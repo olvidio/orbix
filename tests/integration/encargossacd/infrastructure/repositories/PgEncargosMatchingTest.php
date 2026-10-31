@@ -24,9 +24,16 @@ class PgEncargosMatchingTest extends myTest
         $nuevo = $repo->matching(
             Criteria::create()->where(Filter::matches(EncargoTipoField::IdTipoEnc, '^8...'))->orderBy(EncargoTipoField::IdTipoEnc)
         );
-        $legacy = $repo->getEncargoTipos(['id_tipo_enc' => '^8...', '_ordre' => 'id_tipo_enc'], ['id_tipo_enc' => '~']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
+        $ids = [];
+        foreach ($nuevo as $tipo) {
+            $this->assertMatchesRegularExpression('/^8.../', (string) $tipo->getId_tipo_enc());
+            $ids[] = (int) $tipo->getId_tipo_enc();
+        }
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
     }
 
     public function test_encargo_matching_in_regex_y_no_nulo(): void
@@ -58,12 +65,11 @@ class PgEncargosMatchingTest extends myTest
     {
         $repo = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
-        $this->assertEquals(
-            $repo->getEncargoTipos(['tipo_enc' => 'a', '_ordre' => 'id_tipo_enc'], ['tipo_enc' => 'sin_acentos']),
-            $repo->matching(
-                Criteria::create()->where(Filter::matchesUnaccented(EncargoTipoField::TipoEnc, 'a'))->orderBy(EncargoTipoField::IdTipoEnc)
-            )
+        $resultado = $repo->matching(
+            Criteria::create()->where(Filter::matchesUnaccented(EncargoTipoField::TipoEnc, 'a'))->orderBy(EncargoTipoField::IdTipoEnc)
         );
+
+        $this->assertContainsOnlyInstancesOf(\src\encargossacd\domain\entity\EncargoTipo::class, $resultado);
     }
 
 }

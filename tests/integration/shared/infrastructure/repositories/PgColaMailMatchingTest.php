@@ -39,14 +39,9 @@ class PgColaMailMatchingTest extends myTest
                 ->where(Filter::isNull(ColaMailField::Sended))
                 ->andWhere(Filter::in(ColaMailField::UuidItem, [$idPendiente, $idEnviado]));
             $nuevo = $this->repository->matching($criteria);
-            $legacy = $this->repository->getColaMails(
-                ['sended' => 'x', 'uuid_item' => "'" . $idPendiente . "','" . $idEnviado . "'"],
-                ['sended' => 'IS NULL', 'uuid_item' => 'IN']
-            );
 
             $this->assertCount(1, $nuevo);
             $this->assertSame($idPendiente, $nuevo[0]->getUuid_item()->value());
-            $this->assertEquals($legacy, $nuevo);
 
             $limitado = $this->repository->matching(
                 Criteria::create()->where(Filter::isNull(ColaMailField::Sended))->limit(1)

@@ -4,7 +4,6 @@ namespace src\personas\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\personas\domain\criteria\UltimaAsistenciaField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -68,18 +67,6 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
         $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<UltimaAsistencia>
-     */
-    public function getUltimasAsistencias(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(UltimaAsistenciaField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

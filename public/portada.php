@@ -2,6 +2,9 @@
 namespace core;
 
 use frontend\shared\security\HashF;use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
 use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use frontend\shared\web\Lista;
@@ -29,8 +32,8 @@ if (empty($id_grupmenu)) {
 
 $GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
 if (!empty($grupmenu)) {
-    $cGrupMenu = $GrupMenuRepository->getGrupMenus(['grup_menu' => $grupmenu]);
-    $oGrupMenu = $cGrupMenu[0];
+    $cGrupMenu = $GrupMenuRepository->matching(Criteria::create()->where(Filter::eq(GrupMenuField::GrupMenu, $grupmenu)));
+    $oGrupMenu = $cGrupMenu[0] ?? null;
     if (!empty($oGrupMenu)) {
         $id_grupmenu = $oGrupMenu->getId_grupmenu();
     }

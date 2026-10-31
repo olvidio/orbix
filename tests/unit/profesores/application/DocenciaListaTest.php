@@ -41,7 +41,7 @@ final class DocenciaListaTest extends TestCase
         $oAsig->method('getNombre_corto')->willReturn('ALG');
 
         $repoAsig = $this->createMock(AsignaturaRepositoryInterface::class);
-        $repoAsig->method('getAsignaturas')->willReturn([$oAsig]);
+        $repoAsig->method('matching')->willReturn([$oAsig]);
 
         $tipo = new TipoActividadAsignatura(TipoActividadAsignatura::TIPO_CA);
         $actaVo = new ActaNumero('9');

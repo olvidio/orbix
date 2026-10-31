@@ -3,7 +3,6 @@
 namespace src\cambios\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
 use src\shared\infrastructure\persistence\ConverterJson;
 use src\shared\infrastructure\persistence\postgresql\Set;

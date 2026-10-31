@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\application;
 
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
@@ -15,6 +16,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
@@ -351,22 +353,23 @@ class Select_matriculas_de_una_persona
             $this->avisoLines[] = _("está de repaso") . "<br>";
         }
 
-        $aWhere = [];
-        $aOperadores = [];
         if (!empty($this->Qid_activ)) {
-            $aWhere['id_activ'] = $this->Qid_activ;
-            $aWhereNom = ['id_nom' => $this->id_pau, 'id_activ' => $this->Qid_activ];
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $criteriaAct = Criteria::create()->where(Filter::eq(ActividadAllField::IdActiv, (int) $this->Qid_activ));
+            $criteriaAsistente = Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
+                ->andWhere(Filter::eq(AsistenteField::IdActiv, (int) $this->Qid_activ));
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct, true);
         } else {
+            $criteriaAct = Criteria::create()
+                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)'));
             if (empty($this->todos)) {
-                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
-                $aOperadores['f_ini'] = 'BETWEEN';
+                $criteriaAct = $criteriaAct->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca));
             }
-            $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)';
-            $aOperadores['id_tipo_activ'] = '~';
 
-            $aWhereNom = ['id_nom' => $this->id_pau, 'propio' => 't'];
-            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, [], $aWhere, $aOperadores, true);
+            $criteriaAsistente = Criteria::create()
+                ->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau))
+                ->andWhere(Filter::eq(AsistenteField::Propio, true));
+            $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct, true);
         }
         $n = count($cAsistencias);
         if ($n === 0 && empty($this->todos)) {

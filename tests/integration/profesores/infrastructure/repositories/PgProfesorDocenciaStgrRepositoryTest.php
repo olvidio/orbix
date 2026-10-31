@@ -4,6 +4,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorDocenciaStgrFactory;
 
@@ -133,7 +134,7 @@ class PgProfesorDocenciaStgrRepositoryTest extends myTest
 
     public function test_get_profesor_docencias_stgr_sin_filtros()
     {
-        $result = $this->repository->getProfesorDocenciasStgr();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

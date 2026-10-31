@@ -4,7 +4,10 @@ namespace src\planning\application;
 
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaGlobal;
 use src\personas\domain\entity\PersonaSacd;
@@ -69,17 +72,6 @@ class ActividadesDePersonaService
                 $persona[$p] = "p#$id_nom#$nombre";
             }
 
-            $aWhere = [
-                'f_ini' => "'$fin_iso'",
-                'f_fin' => "'$inicio_iso'",
-                'status' => '2,3',
-            ];
-            $aOperador = [
-                'f_ini' => '<=',
-                'f_fin' => '>=',
-                'status' => 'BETWEEN',
-            ];
-
             $cCargoOAsistente = [];
             if (ConfigGlobal::is_app_installed('actividadcargos')) {
                 $cCargoOAsistente = $this->cargoOAsistente->getCargoOAsistente((int)$id_nom);
@@ -88,8 +80,13 @@ class ActividadesDePersonaService
                 $id_activ = $oCargoOAsistente->getId_activ();
                 $propio = $oCargoOAsistente->isPropio();
 
-                $aWhere['id_activ'] = $id_activ;
-                $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+                $cActividades = $this->actividadRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::lte(ActividadAllField::FIni, $fin_iso))
+                        ->andWhere(Filter::gte(ActividadAllField::FFin, $inicio_iso))
+                        ->andWhere(Filter::between(ActividadAllField::Status, 2, 3))
+                        ->andWhere(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+                );
                 if (count($cActividades) === 0) {
                     continue;
                 }

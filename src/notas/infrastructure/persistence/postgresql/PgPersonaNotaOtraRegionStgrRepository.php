@@ -7,7 +7,7 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\notas\domain\criteria\PersonaNotaField;
 use src\notas\infrastructure\persistence\postgresql\traits\NotasCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -64,7 +64,9 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         // de filas legacy en e_notas_otra_region_stgr. No se crean/actualizan filas
         // FORMATO_CERTIFICADO en e_notas_dl (el expediente se lee vía publicv.e_notas).
         unset($oF_certificado);
-        $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
+        $cPersonaNotaOtraRegionStgr = $this->matching(
+            Criteria::create()->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
+        );
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             $rawCerts = $oPersonaNotaOtraRegionStgr->getJson_certificados(true);
             $a_json_certificados = is_array($rawCerts) ? $rawCerts : [];
@@ -180,18 +182,6 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         /** @var list<PersonaNotaOtraRegionStgr> $items */
         $items = array_values($PersonaNotaSet->getTot());
         return $items;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaNotaOtraRegionStgr>
-     */
-    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PersonaNotaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /**

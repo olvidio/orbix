@@ -2,7 +2,10 @@
 
 namespace Tests\integration\ubis\application;
 
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\application\TelecoEliminar;
+use src\ubis\domain\criteria\TelecoUbiField;
 use src\ubis\application\TelecoGuardar;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
@@ -16,6 +19,12 @@ class TelecoTest extends myTest
 {
     private TelecoUbiRepositoryInterface $repository;
     private array $idsCreadosParaLimpiar = [];
+
+    /** @return list<TelecoUbi> */
+    private function telecosDeUbi(int $idUbi): array
+    {
+        return $this->repository->matching(Criteria::create()->where(Filter::eq(TelecoUbiField::IdUbi, $idUbi)));
+    }
 
     public function setUp(): void
     {
@@ -48,7 +57,7 @@ class TelecoTest extends myTest
         );
         $this->assertSame(['ok' => true], $result);
 
-        $nuevos = $this->repository->getTelecos(['id_ubi' => $idUbi]);
+        $nuevos = $this->telecosDeUbi($idUbi);
         $this->assertNotEmpty($nuevos, 'No se creó el teleco nuevo');
         foreach ($nuevos as $o) {
             /** @var TelecoUbi $o */
@@ -62,7 +71,7 @@ class TelecoTest extends myTest
     {
         $idUbi = 200002;
         $GLOBALS['container']->get(TelecoGuardar::class)->execute('CentroDl', $idUbi, [], 1, 0, '600000002', 'inicial');
-        $cOriginal = $this->repository->getTelecos(['id_ubi' => $idUbi]);
+        $cOriginal = $this->telecosDeUbi($idUbi);
         $this->assertNotEmpty($cOriginal);
         $pkey = $cOriginal[0]->getId_item();
         $this->idsCreadosParaLimpiar[] = $pkey;
@@ -82,7 +91,7 @@ class TelecoTest extends myTest
     {
         $idUbi = 200003;
         $GLOBALS['container']->get(TelecoGuardar::class)->execute('CentroDl', $idUbi, [], 1, 0, '600000003', 'para borrar');
-        $telecos = $this->repository->getTelecos(['id_ubi' => $idUbi]);
+        $telecos = $this->telecosDeUbi($idUbi);
         $ids = array_map(fn($t) => $t->getId_item(), $telecos);
         $this->assertNotEmpty($ids);
 

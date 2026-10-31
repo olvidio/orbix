@@ -10,10 +10,8 @@ use src\personas\domain\entity\PersonaN;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\personas\domain\criteria\PersonaField;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaCriteriaTrait;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 
 /**
  * Clase base abstracta para repositorios de PersonaDl y subtipos
@@ -52,18 +50,6 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaDl>
-     */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PersonaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

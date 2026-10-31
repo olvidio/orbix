@@ -4,6 +4,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\entity\ProfesorLatin;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorLatinFactory;
 
@@ -133,7 +134,7 @@ class PgProfesorLatinRepositoryTest extends myTest
 
     public function test_get_profesores_latin_sin_filtros()
     {
-        $result = $this->repository->getProfesoresLatin();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

@@ -7,13 +7,17 @@ use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\criteria\OrderDirection;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\shared\domain\criteria\FilterGroup;
+use src\personas\domain\criteria\PersonaField;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
 
@@ -44,19 +48,19 @@ final class ListaUltimaActivData
 
         $any = (int)date('Y');
 
-        $aWhereP = [];
-        $aOperadorP = [];
+        /** @var list<Filter|FilterGroup> $filtrosP */
+        $filtrosP = [];
+        $ordenarP = false;
         if (!empty($Qid_ubi) && ($Qid_ubi != '999')) {
             $oCentroDl = $this->centroDlRepository->findById((int)$Qid_ubi);
             $nombre_ubi = $oCentroDl !== null ? $oCentroDl->getNombre_ubi() : '';
-            $aWhereP['id_ctr'] = $Qid_ubi;
-            $aWhereP['_ordre'] = 'apellido1, apellido2, nom';
+            $filtrosP[] = Filter::eq(PersonaField::IdCtr, (int)$Qid_ubi);
+            $ordenarP = true;
         } else {
             $nombre_ubi = '';
         }
 
-        $aWhereA = [];
-        $aOperadorA = [];
+        $criteriaA = Criteria::create();
 
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
@@ -104,8 +108,7 @@ final class ListaUltimaActivData
         $alert = '';
         switch ($Qque) {
             case 'crt_s_sg':
-                $aWhereA['id_tipo_activ'] = '^1[45]1';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^1[45]1'));
                 if (empty($nombre_ubi)) {
                     $titulo_actividad = _("s que todavía no han asistido a crt-s o crt-sg");
                 } else {
@@ -113,24 +116,23 @@ final class ListaUltimaActivData
                 }
                 break;
             case 'crt_s':
-                $aWhereA['id_tipo_activ'] = '^141';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^141'));
                 $titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
-                $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
-                $aOperadorP['eap'] = 'TXT';
+                // COALESCE(eap,'x') !~* 'C\d\d': un eap nulo cuenta como «no celador».
+                $filtrosP[] = FilterGroup::anyOf(
+                    Filter::isNull(PersonaField::Eap),
+                    Filter::notMatchesInsensitive(PersonaField::Eap, 'C\d\d')
+                );
                 break;
             case 'crt_cel':
-                $aWhereA['id_tipo_activ'] = '^141';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^141'));
                 $titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
                 $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
-                $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
-                $aOperadorP['eap'] = 'TXT';
+                $filtrosP[] = Filter::matchesInsensitive(PersonaField::Eap, 'C\d\d');
                 break;
             case 'cv_s':
-                $aWhereA['id_tipo_activ'] = '^143';
-                $aOperadorA['id_tipo_activ'] = '~';
+                $criteriaA = $criteriaA->where(Filter::matches(ActividadAllField::IdTipoActiv, '^143'));
                 if (empty($nombre_ubi)) {
                     $titulo_actividad = _("s que no han asistido a cv de s");
                 } else {
@@ -138,20 +140,20 @@ final class ListaUltimaActivData
                 }
                 break;
             case 'cv_s_ad':
-                $aWhereA['id_tipo_activ'] = '1431';
+                $criteriaA = $criteriaA->where(Filter::eq(ActividadAllField::IdTipoActiv, '1431'));
                 $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
                 $anyCv = (int)date('Y');
                 $fin_d = $oConfig->getDiaFinCrt();
                 $fin_m = $oConfig->getMesFinCrt();
                 $f_iso_final = "$anyCv-$fin_m-$fin_d";
 
-                $aWhereUltima = ['id_tipo_activ' => '1431',
-                    'status' => 2,
-                    'f_ini' => $f_iso_final,
-                    '_ordre' => 'f_ini DESC',
-                ];
-                $aOperadorUltima = ['f_ini' => '<'];
-                $cActividades = $this->actividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
+                $cActividades = $this->actividadDlRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActividadAllField::IdTipoActiv, '1431'))
+                        ->andWhere(Filter::eq(ActividadAllField::Status, 2))
+                        ->andWhere(Filter::lt(ActividadAllField::FIni, $f_iso_final))
+                        ->orderBy(ActividadAllField::FIni, OrderDirection::Desc)
+                );
                 if ($cActividades !== []) {
                     /** @var \src\actividades\domain\entity\ActividadAll $oActividadU */
                     $oActividadU = $cActividades[0];
@@ -164,32 +166,37 @@ final class ListaUltimaActivData
                 }
                 $iso_fin = $oFini->sub(new DateInterval('P6M'))->getIso();
                 $iso_ini = $oFini->sub(new DateInterval('P12M'))->getIso();
-                $aWhereP['inc'] = 'ad';
-                $aWhereP['f_inc'] = "'$iso_ini','$iso_fin'";
-                $aOperadorP['f_inc'] = 'BETWEEN';
+                $filtrosP[] = Filter::eq(PersonaField::Inc, 'ad');
+                $filtrosP[] = Filter::between(PersonaField::FInc, $iso_ini, $iso_fin);
                 $alert = '*' . sprintf(_("última cv: %s"), $nom_activ);
                 break;
             case 'cv_jovenes':
                 $titulo_actividad = _("s jóvenes (<30) que no han asistido a cv de s");
                 $f_joven = date('Y-m-d', (int) mktime(0, 0, 0, 1, 1, $any - 30));
-                $aWhereP['f_nacimiento'] = $f_joven;
-                $aOperadorP['f_nacimiento'] = '>';
-                $aWhereP['ce_ini'] = 'x';
-                $aOperadorP['ce_ini'] = 'IS NULL';
-                $aWhereP['ce_fin'] = 'x';
-                $aOperadorP['ce_fin'] = 'IS NULL';
+                $filtrosP[] = Filter::gt(PersonaField::FNacimiento, $f_joven);
+                $filtrosP[] = Filter::isNull(PersonaField::CeIni);
+                $filtrosP[] = Filter::isNull(PersonaField::CeFin);
                 break;
             default:
                 exit(_("No sé en que tipo de actividad hay que mirar las asistencias"));
         }
 
-        $aWhereA['_ordre'] = 'f_ini DESC';
-        $a_id_activ_f_ini = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
+        $a_id_activ_f_ini = $this->actividadRepository->idsConFechaInicio(
+            $criteriaA->orderBy(ActividadAllField::FIni, OrderDirection::Desc)
+        );
 
         $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
-        $aWhereP['situacion'] = 'A';
-        $cPersonas = $this->personaSRepository->getPersonas($aWhereP, $aOperadorP);
+        $criteriaP = Criteria::create()->where(Filter::eq(PersonaField::Situacion, 'A'));
+        foreach ($filtrosP as $filtroP) {
+            $criteriaP = $criteriaP->andWhere($filtroP);
+        }
+        if ($ordenarP) {
+            $criteriaP = $criteriaP->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
+        }
+        $cPersonas = $this->personaSRepository->matching($criteriaP);
         $i = 0;
         $falta = 0;
         $a_valores = [];

@@ -15,6 +15,7 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\personas\domain\PersonaPublicacion;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\shared\config\ConfigGlobal;
@@ -101,16 +102,16 @@ final class ActaVerAddPersonaFormData
     {
         $excluidos = $this->idsConNotaEnAsignatura($id_asignatura);
 
-        $aWhere = [
-            'situacion' => 'A',
-            'nivel_stgr' => NivelStgrId::R,
-            '_ordre' => 'apellido1,apellido2,nom',
-        ];
-        $aOperador = ['nivel_stgr' => '!='];
+        $criteria = Criteria::create()
+            ->where(Filter::eq(PersonaField::Situacion, 'A'))
+            ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::R))
+            ->orderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Apellido2)
+            ->addOrderBy(PersonaField::Nom);
 
         $opciones = [];
 
-        foreach ($this->personaDlRepository->getPersonas($aWhere, $aOperador) as $oPersona) {
+        foreach ($this->personaDlRepository->matching($criteria) as $oPersona) {
             $id = (int) $oPersona->getId_nom();
             if ($this->excluirAlumno($id, $oPersona->getNivel_stgr(), $excluidos)) {
                 continue;
@@ -120,7 +121,7 @@ final class ActaVerAddPersonaFormData
 
         try {
             $miDl = ConfigGlobal::mi_dele();
-            foreach ($this->personaPubRepository->getPersonas($aWhere, $aOperador) as $oPersona) {
+            foreach ($this->personaPubRepository->matching($criteria) as $oPersona) {
                 $id = (int) $oPersona->getId_nom();
                 if (isset($opciones[$id])) {
                     continue;

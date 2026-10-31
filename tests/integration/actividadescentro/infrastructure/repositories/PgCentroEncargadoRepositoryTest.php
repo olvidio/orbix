@@ -4,6 +4,7 @@ namespace Tests\integration\actividadescentro\infrastructure\persistence\postgre
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\actividadescentro\CentroEncargadoFactory;
 
@@ -133,7 +134,7 @@ class PgCentroEncargadoRepositoryTest extends myTest
 
     public function test_get_centros_encargados_sin_filtros()
     {
-        $result = $this->repository->getCentrosEncargados();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

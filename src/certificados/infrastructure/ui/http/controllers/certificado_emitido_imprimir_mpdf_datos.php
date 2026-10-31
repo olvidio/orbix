@@ -3,6 +3,7 @@
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\notas\application\PlanEstudiosDePersona;
 use src\notas\application\support\HuecoOpcionalDePlan;
@@ -144,12 +145,12 @@ $planEstudiosDePersona = DependencyResolver::get(PlanEstudiosDePersona::class);
 $plan = $planEstudiosDePersona->resolve($id_nom);
 $data['plan_estudios'] = $plan;
 
-[$aWhere, $aOperador] = PlanEstudiosFilter::apply($plan, [
-    'active' => 't',
-    'id_nivel' => '1100,2500',
-    '_ordre' => 'id_nivel',
-], ['id_nivel' => 'BETWEEN']);
-$data['cAsignaturas'] = $asignaturaRepository->getAsignaturasAsJson($aWhere, $aOperador);
+$criterioAsignaturas = Criteria::create()
+    ->where(PlanEstudiosFilter::filter($plan))
+    ->andWhere(Filter::eq(AsignaturaField::Active, true))
+    ->andWhere(Filter::between(AsignaturaField::IdNivel, 1100, 2500))
+    ->orderBy(AsignaturaField::IdNivel);
+$data['cAsignaturas'] = $asignaturaRepository->getAsignaturasAsJson($criterioAsignaturas);
 
 $mi_dl = ConfigGlobal::mi_dele();
 $a_mi_region_stgr = $delegacionRepository->mi_region_stgr($mi_dl);

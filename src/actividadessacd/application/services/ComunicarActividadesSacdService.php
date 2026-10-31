@@ -10,6 +10,8 @@ use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -131,16 +133,10 @@ final class ComunicarActividadesSacdService
         $this->avisos = [];
 
         // Solape con el periodo: f_ini <= fin AND f_fin >= inicio.
-        // Sin comillas extras: Condicion usa placeholders PDO para <= / >=.
-        $aWhereAct = [
-            'f_ini' => $this->finIso,
-            'f_fin' => $this->inicioIso,
-            'status' => '2',
-        ];
-        $aOperadorAct = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-        ];
+        $criterioActividad = Criteria::create()
+            ->where(Filter::lte(ActividadAllField::FIni, $this->finIso))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, $this->inicioIso))
+            ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL));
 
         $ActividadAllRepository = $this->actividadAllRepository;
         $CentroEncargadoRepository = $this->centroEncargadoRepository;
@@ -161,13 +157,10 @@ final class ComunicarActividadesSacdService
                 $array_actividades[$id_nom]['txt'][$clave] = $oHelper->getTraduccion($clave, $idioma);
             }
 
-            $aWhere = ['id_nom' => $id_nom];
-            $aOperador = [];
-
             if ($this->soloCargos) {
-                $cAsistentes = $ActividadCargoRepository->getCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $ActividadCargoRepository->getCargoDeActividad($id_nom, $criterioActividad);
             } else {
-                $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($id_nom, $criterioActividad);
             }
 
             $ord_activ = [];

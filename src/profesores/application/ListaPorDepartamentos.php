@@ -5,8 +5,10 @@ namespace src\profesores\application;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\profesores\domain\criteria\ProfesorDirectorField;
 use src\profesores\domain\criteria\ProfesorStgrField;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\asignaturas\domain\criteria\DepartamentoField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
@@ -51,7 +53,9 @@ final class ListaPorDepartamentos
             $cTipoProfesor[$oProfesorTipo->getId_tipo_profesor()] = $oProfesorTipo->getTipo_profesor();
         }
 
-        $cDepartamentos = $this->departamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
+        $cDepartamentos = $this->departamentoRepository->matching(
+            Criteria::create()->orderBy(DepartamentoField::NombreDepartamento)
+        );
 
         $aClaustro = [];
         foreach ($cDepartamentos as $oDepartamento) {
@@ -59,10 +63,12 @@ final class ListaPorDepartamentos
             $departamento = $oDepartamento->getDepartamento();
 
             $aProfesores = [];
+            // d_profesor_director no tiene columna id_dl (el filtro por dl daba error SQL): no se aplica.
             $aDirs = $this->getPersonasOrdenadas(
-                $this->profesorDirectorRepository->getProfesoresDirectores(
-                    $this->buildWhere($id_departamento, $dl),
-                    $this->buildOperador($dl)
+                $this->profesorDirectorRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ProfesorDirectorField::IdDepartamento, $id_departamento))
+                        ->andWhere(Filter::isNull(ProfesorDirectorField::FCese))
                 ),
                 $this->personaDlRepository
             );
@@ -92,38 +98,6 @@ final class ListaPorDepartamentos
             'rstgr' => $rstgr,
             'aClaustro' => $aClaustro,
         ];
-    }
-
-    /**
-     * @param list<string> $dl
-     * @return array<string, mixed>
-     */
-    private function buildWhere(int $id_departamento, array $dl): array
-    {
-        $aWhere = [
-            'id_departamento' => $id_departamento,
-            'f_cese' => 'NULL',
-        ];
-        if (!empty($dl)) {
-            $aWhere['id_dl'] = implode(',', $dl);
-            $aWhere['_ordre'] = 'id_dl';
-        }
-
-        return $aWhere;
-    }
-
-    /**
-     * @param list<string> $dl
-     * @return array<string, string>
-     */
-    private function buildOperador(array $dl): array
-    {
-        $aOperador = ['f_cese' => 'IS NULL'];
-        if (!empty($dl)) {
-            $aOperador['id_dl'] = 'IN';
-        }
-
-        return $aOperador;
     }
 
     /**

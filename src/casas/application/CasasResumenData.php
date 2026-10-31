@@ -3,6 +3,7 @@
 namespace src\casas\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\casas\application\services\CasasResumenOcupacion;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
@@ -232,15 +233,14 @@ final class CasasResumenData
 
         $inicioIso = $oInicio->getIso();
         $finIso = $oFin->getIso();
-        $aWhere = [
-            'f_ini' => $finIso,
-            'f_fin' => $inicioIso,
-            'id_ubi' => $id_ubi,
-            'status' => 4,
-            '_ordre' => 'f_ini',
-        ];
-        $aOperador = ['f_ini' => '<=', 'f_fin' => '>=', 'status' => '<'];
-        $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador) ?: [];
+        $cActividades = $this->actividadRepository->matching(
+            Criteria::create()
+                ->where(Filter::lte(ActividadAllField::FIni, $finIso))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $inicioIso))
+                ->andWhere(Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+                ->andWhere(Filter::lt(ActividadAllField::Status, 4))
+                ->orderBy(ActividadAllField::FIni)
+        );
 
         $a = 0;
         foreach ($cActividades as $oActividad) {

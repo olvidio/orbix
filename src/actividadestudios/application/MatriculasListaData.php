@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -40,14 +41,8 @@ final class MatriculasListaData
     {
         $inicioIso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'inicio_iso');
         $finIso = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'fin_iso');
-        $aWhereActividad = [
-            'f_ini' => "'$inicioIso','$finIso'",
-        ];
-        $aOperadorActividad = ['f_ini' => 'BETWEEN'];
-
-        $aIdActividades = $this->actividadRepository->getArrayIdsWithKeyFini(
-            $aWhereActividad,
-            $aOperadorActividad,
+        $aIdActividades = $this->actividadRepository->idsConFechaInicio(
+            Criteria::create()->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
         );
 
         $cMatriculas = $this->matriculaDlRepository->matching(

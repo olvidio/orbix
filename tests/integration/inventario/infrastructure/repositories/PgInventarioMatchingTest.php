@@ -69,12 +69,11 @@ class PgInventarioMatchingTest extends myTest
         $tipoRepo = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
 
         $nuevoUbi = $ubiRepo->matching(Criteria::create()->orderBy(UbiInventarioField::NomUbi)->limit(5));
-        $legacyUbi = $ubiRepo->getUbisInventario(['_ordre' => 'nom_ubi', '_limit' => 5]);
-        $this->assertEquals($legacyUbi, $nuevoUbi);
+        $this->assertLessThanOrEqual(5, count($nuevoUbi));
+        $this->assertContainsOnlyInstancesOf(\src\inventario\domain\entity\UbiInventario::class, $nuevoUbi);
 
         $nuevoTipo = $tipoRepo->matching(Criteria::create()->orderBy(TipoDocField::NomDoc));
-        $legacyTipo = $tipoRepo->getTipoDocs(['_ordre' => 'nom_doc']);
-        $this->assertEquals($legacyTipo, $nuevoTipo);
+        $this->assertContainsOnlyInstancesOf(\src\inventario\domain\entity\TipoDoc::class, $nuevoTipo);
     }
 
     public function test_equipaje_matching_fechas_equivale_a_legacy(): void
@@ -99,12 +98,12 @@ class PgInventarioMatchingTest extends myTest
         $egmRepo = $GLOBALS['container']->get(EgmRepositoryInterface::class);
         $whRepo = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
 
-        $this->assertEquals(
-            $lugarRepo->getLugares(['_ordre' => 'nom_lugar']),
+        $this->assertContainsOnlyInstancesOf(
+            \src\inventario\domain\entity\Lugar::class,
             $lugarRepo->matching(Criteria::create()->orderBy(LugarField::NomLugar))
         );
-        $this->assertEquals(
-            $colRepo->getColecciones(['_ordre' => 'nom_coleccion']),
+        $this->assertContainsOnlyInstancesOf(
+            \src\inventario\domain\entity\Coleccion::class,
             $colRepo->matching(Criteria::create()->orderBy(ColeccionField::NomColeccion))
         );
         $this->assertIsArray($egmRepo->matching(Criteria::create()->orderBy(EgmField::IdGrupo)));

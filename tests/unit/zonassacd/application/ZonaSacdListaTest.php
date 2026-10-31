@@ -91,7 +91,7 @@ final class ZonaSacdListaTest extends TestCase
 
         $personaRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
         $personaRepo->expects($this->once())
-            ->method('getPersonas')
+            ->method('matching')
             ->willReturn([$oPersona1, $oPersona2]);
 
         $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);

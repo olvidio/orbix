@@ -6,11 +6,13 @@ use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -119,13 +121,11 @@ final class ActivPendientesSelectData
         if ($Qsactividad !== 'ca' && $Qsactividad !== 'crt') {
             $cActividades = [];
         } else {
-            $aWhereA = [];
-            $aOperadorA = [];
-            $aWhereA['id_tipo_activ'] = $id_tipo_activ;
-            $aOperadorA['id_tipo_activ'] = '~';
-            $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
-            $aOperadorA['f_ini'] = 'BETWEEN';
-            $cActividades = $this->actividadRepository->getActividades($aWhereA, $aOperadorA);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo_activ))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs, $fincurs))
+            );
         }
         $aAsistentes = [];
         foreach ($cActividades as $oActividad) {
@@ -140,15 +140,22 @@ final class ActivPendientesSelectData
 
         switch ($Qtipo_personas) {
             case 'n':
-                $cPersonas = $this->personaNRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaNRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele)));
                 $obj_pau = 'PersonaN';
                 break;
             case 'agd':
-                $cPersonas = $this->personaAgdRepository->getPersonas(['situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaAgdRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele)));
                 $obj_pau = 'PersonaAgd';
                 break;
             case 'sacd':
-                $cPersonas = $this->personaDlRepository->getPersonas(['sacd' => 't', 'situacion' => 'A', 'dl' => $mi_dele]);
+                $cPersonas = $this->personaDlRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele)));
                 $obj_pau = 'PersonaDl';
                 break;
             default:
@@ -209,21 +216,19 @@ final class ActivPendientesSelectData
             $a_valores[$i][4] = $aNivelesStgr[$nivel_stgr]?? '';
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['situacion'] = 'A';
-        $aWhere['dl'] = $mi_dele;
-        $aOperador['dl'] = '!=';
+        $criterioOtras = Criteria::create()
+            ->where(Filter::eq(PersonaField::Situacion, 'A'))
+            ->andWhere(Filter::neq(PersonaField::Dl, $mi_dele));
         switch ($Qtipo_personas) {
             case 'n':
-                $cPersonasOtras = $this->personaNRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaNRepository->matching($criterioOtras);
                 break;
             case 'agd':
-                $cPersonasOtras = $this->personaAgdRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaAgdRepository->matching($criterioOtras);
                 break;
             case 'sacd':
-                $aWhere['sacd'] = 't';
-                $cPersonasOtras = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+                $cPersonasOtras = $this->personaDlRepository->matching(
+                    $criterioOtras->andWhere(Filter::eq(PersonaField::Sacd, true)));
                 break;
             default:
                 $cPersonasOtras = [];

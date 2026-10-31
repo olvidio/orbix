@@ -5,6 +5,7 @@ namespace src\actividadestudios\application;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\actividadestudios\application\support\AsignaturaNombreDlPrefix;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -68,7 +69,7 @@ final class MatriculaNueva
         }
 
         if ($Qid_asignatura === 1) {
-            $cAsignaturas = $this->asignaturaRepository->getAsignaturas(['id_nivel' => $Qid_nivel]);
+            $cAsignaturas = $this->asignaturaRepository->matching(Criteria::create()->where(Filter::eq(AsignaturaField::IdNivel, (int) $Qid_nivel)));
             if (empty($cAsignaturas)) {
                 return self::resultado(_("no encuentro asignatura para ese nivel"));
             }

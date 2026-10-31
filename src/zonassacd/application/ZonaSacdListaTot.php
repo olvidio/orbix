@@ -3,6 +3,7 @@
 namespace src\zonassacd\application;
 
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -25,8 +26,14 @@ final class ZonaSacdListaTot
     public function execute(): array
     {
         $mi_dl = ConfigGlobal::mi_delef();
-        $aWhere = ['sacd' => 't', 'dl' => $mi_dl, '_ordre' => 'apellido1,apellido2,nom'];
-        $cSacds = $this->personaSacdRepository->getPersonas($aWhere);
+        $cSacds = $this->personaSacdRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaField::Sacd, true))
+                ->andWhere(Filter::eq(PersonaField::Dl, $mi_dl))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom)
+        );
         $a_valores = [];
         $i = 0;
         foreach ($cSacds as $oPersona) {

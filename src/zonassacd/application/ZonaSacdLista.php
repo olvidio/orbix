@@ -4,6 +4,7 @@ namespace src\zonassacd\application;
 
 use src\permisos\domain\XPermisos;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
@@ -33,15 +34,16 @@ final class ZonaSacdLista
         }
         if ($id_zona === 'no') {
             $mi_dl = ConfigGlobal::mi_delef();
-            $aWhere = [
-                'id_tabla' => "'n','a','sssc','pa','pn'",
-                'sacd' => 't',
-                'situacion' => 'A',
-                'dl' => $mi_dl,
-                '_ordre' => 'apellido1,apellido2,nom',
-            ];
-            $aOperador = ['id_tabla' => 'IN'];
-            $cSacds = $this->personaSacdRepository->getPersonas($aWhere, $aOperador);
+            $cSacds = $this->personaSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::in(PersonaField::IdTabla, ['n', 'a', 'sssc', 'pa', 'pn']))
+                    ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Dl, $mi_dl))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            );
             $i = 0;
             foreach ($cSacds as $oPersona) {
                 $id_nom = $oPersona->getId_nom();

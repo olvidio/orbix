@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\notas\application;
 
 
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\notas\domain\criteria\ActaField as F;
 use src\notas\domain\criteria\ActaTribunalField as TF;
 use src\shared\domain\criteria\Criteria;
@@ -223,7 +224,7 @@ final class ActaVerFormData
         $nombre_asignatura = '';
         if ($id_asignatura_actual) {
             $AsignaturaRepository = $this->asignaturaRepository;
-            $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
+            $cAsignatura = $AsignaturaRepository->matching(Criteria::create()->where(Filter::eq(AsignaturaField::IdAsignatura, (int) $id_asignatura_actual)));
             if ($cAsignatura !== []) {
                 $oAsignatura = $cAsignatura[0];
                 $nombre_asignatura = (string)$oAsignatura->getNombre_asignatura();

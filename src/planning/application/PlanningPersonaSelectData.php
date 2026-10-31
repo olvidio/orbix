@@ -2,6 +2,7 @@
 
 namespace src\planning\application;
 
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -31,32 +32,29 @@ final class PlanningPersonaSelectData
         $Qcentro = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'centro');
         $Qna = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'na');
 
-        $aWhere = [
-            'situacion' => 'A',
-            '_ordre' => 'apellido1,apellido2,nom',
-        ];
-        $aOperador = [];
+        $criterioPersona = Criteria::create()->where(Filter::eq(PersonaField::Situacion, 'A'));
         $criterioCtr = null;
 
         if ($Qapellido1 !== '') {
-            $aWhere['apellido1'] = '^' . $Qapellido1;
-            $aOperador['apellido1'] = 'sin_acentos';
+            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Apellido1, '^' . $Qapellido1));
         }
         if ($Qapellido2 !== '') {
-            $aWhere['apellido2'] = '^' . $Qapellido2;
-            $aOperador['apellido2'] = 'sin_acentos';
+            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Apellido2, '^' . $Qapellido2));
         }
         if ($Qnombre !== '') {
-            $aWhere['nom'] = '^' . $Qnombre;
-            $aOperador['nom'] = 'sin_acentos';
+            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Nom, '^' . $Qnombre));
         }
         if ($Qcentro !== '') {
             $nom_ubi = str_replace('+', '\\+', $Qcentro);
             $criterioCtr = Criteria::create()->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, $nom_ubi));
         }
         if ($Qna !== '') {
-            $aWhere['id_tabla'] = 'p' . $Qna;
+            $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdTabla, 'p' . $Qna));
         }
+        $criterioPersona = $criterioPersona
+            ->orderBy(PersonaField::Apellido1)
+            ->addOrderBy(PersonaField::Apellido2)
+            ->addOrderBy(PersonaField::Nom);
 
         $PersonaRepository = $this->personaRepositoryPicker->getSafe($Qobj_pau);
 
@@ -65,14 +63,15 @@ final class PlanningPersonaSelectData
             $cCentros = $this->centroDlRepository->matching($criterioCtr);
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
-                $aWhere['id_ctr'] = $id_ubi;
-                $cPersonas2 = $PersonaRepository->getPersonas($aWhere, $aOperador);
+                $cPersonas2 = $PersonaRepository->matching(
+                    $criterioPersona->andWhere(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                );
                 if (count($cPersonas2) >= 1) {
                     $cPersonas = array_merge($cPersonas, $cPersonas2);
                 }
             }
         } else {
-            $cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $PersonaRepository->matching($criterioPersona);
         }
 
         $out = [];

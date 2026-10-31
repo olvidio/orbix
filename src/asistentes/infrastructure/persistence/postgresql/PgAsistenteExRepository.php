@@ -3,7 +3,6 @@
 namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;

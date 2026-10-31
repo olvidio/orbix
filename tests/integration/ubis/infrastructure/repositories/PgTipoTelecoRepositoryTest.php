@@ -133,7 +133,7 @@ class PgTipoTelecoRepositoryTest extends myTest
 
     public function test_get_tipos_teleco_sin_filtros()
     {
-        $result = $this->repository->getTiposTeleco();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

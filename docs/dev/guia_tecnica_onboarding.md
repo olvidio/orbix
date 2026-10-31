@@ -171,7 +171,9 @@ Caso de uso (application)
        lectura:   getoDbl_Select()   # réplica si existe
 ```
 
-Helpers frecuentes: `Condicion` (WHERE), `Set` (colecciones), trait `HandlesPdoErrors`, a veces `PdoUnitOfWork` para transacciones + eventos.
+Búsquedas: `matching(Criteria)` con un enum `<Entidad>Field` por entidad (piezas genéricas en `src/shared/domain/criteria/`; ver [`refactor_busquedas_criteria.md`](refactor_busquedas_criteria.md) y la sección «Búsquedas con `Criteria`» de `AGENTS.md`). Ya no existen `$aWhere`/`$aOperators` ni `Condicion`.
+
+Helpers frecuentes: `Set` (colecciones), trait `RunsCriteriaQueries` (ejecuta un `Criteria`), trait `HandlesPdoErrors`, a veces `PdoUnitOfWork` para transacciones + eventos.
 
 Los borrados suelen ser **DELETE físico**; no hay soft-delete global tipo `deleted_at`.
 

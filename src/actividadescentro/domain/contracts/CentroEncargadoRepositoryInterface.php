@@ -31,15 +31,6 @@ interface CentroEncargadoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     *
-     * @return list<CentroEncargado>
-     */
-    public function getCentrosEncargados(array $aWhere = [], array $aOperators = []): array;
-
     public function Eliminar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool;
 
     public function Guardar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool;

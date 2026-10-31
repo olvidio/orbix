@@ -6,6 +6,7 @@ use src\ubis\domain\criteria\CentroDlField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 /**
@@ -44,7 +45,9 @@ final class CentrosSListaData
             $i++;
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
-            $cPersonasCtr = $PersonaSRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A']);
+            $cPersonasCtr = $PersonaSRepository->matching(Criteria::create()
+                ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A')));
             $num_s = count($cPersonasCtr);
             $num_total_s += $num_s;
 

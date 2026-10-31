@@ -8,6 +8,7 @@ use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\criteria\TarifaUbiField;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
@@ -99,25 +100,19 @@ final class CasaIngresosListaData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhere = [];
-        $aOperador = [];
-        if ($periodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
-            $aOperador['f_fin'] = 'BETWEEN';
-        } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
-        }
+        $campoFecha = $periodo === 'desdeHoy' ? ActividadAllField::FFin : ActividadAllField::FIni;
 
         $a_valores = [];
         $txt_err = '';
         foreach ($aGrupos as $id_ubi => $titulo) {
             $id_ubi = (int)$id_ubi;
-            $aWhere['id_ubi'] = $id_ubi;
-            $aWhere['status'] = StatusId::BORRABLE;
-            $aOperador['status'] = '<';
-            $aWhere['_ordre'] = 'f_ini';
-            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::between($campoFecha, $inicioIso, $finIso))
+                    ->andWhere(Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::lt(ActividadAllField::Status, StatusId::BORRABLE))
+                    ->orderBy(ActividadAllField::FIni)
+            );
 
             $a = 0;
             $i_previstos_acumulados = 0.0;

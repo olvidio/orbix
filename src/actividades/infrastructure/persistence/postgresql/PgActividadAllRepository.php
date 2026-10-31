@@ -3,9 +3,8 @@
 namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -67,31 +66,23 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $oIniPlanning = $oFini;
         $a = 0;
         $a_cdc = [];
-        $aWhere = [];
-        $aOperador = [];
+        $criterio = Criteria::create();
         if (empty($id_ubi) || $id_ubi === 1) { // en estos casos sólo miro las actividades de cada sección.
-            if (empty($id_ubi)) {
-                $aOperador['id_ubi'] = 'IS NULL';
-            }
             switch ($cdc_sel) {
                 case 11:
-                    $aWhere['id_tipo_activ'] = '^1';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criterio = $criterio->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1'));
                     break;
                 case 12:
-                    $aWhere['id_tipo_activ'] = '^2';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criterio = $criterio->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^2'));
                     break;
             }
         }
-        $aWhere['f_ini'] = "'" . $oFfin->format('Y-m-d') . "'";
-        $aOperador['f_ini'] = '<=';
-        $aWhere['f_fin'] = "'" . $oFini->format('Y-m-d') . "'";
-        $aOperador['f_fin'] = '>=';
-        $aWhere['id_ubi'] = $id_ubi;
-        $aWhere['status'] = 4;
-        $aOperador['status'] = '<';
-        $oActividades = $this->getActividades($aWhere, $aOperador);
+        $criterio = $criterio
+            ->andWhere(Filter::lte(ActividadAllField::FIni, $oFfin->format('Y-m-d')))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, $oFini->format('Y-m-d')))
+            ->andWhere(empty($id_ubi) ? Filter::isNull(ActividadAllField::IdUbi) : Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+            ->andWhere(Filter::lt(ActividadAllField::Status, 4));
+        $oActividades = $this->matching($criterio);
         foreach ($oActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -222,40 +213,16 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /**
      * retorna l'array amb el id_ubi de les activitats sel·leccionades
      *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Solo se usa el filtro del criterio; el resultado va siempre ordenado por `id_ubi`.
+     *
      * @return list<int|null>
      */
-    public function getUbis(array $aWhere = [], array $aOperators = []): array
+    public function getUbis(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTablaSelect();
-        $oCondicion = new Condicion();
-        $aCondi = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondi[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador === 'TXT') unset($aWhere[$camp]);
-        }
-        $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi !== '') $sCondi = " WHERE " . $sCondi;
-        $sLimit = $this->getLimitPaginador("$nom_tabla", $sCondi, $aWhere);
-        $sOrdre = '';
-        $ordreUbis = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreUbis) && $ordreUbis !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreUbis;
-        }
-        unset($aWhere['_ordre']);
-        $sQry = "SELECT id_ubi FROM $nom_tabla " . $sCondi . " GROUP BY id_ubi" . $sOrdre;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        $conv = new PgCriteriaConverter(ActividadAllField::class, self::COLUMNAS);
+        $q = $conv->convertWhere($criteria);
+        $sQry = 'SELECT id_ubi FROM ' . $this->getNomTablaSelect() . $q['sql'] . ' GROUP BY id_ubi ORDER BY id_ubi';
+        $stmt = $this->prepareAndExecute($this->getoDbl_Select(), $sQry, $q['params'], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -341,54 +308,17 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     }
 
     /**
-     * retorna l'array de id d'Actividad
+     * Ids de las actividades que cumplen el criterio, con clave `f_ini#n` (n = posición, para ordenar por fecha).
      *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @return array<string, int>
      */
-    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array
+    public function idsConFechaInicio(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTablaSelect();
-
-        $oCondicion = new Condicion();
-        $aCondi = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') continue;
-            $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador === 'TXT') unset($aWhere[$camp]);
-        }
-        $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
-        $sLimit = $this->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        $sOrdre = '';
-        $ordreIds = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreIds) && $ordreIds !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreIds;
-        }
-        unset($aWhere['_ordre']);
-        $sQry = "SELECT * FROM $nom_tabla" . $sCondi . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        $i = 0;
         $aListaId = [];
-        foreach ($stmt as $aDades) {
-            if (!is_array($aDades)) {
-                continue;
-            }
+        $i = 0;
+        foreach ($this->matching($criteria) as $oActividad) {
             $i++;
-            $fIni = $aDades['f_ini'] ?? '';
-            $f_ini_iso = (is_scalar($fIni) ? (string) $fIni : '') . '#' . $i;
-            $idActiv = $aDades['id_activ'] ?? 0;
-            $aListaId[$f_ini_iso] = is_numeric($idActiv) ? (int) $idActiv : 0;
+            $aListaId[($oActividad->getF_ini()?->getIso() ?? '') . '#' . $i] = $oActividad->getId_activ();
         }
         return $aListaId;
     }
@@ -442,18 +372,6 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadAll>
-     */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadAllField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -643,18 +561,5 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             return null;
         }
         return ActividadAll::fromArray($aDatos);
-    }
-
-    /**
-     * @param array<string, mixed> $aWhere
-     */
-    private function getLimitPaginador(string $nomTabla, string $sCondi, array $aWhere): string
-    {
-        $oGestor = $GLOBALS['oGestorSessioDelegación'] ?? null;
-        if (is_object($oGestor) && method_exists($oGestor, 'getLimitPaginador')) {
-            return (string) $oGestor->getLimitPaginador($nomTabla, $sCondi, $aWhere);
-        }
-
-        return '';
     }
 }

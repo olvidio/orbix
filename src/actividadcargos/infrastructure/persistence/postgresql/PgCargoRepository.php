@@ -5,7 +5,6 @@ namespace src\actividadcargos\infrastructure\persistence\postgresql;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadcargos\domain\criteria\CargoField;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use PDO;
@@ -103,18 +102,6 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
     {
         $conv = new PgCriteriaConverter(CargoField::class, self::COLUMNAS);
         return array_map(Cargo::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Cargo>
-     */
-    public function getCargos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(CargoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     public function Eliminar(Cargo $Cargo): bool

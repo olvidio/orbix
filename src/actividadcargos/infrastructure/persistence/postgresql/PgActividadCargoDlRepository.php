@@ -6,7 +6,7 @@ use src\shared\infrastructure\persistence\ClaseRepository;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\shared\traits\RunsCriteriaQueries;
 use src\shared\config\ConfigGlobal;
@@ -19,6 +19,7 @@ use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividadcargos\infrastructure\persistence\postgresql\traits\SincronizaCdCargosActivTrait;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -171,17 +172,17 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     /**
      * retorna l'array d'objectes de tipus ActividadCargo
      *
-     * @param array<string, mixed> $aWhereNom
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<string, ActividadCargo>
      */
-    public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array
+    public function getActividadCargosDeAsistente(int $idNom, Criteria $criteriaActividad): array
     {
         // seleccionar las actividades según los criterios de búsqueda.
-        $aListaIds = $this->actividadAllRepository->getArrayIdsWithKeyFini($aWhere, $aOperators);
+        $aListaIds = $this->actividadAllRepository->idsConFechaInicio($criteriaActividad);
 
-        $cCargos = $this->getActividadCargos($aWhereNom);
+        $cCargos = $this->matching(
+            Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $idNom))
+        );
         // descarto los que no están.
         $cCargosOk = [];
         $i = 0;
@@ -211,25 +212,23 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els asistents i el carrec (si el té):
      *        $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
-     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
-     * @param array<string, mixed> $aWhereAct para la Actividad
-     * @param array<string, string> $aOperadorAct para la Actividad
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array{id_activ: int, id_nom: int|string, propio: mixed, plaza?: mixed, id_cargo?: int}>
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
+    public function getAsistenteCargoDeActividad(int $idNom, Criteria $criteriaActividad): array
     {
 
-        if (empty($aWhere['id_nom'])) {
+        if ($idNom === 0) {
             return [];
         }
-        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
+        $id_nom = $idNom;
 
-        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+        $criteriaAsistente = Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom));
+        $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaActividad);
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades según los criterios de búsqueda.
-        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->idsConFechaInicio($criteriaActividad);
         // descarto los que no estan.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
@@ -275,23 +274,20 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * retorna un array amb els carrecs (perque sigui compatible amb: getAsistenteCargoDeActividad).
      *       $aAsis[$id_activ] = array('id_activ','id_nom','propio','id_cargo');
      *
-     * @param array<string, mixed> $aWhere para la asistencia (id_nom y plaza)
-     * @param array<string, string> $aOperador para la asistencia (id_nom y plaza)
-     * @param array<string, mixed> $aWhereAct para la Actividad
-     * @param array<string, string> $aOperadorAct para la Actividad
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array{id_activ: int, id_nom: int|string, propio: string, id_cargo: int, plaza: int}>
      */
-    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array
+    public function getCargoDeActividad(int $idNom, Criteria $criteriaActividad): array
     {
 
-        if (empty($aWhere['id_nom'])) {
+        if ($idNom === 0) {
             return [];
         }
-        $id_nom = is_numeric($aWhere['id_nom']) ? (int) $aWhere['id_nom'] : 0;
+        $id_nom = $idNom;
 
         $cCargos = $this->matching(Criteria::create()->where(Filter::eq(ActividadCargoField::IdNom, $id_nom)));
         // seleccionar las actividades segun los criterios de búsqueda.
-        $aListaIds = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
+        $aListaIds = $this->actividadRepository->idsConFechaInicio($criteriaActividad);
         // descarto los que no están.
         $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
@@ -333,20 +329,6 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
     {
         $conv = new PgCriteriaConverter(ActividadCargoField::class, self::COLUMNAS);
         return array_map(ActividadCargo::fromArray(...), $this->rowsMatching($criteria, $conv));
-    }
-
-    /**
-     * devuelve una colección (array) de objetos de tipo ActividadCargo
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ActividadCargo>
-     */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ActividadCargoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -50,21 +50,9 @@ interface PersonaPubRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * @deprecated usar matching(Criteria)
-     * devuelve una colección (array) de objetos de tipo PersonaDl
-     *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<PersonaPub> Una colección de objetos de tipo PersonaPub
-     */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array;
-
-    /**
-     * Como getPersonas: incluye todas las filas aunque falte región stgr de la dl;
+     * Como matching(): incluye todas las filas aunque falte región stgr de la dl;
      * acumula problemas en $problemasRegionStgr (usar RegionStgrAviso::formatear al mostrar).
      *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param array<int, true> $sinRegionStgrPorIdNom
      * @return list<PersonaPub>
@@ -72,8 +60,7 @@ interface PersonaPubRepositoryInterface
      * @param-out array<int, true> $sinRegionStgrPorIdNom id_nom marcados sin región stgr en la dl
      */
     public function getPersonasParaListado(
-        array $aWhere,
-        array $aOperators,
+        Criteria $criteria,
         array &$problemasRegionStgr,
         array &$sinRegionStgrPorIdNom = [],
     ): array;

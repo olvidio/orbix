@@ -27,11 +27,9 @@ interface ActividadAllRepositoryInterface
     public function getCoincidencia(ActividadAll $oActividad): bool;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @return list<int|null>
      */
-    public function getUbis(array $aWhere = [], array $aOperators = []): array;
+    public function getUbis(Criteria $criteria): array;
 
     /**
      * @return array<int, string>
@@ -39,11 +37,10 @@ interface ActividadAllRepositoryInterface
     public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return array<string, int>
+     * @return array<string, int> id_activ con clave `f_ini#n`
      */
-    public function getArrayIdsWithKeyFini(array $aWhere = [], array $aOperators = []): array;
+    public function idsConFechaInicio(Criteria $criteria): array;
+
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
@@ -51,16 +48,6 @@ interface ActividadAllRepositoryInterface
      * @return list<ActividadAll>
      */
     public function matching(Criteria $criteria): array;
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * devuelve una colección (array) de objetos de tipo ActividadAll
-     *
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ActividadAll>
-     */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

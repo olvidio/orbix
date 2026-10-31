@@ -17,12 +17,4 @@ class PlanEstudiosFilterTest extends myTest
         $this->assertSame(Operator::ArrayContains, $filtro->operator);
         $this->assertSame(2, $filtro->value);
     }
-
-    public function test_apply_legacy_sigue_devolviendo_el_par_de_arrays(): void
-    {
-        [$where, $operators] = PlanEstudiosFilter::apply(1, ['active' => 't'], ['active' => '=']);
-
-        $this->assertSame(['active' => 't', 'plan_estudios' => 1], $where);
-        $this->assertSame(['active' => '=', 'plan_estudios' => 'IN_ARRAY'], $operators);
-    }
 }

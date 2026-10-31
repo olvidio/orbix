@@ -35,53 +35,47 @@ class PgUbisCatalogosMatchingTest extends myTest
         $nuevo = $repo->matching(
             Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->orderBy(DelegacionField::NombreDl)
         );
-        $legacy = $repo->getDelegaciones(['active' => true, '_ordre' => 'nombre_dl']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $d) {
+            $this->assertTrue($d->isActive());
+        }
     }
 
     public function test_delegacion_matching_in_equivale_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $primera = $repo->getDelegaciones(['active' => true, '_limit' => 1])[0] ?? null;
+        $primera = $repo->matching(Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->limit(1))[0] ?? null;
         $this->assertNotNull($primera);
         $region = $primera->getRegionVo()->value();
 
         $nuevo = $repo->matching(
             Criteria::create()->where(Filter::in(DelegacionField::Region, [$region]))->orderBy(DelegacionField::Dl)
         );
-        $legacy = $repo->getDelegaciones(['region' => "'$region'", '_ordre' => 'dl'], ['region' => 'IN']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $d) {
+            $this->assertSame($region, $d->getRegionVo()->value());
+        }
     }
 
     public function test_region_y_tipos_matching_equivalen_a_legacy(): void
     {
         $regiones = $GLOBALS['container']->get(RegionRepositoryInterface::class);
-        $this->assertEquals(
-            $regiones->getRegiones(['active' => true, '_ordre' => 'nombre_region']),
-            $regiones->matching(Criteria::create()->where(Filter::eq(RegionField::Active, true))->orderBy(RegionField::NombreRegion))
-        );
+        $activas = $regiones->matching(Criteria::create()->where(Filter::eq(RegionField::Active, true))->orderBy(RegionField::NombreRegion));
+        $this->assertNotEmpty($activas);
+        foreach ($activas as $r) {
+            $this->assertTrue($r->isActive());
+        }
 
         $tCasa = $GLOBALS['container']->get(TipoCasaRepositoryInterface::class);
-        $this->assertEquals(
-            $tCasa->getTiposCasa(['_ordre' => 'nombre_tipo_casa']),
-            $tCasa->matching(Criteria::create()->orderBy(TipoCasaField::NombreTipoCasa))
-        );
+        $this->assertIsArray($tCasa->matching(Criteria::create()->orderBy(TipoCasaField::NombreTipoCasa)));
 
         $tCentro = $GLOBALS['container']->get(TipoCentroRepositoryInterface::class);
-        $this->assertEquals(
-            $tCentro->getTiposCentro(['_ordre' => 'nombre_tipo_ctr']),
-            $tCentro->matching(Criteria::create()->orderBy(TipoCentroField::NombreTipoCtr))
-        );
+        $this->assertIsArray($tCentro->matching(Criteria::create()->orderBy(TipoCentroField::NombreTipoCtr)));
 
         $tTeleco = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
-        $this->assertEquals(
-            $tTeleco->getTiposTeleco(['_ordre' => 'nombre_teleco']),
-            $tTeleco->matching(Criteria::create()->orderBy(TipoTelecoField::NombreTeleco))
-        );
+        $this->assertIsArray($tTeleco->matching(Criteria::create()->orderBy(TipoTelecoField::NombreTeleco)));
 
         $desc = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $this->assertIsArray(

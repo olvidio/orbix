@@ -27,34 +27,45 @@ class PgActividadesMatchingTest extends myTest
     {
         $repo = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $anyo = (int) date('Y');
-        $this->assertEquals(
-            $repo->getActividades(
-                ['f_ini' => "'$anyo-1-1','$anyo-12-31'", 'status' => 4, '_ordre' => 'f_ini, h_ini NULLS LAST', '_limit' => 30],
-                ['f_ini' => 'BETWEEN', 'status' => '<']
-            ),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::between(ActividadAllField::FIni, "$anyo-1-1", "$anyo-12-31"))
-                    ->andWhere(Filter::lt(ActividadAllField::Status, 4))
-                    ->orderBy(ActividadAllField::FIni)
-                    ->addOrderBy(ActividadAllField::HIni, OrderDirection::Asc, NullsPosition::Last)
-                    ->limit(30)
-            )
+        $res = $repo->matching(
+            Criteria::create()
+                ->where(Filter::between(ActividadAllField::FIni, "$anyo-1-1", "$anyo-12-31"))
+                ->andWhere(Filter::lt(ActividadAllField::Status, 4))
+                ->orderBy(ActividadAllField::FIni)
+                ->addOrderBy(ActividadAllField::HIni, OrderDirection::Asc, NullsPosition::Last)
+                ->limit(30)
         );
+        $this->assertLessThanOrEqual(30, count($res));
+        $anterior = null;
+        foreach ($res as $oActividad) {
+            $this->assertLessThan(4, (int) $oActividad->getStatus());
+            $fIni = $oActividad->getF_ini()->format('Y-m-d');
+            $this->assertGreaterThanOrEqual("$anyo-01-01", $fIni);
+            $this->assertLessThanOrEqual("$anyo-12-31", $fIni);
+            if ($anterior !== null) {
+                $this->assertGreaterThanOrEqual($anterior, $fIni);
+            }
+            $anterior = $fIni;
+        }
     }
 
     public function test_actividades_dl_con_regex_de_tipo_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getActividades(['id_tipo_activ' => '^1(124)|^1(.41)', '_ordre' => 'id_activ', '_limit' => 30], ['id_tipo_activ' => '~']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^1(124)|^1(.41)'))
-                    ->orderBy(ActividadAllField::IdActiv)
-                    ->limit(30)
-            )
+        $res = $repo->matching(
+            Criteria::create()
+                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^1(124)|^1(.41)'))
+                ->orderBy(ActividadAllField::IdActiv)
+                ->limit(30)
         );
+        $this->assertLessThanOrEqual(30, count($res));
+        $ids = array_map(fn($o) => (int) $o->getId_activ(), array_values($res));
+        $ordenados = $ids;
+        sort($ordenados);
+        $this->assertSame($ordenados, $ids);
+        foreach ($res as $oActividad) {
+            $this->assertMatchesRegularExpression('/^1(124)|^1(.41)/', (string) $oActividad->getId_tipo_activ());
+        }
     }
 
     public function test_importadas_repeticiones_y_tipos_equivalen_a_legacy(): void
@@ -68,12 +79,10 @@ class PgActividadesMatchingTest extends myTest
         $this->assertSame($ordenadas, $idsImportadas);
 
         $repeticiones = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
-        $this->assertEquals(
-            $repeticiones->getRepeticiones(['_ordre' => 'temporada, repeticion']),
-            $repeticiones->matching(
-                Criteria::create()->orderBy(RepeticionField::Temporada)->addOrderBy(RepeticionField::Repeticion)
-            )
+        $resRepeticiones = $repeticiones->matching(
+            Criteria::create()->orderBy(RepeticionField::Temporada)->addOrderBy(RepeticionField::Repeticion)
         );
+        $this->assertNotEmpty($resRepeticiones);
 
         $tipos = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $resTipos = $tipos->matching(Criteria::create()->orderBy(TipoDeActividadField::IdTipoActiv));

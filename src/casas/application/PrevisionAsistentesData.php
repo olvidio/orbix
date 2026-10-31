@@ -5,6 +5,9 @@ namespace src\casas\application;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\security\HashB;
@@ -71,44 +74,37 @@ final class PrevisionAsistentesData
         ];
 
         $permitido = true;
-        $aWhere = ['_ordre' => 'f_ini'];
-        $aOperador = ['id_tipo_activ' => '~'];
+        $criteria = Criteria::create();
+        $patronTipo = null;
 
         if ($inicio_iso !== '' && $fin_iso !== '') {
-            if ($periodo === 'desdeHoy') {
-                $aWhere['f_fin'] = "'$inicio_iso','$fin_iso'";
-                $aOperador['f_fin'] = 'BETWEEN';
-            } else {
-                $aWhere['f_ini'] = "'$inicio_iso','$fin_iso'";
-                $aOperador['f_ini'] = 'BETWEEN';
-            }
+            $campoFecha = $periodo === 'desdeHoy' ? ActividadAllField::FFin : ActividadAllField::FIni;
+            $criteria = $criteria->andWhere(Filter::between($campoFecha, $inicio_iso, $fin_iso));
         }
 
         switch ($mi_of) {
             case 'sm':
-                $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '1';
+                $patronTipo = '^' . $mi_sfsv . '1';
                 break;
             case 'nax':
-                $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '2';
+                $patronTipo = '^' . $mi_sfsv . '2';
                 break;
             case 'agd':
-                $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '3';
+                $patronTipo = '^' . $mi_sfsv . '3';
                 break;
             case 'sg':
-                $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '[45]';
+                $patronTipo = '^' . $mi_sfsv . '[45]';
                 break;
             case 'des':
-                // Condición legacy que no se mapea al operador ~: se mantiene
-                // el comportamiento delegando al filtro por defecto.
-                $aWhere['id_tipo_activ'] = '^(16|1141|1125|1341)';
+                $patronTipo = '^(16|1141|1125|1341)';
                 break;
             case 'sr':
-                $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '7';
+                $patronTipo = '^' . $mi_sfsv . '7';
                 break;
             default:
                 $oConfig = $_SESSION['oConfig'] ?? null;
                 if ($oConfig instanceof ConfigSnapshot && $oConfig->getGestionCalendario() === 'central') {
-                    $aWhere['id_tipo_activ'] = '^' . $mi_sfsv;
+                    $patronTipo = '^' . $mi_sfsv;
                 } else {
                     $permitido = false;
                 }
@@ -116,7 +112,11 @@ final class PrevisionAsistentesData
 
         $a_valores = [];
         if ($permitido) {
-            $cActividades = $this->actividadDlRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadDlRepository->matching(
+                $criteria
+                    ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, (string)$patronTipo))
+                    ->orderBy(ActividadAllField::FIni)
+            );
             $i = 0;
             foreach ($cActividades as $oActividad) {
                 $i++;

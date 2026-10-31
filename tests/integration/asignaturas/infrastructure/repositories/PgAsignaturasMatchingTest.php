@@ -29,10 +29,15 @@ class PgAsignaturasMatchingTest extends myTest
                 ->where(Filter::lt(AsignaturaField::IdAsignatura, 3000))
                 ->orderBy(AsignaturaField::IdNivel)
         );
-        $legacy = $repo->getAsignaturas(['id_asignatura' => 3000, '_ordre' => 'id_nivel'], ['id_asignatura' => '<']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $niveles = array_map(static fn($a) => $a->getId_nivel(), $nuevo);
+        $ordenados = $niveles;
+        sort($ordenados);
+        $this->assertSame($ordenados, $niveles);
+        foreach ($nuevo as $a) {
+            $this->assertLessThan(3000, $a->getId_asignatura());
+        }
     }
 
     public function test_asignatura_matching_plan_estudios_array_equivale_a_legacy(): void
@@ -44,9 +49,30 @@ class PgAsignaturasMatchingTest extends myTest
                 ->where(Filter::arrayContains(AsignaturaField::PlanEstudios, 2))
                 ->orderBy(AsignaturaField::IdNivel)
         );
-        $legacy = $repo->getAsignaturas(['plan_estudios' => 2, '_ordre' => 'id_nivel'], ['plan_estudios' => 'IN_ARRAY']);
 
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $a) {
+            $this->assertContains(2, array_map('intval', (array) $a->getPlan_estudios()));
+        }
+    }
+
+    public function test_asignaturas_as_json_sigue_el_criterio(): void
+    {
+        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $criterio = Criteria::create()
+            ->where(Filter::eq(AsignaturaField::Active, true))
+            ->andWhere(Filter::between(AsignaturaField::IdNivel, 1100, 2500))
+            ->orderBy(AsignaturaField::IdNivel);
+
+        $esperadas = $repo->matching($criterio);
+        $json = json_decode($repo->getAsignaturasAsJson($criterio), true);
+
+        $this->assertIsArray($json);
+        $this->assertCount(count($esperadas), $json);
+        if ($esperadas !== []) {
+            $primera = json_decode($json[0], true);
+            $this->assertSame($esperadas[0]->getId_nivel(), $primera['id_nivel']);
+            $this->assertArrayHasKey('nombre_asignatura', $primera);
+        }
     }
 
     public function test_asignatura_tipo_matching_ordenado_equivale_a_legacy(): void
@@ -54,9 +80,13 @@ class PgAsignaturasMatchingTest extends myTest
         $repo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(AsignaturaTipoField::TipoAsignatura));
-        $legacy = $repo->getAsignaturaTipos(['_ordre' => 'tipo_asignatura']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
+        $sinOrden = $repo->matching(Criteria::create());
+        $this->assertEqualsCanonicalizing(
+            array_map(static fn($t) => $t->getId_tipo(), $sinOrden),
+            array_map(static fn($t) => $t->getId_tipo(), $nuevo)
+        );
     }
 
     public function test_departamento_matching_usa_la_columna_departamento(): void
@@ -64,17 +94,16 @@ class PgAsignaturasMatchingTest extends myTest
         $repo = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(DepartamentoField::NombreDepartamento));
-        $legacy = $repo->getDepartamentos(['_ordre' => 'departamento']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
 
         if ($nuevo !== []) {
             $nombre = $nuevo[0]->getDepartamento();
             $porNombre = $repo->matching(
                 Criteria::create()->where(Filter::matchesUnaccented(DepartamentoField::NombreDepartamento, $nombre))
             );
-            $this->assertEquals($repo->getDepartamentos(['departamento' => $nombre], ['departamento' => 'sin_acentos']), $porNombre);
             $this->assertNotEmpty($porNombre);
+            $this->assertContainsEquals($nombre, array_map(static fn($d) => $d->getDepartamento(), $porNombre));
         }
     }
 
@@ -83,8 +112,12 @@ class PgAsignaturasMatchingTest extends myTest
         $repo = $GLOBALS['container']->get(SectorRepositoryInterface::class);
 
         $nuevo = $repo->matching(Criteria::create()->orderBy(SectorField::NombreSector));
-        $legacy = $repo->getSectores(['_ordre' => 'sector']);
 
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertNotEmpty($nuevo);
+        $sinOrden = $repo->matching(Criteria::create());
+        $this->assertEqualsCanonicalizing(
+            array_map(static fn($s) => $s->getId_sector(), $sinOrden),
+            array_map(static fn($s) => $s->getId_sector(), $nuevo)
+        );
     }
 }

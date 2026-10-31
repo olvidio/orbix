@@ -6,6 +6,7 @@ use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
@@ -72,15 +73,15 @@ final class SacdAusenciasJefeZonaData
         }
 
         if (($aRoles[$id_role] ?? '') === 'Oficial_dl' || $es_jefe_calendario) {
-            $cPersonas = $this->personaSacdRepository->getPersonas(
-                [
-                    'sacd' => 't',
-                    'situacion' => 'A',
-                    'id_tabla' => "'n','a'",
-                    '_ordre' => 'apellido1,apellido2,nom',
-                ],
-                ['id_tabla' => 'IN'],
-            ) ?: [];
+            $cPersonas = $this->personaSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            );
             foreach ($cPersonas as $oPersona) {
                 $this->addSacdOption($a_sacd, (int) $oPersona->getId_nom());
             }

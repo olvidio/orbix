@@ -8,6 +8,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\dbextern\application\support\SincroDBFactory;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\security\HashB;
 
 class VerOrbixData
@@ -40,7 +41,13 @@ class VerOrbixData
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
-        $cPersonasOrbix = $repoPersona->getPersonas(['situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+        $cPersonasOrbix = $repoPersona->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom)
+        );
 
         $a_lista = [];
         $i = 0;

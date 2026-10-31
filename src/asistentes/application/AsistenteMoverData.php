@@ -4,6 +4,7 @@ namespace src\asistentes\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\StatusId;
@@ -135,16 +136,13 @@ final class AsistenteMoverData
             $inicurs_iso = $oInicurs ? $oInicurs->format('Y-m-d') : '';
             $fincurs_iso = $oFincurs ? $oFincurs->format('Y-m-d') : '';
 
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['f_ini'] = "'$inicurs_iso','$fincurs_iso'";
-            $aOperador['f_ini'] = 'BETWEEN';
-            $aWhere['id_tipo_activ'] = '^' . $id_tipo;
-            $aOperador['id_tipo_activ'] = '~';
-            $aWhere['status'] = StatusId::ACTUAL;
-            $aWhere['_ordre'] = 'f_ini';
-
-            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::between(ActividadAllField::FIni, $inicurs_iso, $fincurs_iso))
+                    ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . $id_tipo))
+                    ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+                    ->orderBy(ActividadAllField::FIni)
+            );
 
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $cActividadesPreferidas = [];

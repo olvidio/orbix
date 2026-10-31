@@ -2,6 +2,7 @@
 
 namespace Tests\integration\zonassacd\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\entity\Zona;
 use Tests\myTest;
@@ -141,7 +142,7 @@ class PgZonaRepositoryTest extends myTest
 
     public function test_get_zonas_sin_filtros()
     {
-        $result = $this->repository->getZonas();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

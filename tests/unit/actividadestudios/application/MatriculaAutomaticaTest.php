@@ -50,7 +50,7 @@ final class MatriculaAutomaticaTest extends TestCase
         $mat->expects($this->never())->method('Guardar');
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->expects($this->never())->method('getPersonas');
+        $dlRepo->expects($this->never())->method('matching');
 
         $out = $this->useCase(['finder' => $finder, 'mat' => $mat, 'dl' => $dlRepo])->execute([
             'id_pau' => -100162294,
@@ -72,7 +72,7 @@ final class MatriculaAutomaticaTest extends TestCase
         );
 
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
-        $dlRepo->expects($this->never())->method('getPersonas');
+        $dlRepo->expects($this->never())->method('matching');
 
         $asistente = $this->createStub(Asistente::class);
         $asistente->method('getId_activ')->willReturn($idActiv);

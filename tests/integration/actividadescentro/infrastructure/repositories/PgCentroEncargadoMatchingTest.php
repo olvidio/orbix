@@ -33,12 +33,10 @@ class PgCentroEncargadoMatchingTest extends myTest
             ->andWhere(Filter::eq(CentroEncargadoField::IdUbi, $oCentro->getId_ubi()))
             ->orderBy(CentroEncargadoField::NumOrden, OrderDirection::Desc);
         $nuevo = $this->repository->matching($criteria);
-        $legacy = $this->repository->getCentrosEncargados(
-            ['id_activ' => $oCentro->getId_activ(), 'id_ubi' => $oCentro->getId_ubi(), '_ordre' => 'num_orden DESC']
-        );
 
         $this->assertCount(1, $nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertSame($oCentro->getId_activ(), $nuevo[0]->getId_activ());
+        $this->assertSame($oCentro->getId_ubi(), $nuevo[0]->getId_ubi());
 
         $this->repository->Eliminar($nuevo[0], false);
         $this->assertSame([], $this->repository->matching($criteria));

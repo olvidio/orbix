@@ -4,6 +4,7 @@ namespace Tests\integration\procesos\infrastructure\persistence\postgresql;
 
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\procesos\domain\entity\ProcesoTipo;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\procesos\ProcesoTipoFactory;
 
@@ -141,7 +142,7 @@ class PgProcesoTipoRepositoryTest extends myTest
 
     public function test_get_proceso_tipos_sin_filtros()
     {
-        $result = $this->repository->getProcesoTipos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

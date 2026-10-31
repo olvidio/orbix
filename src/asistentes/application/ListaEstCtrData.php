@@ -9,12 +9,14 @@ use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\criteria\MatriculaField;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
@@ -60,11 +62,9 @@ final class ListaEstCtrData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
-        $aWhereNom['propio'] = 't';
-        $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperadorAct['f_ini'] = 'BETWEEN';
-        $aWhereAct['id_tipo_activ'] = '^1(12|33)';
-        $aOperadorAct['id_tipo_activ'] = '~';
+        $criteriaAct = Criteria::create()
+            ->where(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+            ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1(12|33)'));
 
         $criterioCtr = Criteria::create();
         switch ($Qn_agd) {
@@ -104,19 +104,20 @@ final class ListaEstCtrData
             $id_ubi = $oCentroDl->getId_ubi();
             $aGrupos[$id_ubi] = $oCentroDl->getNombre_ubi();
 
-            $aWhere = [];
-            $aOperador = [];
-            $aWhere['situacion'] = 'A';
-            $aWhere['id_ctr'] = $id_ubi;
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+            $criterioPersonas = Criteria::create()
+                ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
             $tipo_ctr = $oCentroDl->getTipo_ctr() ?? '';
             if (strpos($tipo_ctr, 'n') === 0) {
-                $aWhere['sacd'] = 'f';
-                $aWhere['nivel_stgr'] = NivelStgrId::N;
-                $aOperador['nivel_stgr'] = '!=';
+                $criterioPersonas = $criterioPersonas
+                    ->andWhere(Filter::eq(PersonaField::Sacd, false))
+                    ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::N));
             }
 
-            $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador);
+            $cPersonas = $this->personaDlRepository->matching($criterioPersonas);
             $i = 0;
             foreach ($cPersonas as $oPersonaDl) {
                 $i++;
@@ -126,9 +127,10 @@ final class ListaEstCtrData
                 $a_valores[$id_ubi][$i][1] = $i;
                 $a_valores[$id_ubi][$i][2] = $nom;
 
-                $aWhereNom['id_nom'] = $id_nom;
-                $aOperadorNom = [];
-                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $criteriaAsistente = Criteria::create()
+                    ->where(Filter::eq(AsistenteField::Propio, true))
+                    ->andWhere(Filter::eq(AsistenteField::IdNom, $id_nom));
+                $cAsistentes = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct);
                 $a = 0;
                 foreach ($cAsistentes as $oAsistente) {
                     $a++;

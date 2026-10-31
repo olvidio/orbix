@@ -10,6 +10,7 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
@@ -18,11 +19,13 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\criteria\PersonaNotaField;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
@@ -94,17 +97,14 @@ final class MatriculaAutomatica
             }
             $cAlumnos = [$oPersona];
         } else {
-            $cAlumnos = $this->personaDlRepository->getPersonas(
-                [
-                    'situacion' => 'A',
-                    'nivel_stgr' => NivelStgrId::R,
-                ],
-                ['nivel_stgr' => '!='],
+            $cAlumnos = $this->personaDlRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::neq(PersonaField::NivelStgr, NivelStgrId::R))
             );
         }
 
-        $aWhereAct = [];
-        $aOperadoresAct = [];
+        $criteriaAct = null;
         if (empty($Qid_activ)) {
             $mes = (int) date('m');
             /** @var ConfigSnapshot $oConfig */
@@ -113,22 +113,22 @@ final class MatriculaAutomatica
             $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
             $inicurs_ca = FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
             $fincurs_ca = FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
-            $aWhereAct = [
-                'status' => StatusId::ACTUAL,
-                'f_ini' => "'$inicurs_ca','$fincurs_ca'",
-                'id_tipo_activ' => '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)',
-            ];
-            $aOperadoresAct = [
-                'f_ini' => 'BETWEEN',
-                'id_tipo_activ' => '~',
-            ];
+            $criteriaAct = Criteria::create()
+                ->where(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+                ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca))
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)'));
         }
 
         foreach ($cAlumnos as $oPersonaDl) {
             $id_nom = $oPersonaDl->getId_nom();
             $cAsistencias = [];
             if (empty($Qid_activ)) {
-                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(['id_nom' => $id_nom, 'propio' => 't'], [], $aWhereAct, $aOperadoresAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente(
+                    Criteria::create()
+                        ->where(Filter::eq(AsistenteField::IdNom, (int) $id_nom))
+                        ->andWhere(Filter::eq(AsistenteField::Propio, true)),
+                    $criteriaAct,
+                );
             } else {
                 $oAsistente = $this->findAsistenteEnActividad($Qid_activ, $id_nom);
                 $cAsistencias = $oAsistente === null ? [] : [$oAsistente];

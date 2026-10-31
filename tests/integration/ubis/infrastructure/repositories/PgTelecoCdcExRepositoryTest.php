@@ -2,6 +2,7 @@
 
 namespace Tests\integration\ubis\infrastructure\persistence\postgresql;
 
+use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\entity\TelecoUbi;
@@ -134,7 +135,7 @@ class PgTelecoCdcExRepositoryTest extends myTest
 
     public function test_get_telecos_sin_filtros()
     {
-        $result = $this->repository->getTelecos();
+        $result = $this->repository->matching(Criteria::create());
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

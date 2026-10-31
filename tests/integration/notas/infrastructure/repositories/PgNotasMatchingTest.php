@@ -86,12 +86,10 @@ class PgNotasMatchingTest extends myTest
                 ->andWhere(Filter::lt(PersonaNotaField::IdNivel, 99999))
                 ->orderBy(PersonaNotaField::IdNivel)
         );
-        $legacy = $repo->getPersonaNotas(
-            ['id_nom' => $idNom, 'id_nivel' => 99999, '_ordre' => 'id_nivel'],
-            ['id_nivel' => '<']
-        );
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        foreach ($nuevo as $nota) {
+            $this->assertSame($idNom, $nota->getId_nom());
+        }
 
         $repo->Eliminar($o);
     }

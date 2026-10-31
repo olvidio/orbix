@@ -10,6 +10,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\support\PlanEstudiosFilter;
 use src\asignaturas\domain\value_objects\PlanEstudios;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\notas\application\AsignaturasPendientes;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\criteria\PersonaNotaField;
@@ -49,7 +50,7 @@ final class PosiblesAsignaturasCaData
         $aAlumnosFinC = [];
         $aAlumnos = [];
         $pendientes = new AsignaturasPendientes($this->asignaturaRepository);
-        foreach ($this->asistenteRepository->getAsistentes(['id_activ' => $idActiv]) as $oAsistente) {
+        foreach ($this->asistenteRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $idActiv))) as $oAsistente) {
             $idNom = $oAsistente->getId_nom();
             $oPersona = Persona::findPersonaEnGlobal($idNom);
             if ($oPersona === null) {

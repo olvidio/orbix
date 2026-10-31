@@ -4,7 +4,10 @@ namespace src\asistentes\application;
 
 use frontend\shared\web\Periodo;
 use Psr\Container\ContainerInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
 use src\shared\config\ConfigGlobal;
@@ -43,11 +46,10 @@ final class ListaAsisConjuntoActivData
             $Qperiodo = 'actual';
         }
 
-        $aWhere = [];
-        $aOperador = [];
+        $criteria = Criteria::create();
 
         if ($Qstatus != StatusId::ALL) {
-            $aWhere['status'] = $Qstatus;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, $Qstatus));
         }
 
         if ($Qid_tipo_activ === '') {
@@ -83,12 +85,11 @@ final class ListaAsisConjuntoActivData
         }
 
         if ($Qid_tipo_activ !== '......') {
-            $aWhere['id_tipo_activ'] = '^' . $Qid_tipo_activ;
-            $aOperador['id_tipo_activ'] = '~';
+            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . $Qid_tipo_activ));
         }
 
         if ($Qid_ubi !== 0) {
-            $aWhere['id_ubi'] = $Qid_ubi;
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
 
         $oPeriodo = Periodo::conCalendarioDesdeBackend();
@@ -101,27 +102,23 @@ final class ListaAsisConjuntoActivData
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
         if ($Qperiodo === 'desdeHoy') {
-            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
-            $aOperador['f_fin'] = 'BETWEEN';
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FFin, $inicioIso, $finIso));
         } else {
-            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
-            $aOperador['f_ini'] = 'BETWEEN';
-        }
-
-        if (!empty($Qdl_org)) {
-            $aWhere['dl_org'] = $Qdl_org;
+            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
         }
 
         if ($Qnom_activ !== '') {
-            $aWhere['nom_activ'] = '%' . $Qnom_activ . '%';
-            $aOperador['nom_activ'] = 'ILIKE';
+            // Antes ILIKE '%texto%'; se busca el texto literal sin distinguir mayúsculas.
+            $criteria = $criteria->andWhere(
+                Filter::matchesInsensitive(ActividadAllField::NomActiv, preg_quote($Qnom_activ))
+            );
         }
 
         $Qmodo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'modo');
         if ($Qmodo !== '' && $Qmodo === 'publicar') {
-            $aWhere['publicado'] = 'f';
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Publicado, false));
         }
-        $aWhere['_ordre'] = 'f_ini';
+        $criteria = $criteria->orderBy(ActividadAllField::FIni);
 
         $mi_dele = ConfigGlobal::mi_delef();
 
@@ -129,15 +126,12 @@ final class ListaAsisConjuntoActivData
         $oListaPlazasOtras = null;
 
         if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
-            $aWhereDl = $aWhere;
-            $aOperDl = $aOperador;
-            $aWhereDl['dl_org'] = $mi_dele;
+            $criteriaDl = $criteria->andWhere(Filter::eq(ActividadAllField::DlOrg, $mi_dele));
 
             /** @var ListaPlazasConjuntoActividades $oListaPlazasDl */
             $oListaPlazasDl = $this->container->get(ListaPlazasConjuntoActividades::class);
             $oListaPlazasDl->setMi_dele($mi_dele);
-            $oListaPlazasDl->setWhere($aWhereDl);
-            $oListaPlazasDl->setOperador($aOperDl);
+            $oListaPlazasDl->setCriteria($criteriaDl);
             $oListaPlazasDl->setId_tipo_activ($Qid_tipo_activ);
             if ($Qque === 'list_cjto_sacd') {
                 $oListaPlazasDl->setSacd(true);
@@ -145,15 +139,11 @@ final class ListaAsisConjuntoActivData
         }
 
         if (empty($Qdl_org) || $Qdl_org != $mi_dele) {
-            $aWhereOt = $aWhere;
-            $aOperOt = $aOperador;
-            if (!empty($Qdl_org)) {
-                $aWhereOt['dl_org'] = $Qdl_org;
-                $aOperOt['dl_org'] = '=';
-            } else {
-                $aWhereOt['dl_org'] = $mi_dele;
-                $aOperOt['dl_org'] = '!=';
-            }
+            $criteriaOt = $criteria->andWhere(
+                !empty($Qdl_org)
+                    ? Filter::eq(ActividadAllField::DlOrg, $Qdl_org)
+                    : Filter::neq(ActividadAllField::DlOrg, $mi_dele)
+            );
 
             if ($oListaPlazasDl !== null) {
                 // PHP-DI cachea get(): sin clonar, el filtro de otras dl/r pisa el de la propia.
@@ -164,8 +154,7 @@ final class ListaAsisConjuntoActivData
                 $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
             }
             $oListaPlazasOtras->setMi_dele($mi_dele);
-            $oListaPlazasOtras->setWhere($aWhereOt);
-            $oListaPlazasOtras->setOperador($aOperOt);
+            $oListaPlazasOtras->setCriteria($criteriaOt);
             $oListaPlazasOtras->setId_tipo_activ($Qid_tipo_activ);
         }
 

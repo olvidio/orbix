@@ -7,6 +7,9 @@ use src\actividadessacd\application\services\ActividadesSacdHelper;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\entity\PersonaSacd;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -82,14 +85,14 @@ final class ComunicacionActividadesSacdData
                 $idsDl[(int) $oPersonaDl->getId_nom()] = true;
             }
             $cPersonasPaso = [];
-            foreach ($this->personaSacdRepository->getPersonas(
-                [
-                    'id_tabla' => "'pn','pa'",
-                    'situacion' => 'A',
-                    'sacd' => 't',
-                    '_ordre' => 'apellido1,apellido2,nom',
-                ],
-                ['id_tabla' => 'IN']
+            foreach ($this->personaSacdRepository->matching(
+                Criteria::create()
+                    ->where(Filter::in(PersonaField::IdTabla, ['pn', 'pa']))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
             ) as $oPersonaPaso) {
                 if (!isset($idsDl[(int) $oPersonaPaso->getId_nom()])) {
                     $cPersonasPaso[] = $oPersonaPaso;
@@ -197,26 +200,29 @@ final class ComunicacionActividadesSacdData
         switch ($que) {
             case 'nagd':
                 /** @var list<PersonaSacd> $personas */
-                $personas = $this->personaSacdRepository->getPersonas(
-                    [
-                        'id_tabla' => "'n','a'",
-                        'situacion' => 'A',
-                        'sacd' => 't',
-                        'dl' => $mi_dele,
-                        '_ordre' => 'apellido1,apellido2,nom',
-                    ],
-                    ['id_tabla' => 'IN']
+                $personas = $this->personaSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::in(PersonaField::IdTabla, ['n', 'a']))
+                        ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                        ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                        ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele))
+                        ->orderBy(PersonaField::Apellido1)
+                        ->addOrderBy(PersonaField::Apellido2)
+                        ->addOrderBy(PersonaField::Nom)
                 );
                 return $personas;
             case 'sssc':
                 /** @var list<PersonaSacd> $personas */
-                $personas = $this->personaSacdRepository->getPersonas([
-                    'id_tabla' => 'sssc',
-                    'situacion' => 'A',
-                    'sacd' => 't',
-                    'dl' => $mi_dele,
-                    '_ordre' => 'apellido1,apellido2,nom',
-                ]);
+                $personas = $this->personaSacdRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(PersonaField::IdTabla, 'sssc'))
+                        ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                        ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                        ->andWhere(Filter::eq(PersonaField::Dl, $mi_dele))
+                        ->orderBy(PersonaField::Apellido1)
+                        ->addOrderBy(PersonaField::Apellido2)
+                        ->addOrderBy(PersonaField::Nom)
+                );
                 return $personas;
             case 'un_sacd':
                 $oPersona = $this->personaSacdRepository->findById($id_nom);

@@ -5,6 +5,7 @@ namespace src\actividadestudios\application;
 use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -12,6 +13,7 @@ use src\actividadestudios\domain\PosiblesCa;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -121,8 +123,7 @@ final class CaPosiblesData
         }
 
         $miSfsv = OrbixRuntime::miSfsv();
-        $aWhereActividad = [];
-        $aOperadorActividad = [];
+        $patronTipoActiv = '';
         $idCtr = '';
         $idTablaPersona = '';
 
@@ -142,8 +143,7 @@ final class CaPosiblesData
                         $idTipoActiv = '^1' . $miSfsv . '334';
                     }
                 }
-                $aWhereActividad['id_tipo_activ'] = $idTipoActiv;
-                $aOperadorActividad['id_tipo_activ'] = '~';
+                $patronTipoActiv = $idTipoActiv;
                 break;
             case 'n':
                 $idCtr = ($QidCtrN === 1) ? '' : (string)$QidCtrN;
@@ -159,39 +159,34 @@ final class CaPosiblesData
                         $idTipoActiv = '^' . $miSfsv . '124';
                     }
                 }
-                $aWhereActividad['id_tipo_activ'] = $idTipoActiv;
-                $aOperadorActividad['id_tipo_activ'] = '~';
+                $patronTipoActiv = $idTipoActiv;
                 break;
             default:
                 throw new \InvalidArgumentException(_("Parámetro na no válido"));
         }
 
-        $aWhere = [];
-        $aOperador = [];
-        $alum = 0;
         if (!empty($aSel)) {
-            $idNomLst = '';
+            $idsNom = [];
             foreach ($aSel as $selBox) {
                 $partsSel = explode('#', is_scalar($selBox) ? (string) $selBox : '');
                 $idNom = (int) $partsSel[0];
-                if ($alum > 0) {
-                    $idNomLst .= '|';
-                }
                 if (!empty($idNom)) {
-                    $idNomLst .= '^' . $idNom . '$';
+                    $idsNom[] = $idNom;
                 }
-                $alum++;
             }
-            $aWhere['id_nom'] = $idNomLst;
-            $aOperador['id_nom'] = '~';
-            $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+            $criterioPersona = Criteria::create()
+                ->where(Filter::in(PersonaField::IdNom, $idsNom))
+                ->orderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
             $Qtexto = 'image';
             $personaRepository = $this->personaDlRepository;
         } else {
+            $criterioPersona = Criteria::create();
             switch ($idTablaPersona) {
                 case 'n':
-                    $aWhere['nivel_stgr'] = NivelStgrId::getArrayNivelStgrOn();
-                    $aOperador['nivel_stgr'] = 'IN';
+                    $criterioPersona = $criterioPersona
+                        ->where(Filter::in(PersonaField::NivelStgr, NivelStgrId::getArrayNivelStgrOn()));
                     $personaRepository = $this->personaNRepository;
                     break;
                 case 'a':
@@ -200,42 +195,54 @@ final class CaPosiblesData
                 default:
                     throw new \RuntimeException('id_tabla_persona');
             }
-            $aWhere['situacion'] = 'A';
-            $aWhere['sacd'] = 'f';
-            $aWhere['id_tabla'] = $idTablaPersona;
-            $aWhere['_ordre'] = 'id_ctr,apellido1,apellido2,nom';
+            $criterioPersona = $criterioPersona
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->andWhere(Filter::eq(PersonaField::Sacd, false))
+                ->andWhere(Filter::eq(PersonaField::IdTabla, $idTablaPersona));
             if ($idCtr !== '') {
-                $aWhere['id_ctr'] = $idCtr;
+                $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdCtr, (int) $idCtr));
             }
+            $criterioPersona = $criterioPersona
+                ->orderBy(PersonaField::IdCtr)
+                ->addOrderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Apellido2)
+                ->addOrderBy(PersonaField::Nom);
         }
 
-        $cPersonas = $personaRepository->getPersonas($aWhere, $aOperador);
+        $cPersonas = $personaRepository->matching($criterioPersona);
 
-        $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
-        $aOperadorActividad['f_ini'] = 'BETWEEN';
+        $criterioActividad = Criteria::create()
+            ->where(Filter::matches(ActividadAllField::IdTipoActiv, $patronTipoActiv))
+            ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
         if ($QgrupoEstudios !== 'todos') {
             $repoDelegacion = $this->delegacionRepository;
             $cDelegaciones = $repoDelegacion->matching(
                 Criteria::create()->where(Filter::eq(DelegacionField::GrupoEstudios, $QgrupoEstudios))
             );
-            if (count($cDelegaciones) > 1) {
-                $aOperadorActividad['dl_org'] = 'OR';
-            }
-            $miGrupo = '';
+            $dlsGrupo = [];
             foreach ($cDelegaciones as $oDelegacion) {
-                $miGrupo .= $miGrupo === '' ? '' : ',';
-                $miGrupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
+                $dlsGrupo[] = $oDelegacion->getDlVo()->value();
             }
-            $aWhereActividad['dl_org'] = $miGrupo;
+            if (count($dlsGrupo) > 1) {
+                $criterioActividad = $criterioActividad->andWhere(Filter::in(ActividadAllField::DlOrg, $dlsGrupo));
+            } else {
+                // Comportamiento heredado: con 0 o 1 delegaciones el valor se comparaba por
+                // igualdad con el texto ya entrecomillado (`'dl'`), que no coincide nunca.
+                $dlHeredada = $dlsGrupo === [] ? '' : "'" . $dlsGrupo[0] . "'";
+                $criterioActividad = $criterioActividad->andWhere(Filter::eq(ActividadAllField::DlOrg, $dlHeredada));
+            }
         }
 
-        $aWhereActividad['status'] = StatusId::ACTUAL;
-        $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
+        $criterioActividad = $criterioActividad
+            ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            ->orderBy(ActividadAllField::NivelStgr)
+            ->addOrderBy(ActividadAllField::FIni);
 
-        $cActividades1 = $this->actividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
-        $aWhereActividad['publicado'] = 'f';
-        $cActividades2 = $this->actividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
+        $cActividades1 = $this->actividadPubRepository->matching($criterioActividad);
+        $cActividades2 = $this->actividadDlRepository->matching(
+            $criterioActividad->andWhere(Filter::eq(ActividadAllField::Publicado, false))
+        );
         $cActividades = $cActividades1 + $cActividades2;
 
         $msgTxt = '';

@@ -4,6 +4,7 @@ namespace Tests\integration\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
 use src\personas\domain\entity\UltimaAsistencia;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\personas\UltimaAsistenciaFactory;
 
@@ -133,7 +134,7 @@ class PgUltimaAsistenciaRepositoryTest extends myTest
 
     public function test_get_ultimas_asistencias_sin_filtros()
     {
-        $result = $this->repository->getUltimasAsistencias();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

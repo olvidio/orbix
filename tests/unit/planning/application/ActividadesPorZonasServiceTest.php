@@ -337,7 +337,7 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $oActividad->method('getStatus')->willReturn(0);
 
         $activRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $activRepo->method('getActividades')->willReturn([$oActividad]);
+        $activRepo->method('matching')->willReturn([$oActividad]);
 
         $actCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $actCargoRepo->method('getAsistenteCargoDeActividad')->willReturn([

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\notas\application;
 
+use src\asignaturas\domain\criteria\AsignaturaField;
 use src\notas\domain\criteria\PersonaNotaField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -102,7 +103,7 @@ final class ActaVerAddPersona
             $id_nivel = $this->nivelCatalogoAsignaturaEnPlan->resolve($id_nom, $id_asignatura);
         } else {
             $id_nivel = 0;
-            $cAsignatura = $this->asignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura]);
+            $cAsignatura = $this->asignaturaRepository->matching(Criteria::create()->where(Filter::eq(AsignaturaField::IdAsignatura, (int) $id_asignatura)));
             if ($cAsignatura !== []) {
                 $id_nivel = (int) ($cAsignatura[0]->getId_nivel() ?? 0);
             }

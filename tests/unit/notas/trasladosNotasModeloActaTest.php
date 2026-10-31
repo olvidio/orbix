@@ -24,6 +24,8 @@ use Tests\myTest;
  */
 class trasladosNotasModeloActaTest extends myTest
 {
+    use BuscaPersonaNotasTrait;
+
     private string $session_org;
 
     private string $snew_esquema;
@@ -64,7 +66,7 @@ class trasladosNotasModeloActaTest extends myTest
 
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasActa = $PersonaNotaDlRepository->getPersonaNotas([
+            $cNotasActa = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -75,7 +77,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaDlRepository->setoDbl($oDBDestino);
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasDestino = $PersonaNotaDlRepository->getPersonaNotas([
+            $cNotasDestino = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -104,7 +106,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaDlRepository->setoDbl($oDBDestino);
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasDestino = $PersonaNotaDlRepository->getPersonaNotas([
+            $cNotasDestino = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -127,7 +129,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaDlRepository->setoDbl($oDBActa);
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasActa = $PersonaNotaDlRepository->getPersonaNotas([
+            $cNotasActa = $this->buscarPersonaNotas($PersonaNotaDlRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -141,7 +143,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaOtraRegionRepository->setoDbl($this->setConexion($esquema_region_stgr));
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasOtraRegion = $PersonaNotaOtraRegionRepository->getPersonaNotas([
+            $cNotasOtraRegion = $this->buscarPersonaNotas($PersonaNotaOtraRegionRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -188,7 +190,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaOtraRegionRepository->setoDbl($this->setConexion($esquema_region_stgr));
         foreach ($this->cPersonaNotas as $oPersonaNotaEsperada) {
             $id_asignatura = $oPersonaNotaEsperada->getIdAsignaturaVo()->value();
-            $cNotasOtraRegion = $PersonaNotaOtraRegionRepository->getPersonaNotas([
+            $cNotasOtraRegion = $this->buscarPersonaNotas($PersonaNotaOtraRegionRepository, [
                 'id_nom' => $this->id_nom,
                 'id_asignatura' => $id_asignatura,
             ]);
@@ -394,7 +396,7 @@ class trasladosNotasModeloActaTest extends myTest
             ['esquema_region_stgr' => $esquema_region_stgr]
         );
         $repo->setoDbl($this->setConexion($esquema_region_stgr));
-        foreach ($repo->getPersonaNotas(['id_nom' => $id_nom]) as $oNota) {
+        foreach ($this->buscarPersonaNotas($repo, ['id_nom' => $id_nom]) as $oNota) {
             $repo->Eliminar($oNota);
         }
     }
@@ -416,7 +418,7 @@ class trasladosNotasModeloActaTest extends myTest
         $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $PersonaNotaDBRepository->setoDbl($oDBdst);
         $aWhere = ['id_nom' => $id_nom];
-        $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
+        $cPersonaNotas = $this->buscarPersonaNotas($PersonaNotaDBRepository, $aWhere);
         foreach ($cPersonaNotas as $oPersonaNota) {
             $PersonaNotaDBRepository->Eliminar($oPersonaNota);
         }

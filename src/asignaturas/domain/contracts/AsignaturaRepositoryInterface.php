@@ -36,11 +36,7 @@ interface AsignaturaRepositoryInterface
      */
     public function getArrayAsignaturas(): array;
 
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     */
-    public function getAsignaturasAsJson(array $aWhere = [], array $aOperators = []): string;
+    public function getAsignaturasAsJson(Criteria $criteria): string;
 
     /**
      * Asignatura que cumplen el criterio.
@@ -48,14 +44,6 @@ interface AsignaturaRepositoryInterface
      * @return list<Asignatura>
      */
     public function matching(Criteria $criteria): array;
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Asignatura>
-     */
-    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array;
 
     public function Eliminar(Asignatura $Asignatura): bool;
 

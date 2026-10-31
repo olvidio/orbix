@@ -70,12 +70,14 @@ class PgUsuariosMatchingTest extends myTest
         $this->assertIsArray($roles->matching(Criteria::create()->orderBy(RoleField::Role)));
 
         $locales = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-        $this->assertEquals(
-            $locales->getLocales(['_ordre' => 'active DESC,nom_idioma ASC']),
-            $locales->matching(
-                Criteria::create()->orderBy(LocalField::Active, OrderDirection::Desc)->addOrderBy(LocalField::NomIdioma)
-            )
+        $ordenados = $locales->matching(
+            Criteria::create()->orderBy(LocalField::Active, OrderDirection::Desc)->addOrderBy(LocalField::NomIdioma)
         );
+        $this->assertNotEmpty($ordenados);
+        $activos = array_map(static fn($l) => $l->isActive(), $ordenados);
+        $esperado = $activos;
+        rsort($esperado);
+        $this->assertSame($esperado, $activos);
 
         $permMenus = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
         $this->assertIsArray($permMenus->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, 1))));

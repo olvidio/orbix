@@ -163,39 +163,65 @@ class PgActividadCargoDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
-    /*
-    public function test_get_actividad_cargos_de_asistente_sin_filtros()
+    public function test_get_actividad_cargos_de_asistente_con_filtro_de_actividad()
     {
-        $result = $this->repository->getActividadCargosDeAsistente();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
-    }
-    */
+        $criteria = \src\shared\domain\criteria\Criteria::create()->where(
+            \src\shared\domain\criteria\Filter::between(
+                \src\actividades\domain\criteria\ActividadAllField::FIni,
+                '2000-01-01',
+                '2000-12-31'
+            )
+        );
+        $result = $this->repository->getActividadCargosDeAsistente(30011345, $criteria);
 
-    /*
-    public function test_get_asistente_cargo_de_actividad_sin_filtros()
-    {
-        $result = $this->repository->getAsistenteCargoDeActividad();
-        
         $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
     }
-    */
 
-    /*
-    public function test_get_cargo_de_actividad_sin_filtros()
+    private function criterioFechas(): \src\shared\domain\criteria\Criteria
     {
-        $result = $this->repository->getCargoDeActividad();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
+        return \src\shared\domain\criteria\Criteria::create()->where(
+            \src\shared\domain\criteria\Filter::between(
+                \src\actividades\domain\criteria\ActividadAllField::FIni,
+                '2000-01-01',
+                '2000-12-31'
+            )
+        );
     }
-    */
+
+    public function test_get_asistente_cargo_de_actividad_con_filtro_de_fechas()
+    {
+        $result = $this->repository->getAsistenteCargoDeActividad(30011345, $this->criterioFechas());
+
+        $this->assertIsArray($result);
+        foreach ($result as $id_activ => $fila) {
+            $this->assertSame($id_activ, $fila['id_activ']);
+            $this->assertSame(30011345, $fila['id_nom']);
+        }
+    }
+
+    public function test_get_asistente_cargo_de_actividad_sin_id_nom()
+    {
+        $this->assertSame([], $this->repository->getAsistenteCargoDeActividad(0, $this->criterioFechas()));
+    }
+
+    public function test_get_cargo_de_actividad_con_filtro_de_fechas()
+    {
+        $result = $this->repository->getCargoDeActividad(30011345, $this->criterioFechas());
+
+        $this->assertIsArray($result);
+        foreach ($result as $fila) {
+            $this->assertArrayHasKey('id_cargo', $fila);
+        }
+    }
+
+    public function test_get_cargo_de_actividad_sin_id_nom()
+    {
+        $this->assertSame([], $this->repository->getCargoDeActividad(0, $this->criterioFechas()));
+    }
 
     public function test_get_actividad_cargos_sin_filtros()
     {
-        $result = $this->repository->getActividadCargos();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

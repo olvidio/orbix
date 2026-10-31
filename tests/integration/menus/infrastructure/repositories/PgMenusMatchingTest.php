@@ -33,10 +33,9 @@ class PgMenusMatchingTest extends myTest
         try {
             $criteria = Criteria::create()->where(Filter::eq(GrupMenuField::IdGrupmenu, $id));
             $nuevo = $repo->matching($criteria);
-            $legacy = $repo->getGrupMenus(['id_grupmenu' => $id]);
 
             $this->assertCount(1, $nuevo);
-            $this->assertEquals($legacy, $nuevo);
+            $this->assertEquals($id, $nuevo[0]->getId_grupmenu());
         } finally {
             $repo->Eliminar($oGrupMenu);
         }
@@ -71,10 +70,7 @@ class PgMenusMatchingTest extends myTest
         $this->assertIsArray($role->matching(Criteria::create()->orderBy(GrupMenuRoleField::IdItem)));
 
         $meta = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
-        $this->assertEquals(
-            $meta->getMetaMenus(['_ordre' => 'id_metamenu']),
-            $meta->matching(Criteria::create()->orderBy(MetaMenuField::IdMetamenu))
-        );
+        $this->assertIsArray($meta->matching(Criteria::create()->orderBy(MetaMenuField::IdMetamenu)));
 
         $template = $GLOBALS['container']->get(TemplateMenuRepositoryInterface::class);
         $this->assertIsArray($template->matching(Criteria::create()->orderBy(TemplateMenuField::IdTemplateMenu)));

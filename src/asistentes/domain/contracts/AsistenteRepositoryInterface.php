@@ -30,16 +30,6 @@ interface AsistenteRepositoryInterface
     public function matching(Criteria $criteria): array;
 
     /**
-     * devuelve una colección (array) de objetos de tipo Asistente
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<Asistente>
-     */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array;
-
-    /**
      * Une los resultados de varios repositorios de asistentes (Dl, Out, Ex…) para un criterio.
      * El orden y la paginación (limit/offset) de `$criteria` se aplican sobre el conjunto ya unido,
      * en memoria: solo se admiten órdenes por campo de AsistenteField.

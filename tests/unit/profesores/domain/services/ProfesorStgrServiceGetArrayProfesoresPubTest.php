@@ -23,7 +23,7 @@ final class ProfesorStgrServiceGetArrayProfesoresPubTest extends TestCase
         ];
 
         $personaPubRepo = $this->createMock(PersonaPubRepositoryInterface::class);
-        $personaPubRepo->method('getPersonas')->willReturn($personas);
+        $personaPubRepo->method('matching')->willReturn($personas);
 
         $service = new ProfesorStgrService(
             $this->createMock(ProfesorStgrRepositoryInterface::class),

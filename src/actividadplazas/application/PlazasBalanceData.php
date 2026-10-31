@@ -4,6 +4,7 @@ namespace src\actividadplazas\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\criteria\ActividadPlazasField as F;
@@ -131,15 +132,14 @@ final class PlazasBalanceData
         $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dlB)));
         $id_dlB = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
 
-        $aWhereA = [
-            'dl_org' => $dlA,
-            'id_tipo_activ' => '^' . $Qid_tipo_activ,
-            'status' => $status,
-            'f_ini' => "'$inicurs','$fincurs'",
-            '_ordre' => 'f_ini',
-        ];
-        $aOperador = ['id_tipo_activ' => '~', 'f_ini' => 'BETWEEN'];
-        $cActividadesA = $this->actividadRepository->getActividades($aWhereA, $aOperador);
+        $cActividadesA = $this->actividadRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadAllField::DlOrg, $dlA))
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . $Qid_tipo_activ))
+                ->andWhere(Filter::eq(ActividadAllField::Status, (int) $status))
+                ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs, $fincurs))
+                ->orderBy(ActividadAllField::FIni)
+        );
 
         $i = 0;
         $a_valores = [];

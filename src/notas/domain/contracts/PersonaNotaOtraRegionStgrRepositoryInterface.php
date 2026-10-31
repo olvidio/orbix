@@ -34,14 +34,6 @@ interface PersonaNotaOtraRegionStgrRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<\src\notas\domain\entity\PersonaNotaOtraRegionStgr>
-     */
-    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
-
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function Eliminar(PersonaNotaOtraRegionStgr $personaNotaOtraRegionStgr): bool;

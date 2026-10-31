@@ -13,7 +13,10 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\entity\PersonaEx;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class MatriculasListaOtrasRDataTest extends TestCase
@@ -37,8 +40,8 @@ final class MatriculasListaOtrasRDataTest extends TestCase
 
         $personasEx = $this->createMock(PersonaExRepositoryInterface::class);
         $personasEx->expects($this->once())
-            ->method('getPersonas')
-            ->with(['id_nom' => [-5, -7]], ['id_nom' => 'IN'])
+            ->method('matching')
+            ->with(Criteria::create()->where(Filter::in(PersonaField::IdNom, [-5, -7])))
             ->willReturn([$ficha]);
 
         $asignaturas = $this->createMock(AsignaturaRepositoryInterface::class);

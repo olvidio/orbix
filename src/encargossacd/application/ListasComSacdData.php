@@ -12,6 +12,7 @@ use src\encargossacd\domain\criteria\EncargoSacdField;
 use src\encargossacd\domain\criteria\EncargoSacdHorarioField;
 use src\encargossacd\domain\criteria\EncargoSacdObservField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -57,27 +58,22 @@ final class ListasComSacdData
         $array_orden = [1 => 1, 2 => 2, 3 => 2, 4 => 4, 5 => 3, 6 => 5];
 
         $cPersonas = [];
-        $aWhere = [];
-        $aOperador = [];
-        switch ($sel) {
-            case 'nagd':
-                $aWhere['id_tabla'] = '^n|^a';
-                $aWhere['situacion'] = 'A';
-                $aWhere['sacd'] = 't';
-                $aWhere['dl'] = ConfigGlobal::mi_delef();
-                $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-                $aOperador['id_tabla'] = '~';
-                $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
-                break;
-            case 'sssc':
-                $aWhere['id_tabla'] = '^sss';
-                $aWhere['situacion'] = 'A';
-                $aWhere['sacd'] = 't';
-                $aWhere['dl'] = ConfigGlobal::mi_delef();
-                $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-                $aOperador['id_tabla'] = '~';
-                $cPersonas = $this->personaDlRepository->getPersonas($aWhere, $aOperador) ?: [];
-                break;
+        $patronTabla = match ($sel) {
+            'nagd' => '^n|^a',
+            'sssc' => '^sss',
+            default => null,
+        };
+        if ($patronTabla !== null) {
+            $cPersonas = $this->personaDlRepository->matching(
+                Criteria::create()
+                    ->where(Filter::matches(PersonaField::IdTabla, $patronTabla))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->andWhere(Filter::eq(PersonaField::Sacd, true))
+                    ->andWhere(Filter::eq(PersonaField::Dl, ConfigGlobal::mi_delef()))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom)
+            ) ?: [];
         }
 
         /** @var array<int, array{nom_ap: string, txt: array<string, string>, grupo: array<string, list<array<string, mixed>>>, observ: list<array{desc_enc: string}>}> $array_modo */

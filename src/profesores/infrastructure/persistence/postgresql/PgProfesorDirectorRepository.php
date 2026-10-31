@@ -5,7 +5,6 @@ use src\shared\infrastructure\GlobalPdo;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\profesores\domain\criteria\ProfesorDirectorField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -71,18 +70,6 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
         $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ProfesorDirector>
-     */
-    public function getProfesoresDirectores(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ProfesorDirectorField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

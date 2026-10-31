@@ -8,6 +8,9 @@ use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
@@ -95,14 +98,13 @@ final class CasaActividadesListaData
         $a_valores = [];
         foreach ($aGrupos as $id_ubi => $titulo) {
             $id_ubi = (int)$id_ubi;
-            $aWhere = [
-                'id_ubi' => $id_ubi,
-                'f_ini' => "'$inicioIso','$finIso'",
-                'status' => 4,
-                '_ordre' => 'f_ini',
-            ];
-            $aOperador = ['f_ini' => 'BETWEEN', 'status' => '<'];
-            $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+            $cActividades = $this->actividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso))
+                    ->andWhere(Filter::lt(ActividadAllField::Status, 4))
+                    ->orderBy(ActividadAllField::FIni)
+            );
 
             $a = 0;
             foreach ($cActividades as $oActividad) {

@@ -5,7 +5,10 @@ namespace src\actividadcargos\application;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\ActividadAll;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\config\ConfigGlobal;
 
@@ -96,21 +99,17 @@ final class FormCargosPersonasEnActividadData
             } else {
                 $id_tipo = '^' . $Qid_tipo;
             }
-            $aWhere = [];
-            $aOperadores = [];
-            if ($Qque_dl !== '') {
-                $aWhere['dl_org'] = $Qque_dl;
-            } else {
-                $aWhere['dl_org'] = ConfigGlobal::mi_delef();
-                $aOperadores['dl_org'] = '!=';
-            }
-            $aWhere['id_tipo_activ'] = $id_tipo;
-            $aOperadores['id_tipo_activ'] = '~';
-            $aWhere['status'] = StatusId::ACTUAL;
-            $aWhere['_ordre'] = 'f_ini';
+            $filtroDl = $Qque_dl !== ''
+                ? Filter::eq(ActividadAllField::DlOrg, $Qque_dl)
+                : Filter::neq(ActividadAllField::DlOrg, ConfigGlobal::mi_delef());
+            $criteria = Criteria::create()
+                ->where($filtroDl)
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, $id_tipo))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+                ->orderBy(ActividadAllField::FIni);
 
             $aActividadesRows = self::actividadesToRows(
-                $this->actividadRepository->getActividades($aWhere, $aOperadores)
+                $this->actividadRepository->matching($criteria)
             );
         }
 

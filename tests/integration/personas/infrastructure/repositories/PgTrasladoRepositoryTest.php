@@ -133,7 +133,7 @@ class PgTrasladoRepositoryTest extends myTest
 
     public function test_get_traslados_sin_filtros()
     {
-        $result = $this->repository->getTraslados();
+        $result = $this->repository->matching(\src\shared\domain\criteria\Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

@@ -2,10 +2,14 @@
 
 namespace src\asistentes\domain;
 
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\DatosInfoRepo;
 
@@ -59,17 +63,14 @@ class InfoAsistenteDl extends DatosInfoRepo
         $inicurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any)->format('Y-m-d');
         $fincurs_ca = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any)->format('Y-m-d');
 
-        $aWhereActividad = ['_ordre' => 'f_ini', 'status' => StatusId::ACTUAL, 'f_ini' => "'$inicurs_ca','$fincurs_ca'"];
-        $aOperadorActividad = ['f_ini' => 'BETWEEN'];
-
-        $aWhereNom = ['id_nom' => $this->id_pau];
-        $aOperadorNom = [];
+        $criteriaActividad = Criteria::create()
+            ->where(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca))
+            ->orderBy(ActividadAllField::FIni);
 
         return $this->asistenteActividadService->getActividadesDeAsistente(
-            $aWhereNom,
-            $aOperadorNom,
-            $aWhereActividad,
-            $aOperadorActividad,
+            Criteria::create()->where(Filter::eq(AsistenteField::IdNom, (int) $this->id_pau)),
+            $criteriaActividad,
             true,
         );
     }

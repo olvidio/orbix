@@ -11,11 +11,8 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\ConverterDate;
-use src\personas\domain\criteria\PersonaField;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaCriteriaTrait;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\RegionStgrAviso;
@@ -136,17 +133,6 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         return PersonaPublicacion::sqlVigenteParaDl($quotedDl, $quotedAll);
     }
 
-    /**
-     * @param list<string> $aCondicion
-     * @return list<string>
-     */
-    private function conFiltroPublicadoParaMiDl(array $aCondicion): array
-    {
-        $aCondicion[] = $this->sqlFiltroPublicadoParaMiDl();
-
-        return $aCondicion;
-    }
-
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
@@ -175,20 +161,6 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     }
 
     /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<PersonaPub>
-     */
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(PersonaField::class, []);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
-    }
-
-    /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @param array<string, array<int|string, string>> $problemasRegionStgr
      * @param array<int, true> $sinRegionStgrPorIdNom
      * @return list<PersonaPub>
@@ -196,60 +168,13 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
      * @param-out array<int, true> $sinRegionStgrPorIdNom
      */
     public function getPersonasParaListado(
-        array $aWhere,
-        array $aOperators,
+        Criteria $criteria,
         array &$problemasRegionStgr,
         array &$sinRegionStgrPorIdNom = [],
     ): array {
         $sinRegionStgrPorIdNom = [];
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
         $PersonaDlSet = new Set();
-        $oCondicion = new Condicion();
-        $aCondicion = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre' || $camp === '_limit') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondicion[] = $a;
-            }
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
-                unset($aWhere[$camp]);
-            }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
-                unset($aWhere[$camp]);
-            }
-        }
-        $aCondicion = $this->conFiltroPublicadoParaMiDl($aCondicion);
-        $sCondicion = implode(' AND ', $aCondicion);
-        if ($sCondicion !== '') {
-            $sCondicion = ' WHERE ' . $sCondicion;
-        }
-        $sOrdre = '';
-        $sLimit = '';
-        $ordreVal = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreVal) && $ordreVal !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreVal;
-        }
-        unset($aWhere['_ordre']);
-        $limitVal = $aWhere['_limit'] ?? null;
-        if ((is_string($limitVal) || is_int($limitVal)) && (string) $limitVal !== '') {
-            $sLimit = ' LIMIT ' . $limitVal;
-        }
-        unset($aWhere['_limit']);
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return [];
-        }
-
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
-            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
-            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
-            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
-            $aDatos = PersonaPublicacion::hydrateRow($aDatos);
+        foreach ($this->filasPersonasMatching($criteria, $this->sqlFiltroPublicadoParaMiDl()) as $aDatos) {
             $marcaAviso = false;
             $persona = $this->createEntityParaListado($aDatos, $problemasRegionStgr, $marcaAviso);
             if ($marcaAviso) {

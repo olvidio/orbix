@@ -8,6 +8,7 @@ use src\usuarios\domain\criteria\RoleField;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\criteria\GrupMenuField;
 use src\menus\domain\criteria\GrupMenuRoleField;
 use src\shared\config\ConfigGlobal;
 use src\shared\security\HashB;
@@ -43,7 +44,7 @@ class rolesLista
             $permiso = 1;
         }
 
-        $cGM = $this->grupMenuRepository->getGrupMenus(['_ordre' => 'grup_menu']);
+        $cGM = $this->grupMenuRepository->matching(Criteria::create()->orderBy(GrupMenuField::GrupMenu));
         $aGrupMenus = [];
         $ambito = ($_SESSION['oConfig'] ?? null) instanceof ConfigSnapshot
             ? $_SESSION['oConfig']->getAmbito()

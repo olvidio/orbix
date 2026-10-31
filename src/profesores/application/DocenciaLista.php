@@ -25,7 +25,7 @@ final class DocenciaLista
      */
     public function getTablaData(): array
     {
-        $cAsignaturas = $this->asignaturaRepository->getAsignaturas();
+        $cAsignaturas = $this->asignaturaRepository->matching(Criteria::create());
         $a_asignaturas = [];
         foreach ($cAsignaturas as $oAsignatura) {
             $a_asignaturas[$oAsignatura->getId_asignatura()] = $oAsignatura->getNombre_corto();

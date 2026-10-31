@@ -3,6 +3,7 @@
 namespace src\casas\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\criteria\TipoTarifaField;
 use src\shared\domain\criteria\Criteria;
@@ -187,19 +188,14 @@ final class CalendarioUbiResumenData
         }
 
         // Actividades del año previsto
-        $aWhere = [
-            'id_ubi' => $id_ubi,
-            'f_ini' => $oFinPrev->getIso(),
-            'f_fin' => $oIniPrev->getIso(),
-            'id_tipo_activ' => "^$isfsv",
-            '_ordre' => 'f_ini',
-        ];
-        $aOperador = [
-            'f_ini' => '<=',
-            'f_fin' => '>=',
-            'id_tipo_activ' => '~',
-        ];
-        $cActividades = $this->actividadRepository->getActividades($aWhere, $aOperador);
+        $cActividades = $this->actividadRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadAllField::IdUbi, $id_ubi))
+                ->andWhere(Filter::lte(ActividadAllField::FIni, $oFinPrev->getIso()))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $oIniPrev->getIso()))
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$isfsv"))
+                ->orderBy(ActividadAllField::FIni)
+        );
 
         $a_actividades = [];
         $p_tda = 0.0;

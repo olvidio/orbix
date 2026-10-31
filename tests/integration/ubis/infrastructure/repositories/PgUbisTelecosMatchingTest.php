@@ -27,10 +27,10 @@ class PgUbisTelecosMatchingTest extends myTest
             ->andWhere(Filter::eq(TelecoUbiField::IdTipoTeleco, 3))
             ->orderBy(TelecoUbiField::IdItem);
         $nuevo = $repo->matching($criteria);
-        $legacy = $repo->getTelecos(['id_ubi' => $idUbi, 'id_tipo_teleco' => 3, '_ordre' => 'id_item']);
 
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals($idUbi, $nuevo[0]->getId_ubi());
+        $this->assertEquals(3, $nuevo[0]->getId_tipo_teleco());
 
         $repo->Eliminar($o);
     }
@@ -44,13 +44,12 @@ class PgUbisTelecosMatchingTest extends myTest
         $nuevo = $ctr->matching(
             Criteria::create()->where(Filter::matchesUnaccented(TelecoUbiField::NumTeleco, 'test_num_teleco_vo'))
         );
-        $legacy = $ctr->getTelecos(['num_teleco' => 'test_num_teleco_vo'], ['num_teleco' => 'sin_acentos']);
         $this->assertNotEmpty($nuevo);
-        $this->assertEquals($legacy, $nuevo);
+        $this->assertEquals('test_num_teleco_vo', $nuevo[0]->getNum_teleco());
         $ctr->Eliminar($o);
 
         $cdc = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
         $criteria = Criteria::create()->orderBy(TelecoUbiField::IdItem)->limit(5);
-        $this->assertEquals($cdc->getTelecos(['_ordre' => 'id_item', '_limit' => 5]), $cdc->matching($criteria));
+        $this->assertLessThanOrEqual(5, count($cdc->matching($criteria)));
     }
 }

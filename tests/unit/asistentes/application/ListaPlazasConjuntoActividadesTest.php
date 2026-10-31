@@ -12,6 +12,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\asistentes\application\ListaPlazasConjuntoActividades;
+use src\shared\domain\criteria\Criteria;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -40,7 +41,7 @@ final class ListaPlazasConjuntoActividadesTest extends TestCase
         $actividad->method('isPublicado')->willReturn(false);
 
         $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
-        $actividadRepo->method('getActividades')->willReturn([$actividad]);
+        $actividadRepo->method('matching')->willReturn([$actividad]);
 
         $resumenSvc = $this->createMock(ResumenPlazasService::class);
         $resumenSvc->expects($this->atLeastOnce())->method('setId_activ')->with(9001);
@@ -77,8 +78,7 @@ final class ListaPlazasConjuntoActividadesTest extends TestCase
             $cargoRepo,
         );
         $lista->setMi_dele($miDele);
-        $lista->setWhere([]);
-        $lista->setOperador([]);
+        $lista->setCriteria(Criteria::create());
         $lista->setId_tipo_activ($idTipoParaSssCv);
 
         $oLista = $lista->getLista();

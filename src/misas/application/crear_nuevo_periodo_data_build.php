@@ -12,6 +12,7 @@ use src\misas\application\support\MisasBuildInput;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
@@ -150,22 +151,24 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
             $esta_sacd[$id_nom][$num_dia] = 1;
         }
 
-        $aWhereAct = [];
-        $aOperadorAct = [];
-        $aWhereAct['f_ini'] = "'$sFin'";
-        $aOperadorAct['f_ini'] = '<=';
-        $aWhereAct['f_fin'] = "'$sInicio'";
-        $aOperadorAct['f_fin'] = '>=';
-        $aWhereAct['status'] = StatusId::ACTUAL;
-        $aWhere = ['id_nom' => $id_nom];
-        $aOperador = [];
         $ActividadCargoRepository = $self->getActividadCargoRepository();
-        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+        $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad(
+            (int) $id_nom,
+            Criteria::create()
+                ->where(Filter::lte(ActividadAllField::FIni, $sFin))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $sInicio))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+        );
         foreach ($cAsistentes as $aAsistente) {
             $id_activ = $aAsistente['id_activ'];
 
-            $aWhereAct['id_activ'] = $id_activ;
-            $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
+            $cActividades = $ActividadRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadAllField::IdActiv, $id_activ))
+                    ->andWhere(Filter::lte(ActividadAllField::FIni, $sFin))
+                    ->andWhere(Filter::gte(ActividadAllField::FFin, $sInicio))
+                    ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+            );
             if ($cActividades === []) {
                 continue;
             }

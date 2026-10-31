@@ -6,6 +6,7 @@ use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use DateTime;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -58,7 +59,9 @@ final readonly class ListaAsistentesData
         $msg_err = '';
 
         if (ConfigGlobal::is_app_installed('actividadcargos')) {
-            $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargos(['id_activ' => $id_pau]);
+            $cCargosEnActividad = $this->actividadCargoRepository->matching(
+                Criteria::create()->where(Filter::eq(ActividadCargoField::IdActiv, $id_pau))
+            );
             $mi_sfsv = ConfigGlobal::mi_sfsv();
             foreach ($cCargosEnActividad as $oActividadCargo) {
                 $c++;

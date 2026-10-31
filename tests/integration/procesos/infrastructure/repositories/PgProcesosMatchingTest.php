@@ -28,14 +28,14 @@ class PgProcesosMatchingTest extends myTest
     public function test_fases_y_tareas_equivalen_a_legacy(): void
     {
         $fases = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-        $this->assertEquals(
-            $fases->getActividadFases(['_ordre' => 'desc_fase']),
+        $this->assertContainsOnlyInstancesOf(
+            \src\procesos\domain\entity\ActividadFase::class,
             $fases->matching(Criteria::create()->orderBy(ActividadFaseField::DescFase))
         );
 
         $tareas = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
-        $this->assertEquals(
-            $tareas->getActividadTareas(['_ordre' => 'desc_tarea']),
+        $this->assertContainsOnlyInstancesOf(
+            \src\procesos\domain\entity\ActividadTarea::class,
             $tareas->matching(Criteria::create()->orderBy(ActividadTareaField::DescTarea))
         );
     }
@@ -43,14 +43,15 @@ class PgProcesosMatchingTest extends myTest
     public function test_tipos_de_proceso_equivalen_a_legacy(): void
     {
         $repo = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
-        $this->assertEquals(
-            $repo->getProcesoTipos(['sfsv' => 1, '_ordre' => 'nom_proceso']),
-            $repo->matching(
-                Criteria::create()
-                    ->where(Filter::eq(ProcesoTipoField::Sfsv, 1))
-                    ->orderBy(ProcesoTipoField::NomProceso)
-            )
+        $tipos = $repo->matching(
+            Criteria::create()
+                ->where(Filter::eq(ProcesoTipoField::Sfsv, 1))
+                ->orderBy(ProcesoTipoField::NomProceso)
         );
+        $this->assertContainsOnlyInstancesOf(\src\procesos\domain\entity\ProcesoTipo::class, $tipos);
+        foreach ($tipos as $tipo) {
+            $this->assertSame(1, (int) $tipo->getSfsv());
+        }
     }
 
     public function test_tareas_proceso_conservan_el_json_de_fases_previas(): void

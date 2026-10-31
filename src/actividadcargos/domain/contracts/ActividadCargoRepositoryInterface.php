@@ -21,30 +21,22 @@ interface ActividadCargoRepositoryInterface
     public function getActividadSacds(int $iid_activ): array;
 
     /**
-     * @param array<string, mixed> $aWhereNom
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * @param \src\shared\domain\criteria\Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<string, ActividadCargo>
      */
-    public function getActividadCargosDeAsistente(array $aWhereNom, array $aWhere = [], array $aOperators = []): array;
+    public function getActividadCargosDeAsistente(int $idNom, \src\shared\domain\criteria\Criteria $criteriaActividad): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperador
-     * @param array<string, mixed> $aWhereAct
-     * @param array<string, string> $aOperadorAct
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array<string, mixed>>
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+    public function getAsistenteCargoDeActividad(int $idNom, Criteria $criteriaActividad): array;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperador
-     * @param array<string, mixed> $aWhereAct
-     * @param array<string, string> $aOperadorAct
+     * @param Criteria $criteriaActividad filtro sobre la actividad (`ActividadAllField`)
      * @return array<int, array<string, mixed>>
      */
-    public function getCargoDeActividad(array $aWhere, array $aOperador = [], array $aWhereAct = [], array $aOperadorAct = []): array;
+    public function getCargoDeActividad(int $idNom, Criteria $criteriaActividad): array;
 
     /**
      * ActividadCargo que cumplen el criterio.
@@ -52,14 +44,6 @@ interface ActividadCargoRepositoryInterface
      * @return list<ActividadCargo>
      */
     public function matching(Criteria $criteria): array;
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<ActividadCargo>
-     */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array;
 
     public function Eliminar(ActividadCargo $ActividadCargo): bool;
 

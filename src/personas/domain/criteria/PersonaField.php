@@ -8,7 +8,7 @@ use src\shared\domain\criteria\CriteriaField;
  * Campos de las personas (`PersonaDl` y subtipos, `PersonaEx`, `PersonaPub`, `PersonaSacd`) por los que se
  * puede buscar u ordenar. El valor es el nombre del campo en la entidad (= columna). Lo comparten todos los
  * repositorios de personas; cada tabla/vista solo tiene los que le corresponden (`id_auto` solo `Ex`,
- * `edad` y `profesor_stgr` solo `Ex`/`Pub`/`Sacd`, `id_ctr` no está en `Ex`).
+ * `edad` y `profesor_stgr` solo `Ex`/`Pub`/`Sacd`, `id_ctr` no está en `Ex`, `ce_ini`/`ce_fin` solo `N`/`Agd`/`S`/`Nax`).
  * Se omite `publicado_para` (jsonb: no se filtra por él).
  */
 enum PersonaField: string implements CriteriaField
@@ -39,4 +39,6 @@ enum PersonaField: string implements CriteriaField
     case LugarNacimiento = 'lugar_nacimiento';
     case Edad = 'edad';
     case ProfesorStgr = 'profesor_stgr';
+    case CeIni = 'ce_ini';
+    case CeFin = 'ce_fin';
 }

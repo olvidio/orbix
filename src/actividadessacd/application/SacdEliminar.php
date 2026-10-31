@@ -3,7 +3,10 @@
 namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Elimina un sacd ({id_activ, id_cargo}) de una actividad, incluyendo
@@ -32,8 +35,10 @@ final class SacdEliminar
 
         $errors = '';
 
-        $cActCargo = $this->actividadCargoRepository->getActividadCargos(
-            ['id_activ' => $id_activ, 'id_cargo' => $id_cargo]
+        $cActCargo = $this->actividadCargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
+                ->andWhere(Filter::eq(ActividadCargoField::IdCargo, $id_cargo))
         );
         if (count($cActCargo) >= 1) {
             if ($this->actividadCargoRepository->Eliminar($cActCargo[0]) === false) {

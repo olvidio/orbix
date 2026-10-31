@@ -9,6 +9,9 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -61,14 +64,14 @@ final class MatriculasListaOtrasRData
         $aNombre = [];
 
         if ($apellido1 !== '') {
-            $aWhere = [
-                'apellido1' => '^' . $apellido1,
-                'situacion' => 'A',
-                '_ordre' => 'dl,stgr,apellido1,nom',
-            ];
-            $aOperador = ['apellido1' => 'sin_acentos'];
+            $criteria = Criteria::create()
+                ->where(Filter::matchesUnaccented(PersonaField::Apellido1, '^' . $apellido1))
+                ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                ->orderBy(PersonaField::Dl)
+                ->addOrderBy(PersonaField::Apellido1)
+                ->addOrderBy(PersonaField::Nom);
             $sinRegionStgrPorIdNom = [];
-            $cPersonas = $this->personaPubRepository->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
+            $cPersonas = $this->personaPubRepository->getPersonasParaListado($criteria, $problemasRegionStgr, $sinRegionStgrPorIdNom);
             $i = 0;
             foreach ($cPersonas as $oPersona) {
                 $idNom = $oPersona->getId_nom();
@@ -177,7 +180,7 @@ final class MatriculasListaOtrasRData
         }
 
         $fichas = [];
-        foreach ($this->personaExRepository->getPersonas(['id_nom' => $ids], ['id_nom' => 'IN']) as $persona) {
+        foreach ($this->personaExRepository->matching(Criteria::create()->where(Filter::in(PersonaField::IdNom, $ids))) as $persona) {
             $fichas[$persona->getId_nom()] = $persona;
         }
 

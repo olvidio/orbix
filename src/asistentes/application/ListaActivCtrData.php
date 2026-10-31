@@ -4,13 +4,16 @@ namespace src\asistentes\application;
 
 use frontend\shared\web\Periodo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -99,10 +102,6 @@ final class ListaActivCtrData
         $condicion .= $condta_plus === '' ? '' : '|^' . $condta_plus;
         $condicion .= $condta_sr === '' ? '' : '|^' . $condta_sr;
 
-        $aWhereAct = [];
-        $aOperadorAct = [];
-        $aWhereAct['id_tipo_activ'] = $condicion;
-        $aOperadorAct['id_tipo_activ'] = '~';
 
         $oPeriodo = Periodo::conCalendarioDesdeBackend();
         $oPeriodo->setDefaultAny('next');
@@ -155,28 +154,36 @@ final class ListaActivCtrData
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
             if ($tabla === 'p_sssc') {
-                $cPersonas = $this->personaSSSCRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1']);
+                $cPersonas = $this->personaSSSCRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->orderBy(PersonaField::Apellido1));
             } else {
-                $cPersonas = $this->personaDlRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+                $cPersonas = $this->personaDlRepository->matching(Criteria::create()
+                    ->where(Filter::eq(PersonaField::IdCtr, $id_ubi))
+                    ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
+                    ->orderBy(PersonaField::Apellido1)
+                    ->addOrderBy(PersonaField::Apellido2)
+                    ->addOrderBy(PersonaField::Nom));
             }
 
             $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
 
             $i = 0;
             $aPersonasCtr = [];
-            $aWhereNom = [];
             $aPlazas = PlazaId::getArrayPosiblesPlazas();
             foreach ($cPersonas as $oPersona) {
                 $i++;
                 $id_nom = $oPersona->getId_nom();
                 $ap_nom = $oPersona->getPrefApellidosNombre();
-                $aWhereNom['id_nom'] = $id_nom;
-                $aWhereNom['propio'] = 't';
-                $aOperadorNom = [];
-                $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
-                $aOperadorAct['f_ini'] = 'BETWEEN';
+                $criteriaAsistente = Criteria::create()
+                    ->where(Filter::eq(AsistenteField::IdNom, $id_nom))
+                    ->andWhere(Filter::eq(AsistenteField::Propio, true));
+                $criteriaAct = Criteria::create()
+                    ->where(Filter::matches(ActividadAllField::IdTipoActiv, $condicion))
+                    ->andWhere(Filter::between(ActividadAllField::FIni, $inicioIso, $finIso));
 
-                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct);
                 $aActividades = [];
                 if (count($cAsistencias) === 0) {
                     $aActividades = [];

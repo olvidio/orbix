@@ -4,6 +4,7 @@ namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\entity\ProfesorCongreso;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\profesores\ProfesorCongresoFactory;
 
@@ -133,7 +134,7 @@ class PgProfesorCongresoRepositoryTest extends myTest
 
     public function test_get_profesor_congresos_sin_filtros()
     {
-        $result = $this->repository->getProfesorCongresos();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

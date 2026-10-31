@@ -62,7 +62,7 @@ final class SacdAsignarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->with('sacd')->willReturn([2001 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(44);
 
         $guardado = null;
@@ -105,7 +105,7 @@ final class SacdAsignarTest extends TestCase
         $ocupado2->setId_cargo(2002);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$ocupado1, $ocupado2]);
+        $activCargoRepo->method('matching')->willReturn([$ocupado1, $ocupado2]);
         $activCargoRepo->expects($this->never())->method('Guardar');
 
         $out = (new \src\actividadessacd\application\SacdAsignar($cargoRepo, $activCargoRepo, $this->createMock(\src\actividades\domain\contracts\ActividadDlRepositoryInterface::class), $this->createMock(\src\asistentes\domain\contracts\AsistenteDlRepositoryInterface::class)))->execute(['id_activ' => 500, 'id_nom' => 111]);
@@ -123,7 +123,7 @@ final class SacdAsignarTest extends TestCase
         $ocupado->setId_cargo(2001);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([$ocupado]);
+        $activCargoRepo->method('matching')->willReturn([$ocupado]);
         $activCargoRepo->method('getNewId')->willReturn(987654);
 
         $guardado = null;
@@ -158,7 +158,7 @@ final class SacdAsignarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(123);
         $activCargoRepo->method('Guardar')->willReturn(true);
 
@@ -191,7 +191,7 @@ final class SacdAsignarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(1);
         $activCargoRepo->method('Guardar')->willReturn(false);
 
@@ -207,7 +207,7 @@ final class SacdAsignarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(1);
         $activCargoRepo->method('Guardar')->willReturn(true);
 
@@ -228,7 +228,7 @@ final class SacdAsignarTest extends TestCase
         $cargoRepo->method('getArrayCargos')->willReturn([2001 => 'sacd1']);
 
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
-        $activCargoRepo->method('getActividadCargos')->willReturn([]);
+        $activCargoRepo->method('matching')->willReturn([]);
         $activCargoRepo->method('getNewId')->willReturn(1);
         $activCargoRepo->method('Guardar')->willReturn(true);
 

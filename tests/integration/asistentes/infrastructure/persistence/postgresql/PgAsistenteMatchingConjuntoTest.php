@@ -14,7 +14,6 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\NullsPosition;
 use src\shared\domain\criteria\OrderDirection;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use Tests\factories\asistentes\AsistenteFactory;
 use Tests\myTest;
 
@@ -152,10 +151,4 @@ class PgAsistenteMatchingConjuntoTest extends myTest
         $this->repo->matchingConjunto([\stdClass::class], $this->base());
     }
 
-    public function test_orden_crudo_del_adaptador_lanza_excepcion(): void
-    {
-        $criteria = (new LegacyWhereAdapter(F::class))->toCriteria(['id_activ' => self::ACT, '_ordre' => 'substring(observ::text,1)']);
-        $this->expectException(InvalidArgumentException::class);
-        $this->repo->matchingConjunto(self::REPOS, $criteria);
-    }
 }

@@ -4,7 +4,6 @@ namespace src\personas\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\domain\criteria\Criteria;
-use src\shared\infrastructure\persistence\postgresql\LegacyWhereAdapter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
 use src\personas\domain\criteria\TrasladoField;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -69,18 +68,6 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
         $aDatos['f_traslado'] = (new ConverterDate('date', $aDatos['f_traslado']))->fromPg();
 
         return $aDatos;
-    }
-
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Traslado>
-     */
-    public function getTraslados(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(TrasladoField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

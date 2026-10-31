@@ -3,6 +3,7 @@
 namespace src\profesores\domain\services;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
 use src\profesores\domain\criteria\ProfesorStgrField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -23,7 +24,9 @@ class ProfesorStgrService
      */
     public function getArrayProfesoresPub(): array
     {
-        $cPersonasPub = $this->personaPubRepository->getPersonas(['profesor_stgr' => 't']);
+        $cPersonasPub = $this->personaPubRepository->matching(
+            Criteria::create()->where(Filter::eq(PersonaField::ProfesorStgr, true))
+        );
 
         $aProfesores = [];
         foreach ($cPersonasPub as $oPersona) {

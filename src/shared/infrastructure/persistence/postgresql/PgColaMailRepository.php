@@ -58,20 +58,6 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         return $result;
     }
 
-    /**
-     * devuelve una colección (array) de objetos de tipo ColaMail
-     *
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array<string, string> $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return list<ColaMail>
-     */
-    public function getColaMails(array $aWhere = [], array $aOperators = []): array
-    {
-        $adapter = new LegacyWhereAdapter(ColaMailField::class, self::COLUMNAS);
-        return $this->matching($adapter->toCriteria($aWhere, $aOperators));
-    }
-
     public function deleteColaMails(string $date_iso): void
     {
         $oDbl = $this->getoDbl();

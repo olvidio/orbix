@@ -5,6 +5,7 @@ namespace Tests\integration\personas\infrastructure\persistence\postgresql;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaRepositoryInterface;
 use src\personas\domain\entity\TelecoPersona;
+use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
 use Tests\factories\personas\TelecoPersonaFactory;
 
@@ -134,7 +135,7 @@ class PgTelecoPersonaRepositoryTest extends myTest
 
     public function test_get_telecos_persona_sin_filtros()
     {
-        $result = $this->repository->getTelecosPersona();
+        $result = $this->repository->matching(Criteria::create());
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

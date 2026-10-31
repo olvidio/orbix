@@ -5,6 +5,9 @@ namespace src\notas\application;
 
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\criteria\PersonaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Prepara los datos para elegir a que persona (con el mismo primer
@@ -43,13 +46,14 @@ final class TesseraCopiarSelectData
         $nom = $oPersona->getNombreApellidos();
 
         $posibles = [];
-        foreach ($repoN->getPersonas(['apellido1' => $apellido1]) as $oPer) {
+        $criterioApellido = Criteria::create()->where(Filter::eq(PersonaField::Apellido1, $apellido1));
+        foreach ($repoN->matching($criterioApellido) as $oPer) {
             if ($oPer->getId_nom() === $id_nom) {
                 continue;
             }
             $posibles[$oPer->getId_nom()] = $oPer->getNombreApellidos() . ' (n)';
         }
-        foreach ($repoAgd->getPersonas(['apellido1' => $apellido1]) as $oPer) {
+        foreach ($repoAgd->matching($criterioApellido) as $oPer) {
             if ($oPer->getId_nom() === $id_nom) {
                 continue;
             }

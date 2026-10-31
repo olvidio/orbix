@@ -34,14 +34,6 @@ interface ColeccionRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
-    /**
-     * @deprecated usar matching(Criteria)
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
-     * @return list<Coleccion>
-     */
-    public function getColecciones(array $aWhere=[], array $aOperators=[]): array;
-	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
 	public function Eliminar(Coleccion $Coleccion): bool;

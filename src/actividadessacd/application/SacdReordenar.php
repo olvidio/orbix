@@ -4,6 +4,9 @@ namespace src\actividadessacd\application;
 
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\criteria\ActividadCargoField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Reordena un sacd en el listado de cargos sacd de una actividad.
@@ -34,11 +37,11 @@ final class SacdReordenar
         }
 
         $aIdCargos_sacd = $this->cargoRepository->getArrayCargos('sacd');
-        $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
-        $cCargos = $this->actividadCargoRepository->getActividadCargos(
-            ['id_activ' => $id_activ, 'id_cargo' => $txt_where_cargos],
-            ['id_cargo' => 'IN']
+        $cCargos = $this->actividadCargoRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
+                ->andWhere(Filter::in(ActividadCargoField::IdCargo, array_map('intval', array_keys($aIdCargos_sacd))))
         );
 
         $errors = '';

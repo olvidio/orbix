@@ -10,6 +10,7 @@ use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
@@ -78,17 +79,12 @@ final class SacdAsignarAuto
 
     private function seleccionarActividades(string $f_ini_iso): void
     {
-        $aWhere = [
-            'id_tipo_activ' => '.(4|5|7)',
-            'f_ini' => $f_ini_iso,
-            'status' => StatusId::ACTUAL,
-        ];
-        $aOperador = [
-            'id_tipo_activ' => '~',
-            'f_ini' => '>',
-        ];
-
-        $this->a_actividades = $this->actividadDlRepository->getArrayIdsWithKeyFini($aWhere, $aOperador);
+        $this->a_actividades = $this->actividadDlRepository->idsConFechaInicio(
+            Criteria::create()
+                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '.(4|5|7)'))
+                ->andWhere(Filter::gt(ActividadAllField::FIni, $f_ini_iso))
+                ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
+        );
     }
 
     /**
