@@ -3,6 +3,7 @@
 namespace src\planning\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -109,27 +110,21 @@ class ActividadesPorCasasService
             $cdc[$p + 1] = "##";
             $a_actividades[] = [$cdc[$p + 1] => []];
         } else {
-            $aWhere = [];
-            $aOperador = [];
+            $criteriaUbis = Criteria::create();
             switch ($Qcdc_sel) {
                 case 11:
-                    $aWhere['id_tipo_activ'] = '^1';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criteriaUbis = $criteriaUbis->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^1'));
                     break;
                 case 12:
-                    $aWhere['id_tipo_activ'] = '^2';
-                    $aOperador['id_tipo_activ'] = '~';
+                    $criteriaUbis = $criteriaUbis->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^2'));
                     break;
             }
-            $aWhere['f_ini'] = "'$fin_iso'";
-            $aOperador['f_ini'] = '<=';
-            $aWhere['f_fin'] = "'$inicio_iso'";
-            $aOperador['f_fin'] = '>=';
-            $aWhere['status'] = 4;
-            $aOperador['status'] = '<';
-            $aWhere['_ordre'] = 'id_ubi';
+            $criteriaUbis = $criteriaUbis
+                ->andWhere(Filter::lte(ActividadAllField::FIni, $fin_iso))
+                ->andWhere(Filter::gte(ActividadAllField::FFin, $inicio_iso))
+                ->andWhere(Filter::lt(ActividadAllField::Status, 4));
 
-            $aUbis = $this->actividadRepository->getUbis($aWhere, $aOperador);
+            $aUbis = $this->actividadRepository->getUbis($criteriaUbis);
             $p = 0;
             foreach ($aUbis as $id_ubi) {
                 if (empty($id_ubi)) {

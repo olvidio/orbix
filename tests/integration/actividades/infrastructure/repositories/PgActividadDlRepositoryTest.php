@@ -3,7 +3,10 @@
 namespace Tests\integration\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\ActividadAll;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use Tests\myTest;
 use Tests\factories\actividades\ActividadAllFactory;
 
@@ -133,10 +136,24 @@ class PgActividadDlRepositoryTest extends myTest
 
     public function test_get_ubis_sin_filtros()
     {
-        $result = $this->repository->getUbis();
-        
+        $result = $this->repository->getUbis(Criteria::create());
+
         $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
+        $this->assertSame(array_values($result), $result);
+    }
+
+    public function test_get_ubis_con_filtro_de_fechas_y_status()
+    {
+        $criteria = Criteria::create()
+            ->where(Filter::lte(ActividadAllField::FIni, '2999-12-31'))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, '1900-01-01'))
+            ->andWhere(Filter::lt(ActividadAllField::Status, 4));
+
+        $result = $this->repository->getUbis($criteria);
+
+        $this->assertIsArray($result);
+        $this->assertSame(array_values($result), $result);
+        $this->assertSame(array_values(array_unique($result, SORT_REGULAR)), $result);
     }
 
     public function test_get_array_actividades_de_tipo_sin_filtros()

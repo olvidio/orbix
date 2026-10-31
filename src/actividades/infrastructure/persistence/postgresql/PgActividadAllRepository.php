@@ -3,7 +3,6 @@
 namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\postgresql\PgCriteriaConverter;
@@ -214,40 +213,16 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /**
      * retorna l'array amb el id_ubi de les activitats sel·leccionades
      *
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
+     * Solo se usa el filtro del criterio; el resultado va siempre ordenado por `id_ubi`.
+     *
      * @return list<int|null>
      */
-    public function getUbis(array $aWhere = [], array $aOperators = []): array
+    public function getUbis(Criteria $criteria): array
     {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTablaSelect();
-        $oCondicion = new Condicion();
-        $aCondi = [];
-        foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') {
-                continue;
-            }
-            $sOperador = $aOperators[$camp] ?? '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
-                $aCondi[] = $a;
-            }
-            // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador === 'TXT') unset($aWhere[$camp]);
-        }
-        $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi !== '') $sCondi = " WHERE " . $sCondi;
-        $sLimit = $this->getLimitPaginador("$nom_tabla", $sCondi, $aWhere);
-        $sOrdre = '';
-        $ordreUbis = $aWhere['_ordre'] ?? null;
-        if (is_string($ordreUbis) && $ordreUbis !== '') {
-            $sOrdre = ' ORDER BY ' . $ordreUbis;
-        }
-        unset($aWhere['_ordre']);
-        $sQry = "SELECT id_ubi FROM $nom_tabla " . $sCondi . " GROUP BY id_ubi" . $sOrdre;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+        $conv = new PgCriteriaConverter(ActividadAllField::class, self::COLUMNAS);
+        $q = $conv->convertWhere($criteria);
+        $sQry = 'SELECT id_ubi FROM ' . $this->getNomTablaSelect() . $q['sql'] . ' GROUP BY id_ubi ORDER BY id_ubi';
+        $stmt = $this->prepareAndExecute($this->getoDbl_Select(), $sQry, $q['params'], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -586,18 +561,5 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             return null;
         }
         return ActividadAll::fromArray($aDatos);
-    }
-
-    /**
-     * @param array<string, mixed> $aWhere
-     */
-    private function getLimitPaginador(string $nomTabla, string $sCondi, array $aWhere): string
-    {
-        $oGestor = $GLOBALS['oGestorSessioDelegación'] ?? null;
-        if (is_object($oGestor) && method_exists($oGestor, 'getLimitPaginador')) {
-            return (string) $oGestor->getLimitPaginador($nomTabla, $sCondi, $aWhere);
-        }
-
-        return '';
     }
 }

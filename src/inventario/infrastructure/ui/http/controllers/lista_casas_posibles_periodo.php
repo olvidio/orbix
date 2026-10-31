@@ -4,6 +4,9 @@ use src\shared\infrastructure\DependencyResolver;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\criteria\ActividadAllField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\ubis\domain\entity\Ubi;
 use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
@@ -34,18 +37,15 @@ if (empty($Qperiodo) || $Qperiodo === 'otro') {
     $fin = $oPeriodo->getF_fin()->getIso();
 }
 
-$aWhere['dl_org'] = ConfigGlobal::mi_dele();
-$aWhere['id_tipo_activ'] = "^$miSfsv";
-$aOperador['id_tipo_activ'] = "~";
-$aWhere['f_ini'] = $fin;
-$aOperador['f_ini'] = '<=';
-$aWhere['f_fin'] = $inicio;
-$aOperador['f_fin'] = '>=';
-$aWhere['status'] = 4;
-$aOperador['status'] = '<';
+$criteria = Criteria::create()
+    ->where(Filter::eq(ActividadAllField::DlOrg, ConfigGlobal::mi_dele()))
+    ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, "^$miSfsv"))
+    ->andWhere(Filter::lte(ActividadAllField::FIni, $fin))
+    ->andWhere(Filter::gte(ActividadAllField::FFin, $inicio))
+    ->andWhere(Filter::lt(ActividadAllField::Status, 4));
 /** @var ActividadRepositoryInterface $ActividadRepository */
 $ActividadRepository = DependencyResolver::get(ActividadRepositoryInterface::class);
-$aIdUbis = $ActividadRepository->getUbis($aWhere, $aOperador);
+$aIdUbis = $ActividadRepository->getUbis($criteria);
 
 $aUbis = [];
 foreach ($aIdUbis as $id_ubi) {

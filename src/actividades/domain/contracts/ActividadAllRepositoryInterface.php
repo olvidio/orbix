@@ -27,11 +27,9 @@ interface ActividadAllRepositoryInterface
     public function getCoincidencia(ActividadAll $oActividad): bool;
 
     /**
-     * @param array<string, mixed> $aWhere
-     * @param array<string, string> $aOperators
      * @return list<int|null>
      */
-    public function getUbis(array $aWhere = [], array $aOperators = []): array;
+    public function getUbis(Criteria $criteria): array;
 
     /**
      * @return array<int, string>
