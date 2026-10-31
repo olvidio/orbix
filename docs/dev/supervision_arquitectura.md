@@ -125,6 +125,7 @@ Migración desde el legado `apps/` → `frontend/` + `src/`: **muy avanzada**.
 | Lecturas `$GLOBALS['oDB*']` en `src/` | 0; acceso vía `GlobalPdo` |
 | PHPStan nivel 9 sin baseline | 0 errores en `src` + `frontend` |
 | `apps/<modulo>/` de negocio | Eliminados; quedan `apps/core/` y `apps/web/` |
+| Búsquedas en repositorios | `matching(Criteria)` en todos los módulos; eliminados `$aWhere`/`$aOperators`, `LegacyWhereAdapter` y `Condicion` ([plan](refactor_busquedas_criteria.md)) |
 
 Deuda residual típica (detalle en [índice de refactor](REFACTOR_INDICE.md)):
 
