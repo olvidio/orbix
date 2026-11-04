@@ -2,13 +2,20 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "shared"
-endpoints: 6
+endpoints: 7
 estado_revision: "generado"
 ---
 
 # Resumen API Para Ayuda IA - shared
 
 Este documento solo sirve como soporte tecnico para la IA local. Para responder a usuarios, priorizar los documentos de `flujos/` y `pantallas/`.
+
+## `/src/shared/ayuda_pantalla`
+
+- Id: `shared.ayuda_pantalla`
+- Controller: `src/shared/infrastructure/ui/http/controllers/ayuda_pantalla.php`
+- Entrada: `post.controller:string` (ruta `frontend/<mod>/controller/<x>.php` o URL que la contenga), `post.limite:integer` (opcional, 6 por defecto, máx. 30)
+- Respuesta: `standard_envelope_string_data` (`encontrada`, `controller`, `titulo`, `modulo`, `manual_modulo`, `total_tareas`, `tareas[{modulo, ancla, titulo, sirve}]`, `aviso_txt`); pantalla sin ayuda → `encontrada: false` con `aviso_txt`, no es error. Fuente: `docs/manual/_indice_pantallas.json` (`php docs/scripts/generar_indice_ayuda.php`).
 
 ## `/src/shared/locales_posibles`
 

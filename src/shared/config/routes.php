@@ -11,6 +11,9 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/shared/locales_posibles', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/locales_posibles.php';
     });
+    $r->addRoute(['GET','POST'], '/src/shared/ayuda_pantalla', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_pantalla.php';
+    });
     $r->addRoute(['GET','POST'], '/src/shared/ayuda_preguntar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_preguntar.php';
     });
