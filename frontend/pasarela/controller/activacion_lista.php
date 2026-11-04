@@ -36,7 +36,7 @@ $h_lista = $oHashLista->linkSinValParams();
 $url_src_excepcion_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_guardar');
 $oHashSrcGuardar = new HashF();
 $oHashSrcGuardar->setUrl($url_src_excepcion_guardar);
-$oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
+$oHashSrcGuardar->setCamposForm('id_tipo_activ!valor!ctx_guardar');
 $h_src_excepcion_guardar = $oHashSrcGuardar->linkSinValParams();
 
 $url_src_excepcion_eliminar = AppUrlConfig::srcBrowserUrl('/src/pasarela/activacion_excepcion_eliminar');
