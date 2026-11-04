@@ -40,6 +40,10 @@
                 alert(<?= json_encode(_("Debe llenar la fecha del acta")) ?>);
                 return;
             }
+            if (($('#id_asignatura').val() || '') === '' || $('#id_asignatura').val() === '0') {
+                alert(<?= json_encode(_("Debe elegir una asignatura")) ?>);
+                return;
+            }
             var mod = $(formulario).find('input[name=mod]').val();
             if (mod === 'nueva' || $('#notas').val() === 'nuevo') {
                 var actaNum = $('#acta_num').val().trim();

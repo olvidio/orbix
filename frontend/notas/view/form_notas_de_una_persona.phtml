@@ -205,7 +205,12 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
         max_default = <?= $nota_max_default ?>;
         if (!max) $('#nota_max').val(max_default);
     }
+    // Evita guardar dos veces la misma nota con un doble clic.
+    window.fnjs_nota_guardando = false;
     fnjs_guardar = function (formulario) {
+        if (window.fnjs_nota_guardando) {
+            return;
+        }
         var err = 0;
         var mod = $('#mod').val();
         var f_acta = $('#f_acta').val();
@@ -275,6 +280,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
         }
 
         if (err != 1) {
+            window.fnjs_nota_guardando = true;
             var url_guardar = (mod === 'editar')
                 ? '<?= $url_persona_nota_editar ?>'
                 : '<?= $url_persona_nota_nueva ?>';
@@ -288,6 +294,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                 })
                     .done(function (json) {
                         if (!json || json.success !== true) {
+                            window.fnjs_nota_guardando = false;
                             alert(<?= json_encode(_("respuesta") . ": ") ?> + ((json && json.mensaje) ? json.mensaje : ''));
                         } else {
                             var msgOk = '';
@@ -305,6 +312,9 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
                             }
                             <?= $oPosicion->jsNavAtrasToDossiersParent(); ?>
                         }
+                    })
+                    .fail(function () {
+                        window.fnjs_nota_guardando = false;
                     });
                 return false;
             });

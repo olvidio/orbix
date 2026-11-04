@@ -31,4 +31,16 @@ class NotaEpocaTest extends myTest
         $this->assertNull($notaEpoca);
     }
 
+    public function test_descripcion_usa_los_textos_del_formulario()
+    {
+        $this->assertSame('ca', (new NotaEpoca(NotaEpoca::EPOCA_CA))->getDescripcion());
+        $this->assertSame('semestre invierno', (new NotaEpoca(NotaEpoca::EPOCA_INVIERNO))->getDescripcion());
+        $this->assertSame('sin especificar', (new NotaEpoca(NotaEpoca::EPOCA_OTRO))->getDescripcion());
+    }
+
+    public function test_valor_no_valido_lanza_excepcion()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new NotaEpoca(9);
+    }
 }

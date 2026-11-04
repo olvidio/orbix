@@ -9,17 +9,25 @@ final class NotaEpoca
     public const EPOCA_INVIERNO = 2; // semestre invierno.
     public const EPOCA_OTRO = 3; // sin especificar.
 
-    public const ARRAY_EPOCA_TXT = [
-        self::EPOCA_CA => "verano",
-        self::EPOCA_INVIERNO => "invierno",
-        self::EPOCA_OTRO => "otro",
-    ];
+    /**
+     * Textos que ve el usuario (los mismos que el formulario de la nota).
+     *
+     * @return array<int, string>
+     */
+    public static function getArrayEpocaTxt(): array
+    {
+        return [
+            self::EPOCA_CA => _("ca"),
+            self::EPOCA_INVIERNO => _("semestre invierno"),
+            self::EPOCA_OTRO => _("sin especificar"),
+        ];
+    }
 
     private int $value;
 
     public function __construct(int $value)
     {
-        if (!array_key_exists($value, self::ARRAY_EPOCA_TXT)) {
+        if (!array_key_exists($value, self::getArrayEpocaTxt())) {
             throw new \InvalidArgumentException(sprintf('<%s> no es un valor válido para NotaEpoca', $value));
         }
         $this->value = $value;
@@ -28,6 +36,11 @@ final class NotaEpoca
     public function value(): int
     {
         return $this->value;
+    }
+
+    public function getDescripcion(): string
+    {
+        return self::getArrayEpocaTxt()[$this->value];
     }
 
     public function __toString(): string

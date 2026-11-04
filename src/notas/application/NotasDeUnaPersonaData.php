@@ -2,7 +2,6 @@
 
 namespace src\notas\application;
 
-
 use src\asignaturas\domain\criteria\AsignaturaField as F;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -145,7 +144,8 @@ final class NotasDeUnaPersonaData
             $a_valores[$i][3] = $acta;
             $a_valores[$i][4] = $oPersonaNota->getF_acta()?->getFromLocal();
             $a_valores[$i][5] = $preceptorText;
-            $a_valores[$i][6] = $oPersonaNota->getEpoca();
+            $epocaVo = $oPersonaNota->getEpocaVo();
+            $a_valores[$i][6] = $epocaVo?->getDescripcion() ?? '';
             $a_valores[$i][7] = $oPersonaNota->getDetalle();
             $a_valores[$i][8] = $nom_activ;
         }
