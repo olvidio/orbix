@@ -44,6 +44,18 @@ trait RunsCriteriaQueries
         return $this->fetchRows('SELECT * FROM ' . $this->getNomTabla() . $q['sql'], $q['params'], __METHOD__);
     }
 
+    /**
+     * Igual que {@see rowsMatching()} pero con las columnas indicadas (expresión SQL tras SELECT).
+     * Sirve para no traer columnas pesadas (p. ej. bytea) cuando el listado no las necesita.
+     *
+     * @return list<array<string, mixed>>
+     */
+    protected function rowsMatchingColumns(Criteria $criteria, PgCriteriaConverter $converter, string $columnas): array
+    {
+        $q = $converter->convert($criteria);
+        return $this->fetchRows('SELECT ' . $columnas . ' FROM ' . $this->getNomTabla() . $q['sql'], $q['params'], __METHOD__);
+    }
+
     /** Número de filas que cumplen los filtros del criterio (ignora orden y límite). */
     protected function countMatching(Criteria $criteria, PgCriteriaConverter $converter): int
     {

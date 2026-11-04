@@ -59,7 +59,9 @@ $inicurs_ca_iso = $oInicurs_ca->getIso();
 $fincurs_ca_iso = $oFincurs_ca->getIso();
 $inicurs_ca_local = $oInicurs_ca->getFromLocal();
 $fincurs_ca_local = $oFincurs_ca->getFromLocal();
-$titulo = ucfirst(sprintf(_("lista de certificados emitidos entre %s y %s y no enviados"), $inicurs_ca_local, $fincurs_ca_local));
+$titulo = ($Qcertificado !== '')
+    ? ucfirst(sprintf(_("certificados emitidos que coinciden con «%s»"), htmlspecialchars($Qcertificado, ENT_QUOTES, 'UTF-8')))
+    : ucfirst(sprintf(_("lista de certificados emitidos entre %s y %s y no enviados"), $inicurs_ca_local, $fincurs_ca_local));
 
 if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
     exit(_("Solamente lo pueden ver las regiones del stgr"));

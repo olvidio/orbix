@@ -10,6 +10,8 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadoEmitidoFactory;
 use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\certificados\domain\criteria\CertificadoEmitidoField;
 use Tests\myTest;
 
 class PgCertificadoEmitidoRepositoryTest extends myTest
@@ -33,6 +35,7 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
         $this->repository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $oDBdst = $this->setConexion('H-Hv');
         $this->repository->setoDbl($oDBdst);
+        $this->repository->setoDbl_select($oDBdst);
 
     }
 
@@ -75,6 +78,25 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
 
         // Limpiar
         $this->repository->Eliminar($oCertificadoEmitidoActualizado);
+    }
+
+    public function test_matching_sin_documento_indica_si_hay_pdf_sin_leerlo()
+    {
+        $oCertificado = $this->factory->createSimple();
+        $oCertificado->setDocumento('%PDF-1.4 prueba');
+        $id = $oCertificado->getId_item();
+        $this->repository->Guardar($oCertificado);
+
+        $filas = $this->repository->matchingSinDocumento(
+            Criteria::create()->where(Filter::eq(CertificadoEmitidoField::IdItem, $id))
+        );
+
+        $this->assertCount(1, $filas);
+        $this->assertTrue($filas[0]['tiene_documento']);
+        $this->assertEmpty($filas[0]['certificado']->getDocumento());
+
+        // Limpiar
+        $this->repository->Eliminar($oCertificado);
     }
 
     public function test_find_by_id_existente()
@@ -150,7 +172,7 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
 
     public function test_get_certificados_sin_filtros()
     {
-        $result = $this->repository->matching(Criteria::create());
+        $result = $this->repository->matching(Criteria::create()->limit(5));
 
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

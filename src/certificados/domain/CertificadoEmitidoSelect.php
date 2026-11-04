@@ -49,7 +49,8 @@ class CertificadoEmitidoSelect
             ->orderBy(CertificadoEmitidoField::FCertificado, OrderDirection::Desc)
             ->addOrderBy(CertificadoEmitidoField::Certificado, OrderDirection::Desc);
 
-        $cCertificados = $this->certificadoEmitidoRepository->matching($criteria);
+        // Sin el PDF: el listado solo necesita saber si lo hay (con muchos resultados agotaría la memoria).
+        $cCertificados = $this->certificadoEmitidoRepository->matchingSinDocumento($criteria);
 
         $a_botones = [];
         if ($this->delegacionRepository->soy_region_stgr()) {
@@ -73,7 +74,8 @@ class CertificadoEmitidoSelect
 
         $a_valores = [];
         $i = 0;
-        foreach ($cCertificados as $oCertificado) {
+        foreach ($cCertificados as $fila) {
+            $oCertificado = $fila['certificado'];
             $i++;
             $id_item = $oCertificado->getId_item();
             $certificadoTxt = $oCertificado->getCertificado();
@@ -83,7 +85,6 @@ class CertificadoEmitidoSelect
             $nom = $oCertificado->getNom();
             $idioma = $oCertificado->getIdiomaVo()?->value();
             $destino = $oCertificado->getDestino();
-            $pdf = $oCertificado->getDocumento();
             $fecha = $oCertificado->getF_enviado()?->getFromLocal() ?? '';
 
             if ($idioma !== null && $idioma !== '') {
@@ -103,7 +104,7 @@ class CertificadoEmitidoSelect
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = $nom_alumno;
             $a_valores[$i][4] = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? _("Sí") : _("No");
-            $a_valores[$i][5] = ($pdf === null || $pdf === '') ? '' : _("Sí");
+            $a_valores[$i][5] = $fila['tiene_documento'] ? _("Sí") : '';
             $a_valores[$i][6] = $idioma;
             $a_valores[$i][7] = $destino;
             $a_valores[$i][8] = $fecha;

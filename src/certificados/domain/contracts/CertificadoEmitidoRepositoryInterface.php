@@ -14,6 +14,14 @@ interface CertificadoEmitidoRepositoryInterface
      */
     public function matching(Criteria $criteria): array;
 
+    /**
+     * Como {@see matching()} pero sin leer el PDF (`documento`), que es pesado: para listados.
+     * Cada elemento trae la entidad (con `documento` vacío) y si el certificado tiene PDF.
+     *
+     * @return list<array{certificado: CertificadoEmitido, tiene_documento: bool}>
+     */
+    public function matchingSinDocumento(Criteria $criteria): array;
+
     public function Eliminar(CertificadoEmitido $Certificado): bool;
 
     public function Guardar(CertificadoEmitido $Certificado): bool;

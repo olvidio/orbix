@@ -52,6 +52,26 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         return $certificados;
     }
 
+    /**
+     * @return list<array{certificado: CertificadoEmitido, tiene_documento: bool}>
+     */
+    public function matchingSinDocumento(Criteria $criteria): array
+    {
+        $conv = new PgCriteriaConverter(CertificadoEmitidoField::class, self::COLUMNAS);
+        $columnas = 'id_item, id_nom, nom, idioma, destino, certificado, f_certificado, esquema_emisor, firmado, f_enviado, '
+            . '(documento IS NOT NULL AND octet_length(documento) > 0) AS tiene_documento';
+        $resultado = [];
+        foreach ($this->rowsMatchingColumns($criteria, $conv, $columnas) as $aDatos) {
+            $tiene = filter_var($aDatos['tiene_documento'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            unset($aDatos['tiene_documento']);
+            $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado'] ?? null))->fromPg();
+            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado'] ?? null))->fromPg();
+            $resultado[] = ['certificado' => CertificadoEmitido::fromArray($aDatos), 'tiene_documento' => $tiene];
+        }
+
+        return $resultado;
+    }
+
     public function Eliminar(CertificadoEmitido $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
