@@ -139,7 +139,7 @@ final class ListasComCtrData
                 }
             }
             $array_atn_sacd[$nombre_ubi]['colaborador'] = $sacd_colaborador;
-            $array_atn_sacd[$nombre_ubi]['txt']['com_ctr'] = $oService->getTraduccion('com_ctr', '');
+            $array_atn_sacd[$nombre_ubi]['txt']['com_ctr'] = $this->conCursoActual($oService->getTraduccion('com_ctr', ''));
         }
 
         return [
@@ -147,5 +147,18 @@ final class ListasComCtrData
             'origen_txt' => $origen_txt,
             'lugar_fecha' => $lugar_fecha,
         ];
+    }
+
+    /**
+     * El texto guardado lleva un curso fijo (p. ej. «18-19»): se sustituye por el curso en
+     * vigor, que empieza en septiembre.
+     */
+    private function conCursoActual(string $txt): string
+    {
+        $anyo = (int)date('Y');
+        $ini = ((int)date('n') >= 9) ? $anyo : $anyo - 1;
+        $curso = sprintf('%02d-%02d', $ini % 100, ($ini + 1) % 100);
+
+        return (string)preg_replace('/\b\d{2}-\d{2}\b/', $curso, $txt);
     }
 }
