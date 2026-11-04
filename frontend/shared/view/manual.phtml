@@ -2,6 +2,7 @@
 /**
  * @var \frontend\shared\web\Posicion $oPosicion
  * @var string $modulo
+ * @var string $ancla id de encabezado al que desplazar la vista (vacío = ninguno)
  * @var list<array{slug: string, titulo: string}> $modulos
  * @var array{slug: string, titulo: string, html: string}|null $documento
  * @var string $manualBase
@@ -21,6 +22,8 @@
     .manual-orbix .manual-main { flex: 1 1 auto; padding: 0 0 0 1rem; min-width: 0; }
     .manual-orbix .manual-indice { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.5rem 1rem; list-style: none; padding: 0; margin: 0.75rem 0 0; }
     .manual-orbix .manual-indice a { display: block; padding: 0.5rem 0.65rem; border: 1px solid #d8dee4; border-radius: 4px; text-decoration: none; background: #fafbfc; }
+    /* La app tiene menús fijos arriba: al saltar a una ancla el encabezado no debe quedar debajo. */
+    .manual-orbix .manual-contenido :is(h1, h2, h3, h4, h5, h6) { scroll-margin-top: 6rem; }
     .manual-orbix .manual-contenido h1 { font-size: 1.5rem; margin-top: 0; }
     .manual-orbix .manual-contenido h2 { font-size: 1.25rem; margin-top: 1.25rem; border-bottom: 1px solid #eee; }
     .manual-orbix .manual-contenido table { border-collapse: collapse; width: 100%; margin: 0.75rem 0; font-size: 0.95rem; }
@@ -95,6 +98,16 @@
                 <article class="manual-contenido">
                     <?= $documento['html'] ?>
                 </article>
+                <?php if ($ancla !== '') { ?>
+                    <script>
+                        (function () {
+                            var el = document.getElementById(<?= json_encode($ancla) ?>);
+                            if (el) {
+                                el.scrollIntoView();
+                            }
+                        })();
+                    </script>
+                <?php } ?>
             <?php } else { ?>
                 <h2 class="subtitulo"><?= _("Manual de usuario") ?></h2>
                 <p class="comentario"><?= _("Documentación por módulo de Orbix.") ?></p>

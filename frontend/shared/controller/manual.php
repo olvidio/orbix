@@ -2,6 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\helpers\ManualAnclas;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
@@ -74,7 +75,7 @@ function manualCargarModulo(string $dir, string $slug): ?array
     $parsedown = new Parsedown();
     $parsedown->setSafeMode(true);
     $parsedown->setMarkupEscaped(true);
-    $html = $parsedown->text($markdown);
+    $html = ManualAnclas::procesar($parsedown->text($markdown))['html'];
     $titulo = manualExtraerTitulo($raw) ?? manualTituloDesdeSlug($slug);
     return ['slug' => $slug, 'titulo' => $titulo, 'html' => $html];
 }
@@ -98,6 +99,13 @@ if (isset($_POST['modulo']) && is_string($_POST['modulo'])) {
     $modulo = strtolower(trim($_POST['modulo']));
 } elseif (isset($_GET['modulo']) && is_string($_GET['modulo'])) {
     $modulo = strtolower(trim($_GET['modulo']));
+}
+
+// Ancla opcional (id de un encabezado del manual): la vista hace scroll hasta ella.
+$ancla = '';
+$anclaRaw = $_POST['ancla'] ?? $_GET['ancla'] ?? '';
+if (is_string($anclaRaw) && preg_match('/^[a-z0-9-]{1,120}$/', $anclaRaw) === 1) {
+    $ancla = $anclaRaw;
 }
 
 $modulos = manualListarModulos($manualDir);
@@ -125,6 +133,7 @@ $enlaceAyuda = [
 $a_campos = [
     'oPosicion' => $oPosicion,
     'modulo' => $modulo,
+    'ancla' => $ancla,
     'modulos' => $modulos,
     'documento' => $documento,
     'manualBase' => $manualBase,
