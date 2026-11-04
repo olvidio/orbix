@@ -2,9 +2,9 @@
 id: "usuarios.perm_menu_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Perm Menu Info"
+nombre: "Flujo - Abrir el formulario de permiso de menú"
 capacidad: "usuarios.perm_menu_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.perm_menu_form"]
 fragmentos: ["usuarios.pantalla.perm_menu_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/perm_menu_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga formulario modal de permiso menú (nuevo o edición).
+Cargar el formulario (nuevo o de edición) de un permiso de menú.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Botón de añadir o fila de la tabla de permisos de menú.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Abrir el formulario de permiso de menú
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar añadir (o la fila a editar).
+2. Se abre el formulario con el grupo de menús elegible.
+3. Si el grupo ya no existe aparece «Grupo no encontrado».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/perm_menu_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

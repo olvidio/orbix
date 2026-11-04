@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_imprimir.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Imprimir"
+nombre: "Flujo - Emitir un certificado nuevo"
 capacidad: "certificados.certificado_emitido_imprimir.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_imprimir"]
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_imprimir_datos"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Preparar datos e iniciar impresión de certificado nuevo para un alumno.
+Preparar los datos de un certificado nuevo de un alumno y empezar su impresión.
 
 ## Punto De Entrada
 
-Dossier persona / matrículas.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ Dossier persona / matrículas.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Emitir un certificado nuevo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del alumno.
+2. En el dossier de certificados elegir emitir un certificado nuevo.
+3. Elegir el idioma y los datos del certificado y pulsar imprimir.
+4. Se genera el PDF con las notas y los textos legales en el idioma elegido.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_imprimir_datos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

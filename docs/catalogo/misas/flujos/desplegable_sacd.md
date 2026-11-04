@@ -2,7 +2,7 @@
 id: "misas.desplegable_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Desplegable Sacd"
+nombre: "Flujo - Elegir sacerdote en una celda"
 capacidad: "misas.desplegable_sacd.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtrando por disponibilidad según flags de selección y día.
+Ofrecer, al pulsar una celda de la cuadrícula, los sacerdotes disponibles ese día.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Celda de la cuadrícula del plan (**Modificar plan**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir sacerdote en una celda
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plan**, pulsar la celda del día y encargo.
+2. En **Selección de sacd** marcar qué sacerdotes se quieren ver: **libre a 1a hora**, **zona** (por defecto), **dl** o **de paso**; después elegir el **Sacerdote** de la lista, que solo muestra los disponibles ese día.
+3. Indicar **Inicio**, **Fin** y **Observaciones** si procede y pulsar **Save**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/desplegable_sacd`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

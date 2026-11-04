@@ -2,9 +2,9 @@
 id: "ubiscamas.cama.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubiscamas"
-nombre: "Flujo - Gestionar Cama"
+nombre: "Flujo - Gestionar camas"
 capacidad: "ubiscamas.cama.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubiscamas.pantalla.cama_form"]
 fragmentos: ["ubiscamas.pantalla.cama_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/ubiscamas/cama_delete", "/src/ubiscamas/cama_form_data", "/src/ubiscamas/cama_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Crear, editar o eliminar camas individuales asociadas a una habitación.
+Crear, editar o eliminar camas individuales de una habitación.
 
 ## Punto De Entrada
 
-Modal invocado desde `habitacion_form` (editar/nueva cama). Sin entrada de menú en el índice.
+Formulario de la habitación > Camas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,37 +27,17 @@ Modal invocado desde `habitacion_form` (editar/nueva cama). Sin entrada de menú
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Gestionar camas
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/ubiscamas/cama_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Guardar antes la habitación y pulsar **Añadir cama**.
+2. Rellenar **Descripción** y marcar **VIP** o **Larga**; pulsar **Guardar**.
+3. Para cambiar o quitar una cama, usar **Editar** o **Eliminar** en su fila.
 
 Endpoints asociados:
 - `/src/ubiscamas/cama_delete`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
 - `/src/ubiscamas/cama_form_data`
+- `/src/ubiscamas/cama_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

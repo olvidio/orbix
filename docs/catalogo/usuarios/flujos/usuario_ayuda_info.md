@@ -2,9 +2,9 @@
 id: "usuarios.usuario_ayuda_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Ayuda Info"
+nombre: "Flujo - Consultar el correo asociado"
 capacidad: "usuarios.usuario_ayuda_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.ayuda_2fa_reset", "usuarios.pantalla.ayuda_acceso"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_ayuda_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
+En la pantalla de ayuda de acceso, mostrar el correo (ofuscado) asociado al login y el contacto del administrador regional.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pantalla de ayuda de acceso, antes de iniciar sesión.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar el correo asociado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ayuda de acceso.
+2. Escribir el login válido.
+3. Se muestra el correo parcialmente oculto al que llegarán los avisos y el contacto del administrador.
+4. Si el login no es válido aparece «Debe ingresar un nombre de usuario válido».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_ayuda_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

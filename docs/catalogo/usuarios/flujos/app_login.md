@@ -2,7 +2,7 @@
 id: "usuarios.app_login.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar App Login"
+nombre: "Flujo - Entrar desde la app móvil"
 capacidad: "usuarios.app_login.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Autenticación app móvil con credenciales y 2FA opcional.
+Iniciar sesión desde la aplicación móvil con usuario, contraseña y, si procede, código 2FA.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pantalla de acceso de la aplicación móvil.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Entrar desde la app móvil
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la app e indicar usuario, contraseña y esquema.
+2. Si el usuario tiene 2FA, escribir el código de verificación.
+3. Si falta usuario o contraseña aparece «Usuario y contraseña obligatorios».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/app_login`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado Asignar"
 capacidad: "actividadescentro.centro_encargado_asignar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadescentro/centro_encargado_asignar"]

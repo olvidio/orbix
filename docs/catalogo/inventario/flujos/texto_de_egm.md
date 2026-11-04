@@ -2,9 +2,9 @@
 id: "inventario.texto_de_egm.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Texto De Egm"
+nombre: "Flujo - Abrir el texto para modificarlo"
 capacidad: "inventario.texto_de_egm.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_form_texto_listado"]
 fragmentos: ["inventario.pantalla.equipajes_form_texto_listado"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/texto_de_egm"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Texto De Egm
 
-Propuesta generada automaticamente desde la capacidad `inventario.texto_de_egm.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona TextoDeEgm. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar el texto que se añade a las maletas (cabecera, cabecera B, pie) para poder modificarlo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **imprimir equipajes**, al pulsar el lápiz (**modificar texto**) de la cabecera, cabecera B) o pie.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Abrir el texto para modificarlo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz junto a la cabecera, la cabecera B) o el pie.
+2. Se abre el cuadro con el texto actual.
+3. Cambiarlo y guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/texto_de_egm`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

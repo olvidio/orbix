@@ -2,9 +2,9 @@
 id: "inventario.equipajes_add_doc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Add Doc"
+nombre: "Flujo - Añadir un documento a una valija"
 capacidad: "inventario.equipajes_add_doc.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_add_doc"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Add Doc
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_add_doc.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesAddDoc. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Meter un documento en una valija del equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > equipajes > hacer equipajes**, en una valija con el botón **añadir documento**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Añadir un documento a una valija
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **añadir documento**.
+3. Elegir el **tipo de documento**; se listan los ejemplares libres. Marcar el ejemplar y pulsar **añadir** (o **cancel**).
+4. El documento aparece en la valija; si falla se muestra el aviso **respuesta**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_add_doc`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

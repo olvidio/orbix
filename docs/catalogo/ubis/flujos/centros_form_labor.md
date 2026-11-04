@@ -2,9 +2,9 @@
 id: "ubis.centros_form_labor.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Form Labor"
+nombre: "Flujo - Cambiar el tipo de labor"
 capacidad: "ubis.centros_form_labor.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.centros_form_labor"]
 fragmentos: ["ubis.pantalla.centros_form_labor"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_form_labor"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga datos del formulario modal de tipo de labor de un centro DL.
+Cambiar el tipo de labor de un centro.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros** (Pills2: CASAS Y CTR > direcciones > modificar centros).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar el tipo de labor
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > labor**, pulsar el centro.
+2. Elegir el **tipo de labor** y pulsar **guardar cambios**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_form_labor`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "ubis.teleco_tabla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Teleco Tabla"
+nombre: "Flujo - Consultar las telecomunicaciones"
 capacidad: "ubis.teleco_tabla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.teleco_tabla"]
 fragmentos: ["ubis.pantalla.teleco_tabla"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/teleco_tabla"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista las telecomunicaciones de un centro o casa con botones según permisos.
+Ver las telecomunicaciones (teléfonos, fax, e-mails, web) de un centro o casa.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **scdl > direcciones > buscar**: buscar, pulsar el nombre del centro o casa en la tabla y usar «Editar: **centro** / **dirección** / **telecos**» de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar las telecomunicaciones
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **telecos** en «Editar:».
+2. Se muestra «Telecomunicaciones de un centro o casa» con Id_ubi, nombre del teleco (hoy sale su número de tipo), descripción, número o siglas y observaciones.
+3. Los botones son **modificar** y **eliminar** (sobre las filas marcadas) y **nuevo**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/teleco_tabla`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

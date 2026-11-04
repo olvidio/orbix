@@ -2,9 +2,9 @@
 id: "actividadestudios.ca_posibles.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Ca Posibles"
+nombre: "Flujo - Ver los posibles asistentes al ca"
 capacidad: "actividadestudios.ca_posibles.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.ca_posibles"]
 fragmentos: ["actividadestudios.pantalla.ca_posibles"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/ca_posibles_data"]
@@ -17,19 +17,11 @@ Cálculo y listado de créditos/asignaturas cursables por alumno en cada CA.
 
 ## Objetivo De Usuario
 
-Tras elegir centro, periodo y filtros en `ca_posibles_que`, el usuario obtiene el cuadro
-de posibles CA por alumno: créditos cursables, asignaturas pendientes y enlaces de detalle.
-Misma lógica que `frontend/actividadestudios/controller/ca_posibles.php`; en modo lista,
-`pagina_link_spec` lo firma el front.
+Obtener, para el centro y el periodo elegidos, el cuadro de posibles asistentes al ca: por cada alumno, los créditos que puede cursar, las asignaturas pendientes y enlaces al detalle.
 
 ## Punto De Entrada
 
-Pantalla `ca_posibles` (`frontend/actividadestudios/controller/ca_posibles.php`): al enviar
-el formulario de `ca_posibles_que` o al pulsar un enlace de detalle, llama a
-`ca_posibles_data` con los filtros de centro, periodo, grupo de estudios y flags
-(`ca_estudios`, `ca_repaso`, `ca_todos`).
-
-También accesible desde búsqueda de personas (`personas_select`, `fnjs_posibles_ca`).
+Se llega desde el formulario de búsqueda de posibles ca (menú de estudios) o desde la búsqueda de personas, con la opción de posibles ca.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -38,13 +30,13 @@ También accesible desde búsqueda de personas (`personas_select`, `fnjs_posible
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver los posibles asistentes al ca
 
-Pasos:
-1. En `ca_posibles_que`, elegir centro N o AGD, periodo y opciones de filtro.
-2. Pulsar **buscar**; el formulario envía a `ca_posibles.php`.
-3. El controlador valida que haya centro seleccionado y consulta `ca_posibles_data`.
-4. Se muestra el listado o cuadro de posibles CA por alumno.
+Pasos propuestos:
+1. Abrir el formulario de búsqueda de posibles ca.
+2. Elegir el centro (n o agd), el periodo y las opciones de filtro.
+3. Pulsar **buscar**; hace falta haber elegido un centro.
+4. Aparece el cuadro con los posibles asistentes, uno por alumno, con sus créditos y asignaturas pendientes.
 
 Endpoints asociados:
 - `/src/actividadestudios/ca_posibles_data`

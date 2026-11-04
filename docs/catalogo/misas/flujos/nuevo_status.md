@@ -2,9 +2,9 @@
 id: "misas.nuevo_status.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Nuevo Status"
+nombre: "Flujo - Aplicar un nuevo estado a un periodo"
 capacidad: "misas.nuevo_status.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.cambiar_status"]
 fragmentos: ["misas.pantalla.cambiar_status"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/nuevo_status"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
+Aplicar el nuevo estado a todas las misas de una zona en un rango de fechas.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado.
+Menú **dre > Misas > Cambiar estado** (Pills2: ATENCIÓN SACD > Gestión de misas > Cambiar estado).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Aplicar un nuevo estado a un periodo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Cambiar estado**, elegir zona, periodo y **Nuevo estado**.
+2. Pulsar **cambiar**. Los sacerdotes o centros pasan a ver el plan según el estado elegido.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/nuevo_status`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

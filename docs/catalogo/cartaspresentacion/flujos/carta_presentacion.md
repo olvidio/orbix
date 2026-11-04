@@ -2,9 +2,9 @@
 id: "cartaspresentacion.carta_presentacion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
-nombre: "Flujo - Gestionar Carta Presentacion"
+nombre: "Flujo - Dar de alta o modificar la carta de un centro"
 capacidad: "cartaspresentacion.carta_presentacion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/cartaspresentacion/carta_presentacion_eliminar", "/src/cartaspresentacion/carta_presentacion_form_data", "/src/cartaspresentacion/carta_presentacion_update"]
@@ -17,28 +17,37 @@ Operaciones sobre una carta individual (par centro + dirección).
 
 ## Objetivo De Usuario
 
-Dar de alta, modificar o quitar los datos de presentación de un centro concreto.
+Dar de alta, modificar o quitar los datos de presentación de un centro.
 
 ## Punto De Entrada
 
-Desde el listado de la pantalla principal (`cartas_presentacion`): enlace **director** (formulario) o
-**quitar** (eliminar). No tiene entrada de menú propia.
+Desde la lista de la pantalla de cartas de presentación (opción **modificar**): enlace **director** para abrir el formulario o **quitar** para eliminar. No tiene entrada de menú propia.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver formulario / alta
+### Dar de alta o modificar la carta de un centro
 
-1. Pulsar **director** → `carta_presentacion_form_data` con `id_ubi` + `id_direccion`.
-2. Si no hay carta, campos vacíos (alta al guardar). Si hay permiso denegado, mensaje de error.
+Pasos propuestos:
+1. En la lista, pulsar **director** en la fila del centro.
+2. Se abre el formulario; si el centro no tiene carta, sale vacío y se crea al guardar. No se pueden modificar datos de otra delegación.
+3. Rellenar nombre, teléfono, e-mail, zona y observaciones.
+4. Pulsar **Guardar**.
 
-### Crear / actualizar
+Endpoints asociados:
+- `/src/cartaspresentacion/carta_presentacion_eliminar`
+- `/src/cartaspresentacion/carta_presentacion_form_data`
+- `/src/cartaspresentacion/carta_presentacion_update`
 
-1. Rellenar nombre, teléfono, e-mail, zona, observaciones.
-2. **Guardar** → `carta_presentacion_update`.
+### Quitar la carta de un centro
 
-### Eliminar
+Pasos propuestos:
+1. En una fila que ya tiene carta, pulsar **quitar**.
+2. Confirmar el aviso.
 
-1. En fila con carta, pulsar **quitar** → confirmación → `carta_presentacion_eliminar`.
+Endpoints asociados:
+- `/src/cartaspresentacion/carta_presentacion_eliminar`
+- `/src/cartaspresentacion/carta_presentacion_form_data`
+- `/src/cartaspresentacion/carta_presentacion_update`
 
 ## Errores Conocidos
 

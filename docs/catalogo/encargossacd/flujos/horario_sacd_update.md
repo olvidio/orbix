@@ -2,9 +2,9 @@
 id: "encargossacd.horario_sacd_update.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Horario Sacd Update"
+nombre: "Flujo - Guardar un horario de sacerdote"
 capacidad: "encargossacd.horario_sacd_update.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.horario_sacd_update"]
 fragmentos: ["encargossacd.pantalla.horario_sacd_update"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/horario_sacd_update_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.horario_sacd
 
 ## Objetivo De Usuario
 
-Gestiona EncargoSacdHorario. Alta/edición/baja de horario de encargo sacd (encargo_sacd_horario).
+Guardar, modificar o quitar el horario de un sacerdote en un encargo.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Formulario de horario del sacerdote.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Guardar un horario de sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el horario y pulsar **guardar horario**.
+2. Para borrarlo, **eliminar horario** y confirmar «¿Está seguro que desea borrar este horario?».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/horario_sacd_update_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

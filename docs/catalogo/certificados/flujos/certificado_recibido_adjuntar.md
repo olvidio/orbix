@@ -2,9 +2,9 @@
 id: "certificados.certificado_recibido_adjuntar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Recibido Adjuntar"
+nombre: "Flujo - Registrar un certificado recibido"
 capacidad: "certificados.certificado_recibido_adjuntar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_recibido_adjuntar"]
 fragmentos: ["certificados.pantalla.certificado_recibido_adjuntar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_recibido_adjuntar_data"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Registrar un certificado recibido nuevo con PDF.
+Registrar un certificado recibido de otra delegación, con su PDF.
 
 ## Punto De Entrada
 
-Listado certificados de persona → nuevo.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ Listado certificados de persona → nuevo.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Registrar un certificado recibido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la persona y su dossier de certificados.
+2. Pulsar **adjuntar nuevo certificado** y elegir el tipo recibido.
+3. Rellenar los datos y elegir el PDF.
+4. Guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_recibido_adjuntar_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

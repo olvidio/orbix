@@ -2,9 +2,9 @@
 id: "dbextern.sincro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Crear persona desde BDU"
+nombre: "Flujo - Crear una persona desde la BDU"
 capacidad: "dbextern.sincro.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_listas"]
 fragmentos: ["dbextern.pantalla.ver_listas"]
 acciones: ["crear"]
 endpoints: ["/src/dbextern/sincro_crear"]
@@ -17,18 +17,23 @@ Alta individual de ficha Aquinate desde la BDU (punto 4).
 
 ## Objetivo De Usuario
 
-Cuando no hay coincidencia Orbix, crear una ficha nueva y vincularla automáticamente.
+Cuando una persona de la BDU no tiene coincidencia en Aquinate, crear una ficha nueva y vincularla automáticamente.
 
 ## Punto De Entrada
 
-Botón **crear nuevo** en `ver_listas` (`fnjs_crear`).
+Botón **crear nuevo** en «Revisar BDU no unidas».
 
-## Escenarios
+## Escenarios Inferidos
 
-### Crear
+### Crear una persona desde la BDU
 
-1. Envía `id_nom_listas`, `tipo_persona`, `id` (índice en sesión).
-2. Tras éxito, avanza al siguiente registro (`fnjs_submit` con `-`).
+Pasos propuestos:
+1. En «Revisar BDU no unidas», con la persona delante, pulsar **crear nuevo**.
+2. Se crea la ficha y queda vinculada.
+3. Pasa automáticamente a la siguiente persona de la lista.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_crear`
 
 ## Endpoints Del Flujo
 

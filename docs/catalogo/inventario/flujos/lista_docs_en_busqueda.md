@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_en_busqueda.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs En Busqueda"
+nombre: "Flujo - Consultar los documentos pendientes"
 capacidad: "inventario.lista_docs_en_busqueda.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.docs_en_busqueda"]
 fragmentos: ["inventario.pantalla.docs_en_busqueda"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_en_busqueda"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs En Busqueda
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_en_busqueda.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsEnBusqueda. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos que están pendientes de localizar (en búsqueda).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > inventarios > lista docs pendientes**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar los documentos pendientes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs pendientes**.
+2. Leer el listado: **centro - lugar**, **documento** y **núm. reg.**.
+3. Usar la lista para saber qué hay que localizar en cada centro.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_en_busqueda`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

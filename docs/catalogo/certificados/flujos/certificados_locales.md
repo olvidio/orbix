@@ -2,9 +2,9 @@
 id: "certificados.certificados_locales.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificados Locales"
+nombre: "Flujo - Elegir el idioma del certificado"
 capacidad: "certificados.certificados_locales.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_adjuntar", "certificados.pantalla.certificado_recibido_adjuntar"]
 fragmentos: ["certificados.pantalla.certificado_emitido_adjuntar", "certificados.pantalla.certificado_recibido_adjuntar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificados_locales_data"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Cargar desplegable de idiomas en formularios de certificados.
+Cargar la lista de idiomas disponibles en los formularios de certificados.
 
 ## Punto De Entrada
 
-Formularios adjuntar/modificar (emitido y recibido).
+Formularios de certificados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +30,14 @@ Formularios adjuntar/modificar (emitido y recibido).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir el idioma del certificado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de certificado, abrir el desplegable de idioma.
+2. Elegir el idioma en que se emitirá.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificados_locales_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

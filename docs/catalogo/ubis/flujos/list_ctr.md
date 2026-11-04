@@ -2,9 +2,9 @@
 id: "ubis.list_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar List Ctr"
+nombre: "Flujo - Listar centros o casas"
 capacidad: "ubis.list_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.list_ctr"]
 fragmentos: ["ubis.pantalla.list_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/list_ctr_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.
+Sacar un listado de centros o casas de una delegación o del exterior, con teléfonos y enlaces a la ficha.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casas > listados.
+Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,26 @@ Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casa
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar centros o casas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **Localización** (la propia dl, otras o «otras») y el **Tipo de ubi**: solo centros de n, todos los ctr de la dl, solo centros de agd, de s, de sss+, obras corporativas, casas de retiros y de cv, colegios o resto de casas cdc.
+3. Pulsar **listar**.
+4. Pulsar un nombre para abrir su ficha; la tabla admite **Buscar en todas las columnas**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/list_ctr_data`
+
+### Trasladar centros o casas a otra delegación
+
+Pasos propuestos:
+1. En el listado, marcar los centros o casas.
+2. Pulsar el botón de trasladar y elegir la delegación destino.
+3. Confirmar con **Trasladar** (o **Cancelar**).
+
+Endpoints asociados:
+- `/src/ubis/list_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

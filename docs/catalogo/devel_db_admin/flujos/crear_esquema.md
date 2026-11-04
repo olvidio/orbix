@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Crear Esquema"
 capacidad: "devel_db_admin.crear_esquema.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_crear_esquema"]
 fragmentos: ["devel_db_admin.pantalla.db_crear_esquema"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/crear_esquema"]

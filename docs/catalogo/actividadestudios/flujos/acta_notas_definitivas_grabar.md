@@ -2,9 +2,9 @@
 id: "actividadestudios.acta_notas_definitivas_grabar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Acta Notas Definitivas Grabar"
+nombre: "Flujo - Grabar las notas definitivas"
 capacidad: "actividadestudios.acta_notas_definitivas_grabar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.acta_notas"]
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/acta_notas_definitivas_grabar"]
@@ -17,16 +17,11 @@ Conversión del borrador del acta en notas definitivas (`PersonaNota` / tessera)
 
 ## Objetivo De Usuario
 
-El usuario confirma las notas del acta como definitivas: el sistema convierte las
-matrículas/notas borrador en registros `PersonaNota` definitivos, asignando época,
-nivel y acta correspondiente. Sustituye la rama `que=3` del legacy
-`apps/actividadestudios/controller/acta_notas_update.php`.
+Confirmar las notas del acta como definitivas: las notas en borrador pasan a ser notas definitivas de cada persona, con su época, nivel y acta.
 
 ## Punto De Entrada
 
-Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): la función
-`fnjs_guardar_tessera` envía el formulario por AJAX a este endpoint (solo si `mod` no es
-`nueva`).
+Botón de grabar las notas definitivas, en la pantalla del acta de notas de una asignatura.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,13 +29,12 @@ Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): 
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Grabar las notas definitivas
 
-Pasos:
-1. En el acta de notas de una asignatura, revisar notas y situaciones de cada alumno.
-2. Pulsar la acción de grabar definitivas (`fnjs_guardar_tessera`).
-3. El sistema serializa `#f_1303` con `que=3` y llama al endpoint.
-4. Si la respuesta es correcta, las notas quedan grabadas en tessera; si no, se muestra alerta.
+Pasos propuestos:
+1. En el acta de notas de una asignatura, revisar la nota y la situación de cada alumno.
+2. Pulsar el botón de grabar las notas definitivas.
+3. Si todo es correcto, las notas quedan grabadas en la tessera de cada alumno; si no, sale un aviso con el motivo.
 
 Endpoints asociados:
 - `/src/actividadestudios/acta_notas_definitivas_grabar`

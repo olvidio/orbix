@@ -2,9 +2,9 @@
 id: "actividadplazas.peticiones_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Peticiones Activ"
+nombre: "Flujo - Abrir las peticiones de una persona"
 capacidad: "actividadplazas.peticiones_activ.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadplazas.pantalla.peticiones_activ"]
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/peticiones_activ_data"]
@@ -18,13 +18,11 @@ en orden de prioridad.
 
 ## Objetivo De Usuario
 
-Consultar y preparar la edición de las peticiones de plaza de una persona: ver su nombre, las
-actividades disponibles del tipo y las peticiones ya guardadas, listas para reordenar o ampliar.
+Ver las peticiones de plaza de una persona: su nombre, las actividades disponibles del tipo elegido y las peticiones ya guardadas, listas para reordenar o ampliar.
 
 ## Punto De Entrada
 
-Pantalla `peticiones_activ`, abierta al seleccionar una persona desde los listados de colectivos
-(n / a / agd). No tiene entrada directa en el menú de plazas.
+Se abre al seleccionar una persona en los listados de los colectivos (n, a, agd). No tiene entrada propia en el menú de plazas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,14 +30,12 @@ Pantalla `peticiones_activ`, abierta al seleccionar una persona desde los listad
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Abrir las peticiones de una persona
 
-1. Desde un listado de personas (n / a / agd), abrir las peticiones de plaza de una persona.
-2. El sistema carga `peticiones_activ_data` con `id_nom` y `sactividad`.
-3. Devuelve las actividades candidatas y las peticiones actuales; limpia peticiones antiguas ya no
-   disponibles.
-4. Pinta los desplegables (`DesplegableArray`) precargados con el orden de prioridad; el usuario
-   puede guardar o borrar (flujo `peticiones`).
+Pasos propuestos:
+1. Desde un listado de personas (n, a o agd), seleccionar a la persona.
+2. Aparecen las actividades que puede pedir y las peticiones que ya tenía; las que ya no están disponibles se descartan.
+3. Los desplegables salen con el orden de prioridad guardado. Se pueden cambiar y guardar, o borrar todo (ver «Guardar las peticiones de una persona»).
 
 Endpoints asociados:
 - `/src/actividadplazas/peticiones_activ_data`

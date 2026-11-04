@@ -2,9 +2,9 @@
 id: "inventario.inventario_css_inline.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Inventario Css Inline"
+nombre: "Flujo - Qué hace al imprimir"
 capacidad: "inventario.inventario_css_inline.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_imprimir_ctr", "inventario.pantalla.doc_imprimir_dlb"]
 fragmentos: ["inventario.pantalla.doc_imprimir_ctr", "inventario.pantalla.doc_imprimir_dlb"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/inventario/inventario_css_inline_data"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Inventario Css Inline
 
-Propuesta generada automaticamente desde la capacidad `inventario.inventario_css_inline.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona InventarioCssInline. CSS embebido para impresión de inventario (inventario.css.php en disco).
+Dar formato de impresión (márgenes, cabecera y pie de página) a las hojas de inventario.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+No se abre desde el menú: se aplica automáticamente al generar el inventario de centros o de dlb/casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Qué hace al imprimir
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Generar un inventario con **Imprimir ctr**, **Imprimir** o **Imprimir dl**.
+2. El formato se aplica solo; no hay nada que configurar.
+3. Si la hoja sale mal maquetada, avisar a mantenimiento.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/inventario_css_inline_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

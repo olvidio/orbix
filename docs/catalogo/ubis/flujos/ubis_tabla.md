@@ -2,9 +2,9 @@
 id: "ubis.ubis_tabla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Ubis Tabla"
+nombre: "Flujo - Trabajar con los resultados de la búsqueda"
 capacidad: "ubis.ubis_tabla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.ubis_tabla"]
 fragmentos: ["ubis.pantalla.ubis_tabla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/ubis_tabla_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.
+Mostrar la tabla de centros y casas encontrados y permitir abrir, crear, eliminar o trasladar.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > buscar. Pills2: scdl > direcciones > buscar.
+Resultado de la búsqueda de **buscar** (scdl > direcciones > buscar).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Menú Legacy: scdl > direcciones > buscar. Pills2: scdl > direcciones > buscar.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Trabajar con los resultados de la búsqueda
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Tras buscar, aparece «Tabla de toda las casas y centros».
+2. Pulsar un nombre para abrir su ficha.
+3. Para crear uno nuevo, usar el botón **Centro** o **Casa** (solo aparecen si se buscó con un tipo y una localización distintos de «todos»; con «todos» la pantalla solo ofrece **buscar otras opciones** y avisa «OJO!: para crear un centro/casa debe especificar el tipo de centro/casa»).
+4. Para quitar uno, marcarlo y pulsar eliminar; confirmar «¿Está seguro que desea borrar este ubi?».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/ubis_tabla_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

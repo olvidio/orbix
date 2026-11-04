@@ -2,9 +2,9 @@
 id: "usuarios.usuario_check_pwd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Check Pwd"
+nombre: "Flujo - Validar una contraseña al escribirla"
 capacidad: "usuarios.usuario_check_pwd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_pwd"]
 fragmentos: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_pwd"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_check_pwd"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).
+Comprobar, antes de guardar, que la contraseña escrita cumple los requisitos.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Sin entrada de menú propia: se usa desde otra pantalla o de forma automática.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,13 +28,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Validar una contraseña al escribirla
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir la contraseña en el formulario.
+2. Al pulsar guardar se comprueba automáticamente.
+3. Si no cumple, sale un aviso «password error» con el motivo y no se guarda. La regla: más de 8 caracteres e incluir al menos una letra mayúscula, un número y un carácter especial. Ejemplos: «abc» falla por corta; «abcdefgh1» falla por no tener mayúscula ni carácter especial.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_check_pwd`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

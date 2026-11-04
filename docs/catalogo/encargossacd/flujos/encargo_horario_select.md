@@ -2,9 +2,9 @@
 id: "encargossacd.encargo_horario_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Encargo Horario Select"
+nombre: "Flujo - Consultar los horarios de un encargo"
 capacidad: "encargossacd.encargo_horario_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_horario_select"]
 fragmentos: ["encargossacd.pantalla.encargo_horario_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/encargo_horario_select_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.encargo_hora
 
 ## Objetivo De Usuario
 
-Gestiona EncargoHorarioSelect. Datos para la lista de horarios de un encargo (encargo_horario_select). Se devuelven ya precalculados el texto descriptivo del horario y las fechas formateadas para que el frontend solo arme frontend\shared\web\Lista.
+Ver los horarios de un encargo y añadir otro.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Ficha del encargo.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar los horarios de un encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo.
+2. Aparece la lista **horario de** el encargo.
+3. Pulsar **añadir horario** para crear uno nuevo, o un horario para modificarlo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/encargo_horario_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

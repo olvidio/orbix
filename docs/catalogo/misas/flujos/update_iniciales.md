@@ -2,9 +2,9 @@
 id: "misas.update_iniciales.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Update Iniciales"
+nombre: "Flujo - Guardar iniciales y color"
 capacidad: "misas.update_iniciales.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_iniciales_zona"]
 fragmentos: ["misas.pantalla.ver_iniciales_zona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/update_iniciales"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
+Guardar las iniciales y el color de un sacerdote.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd.
+Menú **dre > Misas > Iniciales sacd** (Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar iniciales y color
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Cambiar las iniciales o el color en la fila.
+2. Se guardan al salir de la celda.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/update_iniciales`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

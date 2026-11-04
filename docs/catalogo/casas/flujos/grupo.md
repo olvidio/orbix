@@ -2,7 +2,7 @@
 id: "casas.grupo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Grupo"
+nombre: "Flujo - Gestionar los grupos de casas"
 capacidad: "casas.grupo.gestionar"
 pantallas_principales: ["casas.pantalla.grupo"]
 fragmentos: ["casas.pantalla.grupo_form", "casas.pantalla.grupo_lista"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.grupo.gestionar` y 
 
 ## Objetivo De Usuario
 
-Gestiona GrupoCasa. Crea o actualiza un GrupoCasa. Datos del formulario GrupoCasa (nuevo/editar). Elimina un GrupoCasa. Listado de GrupoCasa (relaciones padre ↔ hijo).
+Agrupar casas: indicar qué casa es la madre y cuáles dependen de ella.
 
 ## Punto De Entrada
 
-- `casas.pantalla.grupo`
+Menú **adl > Gestión casas > grupos** (Pills2: CASAS Y CTR > Gestión casas > grupos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,48 +30,19 @@ Gestiona GrupoCasa. Crea o actualiza un GrupoCasa. Datos del formulario GrupoCas
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Gestionar los grupos de casas
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/casas/grupo_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **grupos**: aparece la lista de **grupos de casas**.
+2. Para crear uno, pulsar nuevo; elegir la **Casa Madre** y la **Casa dependiente** (deben ser dos casas distintas) y pulsar **guardar**.
+3. Para cambiarlo, abrir la relación, modificar y **guardar**; para quitarlo, eliminarla.
+4. Aviso: en la estadística económica las casas de un mismo grupo se recalculan conjuntamente.
 
 Endpoints asociados:
 - `/src/casas/grupo_eliminar`
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/casas/grupo_lista_data`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
 - `/src/casas/grupo_form_data`
+- `/src/casas/grupo_lista_data`
+- `/src/casas/grupo_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

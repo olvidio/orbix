@@ -2,7 +2,7 @@
 id: "actividades.tipo_activ_form_modificar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Formulario editar tipo actividad"
+nombre: "Flujo - Modificar un tipo de actividad"
 capacidad: "actividades.tipo_activ_form_modificar.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
@@ -17,11 +17,23 @@ Carga del formulario de edición para un `id_tipo_activ` seleccionado en la tabl
 
 ## Objetivo De Usuario
 
-Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
+Modificar el nombre de un tipo de actividad existente.
 
 ## Punto De Entrada
 
-Pantalla `tipo_activ` → enlace modificar → `tipo_activ_form_modificar`.
+Menú **sistema > Configuración > gestión Tipos actividades**.
+
+## Escenarios Inferidos
+
+### Modificar un tipo de actividad
+
+Pasos propuestos:
+1. En **gestión Tipos actividades**, pulsar modificar en el tipo.
+2. Se abre el formulario con el nombre actual.
+3. Cambiarlo y guardar.
+
+Endpoints asociados:
+- `/src/actividades/tipo_activ_form_modificar`
 
 ## Endpoints Del Flujo
 

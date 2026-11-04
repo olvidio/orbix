@@ -2,9 +2,9 @@
 id: "actividadestudios.posibles_asignaturas_ca.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Posibles Asignaturas Ca"
+nombre: "Flujo - Ver las posibles asignaturas de una actividad"
 capacidad: "actividadestudios.posibles_asignaturas_ca.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.posibles_asignaturas_ca"]
 fragmentos: ["actividadestudios.pantalla.posibles_asignaturas_ca"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/posibles_asignaturas_ca_data"]
@@ -17,15 +17,11 @@ Informe de asignaturas cursables por alumno en una actividad CA.
 
 ## Objetivo De Usuario
 
-El usuario consulta, para una actividad CA, qué asignaturas podrían matricular los alumnos
-según su historial de notas y pendientes, agrupado por asignatura y por alumno.
+Ver qué asignaturas podrían cursar los asistentes de la actividad.
 
 ## Punto De Entrada
 
-Pantalla `posibles_asignaturas_ca`
-(`frontend/actividadestudios/controller/posibles_asignaturas_ca.php`): se abre desde
-`actividad_select` con acción `posibles_asignaturas`; llama a
-`posibles_asignaturas_ca_data` con `id_activ` y `nom_activ`.
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **posibles asignaturas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,13 +30,11 @@ Pantalla `posibles_asignaturas_ca`
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver las posibles asignaturas de una actividad
 
-Pasos:
-1. En `actividad_select`, seleccionar una actividad CA.
-2. Pulsar la acción **posibles asignaturas**.
-3. El sistema consulta `posibles_asignaturas_ca_data`.
-4. Se muestra el informe Twig con asignaturas y alumnos posibles.
+Pasos propuestos:
+1. Marcar una actividad de tipo ca y pulsar **posibles asignaturas**.
+2. Se muestra una tabla «asignatura / posibles alumnos / nombres» y, debajo, los «alumnos a los que faltan 4 o menos asignaturas para terminar el cuadrienio».
 
 Endpoints asociados:
 - `/src/actividadestudios/posibles_asignaturas_ca_data`

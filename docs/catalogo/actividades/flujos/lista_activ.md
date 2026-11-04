@@ -2,7 +2,7 @@
 id: "actividades.lista_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Tabla listado actividades"
+nombre: "Flujo - Ver el listado de actividades"
 capacidad: "actividades.lista_activ.gestionar"
 pantallas_principales: ["actividades.pantalla.lista_activ_que"]
 fragmentos: ["actividades.pantalla.lista_activ"]
@@ -17,19 +17,23 @@ Obtiene cabeceras, filas y título para listados SR/SG o búsquedas con `que=lis
 
 ## Objetivo De Usuario
 
-Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `actividad_que`.
+Ver la tabla de actividades después de enviar los filtros del formulario de búsqueda.
 
 ## Punto De Entrada
 
-`lista_activ.php` (POST con filtros acumulados).
+Se abre al pulsar buscar en el formulario de listas de actividades.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el listado de actividades
 
-1. Controller normaliza periodo (default curso si faltan fechas).
-2. POST a `lista_activ_datos` con `que`, tipos, periodo, secciones, etc.
-3. Construye `Lista` y renderiza `lista_activ.phtml`.
+Pasos propuestos:
+1. Rellenar el formulario con el tipo de actividad, el periodo y las secciones; si no se ponen fechas, se toma el curso actual.
+2. Pulsar buscar.
+3. Aparece la tabla de actividades que cumplen los filtros.
+
+Endpoints asociados:
+- `/src/actividades/lista_activ_datos`
 
 ## Endpoints Del Flujo
 

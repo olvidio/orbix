@@ -2,9 +2,9 @@
 id: "procesos.procesos_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Select"
+nombre: "Flujo - Elegir el proceso que se quiere administrar"
 capacidad: "procesos.procesos_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/procesos_select_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga inicial de la pantalla de administración de procesos: opciones del desplegable de tipo de proceso y hashes de navegación.
+Elegir el tipo de proceso de actividades que se quiere revisar o modificar, y clonar sus tareas desde otro.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
+Menú **sistema > procesos activ. > procesos** (Pills2: ADMIN LOCAL > procesos activ. > procesos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > proces
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir el proceso que se quiere administrar
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **procesos**.
+2. En **Proceso** elegir el tipo (actividad n, agd, sacd, sg, sr, estudios, general…; hay variantes «(no dl)»).
+3. Pulsar **ver listado** para abrir sus fases y tareas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

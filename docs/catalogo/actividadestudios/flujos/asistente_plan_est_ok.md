@@ -2,7 +2,7 @@
 id: "actividadestudios.asistente_plan_est_ok.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Asistente Plan Est Ok"
+nombre: "Flujo - Confirmar el plan de estudios"
 capacidad: "actividadestudios.asistente_plan_est_ok.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,14 +17,11 @@ Confirmación del plan de estudios de un asistente (`est_ok`).
 
 ## Objetivo De Usuario
 
-El usuario marca el plan de estudios de un asistente como confirmado (`est_ok`). Sustituye
-al case `plan` de `update_3103.php`.
+Marcar como confirmado el plan de estudios de un asistente.
 
 ## Punto De Entrada
 
-Fragmento `select_matriculas_de_una_persona` (dossier 1303): `fnjs_grabar_est` en
-`frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` llama al endpoint
-por AJAX.
+Dossier **Matrículas** de una persona: botón para confirmar el plan.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,12 +29,12 @@ por AJAX.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Confirmar el plan de estudios
 
-Pasos:
-1. En el dossier de matrículas de una persona (1303), marcar o confirmar el plan de estudios.
-2. Pulsar la acción de confirmar plan (`fnjs_grabar_est`).
-3. El sistema actualiza el flag `est_ok` del asistente y refresca el fragmento.
+Pasos propuestos:
+1. En el dossier de matrículas de una persona, marcar la casilla de plan de estudios confirmado.
+2. Pulsar el botón de confirmar el plan.
+3. La lista se refresca y el plan queda como confirmado.
 
 Endpoints asociados:
 - `/src/actividadestudios/asistente_plan_est_ok`

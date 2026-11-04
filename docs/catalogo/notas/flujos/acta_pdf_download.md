@@ -2,7 +2,7 @@
 id: "notas.acta_pdf_download.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Pdf Download"
+nombre: "Flujo - Descargar el PDF de un acta"
 capacidad: "notas.acta_pdf_download.gestionar"
 pantallas_principales: ["notas.pantalla.acta_pdf_download"]
 fragmentos: []
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf_download.g
 
 ## Objetivo De Usuario
 
-Descargar PDF con token firmado.
+Descargar el PDF firmado de un acta.
 
 ## Punto De Entrada
 
-- `notas.pantalla.acta_pdf_download`
+Botón de descarga en **actas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Descargar el PDF de un acta
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **actas**, marcar el acta.
+2. Pulsar descargar PDF: se abre en una pestaña nueva (el enlace caduca a los pocos minutos).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_pdf_download`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

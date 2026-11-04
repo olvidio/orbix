@@ -2,9 +2,9 @@
 id: "misas.eliminar_encargo_zona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Eliminar Encargo Zona"
+nombre: "Flujo - Eliminar un encargo de zona"
 capacidad: "misas.eliminar_encargo_zona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_zona"]
 fragmentos: ["misas.pantalla.ver_encargos_zona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/eliminar_encargo_zona"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
+Eliminar un encargo de zona.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos.
+Menú **dre > Misas > Modificar encargos** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestió
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Eliminar un encargo de zona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo y pulsar **Eliminar encargo**.
+2. Confirmar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/eliminar_encargo_zona`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

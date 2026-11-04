@@ -2,9 +2,9 @@
 id: "misas.modificar_encargos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Modificar Encargos"
+nombre: "Flujo - Elegir la zona de los encargos"
 capacidad: "misas.modificar_encargos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.modificar_encargos"]
 fragmentos: ["misas.pantalla.modificar_encargos"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_encargos_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve zonas permitidas y criterios de orden para la pantalla modificar encargos de zona.
+Elegir la zona para crear y modificar sus encargos (tareas de misa).
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos.
+Menú **dre > Misas > Modificar encargos** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestió
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la zona de los encargos
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar encargos**.
+2. Elegir la zona en **Encargos de la zona** y el **Orden**.
+3. Se abre la lista de encargos de esa zona.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/modificar_encargos_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,7 +2,7 @@
 id: "planning.planning_casa_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por casas (filtros)"
+nombre: "Flujo - Elegir las casas y el periodo del planning"
 capacidad: "planning.planning_casa_que.gestionar"
 pantallas_principales: ["planning.pantalla.planning_casa_que"]
 fragmentos: []
@@ -17,20 +17,25 @@ Entrada del planning por casas: elige grupo de casas y periodo, luego pasa a sel
 
 ## Objetivo De Usuario
 
-Consultar el calendario de actividades por casas (actual o propuesta de calendario).
+Elegir de qué casas se quiere ver el calendario de ocupación y en qué periodo.
 
 ## Punto De Entrada
 
-- `planning_casa_que.php` (menú Herramientas de calendario / planning por casas).
+Menú **scdl > planning > por casas** (Pills2: ACTIVIDADES > Herramientas de calendario o CASAS Y CTR).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Preparar filtros
+### Elegir las casas y el periodo del planning
 
-1. Abrir entrada de menú (`propuesta_calendario` opcional; si truthy y year=0 → año+1).
-2. El front llama a `planning_casa_que_data` para acotar `CasasQue` según rol/permiso (`PAU_CDC`/`des`/`vcsd`/`mi_sfsv` → `modo_casas`).
-3. Elegir grupo de casas (`cdc_sel=9` exige selección manual), periodo y si incluir casas sin actividad.
-4. Pulsar ver planning → `planning_casa_select.php`.
+Pasos propuestos:
+1. Abrir «BÚSQUEDA DE CASAS CUYO PLANNING INTERESA».
+2. Elegir el grupo de casas: **casas sólo sv**, **casas sólo sf**, **casas comunes**, **casas sv**, **casas sf**, **casas y ctr sf**, **una casa o lugar** (y elegirla en el desplegable), **todas las actividades sv** o **todas las actividades sf**.
+3. Indicar si se quieren incluir las **casas sin actividad** (no / sí).
+4. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+5. Pulsar **Planning vista tabla** (calendario en pantalla) o **vista para imprimir**.
+
+Endpoints asociados:
+- `/src/planning/planning_casa_que_data`
 
 ## Endpoints Del Flujo
 

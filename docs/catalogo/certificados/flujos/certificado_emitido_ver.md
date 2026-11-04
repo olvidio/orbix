@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Ver"
+nombre: "Flujo - Consultar un certificado emitido"
 capacidad: "certificados.certificado_emitido_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_ver"]
 fragmentos: ["certificados.pantalla.certificado_emitido_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_ver_datos"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Consultar detalle de un certificado emitido seleccionado en el listado.
+Ver el detalle de un certificado emitido.
 
 ## Punto De Entrada
 
-Listado Certificados → modificar/ver fila.
+Menú Pills2 **ESTUDIOS > Actas y certificados > Certificados**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ Listado Certificados → modificar/ver fila.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar un certificado emitido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Certificados**, buscar y pulsar el certificado.
+2. Se muestran sus datos (alumno, fecha, número) y el PDF si lo tiene.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_ver_datos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

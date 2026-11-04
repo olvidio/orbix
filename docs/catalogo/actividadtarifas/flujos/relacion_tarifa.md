@@ -2,7 +2,7 @@
 id: "actividadtarifas.relacion_tarifa.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadtarifas"
-nombre: "Flujo - Gestionar Relacion Tarifa"
+nombre: "Flujo - Asignar una tarifa a un tipo de actividad"
 capacidad: "actividadtarifas.relacion_tarifa.gestionar"
 pantallas_principales: ["actividadtarifas.pantalla.tarifa_tipo_actividad"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_tipo_actividad_form", "actividadtarifas.pantalla.tarifa_tipo_actividad_lista"]
@@ -17,13 +17,11 @@ Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad.
 
 ## Objetivo De Usuario
 
-Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad.
-
-Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Relacion Tarifa).
+Decidir qué tipo de tarifa corresponde a cada tipo de actividad.
 
 ## Punto De Entrada
 
-- `actividadtarifas.pantalla.tarifa_tipo_actividad`
+Menú **adl > Tarifas > tarifa <-> tipos actividad**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,48 +30,18 @@ Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección 
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Asignar una tarifa a un tipo de actividad
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/actividadtarifas/relacion_tarifa_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **tarifa <-> tipos actividad**.
+2. Elegir el tipo de actividad (obligatorio: «debe indicar el tipo de actividad») y la tarifa (obligatoria: «debe indicar la id_tarifa»).
+3. Guardar. Para cambiar la relación existente, abrirla, elegir otra tarifa y guardar; para quitarla, eliminarla.
 
 Endpoints asociados:
 - `/src/actividadtarifas/relacion_tarifa_eliminar`
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/actividadtarifas/relacion_tarifa_lista_data`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
 - `/src/actividadtarifas/relacion_tarifa_form_data`
+- `/src/actividadtarifas/relacion_tarifa_lista_data`
+- `/src/actividadtarifas/relacion_tarifa_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

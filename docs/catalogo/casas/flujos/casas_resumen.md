@@ -2,9 +2,9 @@
 id: "casas.casas_resumen.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Casas Resumen"
+nombre: "Flujo - Consultar la estadística económica de las casas"
 capacidad: "casas.casas_resumen.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.casas_resumen"]
 fragmentos: ["casas.pantalla.casas_resumen_lista"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/casas/casas_resumen_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.casas_resumen.gesti
 
 ## Objetivo De Usuario
 
-Gestiona CasasResumen. Use case: resumen económico de casas (dias ocupados, asistentes previstos/reales, ingresos, gastos, aportaciones, superávit). Sucesor de apps/casas/controller/casas_resumen_ajax.php. Dos modos: - que='' → un único periodo (año/trimestre/rango) por casa. - que!='' → estadística por año (5 años) por casa.
+Ver el resumen económico de las casas: días ocupados, asistentes previstos y reales, ingresos, gastos, aportaciones y superávit.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **adl > Gestión casas > estadística por casas** (Pills2: CASAS Y CTR > Gestión casas).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar la estadística económica de las casas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **estadística por casas**.
+2. Elegir las casas y el periodo (un año, trimestre o varios periodos).
+3. Se muestra la tabla de resumen por casa.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/casas/casas_resumen_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

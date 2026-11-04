@@ -2,9 +2,9 @@
 id: "actividadestudios.actividad_asignatura.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Actividad Asignatura"
+nombre: "Flujo - Añadir una asignatura a la actividad"
 capacidad: "actividadestudios.actividad_asignatura.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/actividadestudios/actividad_asignatura_eliminar", "/src/actividadestudios/actividad_asignatura_nueva"]
@@ -17,17 +17,11 @@ Alta y baja de asignaturas impartidas en una actividad CA (dossier 3005).
 
 ## Objetivo De Usuario
 
-El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o
-elimina una existente desde el dossier de asignaturas. Sustituye los cases `nuevo` y
-`eliminar` del antiguo `update_3005.php`.
+Añadir una asignatura impartida en la actividad (con su profesor, fechas y tipo) o eliminar una que ya está, desde el dossier de asignaturas.
 
 ## Punto De Entrada
 
-Pantalla `form_asignaturas_de_una_actividad`
-(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`):
-- **crear:** formulario en modo alta, `fnjs_guardar` con `mod=nuevo` → `actividad_asignatura_nueva`.
-- **eliminar:** listado `select_asignaturas_de_una_actividad`, `fnjs_borrar_asignatura` con
-  `mod=eliminar` → `actividad_asignatura_eliminar`.
+Dossier **Asignaturas** de la actividad: botón **nuevo** para añadir y **borrar** para eliminar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -36,25 +30,27 @@ Pantalla `form_asignaturas_de_una_actividad`
 
 ## Escenarios Inferidos
 
-### Crear
+### Añadir una asignatura a la actividad
 
-Pasos:
-1. En el dossier 3005 de una actividad, pulsar **nuevo** para abrir el formulario de alta.
-2. Elegir asignatura, profesor, fechas y tipo; pulsar **guardar**.
-3. El sistema crea la `ActividadAsignatura` y abre el dossier 3005 de la actividad.
-
-Endpoints asociados:
-- `/src/actividadestudios/actividad_asignatura_nueva`
-
-### Eliminar
-
-Pasos:
-1. En el listado de asignaturas del dossier 3005, seleccionar una fila.
-2. Pulsar **borrar** y confirmar.
-3. El sistema elimina la asignatura impartida y refresca el listado.
+Pasos propuestos:
+1. En el dossier de asignaturas de la actividad, pulsar **nuevo**.
+2. Elegir la asignatura, el profesor, las fechas y el tipo, y pulsar **guardar**.
+3. Se vuelve al dossier de asignaturas con la nueva asignatura en la lista.
 
 Endpoints asociados:
 - `/src/actividadestudios/actividad_asignatura_eliminar`
+- `/src/actividadestudios/actividad_asignatura_nueva`
+
+### Eliminar una asignatura de la actividad
+
+Pasos propuestos:
+1. En la lista de asignaturas del dossier, seleccionar la fila.
+2. Pulsar **borrar** y confirmar.
+3. La asignatura desaparece de la lista.
+
+Endpoints asociados:
+- `/src/actividadestudios/actividad_asignatura_eliminar`
+- `/src/actividadestudios/actividad_asignatura_nueva`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

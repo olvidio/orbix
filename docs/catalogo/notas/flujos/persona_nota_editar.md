@@ -2,9 +2,9 @@
 id: "notas.persona_nota_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Persona Nota Editar"
+nombre: "Flujo - Modificar una nota"
 capacidad: "notas.persona_nota_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/persona_nota_editar"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.persona_nota_editar
 
 ## Objetivo De Usuario
 
-Edición de nota existente.
+Corregir los datos de una nota ya apuntada a una persona.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > buscar persona** (por ejemplo **n r/dl**): buscar a la persona, abrir su ficha y, en «Relación de dossiers», pulsar **Notas del stgr de una persona (tessera)**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Modificar una nota
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la tabla de notas marcar la fila y pulsar **modificar nota**.
+2. Cambiar los datos que hagan falta (nota, acta, fecha, época…).
+3. Pulsar **Guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/persona_nota_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

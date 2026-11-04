@@ -2,9 +2,9 @@
 id: "actividadestudios.ca_posibles_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Ca Posibles Que"
+nombre: "Flujo - Ver el cuadro de posibles ca"
 capacidad: "actividadestudios.ca_posibles_que.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.ca_posibles_que"]
 fragmentos: ["actividadestudios.pantalla.ca_posibles_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/ca_posibles_que_data"]
@@ -17,15 +17,11 @@ Pantalla de filtros para el informe de posibles CA.
 
 ## Objetivo De Usuario
 
-El usuario configura los filtros del informe de posibles CA: centro (N o AGD), periodo,
-grupo de estudios y opciones de inclusión (estudios, repaso, todos). Al cargar la pantalla
-obtiene los desplegables y textos iniciales.
+Preparar el cuadro de posibles ca: qué personas podrían ir a cada ca según las asignaturas que les faltan.
 
 ## Punto De Entrada
 
-Pantalla `ca_posibles_que` (`frontend/actividadestudios/controller/ca_posibles_que.php`):
-al abrirse llama a `ca_posibles_que_data` para cargar desplegables de centros y grupo de
-estudios. El formulario envía a `ca_posibles.php` al pulsar **buscar**.
+Menú **vest > posibles ca > posibles ca**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,12 +29,14 @@ estudios. El formulario envía a `ca_posibles.php` al pulsar **buscar**.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el cuadro de posibles ca
 
-Pasos:
-1. Abrir la entrada de menú **posibles ca**.
-2. El sistema carga desplegables de centros N/AGD y texto de grupo vía `ca_posibles_que_data`.
-3. El usuario ajusta periodo, centro y flags; al buscar pasa al flujo `ca_posibles`.
+Pasos propuestos:
+1. Entrar en «Ver cuadro de posibles ca». Nota de la pantalla: para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr.
+2. Marcar qué ca se quieren: **ca de estudios**, **ca de repaso** o **todos los ca**.
+3. Elegir los centros de los numerarios y de los agregados (o «todos los ctr»), el periodo (verano, curso, todo el año u otro) y el año.
+4. Escoger el grupo de estudios y, si hace falta, un texto de referencia y el texto de cabecera: **horizontal (excel)** o **vertical (imprimir)**.
+5. Pulsar **ver cuadro**.
 
 Endpoints asociados:
 - `/src/actividadestudios/ca_posibles_que_data`

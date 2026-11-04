@@ -2,9 +2,9 @@
 id: "procesos.procesos_depende.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Depende"
+nombre: "Flujo - Elegir de qué tarea depende"
 capacidad: "procesos.procesos_depende.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_ver"]
 fragmentos: ["procesos.pantalla.procesos_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_depende"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Actualización dinámica del desplegable de tareas dependientes al cambiar la fase o fase previa en el formulario de edición de una tarea de proceso.
+Actualizar la lista de tareas de las que puede depender una tarea al cambiar la fase.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se invoca desde el formulario modal de `procesos_ver`.
+Formulario de tarea de un proceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada directa de menú; se invoca desde el formulario modal de `procesos_v
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir de qué tarea depende
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de tarea, cambiar la fase o la fase previa.
+2. El desplegable de tareas dependientes se actualiza con las tareas posibles; elegir una.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_depende`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

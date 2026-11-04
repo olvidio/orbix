@@ -2,9 +2,9 @@
 id: "ubis.direcciones_asignar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direcciones Asignar"
+nombre: "Flujo - Asignar una dirección existente"
 capacidad: "ubis.direcciones_asignar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direcciones_asignar"]
 fragmentos: ["ubis.pantalla.direcciones_asignar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_asignar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Asocia una dirección existente a un ubi sin marcarla como propietaria.
+Asociar una dirección ya existente a un centro o casa.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Tabla de direcciones, tras buscar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Asignar una dirección existente
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Buscar la dirección y marcarla en la tabla.
+2. Pulsar asignar.
+3. La dirección aparece en la ficha del centro o casa; no se marca como propietaria.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/direcciones_asignar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,7 +2,7 @@
 id: "ubis.delegaciones_region_stgr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Delegaciones Region Stgr"
+nombre: "Flujo - Elegir región y delegación"
 capacidad: "ubis.delegaciones_region_stgr.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista delegaciones de una región STGR para desplegables dependientes.
+Rellenar el desplegable de delegaciones cuando se elige una región del Studium.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Sin entrada de menú propia: se abre desde la ficha del centro o casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir región y delegación
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir la región.
+2. El desplegable de delegaciones se actualiza con las delegaciones de esa región; elegir una.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/delegaciones_region_stgr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

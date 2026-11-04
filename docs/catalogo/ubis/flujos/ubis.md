@@ -2,9 +2,9 @@
 id: "ubis.ubis.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Ubis"
+nombre: "Flujo - Eliminar un centro o una casa"
 capacidad: "ubis.ubis.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.ubis_eliminar", "ubis.pantalla.ubis_lista", "ubis.pantalla.ubis_update"]
 fragmentos: ["ubis.pantalla.ubis_eliminar", "ubis.pantalla.ubis_lista", "ubis.pantalla.ubis_update"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/ubis/ubis_eliminar", "/src/ubis/ubis_guardar", "/src/ubis/ubis_lista_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
+Eliminar un centro o una casa.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Resultados de **buscar**, o botón **eliminar** de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,34 +29,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Eliminar un centro o una casa
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir la ficha, o marcar el centro o casa en la tabla de resultados.
+2. Pulsar **eliminar** y confirmar «¿Está seguro que desea borrar este centro?» (o «esta casa»).
 
 Endpoints asociados:
 - `/src/ubis/ubis_eliminar`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
+- `/src/ubis/ubis_guardar`
 - `/src/ubis/ubis_lista_data`
 
 ## Campos Y Acciones Detectadas En Pantalla

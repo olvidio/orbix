@@ -2,9 +2,9 @@
 id: "inventario.doc_asignar_dlb.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Doc Asignar Dlb"
+nombre: "Flujo - Guardar la asignación a la dlb/casa"
 capacidad: "inventario.doc_asignar_dlb.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_asignar_dlb"]
 fragmentos: ["inventario.pantalla.doc_asignar_dlb"]
 acciones: ["guardar"]
 endpoints: ["/src/inventario/doc_asignar_dlb_guardar"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Doc Asignar Dlb
 
-Propuesta generada automaticamente desde la capacidad `inventario.doc_asignar_dlb.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona DocAsignarDlb. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los lugares de la dlb/casa elegidos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Se abre al pulsar **Asignar** en la lista de lugares de **asignar documento** (opción dlb/casa).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Guardar
+### Guardar la asignación a la dlb/casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Completar el número de registro o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/doc_asignar_dlb_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "notas.informe_stgr_n.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Informe Stgr N"
+nombre: "Flujo - Sacar el informe anual de numerarios"
 capacidad: "notas.informe_stgr_n.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.informe_stgr_n"]
 fragmentos: ["notas.pantalla.informe_stgr_n"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/informe_stgr_n_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.informe_stgr_n.gest
 
 ## Objetivo De Usuario
 
-Generar informe anual de numerarios.
+Generar el informe anual del Studium Generale de numerarios.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pills2: ESTUDIOS > Datos e informes > Informe anual n > Con números / Con listados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Sacar el informe anual de numerarios
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual n** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/informe_stgr_n_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

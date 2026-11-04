@@ -2,9 +2,9 @@
 id: "actividadestudios.matriculas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Matriculas"
+nombre: "Flujo - Listar las matrículas de un periodo"
 capacidad: "actividadestudios.matriculas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.matriculas_lista"]
 fragmentos: ["actividadestudios.pantalla.matriculas_lista"]
 acciones: ["listar"]
 endpoints: ["/src/actividadestudios/matriculas_lista_data"]
@@ -17,15 +17,11 @@ Listado de matrículas realizadas en un periodo.
 
 ## Objetivo De Usuario
 
-El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de matrículas
-de actividades cuyo `f_ini` cae en ese intervalo, con alumno, centro, actividad, asignatura,
-preceptor y nota.
+Ver las matrículas de las actividades de un periodo.
 
 ## Punto De Entrada
 
-Pantalla `matriculas_lista` (`frontend/actividadestudios/controller/matriculas_lista.php`):
-al cargar o al pulsar **buscar** (`fnjs_buscar` en `matriculas.phtml`) llama a
-`matriculas_lista_data` con `inicioIso` y `finIso` calculados del periodo.
+Menú **vest > actas... > Matrículas** (Pills2: ESTUDIOS > Actas y certificados > Matrículas realizadas).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,13 +30,12 @@ al cargar o al pulsar **buscar** (`fnjs_buscar` en `matriculas.phtml`) llama a
 
 ## Escenarios Inferidos
 
-### Listar
+### Listar las matrículas de un periodo
 
-Pasos:
-1. Abrir **Matrículas** desde el menú.
-2. Elegir año y periodo (por defecto `curso_ca`) y pulsar **buscar**.
-3. El sistema consulta `matriculas_lista_data` y muestra la tabla paginada.
-4. Opcionalmente, seleccionar filas para ver dossier CA o borrar matrículas.
+Pasos propuestos:
+1. Entrar en **Matrículas**: «PERIODO DE SELECCIÓN DE ACTIVIDADES».
+2. Elegir todo el año, un trimestre, el curso ca u **otro** (con fechas) y el año.
+3. Pulsar **buscar** para ver la lista de matrículas.
 
 Endpoints asociados:
 - `/src/actividadestudios/matriculas_lista_data`

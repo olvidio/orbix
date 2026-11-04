@@ -2,7 +2,7 @@
 id: "actividades.tipo_activ_metadata.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Metadatos cascada tipo actividad"
+nombre: "Flujo - Elegir los niveles de un tipo"
 capacidad: "actividades.tipo_activ_metadata.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
@@ -18,11 +18,22 @@ asistentes, actividad, nombre).
 
 ## Objetivo De Usuario
 
-Al cambiar un nivel en el formulario de tipos, actualizar los siguientes desplegables.
+Al cambiar un nivel en el formulario de tipos, actualizar los desplegables siguientes.
 
 ## Punto De Entrada
 
-JS en `tipo_activ.html.twig` al editar/crear tipos.
+Formulario de tipos de actividad.
+
+## Escenarios Inferidos
+
+### Elegir los niveles de un tipo
+
+Pasos propuestos:
+1. En el formulario de tipos, elegir el primer nivel.
+2. Los desplegables siguientes se actualizan con las opciones que corresponden.
+
+Endpoints asociados:
+- `/src/actividades/tipo_activ_metadata`
 
 ## Endpoints Del Flujo
 

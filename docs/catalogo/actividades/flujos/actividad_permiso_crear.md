@@ -2,7 +2,7 @@
 id: "actividades.actividad_permiso_crear.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Permiso crear actividad"
+nombre: "Flujo - Crear una actividad con o sin permiso"
 capacidad: "actividades.actividad_permiso_crear.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
@@ -18,12 +18,23 @@ si la oficina responsable no es la del usuario), con módulo `procesos` instalad
 
 ## Objetivo De Usuario
 
-Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos de proceso.
+Al crear una actividad nueva, permitir o bloquear el formulario según los permisos de proceso del usuario.
 
 ## Punto De Entrada
 
-`actividad_ver` modo *nuevo* con `procesos` → helper `PrefillPermActividadesFases` /
-consulta `actividad_permiso_crear_datos`.
+Menú **actividades > Nueva actividad**.
+
+## Escenarios Inferidos
+
+### Crear una actividad con o sin permiso
+
+Pasos propuestos:
+1. Abrir una actividad nueva.
+2. Si el usuario tiene permiso de crear para ese tipo, el formulario está activo.
+3. Si no, el formulario se muestra bloqueado y hay que pedir el permiso.
+
+Endpoints asociados:
+- `/src/actividades/actividad_permiso_crear_datos`
 
 ## Endpoints Del Flujo
 

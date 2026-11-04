@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_imprimir_mpdf.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Imprimir Mpdf"
+nombre: "Flujo - Obtener el PDF del certificado"
 capacidad: "certificados.certificado_emitido_imprimir_mpdf.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_imprimir_mpdf"]
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_imprimir_mpdf_datos"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Generar el PDF del certificado con notas y textos traducidos.
+Generar el PDF del certificado con las notas y los textos traducidos al idioma elegido.
 
 ## Punto De Entrada
 
-Paso posterior a `certificado_emitido_imprimir`.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ Paso posterior a `certificado_emitido_imprimir`.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Obtener el PDF del certificado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Emitir el certificado desde la ficha del alumno.
+2. El PDF se genera automáticamente y se abre para imprimir o guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_imprimir_mpdf_datos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

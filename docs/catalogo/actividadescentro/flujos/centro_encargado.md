@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado"
 capacidad: "actividadescentro.centro_encargado.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["eliminar"]
 endpoints: ["/src/actividadescentro/centro_encargado_eliminar"]

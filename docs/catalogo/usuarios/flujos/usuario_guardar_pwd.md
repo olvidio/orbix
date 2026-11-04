@@ -2,9 +2,9 @@
 id: "usuarios.usuario_guardar_pwd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Guardar Pwd"
+nombre: "Flujo - Cambiar la contraseña"
 capacidad: "usuarios.usuario_guardar_pwd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form_pwd"]
 fragmentos: ["usuarios.pantalla.usuario_form_pwd"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_guardar_pwd"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
+Cambiar la contraseña de un usuario cumpliendo los requisitos de seguridad.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pantalla de cambio de contraseña (obligatoria si el usuario tiene marcado **Cambio password**) o ficha de usuario.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar la contraseña
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir la nueva contraseña en **password** y repetirla en **confirma password**.
+2. La contraseña debe tener más de 8 caracteres e incluir al menos una mayúscula, un número y un carácter especial (no se admiten comillas dobles).
+3. Pulsar **guardar**. Si no coinciden o no es válida aparecen «error: passwords no coincidentes» o «error: password no válido».
+4. Al guardar bien se muestra «paswword guardado» y se quita la obligación de cambiarla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_guardar_pwd`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

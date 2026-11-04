@@ -2,9 +2,9 @@
 id: "usuarios.usuario_preferencias.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Preferencias"
+nombre: "Flujo - Abrir las preferencias"
 capacidad: "usuarios.usuario_preferencias.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.preferencias"]
 fragmentos: ["usuarios.pantalla.preferencias"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_preferencias"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga datos iniciales de la pantalla preferencias.
+Cargar los valores actuales de las preferencias personales al abrir la pantalla.
 
 ## Punto De Entrada
 
-Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
+Menú de usuario > **preferencias**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Abrir las preferencias
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. La pantalla muestra los valores que ya tiene guardados el usuario.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_preferencias`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

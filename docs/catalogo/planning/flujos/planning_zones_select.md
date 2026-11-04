@@ -2,7 +2,7 @@
 id: "planning.planning_zones_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por zonas SACD (calendario)"
+nombre: "Flujo - Ver el planning de una zona"
 capacidad: "planning.planning_zones_select.gestionar"
 pantallas_principales: ["planning.pantalla.planning_zones_que"]
 fragmentos: ["planning.pantalla.planning_zones_select"]
@@ -17,30 +17,22 @@ Cuadrícula de actividades por zona SACD tras enviar filtros en `planning_zones_
 
 ## Objetivo De Usuario
 
-Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
+Ver el calendario de los sacerdotes de una zona.
 
 ## Punto De Entrada
 
-- `planning_zones_que.php` → AJAX `planning_zones_select`.
+Resultado de **dre > planning > por zonas** tras pulsar **planning vista tabla**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver calendario actual
+### Ver el planning de una zona
 
-1. Confirmar zona (`todo`/`todo_propias` si jefe), trimestre/mes, año y `actividad=si|no`.
-2. Sin `propuesta`: el servicio filtra actividades en status ACTUAL.
-3. `planning_zones_select_data` devuelve `actividades_por_zona` y cabeceras.
-4. Exportar o consultar leyenda.
+Pasos propuestos:
+1. Aparece el calendario con el nombre de la zona, los meses elegidos en columnas y una fila por sacerdote. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+2. **Descargar html** guarda el calendario como página web.
 
-### Ver propuesta de calendario
-
-1. Entrada de menú con `propuesta=true` (o hidden propagado).
-2. Status ≠ borrable; UI muestra banner de propuesta.
-3. Resto igual que el calendario actual.
-
-### Cuadrícula limpia
-
-1. Elegir `actividad=no` → slots vacíos por persona (útil para imprimir plantilla).
+Endpoints asociados:
+- `/src/planning/planning_zones_select_data`
 
 ## Endpoints Del Flujo
 

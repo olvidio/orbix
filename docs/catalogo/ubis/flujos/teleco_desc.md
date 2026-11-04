@@ -2,9 +2,9 @@
 id: "ubis.teleco_desc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Teleco Desc"
+nombre: "Flujo - Elegir la descripción de una teleco"
 capacidad: "ubis.teleco_desc.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.teleco_desc_lista_ajax"]
 fragmentos: ["ubis.pantalla.teleco_desc_lista_ajax"]
 acciones: ["listar"]
 endpoints: ["/src/ubis/teleco_desc_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
+Ofrecer las descripciones de telecomunicación según el tipo elegido.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Formulario de teleco.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,11 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Listar
+### Elegir la descripción de una teleco
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. En el formulario de teleco, elegir el tipo.
+2. El desplegable de descripción se rellena con las opciones de ese tipo.
 
 Endpoints asociados:
 - `/src/ubis/teleco_desc_lista`

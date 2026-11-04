@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_adjuntar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Adjuntar"
+nombre: "Flujo - Adjuntar un certificado emitido"
 capacidad: "certificados.certificado_emitido_adjuntar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_adjuntar"]
 fragmentos: ["certificados.pantalla.certificado_emitido_adjuntar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_adjuntar_data"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Adjuntar PDF de certificado emitido a una persona.
+Adjuntar a una persona un PDF de un certificado ya emitido.
 
 ## Punto De Entrada
 
-Dossier persona o enlace con `id_nom`.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ Dossier persona o enlace con `id_nom`.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Adjuntar un certificado emitido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la persona y su dossier de certificados.
+2. Pulsar **adjuntar nuevo certificado**.
+3. Rellenar los datos y elegir el PDF.
+4. Guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_adjuntar_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

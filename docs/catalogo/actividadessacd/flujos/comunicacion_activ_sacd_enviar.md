@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadessacd"
 nombre: "Flujo - Gestionar Comunicacion Activ Sacd Enviar"
 capacidad: "actividadessacd.comunicacion_activ_sacd_enviar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_enviar"]

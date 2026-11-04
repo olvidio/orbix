@@ -2,9 +2,9 @@
 id: "dbextern.sincro_syncro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Sincronizar fichas unidas"
+nombre: "Flujo - Sincronizar las fichas unidas"
 capacidad: "dbextern.sincro_syncro.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.sincro_index"]
 fragmentos: ["dbextern.pantalla.sincro_index"]
 acciones: ["ejecutar"]
 endpoints: ["/src/dbextern/sincro_syncro"]
@@ -17,19 +17,22 @@ Ejecuta la sincronización masiva del punto 1.
 
 ## Objetivo De Usuario
 
-Actualizar en Aquinate los datos de todas las personas ya vinculadas a la BDU en la DL actual.
+Actualizar en Aquinate los datos de todas las personas ya vinculadas a la BDU en la delegación.
 
 ## Punto De Entrada
 
-Enlace **ejecutar** del punto 1 en `sincro_index` (`fnjs_sincronizar`).
+Enlace **ejecutar** del punto 1 de la pantalla de sincronización.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Sincronizar las fichas unidas
 
-1. Envía `region`, `dl_listas`, `tipo_persona` con HashF.
-2. `SincroPersonas` sincroniza cada persona con `id_match`.
-3. Muestra `alert` con mensaje resumen o errores parciales.
+Pasos propuestos:
+1. En la pantalla de sincronización, pulsar **ejecutar** en el punto 1.
+2. Al terminar sale un aviso con el resumen; los fallos de algunas personas se indican en el mismo aviso.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_syncro`
 
 ## Endpoints Del Flujo
 

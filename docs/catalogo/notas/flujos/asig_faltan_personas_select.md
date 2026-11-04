@@ -2,9 +2,9 @@
 id: "notas.asig_faltan_personas_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Asig Faltan Personas Select"
+nombre: "Flujo - Buscar los alumnos que deben una asignatura"
 capacidad: "notas.asig_faltan_personas_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.asig_faltan_personas_select"]
 fragmentos: ["notas.pantalla.asig_faltan_personas_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asig_faltan_personas_select_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.asig_faltan_persona
 
 ## Objetivo De Usuario
 
-Listar alumnos que deben una asignatura.
+Ver qué alumnos deben una asignatura concreta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > buscar asig. pendientes** (Pills2: ESTUDIOS > Preparación planes estudio > Filtro alumno/asignatura).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Buscar los alumnos que deben una asignatura
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar asig. pendientes**.
+2. En **Búsqueda de personas por asignatura** marcar **numerarios** o **agregados**, el ciclo (**bienio**, **cuadrienio**, **año I**, **año II-IV**) y elegir la **Asignatura**.
+3. Pulsar **Buscar** (o **Borrar** para limpiar).
+4. Se muestra la lista de alumnos que la deben.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/asig_faltan_personas_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

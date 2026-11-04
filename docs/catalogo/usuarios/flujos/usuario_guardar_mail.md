@@ -2,9 +2,9 @@
 id: "usuarios.usuario_guardar_mail.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Guardar Mail"
+nombre: "Flujo - Cambiar el correo"
 capacidad: "usuarios.usuario_guardar_mail.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form_mail"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_guardar_mail"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Actualiza email del usuario (preferencias o admin).
+Cambiar el correo electrónico de un usuario.
 
 ## Punto De Entrada
 
-Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
+Preferencias personales (menú usuario > preferencias) o ficha de usuario en la administración.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar el correo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario (o las preferencias personales).
+2. Escribir el nuevo correo en **Email** y pulsar **guardar**.
+3. El correo se usa para la recuperación de contraseña y de la verificación en dos pasos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_guardar_mail`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

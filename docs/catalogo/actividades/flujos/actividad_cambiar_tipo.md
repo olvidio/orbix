@@ -2,7 +2,7 @@
 id: "actividades.actividad_cambiar_tipo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Cambiar tipo de actividad"
+nombre: "Flujo - Cambiar el tipo de una actividad"
 capacidad: "actividades.actividad_cambiar_tipo.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
@@ -17,20 +17,24 @@ Cambio de tipo en ficha existente (`mod=cambiar_tipo`): regenera proceso y reini
 
 ## Objetivo De Usuario
 
-Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* y guardar.
+Cambiar el tipo de una actividad ya creada (sf/sv, asistentes, actividad o tipo).
 
 ## Punto De Entrada
 
-`actividad_ver` con `mod=cambiar_tipo` (enlace desde ficha o procesos).
+Lista de resultados de **Buscar actividad** (ACTIVIDADES > Buscar actividad, o la entrada del colectivo).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar el tipo de una actividad
 
-1. Activar modo cambiar tipo en la ficha.
-2. Elegir nuevo tipo completo en la cascada.
-3. Confirmar diálogo (`fnjs_guardar('cambiar_tipo')`).
-4. POST a `actividad_cambiar_tipo`; volver atrás si OK.
+Pasos propuestos:
+1. Marcar la actividad en la lista y pulsar **cambiar tipo**.
+2. Se abre un formulario con los datos de la actividad ya rellenados (aunque el título dice «Nueva actividad»).
+3. Elegir el nuevo tipo en **sf/sv**, **asistentes**, **actividad** y **tipo de actividad**.
+4. Pulsar **Guardar ficha**.
+
+Endpoints asociados:
+- `/src/actividades/actividad_cambiar_tipo`
 
 ## Endpoints Del Flujo
 

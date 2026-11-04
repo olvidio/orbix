@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Crear Usuarios"
 capacidad: "devel_db_admin.crear_usuarios.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_crear_usuarios"]
 fragmentos: ["devel_db_admin.pantalla.db_crear_usuarios"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/crear_usuarios"]

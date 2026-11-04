@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_de_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs De Ctr"
+nombre: "Flujo - Buscar los documentos que se van a trasladar"
 capacidad: "inventario.lista_docs_de_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.traslado_doc_lista"]
 fragmentos: ["inventario.pantalla.traslado_doc_lista"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_ctr"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs De Ctr
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_ctr.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos de un centro (y lugar) para marcar cuáles se trasladan.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **traslado de doc**, al pulsar **buscar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Buscar los documentos que se van a trasladar
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **traslado de doc**, elegir centro y lugar de origen.
+2. Pulsar **buscar**.
+3. Aparece **lista de documentos del centro** con **documento** y **observaciones**.
+4. Marcar los documentos a trasladar (**marcar todos** / **desmarcar todos** ayudan).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_de_ctr`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

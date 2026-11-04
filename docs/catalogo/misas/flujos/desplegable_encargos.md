@@ -2,9 +2,9 @@
 id: "misas.desplegable_encargos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Desplegable Encargos"
+nombre: "Flujo - Elegir encargo de la zona"
 capacidad: "misas.desplegable_encargos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/desplegable_encargos"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
+Ofrecer los encargos de la zona elegida en la ventana de encargo-centro.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
+Ventana **nuevo encargo visible para un centro**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir encargo de la zona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ventana de encargo visible para un centro, elegir la zona.
+2. El desplegable **Encargo** se rellena con los encargos de esa zona.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/desplegable_encargos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

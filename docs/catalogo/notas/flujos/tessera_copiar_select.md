@@ -2,9 +2,9 @@
 id: "notas.tessera_copiar_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Tessera Copiar Select"
+nombre: "Flujo - Copiar una tessera a otra persona"
 capacidad: "notas.tessera_copiar_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.tessera_copiar_select"]
 fragmentos: ["notas.pantalla.tessera_copiar_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/tessera_copiar_select_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera_copiar_sele
 
 ## Objetivo De Usuario
 
-Elegir destino y ejecutar copia de tessera.
+Copiar la tessera de una persona a otra con el mismo primer apellido (por ejemplo de numerario a agregado).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Tessera de la persona, botón de copiar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Copiar una tessera a otra persona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la tessera de la persona.
+2. En **copiar la tesera de … a**, elegir la persona destino: se listan las personas con el mismo primer apellido entre numerarios y agregados.
+3. Pulsar **copiar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/tessera_copiar_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

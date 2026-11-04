@@ -2,7 +2,7 @@
 id: "configuracion.modulos_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Definir módulos (listado)"
+nombre: "Flujo - Consultar los módulos definidos"
 capacidad: "configuracion.modulos_select.gestionar"
 pantallas_principales: ["configuracion.pantalla.modulos_select"]
 fragmentos: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
@@ -15,35 +15,52 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consultar los módulos definidos en el esquema y acceder a alta, edición o baja de cada uno.
+Ver los módulos definidos en el esquema y acceder al alta, la modificación o la baja de cada uno.
 
 ## Punto De Entrada
 
-`frontend/configuracion/controller/modulos_select.php`
+Menú **sistema > Configuración > definir módulos**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar módulos
+### Consultar los módulos definidos
 
-1. Abrir desde menú Configuración > definir módulos.
-2. La pantalla carga `modulos_select_data` y muestra tabla con dependencias.
-3. Opcional: restaurar selección/scroll vía `ListNavSupport`.
+Pasos propuestos:
+1. Abrir **definir módulos**: aparece la tabla de módulos con sus dependencias.
 
-### Alta
+Endpoints asociados:
+- `/src/configuracion/modulos_select_data`
+- `/src/configuracion/modulos_update`
 
-1. Pulsar «añadir módulo» → `modulos_form.php` (`mod=nuevo`).
-2. Continuar en flujo «Gestionar módulos (ficha)».
+### Añadir un módulo
 
-### Modificar
+Pasos propuestos:
+1. Pulsar **añadir módulo** y seguir los pasos de «Añadir o modificar un módulo».
 
-1. Seleccionar exactamente una fila (`fnjs_solo_uno`).
-2. Botón «modificar» → `modulos_form.php` con `sel[]`.
+Endpoints asociados:
+- `/src/configuracion/modulos_select_data`
+- `/src/configuracion/modulos_update`
 
-### Eliminar
+### Modificar un módulo
 
-1. Seleccionar una fila y confirmar eliminación.
-2. POST AJAX a `modulos_update` (`mod=eliminar`).
-3. Refresco del listado; error si el repositorio no puede borrar.
+Pasos propuestos:
+1. Seleccionar una sola fila.
+2. Pulsar **modificar**.
+
+Endpoints asociados:
+- `/src/configuracion/modulos_select_data`
+- `/src/configuracion/modulos_update`
+
+### Eliminar un módulo
+
+Pasos propuestos:
+1. Seleccionar la fila y pulsar el botón de eliminar.
+2. Confirmar.
+3. La lista se refresca; si no se puede borrar, sale un aviso con el motivo.
+
+Endpoints asociados:
+- `/src/configuracion/modulos_select_data`
+- `/src/configuracion/modulos_update`
 
 ## Errores Conocidos
 

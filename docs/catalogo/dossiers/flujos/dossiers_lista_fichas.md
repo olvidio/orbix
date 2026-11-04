@@ -2,9 +2,9 @@
 id: "dossiers.dossiers_lista_fichas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dossiers"
-nombre: "Flujo - Gestionar Dossiers Lista Fichas"
+nombre: "Flujo - Ver la relación de dossiers"
 capacidad: "dossiers.dossiers_lista_fichas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dossiers.pantalla.lista_dossiers"]
 fragmentos: ["dossiers.pantalla.lista_dossiers"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dossiers/dossiers_lista_fichas_data"]
@@ -15,19 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Mostrar la tabla de carpetas de dossiers disponibles para la entidad actual, con iconos de permiso y enlace a cada ficha (`href_ver` firmado en frontend).
+Ver las carpetas (dossiers) disponibles de una persona, actividad o centro/casa y qué puede hacer el usuario en cada una.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; acceso embebido desde home persona/ubi, actividad u otras pantallas que enlazan `dossiers_ver.php`.
+Icono o enlace de dossiers en la ficha de la persona, de la actividad o del centro/casa.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar carpetas disponibles
+### Ver la relación de dossiers
 
-1. Con `id_dossier` vacío, `dossiers_ver` solicita filas a `dossiers_lista_fichas_data`.
-2. El frontend firma `href_ver`/`href_abrir` con `DossiersListaSupport::signFilas`.
-3. La vista pinta icono, descripción y símbolo de permiso (deny/eye/pencil).
+Pasos propuestos:
+1. Abrir la ficha de la persona, actividad o centro/casa y pulsar dossiers.
+2. Aparece la **relación de dossiers** con un símbolo por carpeta: **dossier modificable**, **dossier de sólo lectura** o **dossier sin permisos**.
+3. Pulsar una carpeta con permiso para abrirla.
+
+Endpoints asociados:
+- `/src/dossiers/dossiers_lista_fichas_data`
 
 ## Fragmentos O Pantallas Auxiliares
 

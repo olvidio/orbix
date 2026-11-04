@@ -2,9 +2,9 @@
 id: "actividadestudios.lista_clases_ca.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Lista Clases Ca"
+nombre: "Flujo - Ver la lista de clases de una actividad"
 capacidad: "actividadestudios.lista_clases_ca.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.lista_clases_ca"]
 fragmentos: ["actividadestudios.pantalla.lista_clases_ca"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/lista_clases_ca_data"]
@@ -17,14 +17,11 @@ Listado de clases/alumnos por asignatura de una actividad CA.
 
 ## Objetivo De Usuario
 
-El usuario consulta, para una actividad CA seleccionada, el listado de clases: por cada
-asignatura impartida muestra profesor, tipo y alumnos matriculados.
+Ver la lista de clases de una actividad: director de estudios y asistentes por asignatura.
 
 ## Punto De Entrada
 
-Pantalla `lista_clases_ca` (`frontend/actividadestudios/controller/lista_clases_ca.php`):
-se abre desde `actividad_select` con acción `lista_clase` (`actividades.js`); al cargar
-llama a `lista_clases_ca_data` con `id_activ` extraído de `sel`.
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **listas de clase**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,13 +30,12 @@ llama a `lista_clases_ca_data` con `id_activ` extraído de `sel`.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver la lista de clases de una actividad
 
-Pasos:
-1. En el listado de actividades (`actividad_select`), seleccionar una actividad CA.
-2. Pulsar la acción **lista clase**.
-3. El sistema carga `lista_clases_ca` y consulta `lista_clases_ca_data`.
-4. Se muestra el informe con director de estudios y tabla por asignatura.
+Pasos propuestos:
+1. Marcar una actividad de tipo ca y pulsar **listas de clase**.
+2. Se muestra el título de la actividad, el **Director de estudios** (para nombrarlo, ir al dossier de cargos de la actividad) y una tabla por asignatura.
+3. Si la actividad no tiene asignaturas, solo aparece la cabecera.
 
 Endpoints asociados:
 - `/src/actividadestudios/lista_clases_ca_data`

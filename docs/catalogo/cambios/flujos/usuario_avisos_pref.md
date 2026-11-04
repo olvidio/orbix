@@ -2,9 +2,9 @@
 id: "cambios.usuario_avisos_pref.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Configurar preferencia de aviso"
+nombre: "Flujo - Configurar un aviso de cambios en actividades"
 capacidad: "cambios.usuario_avisos_pref.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.usuario_avisos_pref"]
 fragmentos: ["cambios.pantalla.usuario_avisos_pref", "cambios.pantalla.usuario_avisos_pref_fases", "cambios.pantalla.usuario_avisos_pref_propiedades", "cambios.pantalla.usuario_avisos_pref_condicion"]
 acciones: ["cargar", "grabar"]
 endpoints: ["/src/cambios/usuario_avisos_pref_form_data", "/src/cambios/cambio_usuario_objeto_pref_guardar", "/src/cambios/cambio_usuario_propiedad_pref_guardar_todas", "/src/cambios/cambio_usuario_propiedad_pref_preview"]
@@ -15,25 +15,30 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Definir qué cambios debe recibir un usuario o grupo: objeto, ámbito (tipo/fase/casas) y propiedades con
-condiciones opcionales.
+Configurar un aviso de cambios: qué se vigila, en qué actividades y cómo se avisa.
 
 ## Punto De Entrada
 
-Desde `usuario_form_avisos` (o gestión de grupos) con `salida=nuevo|modificar`.
+Menú **sistema > usuarios web > lista usuarios**: buscar al usuario, pulsar **editar** en su fila. Botón **añadir aviso**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Cargar formulario
+### Configurar un aviso de cambios en actividades
 
-1. `usuario_avisos_pref_form_data` devuelve opciones y preselección.
-2. Al cambiar objeto/tipo, AJAX refresca fases y tabla de propiedades.
+Pasos propuestos:
+1. En «Avisos para …», elegir **cambios en:** (el objeto a vigilar).
+2. Elegir si es para actividades que organiza **la propia dl** u **otras dl**, y el tipo (**sf/sv**, **asistentes**, **actividad**, **tipo de actividad**).
+3. En **fase de referencia** elegir la fase (salen todas las posibles, aunque no tengas permiso; el permiso se comprueba al generar el aviso).
+4. Marcar cuándo avisar: **avisar antes de que esté marcada (off)**, **avisar si está marcada (on)** (viene marcada) y **avisar aunque la actividad haya finalizado**.
+5. En «opciones» elegir **ver cambios sólo de las casas** (opcional) y **avisar por:** lista o email.
+6. En «campos o propiedades» marcar los campos a vigilar (enlaces **[todos]**, **[ninguno]**, **[invertir]**) y, si hace falta, una **condición**.
+7. Pulsar **guardar**.
 
-### Grabar
-
-1. `fnjs_grabar_todo` → `cambio_usuario_objeto_pref_guardar`.
-2. Si OK → `cambio_usuario_propiedad_pref_guardar_todas` con el POST de propiedades.
-3. Condiciones intermedias: `cambio_usuario_propiedad_pref_preview` actualiza celdas sin persistir.
+Endpoints asociados:
+- `/src/cambios/usuario_avisos_pref_form_data`
+- `/src/cambios/cambio_usuario_objeto_pref_guardar`
+- `/src/cambios/cambio_usuario_propiedad_pref_guardar_todas`
+- `/src/cambios/cambio_usuario_propiedad_pref_preview`
 
 ## Errores Conocidos
 

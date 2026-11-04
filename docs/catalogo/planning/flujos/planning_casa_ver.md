@@ -2,7 +2,7 @@
 id: "planning.planning_casa_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por casas (calendario)"
+nombre: "Flujo - Ver el calendario de casas"
 capacidad: "planning.planning_casa_ver.gestionar"
 pantallas_principales: ["planning.pantalla.planning_casa_que", "planning.pantalla.planning_casa_select"]
 fragmentos: ["planning.pantalla.planning_casa_ver"]
@@ -17,21 +17,24 @@ Muestra la cuadrícula de actividades por casa tras confirmar la selección en `
 
 ## Objetivo De Usuario
 
-Visualizar y exportar el planning de casas en el periodo elegido.
+Ver el calendario de ocupación de las casas elegidas: qué actividad hay en cada casa y cada día.
 
 ## Punto De Entrada
 
-- Desde `planning_casa_select` → AJAX a `planning_casa_ver`.
+Resultado de **scdl > planning > por casas**, tras pulsar **Planning vista tabla**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver calendario
+### Ver el calendario de casas
 
-1. Confirmar casas y periodo en pasos anteriores (`cdc_sel=9` → CSV `sSeleccionados`).
-2. `planning_casa_ver` envía `cdc_sel`, fechas ISO, `sin_activ` y lista manual si aplica.
-3. Renderiza actividades y periodos de ocupación por ubi.
-4. Con `propuesta_calendario` truthy, el renderer habilita nueva/modificar actividad (`mod=1`/`nueva=1`); la API no recibe el flag (solo UI).
-5. Opcional: exportar o abrir leyenda. Periodo ≥2 meses y `modelo≠2` → doble columna.
+Pasos propuestos:
+1. Aparece «Calendario de casas» con los meses del periodo en columnas y una fila por casa; los domingos van marcados.
+2. Cada actividad es una barra con su tipo abreviado (por ejemplo «sg crt», «n ca»); el color indica el tipo y si está en proyecto o provisional. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+3. **Descargar html** guarda el calendario como página web.
+4. Desde la entrada de menú de **nuevo planning** del calendario de propuestas, la tabla permite crear una actividad nueva en una casa o modificar una existente.
+
+Endpoints asociados:
+- `/src/planning/planning_casa_ver_data`
 
 ## Endpoints Del Flujo
 

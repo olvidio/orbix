@@ -2,9 +2,9 @@
 id: "misas.modificar_encargos_centros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Modificar Encargos Centros"
+nombre: "Flujo - Elegir la zona de los encargos visibles por centro"
 capacidad: "misas.modificar_encargos_centros.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.modificar_encargos_centros"]
 fragmentos: ["misas.pantalla.modificar_encargos_centros"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_encargos_centros_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos de centros.
+Elegir la zona para decidir qué encargos ve cada centro.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
+Menú **dre > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión d
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la zona de los encargos visibles por centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Encargos centro**.
+2. Elegir la zona en **Encargos de la zona**.
+3. Se abre la lista de encargos visibles por centro.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/modificar_encargos_centros_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

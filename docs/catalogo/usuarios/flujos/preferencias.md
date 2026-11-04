@@ -2,9 +2,9 @@
 id: "usuarios.preferencias.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Preferencias"
+nombre: "Flujo - Cambiar las preferencias personales"
 capacidad: "usuarios.preferencias.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.preferencias"]
 fragmentos: []
 acciones: ["guardar"]
 endpoints: ["/src/usuarios/preferencias_guardar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
+Cambiar las preferencias personales: diseño del menú, página de inicio, estilo, presentación de tablas, nombres e idioma.
 
 ## Punto De Entrada
 
-Menú Legacy: menú usuario > preferencias. Pills2: menú usuario > preferencias.
+Menú de usuario > **preferencias**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,23 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Guardar
+### Cambiar las preferencias personales
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. En **Preferencias personales** elegir: Layout (Legacy, Burger, Pills, Pills 2), Página central de inicio (Home, Oficina, Avisos cambios actividades), Menú principal de la oficina, Estilo, Disposición menú, Presentación tablas (SlickGrid o Html), Presentación nombre/apellidos, Idioma y Zona horaria.
+3. Pulsar guardar. Algunos cambios (layout, idioma) exigen volver a entrar: la pantalla avisa «deberá volver a entrar».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/preferencias_guardar`
+
+### Gestionar los avisos de cambios en actividades
+
+Pasos propuestos:
+1. En la parte superior de preferencias, usar **ver lista**, **ver mails sin enviar** o **gestionar avisos en cambios actividades**.
+
+Endpoints asociados:
+- `/src/usuarios/preferencias_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

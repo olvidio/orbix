@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "cambios"
 nombre: "Flujo - Consultar y purgar cambios"
 capacidad: "cambios.avisos_generar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.avisos_generar"]
 fragmentos: ["cambios.pantalla.avisos_generar"]
 acciones: ["listar", "eliminar", "eliminar_hasta_fecha", "generar_tabla"]
 endpoints: ["/src/cambios/avisos_generar_lista_data", "/src/cambios/avisos_generar_tabla", "/src/cambios/cambio_usuario_eliminar", "/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
@@ -26,27 +26,27 @@ fecha límite). Opcionalmente regenerar la tabla de avisos desde el menú de adm
 
 ### Generar tabla (batch)
 
-1. Menú «generar tabla avisos» (usuarios web / ADMIN LOCAL) → `/src/cambios/avisos_generar_tabla`
+1. Abrir **generar tabla avisos** (usuarios web / ADMIN LOCAL).
    (también cron / `Cambio::generarTabla()` vía CLI).
 2. El sistema cruza cambios nuevos con preferencias y crea avisos pendientes; muestra HTML de
    resultado o incidencias (sin pantalla FE).
-3. Revisar el listado en `avisos_generar`.
+3. Revisar el listado de avisos que aparece.
 
 ### Listar
 
 1. Abrir la pantalla.
 2. Si es admin, elegir usuario y tipo de aviso.
-3. El sistema carga `avisos_generar_lista_data` y muestra la tabla.
+3. Se muestra la tabla con los avisos anotados.
 
 ### Eliminar filas
 
 1. Marcar filas en la tabla.
-2. Pulsar borrar → `cambio_usuario_eliminar` con `sel[]`.
+2. Pulsar **borrar**.
 
 ### Eliminar hasta fecha
 
-1. Indicar `f_fin`.
-2. Pulsar purga → `cambio_usuario_eliminar_hasta_fecha`.
+1. Indicar la fecha límite.
+2. Pulsar **purga**: se borran los avisos anotados hasta esa fecha.
 
 ## Errores Conocidos
 

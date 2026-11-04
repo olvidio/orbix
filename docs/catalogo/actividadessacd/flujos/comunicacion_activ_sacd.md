@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadessacd"
 nombre: "Flujo - Gestionar Comunicacion Activ Sacd"
 capacidad: "actividadessacd.comunicacion_activ_sacd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_data"]
@@ -37,7 +37,7 @@ la función `fnjs_ver` llama a este endpoint al pulsar **buscar** (o automática
 
 Pasos:
 1. Seleccionar periodo en la barra de filtros (o entrar con un sacd preseleccionado).
-2. Pulsar **buscar** (o auto-carga si `AUTO_CARGAR`).
+2. Pulsar **buscar** (en algunos casos la lista se carga sola al abrir la pantalla).
 3. El sistema pinta el listado por sacd con actividades, textos y leyenda.
 
 Endpoints asociados:

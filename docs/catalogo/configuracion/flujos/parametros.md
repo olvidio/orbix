@@ -2,7 +2,7 @@
 id: "configuracion.parametros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Configurar parámetros del esquema"
+nombre: "Flujo - Ver los parámetros del esquema"
 capacidad: "configuracion.parametros.gestionar"
 pantallas_principales: ["configuracion.pantalla.parametros"]
 fragmentos: []
@@ -15,27 +15,33 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consultar y modificar los parámetros globales del esquema (curso escolar, certificados,
-idioma, ámbito territorial, gestión de calendario, etc.).
+Consultar y cambiar los parámetros generales del esquema: curso escolar, certificados, idioma, ámbito territorial, gestión de calendario, etc.
 
 ## Punto De Entrada
 
-`frontend/configuracion/controller/parametros.php`
+Menú **sistema > Configuración > config esquema** (Pills2: ADMIN LOCAL > Esquema).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Cargar parámetros
+### Ver los parámetros del esquema
 
-1. Abrir menú config esquema / Esquema.
-2. `parametros_lista` devuelve valores actuales y catálogo de idiomas.
-3. Si hay error en la carga, la pantalla termina con el mensaje (`exit($data['error'])`).
+Pasos propuestos:
+1. Abrir **config esquema**: aparece un bloque por cada parámetro con su valor actual.
 
-### Guardar un parámetro
+Endpoints asociados:
+- `/src/configuracion/parametros_lista`
+- `/src/configuracion/parametros_update`
 
-1. Editar el bloque deseado (cada formulario lleva `parametro` oculto vía HashF).
-2. Periodos STGR/CRT: campos `ini_dia`, `ini_mes`, `fin_dia`, `fin_mes` (no `valor`).
-3. Resto: campo `valor` (texto, radio o desplegable).
-4. «Guardar» → `parametros_update` → aviso «se ha guardado correctamente».
+### Cambiar un parámetro
+
+Pasos propuestos:
+1. Editar el bloque que interese.
+2. Los periodos del stgr y del crt se escriben como día y mes de inicio y de fin; el resto de parámetros llevan un solo valor (texto, opción o desplegable).
+3. Pulsar **Guardar**: sale el aviso «se ha guardado correctamente».
+
+Endpoints asociados:
+- `/src/configuracion/parametros_lista`
+- `/src/configuracion/parametros_update`
 
 ## Errores Conocidos
 

@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_de_lugar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs De Lugar"
+nombre: "Flujo - Ver los documentos de la casa"
 capacidad: "inventario.lista_docs_de_lugar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_lista_docs", "inventario.pantalla.equipajes_ver_docs"]
 fragmentos: ["inventario.pantalla.equipajes_lista_docs", "inventario.pantalla.equipajes_ver_docs"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_lugar"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs De Lugar
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_lugar.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeLugar. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que tiene la casa (el lugar) para repartirlos en valijas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **hacer equipajes**, al montar una valija.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los documentos de la casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, elegir el equipaje y abrir una valija.
+2. Se muestra la lista de documentos de la casa con **sigla**, **identificador** y **num reg**.
+3. Marcar los que van en la valija y pulsar **crear valija**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_de_lugar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

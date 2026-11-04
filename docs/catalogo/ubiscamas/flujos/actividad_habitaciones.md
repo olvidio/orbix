@@ -2,9 +2,9 @@
 id: "ubiscamas.actividad_habitaciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubiscamas"
-nombre: "Flujo - Gestionar Actividad Habitaciones"
+nombre: "Flujo - Asignar camas a los asistentes"
 capacidad: "ubiscamas.actividad_habitaciones.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubiscamas.pantalla.lista_habitaciones", "ubiscamas.pantalla.lista_habitaciones_distribucion", "ubiscamas.pantalla.lista_habitaciones_nombres"]
 fragmentos: ["ubiscamas.pantalla.lista_habitaciones", "ubiscamas.pantalla.lista_habitaciones_distribucion", "ubiscamas.pantalla.lista_habitaciones_nombres"]
 acciones: ["listar"]
 endpoints: ["/src/ubiscamas/actividad_habitaciones_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-and-drop), activar modo solo VIP y abrir vistas de distribución o nombres.
+Ver las camas de la casa de una actividad y asignar a cada asistente su cama.
 
 ## Punto De Entrada
 
-Dossier de actividad, enlace `camas` (`frontend/actividades/view/actividades.js` → `lista_habitaciones.php`). Sin entrada de menú en el índice.
+Ficha de la actividad > habitaciones.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,12 @@ Dossier de actividad, enlace `camas` (`frontend/actividades/view/actividades.js`
 
 ## Escenarios Inferidos
 
-### Listar
+### Asignar camas a los asistentes
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir las habitaciones de la actividad; se ofrece **lista por habitaciones** o **lista por nombre**.
+2. Arrastrar al asistente a la cama o usar las flechas de asignar y desasignar.
+3. Marcar **solo VIP** para ver únicamente las camas VIP.
 
 Endpoints asociados:
 - `/src/ubiscamas/actividad_habitaciones_lista`

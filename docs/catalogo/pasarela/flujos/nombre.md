@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Gestionar nombres particulares"
 capacidad: "pasarela.nombre.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.nombre_lista"]
 fragmentos:
   - "pasarela.pantalla.nombre_ajax"
   - "pasarela.pantalla.nombre_form"
@@ -24,12 +24,43 @@ Asignar nombre exportado distinto al tipo genérico.
 
 ## Punto De Entrada
 
-`nombre_lista.php` desde parámetros.
+Menú **Pasarela > parámetros > nombres de actividades particulares**.
 
-## Escenarios
+## Escenarios Inferidos
 
-1. Listar excepciones.
-2. Añadir tipo + nombre o editar/eliminar fila.
+### Consultar los nombres particulares
+
+Pasos propuestos:
+1. Abrir **Pasarela > parámetros** y pulsar **nombres de actividades particulares**.
+2. Leer la lista de tipos de actividad con nombre propio.
+
+Endpoints asociados:
+- `/src/pasarela/nombre_lista`
+- `/src/pasarela/nombre_excepcion_guardar`
+- `/src/pasarela/nombre_excepcion_eliminar`
+
+### Poner un nombre a un tipo de actividad
+
+Pasos propuestos:
+1. Pulsar **nuevo**.
+2. Elegir el tipo de actividad y escribir el **nombre actividad** que se exportará.
+3. Pulsar **guardar**.
+
+Endpoints asociados:
+- `/src/pasarela/nombre_lista`
+- `/src/pasarela/nombre_excepcion_guardar`
+- `/src/pasarela/nombre_excepcion_eliminar`
+
+### Cambiar o quitar un nombre
+
+Pasos propuestos:
+1. Abrir la fila del tipo.
+2. Cambiar el nombre y pulsar **guardar**, o pulsar **eliminar** y confirmar «¿Está seguro que desea borrar este nombre?».
+
+Endpoints asociados:
+- `/src/pasarela/nombre_lista`
+- `/src/pasarela/nombre_excepcion_guardar`
+- `/src/pasarela/nombre_excepcion_eliminar`
 
 ## Endpoints Del Flujo
 
@@ -44,4 +75,5 @@ Asignar nombre exportado distinto al tipo genérico.
 
 ## Ruta de menú
 
-- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
+- **Legacy:** dre > Pasarela > parámetros > nombres de actividades particulares
+- **Pills2:** ACTIVIDADES > Pasarela > parámetros > nombres de actividades particulares

@@ -2,9 +2,9 @@
 id: "dbextern.ver_orbix_otradl.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Revisar traslados punto 7"
+nombre: "Flujo - Revisar los traslados del punto 7"
 capacidad: "dbextern.ver_orbix_otradl.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_orbix_otradl"]
 fragmentos: ["dbextern.pantalla.ver_orbix_otradl"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dbextern/ver_orbix_otradl_datos"]
@@ -17,18 +17,22 @@ Personas Aquinate que deben trasladarse a la DL de su BDU.
 
 ## Objetivo De Usuario
 
-Ver quién está activo aquí pero su correspondencia BDU pertenece a otra DL.
+Ver quién está activo en esta delegación pero tiene su correspondencia en la BDU en otra delegación.
 
 ## Punto De Entrada
 
-**ver** del punto 7 en `sincro_index`.
+Enlace **ver** del punto 7 de la pantalla de sincronización.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener datos
+### Revisar los traslados del punto 7
 
-1. Envía `ids_traslados_A` (JSON) y `tipo_persona`.
-2. Tabla con nombre, DL destino y acción trasladar.
+Pasos propuestos:
+1. Pulsar **ver** en el punto 7.
+2. Aparece la tabla con el nombre, la delegación de destino y la acción **trasladar**.
+
+Endpoints asociados:
+- `/src/dbextern/ver_orbix_otradl_datos`
 
 ## Endpoints Del Flujo
 

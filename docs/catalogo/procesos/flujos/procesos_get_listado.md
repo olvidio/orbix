@@ -2,9 +2,9 @@
 id: "procesos.procesos_get_listado.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Get Listado"
+nombre: "Flujo - Consultar y modificar las tareas de un proceso"
 capacidad: "procesos.procesos_get_listado.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_get_listado"]
 fragmentos: ["procesos.pantalla.procesos_get_listado"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_get_listado"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Visualización en formato tabla de las fases/tareas de un tipo de proceso, con acciones de modificar y eliminar cada tarea.
+Ver las fases y tareas de un tipo de proceso en forma de tabla, con acciones para modificar o eliminar cada tarea.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se abre desde la pantalla de administración de procesos (`procesos_select`) con el botón «ver listado».
+Menú **sistema > procesos activ. > procesos** (Pills2: ADMIN LOCAL > procesos activ. > procesos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada directa de menú; se abre desde la pantalla de administración de pr
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar y modificar las tareas de un proceso
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir el proceso y pulsar **ver listado**.
+2. Se muestra una tabla con cada fase y tarea.
+3. Pulsar una tarea para modificarla, o su botón de eliminar para quitarla (con confirmación).
+4. Para añadir una tarea, elegir el proceso y pulsar **nuevo**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_get_listado`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

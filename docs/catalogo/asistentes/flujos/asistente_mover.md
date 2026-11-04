@@ -2,9 +2,9 @@
 id: "asistentes.asistente_mover.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Asistente Mover"
+nombre: "Flujo - Mover un asistente a otra actividad"
 capacidad: "asistentes.asistente_mover.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.asistente_mover"]
 fragmentos: ["asistentes.pantalla.asistente_mover"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/asistente_mover_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Mover asistente de una actividad a otra del mismo tipo.
-
+Pasar un asistente de una actividad a otra del mismo tipo.
 
 ## Punto De Entrada
 
-Pantalla `asistente_mover` (`frontend/asistentes/controller/`).
-
+Ficha de la actividad o lista de asistentes, opción de mover.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ Pantalla `asistente_mover` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Mover un asistente a otra actividad
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar al asistente en la lista y elegir mover.
+2. En **mover a** elegir la actividad de destino (del mismo tipo) y, si se quiere, escribir **observaciones**.
+3. Pulsar **guardar** (o **cancelar**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/asistente_mover_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

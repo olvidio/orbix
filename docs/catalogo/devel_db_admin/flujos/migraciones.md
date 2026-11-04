@@ -2,9 +2,9 @@
 id: "devel_db_admin.migraciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "devel_db_admin"
-nombre: "Flujo - Gestionar Migraciones"
+nombre: "Flujo - Aplicar las migraciones pendientes"
 capacidad: "devel_db_admin.migraciones.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.migraciones_lista"]
 fragmentos: ["devel_db_admin.pantalla.migraciones_lista"]
 acciones: ["listar"]
 endpoints: ["/src/devel_db_admin/migraciones_lista_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `devel_db_admin.migracione
 
 ## Objetivo De Usuario
 
-Revisar y aplicar migraciones SQL del repositorio.
-
+Revisar y aplicar las migraciones SQL pendientes de la base de datos (herramienta de desarrollo).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **sistema > DB > actualizar DB**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,13 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Listar
+### Aplicar las migraciones pendientes
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Entrar en **actualizar DB**: aparece la lista de migraciones de base de datos.
+2. Revisar las pendientes (las de estructura se ejecutan primero en la base principal y luego en la réplica de lectura).
+3. Pulsar para aplicarlas y esperar a «ejecutando...»; al terminar se reactivan las suscripciones.
+4. Para anotar una como aplicada sin ejecutarla, usar quitar registro.
 
 Endpoints asociados:
 - `/src/devel_db_admin/migraciones_lista_data`

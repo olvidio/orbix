@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_asignar_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs Asignar Ctr"
+nombre: "Flujo - Rellenar la asignación a centros"
 capacidad: "inventario.lista_docs_asignar_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_asignar_ctr"]
 fragmentos: ["inventario.pantalla.doc_asignar_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_asignar_ctr"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs Asignar Ctr
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_asignar_ctr.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsAsignarCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Indicar, para cada centro elegido, cuántos ejemplares (o qué número de registro) recibe de un documento.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Se abre al pulsar **Asignar** en la lista de centros de **asignar documento**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Rellenar la asignación a centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar el nombre del documento que aparece como título.
+2. Escribir en cada centro el **número de registro** (documentos numerados) o el **número de ejemplares**.
+3. Indicar las fechas **recibido** y **asignado** (formato dd/mm/aa) si procede.
+4. Pulsar **guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_asignar_ctr`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "inventario.cabecera_pie_txt.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Cabecera Pie Txt"
+nombre: "Flujo - Editar los textos tipo"
 capacidad: "inventario.cabecera_pie_txt.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.cabecera_pie_txt"]
 fragmentos: ["inventario.pantalla.cabecera_pie_txt", "inventario.pantalla.equipajes_imprimir"]
 acciones: ["ejecutar", "guardar"]
 endpoints: ["/src/inventario/cabecera_pie_txt", "/src/inventario/cabecera_pie_txt_guardar"]
@@ -13,17 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Cabecera Pie Txt
 
-Propuesta generada automaticamente desde la capacidad `inventario.cabecera_pie_txt.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Editar textos globales de cabecera/pie para impresión de equipajes.
+Fijar los textos tipo que llevan por defecto los equipajes impresos: cabecera, cabecera para el material que envía la dl y pie de firma.
 
 ## Punto De Entrada
 
-- `inventario.pantalla.cabecera_pie_txt`
-
-
+Menú **Inventario > equipajes > tipos de texto** (pantalla **Textos tipo para las cabeceras y pies de los equipajes**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,21 +28,18 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Editar los textos tipo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **tipos de texto**.
+2. Modificar la **cabecera tipo para equipajes** (instrucciones para comprobar el inventario de la casa al llegar y al marchar).
+3. Modificar la **cabecera para equipajes tipo B) (que envía la dl)** (instrucciones para el material que lleva la delegación y se devuelve al final).
+4. Modificar el **pie tipo para equipajes** (lista de lo que se deja en la casa) y el texto **para la firma en equipajes** (observaciones, fecha y firma).
+5. Pulsar **guardar**; aparece «textos guardados correctamente».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/cabecera_pie_txt`
+- `/src/inventario/cabecera_pie_txt_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

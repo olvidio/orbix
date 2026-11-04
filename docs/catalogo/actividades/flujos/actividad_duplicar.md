@@ -2,7 +2,7 @@
 id: "actividades.actividad_duplicar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Duplicar actividad"
+nombre: "Flujo - Duplicar una actividad"
 capacidad: "actividades.actividad_duplicar.gestionar"
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.actividad_select"]
@@ -17,19 +17,23 @@ Crear una copia de actividad(es) de la propia dl desde un listado.
 
 ## Objetivo De Usuario
 
-Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
+Crear una copia de una actividad con las mismas fechas, plazas y demás datos.
 
 ## Punto De Entrada
 
-Acción en `actividad_select` u otros listados que expongan duplicar (según permisos).
+Lista de resultados de **Buscar actividad** (ACTIVIDADES > Buscar actividad, o la entrada del colectivo).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Duplicar una actividad
 
-1. Localizar actividad en listado de búsqueda.
-2. Elegir duplicar (una selección).
-3. POST `actividad_duplicar`; abrir o localizar la copia.
+Pasos propuestos:
+1. Marcar la actividad en la lista y pulsar **duplicar**.
+2. Confirmar el aviso «Seguro que desea duplicar esta actividad».
+3. La copia se llama «dup » + el nombre original y conserva fechas y plazas; la lista se vuelve a cargar con la búsqueda por defecto, así que hay que buscar de nuevo para ver la copia.
+
+Endpoints asociados:
+- `/src/actividades/actividad_duplicar`
 
 ## Endpoints Del Flujo
 

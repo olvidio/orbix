@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Gestionar contribución reserva"
 capacidad: "pasarela.contribucion_reserva.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.contribucion_reserva_lista"]
 fragmentos:
   - "pasarela.pantalla.contribucion_reserva_ajax"
 acciones: ["listar", "guardar", "eliminar"]
@@ -21,15 +21,54 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Porcentaje de contribución en reserva de plaza.
+Importe de contribución en reserva de plaza.
 
 ## Punto De Entrada
 
-`contribucion_reserva_lista.php` desde parámetros.
+Menú **Pasarela > parámetros > Contribución reserva**.
 
-## Escenarios
+## Escenarios Inferidos
 
-Listar, default y excepciones (misma UX que no duerme).
+### Consultar el importe
+
+Pasos propuestos:
+1. Abrir **Pasarela > parámetros** y pulsar **Contribución reserva**.
+2. Leer el importe general y las excepciones por tipo de actividad.
+
+Endpoints asociados:
+- `/src/pasarela/contribucion_reserva_lista`
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
+
+### Cambiar el importe general
+
+Pasos propuestos:
+1. Pulsar el botón de modificar el valor por defecto.
+2. Escribir un número entero de euros entre 0 y 100, que es lo que acepta la pantalla.
+3. Pulsar **guardar**.
+
+Endpoints asociados:
+- `/src/pasarela/contribucion_reserva_lista`
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
+
+### Poner un importe distinto a un tipo de actividad
+
+Pasos propuestos:
+1. Pulsar **nuevo**.
+2. Elegir el tipo de actividad y escribir el importe (entero de euros entre 0 y 100, que es lo que acepta la pantalla).
+3. Pulsar **guardar**; con **eliminar** la fila el tipo vuelve al importe general.
+
+Endpoints asociados:
+- `/src/pasarela/contribucion_reserva_lista`
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_guardar`
+- `/src/pasarela/contribucion_reserva_excepcion_eliminar`
 
 ## Endpoints Del Flujo
 
@@ -48,4 +87,5 @@ Listar, default y excepciones (misma UX que no duerme).
 
 ## Ruta de menú
 
-- sin entrada de menú en el índice (acceso desde `parametros_menu` o dispatcher AJAX embebido).
+- **Legacy:** dre > Pasarela > parámetros > Contribución reserva
+- **Pills2:** ACTIVIDADES > Pasarela > parámetros > Contribución reserva

@@ -2,9 +2,9 @@
 id: "misas.ver_encargos_centros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Ver Encargos Centros"
+nombre: "Flujo - Hacer visible un encargo para un centro"
 capacidad: "misas.ver_encargos_centros.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_encargos_centros_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del modal (zonas, centros).
+Ver y modificar qué encargos de la zona aparecen en el plan de cada centro.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
+Menú **dre > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión d
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Hacer visible un encargo para un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Encargos centro**, elegir la zona.
+2. Pulsar **nuevo**; en **Zona del encargo**, **Encargo** y **Centro** elegir los valores y pulsar **Grabar**.
+3. Para modificarlo, pulsarlo y **Grabar**; para quitarlo, **Eliminar encargo**.
+4. Si falta encargo o centro aparece «Falta encargo o centro».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/ver_encargos_centros_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

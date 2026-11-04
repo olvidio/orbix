@@ -2,7 +2,7 @@
 id: "ubis.casas_opciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Casas Opciones"
+nombre: "Flujo - Elegir una casa en un desplegable"
 capacidad: "ubis.casas_opciones.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de casas que usan los desplegables de otras pantallas.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Sin entrada de menú propia: se abre desde la ficha del centro o casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir una casa en un desplegable
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de casa, abrir el desplegable.
+2. La lista se carga filtrada por el tipo de casa y la delegación que corresponda; elegir una.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/casas_opciones_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

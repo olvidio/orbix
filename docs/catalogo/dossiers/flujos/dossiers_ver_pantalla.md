@@ -2,9 +2,9 @@
 id: "dossiers.dossiers_ver_pantalla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dossiers"
-nombre: "Flujo - Gestionar Dossiers Ver Pantalla"
+nombre: "Flujo - Abrir un dossier"
 capacidad: "dossiers.dossiers_ver_pantalla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dossiers.pantalla.dossiers_ver"]
 fragmentos: ["dossiers.pantalla.dossiers_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dossiers/dossiers_ver_pantalla_data"]
@@ -15,32 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Abrir y navegar los dossiers de una persona, actividad o ubi: cabecera, relación de carpetas o ficha con widgets embebidos (matrículas, asistentes, certificados, tablas genéricas). Reutilizado desde `home_persona`, `home_ubis`, `actividad_ver` y otras pantallas vía `fnjs_update_div`.
+Abrir y recorrer los dossiers de una persona, actividad o centro/casa: cabecera, relación de carpetas y el contenido de cada una (matrículas, asistentes, certificados, tablas).
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; acceso embebido desde home persona/ubi, actividad u otras pantallas que enlazan `dossiers_ver.php`.
+Ficha de persona, ficha de actividad o ficha de centro/casa.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Abrir relación de dossiers
+### Abrir un dossier
 
-1. Desde el home de persona/ubi o la cabecera de actividad, pulsar el icono/enlace de dossiers.
-2. El controller carga `dossiers_ver_pantalla_data` con `pau` + `id_pau` (y opcionalmente `obj_pau`).
-3. Si `id_dossier` está vacío, se muestra la cabecera (`dossiers_ver_top`) y la tabla `lista_dossiers`.
-4. Cada fila con permiso abre la ficha vía `fnjs_update_div` y `href_ver`.
+Pasos propuestos:
+1. Desde la ficha, pulsar dossiers y luego la carpeta que interesa.
+2. Se muestra su contenido; según el permiso se puede solo consultar o también modificar.
+3. Usar los enlaces de la cabecera para volver a la relación de dossiers o a la ficha de origen.
 
-### Ver o editar una ficha de dossier
-
-1. Pulsar una carpeta con permiso de lectura/escritura.
-2. El backend devuelve `modo=ficha` y `ficha_segmentos` (`select_*` o `datos_tabla`).
-3. El frontend renderiza cada segmento (widgets de otros módulos o tabla genérica `DossiersVerFichaDatosTabla`).
-4. La cabecera permite volver a la relación (`go_dossiers`) o al home del sujeto (`go_home`).
-
-### Reutilización desde otras vistas (`queSel`)
-
-1. Pantallas de asistentes, matrículas, cargos, etc. invocan `dossiers_ver` con `queSel`/`que` (`activ`, `matriculas`, `asis`, `asig`, `carg`).
-2. El caso de uso fuerza `pau`, `permiso` e `id_dossier` según el contexto.
+Endpoints asociados:
+- `/src/dossiers/dossiers_ver_pantalla_data`
 
 ## Fragmentos O Pantallas Auxiliares
 

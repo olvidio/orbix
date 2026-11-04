@@ -2,9 +2,9 @@
 id: "asistentes.lista_ultim_que_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Lista Ultim Que Ctr"
+nombre: "Flujo - Preparar el informe de última asistencia"
 capacidad: "asistentes.lista_ultim_que_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.lista_ultim_que_ctr"]
 fragmentos: ["asistentes.pantalla.lista_ultim_que_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_ultim_que_ctr_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Elegir centro para informe de última asistencia.
-
+Elegir centro y curso para el informe de última asistencia (quién no ha ido al crt o a la cv).
 
 ## Punto De Entrada
 
-Pantalla `lista_ultim_que_ctr` (`frontend/asistentes/controller/`).
-
+Menú **vsg > crt / cv > s que no han ido al crt / cv > este curso / el curso pasado**, **s que han de hacer crt interno** o **el crt de cel**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ Pantalla `lista_ultim_que_ctr` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Preparar el informe de última asistencia
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción que interese (este curso o el curso pasado).
+2. Elegir el centro.
+3. Se muestra el informe.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/lista_ultim_que_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "ubis.home_ubis.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Home Ubis"
+nombre: "Flujo - Ver el resumen de un centro o casa"
 capacidad: "ubis.home_ubis.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.home_ubis"]
 fragmentos: ["ubis.pantalla.home_ubis"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/home_ubis_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objetos pau/dir.
+Mostrar la ficha resumen de un centro o casa con su dirección y telecomunicaciones.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Resultado de **buscar** o enlace desde otras fichas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el resumen de un centro o casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el centro o casa.
+2. Aparecen los apartados **dirección** y **telecos**, cada uno con su botón **editar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/home_ubis_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

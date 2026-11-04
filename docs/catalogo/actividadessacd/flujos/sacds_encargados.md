@@ -35,7 +35,7 @@ Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): la
 ### Obtener Datos
 
 Pasos:
-1. Tras una asignación, reordenación o borrado, el sistema actualiza la celda `<id_activ>_sacds`.
+1. Tras una asignación, reordenación o borrado, la celda de sacd de esa actividad se actualiza sola.
 2. Se repintan los sacd encargados con sus enlaces de menú contextual.
 
 Endpoints asociados:

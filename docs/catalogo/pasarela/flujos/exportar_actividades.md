@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Exportar actividades al exterior"
 capacidad: "pasarela.exportar_actividades.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.exportar_que"]
 fragmentos:
   - "pasarela.pantalla.exportar_select"
 acciones: ["listar", "guardar", "eliminar"]
@@ -21,13 +21,21 @@ Generar listado tabular con datos de actividades filtradas para sistemas externo
 
 ## Punto De Entrada
 
-`exportar_que.php` (menú Pasarela).
+Menú **Pasarela > exportar actividades**.
 
-## Escenarios
+## Escenarios Inferidos
 
-1. Elegir filtros y casas.
-2. Submit → `exportar_select` calcula periodo ISO.
-3. Muestra tabla; avisos en `errores` (tarifas/activación faltantes).
+### Exportar actividades al exterior
+
+Pasos propuestos:
+1. Abrir **Pasarela > exportar actividades**.
+2. Elegir el tipo de actividad y el **periodo**.
+3. Pulsar **ver selección**.
+4. Se muestra la tabla de actividades preparada para el sistema externo.
+5. Leer los avisos: indican tarifas o fechas de activación que faltan para alguna actividad.
+
+Endpoints asociados:
+- `/src/pasarela/exportar_actividades_data`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "ubis.direcciones_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direcciones Editar"
+nombre: "Flujo - Modificar la dirección"
 capacidad: "ubis.direcciones_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direcciones_editar"]
 fragmentos: ["ubis.pantalla.direcciones_editar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_editar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.
+Modificar la dirección de un centro o casa y gestionar su plano.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **scdl > direcciones > buscar**: buscar, pulsar el nombre del centro o casa en la tabla y usar «Editar: **centro** / **dirección** / **telecos**» de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Modificar la dirección
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Cambiar los campos que hagan falta (dirección, código postal, población, provincia, país, latitud y longitud, comentarios).
+3. Para el plano: **ver plano**, **adjuntar plano** o **eliminar plano**.
+4. Pulsar **Guardar Cambios**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/direcciones_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

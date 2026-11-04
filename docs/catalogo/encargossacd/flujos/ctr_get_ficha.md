@@ -2,9 +2,9 @@
 id: "encargossacd.ctr_get_ficha.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Ctr Get Ficha"
+nombre: "Flujo - Abrir la ficha de un centro"
 capacidad: "encargossacd.ctr_get_ficha.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.ctr_get_ficha"]
 fragmentos: ["encargossacd.pantalla.ctr_get_ficha"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/ctr_get_ficha_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.ctr_get_fich
 
 ## Objetivo De Usuario
 
-Gestiona CtrGetFicha. Lectura de la ficha de atencion sacerdotal de un centro. Puerto del antiguo frontend/encargossacd/controller/ctr_get_ficha.php. Devuelve arrays planos/estructurados para que el controlador frontend arme frontend\shared\web\Desplegable y la HTML sin instanciar nada de src\.
+Cargar la ficha de atención sacerdotal del centro elegido.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Abrir la ficha de un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha ctr**, elegir el grupo y el centro.
+2. La ficha aparece como «Atención ctr (nombre del centro)» con **sacd titular**, casilla **cl**, **dedicación** (mañanas, tarde 1ª hora, tarde 2ª hora), **Suplente**, colaboradores, **observaciones** y **exigencias del ctr**. En **Selección de sacd** las casillas **prelatura** y **sss+** limitan qué sacerdotes salen en las listas.
+3. Para añadir un colaborador, pulsar **añadir sacd colaborador**; para fijar horas, **crear horario**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/ctr_get_ficha_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

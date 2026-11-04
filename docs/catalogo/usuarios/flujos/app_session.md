@@ -2,7 +2,7 @@
 id: "usuarios.app_session.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar App Session"
+nombre: "Flujo - Reabrir la app con sesión activa"
 capacidad: "usuarios.app_session.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).
+Al arrancar la app móvil, comprobar si ya hay una sesión abierta para no pedir de nuevo las credenciales.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Arranque de la aplicación móvil.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Reabrir la app con sesión activa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la app.
+2. Si la sesión sigue vigente entra directamente; si no, muestra la pantalla de acceso.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/app_session`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

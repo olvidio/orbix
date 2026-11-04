@@ -2,9 +2,9 @@
 id: "actividadestudios.form_asignaturas_de_una_actividad.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Form Asignaturas De Una Actividad"
+nombre: "Flujo - Gestionar las asignaturas de una actividad"
 capacidad: "actividadestudios.form_asignaturas_de_una_actividad.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/form_asignaturas_de_una_actividad_data"]
@@ -17,16 +17,11 @@ Carga del formulario de alta/edición de una asignatura impartida (dossier 3005)
 
 ## Objetivo De Usuario
 
-El usuario abre el formulario para crear o editar una asignatura impartida en una actividad
-CA: el sistema devuelve desplegables de asignaturas y profesores, fechas, flags de aviso y
-permisos según el modo (nuevo/editar).
+Ver y modificar las asignaturas que se imparten en una actividad.
 
 ## Punto De Entrada
 
-Pantalla `form_asignaturas_de_una_actividad`
-(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): al abrirse
-desde el dossier 3005 llama a `form_asignaturas_de_una_actividad_data` con `id_activ`,
-`id_asignatura`, `pau` y opcionalmente `sel`. Sucesor de `apps/actividadestudios/controller/form_3005.php`.
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **asignaturas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,12 +29,12 @@ desde el dossier 3005 llama a `form_asignaturas_de_una_actividad_data` con `id_a
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Gestionar las asignaturas de una actividad
 
-Pasos:
-1. En el dossier 3005, pulsar **nuevo** o **modificar** sobre una asignatura.
-2. El sistema carga el formulario consultando `form_asignaturas_de_una_actividad_data`.
-3. Se muestran desplegables, fechas y botón guardar con hash de seguridad.
+Pasos propuestos:
+1. Marcar la actividad y pulsar **asignaturas**.
+2. Se abre «Relación de asignaturas» con el enlace **( dossiers )**; si no hay ninguna, indica «no hay ninguna fila».
+3. Pulsar **añadir asignatura** para añadir una.
 
 Endpoints asociados:
 - `/src/actividadestudios/form_asignaturas_de_una_actividad_data`

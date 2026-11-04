@@ -2,7 +2,7 @@
 id: "profesores.lista_por_departamentos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Consultar claustro"
+nombre: "Flujo - Ver el claustro por departamentos"
 capacidad: "profesores.lista_por_departamentos.gestionar"
 pantallas_principales: ["profesores.pantalla.lista_por_departamentos"]
 fragmentos: []
@@ -17,20 +17,20 @@ Consulta del claustro STGR agrupado por departamento y tipo de profesor.
 
 ## Objetivo De Usuario
 
-Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegación en RSTGR.
+Ver el claustro de profesores agrupado por departamento y categoría.
 
 ## Punto De Entrada
 
-Pantalla `lista_por_departamentos` (`frontend/profesores/controller/lista_por_departamentos.php`).
+Menú **vest > buscar persona > claustro** (Pills2: stgr > personas > claustro).
 
 ## Escenarios Inferidos
 
-### Consultar
+### Ver el claustro por departamentos
 
-Pasos:
-1. Abrir **claustro** desde el menú.
-2. En RSTGR sin filtro: marcar delegaciones y pulsar **Aplicar filtro** (`filtro=1`, `dl[]`).
-3. Revisar departamentos con subsecciones director y tipos de profesor.
+Pasos propuestos:
+1. Entrar en **claustro**.
+2. Se muestra cada departamento (por ejemplo «Música») con sus categorías: director, Ordinario, Extraordinario, Adjunto, Encargado, Ayudante y Asociado.
+3. Bajo cada categoría se listan los profesores que la tienen. Si una categoría sale sin nombres es que ahora mismo no hay nadie en ella (en la instancia de desarrollo solo se ven los títulos).
 
 Endpoints asociados:
 - `/src/profesores/lista_por_departamentos`

@@ -2,9 +2,9 @@
 id: "dbextern.sincro_trasladar_a.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Trasladar a otra DL"
+nombre: "Flujo - Trasladar una ficha a otra dl"
 capacidad: "dbextern.sincro_trasladar_a.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_orbix_otradl"]
 fragmentos: ["dbextern.pantalla.ver_orbix_otradl"]
 acciones: ["trasladar"]
 endpoints: ["/src/dbextern/sincro_trasladar_a"]
@@ -17,18 +17,22 @@ Traslado hacia la DL de la BDU (punto 7).
 
 ## Objetivo De Usuario
 
-Mover la ficha Aquinate a la delegación donde está su correspondencia en listas.
+Mover la ficha de Aquinate a la delegación donde la persona está en las listas de la BDU.
 
 ## Punto De Entrada
 
-**trasladar** en `ver_orbix_otradl`.
+Botón **trasladar** en la lista del punto 7 («Revisar traslados punto 7»).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Trasladar
+### Trasladar una ficha a otra dl
 
-1. POST `id_nom_orbix`, `dl` destino, `tipo_persona`.
-2. Solo permitido si región destino = región actual.
+Pasos propuestos:
+1. En el punto 7, pulsar **trasladar** en la persona.
+2. Solo se puede si la región de destino es la misma que la actual; si no, avisa «Este traslado debe hacerse desde el dossier de traslados».
+
+Endpoints asociados:
+- `/src/dbextern/sincro_trasladar_a`
 
 ## Endpoints Del Flujo
 

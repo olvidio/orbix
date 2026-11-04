@@ -2,9 +2,9 @@
 id: "actividadescentro.activ_ctr_shell.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadescentro"
-nombre: "Flujo - Gestionar Activ Ctr Shell"
+nombre: "Flujo - Abrir la asignación de centros encargados"
 capacidad: "actividadescentro.activ_ctr_shell.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/activ_ctr_shell_data"]
@@ -18,14 +18,11 @@ endpoints del módulo.
 
 ## Objetivo De Usuario
 
-Al abrir la pantalla de asignación de centros encargados, el sistema resuelve el colectivo (`tipo`,
-que puede remaparse a `sf*` en el semestre de formación) y firma las URLs AJAX que usará el resto de
-acciones. Es un paso transparente para el usuario, previo a mostrar los filtros de periodo.
+Preparar la pantalla de asignación de centros encargados antes de mostrar los filtros de periodo.
 
 ## Punto De Entrada
 
-Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): al cargarse invoca
-`activ_ctr_shell_data` vía `PostRequest::getDataFromUrl`.
+Menú de asignación de centros encargados a las actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,13 +30,14 @@ Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): al
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Abrir la asignación de centros encargados
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la pantalla de centros encargados.
+2. La pantalla se prepara sola y muestra los filtros de periodo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/activ_ctr_shell_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

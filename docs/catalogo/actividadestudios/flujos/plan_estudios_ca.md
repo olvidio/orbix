@@ -2,9 +2,9 @@
 id: "actividadestudios.plan_estudios_ca.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Plan Estudios Ca"
+nombre: "Flujo - Ver el plan de estudios de una actividad"
 capacidad: "actividadestudios.plan_estudios_ca.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.plan_estudios_ca"]
 fragmentos: ["actividadestudios.pantalla.plan_estudios_ca"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/plan_estudios_ca_data"]
@@ -17,15 +17,11 @@ Informe del plan de estudios de una actividad CA.
 
 ## Objetivo De Usuario
 
-El usuario consulta el plan de estudios de una actividad CA: director de estudios,
-preceptores, profesores por asignatura y alumnos con sus asignaturas matriculadas y
-observaciones de plan (`observ_est`).
+Ver el plan de estudios de una actividad (director de estudios, profesores, preceptores y asistentes).
 
 ## Punto De Entrada
 
-Pantalla `plan_estudios_ca` (`frontend/actividadestudios/controller/plan_estudios_ca.php`):
-se abre desde `actividad_select` con acción `plan_estudios`; llama a
-`plan_estudios_ca_data` con `id_activ`.
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **plan estudios**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,12 +30,12 @@ se abre desde `actividad_select` con acción `plan_estudios`; llama a
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el plan de estudios de una actividad
 
-Pasos:
-1. En `actividad_select`, seleccionar una actividad CA.
-2. Pulsar la acción **plan estudios**.
-3. El sistema consulta `plan_estudios_ca_data` y muestra el informe completo.
+Pasos propuestos:
+1. Marcar una actividad de tipo ca y pulsar **plan estudios**.
+2. Se muestra el título de la actividad con **Director de estudios** (para nombrarlo hay que ir al dossier de cargos de la actividad), **Profesores**, **Preceptores** y **Asistentes**.
+3. Debajo, cada asistente con su plan; «???» indica que no hay dato.
 
 Endpoints asociados:
 - `/src/actividadestudios/plan_estudios_ca_data`

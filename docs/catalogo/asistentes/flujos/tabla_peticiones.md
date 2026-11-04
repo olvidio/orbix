@@ -2,9 +2,9 @@
 id: "asistentes.tabla_peticiones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Tabla Peticiones"
+nombre: "Flujo - Ver las otras peticiones de los asistentes"
 capacidad: "asistentes.tabla_peticiones.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.tabla_peticiones"]
 fragmentos: ["asistentes.pantalla.tabla_peticiones"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/tabla_peticiones_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Ver peticiones de plaza y mover asistente a actividad preferida.
-
+Ver las peticiones de plaza de las personas que quieren asistir a la actividad.
 
 ## Punto De Entrada
 
-Pantalla `tabla_peticiones` (`frontend/asistentes/controller/`).
-
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **otras peticiones**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ Pantalla `tabla_peticiones` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver las otras peticiones de los asistentes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la actividad y pulsar **otras peticiones**.
+2. Se muestra el título de la actividad y una tabla «nombre / peticiones (libres/concedidas)» con cada persona que ha pedido plaza y sus otras peticiones.
+3. Si no hay peticiones, la tabla sale vacía.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/tabla_peticiones_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

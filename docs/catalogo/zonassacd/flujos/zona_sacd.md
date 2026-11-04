@@ -2,9 +2,9 @@
 id: "zonassacd.zona_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "zonassacd"
-nombre: "Flujo - Gestionar Zona Sacd"
+nombre: "Flujo - Consultar los sacerdotes de una zona"
 capacidad: "zonassacd.zona_sacd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["zonassacd.pantalla.zona_sacd"]
 fragmentos: ["zonassacd.pantalla.zona_sacd", "zonassacd.pantalla.zona_sacd_lista_ajax", "zonassacd.pantalla.zona_sacd_update_ajax"]
 acciones: ["crear_actualizar", "ejecutar", "listar"]
 endpoints: ["/src/zonassacd/zona_sacd", "/src/zonassacd/zona_sacd_lista", "/src/zonassacd/zona_sacd_update"]
@@ -15,30 +15,35 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consultar y gestionar la asignación de sacerdotes (sacd) a zonas geográficas: listado por zona, cambio de zona propia, asignaciones iglesia/cgi y edición de días de atención semanal.
+Ver los sacerdotes de cada zona, los días de la semana que atienden, y cambiarlos de zona.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > zonas > zonas-sacd. Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd.
+Menú **dre > zonas > zonas-sacd** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Consultar sacd de una zona
+### Consultar los sacerdotes de una zona
 
-1. Abrir Zonas-sacd desde el menú.
-2. Elegir zona (o «sin asignar zona») en el desplegable → carga AJAX `zona_sacd_lista`.
-3. Revisar tabla: sacd, zona, propia, días L–D.
+Pasos propuestos:
+1. Abrir «Lista de sacd de la zona» y elegir la zona (o «sin asignar zona»).
+2. Aparece una tabla con sacerdote, zona, **propia** (1 si es su zona propia) y los días **L M X J V S D** (una «x» o un «-» en cada día: indica si el sacerdote atiende o no ese día, es decir, si está o no está).
 
-### Cambiar asignación de zona (perm_des)
+Endpoints asociados:
+- `/src/zonassacd/zona_sacd`
+- `/src/zonassacd/zona_sacd_lista`
+- `/src/zonassacd/zona_sacd_update`
 
-1. Marcar sacd en la tabla.
-2. Elegir zona destino y pulsar «cambiar asignación zona» (`acumular=1`) o «añadir asignación iglesia/cgi» (`acumular=2`).
-3. Validaciones cliente: zona destino y al menos un sacd marcado.
+### Cambiar los días o la zona de un sacerdote
 
-### Editar días de atención (perm_des)
+Pasos propuestos:
+1. Marcar al sacerdote y pulsar **modificar**: se abre una ventana con su nombre, la casilla **propia** y los días (Lunes a Domingo). Pulsar **Grabar** para guardar o **Cancel** para salir.
+2. Para cambiar de zona a varios sacerdotes: marcarlos, elegir la zona en «asignar los sacd marcados a la zona» y pulsar **cambiar asignación zona**; con **añadir asignación iglesia/cgi** en lugar de cambiar de zona se añade otra, de modo que el sacerdote queda con dos zonas.
 
-1. Marcar un solo sacd → botón «modificar» → modal.
-2. GET `/src/misas/zona_sacd_datos_get`; grabar con PUT `/src/misas/zona_sacd_datos_put`.
+Endpoints asociados:
+- `/src/zonassacd/zona_sacd`
+- `/src/zonassacd/zona_sacd_lista`
+- `/src/zonassacd/zona_sacd_update`
 
 ## Fragmentos O Pantallas Auxiliares
 

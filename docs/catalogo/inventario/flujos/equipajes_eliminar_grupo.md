@@ -2,9 +2,9 @@
 id: "inventario.equipajes_eliminar_grupo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Eliminar Grupo"
+nombre: "Flujo - Eliminar una valija"
 capacidad: "inventario.equipajes_eliminar_grupo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_eliminar_grupo"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Eliminar Grupo
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_eliminar_grupo.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesEliminarGrupo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Borrar una valija entera del equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > equipajes > hacer equipajes**, en la valija con el botón **eliminar valija**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Eliminar una valija
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **eliminar valija**.
+3. Confirmar la pregunta «¿Está seguro de borrar este grupo?».
+4. La valija desaparece del equipaje y los documentos que llevaba dejan de estar en ella (siguen existiendo).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_eliminar_grupo`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

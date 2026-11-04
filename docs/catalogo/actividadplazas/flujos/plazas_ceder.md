@@ -2,9 +2,9 @@
 id: "actividadplazas.plazas_ceder.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Plazas Ceder"
+nombre: "Flujo - Ceder plazas a otra delegación"
 capacidad: "actividadplazas.plazas_ceder.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadplazas.pantalla.resumen_plazas"]
 fragmentos: ["actividadplazas.pantalla.resumen_plazas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadplazas/plazas_ceder"]
@@ -17,13 +17,11 @@ Cede (o quita) plazas de mi delegación a otra delegación en una actividad conc
 
 ## Objetivo De Usuario
 
-Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otra delegación y
-confirmar el cambio.
+Desde el resumen de plazas de una actividad, indicar cuántas plazas se ceden a otra delegación y confirmar el cambio.
 
 ## Punto De Entrada
 
-Formulario **Ceder** al pie de la pantalla `resumen_plazas`, abierta desde el menú «Plazas» de una
-actividad concreta.
+Bloque **Ceder** al final del resumen de plazas, que se abre desde el botón de plazas de una actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,13 @@ actividad concreta.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ceder plazas a otra delegación
 
+Pasos propuestos:
 1. Abrir el resumen de plazas de la actividad.
-2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación destino.
-3. Pulsar **Guardar** (`fnjs_guardar`): envía `id_activ`, `num_plazas` y `region_dl` a
-   `plazas_ceder`.
-4. Si tiene éxito, la pantalla se recarga (`fnjs_actualizar`) mostrando el nuevo reparto.
+2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación que las recibe.
+3. Pulsar **Guardar**.
+4. La pantalla se recarga y muestra el nuevo reparto.
 
 Endpoints asociados:
 - `/src/actividadplazas/plazas_ceder`

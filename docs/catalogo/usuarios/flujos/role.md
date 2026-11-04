@@ -2,9 +2,9 @@
 id: "usuarios.role.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Role"
+nombre: "Flujo - Consultar los roles"
 capacidad: "usuarios.role.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.role_lista"]
 fragmentos: ["usuarios.pantalla.role_form", "usuarios.pantalla.role_lista"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/role_eliminar", "/src/usuarios/role_guardar", "/src/usuarios/role_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar grupmenus.
+Consultar los roles y asignar a cada uno los grupos de menús de la delegación.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > usuarios web > lista de roles. Pills2: ADMIN LOCAL > usuarios web > lista de roles.
+Menú **sistema > usuarios web > lista de roles** (Pills2: ADMIN LOCAL > usuarios web > lista de roles).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,34 +28,38 @@ Menú Legacy: sistema > usuarios web > lista de roles. Pills2: ADMIN LOCAL > usu
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Consultar los roles
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **lista de roles**.
+2. Los roles son comunes a todas las delegaciones y solo los modifica el superusuario.
+3. Pulsar un rol para ver su ficha y los grupos de menús que tiene.
 
 Endpoints asociados:
 - `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
+- `/src/usuarios/role_lista`
 
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Listar
+### Asignar grupos de menús a un rol
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir la ficha del rol.
+2. Pulsar **añadir grup menu** y marcar los grupos de menús que se quieren dar.
+3. Guardar. Los grupos de menús son propios de cada delegación (sv y sf distintos) y los puede modificar el administrador.
 
 Endpoints asociados:
+- `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
+- `/src/usuarios/role_lista`
+
+### Quitar un grupo de menús a un rol
+
+Pasos propuestos:
+1. En la ficha del rol, en la tabla de grupos de menús, elegir el que se quiere quitar y confirmar.
+
+Endpoints asociados:
+- `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
 - `/src/usuarios/role_lista`
 
 ## Campos Y Acciones Detectadas En Pantalla

@@ -2,7 +2,7 @@
 id: "actividades.actividad_select_ubi_desplegable.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Desplegables lugar (popup)"
+nombre: "Flujo - Elegir el lugar de una actividad"
 capacidad: "actividades.actividad_select_ubi_desplegable.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_select_ubi"]
 fragmentos: []
@@ -17,19 +17,23 @@ Opciones de historial frecuente y regiones en el popup seleccionar lugar.
 
 ## Objetivo De Usuario
 
-Al elegir modo historial o región, cargar casas/ubis candidatas antes de confirmar.
+En la ventana para elegir lugar, al escoger buscar por historial o por región, cargar las casas o ubicaciones candidatas antes de confirmar.
 
 ## Punto De Entrada
 
-`actividad_select_ubi.phtml` → `fnjs_cargar_desplegable` / `fnjs_construir_desplegable`.
+Ventana emergente de elegir lugar, abierta desde la ficha de actividad o el planning. No tiene entrada de menú.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Elegir el lugar de una actividad
 
-1. Usuario elige tipo de búsqueda (`freq`, `region`, …) y `dl_org`/`isfsv`.
-2. AJAX a `actividad_select_ubi_desplegable`.
-3. Pinta desplegable de ubis; al elegir, rellena campos del opener.
+Pasos propuestos:
+1. En la ventana de lugar, elegir el tipo de búsqueda (por ejemplo historial o región) y quién organiza.
+2. Se carga el desplegable de casas o ubicaciones posibles.
+3. Al elegir una, se rellenan los datos de lugar en la pantalla desde la que se abrió la ventana.
+
+Endpoints asociados:
+- `/src/actividades/actividad_select_ubi_desplegable`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "personas.stgr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Guardar nivel STGR"
+nombre: "Flujo - Guardar el nivel stgr"
 capacidad: "personas.stgr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.stgr_cambio"]
 fragmentos: ["personas.pantalla.stgr_cambio"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/personas/stgr_update"]
@@ -17,19 +17,22 @@ Aplica el nuevo nivel STGR seleccionado en el formulario modal.
 
 ## Objetivo De Usuario
 
-Actualizar el nivel STGR de una persona del listado.
+Guardar el nivel de estudios (stgr) elegido para una persona.
 
 ## Punto De Entrada
 
-- `stgr_cambio.phtml` → `fnjs_guardar_stgr`.
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl). **modificar stgr**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Guardar cambio
+### Guardar el nivel stgr
 
-1. Elegir nivel en el desplegable.
-2. Guardar → `stgr_update` con `id_nom`, `id_tabla`, `nivel_stgr`.
-3. Volver al listado y comprobar columna STGR.
+Pasos propuestos:
+1. Elegir el nivel en el desplegable y pulsar **Guardar**.
+2. No sale mensaje: se vuelve a la lista de personas. El nuevo nivel se ve en la ficha de la persona (campo «stgr»).
+
+Endpoints asociados:
+- `/src/personas/stgr_update`
 
 ## Endpoints Del Flujo
 

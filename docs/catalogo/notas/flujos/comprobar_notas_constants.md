@@ -2,7 +2,7 @@
 id: "notas.comprobar_notas_constants.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Comprobar Notas Constants"
+nombre: "Flujo - Preparar la comprobación de notas"
 capacidad: "notas.comprobar_notas_constants.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.comprobar_notas_con
 
 ## Objetivo De Usuario
 
-Cargar constantes VO antes de ejecutar comprobaciones.
+Cargar las constantes que usan las comprobaciones de notas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Sin entrada de menú propia: se usa desde otra pantalla de notas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,13 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Preparar la comprobación de notas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Al abrir **Comprobar datos** las constantes se cargan automáticamente.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/comprobar_notas_constants_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

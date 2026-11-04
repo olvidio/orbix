@@ -2,9 +2,9 @@
 id: "misas.cambiar_status.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Cambiar Status"
+nombre: "Flujo - Cambiar el estado del plan"
 capacidad: "misas.cambiar_status.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.cambiar_status"]
 fragmentos: ["misas.pantalla.cambiar_status"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/cambiar_status_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas permitidas, criterios de orden y estados posibles.
+Cambiar el estado del plan de misas de una zona y periodo: propuesta, visible para sacerdotes o visible para centros.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado.
+Menú **dre > Misas > Cambiar estado** (Pills2: ATENCIÓN SACD > Gestión de misas > Cambiar estado).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Menú Legacy: dre > Misas > Cambiar estado. Pills2: dre > ?110 > Cambiar estado<
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Cambiar el estado del plan
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Cambiar estado**.
+2. Elegir la zona en **Plan de Misas Zona**, el **Orden** y el **Periodo**.
+3. En **Nuevo estado** elegir propuesta, visible sacd o visible ctr.
+4. Pulsar **cambiar**: se aplica a todas las misas de la zona en ese periodo. No muestra ningún mensaje de confirmación; para comprobarlo hay que volver a abrir el plan.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/cambiar_status_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

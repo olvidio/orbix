@@ -2,7 +2,7 @@
 id: "inventario.lista_colecciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Colecciones"
+nombre: "Flujo - Agrupar un listado por colección"
 capacidad: "inventario.lista_colecciones.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Colecciones
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_colecciones.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ColeccionesOpciones. Opciones del desplegable de colecciones (lista_colecciones.php).
+Cargar las colecciones de documentos para agrupar o filtrar un listado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+No se abre desde el menú: se usa dentro de los listados de documentos que permiten agrupar por colección.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Agrupar un listado por colección
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En un listado de documentos con agrupación, abrir el desplegable de colección.
+2. Las colecciones disponibles se cargan solas.
+3. Elegir la colección para ver solo sus documentos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_colecciones`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "certificados.certificado_recibido.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Recibido"
+nombre: "Flujo - Gestionar certificados recibidos"
 capacidad: "certificados.certificado_recibido.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_recibido_adjuntar", "certificados.pantalla.certificado_recibido_modificar"]
 fragmentos: ["certificados.pantalla.certificado_recibido_adjuntar", "certificados.pantalla.certificado_recibido_modificar"]
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/certificados/certificado_recibido_delete", "/src/certificados/certificado_recibido_guardar"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
+Gestionar los certificados recibidos de una persona: adjuntar, modificar y eliminar.
 
 ## Punto De Entrada
 
-Dossier persona 1010 (`select_certificados_de_una_persona`).
+Ficha de la persona > dossier de certificados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,24 +30,16 @@ Dossier persona 1010 (`select_certificados_de_una_persona`).
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Gestionar certificados recibidos
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Adjuntar: pulsar **adjuntar nuevo certificado**, rellenar y subir el PDF.
+2. Modificar: abrir el certificado, cambiar los datos y guardar.
+3. Eliminar: pulsarlo y confirmar «¿seguro que desea borrar el certificado?».
 
 Endpoints asociados:
 - `/src/certificados/certificado_recibido_delete`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_recibido_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

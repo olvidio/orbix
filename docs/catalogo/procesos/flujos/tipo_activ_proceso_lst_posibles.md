@@ -2,7 +2,7 @@
 id: "procesos.tipo_activ_proceso_lst_posibles.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Tipo Activ Proceso Lst Posibles"
+nombre: "Flujo - Ver los procesos asignables a un tipo de actividad"
 capacidad: "procesos.tipo_activ_proceso_lst_posibles.gestionar"
 pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: ["procesos.pantalla.tipo_activ_proceso_lst_posibles"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Obtener y mostrar la mini-tabla de procesos que el usuario puede asignar a un tipo de actividad concreto (propio o no propio).
+Mostrar los procesos que se pueden asignar a un tipo de actividad.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
+Menú **sistema > procesos activ. > tipo activ - proceso** (Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LO
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los procesos asignables a un tipo de actividad
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tipo activ - proceso**.
+2. Elegir el tipo de actividad (propio de la dl o no propio).
+3. Se muestra la mini-tabla de procesos posibles.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/tipo_activ_proceso_lst_posibles`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

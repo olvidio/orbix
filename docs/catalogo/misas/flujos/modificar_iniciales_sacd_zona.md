@@ -2,9 +2,9 @@
 id: "misas.modificar_iniciales_sacd_zona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Modificar Iniciales Sacd Zona"
+nombre: "Flujo - Elegir la zona de las iniciales"
 capacidad: "misas.modificar_iniciales_sacd_zona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.modificar_iniciales_sacd_zona"]
 fragmentos: ["misas.pantalla.modificar_iniciales_sacd_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_iniciales_sacd_zona_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
+Elegir la zona cuyas iniciales de sacerdotes se quieren editar.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd.
+Menú **dre > Misas > Iniciales sacd** (Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Iniciales sacd. Pills2: ATENCIÓN SACD > Gestión de
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la zona de las iniciales
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Iniciales sacd**.
+2. Elegir la zona en **Iniciales sacerdotes de la zona**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/modificar_iniciales_sacd_zona_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

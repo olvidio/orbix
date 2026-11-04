@@ -24,11 +24,18 @@ Mostrar etiqueta legible del tipo al editar excepciones.
 
 ## Punto De Entrada
 
-Formularios `form_modificar` de parámetros pasarela.
+No se abre desde el menú: aparece al editar una fila de cualquier parámetro de la pasarela.
 
-## Escenarios
+## Escenarios Inferidos
 
-Con `id_tipo_activ` devuelve texto sf/sv + asistentes + actividad.
+### Ver el nombre del tipo al editar
+
+Pasos propuestos:
+1. Abrir una fila de un parámetro (fecha de activación, nombre o contribución).
+2. El sistema muestra el nombre completo del tipo de actividad (sección, asistentes y actividad) para saber qué se está editando.
+
+Endpoints asociados:
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "encargossacd.horario_sacd_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Horario Sacd Ver"
+nombre: "Flujo - Crear o modificar el horario de un sacerdote"
 capacidad: "encargossacd.horario_sacd_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.horario_sacd_ver"]
 fragmentos: ["encargossacd.pantalla.horario_sacd_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/horario_sacd_ver_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.horario_sacd
 
 ## Objetivo De Usuario
 
-Gestiona EncargoSacdHorarioVer. Datos del formulario horario sacd (ficha tareas).
+Ver el formulario de horario de un sacerdote en un encargo, con excepciones antes o después de una fecha.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Ficha de sacd o de centro, **crear horario** / **definir horario**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,16 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Crear o modificar el horario de un sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha, pulsar **crear horario**.
+2. Indicar **dia**, **hora inicio**, **hora fin** y el periodo (**activo desde** / **hasta**).
+3. Se pueden **añadir horario** y **generar excepciones** (antes del / después del).
+4. Pulsar **guardar horario**; **eliminar horario** pide confirmación.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/horario_sacd_ver_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

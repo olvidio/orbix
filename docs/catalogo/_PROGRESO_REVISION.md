@@ -1,7 +1,7 @@
 ---
 tipo: "progreso_revision"
 alcance: "catalogo"
-ultima_actualizacion: 2026-07-25
+ultima_actualizacion: 2026-11-04
 ---
 
 # Progreso de revisión del catálogo
@@ -49,6 +49,30 @@ Leyenda estado: ⬜ pendiente · 🟡 en curso · ✅ API revisada · ⭐ API+pa
 | 31 | ubiscamas | 9 | 5 | 5 | ⭐ | API+pant+flujos revisados (ola 7). `operacion`: `actividad_habitaciones_lista`→lista_data; 2 `form_data`; 6 mutaciones (`update_cama_asistente`/`update_solo_vip` con `requiere_hashb:true`, JSON directo). Salida real payloads + doble `JSON.parse`; errores `_()`/`Exception` reales; permisos frontend+dossier actividad/CDC. Dominios: habitaciones/camas CDC (`habitacion_form`, dossier `select_habitaciones_cdc`), asignación camas actividad (`lista_habitaciones` vía `actividades.js` que=camas). Ruta menú: sin entrada en `_referencia_menus.md` (acceso dossier). Regenerados openapi+ai+manual. Script: `aplicar_revision_ubiscamas.php`. |
 | 32 | usuarios | 44 | 24 | 33 | ⭐ | API+pant+flujos revisados (ola 7 FINAL). `operacion` corregida (~10 `lista_data`, ~12 `form_data`, 22 mutaciones; builders ya no mutación); Salida real payloads + doble `JSON.parse` (`usuario_form` JsonResponse); errores `_()` reales; permisos id_role≤3/HashB/frontend+`$_SESSION['oPerm']`; 7 casos `application/` + resto inline controllers. Dominios: login/sesión/2FA, preferencias, admin usuarios/roles/grupos, perm menú/actividad, recovery mail. Ruta menú ADMIN LOCAL > usuarios web en 3 pant principales; login/recovery/preferencias sin menú admin. Script: `aplicar_revision_usuarios.php`. Regenerados openapi+ai+manual. |
 | 33 | zonassacd | 9 | 6 | 5 | ⭐ | API+pant+flujos revisados (ola 7 FINAL). `operacion`: 2 `form_data` (zona_sacd/ctr page), 2 `lista_data` (listas), 2 mutaciones (update), 2 rutas muertas (zona_*_ajax sin controller); Salida real payloads + doble `JSON.parse`; errores `_()` reales; permisos `perm_des` vía `have_perm_oficina(des|vcsd)` frontend+sesión; modal días vía `misas/zona_sacd_datos_*`; `zona_sacd_lista_ajax?que=get_lista_tot` consume lista_tot. Ruta menú ATENCIÓN SACD > Gestión de zonas (Zonas-sacd, Zonas-ctr, Lista sacd-zona); fragmentos AJAX «sin entrada». Linaje `apps/zonassacd/*`. Regenerados openapi+ai+manual. Script: `aplicar_revision_zonassacd.php`. |
+
+## Cierre del repaso de manuales (2026-11-04)
+
+Repaso de los 33 manuales (`docs/manual/`) con pantalla real de la instancia de desarrollo, cuaderno de dudas
+([`docs/dev/MANUAL_REPASO_DUDAS.md`](../dev/MANUAL_REPASO_DUDAS.md)) y traspaso
+([`docs/dev/MANUAL_REPASO_HANDOFF.md`](../dev/MANUAL_REPASO_HANDOFF.md)).
+
+- **Estado del manual** (`estado_revision`): lo fija [`_estado_manual.json`](_estado_manual.json), que lee el generador.
+  `revisado` = contrastado con pantalla real (consulta y acciones principales); `revisado_parcial` = alguna parte
+  redactada solo desde el código. Ninguno implica haber probado todas las acciones que cambian datos.
+- **`revisado` (20):** actividadcargos, actividades, actividadestudios, actividadplazas, asistentes, certificados,
+  dossiers, encargossacd, inventario, menus, misas, notas, pasarela, personas, planning, procesos, profesores, ubis,
+  usuarios, zonassacd.
+- **`revisado_parcial` (13):** actividadescentro, actividadessacd, actividadtarifas, asignaturas, cambios,
+  cartaspresentacion, casas, configuracion, dbextern, devel_db_admin, shared, tablonanuncios, ubiscamas.
+- **Flujos:** sin jerga técnica en los pasos (15 módulos pulidos) y con todas las pantallas candidatas enlazadas
+  (`php tools/fix/enlazar_flujos_pantallas.php --todas --apply`). Quedan 45 flujos sin pantalla propia: son endpoints
+  internos que ninguna pantalla llama directamente.
+- **`docs/ai/<módulo>`:** `flujos/` y `00_indice.md` regenerados desde el catálogo. `api_resumen.md` **no** se regenera:
+  se mantiene a mano y está más al día que el catálogo (ver AGENTS.md).
+- **Pendiente** (detalle en el traspaso): D-TAR-1 (copiar tarifas), 7 metamenús sin destino
+  ([`menus_enlaces_rotos.md`](../dev/menus_enlaces_rotos.md)), acciones que cambian datos sin probar en pantalla
+  (continuar en matriculación automática, eliminar/subir pdf firmado/enviar certificados, guardar habitaciones y camas),
+  25 pantallas sin ayuda propia, y revisar las traducciones escritas a mano (ca/de/it).
 
 **Lagunas de cobertura conocidas (act. 2026-07-25 — ver `docs/dev/MANUAL_REPASO_HANDOFF.md`):**
 - `devel_codegen` (frontend + src) sin catálogo: excepción aceptada (codegen interno).

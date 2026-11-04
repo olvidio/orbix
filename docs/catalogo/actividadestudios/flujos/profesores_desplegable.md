@@ -2,9 +2,9 @@
 id: "actividadestudios.profesores_desplegable.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Profesores Desplegable"
+nombre: "Flujo - Elegir el profesor de una asignatura"
 capacidad: "actividadestudios.profesores_desplegable.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/profesores_desplegable_data"]
@@ -17,16 +17,11 @@ Desplegable AJAX de profesores para asignatura de actividad.
 
 ## Objetivo De Usuario
 
-Al cambiar la asignatura o añadir un profesor en el formulario de asignatura impartida, el
-usuario obtiene la lista actualizada de profesores candidatos para esa asignatura en la
-actividad.
+Al cambiar la asignatura, o al añadir otro profesor en el formulario de una asignatura impartida, obtener la lista actualizada de profesores posibles para esa asignatura.
 
 ## Punto De Entrada
 
-Pantalla `form_asignaturas_de_una_actividad`
-(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): las
-funciones `fnjs_construir_desplegable` y `fnjs_mas_profes` llaman por AJAX a
-`profesores_desplegable_data` (URLs `h`, `h1`, `h2` del HashF).
+Formulario de asignatura de una actividad (desplegable de profesor y botón **más**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,13 +29,12 @@ funciones `fnjs_construir_desplegable` y `fnjs_mas_profes` llaman por AJAX a
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir el profesor de una asignatura
 
-Pasos:
-1. En el formulario de asignatura impartida, cambiar la asignatura del desplegable.
-2. Se dispara `fnjs_mas_profes('asignatura')` o reconstrucción del desplegable.
-3. El sistema consulta `profesores_desplegable_data` con `id_activ`, `id_asignatura` y `salida`.
-4. Se actualiza el desplegable de profesores en pantalla.
+Pasos propuestos:
+1. En el formulario de la asignatura de la actividad, elegir o cambiar la asignatura.
+2. El desplegable de profesores se actualiza con los que pueden impartirla.
+3. Para añadir otro profesor, pulsar **más** y elegirlo en el nuevo desplegable.
 
 Endpoints asociados:
 - `/src/actividadestudios/profesores_desplegable_data`

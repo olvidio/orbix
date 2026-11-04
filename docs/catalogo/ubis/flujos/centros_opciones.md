@@ -2,7 +2,7 @@
 id: "ubis.centros_opciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Opciones"
+nombre: "Flujo - Elegir un centro en un desplegable"
 capacidad: "ubis.centros_opciones.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de centros que usan los desplegables de otras pantallas.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Sin entrada de menú propia: se abre desde la ficha del centro o casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir un centro en un desplegable
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de centro, abrir el desplegable.
+2. La lista se carga según el filtro de la pantalla; elegir uno.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_opciones_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

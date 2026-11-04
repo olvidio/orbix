@@ -2,9 +2,9 @@
 id: "inventario.equipajes_egm.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Egm"
+nombre: "Flujo - Imprimir un equipaje"
 capacidad: "inventario.equipajes_egm.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_imprimir"]
 fragmentos: ["inventario.pantalla.equipajes_doc_casa", "inventario.pantalla.equipajes_imprimir"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_egm"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Egm
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_egm.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesEgm. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Preparar e imprimir el equipaje de una casa: el inventario de lo que hay en la casa más el material que lleva la delegación, con espacio para observaciones y firma.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > equipajes > imprimir equipajes**. También se ven las valijas (sin imprimir) en **hacer equipajes**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,28 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Imprimir un equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **imprimir equipajes** y elegir el filtro **desde hoy**, **todo el curso** o **todos**.
+2. Elegir el equipaje en **escoger un equipaje**.
+3. Se muestra la hoja «(casa): Inventario de publicaciones internas» con las actividades del equipaje y la cabecera.
+4. Revisar el apartado **A) Documentación que pertenece a la casa y se queda siempre allí** (con los ejemplares y numeración de cada documento).
+5. Si el equipaje tiene valijas, revisar el apartado **B) Documentación que envía la Delegación**, con cada valija y sus documentos.
+6. Comprobar el pie y el bloque final de **Observacions** y **data i firma**.
+7. Imprimir desde el navegador. Los lápices de **modificar texto** no salen en el papel.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_egm`
+
+### Ver las valijas de un equipaje
+
+Pasos propuestos:
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En **maletas para** (nombre de la casa) se listan las valijas con sus documentos.
+
+Endpoints asociados:
+- `/src/inventario/equipajes_egm`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

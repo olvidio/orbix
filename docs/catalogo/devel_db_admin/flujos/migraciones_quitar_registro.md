@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Migraciones Quitar Registro"
 capacidad: "devel_db_admin.migraciones_quitar_registro.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.migraciones_lista"]
 fragmentos: ["devel_db_admin.pantalla.migraciones_lista"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/migraciones_quitar_registro"]

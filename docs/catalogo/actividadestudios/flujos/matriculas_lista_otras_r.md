@@ -2,9 +2,9 @@
 id: "actividadestudios.matriculas_lista_otras_r.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Matriculas Lista Otras R"
+nombre: "Flujo - Consultar alumnos de otras regiones"
 capacidad: "actividadestudios.matriculas_lista_otras_r.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.matriculas_lista_otras_r"]
 fragmentos: ["actividadestudios.pantalla.matriculas_lista_otras_r"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/matriculas_lista_otras_r_data"]
@@ -17,14 +17,11 @@ Listado de alumnos de otras regiones STGR para certificados.
 
 ## Objetivo De Usuario
 
-El usuario busca alumnos de otras regiones por apellido para consultar sus asignaturas
-matriculadas y emitir certificados E43. Solo visible en ámbito región STGR (`rstgr` o `r`).
+Buscar por apellido a alumnos de otras regiones para ver sus asignaturas matriculadas y emitir certificados E43. Solo está disponible para las regiones del stgr.
 
 ## Punto De Entrada
 
-Pantalla `matriculas_lista_otras_r`
-(`frontend/actividadestudios/controller/matriculas_lista_otras_r.php`): al cargar o buscar
-por apellidos llama a `matriculas_lista_otras_r_data`.
+Menú **Envío información a otras r** (solo regiones del stgr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,14 +29,13 @@ por apellidos llama a `matriculas_lista_otras_r_data`.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar alumnos de otras regiones
 
-Pasos:
-1. Abrir **Envío información a otras r** (solo regiones STGR).
-2. Opcionalmente filtrar por apellido y pulsar **buscar**.
-3. El sistema consulta `matriculas_lista_otras_r_data` y muestra alumnos con alertas y
-   asignaturas.
-4. Seleccionar un alumno para **imprimir certificado** (`fnjs_imp_certificado`).
+Pasos propuestos:
+1. Abrir **Envío información a otras r**.
+2. Si se quiere, escribir un apellido y pulsar **buscar**.
+3. Aparecen los alumnos con sus avisos y asignaturas.
+4. Seleccionar un alumno y pulsar **imprimir certificado** para emitir su E43.
 
 Endpoints asociados:
 - `/src/actividadestudios/matriculas_lista_otras_r_data`

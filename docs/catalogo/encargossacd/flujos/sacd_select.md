@@ -2,9 +2,9 @@
 id: "encargossacd.sacd_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Sacd Select"
+nombre: "Flujo - Elegir un sacerdote"
 capacidad: "encargossacd.sacd_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.sacd_ficha_ajax"]
 fragmentos: ["encargossacd.pantalla.sacd_ficha_ajax"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/sacd_select_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.sacd_select.
 
 ## Objetivo De Usuario
 
-Gestiona SacdSelect. Opciones para el desplegable de SACDs filtrados por tabla (sacd_ficha_ajax?que=get_select).
+Rellenar el desplegable de sacerdotes según el tipo elegido.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir un sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha sacd** o **ausencias**, elegir el **tipo**.
+2. El desplegable **sacd** se rellena con los sacerdotes de ese tipo; elegir uno.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/sacd_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

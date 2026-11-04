@@ -2,9 +2,9 @@
 id: "usuarios.usuario_2fa_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario 2fa Info"
+nombre: "Flujo - Ver el estado y el QR"
 capacidad: "usuarios.usuario_2fa_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form_2fa"]
 fragmentos: ["usuarios.pantalla.usuario_form_2fa"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_2fa_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Estado 2FA del usuario para formulario configuración.
+Mostrar el estado de la verificación en dos pasos del usuario y los datos para configurarla.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Formulario 2FA de la ficha de usuario o de las preferencias.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver el estado y el QR
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la configuración de **autenticación de dos factores (2FA)**.
+2. Se muestra si está activada y, si no, el **Código QR** y la **Clave secreta** para configurarla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_2fa_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

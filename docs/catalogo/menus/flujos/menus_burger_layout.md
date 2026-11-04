@@ -2,7 +2,7 @@
 id: "menus.menus_burger_layout.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Menus Burger Layout"
+nombre: "Flujo - Ver el menú Burger o Pills"
 capacidad: "menus.menus_burger_layout.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Árbol anidado + HTML utilidades para layouts modernos (H-dlpv).
+Cargar el árbol de menús de los diseños modernos (Burger, Pills, Pills 2).
 
 ## Punto De Entrada
 
-Carga en Burger/Pills/Pills2Layout.
+Automático al iniciar sesión con esos layouts.
+
+## Escenarios Inferidos
+
+### Ver el menú Burger o Pills
+
+Pasos propuestos:
+1. Elegir el layout en **preferencias**.
+2. Al entrar, el menú aparece anidado según el rol del usuario.
+
+Endpoints asociados:
+- `/src/menus/menus_burger_layout_data`
 
 ## Endpoints Del Flujo
 

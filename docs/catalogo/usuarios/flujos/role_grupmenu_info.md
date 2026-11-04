@@ -2,9 +2,9 @@
 id: "usuarios.role_grupmenu_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Role Grupmenu Info"
+nombre: "Flujo - Ver los grupos disponibles"
 capacidad: "usuarios.role_grupmenu_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.role_grupmenu"]
 fragmentos: ["usuarios.pantalla.role_grupmenu"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/role_grupmenu_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista grupmenus disponibles para añadir a un rol.
+Mostrar los grupos de menús que se pueden añadir a un rol.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Botón **añadir grup menu** en la ficha del rol.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los grupos disponibles
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del rol, pulsar **añadir grup menu**.
+2. Aparece la lista de grupos de menús que el rol aún no tiene.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/role_grupmenu_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

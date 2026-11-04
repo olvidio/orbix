@@ -2,7 +2,7 @@
 id: "misas.cuadricula.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Cuadricula"
+nombre: "Flujo - Editar una celda del plan de misas"
 capacidad: "misas.cuadricula.gestionar"
 pantallas_principales: ["modificar_plan_de_misas", "preparar_plan_de_misas", "modificar_plantilla"]
 fragmentos: ["ver_cuadricula_zona", "modificar_cuadricula_zona", "crear_nuevo_periodo", "importar_plantilla"]
@@ -20,19 +20,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Asignar, cambiar o borrar el sacerdote (y horario/observaciones) en una celda de la cuadrícula Encargo × día; preparar un periodo nuevo desde plantilla; o copiar una plantilla a otra.
+Asignar, cambiar o borrar el sacerdote de una celda del plan de misas; preparar un periodo nuevo o copiar una plantilla a otra.
 
 ## Punto De Entrada
 
-| Pantalla web | Controller | Qué hace |
-|--------------|------------|----------|
-| Modificar plan | `modificar_plan_de_misas.php` → `modificar_cuadricula_zona.php` | Edita plan real (`tipo_plantilla=p`) |
-| Preparar plan | `preparar_plan_de_misas.php` → botón **preparar** | Crea periodo desde plantilla vía `crear_nuevo_periodo` |
-| Modificar plantilla | `modificar_plantilla.php` → `modificar_cuadricula_zona.php` | Edita plantilla (`s1`/`d1`/`m1`/…) e **importar** |
-
-Vista editable: `frontend/misas/view/modificar_cuadricula_zona.phtml` (SlickGrid + modal). Vista solo lectura: `ver_cuadricula_zona.phtml` (tabla HTML).
-
----
+Menú **dre > Misas** (Pills2: ATENCIÓN SACD > Gestión de misas).
 
 ## 1. Guardar celda → `POST /src/misas/cuadricula_update`
 
@@ -151,6 +143,23 @@ Ficha: [`api/ver_cuadricula_zona_data.md`](../api/ver_cuadricula_zona_data.md).
 | `s1` / `s3` | Plantilla semanal 1 / 3 |
 | `d1` / `d3` | Plantilla domingos 1 / 3 |
 | `m1` / `m3` | Plantilla mensual 1 / 3 |
+
+## Escenarios Inferidos
+
+### Editar una celda del plan de misas
+
+Pasos propuestos:
+1. Entrar en **Modificar plan** y buscar la zona y el periodo.
+2. Pulsar la celda del encargo y día; elegir el sacerdote (o dejarla vacía para borrar), con horario y observaciones si procede.
+3. Para periodos nuevos usar **Nuevo plan**; para copiar plantillas, **Modificar plantilla > importar**.
+4. Leyenda de la fila de cada sacerdote (por día): **SI** = el sacerdote está en la zona ese día; **NO** = no está en la zona ese día; **--** = ese día está en otro sitio (al pasar el ratón sale «Está en …»). El fondo rojo avisa de un problema: «Tiene dos Misas a primera hora» o «No está en la zona y tiene Misa a primera hora».
+
+Endpoints asociados:
+- `/src/misas/ver_cuadricula_zona_data`
+- `/src/misas/cuadricula_update`
+- `/src/misas/desplegable_sacd`
+- `/src/misas/crear_nuevo_periodo_data`
+- `/src/misas/importar_plantilla_data`
 
 ## Ruta de menú
 

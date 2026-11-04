@@ -2,7 +2,7 @@
 id: "configuracion.periodo_calendario_escolar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Periodo calendario escolar (interno)"
+nombre: "Flujo - Cambiar las fechas del curso"
 capacidad: "configuracion.periodo_calendario_escolar.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,26 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso STGR y CRT
-(caché en sesión o BD) para que `Periodo` calcule rangos de fechas en listados y filtros
-de calendario.
+No hay pantalla de usuario: es un dato interno. Los listados y filtros de calendario usan las fechas de inicio y fin del curso del stgr y del crt para calcular sus periodos.
 
 ## Punto De Entrada
 
-Consumo programático desde `frontend/shared/web/Periodo.php`:
-`Periodo::conCalendarioDesdeBackend()` → POST a `periodo_calendario_escolar_data`.
+No tiene entrada: se usa por debajo cuando una pantalla necesita fechas de curso. Los valores se cambian en **config esquema** (curso del stgr y curso del crt).
 
-Los valores editables por el administrador están en la pantalla **config esquema**
-(`curso_stgr`, `curso_crt`); este endpoint solo los lee (vía `ConfigSnapshot` / sesión).
+## Escenarios Inferidos
 
-## Escenarios
+### Cambiar las fechas del curso
 
-### Obtener calendario
+Pasos propuestos:
+1. Abrir **config esquema** (ver «Cambiar un parámetro»).
+2. Cambiar el periodo del curso del stgr o del crt y guardar; los listados de calendario usarán las nuevas fechas.
 
-1. Si `$_SESSION['oConfig']` ya es `ConfigSnapshot`, no llama al backend.
-2. Si no, una petición POST devuelve `dia_ini_stgr`, `mes_ini_stgr`, `dia_fin_stgr`,
-   `mes_fin_stgr`, equivalentes CRT y `any_final_est` / `any_final_crt`.
-3. Resultado cacheado estáticamente en la petición PHP.
+Endpoints asociados:
+- `/src/configuracion/periodo_calendario_escolar_data`
 
 ## Errores Conocidos
 

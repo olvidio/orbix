@@ -2,7 +2,7 @@
 id: "actividades.actividad_importar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Importar actividad de otra dl"
+nombre: "Flujo - Importar actividades de otra dl"
 capacidad: "actividades.actividad_importar.gestionar"
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.actividad_que", "actividades.pantalla.actividad_select"]
@@ -17,21 +17,24 @@ Copiar actividades de otras delegaciones/regions a la dl propia.
 
 ## Objetivo De Usuario
 
-Buscar actividades externas (`modo=importar`), seleccionar una o varias e importarlas.
+Buscar actividades de otra delegación o región, elegir una o varias e importarlas a la propia.
 
 ## Punto De Entrada
 
-1. `actividad_que` con `modo=importar` (menú *importar activ* o variantes por colectivo).
-2. Resultados en `actividad_select`; acción importar sobre selección.
+Menú **importar activ** (hay variantes por colectivo: crt, cv, ca; n o agd). Primero sale el formulario de búsqueda y después la lista de resultados.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Importar actividades de otra dl
 
-1. Abrir búsqueda en modo importar.
-2. Filtrar y localizar actividad origen.
-3. Seleccionar e importar (POST `actividad_importar` con ids).
-4. Revisar mensajes por actividad importada o error.
+Pasos propuestos:
+1. Abrir la opción de importar del menú.
+2. Rellenar el formulario de búsqueda y pulsar buscar para localizar la actividad de origen.
+3. En la lista, marcar las actividades que se quieren importar y pulsar **importar**.
+4. Revisar los mensajes: sale uno por cada actividad importada o con error.
+
+Endpoints asociados:
+- `/src/actividades/actividad_importar`
 
 ## Endpoints Del Flujo
 

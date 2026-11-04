@@ -2,9 +2,9 @@
 id: "misas.modificar_plantilla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Modificar Plantilla"
+nombre: "Flujo - Modificar la plantilla de una zona"
 capacidad: "misas.modificar_plantilla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.modificar_plantilla"]
 fragmentos: ["misas.pantalla.modificar_plantilla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/modificar_plantilla_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
+Editar la plantilla de una zona: las tareas que se repiten cada semana o mes y quién las hace.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
+Menú **dre > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,24 @@ Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gesti�
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Modificar la plantilla de una zona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar plantilla**.
+2. Elegir la zona en **Plantilla de la zona**, el **Tipo de plantilla** y el **Orden**.
+3. Editar la cuadrícula que aparece.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/modificar_plantilla_data`
+
+### Importar de otra plantilla
+
+Pasos propuestos:
+1. En el desplegable **Importar de la plantilla** elegir el tipo de plantilla origen.
+2. Pulsar **importar**. Aviso: «Borrará todos los datos introducidos en la plantilla que ves!!».
+
+Endpoints asociados:
+- `/src/misas/modificar_plantilla_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

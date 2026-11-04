@@ -2,9 +2,9 @@
 id: "actividadplazas.plazas_balance_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Plazas Balance Que"
+nombre: "Flujo - Abrir el balance de plazas"
 capacidad: "actividadplazas.plazas_balance_que.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadplazas.pantalla.plazas_balance_que"]
 fragmentos: ["actividadplazas.pantalla.plazas_balance_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/plazas_balance_que_data"]
@@ -18,13 +18,11 @@ actividad, y dispara la comparativa al elegir una dl.
 
 ## Objetivo De Usuario
 
-Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la propia, y ver el grid
-comparativo que se carga debajo.
+Entrar en el balance de plazas entre delegaciones y elegir con qué delegación comparar la propia.
 
 ## Punto De Entrada
 
-Menú de plazas → **Balance de plazas** (ver "Ruta de menú"). Se abre
-`actividadplazas.pantalla.plazas_balance_que`.
+Menú de plazas > **Balance de plazas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,13 +31,12 @@ Menú de plazas → **Balance de plazas** (ver "Ruta de menú"). Se abre
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Abrir el balance de plazas
 
-1. Abrir **Balance de plazas** desde el menú (según tipo y colectivo).
-2. El sistema carga `plazas_balance_que_data`: opciones del desplegable de delegaciones e
-   `id_tipo_activ` del contexto (`sactividad`/`sasistentes`).
-3. Al elegir una delegación (`fnjs_comparativa`), solicita por AJAX `plazas_balance_dl` e inserta el
-   HTML en `#comparativa` (flujo `plazas_balance`).
+Pasos propuestos:
+1. Abrir **Balance de plazas** desde el menú (según el tipo de actividad y el colectivo).
+2. Elegir la delegación en el desplegable.
+3. La comparación aparece debajo, sin salir de la pantalla (ver «Comparar con otra delegación»).
 
 Endpoints asociados:
 - `/src/actividadplazas/plazas_balance_que_data`

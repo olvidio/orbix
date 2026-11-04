@@ -2,9 +2,9 @@
 id: "notas.buscar_acta.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Buscar Acta"
+nombre: "Flujo - Elegir el acta de una nota"
 capacidad: "notas.buscar_acta.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/buscar_acta"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.buscar_acta.gestion
 
 ## Objetivo De Usuario
 
-Autocompletar/búsqueda de acta al rellenar notas.
+Ayudar a elegir un acta mientras se rellenan las notas de una persona.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Formulario de notas de una persona.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir el acta de una nota
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de nota, empezar a escribir el número del acta en **acta** (formato num/aa).
+2. Elegir de la lista que aparece.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/buscar_acta`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

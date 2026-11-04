@@ -2,9 +2,9 @@
 id: "encargossacd.encargo_lst_tipo_enc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Encargo Lst Tipo Enc"
+nombre: "Flujo - Elegir el tipo de encargo"
 capacidad: "encargossacd.encargo_lst_tipo_enc.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/encargo_lst_tipo_enc_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.encargo_lst_
 
 ## Objetivo De Usuario
 
-Gestiona EncargoLstTipoEnc. Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (id_tipo_enc ~ ^grupo).
+Ofrecer los tipos de encargo que corresponden al grupo elegido.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Formulario de encargo.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir el tipo de encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, elegir el **grupo**.
+2. El desplegable **tipo encargo** muestra solo los tipos de ese grupo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/encargo_lst_tipo_enc_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

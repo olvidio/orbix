@@ -2,9 +2,9 @@
 id: "notas.acta_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Ver"
+nombre: "Flujo - Ver o modificar la cabecera del acta"
 capacidad: "notas.acta_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_ver"]
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ver_formulario"]
 endpoints: ["/src/notas/acta_ver_form_data", "/src/notas/acta_ver_notas_listado_data", "/src/notas/acta_ver_add_persona_form_data", "/src/notas/acta_ver_add_persona", "/src/notas/acta_nueva", "/src/notas/acta_modificar"]
@@ -17,12 +17,11 @@ Ver/editar cabecera de acta; en apertura desde listado, ver alumnos del acta y (
 
 ## Objetivo De Usuario
 
-Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
+Consultar o modificar la cabecera de un acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
 
 ## Punto De Entrada
 
-- Desde `acta_select` (listado) → fragmento `acta_ver` **standalone**.
-- Desde actividad de estudios (`actividadestudios/acta_notas`) → mismo fragmento **embebido** (sin listado/alta de alumno en esta pantalla).
+Se abre desde el listado de actas (ESTUDIOS > Actas), y también dentro de una actividad de estudios, desde el acta de notas de una asignatura. Dentro de la actividad no sale el listado de notas ni el alta de alumnos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,22 +29,50 @@ Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal,
 
 ## Escenarios Inferidos
 
-### Ver / editar cabecera
+### Ver o modificar la cabecera del acta
 
-1. Abrir acta desde el listado o desde la actividad.
-2. Cargar cabecera (`acta_ver_form_data`).
-3. Guardar alta (`acta_nueva`) o cambios (`acta_modificar`).
+Pasos propuestos:
+1. Abrir el acta desde el listado o desde la actividad.
+2. Se muestra la cabecera con los datos del acta.
+3. Para un acta nueva, rellenarla y guardar; para uno existente, corregir lo que haga falta y guardar los cambios.
 
-### Listado de notas (solo standalone)
+Endpoints asociados:
+- `/src/notas/acta_ver_form_data`
+- `/src/notas/acta_ver_notas_listado_data`
+- `/src/notas/acta_ver_add_persona_form_data`
+- `/src/notas/acta_ver_add_persona`
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_modificar`
 
-1. Con acta existente (no modo nueva) y asignatura válida, la UI pide `acta_ver_notas_listado_data`.
-2. Se muestra tabla id/nombre/nota/situación; avisos si hay notas sin acceso al nombre.
+### Ver las notas del acta
 
-### Añadir alumno (solo standalone + permiso escritura + sin PDF)
+Pasos propuestos:
+1. Con un acta ya creada y con asignatura, debajo de la cabecera aparece la tabla de alumnos con su nombre, nota y situación.
+2. Si de alguna nota no se puede ver el nombre, sale un aviso.
 
-1. Pedir `acta_ver_add_persona_form_data` (desplegable de candidatos).
-2. Elegir persona, nota y máximo; enviar `acta_ver_add_persona`.
-3. Recargar listado / mensaje de esquema de escritura.
+Endpoints asociados:
+- `/src/notas/acta_ver_form_data`
+- `/src/notas/acta_ver_notas_listado_data`
+- `/src/notas/acta_ver_add_persona_form_data`
+- `/src/notas/acta_ver_add_persona`
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_modificar`
+
+### Añadir un alumno al acta
+
+Pasos propuestos:
+1. Solo está disponible desde el listado de actas, con permiso de escritura y si el acta no tiene el PDF firmado.
+2. Elegir a la persona en el desplegable de candidatos (de la dl o publicados para la dl; no salen quienes están en repaso ni quienes ya tienen nota de esa asignatura).
+3. Escribir la nota y la nota máxima y guardar.
+4. El listado se recarga con el alumno añadido.
+
+Endpoints asociados:
+- `/src/notas/acta_ver_form_data`
+- `/src/notas/acta_ver_notas_listado_data`
+- `/src/notas/acta_ver_add_persona_form_data`
+- `/src/notas/acta_ver_add_persona`
+- `/src/notas/acta_nueva`
+- `/src/notas/acta_modificar`
 
 ## Casos particulares
 

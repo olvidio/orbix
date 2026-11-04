@@ -2,9 +2,9 @@
 id: "dbextern.sincro_crear_todos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Crear todas desde BDU"
+nombre: "Flujo - Crear todas las fichas pendientes"
 capacidad: "dbextern.sincro_crear_todos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_listas"]
 fragmentos: ["dbextern.pantalla.ver_listas"]
 acciones: ["crear"]
 endpoints: ["/src/dbextern/sincro_crear_todos"]
@@ -17,18 +17,23 @@ Alta masiva de personas BDU sin vínculo.
 
 ## Objetivo De Usuario
 
-Crear en bloque todas las fichas pendientes del punto 4 sin revisar una a una.
+Crear de golpe todas las fichas pendientes del punto 4, sin revisarlas una a una.
 
 ## Punto De Entrada
 
-Botón **crear todos** en `ver_listas` (`fnjs_crear_todos`).
+Botón **crear todos** en la pantalla «Revisar BDU no unidas».
 
-## Escenarios
+## Escenarios Inferidos
 
-### Crear
+### Crear todas las fichas pendientes
 
-1. Envía `region`, `dl`, `tipo_persona`.
-2. Muestra alerta «Ja está» si todo ok, o errores acumulados.
+Pasos propuestos:
+1. Abrir «Revisar BDU no unidas» (punto 4).
+2. Pulsar **crear todos**.
+3. Si todo va bien aparece «Ja está»; si alguna persona falla, se muestran los errores acumulados.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_crear_todos`
 
 ## Endpoints Del Flujo
 

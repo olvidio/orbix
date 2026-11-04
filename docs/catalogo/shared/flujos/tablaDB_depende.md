@@ -2,9 +2,9 @@
 id: "shared.tablaDB_depende.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Desplegable dependiente"
+nombre: "Flujo - Cambiar un campo que condiciona otro"
 capacidad: "shared.tablaDB_depende.gestionar"
-pantallas_principales: []
+pantallas_principales: ["shared.pantalla.tablaDB_formulario_ver"]
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
 acciones: ["actualizar_opciones"]
 endpoints: ["/src/shared/tablaDB_depende_datos"]
@@ -15,22 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Actualizar las opciones de un campo hijo cuando cambia el valor del campo padre en un formulario
-`tablaDB` (p. ej. centro → lugar en inventario).
+Actualizar las opciones de un campo cuando cambia el valor de otro del que depende en un formulario de mantenimiento (por ejemplo, al cambiar el centro se actualizan los lugares en inventario).
 
 ## Punto De Entrada
 
-`onchange` en `<select>` padre → `fnjs_actualizar_depende(camp, accion)` en `tablaDB_formulario.phtml`.
+Se activa solo al cambiar el desplegable «padre» de un formulario de mantenimiento de tabla; solo en los que tienen campos dependientes.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Actualizar opciones
+### Cambiar un campo que condiciona otro
 
-1. Leer valor del padre (`valor_depende`).
-2. POST a `tablaDB_depende_datos` con `clase_info`, `accion` (id hijo) y hash.
-3. Sustituir HTML del `<select>` hijo con `data.aOpciones`.
+Pasos propuestos:
+1. En el formulario, cambiar el desplegable principal (por ejemplo el centro).
+2. El desplegable dependiente (por ejemplo el lugar) se rellena con las opciones válidas para ese valor.
 
-Solo aplica en `Info*` que implementan `getArrayCamposDepende` / `getOpcionesParaCondicion`.
+Endpoints asociados:
+- `/src/shared/tablaDB_depende_datos`
 
 ## Errores Conocidos
 

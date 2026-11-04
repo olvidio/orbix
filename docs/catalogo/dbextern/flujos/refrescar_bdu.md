@@ -2,9 +2,9 @@
 id: "dbextern.refrescar_bdu.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Refrescar copia BDU"
+nombre: "Flujo - Refrescar la copia de la BDU"
 capacidad: "dbextern.refrescar_bdu.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.sincro_index"]
 fragmentos: ["dbextern.pantalla.sincro_index"]
 acciones: ["ejecutar"]
 endpoints: ["/src/dbextern/refrescar_bdu"]
@@ -17,20 +17,23 @@ Actualiza la tabla temporal `tmp_bdu` desde la BDU externa.
 
 ## Objetivo De Usuario
 
-Si los datos de listas cambiaron después de la fecha mostrada, refrescar la copia local antes de
-sincronizar (operación de varios minutos).
+Si los datos de las listas han cambiado después de la fecha que se muestra, actualizar la copia local de la BDU antes de sincronizar. Tarda varios minutos.
 
 ## Punto De Entrada
 
-Enlace **refrescar** en `sincro_index` (`fnjs_refrescar`).
+Enlace **refrescar** en la pantalla de sincronización («Actualizar datos desde BDU»).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Refrescar la copia de la BDU
 
-1. Usuario pulsa **refrescar**.
-2. AJAX a `refrescar_bdu` con HashF (`que=algo`).
-3. Tras éxito, recarga `sincro_index` en `#main`.
+Pasos propuestos:
+1. En la pantalla de sincronización, pulsar **refrescar**.
+2. Esperar a que termine (varios minutos).
+3. La pantalla se recarga con los contadores al día. Si falla, sale «Error al refrescar la BDU» con el motivo.
+
+Endpoints asociados:
+- `/src/dbextern/refrescar_bdu`
 
 ## Endpoints Del Flujo
 

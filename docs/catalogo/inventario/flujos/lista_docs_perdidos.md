@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_perdidos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs Perdidos"
+nombre: "Flujo - Consultar los documentos perdidos"
 capacidad: "inventario.lista_docs_perdidos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.docs_perdidos"]
 fragmentos: ["inventario.pantalla.docs_perdidos"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_perdidos"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs Perdidos
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_perdidos.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsPerdidos. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos dados por perdidos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > inventarios > lista docs perdidos**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar los documentos perdidos
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs perdidos**.
+2. Leer el listado: **centro - lugar**, **documento**, **número** y **fecha perdido**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_perdidos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

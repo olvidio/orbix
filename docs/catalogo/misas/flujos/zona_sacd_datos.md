@@ -2,7 +2,7 @@
 id: "misas.zona_sacd_datos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Zona Sacd Datos"
+nombre: "Flujo - Consultar la disponibilidad semanal de un sacerdote"
 capacidad: "misas.zona_sacd_datos.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona para el modal zona_sacd.
+Ver los días de la semana en que un sacerdote está disponible en una zona.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Ventana de disponibilidad del sacerdote en la zona.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Obtener
+### Consultar la disponibilidad semanal de un sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ventana de disponibilidad del sacerdote en la zona.
+2. Se muestran marcados los días de la semana disponibles.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/zona_sacd_datos_get`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

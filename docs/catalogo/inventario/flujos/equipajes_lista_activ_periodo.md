@@ -2,9 +2,9 @@
 id: "inventario.equipajes_lista_activ_periodo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Lista Activ Periodo"
+nombre: "Flujo - Elegir las actividades del equipaje"
 capacidad: "inventario.equipajes_lista_activ_periodo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_lista_activ_periodo"]
 fragmentos: ["inventario.pantalla.equipajes_lista_activ_periodo"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_lista_activ_periodo"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Lista Activ Periodo
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_lista_activ_periodo.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesListaActivPeriodo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver las actividades de una casa en el periodo elegido, para marcar las que irán en el mismo equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **nuevo equipaje**, tras elegir la casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Marcar las actividades del equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **nuevo equipaje**, elegir periodo y casa.
+2. Leer la lista: **empieza**, **termina**, **actividad** y **observaciones**.
+3. Marcar las actividades que viajan juntas.
+4. Pulsar **seleccionar** para ponerle nombre al equipaje.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_lista_activ_periodo`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

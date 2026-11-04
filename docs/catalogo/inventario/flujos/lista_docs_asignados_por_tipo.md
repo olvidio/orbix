@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_asignados_por_tipo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs Asignados Por Tipo"
+nombre: "Flujo - Consultar los centros que tienen el documento"
 capacidad: "inventario.lista_docs_asignados_por_tipo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_asignado"]
 fragmentos: ["inventario.pantalla.doc_asignado"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_asignados_por_tipo"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs Asignados Por Tipo
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_asignados_por_tipo.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsAsignadosPorTipo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver qué centros tienen ya asignado un tipo de documento.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Desde **asignar documento**, tras elegir el tipo de documento y pulsar **lista de asignados**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar los centros que tienen el documento
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento.
+2. Pulsar **lista de asignados**.
+3. Leer el listado **Centros que tienen este documento**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_asignados_por_tipo`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

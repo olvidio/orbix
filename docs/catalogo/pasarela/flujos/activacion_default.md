@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Editar activación por defecto"
 capacidad: "pasarela.activacion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.activacion_ajax"]
 fragmentos:
   - "pasarela.pantalla.activacion_ajax"
 acciones: ["listar", "guardar", "eliminar"]
@@ -22,12 +22,20 @@ Cambiar el valor global de días de activación (o `upload`).
 
 ## Punto De Entrada
 
-Desde listado activación, acción modificar default.
+Dentro de **fecha de activación**, con el botón de modificar el valor por defecto.
 
-## Escenarios
+## Escenarios Inferidos
 
-1. `form_default` carga `activacion_default_data`.
-2. Usuario guarda → `activacion_default_guardar`.
+### Cambiar la fecha de activación general
+
+Pasos propuestos:
+1. En **fecha de activación**, abrir el valor por defecto.
+2. Indicar el **número de días antes del inicio de la actividad** (o `upload`).
+3. Pulsar **guardar** (o **cancel**). Si se deja vacío avisa de que falta el valor por defecto.
+
+Endpoints asociados:
+- `/src/pasarela/activacion_default_data`
+- `/src/pasarela/activacion_default_guardar`
 
 ## Endpoints Del Flujo
 

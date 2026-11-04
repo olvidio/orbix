@@ -2,7 +2,7 @@
 id: "actividadestudios.asistente_observ_est.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Asistente Observ Est"
+nombre: "Flujo - Guardar las observaciones del plan de estudios"
 capacidad: "actividadestudios.asistente_observ_est.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,14 +17,11 @@ Guardado del campo `observ_est` (observaciones de plan de estudios) de un asiste
 
 ## Objetivo De Usuario
 
-El usuario guarda las observaciones de plan de estudios (`observ_est`) de un asistente
-en su actividad vigente. Sustituye al case `observ_est` de `update_3103.php`.
+Guardar las observaciones sobre el plan de estudios de un asistente en su actividad.
 
 ## Punto De Entrada
 
-Fragmento `select_matriculas_de_una_persona` (dossier 1303): `fnjs_grabar_observ` en
-`frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml` llama al endpoint
-por AJAX al grabar observaciones de estudios.
+Dossier **Matrículas** de una persona: botón para grabar las observaciones de estudios.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,13 +29,12 @@ por AJAX al grabar observaciones de estudios.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar las observaciones del plan de estudios
 
-Pasos:
-1. En el dossier de matrículas de una persona (1303), editar el campo de observaciones de
-   plan de estudios de un asistente.
-2. Pulsar grabar observaciones (`fnjs_grabar_observ`).
-3. El sistema envía el formulario serializado al endpoint y refresca el fragmento si tiene éxito.
+Pasos propuestos:
+1. En el dossier de matrículas de una persona, escribir el texto en las observaciones del plan de estudios.
+2. Pulsar el botón para grabar las observaciones.
+3. Si se guarda bien, la lista se refresca con el texto nuevo.
 
 Endpoints asociados:
 - `/src/actividadestudios/asistente_observ_est`

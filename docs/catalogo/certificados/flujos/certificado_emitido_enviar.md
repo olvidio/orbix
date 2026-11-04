@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_enviar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Enviar"
+nombre: "Flujo - Enviar un certificado a otra delegación"
 capacidad: "certificados.certificado_emitido_enviar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_lista"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/certificados/certificado_emitido_enviar"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Enviar certificado emitido a la delegación destino del alumno (copia + anuncio).
+Enviar un certificado emitido a la delegación destino del alumno.
 
 ## Punto De Entrada
 
-Listado Certificados → enviar.
+Menú Pills2 **ESTUDIOS > Actas y certificados > Certificados**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Enviar un certificado a otra delegación
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Certificados**, marcar el certificado.
+2. Pulsar enviar: se manda una copia a la delegación del alumno y se le avisa.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_enviar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

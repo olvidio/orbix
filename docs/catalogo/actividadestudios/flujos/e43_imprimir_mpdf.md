@@ -2,9 +2,9 @@
 id: "actividadestudios.e43_imprimir_mpdf.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar E43 Imprimir Mpdf"
+nombre: "Flujo - Imprimir el certificado E43"
 capacidad: "actividadestudios.e43_imprimir_mpdf.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.e43_imprimir_mpdf"]
 fragmentos: ["actividadestudios.pantalla.e43_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/e43_imprimir_mpdf_data"]
@@ -17,15 +17,11 @@ Generación del HTML/PDF imprimible del certificado E43.
 
 ## Objetivo De Usuario
 
-El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mismos datos
-que la pantalla E43 y los renderiza en la plantilla imprimible (`e43_imprimir_mpdf.php` /
-`e43_2_mpdf.php`).
+Imprimir el certificado E43 de un alumno en PDF, con los mismos datos que se ven en pantalla.
 
 ## Punto De Entrada
 
-Pantalla `e43_imprimir_mpdf` (`frontend/actividadestudios/controller/e43_imprimir_mpdf.php`,
-incluida desde `e43_2_mpdf.php`): al abrir la ventana de impresión desde `e43.phtml`
-llama a `e43_imprimir_mpdf_data` con `id_nom` e `id_activ` por GET.
+Botón **imprimir** de la pantalla del certificado E43.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,12 +30,11 @@ llama a `e43_imprimir_mpdf_data` con `id_nom` e `id_activ` por GET.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Imprimir el certificado E43
 
-Pasos:
-1. En la pantalla E43, pulsar **imprimir** (abre ventana con `e43_2_mpdf.php`).
-2. El controlador consulta `e43_imprimir_mpdf_data`.
-3. Se renderiza el certificado con estilos `e43_mpdf.css` listo para imprimir/exportar.
+Pasos propuestos:
+1. En la pantalla del certificado E43, pulsar **imprimir**.
+2. Se abre una ventana con el certificado listo para imprimir o guardar como PDF.
 
 Endpoints asociados:
 - `/src/actividadestudios/e43_imprimir_mpdf_data`

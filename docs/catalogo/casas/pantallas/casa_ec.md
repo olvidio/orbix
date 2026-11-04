@@ -8,7 +8,7 @@ controller: "frontend/casas/controller/casa_ec.php"
 vistas: ["frontend/casas/view/casa_ec.phtml"]
 fragmentos_frontend: ["frontend/casas/controller/casas_resumen_lista.php"]
 endpoints: []
-capacidades: []
+capacidades: ["casas.casa_ec.consultar"]
 campos: ["html.buscar"]
 acciones: ["fnjs_detalles", "fnjs_mas_casas", "fnjs_ver"]
 estado_revision: "revisado"

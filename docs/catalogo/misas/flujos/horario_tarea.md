@@ -2,9 +2,9 @@
 id: "misas.horario_tarea.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Horario Tarea"
+nombre: "Flujo - Poner horario a una tarea"
 capacidad: "misas.horario_tarea.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.horario_tarea"]
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/horario_tarea_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
+Ver y fijar la hora de inicio y fin de una tarea (encargo) en la plantilla.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
+Ventana de horario de una tarea en **Modificar plantilla**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,22 @@ Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gesti�
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Poner horario a una tarea
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, abrir el horario de la tarea.
+2. Escribir **Inicio** y **Fin** y pulsar **guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/horario_tarea_data`
+
+### Quitar el horario de una tarea
+
+Pasos propuestos:
+1. Abrir el horario de la tarea y pulsar **quitar el actual**.
+
+Endpoints asociados:
+- `/src/misas/horario_tarea_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

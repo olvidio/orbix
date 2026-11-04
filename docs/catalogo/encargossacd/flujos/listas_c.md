@@ -2,9 +2,9 @@
 id: "encargossacd.listas_c.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas C"
+nombre: "Flujo - Listar los encargos por sacerdote"
 capacidad: "encargossacd.listas_c.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_c"]
 fragmentos: ["encargossacd.pantalla.listas_c"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_c_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_c.ges
 
 ## Objetivo De Usuario
 
-Gestiona ListasC. Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c). Sustituye la logica de frontend/encargossacd/controller/listas_c.php.
+Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar los encargos por sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **por sacd**.
+3. Se muestra cada sacerdote (agrupados por ciudad) con sus encargos y la dedicación entre paréntesis, por ejemplo «cl de: Raset (1 tarde 2ª hora)», «atención de: Ribalera (2 tarde 1ª hora)», estudio o descanso.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_c_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

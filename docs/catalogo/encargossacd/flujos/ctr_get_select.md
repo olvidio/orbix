@@ -2,9 +2,9 @@
 id: "encargossacd.ctr_get_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Ctr Get Select"
+nombre: "Flujo - Elegir un centro"
 capacidad: "encargossacd.ctr_get_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.ctr_ficha"]
 fragmentos: ["encargossacd.pantalla.ctr_ficha", "encargossacd.pantalla.encargo_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/ctr_get_select_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.ctr_get_sele
 
 ## Objetivo De Usuario
 
-Gestiona EncargoCtrSelect. Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en refactor.md (id, name, opciones, selected, blanco, val_blanco, action) para que el frontend monte el <select> con fnjs_construir_desplegable (o el modelo frontend/encargossacd/model/DesplCentros). Importante: esta clase vive en capa application y por tanto **no** puede instanciar frontend\shared\web\Desplegable (ver refactor.md).
+Rellenar el desplegable de centros según el grupo elegido.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +30,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha ctr**, elegir el **grupo de ctrs**.
+2. El desplegable **centro** se rellena con los centros de ese grupo; elegir uno.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/ctr_get_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

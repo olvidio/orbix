@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadescentro"
 nombre: "Flujo - Gestionar Centro Encargado Reordenar"
 capacidad: "actividadescentro.centro_encargado_reordenar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadescentro/centro_encargado_reordenar"]

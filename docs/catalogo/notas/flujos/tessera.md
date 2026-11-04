@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "notas"
 nombre: "Flujo - Gestionar Tessera"
 capacidad: "notas.tessera.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.tessera_copiar_select"]
 fragmentos: ["notas.pantalla.tessera_copiar_select"]
 acciones: ["copiar"]
 endpoints: ["/src/notas/tessera_copiar"]

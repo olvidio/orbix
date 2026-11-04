@@ -2,7 +2,7 @@
 id: "actividadtarifas.tipo_tarifa.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadtarifas"
-nombre: "Flujo - Gestionar Tipo Tarifa"
+nombre: "Flujo - Mantener los tipos de tarifa"
 capacidad: "actividadtarifas.tipo_tarifa.gestionar"
 pantallas_principales: ["actividadtarifas.pantalla.tarifa"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_form", "actividadtarifas.pantalla.tarifa_lista"]
@@ -17,13 +17,11 @@ Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones).
 
 ## Objetivo De Usuario
 
-Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones).
-
-Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tipo Tarifa).
+Mantener el catálogo de tipos de tarifa: cada uno con su letra, su modo y observaciones.
 
 ## Punto De Entrada
 
-- `actividadtarifas.pantalla.tarifa`
+Menú **adl > Tarifas > definir tarifa**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,48 +30,19 @@ Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección 
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Mantener los tipos de tarifa
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/actividadtarifas/tipo_tarifa_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **definir tarifa**: aparece el listado de tarifas.
+2. Para crear una, pulsar nuevo; escribir la **letra**, el **modo** y las **observaciones**, y pulsar **guardar** (o **cancel**).
+3. Para modificar, pulsar la tarifa, cambiar los datos y **guardar**.
+4. Para quitarla, abrirla y pulsar **eliminar**, confirmando.
 
 Endpoints asociados:
 - `/src/actividadtarifas/tipo_tarifa_eliminar`
-
-### Listar
-
-Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Endpoints asociados:
-- `/src/actividadtarifas/tipo_tarifa_lista_data`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
 - `/src/actividadtarifas/tipo_tarifa_form_data`
+- `/src/actividadtarifas/tipo_tarifa_lista_data`
+- `/src/actividadtarifas/tipo_tarifa_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

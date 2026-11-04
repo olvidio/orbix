@@ -2,9 +2,9 @@
 id: "misas.quitar_horario.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Quitar Horario"
+nombre: "Flujo - Quitar el horario de una tarea"
 capacidad: "misas.quitar_horario.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.horario_tarea"]
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/quitar_horario"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+Quitar el horario asignado a una tarea de la plantilla.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
+Ventana de horario de la tarea.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gesti�
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar el horario de una tarea
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el horario de la tarea.
+2. Pulsar **quitar el actual**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/quitar_horario`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -28,13 +28,13 @@ Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por d
 
 ### Confirmar (`seguro=2`)
 
-1. Abrir la pantalla frontend → mensajes de advertencia + enlace firmado «continuar» (`seguro=1`).
-2. Si `miDele()==='dlb'`: enlace extra «Poner todas las dl igual» (`seguro=1&todos=1`).
+1. Abrir la pantalla: salen los mensajes de advertencia y el enlace **continuar**.
+2. Si la delegación es dlb, aparece además el enlace **Poner todas las dl igual**.
 
 ### Ejecutar (`seguro=1`)
 
-1. Recorre esquema(s); salta `H-Hv`.
-2. Copia ref→aux; en sf no toca `aux_grupmenu_rol`.
+1. El proceso recorre las delegaciones (salta la `H-Hv`).
+2. Copia los menús de referencia a los de cada delegación; en la sf no toca los grupos de menú por rol.
 
 ## Endpoints Del Flujo
 

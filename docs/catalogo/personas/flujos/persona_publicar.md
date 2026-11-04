@@ -2,9 +2,9 @@
 id: "personas.persona_publicar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Publicar persona hacia otra DL"
+nombre: "Flujo - Publicar una persona hacia otra dl"
 capacidad: "personas.persona_publicar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.persona_publicar_form"]
 fragmentos: ["personas.pantalla.persona_publicar_form"]
 acciones: ["ver_formulario", "publicar"]
 endpoints: ["/src/personas/persona_publicar_form_data", "/src/personas/persona_publicar"]
@@ -18,26 +18,24 @@ caducidad por defecto de un mes.
 
 ## Objetivo De Usuario
 
-Compartir temporalmente una persona con otra delegación sin trasladarla.
+Compartir temporalmente una persona con otra delegación, sin trasladarla.
 
 ## Punto De Entrada
 
-- Listado `personas_select`: botón «publicar» (`fnjs_publicar`) si hay permiso oficina
-  `est`, `sm` o `agd`.
+Botón **publicar** de la lista de personas; solo sale con permiso de las oficinas est, sm o agd.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver formulario
+### Publicar una persona hacia otra dl
 
-1. Seleccionar persona en el listado (`sel=id_nom#id_tabla`).
-2. Pulsar «publicar» → `persona_publicar_form.php`.
-3. Carga `persona_publicar_form_data` y muestra nombre + desplegable de DL.
+Pasos propuestos:
+1. En la lista de personas, seleccionar a la persona y pulsar **publicar**.
+2. Se abre un formulario con su nombre y un desplegable de delegaciones; elegir la delegación destino (es obligatorio).
+3. Guardar. Sale el aviso «persona publicada» y se vuelve a la lista.
 
-### Publicar
-
-1. Elegir DL destino (obligatorio en FE).
-2. Guardar → `persona_publicar` con `id_nom`, `id_schema`, `dl`.
-3. Éxito: alerta «persona publicada» y navegación atrás.
+Endpoints asociados:
+- `/src/personas/persona_publicar_form_data`
+- `/src/personas/persona_publicar`
 
 ## Endpoints Del Flujo
 

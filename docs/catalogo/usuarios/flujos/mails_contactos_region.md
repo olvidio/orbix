@@ -2,7 +2,7 @@
 id: "usuarios.mails_contactos_region.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Mails Contactos Region"
+nombre: "Flujo - Ver los contactos de la región"
 capacidad: "usuarios.mails_contactos_region.gestionar"
 pantallas_principales: ["usuarios.pantalla.mails_contactos_region"]
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
+Mostrar los correos de contacto de los administradores de la región para pedir ayuda de acceso.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pantalla de ayuda de acceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los contactos de la región
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ayuda de acceso.
+2. Consultar la lista de contactos y escribir al que corresponda.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/mails_contactos_region`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

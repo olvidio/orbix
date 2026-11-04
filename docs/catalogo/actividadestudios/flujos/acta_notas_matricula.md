@@ -2,9 +2,9 @@
 id: "actividadestudios.acta_notas_matricula.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Acta Notas Matricula"
+nombre: "Flujo - Guardar las notas en borrador"
 capacidad: "actividadestudios.acta_notas_matricula.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.acta_notas"]
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["guardar"]
 endpoints: ["/src/actividadestudios/acta_notas_matricula_guardar"]
@@ -17,14 +17,11 @@ Guardado del borrador de notas sobre cada matrícula del acta.
 
 ## Objetivo De Usuario
 
-El usuario edita notas, nota máxima, preceptor o situación de acta de los alumnos
-matriculados y guarda el borrador en las matrículas. Sustituye la rama `que=1` del legacy
-`apps/actividadestudios/controller/acta_notas_update.php`.
+Editar las notas, la nota máxima, el preceptor o la situación de acta de los alumnos matriculados, y guardarlo como borrador en sus matrículas.
 
 ## Punto De Entrada
 
-Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): `fnjs_guardar_nota`
-(disparada al cambiar una nota vía `fnjs_nota`) envía el formulario por AJAX con `que=1`.
+Pantalla del acta de notas de una asignatura: se guarda al salir de la casilla de nota o al pulsar guardar.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,13 +29,12 @@ Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): 
 
 ## Escenarios Inferidos
 
-### Guardar
+### Guardar las notas en borrador
 
-Pasos:
-1. En el acta de notas, modificar nota, nota máxima, preceptor o desplegable de acta de un alumno.
-2. Al salir del campo nota (`fnjs_nota`) o al guardar explícitamente, se invoca `fnjs_guardar_nota`.
-3. El sistema serializa `#f_1303` y llama al endpoint.
-4. Si hay error de validación, se muestra alerta con el mensaje devuelto.
+Pasos propuestos:
+1. En el acta de notas, cambiar la nota, la nota máxima, el preceptor o la situación del acta de un alumno.
+2. Al salir de la casilla de la nota (o al guardar) se graba el cambio en su matrícula.
+3. Si algún dato no es válido, sale un aviso con el motivo.
 
 Endpoints asociados:
 - `/src/actividadestudios/acta_notas_matricula_guardar`

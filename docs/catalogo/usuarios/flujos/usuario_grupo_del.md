@@ -2,9 +2,9 @@
 id: "usuarios.usuario_grupo_del.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Grupo Del"
+nombre: "Flujo - Quitar un grupo a un usuario"
 capacidad: "usuarios.usuario_grupo_del.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form"]
 fragmentos: ["usuarios.pantalla.usuario_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_grupo_del"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
+Quitar un grupo de permisos a un usuario.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Ficha de usuario, tras elegir el grupo en **quitar de un grupo de permisos**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar un grupo a un usuario
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario y pulsar **quitar de un grupo de permisos**.
+2. En la tabla pulsar **quitar** en la fila del grupo (sin confirmación).
+3. La lista de grupos se actualiza.
+4. Si aparece «Operación no autorizada», volver a abrir la ficha y repetir.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_grupo_del`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

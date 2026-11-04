@@ -2,7 +2,7 @@
 id: "ubis.calendario_periodos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Calendario Periodos"
+nombre: "Flujo - Consultar los periodos de una casa"
 capacidad: "ubis.calendario_periodos.gestionar"
 pantallas_principales: ["ubis.pantalla.calendario_periodos"]
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Elimina un periodo de calendario CDC identificado por id_item.
+Definir los periodos del calendario de una casa en un año y borrar los que sobran.
 
 ## Punto De Entrada
 
-Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
+Menú **adl > Nuevo Calendario > Definir periodos** (Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,24 +27,26 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Consultar los periodos de una casa
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **Definir periodos**.
+2. Elegir la casa y el año y pulsar **buscar**.
+3. Se listan los periodos ordenados por fecha de inicio y se avisa si alguno se solapa con otro.
 
 Endpoints asociados:
 - `/src/ubis/calendario_periodos_eliminar`
+- `/src/ubis/calendario_periodos_guardar`
 
-### Guardar
+### Borrar un periodo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista, pulsar eliminar en el periodo.
+2. Confirmar «¿Está seguro de borrar este periodo?».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/calendario_periodos_eliminar`
+- `/src/ubis/calendario_periodos_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

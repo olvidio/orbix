@@ -2,9 +2,9 @@
 id: "actividadestudios.matriculas_pendientes.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Matriculas Pendientes"
+nombre: "Flujo - Ver y borrar matrículas pendientes"
 capacidad: "actividadestudios.matriculas_pendientes.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.matriculas_pendientes"]
 fragmentos: ["actividadestudios.pantalla.matriculas_pendientes"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/matriculas_pendientes_data"]
@@ -17,15 +17,11 @@ Listado de matrículas pendientes de nota en acta.
 
 ## Objetivo De Usuario
 
-El usuario consulta las matrículas que aún no tienen nota definitiva en acta: una fila por
-matrícula con actividad, asignatura, alumno y permiso. Puede abrir el dossier de la
-actividad o borrar matrículas seleccionadas.
+Ver las matrículas de actividades pendientes de procesar y borrar las que no valgan.
 
 ## Punto De Entrada
 
-Pantalla `matriculas_pendientes`
-(`frontend/actividadestudios/controller/matriculas_pendientes.php`): al cargar llama a
-`matriculas_pendientes_data` (sin parámetros). Refresco vía `fnjs_actualizar`.
+Menú **vest > actas... > Matr. Pendientes** (Pills2: ESTUDIOS > Actas y certificados > Exam. pendientes de acta).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,13 +30,12 @@ Pantalla `matriculas_pendientes`
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver y borrar matrículas pendientes
 
-Pasos:
-1. Abrir **Matr. Pendientes** / **Exam. pendientes de acta** desde el menú.
-2. El sistema carga automáticamente `matriculas_pendientes_data`.
-3. Se muestra la tabla con avisos de región STGR si aplica.
-4. Opcional: ver dossier CA de una fila o borrar matrículas.
+Pasos propuestos:
+1. Entrar en **Matr. Pendientes**: aparece una lista de matrículas con casilla para marcar.
+2. Marcar las matrículas y pulsar **ver asignaturas ca** (ver sus asignaturas) o **borrar matrícula**.
+3. Si hay datos huérfanos, salen mensajes como «No encuentro a nadie con id_nom: …» o «No encuentro ninguna actividad con id: … (alumno id_nom: …)».
 
 Endpoints asociados:
 - `/src/actividadestudios/matriculas_pendientes_data`

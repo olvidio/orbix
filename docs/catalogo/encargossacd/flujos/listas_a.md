@@ -2,9 +2,9 @@
 id: "encargossacd.listas_a.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas A"
+nombre: "Flujo - Listar la atención de los centros"
 capacidad: "encargossacd.listas_a.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_a"]
 fragmentos: ["encargossacd.pantalla.listas_a"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_a_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_a.ges
 
 ## Objetivo De Usuario
 
-Gestiona ListasA. Genera el listado de atencion SACD "a" (cr 9/05, Anexo2, 9.4 a). Sustituye la logica que habia en frontend/encargossacd/controller/listas_a.php. Devuelve el HTML completo junto con los textos de cabecera, listos para inyectarlos en la vista listas.phtml.
+Sacar el listado de atención de centros de sv y sf (cr 1/14, 10,a).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar la atención de los centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En «listados de encargos para cr» elegir **atención ctr sv** o **atención ctr sf**.
+3. Se muestra el listado, listo para imprimir: cabecera con el **Curso** (por ejemplo 1/9/2026 - 31/8/2027), «dlb» y la referencia «ref. cr 1/14, 10, a)»; luego «1. ctr de n» con cada centro y sus sacerdotes. Si un sacerdote asignado ya no existe, el listado lo dice («No encuentro a nadie con id_nom: …»); hay que corregir ese encargo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_a_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

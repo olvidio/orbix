@@ -2,9 +2,9 @@
 id: "actividadplazas.plazas_balance.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Plazas Balance"
+nombre: "Flujo - Comparar con otra delegación"
 capacidad: "actividadplazas.plazas_balance.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadplazas.pantalla.plazas_balance_dl"]
 fragmentos: ["actividadplazas.pantalla.plazas_balance_dl"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadplazas/plazas_balance_data"]
@@ -18,13 +18,11 @@ actividad, insertado en la pantalla de balance.
 
 ## Objetivo De Usuario
 
-Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene cada actividad en mi
-delegación frente a otra delegación elegida en el desplegable.
+Comparar, para un tipo de actividad, las plazas concedidas y libres de cada actividad en la propia delegación frente a otra delegación elegida.
 
 ## Punto De Entrada
 
-Fragmento `plazas_balance_dl`, invocado por AJAX desde `plazas_balance_que` al elegir una delegación
-en el desplegable (`fnjs_comparativa`). No tiene menú propio.
+Se muestra dentro de **Balance de plazas** al elegir una delegación. No tiene entrada propia en el menú.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,13 +31,12 @@ en el desplegable (`fnjs_comparativa`). No tiene menú propio.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Comparar con otra delegación
 
-1. En **Balance de plazas**, elegir la delegación a comparar en el desplegable.
-2. El sistema carga el HTML del grid en `#comparativa` vía `plazas_balance_dl.php`.
-3. Ese fragmento obtiene los datos de `plazas_balance_data` (`dlA` = mi dl, `dlB` = la elegida):
-   cabecera con concedidas cruzadas (A→B y B→A) y tabla con concedidas/libres por actividad.
-4. Las celdas de mi dl son editables (doble clic → `gestion_plazas_update`).
+Pasos propuestos:
+1. En **Balance de plazas**, elegir en el desplegable la delegación con la que comparar.
+2. Debajo aparece la tabla: arriba, las plazas que se conceden mutuamente las dos delegaciones, y por actividad las concedidas y las libres.
+3. Las celdas de la propia delegación se pueden cambiar con doble clic; se guarda al momento.
 
 Endpoints asociados:
 - `/src/actividadplazas/plazas_balance_data`

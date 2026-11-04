@@ -2,9 +2,9 @@
 id: "misas.ver_plan_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Ver Plan Sacd"
+nombre: "Flujo - Consultar el plan de un sacerdote"
 capacidad: "misas.ver_plan_sacd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_plan_sacd"]
 fragmentos: ["misas.pantalla.ver_plan_sacd"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_plan_sacd_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
+Mostrar, día a día, las misas asignadas a un sacerdote en un periodo.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Plan sacerdote. Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote.
+Menú **dre > Misas > Plan sacerdote** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Plan sacerdote. Pills2: ATENCIÓN SACD > Gestión de
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar el plan de un sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Plan sacerdote**, elegir sacerdote y periodo.
+2. La tabla muestra **Dia**, **Encargo** y **Observaciones** de cada misa.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/ver_plan_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

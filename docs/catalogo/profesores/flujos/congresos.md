@@ -2,7 +2,7 @@
 id: "profesores.congresos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Consultar congresos"
+nombre: "Flujo - Consultar la asistencia a congresos"
 capacidad: "profesores.congresos.gestionar"
 pantallas_principales: ["profesores.pantalla.congresos"]
 fragmentos: []
@@ -17,19 +17,20 @@ Consulta global de asistencia a congresos del claustro STGR.
 
 ## Objetivo De Usuario
 
-Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
+Consultar la asistencia de los profesores a congresos, claustros, reuniones y otros eventos.
 
 ## Punto De Entrada
 
-Pantalla `congresos` (`frontend/profesores/controller/congresos.php`).
+Menú **vest > actas... > asistencia a congresos**.
 
 ## Escenarios Inferidos
 
-### Consultar
+### Consultar la asistencia a congresos
 
-Pasos:
-1. Abrir **asistencia a congresos** desde el menú `stgr2`.
-2. Revisar la tabla `tabla_congreso`.
+Pasos propuestos:
+1. Entrar en **asitencia a congresos**.
+2. Se muestra una tabla con «apellidos, nombre», «tipo» (claustro, reunión, congreso, cv…), «lugar», «inicio», «fin» y «organiza».
+3. Arriba a la derecha de la tabla hay dos iconos (lupa y guardar) para buscar en ella y exportarla.
 
 Endpoints asociados:
 - `/src/profesores/congresos`

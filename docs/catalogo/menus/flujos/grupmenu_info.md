@@ -2,9 +2,9 @@
 id: "menus.grupmenu_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Grupmenu Info"
+nombre: "Flujo - Editar un grupo de menús"
 capacidad: "menus.grupmenu_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["menus.pantalla.grupmenu_form"]
 fragmentos: ["menus.pantalla.grupmenu_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/menus/grupmenu_info"]
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Precarga formulario edición grupmenu.
+Cargar el formulario de edición de un grupo de menús.
 
 ## Punto De Entrada
 
-`grupmenu_form`.
+Gestor de menús, editar grupo.
+
+## Escenarios Inferidos
+
+### Editar un grupo de menús
+
+Pasos propuestos:
+1. En el gestor de menús, abrir el grupo.
+2. Cambiar su nombre y guardar.
+
+Endpoints asociados:
+- `/src/menus/grupmenu_info`
 
 ## Endpoints Del Flujo
 

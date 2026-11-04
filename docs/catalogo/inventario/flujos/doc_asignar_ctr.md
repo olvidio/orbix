@@ -2,9 +2,9 @@
 id: "inventario.doc_asignar_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Doc Asignar Ctr"
+nombre: "Flujo - Guardar la asignación a centros"
 capacidad: "inventario.doc_asignar_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_asignar_ctr"]
 fragmentos: ["inventario.pantalla.doc_asignar_ctr"]
 acciones: ["guardar"]
 endpoints: ["/src/inventario/doc_asignar_ctr_guardar"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Doc Asignar Ctr
 
-Propuesta generada automaticamente desde la capacidad `inventario.doc_asignar_ctr.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona DocAsignarCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los centros elegidos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Se abre al pulsar **Asignar** en la lista de centros de **asignar documento**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Guardar
+### Guardar la asignación a centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Asignar a centros (sin especificar lugar)**, marcar los centros y pulsar para continuar. En la pantalla siguiente completar, para cada centro, el número de registro (propone «último + 1») o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/doc_asignar_ctr_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

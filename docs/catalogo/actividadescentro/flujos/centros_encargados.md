@@ -2,9 +2,9 @@
 id: "actividadescentro.centros_encargados.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadescentro"
-nombre: "Flujo - Gestionar Centros Encargados"
+nombre: "Flujo - Ver los centros encargados actualizados"
 capacidad: "actividadescentro.centros_encargados.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/centros_encargados_data"]
@@ -17,14 +17,11 @@ Recarga de la celda de centros encargados de una actividad tras una mutación.
 
 ## Objetivo De Usuario
 
-Tras asignar, reordenar o eliminar un centro encargado, la celda de esa actividad se refresca con la
-lista actualizada de centros y el flag `permite_modificar` (que decide si cada centro se pinta como
-enlace o como texto plano). Es un paso automático, no una acción explícita del usuario.
+Refrescar la lista de centros encargados de una actividad tras asignar, reordenar o quitar uno.
 
 ## Punto De Entrada
 
-Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
-`fnjs_actualizar_activ` llama a este endpoint después de cada mutación.
+Automático: no requiere acción del usuario.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,13 +29,14 @@ Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver los centros encargados actualizados
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Asignar, reordenar o quitar un centro.
+2. La celda de la actividad se refresca sola con la lista al día.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/centros_encargados_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

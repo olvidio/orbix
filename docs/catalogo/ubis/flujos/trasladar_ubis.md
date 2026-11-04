@@ -2,9 +2,9 @@
 id: "ubis.trasladar_ubis.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Trasladar Ubis"
+nombre: "Flujo - Trasladar centros o casas"
 capacidad: "ubis.trasladar_ubis.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.trasladar_ubis"]
 fragmentos: ["ubis.pantalla.trasladar_ubis"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/trasladar_ubis"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Traslada centros y casas seleccionados a otra delegación destino.
+Pasar los centros o casas seleccionados a otra delegación.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casas > listados.
+Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casa
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Trasladar centros o casas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **listados**, marcar uno o varios centros o casas.
+2. Elegir la delegación en **Trasladar a** y pulsar **Trasladar**.
+3. Comprobar el listado: los trasladados ya no pertenecen a la delegación de origen.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/trasladar_ubis`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

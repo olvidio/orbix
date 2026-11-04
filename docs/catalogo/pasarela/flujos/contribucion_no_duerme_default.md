@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Default contribución no duerme"
 capacidad: "pasarela.contribucion_no_duerme.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.contribucion_no_duerme_ajax"]
 fragmentos:
   - "pasarela.pantalla.contribucion_no_duerme_ajax"
 acciones: ["listar", "guardar", "eliminar"]
@@ -18,15 +18,24 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Cambiar el porcentaje global.
+Cambiar el importe global.
 
 ## Punto De Entrada
 
-Listado contribución no duerme.
+Dentro de **Contribución no duerme**, con el botón de modificar el valor por defecto.
 
-## Escenarios
+## Escenarios Inferidos
 
-Carga formulario y guarda porcentaje default.
+### Cambiar el importe general
+
+Pasos propuestos:
+1. Abrir el valor por defecto.
+2. Escribir un número entero de euros entre 0 y 100, que es lo que acepta la pantalla.
+3. Pulsar **guardar** (o **cancel**). Fuera de rango o vacío, el sistema avisa.
+
+Endpoints asociados:
+- `/src/pasarela/contribucion_no_duerme_default_data`
+- `/src/pasarela/contribucion_no_duerme_default_guardar`
 
 ## Endpoints Del Flujo
 

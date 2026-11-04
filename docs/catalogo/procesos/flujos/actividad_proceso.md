@@ -2,9 +2,9 @@
 id: "procesos.actividad_proceso.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Actividad Proceso"
+nombre: "Flujo - Ver y avanzar el proceso de una actividad"
 capacidad: "procesos.actividad_proceso.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.actividad_proceso"]
 fragmentos: ["procesos.pantalla.actividad_proceso", "procesos.pantalla.actividad_proceso_get"]
 acciones: ["crear_actualizar", "obtener", "obtener_datos"]
 endpoints: ["/src/procesos/actividad_proceso_data", "/src/procesos/actividad_proceso_get", "/src/procesos/actividad_proceso_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consulta y edición del proceso de una actividad: ver tareas por fase, marcar completado, guardar observaciones y actualizar el estado de cada tarea.
+Ver y avanzar las fases del proceso de una actividad (tareas completadas, observaciones).
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se abre embebido desde otras pantallas (p. ej. cambio de fase o dossier de actividad).
+Lista de resultados de **Buscar actividad**: marcar la actividad y pulsar el botón **proceso**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,32 +28,18 @@ Sin entrada directa de menú; se abre embebido desde otras pantallas (p. ej. cam
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Ver y avanzar el proceso de una actividad
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Marcar la actividad y pulsar **proceso**.
+2. Se muestra el título, el enlace **(dossiers)** y «Fases de la actividad», con la opción **forzar** y una fila por fase y tarea.
+3. Marcar las tareas hechas, escribir observaciones y guardar.
+4. Si el proceso de la actividad no se ha generado bien, aparece un error del tipo «La fase del proceso tipo: 6, fase: 2, tarea: 0»; los procesos se generan al crear la actividad, así que este error indica un dato incompleto de esa actividad; en ese caso hay que regenerar el proceso.
 
 Endpoints asociados:
+- `/src/procesos/actividad_proceso_data`
+- `/src/procesos/actividad_proceso_get`
 - `/src/procesos/actividad_proceso_update`
-
-### Obtener
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "asistentes.lista_est_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Lista Est Ctr"
+nombre: "Flujo - Ver los estudios matriculados por centro"
 capacidad: "asistentes.lista_est_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.lista_est_ctr"]
 fragmentos: ["asistentes.pantalla.lista_est_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_est_ctr_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Ver estudios matriculados por centro.
-
+Ver, centro por centro, los estudios en los que están matriculadas sus personas.
 
 ## Punto De Entrada
 
-Pantalla `lista_est_ctr` (`frontend/asistentes/controller/`).
-
+Menú **vest > ca n > estudios x ctr** (o cv agd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,14 @@ Pantalla `lista_est_ctr` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver los estudios matriculados por centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el curso y pulsar **Buscar**.
+2. Debería aparecer, por centro, la lista de personas con sus estudios matriculados (pantalla no comprobada en la instancia).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/lista_est_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

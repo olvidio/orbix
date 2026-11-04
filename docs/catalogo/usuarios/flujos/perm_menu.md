@@ -2,9 +2,9 @@
 id: "usuarios.perm_menu.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Perm Menu"
+nombre: "Flujo - Añadir un permiso de menú"
 capacidad: "usuarios.perm_menu.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.perm_menu_form"]
 fragmentos: ["usuarios.pantalla.grupo_form", "usuarios.pantalla.perm_menu_form"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/perm_menu_eliminar", "/src/usuarios/perm_menu_guardar", "/src/usuarios/perm_menu_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Gestión permisos menú DL de un usuario desde su ficha.
+Ver, añadir y quitar los permisos sobre menús de un usuario desde su ficha.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Ficha del usuario, apartado de permisos de menú.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,34 +28,27 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Añadir un permiso de menú
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir la ficha del usuario.
+2. Pulsar **añadir grup menu** y elegir el grupo de menús.
+3. Guardar.
 
 Endpoints asociados:
 - `/src/usuarios/perm_menu_eliminar`
+- `/src/usuarios/perm_menu_guardar`
+- `/src/usuarios/perm_menu_lista`
 
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Listar
+### Quitar un permiso de menú
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Elegir la fila en la tabla de la ficha y pulsar quitar.
+2. Confirmar «¿Esta seguro que desea borrar este permiso?».
 
 Endpoints asociados:
+- `/src/usuarios/perm_menu_eliminar`
+- `/src/usuarios/perm_menu_guardar`
 - `/src/usuarios/perm_menu_lista`
 
 ## Campos Y Acciones Detectadas En Pantalla

@@ -17,31 +17,23 @@ Búsqueda por criterios y visualización del listado con acciones sobre la selec
 
 ## Objetivo De Usuario
 
-Encontrar personas del colectivo indicado por el menú, revisar resultados y lanzar acciones
-(ficha, dossiers, STGR, traslado, módulos satélite).
+Buscar personas y trabajar con las que salgan: abrir su ficha, ver sus actividades, notas, tessera, trasladarlas, etc.
 
 ## Punto De Entrada
 
-- `personas_que.php` (criterios) → `personas_select.php` (tabla).
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Buscar
+### Buscar y listar personas
 
-1. Abrir entrada de menú (define `tabla`, `na`, `tipo`, `es_sacd`).
-2. Rellenar criterios opcionales en `personas_que`.
-3. Enviar → `personas_select` llama a `personas_select_data`.
-4. Revisar total y avisos de región STGR si aparecen.
+Pasos propuestos:
+1. Abrir «Búsqueda de personas» (por ejemplo «numerarios»). Elegir **realizar una búsqueda exacta** (no / sí) y escribir **Nombre**, **Primer apellido**, **Segundo apellido** o **centro**.
+2. Pulsar **Buscar**: sale «N personas encontradas» con una tabla.
+3. Pulsar el nombre de una persona abre su ficha. Para actuar sobre una o varias, marcarlas y pulsar un botón: **cambio de ctr**, **ver dossiers**, **ficha**, **ver actividades**, **ver tessera**, **modificar stgr**, **imprimir tessera**, **ver notas**, **posibles ca**, **petición ca**, **petición crt**, **plan estudios**, **ficha profesor stgr**, **copiar tessera**, **publicar** o **atención actividades**.
 
-### Acciones sobre selección
-
-1. Marcar fila(s) en la tabla (`sel=id_nom#id_tabla`).
-2. Pulsar botón contextual (ficha, dossiers, modificar stgr, publicar, etc.).
-
-### Publicar hacia otra DL
-
-1. Con permiso `est`/`sm`/`agd`, pulsar «publicar».
-2. Continúa en flujo `persona_publicar` (form + mutación).
+Endpoints asociados:
+- `/src/personas/personas_select_data`
 
 ## Endpoints Del Flujo
 

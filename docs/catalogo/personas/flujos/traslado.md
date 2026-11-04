@@ -2,9 +2,9 @@
 id: "personas.traslado.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Trasladar persona"
+nombre: "Flujo - Trasladar a una persona"
 capacidad: "personas.traslado.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.traslado_form"]
 fragmentos: ["personas.pantalla.traslado_form"]
 acciones: ["ver_formulario", "crear_actualizar"]
 endpoints: ["/src/personas/traslado_form_data", "/src/personas/traslado_update"]
@@ -17,26 +17,25 @@ Cambio de centro y/o delegación con registro en dossier de traslados.
 
 ## Objetivo De Usuario
 
-Mover una persona a otro centro o delegación, documentando fechas y situación.
+Cambiar a una persona de centro o de delegación, con fecha y situación.
 
 ## Punto De Entrada
 
-- Ficha edición: enlace traslado.
-- Listado: «cambio de ctr» (`sm`) — abre formulario de centro.
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl). Marcar una persona y pulsar **cambio de ctr**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver formulario
+### Trasladar a una persona
 
-1. Abrir traslado con persona seleccionada (`id_pau`, `obj_pau`).
-2. `traslado_form_data` precarga ctr/dl actuales y opciones.
-3. No disponible para personas de paso publicadas.
+Pasos propuestos:
+1. Marcar una persona y pulsar **cambio de ctr**.
+2. Se muestra una tabla Tipo / Origen / Destino / Fecha: en la fila **Centro** (origen, por ejemplo «Diagonal») elegir el centro de destino y la fecha; en la fila **Delegación** (origen, por ejemplo «dlb») elegir la delegación de destino y la fecha.
+3. Elegir la **Situación** (por ejemplo «Alta») y pulsar **Actualizar cambios**.
+4. Las personas de paso publicadas no se pueden trasladar.
 
-### Aplicar traslado
-
-1. Rellenar nuevo centro y/o nueva delegación con fechas.
-2. Si hay cambio de dl, elegir situación válida.
-3. Guardar → `traslado_update`; se abre dossier tipo 1004.
+Endpoints asociados:
+- `/src/personas/traslado_form_data`
+- `/src/personas/traslado_update`
 
 ## Endpoints Del Flujo
 

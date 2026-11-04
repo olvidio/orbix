@@ -2,7 +2,7 @@
 id: "asistentes.asistente_plaza_asignar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Asistente Plaza Asignar"
+nombre: "Flujo - Asignar plaza a varios asistentes"
 capacidad: "asistentes.asistente_plaza_asignar.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Asignar plaza común a varios asistentes seleccionados.
-
+Asignar una plaza común a varios asistentes marcados a la vez.
 
 ## Punto De Entrada
 
-Pantalla `lista_asistentes` (`frontend/asistentes/controller/`).
-
+Lista de asistentes de una actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Asignar plaza a varios asistentes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de asistentes, marcar los que corresponda.
+2. Elegir asignar plaza y la plaza que se quiere dar.
+3. Confirmar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/asistente_plaza_asignar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

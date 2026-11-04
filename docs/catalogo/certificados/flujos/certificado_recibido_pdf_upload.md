@@ -2,7 +2,7 @@
 id: "certificados.certificado_recibido_pdf_upload.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Recibido Pdf Upload"
+nombre: "Flujo - Subir el PDF de un certificado recibido"
 capacidad: "certificados.certificado_recibido_pdf_upload.gestionar"
 pantallas_principales: ["certificados.pantalla.certificado_recibido_pdf_upload"]
 fragmentos: ["certificados.pantalla.certificado_recibido_adjuntar", "certificados.pantalla.certificado_recibido_modificar"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Subir PDF de certificado recibido.
+Subir el PDF de un certificado recibido.
 
 ## Punto De Entrada
 
-Formulario adjuntar recibido.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +30,13 @@ Formulario adjuntar recibido.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Subir el PDF de un certificado recibido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de adjuntar, elegir el PDF y guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_recibido_pdf_upload`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "inventario.equipajes_texto_listado.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Texto Listado"
+nombre: "Flujo - Cambiar los textos del listado del equipaje"
 capacidad: "inventario.equipajes_texto_listado.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 acciones: ["guardar"]
 endpoints: ["/src/inventario/equipajes_texto_listado_guardar"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Texto Listado
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_texto_listado.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesTextoListado. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar el texto de cabecera, cabecera B), pie o el texto para las maletas de un equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **imprimir equipajes**, con el icono del lápiz (**modificar texto**) junto a la cabecera, la cabecera B) o el pie. El lápiz no sale al imprimir.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Guardar
+### Cambiar los textos del listado del equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz (**modificar texto**) (o **introducir texto** si aún está vacío).
+2. Escribir el texto de **cabecera**, **cabecera B)**, **pie** o **texto a añadir en las maletas**.
+3. Pulsar **guardar** (o **cancel**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_texto_listado_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

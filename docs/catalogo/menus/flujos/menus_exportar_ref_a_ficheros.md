@@ -33,11 +33,11 @@ Menú «importar desde ficheros». En `_referencia_menus.md` la URL apunta a
 
 ### Exportar a ficheros
 
-1. POST `accion=exportar` → escribe SQL bajo `log/menus/` (directorio con permiso escritura).
+1. Lanzar la acción de exportar: se escriben ficheros SQL con los menús en la carpeta `log/menus/` del servidor (debe tener permiso de escritura).
 
 ### Importar desde ficheros
 
-1. POST `accion=importar` → sustituye `DIRBASE`, ejecuta `psql`, log en `log/menus/menus.log`.
+1. Lanzar la acción de importar: se cargan en la base de datos los menús de los ficheros SQL; el resultado queda anotado en `log/menus/menus.log`.
 
 ## Endpoints Del Flujo
 

@@ -2,7 +2,7 @@
 id: "actividades.actividad_que_filtros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Filtros extra buscar actividad"
+nombre: "Flujo - Usar los filtros adicionales"
 capacidad: "actividades.actividad_que_filtros.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_que"]
 fragmentos: []
@@ -17,19 +17,24 @@ Carga AJAX del bloque lugar / organiza / publicada en `actividad_que`.
 
 ## Objetivo De Usuario
 
-Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para usuarios `ctr`).
+Ver los filtros adicionales de la búsqueda de actividades: lugar, organiza y publicada.
 
 ## Punto De Entrada
 
-`actividad_que.html.twig` → `fnjs_cargar_filtros_extra` al cargar la página.
+Menú **ACTIVIDADES > Buscar actividad** (o la entrada del colectivo, por ejemplo vsm > ca > importar ca).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Usar los filtros adicionales
 
-1. Pantalla buscar actividad lista.
-2. JS llama `actividad_que_filtros` con contexto de sesión.
-3. HTML devuelto se inserta en `#filtros_extra`.
+Pasos propuestos:
+1. Abrir **Buscar actividad**; los filtros extra se cargan solos debajo del formulario (no aparecen para usuarios de centro).
+2. Elegir el filtro de **lugar** (según país o dl, o lugar concreto) y, si interesa, **organiza**.
+3. En **publicada** elegir **si**, **no** o **todas**.
+4. Pulsar **buscar**.
+
+Endpoints asociados:
+- `/src/actividades/actividad_que_filtros`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "ubis.teleco_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Teleco Editar"
+nombre: "Flujo - Añadir o editar una telecomunicación"
 capacidad: "ubis.teleco_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.teleco_editar"]
 fragmentos: ["ubis.pantalla.teleco_editar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/teleco_editar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga el formulario de alta/edición de una telecomunicación de un ubi.
+Añadir una telecomunicación o modificar una existente.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **scdl > direcciones > buscar**: buscar, pulsar el nombre del centro o casa en la tabla y usar «Editar: **centro** / **dirección** / **telecos**» de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Añadir o editar una telecomunicación
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **telecos** pulsar **nuevo**, o marcar un registro y pulsar **modificar**.
+2. Elegir el **Tipo teleco** (correo electrónico, fax, página web, teléfono fijo o teléfono móvil); entonces el desplegable **Descripción** se rellena con las opciones de ese tipo (por ejemplo otros, de la casa, dirección, administración, sacd). Escribir el **Número** y, si hace falta, las **Observaciones**.
+3. Pulsar **Guardar Cambios**. Vuelve a la ficha y el número aparece junto a los demás teléfonos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/teleco_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,7 +2,7 @@
 id: "shared.tablaDB_buscar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Búsqueda previa al listado"
+nombre: "Flujo - Buscar antes de listar"
 capacidad: "shared.tablaDB_buscar.gestionar"
 pantallas_principales: ["shared.pantalla.tablaDB_lista_ver"]
 fragmentos: []
@@ -15,23 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Filtrar registros antes de mostrar la tabla en mantenimientos que definen criterios de búsqueda.
+Filtrar los registros antes de ver la tabla, en los mantenimientos que piden criterios de búsqueda.
 
 ## Punto De Entrada
 
-Primera carga de `tablaDB_lista_ver.php` (sin `k_buscar` ni `aSerieBuscar`).
+Primera pantalla de un mantenimiento de tabla genérico, cuando éste define criterios.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Mostrar criterios
+### Buscar antes de listar
 
-1. `tablaDB_buscar_datos` con `clase_info` y contexto padre.
-2. Vista `tablaDB_busqueda.phtml` o `buscar_view` custom del `Info*`.
+Pasos propuestos:
+1. Abrir el mantenimiento desde el menú: aparece primero el formulario de criterios.
+2. Rellenar los criterios que interesen.
+3. Pulsar buscar: se muestra la tabla con los registros que cumplen.
 
-### Buscar
-
-1. Usuario rellena `k_buscar` (y campos extra del `Info*`).
-2. Submit → misma URL con criterios → fase listado (`tablaDB_lista_datos`).
+Endpoints asociados:
+- `/src/shared/tablaDB_buscar_datos`
 
 ## Errores Conocidos
 

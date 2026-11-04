@@ -2,7 +2,7 @@
 id: "encargossacd.propuestas_lista_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Propuestas Lista Sacd"
+nombre: "Flujo - Ver las propuestas por sacd"
 capacidad: ""
 pantallas_principales: ["encargossacd.pantalla.propuestas_lista_sacd"]
 fragmentos: []
@@ -17,12 +17,11 @@ Listado imprimible de propuestas por SACD.
 
 ## Objetivo De Usuario
 
-Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API también `sssc`).
+Revisar, e imprimir si hace falta, los encargos propuestos para cada sacd. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Punto De Entrada
 
-Desde hub propuestas → «listado propuestas por sacd».
-
+Desde el menú de propuestas, opción **listado propuestas por sacd**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,10 +29,14 @@ Desde hub propuestas → «listado propuestas por sacd».
 
 ## Escenarios Inferidos
 
-### Obtener datos
+### Ver las propuestas por sacd
 
-1. FE pasa `sel` a `propuestas_lista_sacd_data`.
-2. Renderiza `propuestas_lista_sacd.phtml` con `array_modo`.
+Pasos propuestos:
+1. Abrir **listado propuestas por sacd**.
+2. Se muestra, por cada sacd, la lista de encargos propuestos, lista para imprimir.
+
+Endpoints asociados:
+- `/src/encargossacd/propuestas_lista_sacd_data`
 
 ## Endpoints Del Flujo
 

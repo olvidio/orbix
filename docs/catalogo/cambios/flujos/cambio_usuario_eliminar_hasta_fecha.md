@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "cambios"
 nombre: "Flujo - Purgar cambios hasta fecha"
 capacidad: "cambios.cambio_usuario_eliminar_hasta_fecha.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.avisos_generar"]
 fragmentos: ["cambios.pantalla.avisos_generar"]
 acciones: ["eliminar_hasta_fecha"]
 endpoints: ["/src/cambios/cambio_usuario_eliminar_hasta_fecha"]

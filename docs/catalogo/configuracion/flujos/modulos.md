@@ -2,9 +2,9 @@
 id: "configuracion.modulos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "configuracion"
-nombre: "Flujo - Gestionar módulo (ficha)"
+nombre: "Flujo - Añadir o modificar un módulo"
 capacidad: "configuracion.modulos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
 fragmentos: ["configuracion.pantalla.modulos_form", "configuracion.pantalla.modulos_update"]
 acciones: ["ver_formulario", "crear_actualizar", "eliminar"]
 endpoints: ["/src/configuracion/modulos_form_data", "/src/configuracion/modulos_update"]
@@ -15,30 +15,34 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módulos/apps
-requeridos) de uno existente.
+Dar de alta un módulo nuevo, o cambiar el nombre, la descripción y las dependencias (módulos y aplicaciones que necesita) de uno existente.
 
 ## Punto De Entrada
 
-`frontend/configuracion/controller/modulos_form.php` (desde listado «definir módulos»).
+Se abre desde la lista de **definir módulos**: botón **añadir módulo** o **modificar**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver formulario
+### Añadir o modificar un módulo
 
-1. Desde listado: «añadir módulo» (`mod=nuevo`) o «modificar» (fila seleccionada).
-2. `modulos_form_data` devuelve hashes, catálogo de módulos/apps y valores actuales.
-3. Apps requeridas por módulos dependientes se muestran checked+disabled.
+Pasos propuestos:
+1. En la lista de módulos, pulsar **añadir módulo**, o seleccionar uno y pulsar **modificar**.
+2. Aparece el formulario con los módulos y aplicaciones disponibles. Las aplicaciones que necesitan otros módulos salen marcadas y no se pueden desmarcar.
+3. Rellenar o cambiar el nombre, la descripción y las dependencias (al marcar o desmarcar una casilla, el cambio se guarda al momento).
+4. Pulsar **Guardar cambios** para volver a la lista.
 
-### Crear o actualizar
+Endpoints asociados:
+- `/src/configuracion/modulos_form_data`
+- `/src/configuracion/modulos_update`
 
-1. Editar campos; cambios en checkboxes guardan al vuelo (`fnjs_cambio`).
-2. «Guardar cambios» → `modulos_update` (alta si `mod=nuevo` y `nom` no vacío; edición por `id_mod`).
-3. Volver al listado con `navAtras`.
+### Eliminar un módulo
 
-### Eliminar
+Pasos propuestos:
+1. Se hace desde la lista de módulos, no desde el formulario (ver «Consultar los módulos definidos»).
 
-Gestión desde el listado (`modulos_select`), no desde la ficha.
+Endpoints asociados:
+- `/src/configuracion/modulos_form_data`
+- `/src/configuracion/modulos_update`
 
 ## Errores Conocidos
 

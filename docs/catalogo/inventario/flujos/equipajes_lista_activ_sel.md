@@ -2,9 +2,9 @@
 id: "inventario.equipajes_lista_activ_sel.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Lista Activ Sel"
+nombre: "Flujo - Nombrar el equipaje"
 capacidad: "inventario.equipajes_lista_activ_sel.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_form_nuevo"]
 fragmentos: ["inventario.pantalla.equipajes_form_nuevo"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_lista_activ_sel"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Lista Activ Sel
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_lista_activ_sel.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesListaActivSel. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ponerle nombre al equipaje formado con las actividades marcadas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Se abre en una ventana al pulsar **seleccionar** en la lista de actividades de **nuevo equipaje**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Nombrar el equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar las actividades y pulsar **seleccionar**.
+2. En la ventana aparece el **nombre del equipaje** ya propuesto como «casa (fechas)»; se puede cambiar.
+3. Pulsar **guardar** (o **cancel** para cerrar sin crear nada).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_lista_activ_sel`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

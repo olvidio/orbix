@@ -17,20 +17,24 @@ Marcar actividades de la dl propia como publicadas (visibles externamente según
 
 ## Objetivo De Usuario
 
-Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
+Buscar actividades que aún no están publicadas y publicarlas de golpe.
 
 ## Punto De Entrada
 
-`actividad_que` (`modo=publicar`) → `actividad_select` → acción publicar.
+Menú **publicar activ**. Primero sale el formulario de búsqueda y después la lista de resultados.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Publicar actividades
 
-1. Menú *publicar activ*.
-2. Filtrar actividades no publicadas de la dl.
-3. Seleccionar filas y publicar (`actividad_publicar`).
-4. Comprobar actualización en listado.
+Pasos propuestos:
+1. Abrir **publicar activ** del menú.
+2. Buscar las actividades de la propia dl que aún no están publicadas.
+3. En la lista, marcar las filas y pulsar **publicar**.
+4. Comprobar en el listado que ya aparecen como publicadas.
+
+Endpoints asociados:
+- `/src/actividades/actividad_publicar`
 
 ## Endpoints Del Flujo
 

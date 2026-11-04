@@ -2,9 +2,9 @@
 id: "misas.ver_plan_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Ver Plan Ctr"
+nombre: "Flujo - Consultar el plan de un centro"
 capacidad: "misas.ver_plan_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_plan_ctr"]
 fragmentos: ["misas.pantalla.imprimir_plan_ctr", "misas.pantalla.ver_plan_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_plan_ctr_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Genera la cuadrícula del plan de misas por centro: encargos en filas, días en columnas, con leyenda de sacds.
+Mostrar el plan de misas de un centro: encargos en filas y días en columnas, con leyenda de sacerdotes.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Plan centro. Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr.
+Menú **dre > Misas > Plan centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,13 +28,15 @@ Menú Legacy: dre > Misas > Plan centro. Pills2: ATENCIÓN SACD > Gestión de mi
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar el plan de un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Plan centro**, elegir zona, centro y periodo.
+2. Leer la cuadrícula; las iniciales de la leyenda identifican a cada sacerdote.
+3. Se puede imprimir desde la propia pantalla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/ver_plan_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

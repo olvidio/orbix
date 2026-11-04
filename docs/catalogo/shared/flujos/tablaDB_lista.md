@@ -2,7 +2,7 @@
 id: "shared.tablaDB_lista.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Listar y mantener tabla genérica"
+nombre: "Flujo - Buscar y listar los registros"
 capacidad: "shared.tablaDB_lista.gestionar"
 pantallas_principales: ["shared.pantalla.tablaDB_lista_ver"]
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
@@ -15,30 +15,36 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consultar y mantener registros de tablas de configuración enlazadas desde el menú (asignaturas,
-ubis, inventario, procesos, etc.) mediante el shell común `tablaDB`.
+Consultar y mantener los registros de tablas de configuración que se abren desde el menú (asignaturas, ubicaciones, inventario, procesos…) con la misma pantalla genérica.
 
 ## Punto De Entrada
 
-`frontend/shared/controller/tablaDB_lista_ver.php` con `clase_info` según la entrada de menú.
+Distintas entradas de menú abren esta misma pantalla, cada una con su tabla.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Buscar y listar
+### Buscar y listar los registros
 
-1. Abrir desde menú (pasa `clase_info` y contexto `pau`/`id_pau` si aplica).
-2. Si el `Info*` define criterios, rellenar búsqueda → `tablaDB_buscar_datos`.
-3. Enviar → `tablaDB_lista_datos` y tabla con ordenación múltiple.
+Pasos propuestos:
+1. Abrir la tabla desde el menú.
+2. Si el mantenimiento pide criterios, rellenarlos y pulsar buscar.
+3. Aparece la tabla; se puede ordenar por varias columnas.
 
-### Alta / edición
+Endpoints asociados:
+- `/src/shared/tablaDB_buscar_datos`
+- `/src/shared/tablaDB_lista_datos`
+- `/src/shared/tablaDB_update`
 
-1. «Nuevo» o seleccionar fila → `tablaDB_formulario_ver` (`mod=nuevo`/`editar`).
-2. Guardar → `tablaDB_update` → volver al listado.
+### Añadir, modificar o eliminar un registro
 
-### Borrado
+Pasos propuestos:
+1. Pulsar **nuevo** para añadir, o seleccionar una fila y pulsar **modificar** (ver «Crear o modificar un registro»).
+2. Para eliminar, seleccionar la fila, pulsar **eliminar** y confirmar.
 
-1. Marcar fila(s) y eliminar (`mod=eliminar`, `sel[]` o `s_pkey`).
-2. `tablaDB_update` → refresco de listado.
+Endpoints asociados:
+- `/src/shared/tablaDB_buscar_datos`
+- `/src/shared/tablaDB_lista_datos`
+- `/src/shared/tablaDB_update`
 
 ## Errores Conocidos
 

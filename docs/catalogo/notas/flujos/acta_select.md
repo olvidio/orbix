@@ -2,9 +2,9 @@
 id: "notas.acta_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Select"
+nombre: "Flujo - Buscar un acta"
 capacidad: "notas.acta_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_select"]
 fragmentos: ["notas.pantalla.acta_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/acta_select_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_select.gestion
 
 ## Objetivo De Usuario
 
-Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o descargar PDF.
+Buscar actas del curso y abrir, modificar, imprimir o descargar su PDF.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > actas** (Pills2: ESTUDIOS > Actas y certificados > Actas).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,25 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Buscar un acta
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **actas**.
+2. Escribir en el buscador el número de acta con formato nn/aa (por ejemplo 12/21). Se pueden usar comodines: un punto (.) es cualquier carácter y .* cualquier cantidad de caracteres (por ejemplo «dlm. 2/19» devuelve dlmE 2/19, dlmO 2/19…).
+3. En una delegación solo se buscan las actas de la propia delegación o región; una región con delegaciones busca en todas.
+4. Pulsar el acta de la tabla para abrirla.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_select_data`
+
+### Imprimir o descargar un acta
+
+Pasos propuestos:
+1. En la tabla, marcar el acta.
+2. Elegir imprimir o descargar el PDF.
+
+Endpoints asociados:
+- `/src/notas/acta_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

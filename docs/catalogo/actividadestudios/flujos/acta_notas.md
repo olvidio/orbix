@@ -2,9 +2,9 @@
 id: "actividadestudios.acta_notas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Acta Notas"
+nombre: "Flujo - Ver el acta de una asignatura"
 capacidad: "actividadestudios.acta_notas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.acta_notas"]
 fragmentos: ["actividadestudios.pantalla.acta_notas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/acta_notas_data"]
@@ -18,16 +18,11 @@ con la tabla de alumnos matriculados y sus notas en borrador.
 
 ## Objetivo De Usuario
 
-El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra
-el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con
-nota, nota máxima, preceptor y situación de acta, según permisos de la DL propietaria.
+Abrir el acta de una asignatura impartida en una actividad: se ve la cabecera del acta y, debajo, la lista de matriculados con su nota, nota máxima, preceptor y situación de acta, según los permisos de la delegación propietaria.
 
 ## Punto De Entrada
 
-Pantalla `acta_notas` (`frontend/actividadestudios/controller/acta_notas.php`): al abrirse
-llama a `acta_notas_data` con `id_activ` e `id_asignatura`. Se llega desde el listado de
-asignaturas del dossier 3005 (`select_asignaturas_de_una_actividad`, acción **actas** /
-`fnjs_actas`).
+Se llega desde la lista de asignaturas de una actividad (dossier «Asignaturas»), con el botón **actas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -37,16 +32,13 @@ asignaturas del dossier 3005 (`select_asignaturas_de_una_actividad`, acción **a
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el acta de una asignatura
 
-Pasos:
-1. En el dossier de asignaturas de una actividad (3005), seleccionar una asignatura.
-2. Pulsar **actas** (`fnjs_actas`).
-3. El sistema carga `acta_notas` y consulta `acta_notas_data` con las claves de actividad
-   y asignatura.
-4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
-   Los alumnos con nota en un acta firmada quedan en solo lectura; si quedan alumnos sin nota,
-   se puede crear una segunda convocatoria.
+Pasos propuestos:
+1. En el dossier de asignaturas de una actividad, seleccionar una asignatura.
+2. Pulsar **actas**.
+3. Se muestra el acta con los matriculados, el desplegable de situación del acta y, si se tiene permiso, la posibilidad de editar.
+4. Los alumnos con nota en un acta firmada quedan en solo lectura; si quedan alumnos sin nota, se puede crear una segunda convocatoria.
 
 Endpoints asociados:
 - `/src/actividadestudios/acta_notas_data`

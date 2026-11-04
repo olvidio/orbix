@@ -2,9 +2,9 @@
 id: "shared.tablaDB_formulario.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Formulario tabla genérica"
+nombre: "Flujo - Crear o modificar un registro"
 capacidad: "shared.tablaDB_formulario.gestionar"
-pantallas_principales: []
+pantallas_principales: ["shared.pantalla.tablaDB_formulario_ver"]
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver"]
 acciones: ["cargar", "guardar", "cancelar"]
 endpoints: ["/src/shared/tablaDB_formulario_datos", "/src/shared/tablaDB_update"]
@@ -15,25 +15,25 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Crear o modificar un registro en el mantenimiento genérico de tablas.
+Crear o modificar un registro en un mantenimiento genérico de tablas.
 
 ## Punto De Entrada
 
-`tablaDB_formulario_ver.php` desde listado (`mod`, `sel`/`s_pkey`) o dossier (`obj_pau`).
+Desde la tabla del mantenimiento (botones **nuevo** o **modificar**) o desde un dossier.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Cargar formulario
+### Crear o modificar un registro
 
-1. POST con `clase_info`, `mod`, `a_pkey` (edición) o vacío (alta).
-2. `tablaDB_formulario_datos` devuelve `fields` y metadatos.
-3. Render de campos según tipo.
+Pasos propuestos:
+1. En la tabla, pulsar **nuevo**, o seleccionar una fila y pulsar **modificar**.
+2. Aparece el formulario con los campos del registro; en una modificación salen con sus valores.
+3. Rellenar los campos; las fechas se comprueban antes de enviar.
+4. Pulsar guardar: se vuelve a la tabla.
 
-### Guardar
-
-1. Validar fecha en cliente (`fnjs_comprobar_fecha`).
-2. `fnjs_grabar` → `tablaDB_update` con todos los campos + `go_to`.
-3. Éxito → navegación atrás al listado/dossier.
+Endpoints asociados:
+- `/src/shared/tablaDB_formulario_datos`
+- `/src/shared/tablaDB_update`
 
 ## Errores Conocidos
 

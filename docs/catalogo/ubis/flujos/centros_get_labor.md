@@ -2,9 +2,9 @@
 id: "ubis.centros_get_labor.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Get Labor"
+nombre: "Flujo - Consultar o cambiar el tipo de labor de los centros"
 capacidad: "ubis.centros_get_labor.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.centros_get_labor"]
 fragmentos: ["ubis.pantalla.centros_get_labor"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_get_labor"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista todos los centros DL activos con su tipo de centro y tipo de labor.
+Listar los centros de la dl con su tipo de centro y tipo de labor, para editarlos.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros** (Pills2: CASAS Y CTR > direcciones > modificar centros).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar o cambiar el tipo de labor de los centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **labor** en el desplegable; pulsar **buscar**.
+2. Se muestra la lista de centros con su tipo de centro y de labor.
+3. Pulsar un centro para abrir el formulario de edición.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_get_labor`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

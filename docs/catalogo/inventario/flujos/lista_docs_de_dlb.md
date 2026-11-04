@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_de_dlb.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs De Dlb"
+nombre: "Flujo - Elegir lugares para asignar un documento"
 capacidad: "inventario.lista_docs_de_dlb.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_de_dlb"]
 fragmentos: ["inventario.pantalla.doc_de_dlb"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_dlb"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs De Dlb
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_dlb.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeDlb. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Elegir los centros-lugar de la dlb/casa a los que se asignará un documento (o de los que se va a imprimir el inventario).
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Desde **asignar documento** (botón **Asignar a dlb/casa (especificar lugar)**) o desde **de centros o dlb** (botón **inventario de dlb/casa**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,25 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir lugares para asignar un documento
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento y pulsar **Asignar a dlb/casa (especificar lugar)**.
+2. Marcar los **centro - lugar** de la lista.
+3. Pulsar **Asignar** para pasar a indicar número y fechas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_de_dlb`
+
+### Elegir lugares para imprimir su inventario
+
+Pasos propuestos:
+1. Abrir **de centros o dlb** y pulsar **inventario de dlb/casa**.
+2. Marcar los lugares que interesan.
+3. Pulsar **Imprimir** (o **Imprimir dl** para incluir las observaciones de la delegación).
+
+Endpoints asociados:
+- `/src/inventario/lista_docs_de_dlb`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

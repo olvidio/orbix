@@ -2,9 +2,9 @@
 id: "menus.menu_mover.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Menu Mover"
+nombre: "Flujo - Mover una entrada a otro grupo"
 capacidad: "menus.menu_mover.gestionar"
-pantallas_principales: []
+pantallas_principales: ["menus.pantalla.menus_get"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/menus/menu_mover"]
@@ -15,11 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Cambiar grupmenu de un ítem desde ficha.
+Pasar una entrada de menú a otro grupo.
 
 ## Punto De Entrada
 
-Ficha menú en gestor.
+Menú **sistema > menus > seleccionar** (Pills2: ADMIN GLOBAL > menus > seleccionar).
+
+## Escenarios Inferidos
+
+### Mover una entrada a otro grupo
+
+Pasos propuestos:
+1. Abrir la entrada en el gestor de menús.
+2. Elegir el grupo de destino en el desplegable junto a **mover a**.
+3. Pulsar **mover a**.
+
+Endpoints asociados:
+- `/src/menus/menu_mover`
 
 ## Endpoints Del Flujo
 

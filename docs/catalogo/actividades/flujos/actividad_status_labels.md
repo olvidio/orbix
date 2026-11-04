@@ -2,7 +2,7 @@
 id: "actividades.actividad_status_labels.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Etiquetas de estado actividad"
+nombre: "Flujo - Ver el estado de una actividad"
 capacidad: "actividades.actividad_status_labels.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
@@ -17,11 +17,22 @@ Mapa id → etiqueta legible de estados de actividad para el desplegable de la f
 
 ## Objetivo De Usuario
 
-Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o planning.
+Mostrar los nombres de estado correctos (proyecto, publicada, terminada…) según la sección y los permisos.
 
 ## Punto De Entrada
 
-Render de `actividad_ver` / planning (PostRequest en servidor al montar formulario).
+Ficha de actividad (menú **actividades > buscar actividad** y abrir una).
+
+## Escenarios Inferidos
+
+### Ver el estado de una actividad
+
+Pasos propuestos:
+1. Abrir la ficha de la actividad o el planning.
+2. El desplegable de estado muestra los nombres que corresponden a su sección (sf/sv) y a los permisos del usuario.
+
+Endpoints asociados:
+- `/src/actividades/actividad_status_labels_datos`
 
 ## Endpoints Del Flujo
 

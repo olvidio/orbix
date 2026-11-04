@@ -2,7 +2,7 @@
 id: "procesos.actividad_que_fases_ajax.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Actividad Que Fases Ajax"
+nombre: "Flujo - Filtrar actividades por fases"
 capacidad: "procesos.actividad_que_fases_ajax.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devolver las fases aplicables a un tipo de actividad para construir los checkboxes de filtro `fases_on` / `fases_off` en la búsqueda de actividades.
+Mostrar las fases de un tipo de actividad para marcarlas en el filtro de búsqueda de actividades.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se invoca vía AJAX desde el filtro de búsqueda de actividades.
+Filtros de búsqueda de actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Filtrar actividades por fases
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la búsqueda de actividades, elegir el tipo.
+2. Aparecen las fases posibles como casillas para marcar las que deben estar completadas (fases_on) o no (fases_off).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/actividad_que_fases_ajax`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

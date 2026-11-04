@@ -2,7 +2,7 @@
 id: "actividadestudios.asistente_observ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Asistente Observ"
+nombre: "Flujo - Guardar las observaciones de un asistente"
 capacidad: "actividadestudios.asistente_observ.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,14 +17,11 @@ Guardado del campo `observ` de un asistente en una actividad de estudios.
 
 ## Objetivo De Usuario
 
-El usuario guarda el texto de observaciones generales (`observ`) de un asistente en una
-actividad. Sustituye al case `observ` de `update_3103.php`.
+Guardar el texto de observaciones generales de un asistente en una actividad.
 
 ## Punto De Entrada
 
-Endpoint de mutación invocado por AJAX desde el dossier de matrículas de una actividad
-(3103) en el sistema legacy. En el frontend actual **no hay referencia activa** a esta
-URL (solo existe el caso de uso y la ruta en `src/`).
+Ahora mismo no hay ningún botón que lo use en la pantalla actual: la acción existe en el sistema, pero no está enlazada desde el dossier de matrículas de la actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,12 +29,11 @@ No se han detectado fragmentos AJAX relacionados en `frontend/` actual.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar las observaciones de un asistente
 
-Pasos:
-1. Desde el contexto de un asistente en una actividad, editar el campo `observ`.
-2. Enviar `id_activ`, `id_nom` (o `id_pau`) y `observ` al endpoint.
-3. El sistema localiza al asistente y persiste el texto.
+Pasos propuestos:
+1. Esta acción no se puede lanzar desde las pantallas actuales.
+2. Las observaciones de un asistente se editan desde su ficha de asistencia (ver el apartado de asistentes).
 
 Endpoints asociados:
 - `/src/actividadestudios/asistente_observ`

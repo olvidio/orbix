@@ -2,9 +2,9 @@
 id: "actividadestudios.form_matriculas_de_una_persona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Form Matriculas De Una Persona"
+nombre: "Flujo - Matricular o modificar la matrícula de una persona"
 capacidad: "actividadestudios.form_matriculas_de_una_persona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadestudios/form_matriculas_de_una_persona_data"]
@@ -17,16 +17,11 @@ Carga del formulario de alta/edición de matrícula (dossiers 1303 y 3103).
 
 ## Objetivo De Usuario
 
-El usuario abre el formulario para matricular o editar la matrícula de una persona en una
-asignatura de una actividad: el sistema devuelve desplegables de nivel, asignatura,
-preceptor y datos de la actividad según el modo.
+Abrir el formulario para matricular a una persona en una asignatura de una actividad, o para cambiar esa matrícula: nivel, asignatura, preceptor y datos de la actividad.
 
 ## Punto De Entrada
 
-Pantalla `form_matriculas_de_una_persona`
-(`frontend/actividadestudios/controller/form_matriculas_de_una_persona.php`): al abrirse
-desde dossier 1303 (persona) o 3103 (actividad) llama a
-`form_matriculas_de_una_persona_data`. Sucesor de `apps/actividadestudios/controller/form_1303.php`.
+Dossier **Matrículas**, de una persona o de una actividad: botones **nuevo** y **modificar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,12 +29,12 @@ desde dossier 1303 (persona) o 3103 (actividad) llama a
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Matricular o modificar la matrícula de una persona
 
-Pasos:
-1. En el dossier de matrículas (1303 o 3103), pulsar **nuevo** o **modificar**.
-2. El sistema carga el formulario con `id_nom`, `id_activ`, `id_nivel`, `id_asignatura`.
-3. Se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
+Pasos propuestos:
+1. En el dossier de matrículas, pulsar **nuevo** o seleccionar una matrícula y pulsar **modificar**.
+2. Se abre el formulario con los desplegables de nivel, asignatura y preceptor; al cambiar uno se actualizan los demás.
+3. Rellenar los datos y guardar.
 
 Endpoints asociados:
 - `/src/actividadestudios/form_matriculas_de_una_persona_data`

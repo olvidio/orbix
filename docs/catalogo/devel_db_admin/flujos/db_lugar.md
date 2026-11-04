@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Db Lugar"
 capacidad: "devel_db_admin.db_lugar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que"]
 fragmentos: ["devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/db_lugar"]

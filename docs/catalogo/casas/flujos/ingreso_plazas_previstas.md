@@ -2,9 +2,9 @@
 id: "casas.ingreso_plazas_previstas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Ingreso Plazas Previstas"
+nombre: "Flujo - Corregir los asistentes previstos"
 capacidad: "casas.ingreso_plazas_previstas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.prevision_asistentes"]
 fragmentos: ["casas.pantalla.prevision_asistentes"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/casas/ingreso_plazas_previstas_update"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.ingreso_plazas_prev
 
 ## Objetivo De Usuario
 
-Gestiona IngresoPlazasPrevistas. Actualiza num_asistentes_previstos de un Ingreso desde la TablaEditable de prevision_asistentes.
+Cambiar el número de asistentes previstos de una actividad en la previsión.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **adl > Nuevo Calendario > previsión asistentes**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,12 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Corregir los asistentes previstos
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Abrir **previsión asistentes**.
+2. Hacer doble clic en la celda del número de asistentes previstos, escribir el valor y confirmar.
+3. Se guarda al salir de la celda.
 
 Endpoints asociados:
 - `/src/casas/ingreso_plazas_previstas_update`

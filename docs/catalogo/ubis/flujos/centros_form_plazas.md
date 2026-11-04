@@ -2,9 +2,9 @@
 id: "ubis.centros_form_plazas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Form Plazas"
+nombre: "Flujo - Cambiar plazas y sede"
 capacidad: "ubis.centros_form_plazas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.centros_form_plazas"]
 fragmentos: ["ubis.pantalla.centros_form_plazas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_form_plazas"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga datos del formulario modal de plazas y sede de un centro DL.
+Cambiar las plazas, las habitaciones individuales y la marca de sede de un centro.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros** (Pills2: CASAS Y CTR > direcciones > modificar centros).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar plazas y sede
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > sede, plazas**, pulsar el centro.
+2. Rellenar **plazas**, **habitaciones individuales** y marcar si es sede.
+3. Pulsar **guardar cambios**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_form_plazas`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

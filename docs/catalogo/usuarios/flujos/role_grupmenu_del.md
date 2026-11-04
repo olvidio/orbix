@@ -2,9 +2,9 @@
 id: "usuarios.role_grupmenu_del.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Role Grupmenu Del"
+nombre: "Flujo - Quitar un grupo de menús"
 capacidad: "usuarios.role_grupmenu_del.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.role_form"]
 fragmentos: ["usuarios.pantalla.role_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/role_grupmenu_del"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Quita asociación grupmenu↔rol por id_item.
+Quitar un grupo de menús de un rol.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Tabla de grupos de menús de la ficha del rol.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar un grupo de menús
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del rol, elegir el grupo en la tabla.
+2. Pulsar quitar y confirmar.
+3. Si el registro ya no existe aparece «no existe el registro».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/role_grupmenu_del`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

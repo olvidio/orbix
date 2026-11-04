@@ -2,9 +2,9 @@
 id: "procesos.tipo_activ_proceso.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Tipo Activ Proceso"
+nombre: "Flujo - Consultar los procesos de cada tipo de actividad"
 capacidad: "procesos.tipo_activ_proceso.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: ["procesos.pantalla.tipo_activ_proceso_lista"]
 acciones: ["listar"]
 endpoints: ["/src/procesos/tipo_activ_proceso_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Listado de tipos de actividad con el proceso asignado (propio y no propio) para su gestión desde la pantalla de asignación.
+Ver los tipos de actividad con el proceso que tienen asignado.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
+Menú **sistema > procesos activ. > tipo activ - proceso**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,11 @@ Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LO
 
 ## Escenarios Inferidos
 
-### Listar
+### Consultar los procesos de cada tipo de actividad
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Entrar en **tipo activ - proceso**.
+2. Se lista cada tipo de actividad con su proceso (propio y no propio); pulsar uno para cambiarlo.
 
 Endpoints asociados:
 - `/src/procesos/tipo_activ_proceso_lista`

@@ -2,9 +2,9 @@
 id: "casas.prevision_asistentes.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Prevision Asistentes"
+nombre: "Flujo - Consultar la previsión de asistentes"
 capacidad: "casas.prevision_asistentes.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.prevision_asistentes"]
 fragmentos: ["casas.pantalla.prevision_asistentes"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/casas/prevision_asistentes_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.prevision_asistente
 
 ## Objetivo De Usuario
 
-Gestiona PrevisionAsistentes. Datos de la pantalla prevision_asistentes.
+Ver la previsión de asistentes de las casas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **adl > Nuevo Calendario > previsión asistentes** (Pills2: ACTIVIDADES > Estadísticas económicas > Previsión asistentes).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar la previsión de asistentes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **previsión asistentes**.
+2. Elegir el periodo y las casas.
+3. Se muestra la tabla con los asistentes previstos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/casas/prevision_asistentes_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

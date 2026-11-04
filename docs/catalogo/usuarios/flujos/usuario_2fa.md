@@ -2,9 +2,9 @@
 id: "usuarios.usuario_2fa.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario 2fa"
+nombre: "Flujo - Activar la verificación en dos pasos"
 capacidad: "usuarios.usuario_2fa.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_reset_2fa"]
 fragmentos: ["usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_reset_2fa"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/usuarios/usuario_2fa_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Configuración autenticación dos factores del usuario.
+Activar o desactivar la verificación en dos pasos (2FA) de un usuario.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Ficha del usuario (¿tiene doble factor activado?) o preferencias personales.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -28,13 +28,14 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Activar la verificación en dos pasos
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Descargar una aplicación de autenticación (Google Authenticator, Microsoft Authenticator o Authy).
+2. Escanear el **Código QR** o escribir la **Clave secreta**.
+3. Escribir el **Código de verificación** que muestra la aplicación y marcar **Activar autenticación de dos factores**.
+4. Guardar. Desde ese momento, en cada acceso se pide contraseña y código.
+5. Si falta el código aparece «Se requiere un código de verificación para activar 2FA».
 
 Endpoints asociados:
 - `/src/usuarios/usuario_2fa_update`

@@ -2,7 +2,7 @@
 id: "actividades.actividad_nuevo_curso_ejecutar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Ejecutar generación nuevo curso"
+nombre: "Flujo - Generar las actividades de un nuevo curso"
 capacidad: "actividades.actividad_nuevo_curso_ejecutar.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_nuevo_curso"]
 fragmentos: []
@@ -18,21 +18,24 @@ opcionalmente centros encargados y fases.
 
 ## Objetivo De Usuario
 
-Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar varios minutos).
+Confirmar los años de origen y destino y lanzar la generación de las actividades del nuevo curso. Puede tardar varios minutos.
 
 ## Punto De Entrada
 
-Formulario `actividad_nuevo_curso.phtml` → POST directo al endpoint (no pasa por controller
-frontend intermedio).
+Formulario de **Generar nuevo curso** (menú Nuevo calendario > nuevo curso).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Generar las actividades de un nuevo curso
 
-1. Leer avisos de borrado/creación.
-2. Elegir `year` (destino) y `year_ref` (origen).
-3. Enviar formulario; esperar respuesta.
-4. Revisar resumen o listado si `ver_lista`.
+Pasos propuestos:
+1. Leer los avisos sobre lo que se borra y lo que se crea.
+2. Elegir el **año de destino** y el **año de origen**.
+3. Enviar el formulario y esperar a que termine.
+4. Revisar el resumen o, si se ha pedido, el listado de actividades creadas.
+
+Endpoints asociados:
+- `/src/actividades/actividad_nuevo_curso_ejecutar`
 
 ## Endpoints Del Flujo
 

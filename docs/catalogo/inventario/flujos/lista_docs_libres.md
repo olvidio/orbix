@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_libres.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs Libres"
+nombre: "Flujo - Elegir un documento libre"
 capacidad: "inventario.lista_docs_libres.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_docs_libres"]
 fragmentos: ["inventario.pantalla.equipajes_docs_libres"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_libres"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs Libres
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_libres.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsLibres. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos todavía sin meter en ninguna valija del equipaje, para añadirlos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **hacer equipajes**, en el formulario **añadir documento**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir un documento libre
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, abrir una valija y pulsar **añadir documento**.
+2. Elegir el **tipo de documento** entre los libres.
+3. Pulsar **añadir** (o **cancel**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_libres`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

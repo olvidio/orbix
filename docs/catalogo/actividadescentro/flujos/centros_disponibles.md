@@ -2,9 +2,9 @@
 id: "actividadescentro.centros_disponibles.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadescentro"
-nombre: "Flujo - Gestionar Centros Disponibles"
+nombre: "Flujo - Asignar un centro encargado"
 capacidad: "actividadescentro.centros_disponibles.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/centros_disponibles_data"]
@@ -17,15 +17,11 @@ Desplegable de centros candidatos para asignar como encargados de una actividad.
 
 ## Objetivo De Usuario
 
-Al pulsar **nuevo** en una actividad, el usuario ve la lista de centros candidatos (filtrada por el
-colectivo `tipo`) para elegir cuál asignar como encargado. Para el tipo `sg` la lista incluye, por
-centro, el número de actividades en el periodo y la diferencia de días con su actividad más próxima,
-para ayudar a repartir la carga.
+Ver los centros candidatos para asignar como encargados de una actividad.
 
 ## Punto De Entrada
 
-Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función
-`fnjs_nuevo_ctr` llama a este endpoint al pulsar **nuevo**.
+Pantalla de asignación de centros encargados, botón **nuevo**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,13 +29,15 @@ Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Asignar un centro encargado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la fila de la actividad, pulsar **nuevo**.
+2. Se listan los centros candidatos (para sg, con el nº de actividades del periodo y la distancia en días a su actividad más próxima).
+3. Elegir el centro para asignarlo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/centros_disponibles_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "encargossacd.sacd_ficha.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Sacd Ficha"
+nombre: "Flujo - Consultar y modificar la ficha de un sacerdote"
 capacidad: "encargossacd.sacd_ficha.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.sacd_ficha"]
 fragmentos: ["encargossacd.pantalla.sacd_ficha_ajax"]
 acciones: ["crear_actualizar", "obtener_datos"]
 endpoints: ["/src/encargossacd/sacd_ficha_data", "/src/encargossacd/sacd_ficha_update"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.sacd_ficha.g
 
 ## Objetivo De Usuario
 
-Gestiona SacdFicha. Datos para la ficha de encargos de un SACD (sacd_ficha_ajax?que=ficha). Porta la lectura del antiguo controlador frontend y devuelve un payload estructurado con los encargos y sus dedicaciones (horario del centro y del SACD ya calculadas como texto cuando mod_horario=3). Mutacion de la ficha de encargos de un SACD (sacd_ficha_ajax?que=update). Porta la logica del antiguo controlador frontend, haciendo la misma actualizacion de dedicaciones por modulo y de observaciones.
+Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 
 ## Punto De Entrada
 
-Menú: dre > Encargos > ficha sacd.
-
+Menú **dre > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,24 +29,18 @@ Menú: dre > Encargos > ficha sacd.
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Consultar y modificar la ficha de un sacerdote
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Entrar en **ficha sacd**; la pantalla se titula «fase real».
+2. Elegir el **tipo** (n, agd, sss+, cp) y luego el sacerdote en **Sacd:**.
+3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial dre»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
+4. Para añadir otro encargo, elegir en **añadir encargo** (estudio, descanso, retiro, otros).
+5. Escribir o cambiar las **observaciones** si hace falta y pulsar **Guardar**.
 
 Endpoints asociados:
+- `/src/encargossacd/sacd_ficha_data`
 - `/src/encargossacd/sacd_ficha_update`
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 

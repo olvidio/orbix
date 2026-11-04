@@ -2,9 +2,9 @@
 id: "ubis.calendario_periodos_form_periodo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Calendario Periodos Form Periodo"
+nombre: "Flujo - Modificar un periodo"
 capacidad: "ubis.calendario_periodos_form_periodo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.calendario_periodos_form_periodo"]
 fragmentos: ["ubis.pantalla.calendario_periodos_form_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/calendario_periodos_form_periodo_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga los campos del formulario de edición de un periodo de calendario existente.
+Abrir el formulario de un periodo ya existente para modificarlo.
 
 ## Punto De Entrada
 
-Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
+Menú **adl > Nuevo Calendario > Definir periodos** (Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > H
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Modificar un periodo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de periodos de la casa, pulsar el periodo.
+2. Cambiar fechas o sección y guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/calendario_periodos_form_periodo_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "menus"
 nombre: "Flujo - Gestionar Grupmenu"
 capacidad: "menus.grupmenu.gestionar"
-pantallas_principales: []
+pantallas_principales: ["menus.pantalla.grupmenu_form", "menus.pantalla.grupmenu_lista", "menus.pantalla.menus_get", "menus.pantalla.menus_que"]
 fragmentos: ["menus.pantalla.grupmenu_lista", "menus.pantalla.grupmenu_form"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/menus/grupmenu_eliminar", "/src/menus/grupmenu_guardar", "/src/menus/grupmenu_lista", "/src/menus/grupmenu_info"]
@@ -30,9 +30,9 @@ Dos caminos:
 
 ### Via pantallas Orbix
 
-1. Listar en `grupmenu_lista` → nuevo/modificar abre `grupmenu_form`.
-2. Alta: sin `grupmenu_info`; edición: carga `grupmenu_info` y guarda con `grupmenu_guardar`.
-3. Eliminar: `grupmenu_eliminar`.
+1. En la lista de grupos de menú, pulsar **nuevo** o seleccionar uno y pulsar **modificar**: se abre el formulario.
+2. En un alta el formulario sale vacío; al modificar sale con los datos del grupo. Pulsar **guardar**.
+3. Para eliminar un grupo, seleccionarlo y pulsar **eliminar**.
 
 ## Endpoints Del Flujo
 

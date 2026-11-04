@@ -2,9 +2,9 @@
 id: "encargossacd.sacd_ausencias.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Sacd Ausencias"
+nombre: "Flujo - Guardar las ausencias de un sacerdote"
 capacidad: "encargossacd.sacd_ausencias.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.sacd_ausencias"]
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_update"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/encargossacd/sacd_ausencias_update"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.sacd_ausenci
 
 ## Objetivo De Usuario
 
-Gestiona SacdAusencias. Guarda/modifica las ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_update.php). Devuelve ['error' => bool, 'mensajes' => string] donde mensajes acumula los errores de guardado/eliminacion para mostrar al usuario.
+Guardar o modificar las ausencias y otras tareas de un sacerdote.
 
 ## Punto De Entrada
 
-Menú: dre > ausencias > sacd.
-
+Menú **dre > ausencias > sacd**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,12 @@ Menú: dre > ausencias > sacd.
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Guardar las ausencias de un sacerdote
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir el tipo y el sacd.
+2. Rellenar fechas de inicio y fin y el tipo de ausencia; para borrar una, dejar las dos fechas en blanco.
+3. Pulsar **guardar**.
 
 Endpoints asociados:
 - `/src/encargossacd/sacd_ausencias_update`

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadessacd"
 nombre: "Flujo - Gestionar Texto Comunicacion"
 capacidad: "actividadessacd.texto_comunicacion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_txt"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 acciones: ["guardar", "obtener_datos"]
 endpoints: ["/src/actividadessacd/texto_comunicacion_data", "/src/actividadessacd/texto_comunicacion_guardar"]

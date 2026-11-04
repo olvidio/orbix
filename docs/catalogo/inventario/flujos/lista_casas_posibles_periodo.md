@@ -2,9 +2,9 @@
 id: "inventario.lista_casas_posibles_periodo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Casas Posibles Periodo"
+nombre: "Flujo - Consultar las casas del periodo"
 capacidad: "inventario.lista_casas_posibles_periodo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_casas_posibles"]
 fragmentos: ["inventario.pantalla.equipajes_casas_posibles"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_casas_posibles_periodo"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Casas Posibles Periodo
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_casas_posibles_periodo.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaCasasPosiblesPeriodo. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver en qué casas se realizan actividades en el periodo elegido, para escoger la casa del equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **nuevo equipaje**, con el botón **ver las casas donde se realizan las actividades**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir la casa del equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **nuevo equipaje**, elegir el periodo.
+2. Pulsar **ver las casas donde se realizan las actividades**.
+3. Elegir la casa en el desplegable: se carga la lista de sus actividades.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_casas_posibles_periodo`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

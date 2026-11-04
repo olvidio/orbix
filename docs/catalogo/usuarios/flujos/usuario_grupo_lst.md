@@ -2,9 +2,9 @@
 id: "usuarios.usuario_grupo_lst.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Grupo Lst"
+nombre: "Flujo - Elegir un grupo para añadir"
 capacidad: "usuarios.usuario_grupo_lst.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_grupo_lst"]
 fragmentos: ["usuarios.pantalla.usuario_grupo_lst"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_grupo_lst"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados).
+Mostrar los grupos de permisos que se pueden añadir a un usuario (los que aún no tiene).
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Botón **añadir un grupo de permisos** de la ficha de usuario.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir un grupo para añadir
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **añadir un grupo de permisos**.
+2. Aparece la lista de grupos disponibles, sin los que el usuario ya tiene.
+3. En la tabla (columnas **grupo**, **sección**, **acción**) pulsar **añadir** en la fila del grupo: se asigna al instante (ver «Asignar un grupo a un usuario»).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_grupo_lst`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

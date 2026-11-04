@@ -2,9 +2,9 @@
 id: "misas.importar_plantilla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Importar Plantilla"
+nombre: "Flujo - Importar otra plantilla"
 capacidad: "misas.importar_plantilla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.importar_plantilla"]
 fragmentos: ["misas.pantalla.importar_plantilla"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/importar_plantilla_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Copia asignaciones de plantilla origen a destino para una zona, creando/actualizando EncargoDia en el rango correspondiente.
+Copiar las asignaciones de una plantilla a otra de la misma zona.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
+Menú **dre > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gesti�
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Importar otra plantilla
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, elegir la plantilla origen en **Importar de la plantilla**.
+2. Pulsar **importar** y confirmar el aviso de que se borra lo que hay.
+3. Se muestra la plantilla con los datos copiados.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/importar_plantilla_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

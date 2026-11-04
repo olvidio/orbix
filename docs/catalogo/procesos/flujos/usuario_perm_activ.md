@@ -2,9 +2,9 @@
 id: "procesos.usuario_perm_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Usuario Perm Activ"
+nombre: "Flujo - Definir un permiso de actividades de un usuario"
 capacidad: "procesos.usuario_perm_activ.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.usuario_perm_activ"]
 fragmentos: ["procesos.pantalla.usuario_perm_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/usuario_perm_activ_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga de la pantalla de alta o edición de permisos de actividad para un usuario: tipo de actividad, filas de ámbitos afectados y desplegables de fase y permisos.
+Dar de alta o modificar un permiso de actividades de un usuario: tipo de actividad, ámbito, fase y permiso.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se abre embebido desde la gestión de usuarios o permisos.
+Ficha del usuario, apartado **Permisos en actividades > propios**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada directa de menú; se abre embebido desde la gestión de usuarios o p
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Definir un permiso de actividades de un usuario
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **añadir permiso**.
+2. Elegir el tipo de actividad y el ámbito (propia dl u otras).
+3. Elegir la fase de referencia y el permiso.
+4. Guardar. Manda el nivel más concreto («sv n crt» sobre «sv n»).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/usuario_perm_activ_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

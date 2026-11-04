@@ -2,9 +2,9 @@
 id: "notas.asignaturas_pendientes.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Asignaturas Pendientes"
+nombre: "Flujo - Consultar el cuadro alumnos-asignaturas"
 capacidad: "notas.asignaturas_pendientes.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.asignaturas_pendientes"]
 fragmentos: ["notas.pantalla.asignaturas_pendientes"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asignaturas_pendientes_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_pendien
 
 ## Objetivo De Usuario
 
-Consultar matriz de asignaturas pendientes por alumno.
+Ver el cuadro de alumnos y asignaturas pendientes de cada uno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > tabla alumnos-asignaturas** (Pills2: ESTUDIOS > Preparación planes estudio).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar el cuadro alumnos-asignaturas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tabla alumnos-asignaturas**.
+2. Se muestra una fila por alumno y una columna por asignatura, con lo que le falta.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/asignaturas_pendientes_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

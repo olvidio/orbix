@@ -8,7 +8,7 @@ controller: "frontend/inventario/controller/inventario_que.php"
 vistas: ["frontend/inventario/view/inventario_que.phtml"]
 fragmentos_frontend: ["frontend/inventario/controller/doc_de_ctr.php", "frontend/inventario/controller/doc_de_dlb.php"]
 endpoints: []
-capacidades: []
+capacidades: ["inventario.inventario_que.elegir"]
 campos: ["html.okay", "html.okay2"]
 acciones: ["fnjs_enviar_formulario", "fnjs_go", "fnjs_left_side_hide"]
 estado_revision: "revisado"

@@ -37,7 +37,7 @@ función `fnjs_asignar_sacd_auto` llama a este endpoint al pulsar **continuar**.
 Pasos:
 1. Leer el texto que describe el criterio de asignación automática.
 2. Pulsar **continuar**.
-3. El sistema procesa y muestra el resultado (`asignadas`, `sin_asignar`) sin recargar la página.
+3. El sistema procesa y muestra el resultado (cuántas actividades se han asignado y cuántas quedan sin asignar) sin recargar la página.
 
 Endpoints asociados:
 - `/src/actividadessacd/sacd_asignar_auto`

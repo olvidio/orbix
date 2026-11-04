@@ -2,7 +2,7 @@
 id: "ubiscamas.update_cama_asistente.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubiscamas"
-nombre: "Flujo - Gestionar Update Cama Asistente"
+nombre: "Flujo - Asignar una cama a un asistente"
 capacidad: "ubiscamas.update_cama_asistente.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Persistir la asignación cama↔asistente en la actividad actual (requiere token HashB).
+Guardar la asignación de cama a un asistente en la distribución de habitaciones.
 
 ## Punto De Entrada
 
-Acción AJAX en `lista_habitaciones.phtml` (flechas asignar/desasignar cama). Sin entrada de menú en el índice.
+Pantalla de habitaciones de la actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Asignar una cama a un asistente
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de habitaciones, usar las flechas de asignar o desasignar cama.
+2. La asignación se guarda al momento.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubiscamas/update_cama_asistente`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

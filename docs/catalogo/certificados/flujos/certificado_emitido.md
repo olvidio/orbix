@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido"
+nombre: "Flujo - Emitir, guardar o eliminar un certificado"
 capacidad: "certificados.certificado_emitido.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_imprimir"]
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir"]
 acciones: ["eliminar", "guardar"]
 endpoints: ["/src/certificados/certificado_emitido_delete", "/src/certificados/certificado_emitido_guardar"]
@@ -21,7 +21,7 @@ Imprimir, guardar o eliminar un certificado emitido desde el formulario de impre
 
 ## Punto De Entrada
 
-Desde dossier de persona o flujo de impresión (`certificado_emitido_imprimir`).
+Ficha del alumno > dossier de certificados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,24 +29,16 @@ Desde dossier de persona o flujo de impresión (`certificado_emitido_imprimir`).
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Emitir, guardar o eliminar un certificado
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir el formulario de impresión del certificado.
+2. Pulsar imprimir para generar el PDF y guardar para registrarlo con su número.
+3. Para quitarlo, eliminarlo y confirmar.
 
 Endpoints asociados:
 - `/src/certificados/certificado_emitido_delete`
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_guardar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

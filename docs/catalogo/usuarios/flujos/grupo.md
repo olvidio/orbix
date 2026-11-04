@@ -2,9 +2,9 @@
 id: "usuarios.grupo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Grupo"
+nombre: "Flujo - Buscar un grupo"
 capacidad: "usuarios.grupo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.grupo_lista"]
 fragmentos: ["usuarios.pantalla.grupo_lista"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/grupo_eliminar", "/src/usuarios/grupo_guardar", "/src/usuarios/grupo_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Administración de grupos de permisos: listar, alta/edición y borrado.
+Administrar los grupos de permisos que se asignan a los usuarios: crear, renombrar y eliminar.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > usuarios web > grupos. Pills2: ADMIN LOCAL > usuarios web > grupos.
+Menú **sistema > usuarios web > grupos** (Pills2: ADMIN LOCAL > usuarios web > grupos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,34 +27,48 @@ Menú Legacy: sistema > usuarios web > grupos. Pills2: ADMIN LOCAL > usuarios we
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Buscar un grupo
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **grupos**.
+2. Escribir parte del nombre en **Nombre** y pulsar **Buscar**.
 
 Endpoints asociados:
 - `/src/usuarios/grupo_eliminar`
+- `/src/usuarios/grupo_guardar`
+- `/src/usuarios/grupo_lista`
 
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Listar
+### Crear un grupo
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Pulsar **NUEVO GRUPO**.
+2. Escribir el nombre. Convención de la pantalla: poner entre paréntesis si el grupo se refiere a menús (m), permisos (p) o ambos (m+p).
+3. Guardar.
 
 Endpoints asociados:
+- `/src/usuarios/grupo_eliminar`
+- `/src/usuarios/grupo_guardar`
+- `/src/usuarios/grupo_lista`
+
+### Cambiar el nombre de un grupo
+
+Pasos propuestos:
+1. Pulsar el grupo en la lista, modificar el nombre y guardar.
+
+Endpoints asociados:
+- `/src/usuarios/grupo_eliminar`
+- `/src/usuarios/grupo_guardar`
+- `/src/usuarios/grupo_lista`
+
+### Eliminar un grupo
+
+Pasos propuestos:
+1. Marcar el grupo en la lista y pulsar eliminar.
+2. Confirmar. Si hay un error aparece «hay un error, no se ha eliminado».
+
+Endpoints asociados:
+- `/src/usuarios/grupo_eliminar`
+- `/src/usuarios/grupo_guardar`
 - `/src/usuarios/grupo_lista`
 
 ## Campos Y Acciones Detectadas En Pantalla

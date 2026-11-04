@@ -2,7 +2,7 @@
 id: "actividades.actividad_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Selector tipo en buscar actividad"
+nombre: "Flujo - Elegir el tipo de actividad al buscar"
 capacidad: "actividades.actividad_que.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_que"]
 fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
@@ -17,21 +17,29 @@ HTML inicial de la cascada sf/sv → asistentes → actividad → tipo en pantal
 
 ## Objetivo De Usuario
 
-Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables coherentes con
-permisos y parámetros (`sasistentes`, `sactividad`, `ssfsv`).
+Elegir el tipo de actividad (sf/sv, asistentes, actividad y tipo) en la pantalla de búsqueda; los cuatro desplegables van encadenados.
 
 ## Punto De Entrada
 
-- `actividad_que.php` (PostRequest al renderizar).
-- `planning_casa_nueva` / `planning_casa_modificar` (bloque tipo).
+Menú **ACTIVIDADES > Buscar actividad** (o la entrada del colectivo, por ejemplo vsm > ca > importar ca).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir el tipo de actividad al buscar
 
-1. Controller envía contexto (colectivo, dl, modo).
-2. `actividad_que_datos` devuelve HTML del selector de tipo.
-3. Twig/phtml inserta el bloque en el formulario.
+Pasos propuestos:
+1. Abrir **Buscar actividad**. Según la entrada de menú, algunos desplegables ya vienen rellenados.
+2. En **sf/sv** elegir sv, sf o reservada.
+3. En **asistentes** elegir n, agd, s, sg, sssc o sr.
+4. En **actividad** elegir crt, ca, cv, cve o cv-crt.
+5. En **tipo de actividad** elegir el tipo concreto (la lista depende de lo elegido antes; «(sin especificar)» no filtra por tipo).
+6. Marcar el **estado** (proyecto, actual, terminada, borrable o cualquiera) y, si hace falta, las fases **marcadas** / **sin marcar**; no se puede elegir la misma fase en las dos.
+7. Escribir parte del nombre en **el nombre contiene** si se conoce.
+8. En **periodo** elegir todo el año, un trimestre, un curso o un año concreto; con **otro** hay que indicar fecha de inicio y de fin («debe introducir la fecha inicio/fin del periodo»).
+9. Pulsar **buscar**; se abre la lista de actividades que cumplen todo.
+
+Endpoints asociados:
+- `/src/actividades/actividad_que_datos`
 
 ## Endpoints Del Flujo
 

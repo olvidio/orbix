@@ -2,9 +2,9 @@
 id: "ubis.centros_get_num.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Get Num"
+nombre: "Flujo - Consultar o cambiar buzón, pi y cartas"
 capacidad: "ubis.centros_get_num.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.centros_get_num"]
 fragmentos: ["ubis.pantalla.centros_get_num"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_get_num"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
+Listar los centros de la dl con su nº de buzón, ejemplares de pi y cartas, para editarlos.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros** (Pills2: CASAS Y CTR > direcciones > modificar centros).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar o cambiar buzón, pi y cartas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **pi, cartas, nº buzón**; pulsar **buscar**.
+2. Se muestra la lista con el nº de buzón, nº de ejemplares de pi y nº de cartas.
+3. Pulsar un centro para editar sus números.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_get_num`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

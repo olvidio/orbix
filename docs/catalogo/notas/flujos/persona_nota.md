@@ -2,9 +2,9 @@
 id: "notas.persona_nota.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Persona Nota"
+nombre: "Flujo - Añadir una nota"
 capacidad: "notas.persona_nota.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["crear", "eliminar"]
 endpoints: ["/src/notas/persona_nota_eliminar", "/src/notas/persona_nota_nueva"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.persona_nota.gestio
 
 ## Objetivo De Usuario
 
-Alta de nota en dossier 1011 (`persona_nota_nueva`).
+Apuntar a una persona una asignatura aprobada, con su nota y el acta o certificado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > buscar persona** (por ejemplo **n r/dl**): buscar a la persona, abrir su ficha y, en «Relación de dossiers», pulsar **Notas del stgr de una persona (tessera)**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,24 +29,29 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Crear
+### Añadir una nota
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir el dossier de notas de la persona (se titula «Notas del stgr»; sin notas dice «no hay ninguna fila») y pulsar **añadir nota**.
+2. Se abre «asignaturas aprobadas». Elegir si procede de un **acta** o de un **certificado**: delegación (por ejemplo dlb) y número (formato num/aa, por ejemplo 38/26).
+3. Elegir la **Asignatura**, escribir la **nota** (y «sobre» cuánto, por defecto 10), la **situación** (por ejemplo «nota numérica») y la **fecha acta**.
+4. Marcar **preceptor** si procede, elegir la **época** (sin especificar, ca o semestre invierno), la actividad en **cursada en** (enlace **añadir ca**) y un **detalle** opcional.
+5. Pulsar **Guardar** una sola vez (un doble clic no guarda la nota dos veces). Una asignatura que ya tiene nota deja de salir en el desplegable de asignaturas, así que no se puede guardar dos veces. Sale el aviso «Nota guardada en el esquema H-dlbv» (el nombre del esquema es intencionado) y vuelve la tabla con asignatura, nota (por ejemplo «Cum laude (8/10)»), acta, fecha acta, preceptor, época (ca, semestre invierno o sin especificar), detalle y cursada en.
+6. Si se guarda dos veces la misma nota, quedan dos filas iguales.
 
 Endpoints asociados:
 - `/src/notas/persona_nota_eliminar`
+- `/src/notas/persona_nota_nueva`
+
+### Quitar una nota
+
+Pasos propuestos:
+1. En la tabla de notas marcar la fila y pulsar **borrar asignatura**.
+2. Confirmar «¿Está seguro que desea borrar la nota de esta asignatura?».
+
+Endpoints asociados:
+- `/src/notas/persona_nota_eliminar`
+- `/src/notas/persona_nota_nueva`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "encargossacd.encargo_ver_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Encargo Ver Editar"
+nombre: "Flujo - Guardar los cambios de un encargo"
 capacidad: "encargossacd.encargo_ver_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/encargossacd/encargo_ver_editar"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.encargo_ver_
 
 ## Objetivo De Usuario
 
-Gestiona EncargoVerEditar. Actualización de encargo desde encargo_ver (antes encargo_ajax.php que=editar).
+Guardar los cambios hechos en un encargo.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar los cambios de un encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Modificar los campos del encargo.
+2. Pulsar **modificar encargo**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/encargo_ver_editar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "misas.buscar_plan_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Buscar Plan Ctr"
+nombre: "Flujo - Ver el plan de misas de un centro"
 capacidad: "misas.buscar_plan_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.buscar_plan_ctr"]
 fragmentos: ["misas.pantalla.buscar_plan_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/buscar_plan_ctr_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
+Elegir zona, centro y periodo para ver el plan de misas de un centro.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Plan centro. Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr.
+Menú **dre > Misas > Plan centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Menú Legacy: dre > Misas > Plan centro. Pills2: ATENCIÓN SACD > Gestión de mi
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el plan de misas de un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Plan centro**.
+2. Elegir la **zona**, el **centro** y el **Periodo**.
+3. Se muestra el plan: los encargos en filas y los días en columnas, con la leyenda de sacerdotes.
+4. Si el usuario no tiene permiso, aparece «No tiene permiso para ver esta página».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/buscar_plan_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

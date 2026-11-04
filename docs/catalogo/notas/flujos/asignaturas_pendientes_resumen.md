@@ -2,9 +2,9 @@
 id: "notas.asignaturas_pendientes_resumen.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Asignaturas Pendientes Resumen"
+nombre: "Flujo - Consultar el resumen de pendientes"
 capacidad: "notas.asignaturas_pendientes_resumen.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.asignaturas_pendientes_resumen"]
 fragmentos: ["notas.pantalla.asignaturas_pendientes_resumen"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asignaturas_pendientes_resumen_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_pendien
 
 ## Objetivo De Usuario
 
-Ver resumen de pendientes por asignatura.
+Ver, para cada asignatura, cuántos alumnos la tienen pendiente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > resumen pendientes** (Pills2: ESTUDIOS > Preparación planes estudio > nº alum. por asignatura).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar el resumen de pendientes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **resumen pendientes**.
+2. Cada fila es una asignatura (con sus créditos y año). Las columnas dan el número de alumnos que la tienen pendiente: las que empiezan por **n** son numerarios y las que empiezan por **a** son agregados. Después de la letra va el curso en que está el alumno: **b** = bienio, **c1** = cuadrienio año I, **c2** = cuadrienio año II. La columna **total** suma b + c1 + c2. Así, nb, nc1, nc2 y ntotal son numerarios; ab, ac1, ac2 y atotal son agregados.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/asignaturas_pendientes_resumen_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

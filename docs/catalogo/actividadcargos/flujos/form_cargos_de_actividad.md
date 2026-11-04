@@ -2,9 +2,9 @@
 id: "actividadcargos.form_cargos_de_actividad.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadcargos"
-nombre: "Flujo - Gestionar Form Cargos De Actividad"
+nombre: "Flujo - Añadir o modificar un cargo en una actividad"
 capacidad: "actividadcargos.form_cargos_de_actividad.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadcargos.pantalla.form_cargos_de_actividad"]
 fragmentos: ["actividadcargos.pantalla.form_cargos_de_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadcargos/form_cargos_de_actividad_data"]
@@ -17,11 +17,11 @@ Bootstrap del formulario de cargo en la vista por actividad (dossier 3102).
 
 ## Objetivo De Usuario
 
-Asignar o editar el cargo de una persona en una actividad: el sistema carga desplegables, valores actuales, hash de campos y URLs de mutación antes de mostrar el formulario.
+Añadir o modificar un cargo de una persona en una actividad.
 
 ## Punto De Entrada
 
-Controller `frontend/actividadcargos/controller/form_cargos_de_actividad.php`, invocado desde el widget 3102 (enlace **añadir …** o botón **modificar cargo**) vía `fnjs_enviar_formulario` al bloque del dossier.
+«Relación de cargos» de la actividad (botón **cargos** en la lista) o «Relación de asistentes» (botón **añadir cargo** o **modificar cargo**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,14 +29,22 @@ Controller `frontend/actividadcargos/controller/form_cargos_de_actividad.php`, i
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Añadir o modificar un cargo en una actividad
 
 Pasos propuestos:
-1. El usuario abre el formulario desde el widget de relación de cargos (modo `nuevo` o `editar`).
-2. El controller POSTea a `form_cargos_de_actividad_data` con contexto del dossier (`pau`, `id_pau`, `obj_pau`, `sel`, `mod`, `permiso`).
-3. El backend devuelve payload con desplegables (`personas_select`, `cargos_select`), valores (`observ`, `chk`), flags (`show_asis`, `id_nom_real`) y `hash_form_config`.
-4. El front compone HTML de desplegables y hash; pinta el formulario en el bloque AJAX.
-5. Si falta contexto válido, puede devolver `redir: go_atras` o `error`.
+1. Pulsar **añadir n** / **añadir agd** en «Relación de cargos», o marcar a un asistente y pulsar **añadir cargo** / **modificar cargo**.
+2. Se abre «Cargo de una actividad» con el nombre del asistente y los campos **Cargo** (desplegable, por ejemplo «d»), **¿Puede ser agd?** y **Observaciones**.
+3. Pulsar **Guardar datos del cargo**, o **Cancelar** para salir sin guardar.
+
+Endpoints asociados:
+- `/src/actividadcargos/form_cargos_de_actividad_data`
+
+### Ver los cargos de una actividad
+
+Pasos propuestos:
+1. Marcar la actividad en la lista y pulsar **cargos**.
+2. Se abre «Relación de cargos» con el enlace **( dossiers )**; sin cargos indica «no hay ninguna fila».
+3. Los botones **añadir n** y **añadir agd** abren el formulario de cargo.
 
 Endpoints asociados:
 - `/src/actividadcargos/form_cargos_de_actividad_data`

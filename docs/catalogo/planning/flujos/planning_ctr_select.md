@@ -2,7 +2,7 @@
 id: "planning.planning_ctr_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por centro (calendario)"
+nombre: "Flujo - Ver el planning de las personas de un centro"
 capacidad: "planning.planning_ctr_select.gestionar"
 pantallas_principales: ["planning.pantalla.planning_ctr_que"]
 fragmentos: ["planning.pantalla.planning_ctr_select"]
@@ -17,20 +17,26 @@ Calendario de personas y actividades por centro tras enviar filtros en `planning
 
 ## Objetivo De Usuario
 
-Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en un periodo.
+Ver el calendario de actividades de las personas de un centro (o de todos los centros de un colectivo).
 
 ## Punto De Entrada
 
-- `planning_ctr_que.php` → AJAX `planning_ctr_select`.
+Menú **vest > planning > por centro** (también en vsm, vsr y Calendario).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver calendario
+### Ver el planning de las personas de un centro
 
-1. Elegir centro o checkboxes de colectivo (`todos_n`/`todos_agd`/`todos_s`; último gana; default `n` si ctr vacío), periodo y filtro sacd (`sacd===''` excluye; `0` no).
-2. `planning_ctr_select_data` resuelve personas (`PersonaDl`) y actividades agrupadas; `obj_pau` del form no afecta al API.
-3. Revisar avisos (`msg_txt`) si algún ctr no tiene personas (`No encuentro este ctr` / `No encuentro personas para %s`).
-4. Exportar (`modelo=2`) o consultar leyenda.
+Pasos propuestos:
+1. Abrir «ACTIVIDADES DE LAS PERSONAS DE UN CENTRO».
+2. Escribir el **Centro** (si se deja vacío salen todos los n ordenados por centro) o marcar **todos los ctr con n**, **todos los ctr con agd** o **todos los ctr con s**.
+3. Elegir **incluir sacd**: no / sí.
+4. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+5. Pulsar **Planning vista tabla** o **vista para imprimir**.
+6. Si un centro no existe o no tiene personas, avisa «No encuentro este ctr» o «No encuentro personas para …». El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+
+Endpoints asociados:
+- `/src/planning/planning_ctr_select_data`
 
 ## Endpoints Del Flujo
 

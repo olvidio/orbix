@@ -2,9 +2,9 @@
 id: "actividadescentro.lista_actividades_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadescentro"
-nombre: "Flujo - Gestionar Lista Actividades Ctr"
+nombre: "Flujo - Consultar las actividades y sus centros encargados"
 capacidad: "actividadescentro.lista_actividades_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadescentro/lista_actividades_ctr_data"]
@@ -17,14 +17,11 @@ Listado de actividades del colectivo + periodo elegidos, con sus centros encarga
 
 ## Objetivo De Usuario
 
-El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del
-colectivo (`tipo`) en ese periodo y, por cada una, los centros encargados actuales y los flags de
-permiso (modificar / crear centros) que deciden qué acciones se ofrecen.
+Ver las actividades de un periodo con los centros encargados actuales.
 
 ## Punto De Entrada
 
-Pantalla `activ_ctr` (`frontend/actividadescentro/controller/activ_ctr.php`): la función `fnjs_ver`
-llama a este endpoint al pulsar el botón **buscar**.
+Pantalla de asignación de centros encargados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,13 +29,15 @@ llama a este endpoint al pulsar el botón **buscar**.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar las actividades y sus centros encargados
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el periodo.
+2. Pulsar **buscar**.
+3. Se muestra la tabla de actividades con sus centros encargados; según los permisos aparecen los botones para modificar o crear.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/actividadescentro/lista_actividades_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

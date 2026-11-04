@@ -2,7 +2,7 @@
 id: "menus.menus_legacy_layout_items.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Menus Legacy Layout Items"
+nombre: "Flujo - Ver el menú Legacy"
 capacidad: "menus.menus_legacy_layout_items.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Ítems visibles para barra lateral layout H-dlbv.
+Cargar los ítems visibles del menú del diseño Legacy.
 
 ## Punto De Entrada
 
-Carga en `LegacyLayout` al iniciar sesión.
+Automático al iniciar sesión con el layout Legacy.
+
+## Escenarios Inferidos
+
+### Ver el menú Legacy
+
+Pasos propuestos:
+1. Iniciar sesión con layout Legacy (se elige en **preferencias**).
+2. La barra lateral muestra los grupos permitidos para el usuario.
+
+Endpoints asociados:
+- `/src/menus/menus_legacy_layout_items_data`
 
 ## Endpoints Del Flujo
 

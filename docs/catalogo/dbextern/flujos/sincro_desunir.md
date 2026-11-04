@@ -2,9 +2,9 @@
 id: "dbextern.sincro_desunir.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Desunir vínculo BDU"
+nombre: "Flujo - Desunir una persona de la BDU"
 capacidad: "dbextern.sincro_desunir.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_desaparecidos_de_orbix"]
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_orbix"]
 acciones: ["desunir"]
 endpoints: ["/src/dbextern/sincro_desunir"]
@@ -17,18 +17,22 @@ Elimina `id_match` para personas del punto 3.
 
 ## Objetivo De Usuario
 
-Romper el vínculo incorrecto para poder re-unir o crear la ficha después.
+Romper un vínculo incorrecto entre una persona de la BDU y una ficha de Aquinate, para poder unirla de nuevo o crear la ficha después.
 
 ## Punto De Entrada
 
-**desunir** en `ver_desaparecidos_de_orbix` (`fnjs_desunir`).
+Botón **desunir** en la lista «BDU sin ficha Aquinate» (punto 3).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Desunir
+### Desunir una persona de la BDU
 
-1. POST `id_nom_listas`, `tipo_persona`.
-2. Fila tachada si éxito.
+Pasos propuestos:
+1. En la lista «BDU sin ficha Aquinate», pulsar **desunir** en la persona.
+2. Si se ha hecho bien, la fila aparece tachada.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_desunir`
 
 ## Endpoints Del Flujo
 

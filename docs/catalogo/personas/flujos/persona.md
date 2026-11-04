@@ -2,9 +2,9 @@
 id: "personas.persona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Guardar o eliminar persona"
+nombre: "Flujo - Guardar los datos personales"
 capacidad: "personas.persona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.personas_editar"]
 fragmentos: ["personas.pantalla.personas_editar"]
 acciones: ["crear_actualizar", "eliminar"]
 endpoints: ["/src/personas/persona_update", "/src/personas/persona_eliminar"]
@@ -17,25 +17,24 @@ Persistencia de la ficha y borrado con restricción de delegación.
 
 ## Objetivo De Usuario
 
-Guardar cambios en la ficha o eliminar un registro de la propia delegación.
+Guardar o eliminar los datos personales de una persona.
 
 ## Punto De Entrada
 
-- `personas_editar` + `_persona_form_js.phtml` (HashF).
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl). Ficha > **editar**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Guardar
+### Guardar los datos personales
 
-1. Editar campos en la ficha (solo si `ok=1` por permiso oficina).
-2. Pulsar guardar → `persona_update` con campos del Hash.
-3. Confirmar mensaje de éxito o error del repositorio.
+Pasos propuestos:
+1. En «DATOS PERSONALES» cambiar los campos necesarios.
+2. Pulsar **Guardar Cambios** (solo si tu rol lo permite).
+3. Si hay un problema el servidor lo avisa con un mensaje.
 
-### Eliminar
-
-1. Pulsar eliminar (PersonaEx admite botón extra).
-2. Confirmar → `persona_eliminar`.
-3. Solo procede si `persona.dl === mi_delef`.
+Endpoints asociados:
+- `/src/personas/persona_update`
+- `/src/personas/persona_eliminar`
 
 ## Endpoints Del Flujo
 

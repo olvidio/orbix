@@ -2,9 +2,9 @@
 id: "usuarios.usuario_grupo_del_lst.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Grupo Del Lst"
+nombre: "Flujo - Ver los grupos que se pueden quitar"
 capacidad: "usuarios.usuario_grupo_del_lst.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_grupo_del_lst"]
 fragmentos: ["usuarios.pantalla.usuario_grupo_del_lst"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_grupo_del_lst"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista grupos ya asignados al usuario con acción quitar.
+Mostrar los grupos que el usuario ya tiene, para poder quitarle alguno.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Botón **quitar de un grupo de permisos** de la ficha de usuario.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los grupos que se pueden quitar
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **quitar de un grupo de permisos**.
+2. Aparece la lista de grupos asignados.
+3. En la tabla pulsar **quitar** en la fila del grupo: se retira al instante, sin pedir confirmación (ver «Quitar un grupo a un usuario»).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_grupo_del_lst`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

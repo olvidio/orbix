@@ -2,9 +2,9 @@
 id: "procesos.procesos_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Ver"
+nombre: "Flujo - Crear o modificar una tarea de un proceso"
 capacidad: "procesos.procesos_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_ver"]
 fragmentos: ["procesos.pantalla.procesos_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/procesos/procesos_ver_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga del formulario modal de alta o edición de una tarea dentro de un tipo de proceso, con desplegables de fases, tareas, status, oficina y dependencias.
+Crear o modificar una tarea dentro de un tipo de proceso: fase, status, oficina y tareas de las que depende.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se abre desde la pantalla de administración de procesos (`procesos_select`).
+Ventana modal que se abre desde **ver listado** de un proceso.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada directa de menú; se abre desde la pantalla de administración de pr
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Crear o modificar una tarea de un proceso
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Desde el listado del proceso, pulsar **nuevo** en la pantalla de selección de proceso (o una tarea existente del listado).
+2. Elegir la fase, la tarea, el status, la oficina y la fase o tarea previa de la que depende.
+3. Guardar. Al guardar, las actividades que usen este proceso deberán regenerarse para recoger el cambio.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_ver_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

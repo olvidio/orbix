@@ -2,9 +2,9 @@
 id: "misas.plan_de_misas_pantalla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Plan De Misas Pantalla"
+nombre: "Flujo - Elegir zona, orden y periodo del plan"
 capacidad: "misas.plan_de_misas_pantalla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.modificar_plan_de_misas", "misas.pantalla.preparar_plan_de_misas", "misas.pantalla.ver_plan_de_misas"]
 fragmentos: ["misas.pantalla.modificar_plan_de_misas", "misas.pantalla.preparar_plan_de_misas", "misas.pantalla.ver_plan_de_misas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/plan_de_misas_pantalla_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
+Cargar las zonas, el orden y los tipos de plantilla que ofrecen las pantallas de preparar, modificar y ver el plan de misas.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan.
+Menú **dre > Misas > Nuevo plan / Modificar plan / Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan, Modificar plan, Ver plan zona).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de mi
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir zona, orden y periodo del plan
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la pantalla del plan.
+2. En **Plan de Misas Zona** elegir la zona.
+3. Elegir el **Orden** de los sacerdotes (orden, prioridad o alfabético) y el **Periodo**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/plan_de_misas_pantalla_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

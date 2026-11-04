@@ -2,9 +2,9 @@
 id: "encargossacd.propuestas_lista_enc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Propuestas Lista Enc"
+nombre: "Flujo - Ver las propuestas por encargos"
 capacidad: ""
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.propuestas_lista_enc"]
 fragmentos: ["encargossacd.pantalla.propuestas_lista_enc"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/propuestas_lista_enc_data"]
@@ -17,12 +17,11 @@ Consulta HTML de propuestas agrupadas por encargo/centro (solo lectura).
 
 ## Objetivo De Usuario
 
-Ver el estado de las propuestas por encargos tras (o durante) la edición staging.
+Ver cómo van las propuestas, por encargos, después (o durante) la edición. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Punto De Entrada
 
-Desde hub propuestas → «listado propuestas por encargos».
-
+Desde el menú de propuestas, opción **listado propuestas por encargos**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,10 +29,15 @@ Desde hub propuestas → «listado propuestas por encargos».
 
 ## Escenarios Inferidos
 
-### Obtener datos
+### Ver las propuestas por encargos
 
-1. FE llama `propuestas_lista_enc_data` con `filtro_ctr` (opcional).
-2. Si `error` → echo del mensaje; si no → echo de `html`.
+Pasos propuestos:
+1. Abrir **listado propuestas por encargos**.
+2. Si se quiere, filtrar por centro.
+3. Se muestra el listado. Si todavía no se ha creado la tabla de propuestas, avisa «Debe crear la tabla de propuestas».
+
+Endpoints asociados:
+- `/src/encargossacd/propuestas_lista_enc_data`
 
 ## Endpoints Del Flujo
 

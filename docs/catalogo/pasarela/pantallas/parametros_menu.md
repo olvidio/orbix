@@ -13,7 +13,7 @@ fragmentos_frontend:
   - "frontend\/pasarela\/controller\/contribucion_no_duerme_lista.php"
   - "frontend\/pasarela\/controller\/contribucion_reserva_lista.php"
 endpoints:[]
-capacidades:[]
+capacidades: ["pasarela.parametros_menu.consultar"]
 campos: []
 acciones: []
 estado_revision: "revisado"

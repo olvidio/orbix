@@ -2,9 +2,9 @@
 id: "inventario.lista_docs_de_egm.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Docs De Egm"
+nombre: "Flujo - Ver los documentos de una valija"
 capacidad: "inventario.lista_docs_de_egm.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_form_del", "inventario.pantalla.equipajes_lista_docs"]
 fragmentos: ["inventario.pantalla.equipajes_form_del", "inventario.pantalla.equipajes_lista_docs"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_docs_de_egm"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Docs De Egm
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_docs_de_egm.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDocsDeEgm. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que lleva una valija, para quitar alguno.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **hacer equipajes**, al pulsar **quitar documento** en una valija.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver los documentos de una valija
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, pulsar **quitar documento** en una valija.
+2. Aparece la lista de documentos de esa valija (sigla e identificador).
+3. Marcar los que se quitan.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_docs_de_egm`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

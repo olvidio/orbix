@@ -2,9 +2,9 @@
 id: "usuarios.usuario_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario Info"
+nombre: "Flujo - Ver el resumen de un usuario en su ficha"
 capacidad: "usuarios.usuario_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_form_mail", "usuarios.pantalla.usuario_form_pwd"]
 fragmentos: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_form_mail", "usuarios.pantalla.usuario_form_pwd"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Resumen usuario para cabecera ficha (grupos, login, email).
+Calcular el resumen del usuario (grupos, login, correo) que se muestra en la cabecera de su ficha.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Sin entrada de menú propia: se usa desde otra pantalla o de forma automática.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +30,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Ver el resumen de un usuario en su ficha
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de un usuario desde **lista usuarios**.
+2. La cabecera muestra el login, el correo y los grupos asignados; no hay que hacer nada más.
+3. Si el usuario no existe aparece «Usuario no encontrado».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

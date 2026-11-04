@@ -2,9 +2,9 @@
 id: "dbextern.ver_desaparecidos_de_listas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Aquinate con BDU vacía"
+nombre: "Flujo - Revisar fichas Aquinate con la BDU vacía"
 capacidad: "dbextern.ver_desaparecidos_de_listas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_desaparecidos_de_listas"]
 fragmentos: ["dbextern.pantalla.ver_desaparecidos_de_listas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dbextern/ver_desaparecidos_de_listas_datos"]
@@ -17,18 +17,22 @@ Listado del punto 8.
 
 ## Objetivo De Usuario
 
-Revisar fichas Aquinate cuya correspondencia BDU ya no existe.
+Revisar las fichas de Aquinate cuya correspondencia en la BDU ya no existe.
 
 ## Punto De Entrada
 
-**ver** del punto 8 en `sincro_index`.
+Enlace **ver** del punto 8 de la pantalla de sincronización.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener datos
+### Revisar fichas Aquinate con la BDU vacía
 
-1. Envía `ids_desaparecidos_de_listas` (JSON).
-2. Tabla con acciones **baja** y enlace a traslado externo (`fnjs_traslado`).
+Pasos propuestos:
+1. Pulsar **ver** en el punto 8.
+2. Aparece la tabla de personas, con la acción **baja** y un enlace para hacer el traslado externo.
+
+Endpoints asociados:
+- `/src/dbextern/ver_desaparecidos_de_listas_datos`
 
 ## Endpoints Del Flujo
 

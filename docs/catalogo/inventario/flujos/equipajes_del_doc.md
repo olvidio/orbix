@@ -2,9 +2,9 @@
 id: "inventario.equipajes_del_doc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Del Doc"
+nombre: "Flujo - Quitar un documento de una valija"
 capacidad: "inventario.equipajes_del_doc.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_del_doc"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Del Doc
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_del_doc.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesDelDoc. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Sacar un documento de una valija del equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > equipajes > hacer equipajes**, en una valija con el botón **quitar documento**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,16 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar un documento de una valija
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **quitar documento**.
+3. Marcar los documentos a quitar y pulsar el botón de quitar (**Cancel** para salir sin cambios).
+4. Los documentos dejan de estar en la valija; si falla se muestra el aviso **respuesta**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_del_doc`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

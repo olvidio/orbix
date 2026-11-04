@@ -2,7 +2,7 @@
 id: "actividadplazas.posibles_propietarios.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Posibles Propietarios"
+nombre: "Flujo - Elegir la delegación propietaria de la plaza"
 capacidad: "actividadplazas.posibles_propietarios.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,18 +17,11 @@ Carga por AJAX el desplegable de posibles propietarios de plaza para una persona
 
 ## Objetivo De Usuario
 
-Al editar la asistencia de una persona en una actividad (o viceversa), elegir qué delegación es
-propietaria de la plaza entre las opciones válidas para esa combinación persona+actividad.
+Al editar la asistencia de una persona a una actividad, elegir qué delegación es la propietaria de la plaza entre las opciones válidas para esa persona y esa actividad.
 
 ## Punto De Entrada
 
-No tiene pantalla propia. Se invoca desde formularios del módulo **asistentes**:
-
-- `FormActividadesDeUnaPersonaRender` (actividades de una persona).
-- `FormAsistentesAUnaActividadRender` (asistentes de una actividad).
-
-La URL llega en el payload del formulario (`paths.posibles_propietarios_data`) y el frontend monta el
-`<select>` con `fnjs_construir_desplegable`.
+No tiene pantalla propia: es el desplegable «propiedad de» de los formularios de asistencia (actividades de una persona y asistentes de una actividad).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -36,13 +29,12 @@ No se han detectado fragmentos AJAX relacionados en actividadplazas.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la delegación propietaria de la plaza
 
-1. Abrir el formulario de asistencia (persona↔actividad) desde el módulo asistentes.
-2. Al cargar o cambiar persona/actividad, el frontend solicita `posibles_propietarios_data` con
-   `id_nom` e `id_activ`.
-3. El sistema devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`,
-   `val_blanco`) con las dl propietarias posibles, preseleccionando `mi_delef()>[dl_de_paso]`.
+Pasos propuestos:
+1. Abrir el formulario de asistencia, bien desde una persona o bien desde una actividad.
+2. En **propiedad de** aparecen solo las delegaciones posibles para esa combinación; por defecto sale preseleccionada la propia delegación.
+3. Elegir la que corresponda y guardar el formulario.
 
 Endpoints asociados:
 - `/src/actividadplazas/posibles_propietarios_data`

@@ -2,9 +2,9 @@
 id: "notas.actividades_buscar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Actividades Buscar"
+nombre: "Flujo - Vincular una actividad al acta"
 capacidad: "notas.actividades_buscar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.actividad_buscar_form"]
 fragmentos: ["notas.pantalla.actividad_buscar_form"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/actividades_buscar_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.actividades_buscar.
 
 ## Objetivo De Usuario
 
-Seleccionar actividad CA vinculada al acta.
+Elegir la actividad de estudios (CA) a la que corresponde el acta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta, botón de elegir actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Vincular una actividad al acta
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, pulsar para seleccionar la actividad.
+2. Elegir la **organización** y la **actividad** y pulsar **seleccionar la actividad** y **guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/actividades_buscar_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

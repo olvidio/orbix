@@ -2,7 +2,7 @@
 id: "cartaspresentacion.poblaciones.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
-nombre: "Flujo - Gestionar Poblaciones"
+nombre: "Flujo - Elegir la población"
 capacidad: "cartaspresentacion.poblaciones.gestionar"
 pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: []
@@ -17,20 +17,22 @@ Recarga del desplegable de población al cambiar el filtro dl/regiones en la pan
 
 ## Objetivo De Usuario
 
-Filtrar el listado de centros por población dentro de la delegación (modo `get_dl`).
+Filtrar la lista de centros por población dentro de la delegación.
 
 ## Punto De Entrada
 
-Pantalla `cartas_presentacion`: al cambiar el desplegable «según dl» se invoca `fnjs_poblacion`.
+Desplegable «según dl» de la pantalla de modificar cartas de presentación.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener poblaciones
+### Elegir la población
 
-1. Usuario elige `get_dl` en `tipo_lista`.
-2. AJAX a `poblaciones_data` con `filtro=get_dl`.
-3. Se reconstruye el desplegable `poblacion_sel` con `fnjs_construir_desplegable`.
-4. Si elige `get_r`, se oculta el desplegable de población (sin llamada AJAX).
+Pasos propuestos:
+1. En «según dl» elegir la opción de la delegación: se rellena el desplegable de poblaciones.
+2. Elegir la población. Si se elige «según r», el desplegable de población se oculta.
+
+Endpoints asociados:
+- `/src/cartaspresentacion/poblaciones_data`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "inventario.lista_equipajes_posibles_maletas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Equipajes Posibles Maletas"
+nombre: "Flujo - Crear una valija nueva"
 capacidad: "inventario.lista_equipajes_posibles_maletas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_posibles_maletas"]
 fragmentos: ["inventario.pantalla.equipajes_posibles_maletas"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_equipajes_posibles_maletas"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Equipajes Posibles Maletas
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_equipajes_posibles_maletas.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaEquipajesPosiblesMaletas. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Calcular el nombre de la siguiente valija (maleta) que se puede crear en un equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **hacer equipajes**, al crear una valija nueva.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Crear una valija nueva
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, elegir el equipaje.
+2. Pulsar **nueva valija**.
+3. El sistema propone el siguiente número («valija» + número) para la nueva maleta.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_equipajes_posibles_maletas`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

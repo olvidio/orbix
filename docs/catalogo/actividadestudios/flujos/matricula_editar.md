@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadestudios"
 nombre: "Flujo - Gestionar Matricula Editar"
 capacidad: "actividadestudios.matricula_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/matricula_editar"]

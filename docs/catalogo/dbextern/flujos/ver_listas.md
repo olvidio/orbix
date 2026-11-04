@@ -2,9 +2,9 @@
 id: "dbextern.ver_listas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Revisar BDU no unidas"
+nombre: "Flujo - Revisar las personas de la BDU no unidas"
 capacidad: "dbextern.ver_listas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_listas"]
 fragmentos: ["dbextern.pantalla.ver_listas"]
 acciones: ["obtener_datos", "navegar"]
 endpoints: ["/src/dbextern/ver_listas_datos"]
@@ -17,22 +17,24 @@ Exploración del punto 4: cola de personas BDU sin vínculo.
 
 ## Objetivo De Usuario
 
-Revisar una a una las personas de la BDU no unidas, viendo posibles coincidencias en Aquinate.
+Revisar una a una las personas de la BDU que no están unidas a ninguna ficha, viendo las posibles coincidencias en Aquinate.
 
 ## Punto De Entrada
 
-**ver** del punto 4 en `sincro_index` → `ver_listas.php`.
+Enlace **ver** del punto 4 de la pantalla de sincronización.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener datos
+### Revisar las personas de la BDU no unidas
 
-1. Primera carga: `ver_listas_datos` con `first_load=1`, uniones automáticas, sesión `DBListas`.
-2. Por cada registro: `ver_listas_datos` con `id_nom_bdu` para candidatos Orbix.
+Pasos propuestos:
+1. Pulsar **ver** en el punto 4: en la primera carga se hacen las uniones automáticas evidentes.
+2. Aparece la primera persona pendiente con sus candidatos de Aquinate.
+3. Elegir **unir** con un candidato o **crear nuevo** si no hay coincidencia.
+4. Usar los botones anterior y siguiente para moverse por la lista.
 
-### Navegar
-
-1. Botones anterior/siguiente actualizan `id` en sesión vía POST al mismo controller.
+Endpoints asociados:
+- `/src/dbextern/ver_listas_datos`
 
 ## Endpoints Del Flujo
 

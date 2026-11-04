@@ -2,9 +2,9 @@
 id: "certificados.certificado_recibido_modificar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Recibido Modificar"
+nombre: "Flujo - Modificar un certificado recibido"
 capacidad: "certificados.certificado_recibido_modificar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_recibido_modificar"]
 fragmentos: ["certificados.pantalla.certificado_recibido_modificar"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_recibido_modificar_data"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Modificar metadatos de certificado recibido.
+Corregir los datos de un certificado recibido.
 
 ## Punto De Entrada
 
-Listado dossier persona → modificar.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ Listado dossier persona → modificar.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Modificar un certificado recibido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de certificados, pulsar el certificado recibido.
+2. Cambiar los datos y guardar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_recibido_modificar_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "procesos.procesos_regenerar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Regenerar"
+nombre: "Flujo - Regenerar las actividades de un proceso"
 capacidad: "procesos.procesos_regenerar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_regenerar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Regenerar masivamente las tareas de proceso de las actividades asociadas a un tipo de proceso, a partir de la definición de fases/tareas del proceso.
+Regenerar las tareas de todas las actividades que usan un tipo de proceso, tras cambiar su definición.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
+Menú **sistema > procesos activ. > procesos** (Pills2: ADMIN LOCAL > procesos activ. > procesos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > proces
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Regenerar las actividades de un proceso
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir el proceso.
+2. Pulsar **rehacer los procesos de las actividades**. Las tareas de las actividades asociadas se recalculan a partir de la definición actual de fases y tareas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_regenerar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

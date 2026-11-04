@@ -2,9 +2,9 @@
 id: "actividades.calendario_listas.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Listados calendario nuevo"
+nombre: "Flujo - Sacar un listado del calendario"
 capacidad: "actividades.calendario_listas.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividades.pantalla.calendario_listas"]
 fragmentos: ["actividades.pantalla.calendario_listas"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/calendario_listas_datos"]
@@ -18,12 +18,23 @@ centros encargados, variantes SV/SF).
 
 ## Objetivo De Usuario
 
-Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla de actividades.
+Sacar listados del calendario de actividades por oficina o por casas, en un periodo.
 
 ## Punto De Entrada
 
-- Menús adl/dre/Calendario que POSTean a `calendario_listas.php`.
-- `actividades_centro_que` con `tipo_lista=ctrsEncargados`.
+Menú **adl / dre / Calendario > Nuevo calendario > listados** (Pills2: ACTIVIDADES > Herramientas de calendario).
+
+## Escenarios Inferidos
+
+### Sacar un listado del calendario
+
+Pasos propuestos:
+1. Entrar en **Nuevo calendario > listados** y elegir el tipo de listado: por oficinas, de la oficina propia, casas comunes, todas las casas (sf o sv).
+2. Elegir el periodo.
+3. Se muestra la tabla de actividades; pulsar una para abrir su ficha.
+
+Endpoints asociados:
+- `/src/actividades/calendario_listas_datos`
 
 ## Endpoints Del Flujo
 

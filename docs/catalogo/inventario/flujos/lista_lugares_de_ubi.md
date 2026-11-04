@@ -2,9 +2,9 @@
 id: "inventario.lista_lugares_de_ubi.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Lugares De Ubi"
+nombre: "Flujo - Elegir el lugar dentro del centro"
 capacidad: "inventario.lista_lugares_de_ubi.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.traslado_doc_que"]
 fragmentos: ["inventario.pantalla.traslado_doc_que"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_lugares_de_ubi"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Lugares De Ubi
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_lugares_de_ubi.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaLugaresDeUbi. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar los lugares (estancias) de un centro cuando se elige como origen o destino de un traslado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **traslado de doc**: se carga sola al elegir un centro.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir el lugar dentro del centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **traslado de doc**, elegir un centro (origen o destino).
+2. Aparece el desplegable **seleccione un lugar** con los lugares de ese centro.
+3. Si falla la carga se muestra «Error al cargar lugares de origen/destino»; volver a elegir el centro.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_lugares_de_ubi`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

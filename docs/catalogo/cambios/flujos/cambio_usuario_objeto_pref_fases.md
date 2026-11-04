@@ -2,9 +2,9 @@
 id: "cambios.cambio_usuario_objeto_pref_fases.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Actualizar fases de referencia"
+nombre: "Flujo - Elegir la fase de un aviso"
 capacidad: "cambios.cambio_usuario_objeto_pref_fases.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.usuario_avisos_pref_fases"]
 fragmentos: ["cambios.pantalla.usuario_avisos_pref_fases"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/cambios/cambio_usuario_objeto_pref_fases_data"]
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Refrescar el desplegable de fase/estado al cambiar objeto o tipo de actividad en el formulario de aviso.
+Actualizar el desplegable de fase/estado al cambiar el objeto o el tipo de actividad.
 
 ## Punto De Entrada
 
-`fnjs_actualizar_fases` → fragmento `usuario_avisos_pref_fases`.
+Menú de usuario > **preferencias** > **gestionar avisos en cambios actividades**.
+
+## Escenarios Inferidos
+
+### Elegir la fase de un aviso
+
+Pasos propuestos:
+1. Cambiar el objeto o el tipo de actividad.
+2. El desplegable de fase se actualiza con las fases posibles.
+
+Endpoints asociados:
+- `/src/cambios/cambio_usuario_objeto_pref_fases_data`
 
 ## Errores Conocidos
 

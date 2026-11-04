@@ -2,9 +2,9 @@
 id: "usuarios.usuario_2fa_verify.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Usuario 2fa Verify"
+nombre: "Flujo - Verificar el código"
 capacidad: "usuarios.usuario_2fa_verify.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.usuario_form_2fa"]
 fragmentos: ["usuarios.pantalla.usuario_form_2fa"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/usuario_2fa_verify"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Valida código TOTP contra secret provisional (paso previo a activar 2FA).
+Comprobar el código de la aplicación de autenticación antes de activar la verificación en dos pasos.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Formulario 2FA, paso **Verificación**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Verificar el código
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Escanear el QR con la aplicación.
+2. Escribir en **Código de verificación** el número que muestra.
+3. Si es correcto se permite activar 2FA; si no, aparece «Código de verificación inválido».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/usuario_2fa_verify`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

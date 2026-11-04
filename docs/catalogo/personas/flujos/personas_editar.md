@@ -2,9 +2,9 @@
 id: "personas.personas_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Abrir ficha de persona"
+nombre: "Flujo - Abrir los datos personales de una persona"
 capacidad: "personas.personas_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.personas_editar"]
 fragmentos: ["personas.pantalla.personas_editar"]
 acciones: ["obtener_datos", "alta"]
 endpoints: ["/src/personas/personas_editar_data"]
@@ -17,26 +17,22 @@ Carga del formulario de alta o edición según colectivo y permisos.
 
 ## Objetivo De Usuario
 
-Crear una persona nueva o editar la ficha existente con los campos del colectivo correspondiente.
+Abrir los datos personales de una persona para consultarlos o cambiarlos, o dar de alta una persona.
 
 ## Punto De Entrada
 
-- Listado: botón «ficha» (edición) o enlace alta (`nuevo=1`, `apellido1` precargado).
-- Cabecera: enlace «ficha».
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl). Ficha de la persona > **editar**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Alta
+### Abrir los datos personales de una persona
 
-1. Desde listado con permiso `3`, pulsar alta.
-2. `personas_editar_data` con `nuevo=1` asigna `id_nom` y defaults.
-3. Completar formulario y guardar (flujo `persona`).
+Pasos propuestos:
+1. En la ficha pulsar **editar**. Se abre «DATOS PERSONALES» con **Delegación**, **Trato**, **Nombre**, **Apelativo**, **nx1**, **Primer apellido**, **nx2**, **Segundo Apellido**, **Lugar de nacimiento**, **Fecha Nacimiento**, **Situacion**, **Fecha situación**, **Idioma preferido**, **Profesión**, **sacd**, **Stgr**, **eap**, **inc**, **Fecha inc**, **ce**, **Lugar ce**, **Año inicio ce**, **Año fin ce** y **Observaciones**.
+2. Al lado aparece el **Centro-sede**.
 
-### Edición
-
-1. Seleccionar persona y abrir ficha.
-2. Cargar datos vía `sel` o `id_nom`.
-3. Plantilla según `obj_pau` y permiso oficina.
+Endpoints asociados:
+- `/src/personas/personas_editar_data`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "profesores.ficha_profesor_stgr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Ver ficha profesor STGR"
+nombre: "Flujo - Consultar la ficha de un profesor"
 capacidad: "profesores.ficha_profesor_stgr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["profesores.pantalla.ficha_profesor_stgr"]
 fragmentos: ["profesores.pantalla.ficha_profesor_stgr"]
 acciones: ["consultar", "imprimir", "modificar_bloque"]
 endpoints: ["/src/profesores/ficha_profesor_stgr"]
@@ -17,13 +17,11 @@ Dossier académico del profesor desde la búsqueda de personas.
 
 ## Objetivo De Usuario
 
-Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nombramientos,
-curriculum, docencia, congresos, etc.
+Consultar la ficha stgr de un profesor (nombramientos, curriculum, docencia, congresos…) y, con permiso, imprimirla o modificarla.
 
 ## Punto De Entrada
 
-Botón **ficha profesor stgr** en `personas_select` (`fnjs_ficha_profe`), que abre
-`ficha_profesor_stgr.php` con `sel=id_nom#id_tabla`.
+Botón **ficha profesor stgr** de la lista de personas.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,24 +29,31 @@ Botón **ficha profesor stgr** en `personas_select` (`fnjs_ficha_profe`), que ab
 
 ## Escenarios Inferidos
 
-### Consultar
+### Consultar la ficha de un profesor
 
-Pasos:
-1. Buscar persona y abrir **ficha profesor stgr**.
-2. Revisar bloques visibles según `aPerm`.
+Pasos propuestos:
+1. Buscar a la persona y pulsar **ficha profesor stgr**.
+2. Se muestran los bloques de la ficha que el usuario tiene permiso para ver.
 
 Endpoints asociados:
 - `/src/profesores/ficha_profesor_stgr`
 
-### Imprimir
+### Imprimir la ficha
 
-Pasos:
-1. Pulsar **[imprimir]** → recarga con `print=1` (forzado en RSTGR).
+Pasos propuestos:
+1. Pulsar **[imprimir]**: la ficha se vuelve a mostrar en formato de impresión (en las regiones del stgr siempre sale así).
 
-### Modificar bloque
+Endpoints asociados:
+- `/src/profesores/ficha_profesor_stgr`
 
-Pasos:
-1. Con permiso de escritura, pulsar **[modificar]** en un bloque → `tablaDB_lista_ver`.
+### Modificar un bloque de la ficha
+
+Pasos propuestos:
+1. Con permiso de escritura, pulsar **[modificar]** en el bloque que se quiere cambiar.
+2. Se abre la tabla de ese bloque para editarla.
+
+Endpoints asociados:
+- `/src/profesores/ficha_profesor_stgr`
 
 ## Errores Conocidos
 

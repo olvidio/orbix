@@ -2,9 +2,9 @@
 id: "casas.calendario_ubi_resumen.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Calendario Ubi Resumen"
+nombre: "Flujo - Consultar la previsión económica de una casa"
 capacidad: "casas.calendario_ubi_resumen.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.calendario_ubi_resumen"]
 fragmentos: ["casas.pantalla.calendario_ubi_resumen", "casas.pantalla.calendario_ubi_resumen_body"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/casas/calendario_ubi_resumen_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.calendario_ubi_resu
 
 ## Objetivo De Usuario
 
-Gestiona CalendarioUbiResumen. Datos del estudio económico de una casa (calendario_ubi_resumen).
+Ver el estudio económico de una casa: ocupación, ingresos y gastos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **adl > Nuevo Calendario > Previsión económica** (Calendario > Nuevo calendario > Previsión económica).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +30,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar la previsión económica de una casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Previsión económica**.
+2. Elegir la casa y el periodo.
+3. Se muestra el estudio económico.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/casas/calendario_ubi_resumen_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

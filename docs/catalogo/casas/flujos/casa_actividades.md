@@ -2,9 +2,9 @@
 id: "casas.casa_actividades.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Casa Actividades"
+nombre: "Flujo - Consultar las actividades de una casa"
 capacidad: "casas.casa_actividades.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.casa_actividades_lista"]
 fragmentos: ["casas.pantalla.casa_actividades_lista"]
 acciones: ["listar"]
 endpoints: ["/src/casas/casa_actividades_lista_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.casa_actividades.ge
 
 ## Objetivo De Usuario
 
-Gestiona CasaActividades. Listado de actividades por casa y periodo (casa_actividades_lista).
+Ver las actividades de una casa en un periodo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Estudio económico de la casa.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,11 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Listar
+### Consultar las actividades de una casa
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir el estudio económico de la casa y elegir el periodo.
+2. Aparece la lista de actividades; pulsar una para abrir su ficha.
 
 Endpoints asociados:
 - `/src/casas/casa_actividades_lista_data`

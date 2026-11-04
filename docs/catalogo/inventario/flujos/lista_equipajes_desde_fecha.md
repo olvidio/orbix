@@ -2,9 +2,9 @@
 id: "inventario.lista_equipajes_desde_fecha.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Equipajes Desde Fecha"
+nombre: "Flujo - Cambiar los equipajes que se ven"
 capacidad: "inventario.lista_equipajes_desde_fecha.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_desplegable", "inventario.pantalla.equipajes_movimientos_que", "inventario.pantalla.equipajes_ver"]
 fragmentos: ["inventario.pantalla.equipajes_desplegable", "inventario.pantalla.equipajes_movimientos_que", "inventario.pantalla.equipajes_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_equipajes_desde_fecha"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Equipajes Desde Fecha
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_equipajes_desde_fecha.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaEquipajesDesdeFecha. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar la lista de equipajes entre los que escoger, según el filtro de fechas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **hacer equipajes**, **imprimir equipajes** y **eliminar equipajes**: se actualiza al cambiar el filtro.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar los equipajes que se ven
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** (o imprimir / eliminar).
+2. Elegir el filtro: **desde hoy**, **todo el curso** o **todos**.
+3. El desplegable **escoger un equipaje** se actualiza con los equipajes de ese periodo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_equipajes_desde_fecha`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

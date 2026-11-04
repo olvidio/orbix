@@ -2,9 +2,9 @@
 id: "ubis.direcciones_quitar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direcciones Quitar"
+nombre: "Flujo - Quitar una dirección del centro o casa"
 capacidad: "ubis.direcciones_quitar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direcciones_quitar"]
 fragmentos: ["ubis.pantalla.direcciones_quitar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_quitar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Desvincula una dirección del ubi según el índice en la lista CSV de ids.
+Quitar la dirección de un centro o casa sin borrarla.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **scdl > direcciones > buscar**: buscar, pulsar el nombre del centro o casa en la tabla y usar «Editar: **centro** / **dirección** / **telecos**» de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar una dirección del centro o casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Pulsar **Quitar Dirección**.
+3. La dirección deja de aparecer en el centro o casa, pero sigue existiendo para otros.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/direcciones_quitar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

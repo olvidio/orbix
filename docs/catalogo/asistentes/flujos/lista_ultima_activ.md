@@ -2,9 +2,9 @@
 id: "asistentes.lista_ultima_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Lista Ultima Activ"
+nombre: "Flujo - Consultar quién no ha asistido recientemente"
 capacidad: "asistentes.lista_ultima_activ.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.lista_ultima_activ"]
 fragmentos: ["asistentes.pantalla.lista_ultima_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_ultima_activ_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Informe de personas s sin asistencia reciente.
-
+Informe de las personas s que no han asistido recientemente al crt o a la cv.
 
 ## Punto De Entrada
 
-Pantalla `lista_ultima_activ` (`frontend/asistentes/controller/`).
-
+Menú **vsg > crt / cv > s que no han ido ...**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,14 @@ Pantalla `lista_ultima_activ` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar quién no ha asistido recientemente
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción **s que no han ido al crt** (o a la **cv**) del curso actual o del anterior.
+2. Se muestra la lista con la fecha de su última asistencia.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/lista_ultima_activ_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

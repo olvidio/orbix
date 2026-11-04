@@ -2,7 +2,7 @@
 id: "ubis.centros.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros"
+nombre: "Flujo - Guardar los datos de un centro"
 capacidad: "ubis.centros.gestionar"
 pantallas_principales: ["ubis.pantalla.centros_que"]
 fragmentos: ["ubis.pantalla.centros_form_labor", "ubis.pantalla.centros_form_num", "ubis.pantalla.centros_form_plazas"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
+Guardar los cambios de un centro de la dl: labor, números o plazas.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,11 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Guardar los datos de un centro
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir **labor**, **pi, cartas, nº buzón** o **sede, plazas** y pulsar **buscar**.
+2. Abrir el centro, cambiar el bloque y pulsar **guardar cambios**.
 
 Endpoints asociados:
 - `/src/ubis/centros_update`

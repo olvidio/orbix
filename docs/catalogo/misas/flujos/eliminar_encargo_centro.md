@@ -2,9 +2,9 @@
 id: "misas.eliminar_encargo_centro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Eliminar Encargo Centro"
+nombre: "Flujo - Quitar un encargo visible para un centro"
 capacidad: "misas.eliminar_encargo_centro.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/eliminar_encargo_centro"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
+Quitar un encargo de la vista de un centro.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
+Menú **dre > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Quitar un encargo visible para un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo-centro y pulsar **Eliminar encargo**.
+2. Confirmar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/eliminar_encargo_centro`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

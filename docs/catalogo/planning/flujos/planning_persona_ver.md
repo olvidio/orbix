@@ -2,7 +2,7 @@
 id: "planning.planning_persona_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por persona (calendario)"
+nombre: "Flujo - Ver el calendario de una persona"
 capacidad: "planning.planning_persona_ver.gestionar"
 pantallas_principales: ["planning.pantalla.planning_persona_que", "planning.pantalla.planning_persona_select"]
 fragmentos: ["planning.pantalla.planning_persona_ver"]
@@ -17,19 +17,22 @@ Calendario de actividades de las personas seleccionadas en el listado.
 
 ## Objetivo De Usuario
 
-Visualizar y exportar el planning individual o múltiple en el periodo elegido.
+Ver el calendario de actividades de las personas elegidas.
 
 ## Punto De Entrada
 
-- Desde `planning_persona_select` → AJAX `planning_persona_ver`.
+Resultado de **scdl > planning > persona dl** tras marcar personas y pulsar **vista tabla**.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver calendario
+### Ver el calendario de una persona
 
-1. Seleccionar persona(s) en el listado (`sel` o `sSeleccionados`).
-2. `planning_persona_ver_data` carga actividades en vista plana (no por centro).
-3. Con `modelo=2` se imprime; si no, exportar o consultar leyenda.
+Pasos propuestos:
+1. Aparece el calendario con los meses del periodo (enero - 2027, febrero - 2027…) y una fila por persona; cada actividad es una barra con su tipo. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+2. **Descargar html** guarda el calendario como página web.
+
+Endpoints asociados:
+- `/src/planning/planning_persona_ver_data`
 
 ## Endpoints Del Flujo
 

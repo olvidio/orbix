@@ -2,9 +2,9 @@
 id: "encargossacd.listas_d.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas D"
+nombre: "Flujo - Listar la tabla por sacerdote"
 capacidad: "encargossacd.listas_d.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_d"]
 fragmentos: ["encargossacd.pantalla.listas_d"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_d_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_d.ges
 
 ## Objetivo De Usuario
 
-Gestiona ListasD. Genera el listado "d" de atencion SACD (cr 9/20, 10). Sustituye la logica de frontend/encargossacd/controller/listas_d.php. La vista original devolvia dos tablas HTML sueltas (cabecera + listado); aqui se componen ambas en Html para que el frontend solo tenga que volcarlas al cliente.
+Sacar la tabla por sacerdote (cr 9/20, 10), para sv o sf.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar la tabla por sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **tabla por sacd** o **tabla por sacd sf**.
+3. Se muestra, por sacerdote y ciudad, la lista de centros con el nº de horas (por ejemplo Raset 3, Moneders 5), incluidos estudio y descanso.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_d_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "encargossacd.listas_cl.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas Cl"
+nombre: "Flujo - Listar los centros de la sss+"
 capacidad: "encargossacd.listas_cl.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_cl"]
 fragmentos: ["encargossacd.pantalla.listas_cl"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_cl_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_cl.ge
 
 ## Objetivo De Usuario
 
-Gestiona ListasCl. Listado de cl para cr, restringido a los centros de la sss+. Sustituye la logica de frontend/encargossacd/controller/listas_cl.php (era una plantilla con SQL crudo). Devuelve el HTML completo listo para volcarlo al cliente; el frontend se limita a pasar sf y a echo del resultado.
+Sacar el listado de los centros de la sss+ (cr 1/14, 10,c).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar los centros de la sss+
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **cl sss+**.
+3. Se muestra el listado.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_cl_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

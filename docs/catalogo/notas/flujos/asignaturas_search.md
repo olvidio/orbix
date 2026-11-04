@@ -2,9 +2,9 @@
 id: "notas.asignaturas_search.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Asignaturas Search"
+nombre: "Flujo - Elegir una asignatura"
 capacidad: "notas.asignaturas_search.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_ver"]
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/asignaturas_search"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.asignaturas_search.
 
 ## Objetivo De Usuario
 
-Autocompletado de asignaturas en formulario de acta.
+Autocompletar el nombre de la asignatura al rellenar un acta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir una asignatura
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, escribir parte del nombre de la asignatura.
+2. Elegir de la lista que aparece.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/asignaturas_search`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "notas"
 nombre: "Flujo - Gestionar Nota Persona"
 capacidad: "notas.nota_persona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 acciones: ["ver_formulario"]
 endpoints: ["/src/notas/nota_persona_form_data"]

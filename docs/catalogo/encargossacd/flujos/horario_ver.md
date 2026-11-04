@@ -2,9 +2,9 @@
 id: "encargossacd.horario_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Horario Ver"
+nombre: "Flujo - Ver o crear un horario de encargo"
 capacidad: "encargossacd.horario_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.horario_ver"]
 fragmentos: ["encargossacd.pantalla.horario_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/horario_ver_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.horario_ver.
 
 ## Objetivo De Usuario
 
-Gestiona EncargoHorarioVer. Datos del formulario de horario de encargo (no sacd).
+Ver el formulario de horario de un encargo (días, horas, nº de sacerdotes, periodo de vigencia).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Ficha del encargo, **añadir horario**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver o crear un horario de encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de horarios, pulsar **añadir horario** o un horario existente.
+2. Indicar **dia**, **hora inicio**, **hora fin**, **nº de sacd** y el periodo (**activo desde** / **hasta**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/horario_ver_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

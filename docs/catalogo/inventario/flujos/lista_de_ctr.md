@@ -2,9 +2,9 @@
 id: "inventario.lista_de_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista De Ctr"
+nombre: "Flujo - Elegir el centro de origen y de destino"
 capacidad: "inventario.lista_de_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.traslado_doc_que"]
 fragmentos: ["inventario.pantalla.traslado_doc_que"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_de_ctr"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista De Ctr
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_de_ctr.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona ListaDeCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar la lista de centros disponibles como origen y destino en el traslado de documentos.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Dentro de **Inventario > inventarios > traslado de doc**: se carga sola al abrir la pantalla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +27,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir el centro de origen y de destino
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **traslado de doc**.
+2. Elegir el centro de origen en su desplegable.
+3. Elegir el centro de destino en el segundo desplegable.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_de_ctr`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "ubis.delegacion_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Delegacion Que"
+nombre: "Flujo - Elegir la delegación de destino"
 capacidad: "ubis.delegacion_que.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.delegacion_que"]
 fragmentos: ["ubis.pantalla.delegacion_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/delegacion_que_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve delegaciones destino disponibles para el traslado de ubis.
+Ofrecer las delegaciones a las que se pueden trasladar los centros o casas marcados.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casas > listados.
+Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > listados. Pills2: Calendario > centros y casa
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la delegación de destino
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el listado, marcar los centros o casas a trasladar.
+2. Pulsar trasladar.
+3. En **Trasladar a**, elegir la delegación y confirmar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/delegacion_que_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

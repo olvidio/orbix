@@ -2,7 +2,7 @@
 id: "profesores.profesor_asignatura_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Buscar profesor para asignatura"
+nombre: "Flujo - Buscar profesores para una asignatura"
 capacidad: "profesores.profesor_asignatura_que.gestionar"
 pantallas_principales: ["profesores.pantalla.profesor_asignatura_que"]
 fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
@@ -17,12 +17,11 @@ Consulta de profesores habilitados para impartir una asignatura concreta.
 
 ## Objetivo De Usuario
 
-Elegir asignatura y ver candidatos (departamento + ampliación) con datos de contacto y docencia
-previa, como apoyo antes de asignar en el curso académico.
+Saber qué profesores pueden impartir una asignatura.
 
 ## Punto De Entrada
 
-Pantalla `profesor_asignatura_que` (`frontend/profesores/controller/profesor_asignatura_que.php`).
+Menú **vest > buscar persona > profesor para asignatura** (Pills2: stgr > personas).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,16 +29,16 @@ Pantalla `profesor_asignatura_que` (`frontend/profesores/controller/profesor_asi
 
 ## Escenarios Inferidos
 
-### Consultar
+### Buscar profesores para una asignatura
 
-Pasos:
-1. Abrir **profesor para asignatura** desde el menú.
-2. Elegir asignatura en el desplegable (`fnjs_profes`).
-3. Revisar la tabla AJAX con profesores, centro, docencia y contacto.
+Pasos propuestos:
+1. Entrar en «Profesores que pueden impartir una asignatura».
+2. Elegir la **Asignatura** en el desplegable.
+3. Debajo aparece la lista de profesores que pueden darla, o «no hay ninguna fila» si no hay ninguno registrado.
 
 Endpoints asociados:
-- `/src/profesores/profesor_asignatura_que` — carga inicial
-- `/src/profesores/profesor_asignatura_ajax` — tabla al cambiar asignatura
+- `/src/profesores/profesor_asignatura_que`
+- `/src/profesores/profesor_asignatura_ajax`
 
 ## Endpoints Del Flujo
 

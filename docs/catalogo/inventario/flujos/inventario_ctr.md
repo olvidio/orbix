@@ -2,9 +2,9 @@
 id: "inventario.inventario_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Inventario Ctr"
+nombre: "Flujo - Imprimir el inventario de centros"
 capacidad: "inventario.inventario_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_imprimir_ctr"]
 fragmentos: ["inventario.pantalla.doc_imprimir_ctr"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/inventario_ctr"]
@@ -13,17 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Inventario Ctr
 
-Propuesta generada automaticamente desde la capacidad `inventario.inventario_ctr.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imprimir_ctr` vía `inventario_ctr`.
+Obtener el inventario impreso de los documentos de uno o varios centros, listo para firmar.
 
 ## Punto De Entrada
 
-- `inventario.pantalla.inventario_que → doc_de_ctr`
-
-
+Desde **de centros o dlb > inventario de centros**, tras marcar los centros y pulsar **Imprimir ctr** o **Imprimir dl**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +27,16 @@ Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imp
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Imprimir el inventario de centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar los centros en **inventario de centros**.
+2. Pulsar **Imprimir ctr** (o **Imprimir dl** para añadir la columna **observaciones dl**).
+3. Se muestra una hoja por centro titulada **Inventario de documentos de** (nombre del centro), con **documento** y **observaciones**.
+4. Imprimir desde el navegador. Cada hoja termina con la nota «(*) Se guarda bajo llave», el total de páginas y el espacio **Conforme (firma)**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/inventario_ctr`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

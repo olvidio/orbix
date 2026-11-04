@@ -2,9 +2,9 @@
 id: "usuarios.role_grupmenu_add.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Role Grupmenu Add"
+nombre: "Flujo - Añadir grupos de menús a un rol"
 capacidad: "usuarios.role_grupmenu_add.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.role_grupmenu"]
 fragmentos: ["usuarios.pantalla.role_grupmenu"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/role_grupmenu_add"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
+Añadir a un rol los grupos de menús marcados.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Ficha del rol, ventana **añadir nuevo grupMenu**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Añadir grupos de menús a un rol
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar **añadir grup menu** en la ficha del rol.
+2. Marcar uno o varios grupos de la lista.
+3. Guardar. Si no se marca ninguno aparece «debe seleccionar uno».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/role_grupmenu_add`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "cartaspresentacion.cartas_presentacion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
-nombre: "Flujo - Gestionar Cartas Presentacion"
+nombre: "Flujo - Ver el listado de cartas"
 capacidad: "cartaspresentacion.cartas_presentacion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_lista"]
 acciones: ["listar"]
 endpoints: ["/src/cartaspresentacion/cartas_presentacion_lista_data"]
@@ -17,25 +17,32 @@ Visualización del listado agrupado de cartas (solo lectura) desde el menú o de
 
 ## Objetivo De Usuario
 
-Consultar todas las cartas de presentación organizadas por tipo de labor, delegación y población.
+Consultar todas las cartas de presentación agrupadas por tipo de labor, delegación y población.
 
 ## Punto De Entrada
 
-- Menú **lista dl** o **lista todo** → `cartas_presentacion_lista.php` con `que=lista_dl` o
-  `que=lista_todo`.
-- Pantalla **buscar** → mismo fragmento con `que=get` y filtros.
+Menú **scdl > direcciones > cartas presentacion**: **lista dl** (solo la propia delegación) o **lista todo** (todas). La pantalla **buscar** muestra el mismo listado con filtros.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar (menú)
+### Ver el listado de cartas
 
-1. Abrir lista dl (solo mi delegación) o lista todo (todas las delegaciones).
-2. El sistema muestra tablas HTML agrupadas con datos de contacto.
+Pasos propuestos:
+1. Abrir **lista dl** o **lista todo**.
+2. Aparecen las tablas agrupadas con los datos de contacto.
+3. Los centros con el tipo de labor mal configurado salen en un aviso al final de la página.
 
-### Listar (buscar)
+Endpoints asociados:
+- `/src/cartaspresentacion/cartas_presentacion_lista_data`
 
-1. Desde buscar, rellenar filtros y pulsar **buscar**.
-2. Los resultados se cargan en `#resultados`.
+### Ver el listado filtrado
+
+Pasos propuestos:
+1. Abrir **buscar**, rellenar los filtros y pulsar **buscar**.
+2. Los resultados aparecen debajo.
+
+Endpoints asociados:
+- `/src/cartaspresentacion/cartas_presentacion_lista_data`
 
 ## Endpoints Del Flujo
 

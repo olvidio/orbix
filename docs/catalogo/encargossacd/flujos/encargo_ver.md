@@ -2,9 +2,9 @@
 id: "encargossacd.encargo_ver.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Encargo Ver"
+nombre: "Flujo - Modificar un encargo"
 capacidad: "encargossacd.encargo_ver.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_select", "encargossacd.pantalla.encargo_ver"]
 acciones: ["crear", "eliminar", "obtener_datos"]
 endpoints: ["/src/encargossacd/encargo_ver_data", "/src/encargossacd/encargo_ver_eliminar", "/src/encargossacd/encargo_ver_nuevo"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.encargo_ver.
 
 ## Objetivo De Usuario
 
-Gestiona EncargoVer. Alta de encargo desde el formulario de encargo_ver (antes encargo_ajax.php que=nuevo). Borrado desde lista encargo_select (antes encargo_ajax.php que=eliminar). Datos para la pantalla encargo_ver (nuevo / editar encargo). El frontend arma los frontend\shared\web\Desplegable a partir de los arrays devueltos.
+Crear, ver, modificar o eliminar un encargo (atención de un centro, zona, etc.).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,32 +30,39 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Crear
+### Modificar un encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo desde **ver encargo**.
+2. Cambiar el **grupo**, el **tipo encargo**, el **centro** o la **zona**, el **lugar**, la **descripción** y el **idioma**.
+3. Pulsar **modificar encargo**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-Endpoints asociados:
+- `/src/encargossacd/encargo_ver_data`
 - `/src/encargossacd/encargo_ver_eliminar`
+- `/src/encargossacd/encargo_ver_nuevo`
 
-### Obtener Datos
+### Crear un encargo nuevo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **ver encargo** pulsar **añadir encargo**.
+2. Elegir el **tipo de encargo** («escoger el tipo de encargo»), el centro o zona y la descripción.
+3. Pulsar **nuevo encargo** (o **generar**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/encargo_ver_data`
+- `/src/encargossacd/encargo_ver_eliminar`
+- `/src/encargossacd/encargo_ver_nuevo`
+
+### Eliminar un encargo
+
+Pasos propuestos:
+1. En la tabla de encargos, marcar el encargo y eliminarlo; confirmar.
+
+Endpoints asociados:
+- `/src/encargossacd/encargo_ver_data`
+- `/src/encargossacd/encargo_ver_eliminar`
+- `/src/encargossacd/encargo_ver_nuevo`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "encargossacd.encargo_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Encargo Select"
+nombre: "Flujo - Buscar un encargo"
 capacidad: "encargossacd.encargo_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_select"]
 fragmentos: ["encargossacd.pantalla.encargo_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/encargo_select_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.encargo_sele
 
 ## Objetivo De Usuario
 
-Gestiona EncargoSelect. Datos para la lista de encargos (encargo_select). El frontend construye la frontend\shared\web\Lista y los enlaces; aqui devolvemos unicamente los datos planos de cada fila.
+Buscar los encargos existentes y acceder a su ficha, o crear uno nuevo.
 
 ## Punto De Entrada
 
-Menú: dre > Encargos > ver encargo.
-
+Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,24 @@ Menú: dre > Encargos > ver encargo.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Buscar un encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ver encargo**.
+2. Rellenar los criterios de **buscar un encargo** y pulsar **buscar**.
+3. Pulsar el encargo en la tabla para abrirlo (o usar **Buscar en todas las columnas**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/encargo_select_data`
+
+### Crear un encargo
+
+Pasos propuestos:
+1. Pulsar **añadir encargo**.
+2. Rellenar el formulario (ver «Modificar un encargo») y guardar.
+
+Endpoints asociados:
+- `/src/encargossacd/encargo_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

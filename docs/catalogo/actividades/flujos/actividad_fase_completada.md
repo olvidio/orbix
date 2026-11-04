@@ -2,7 +2,7 @@
 id: "actividades.actividad_fase_completada.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Consultar fase completada"
+nombre: "Flujo - Ver si una fase está completada"
 capacidad: "actividades.actividad_fase_completada.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -18,11 +18,22 @@ desde otros módulos o JS de procesos).
 
 ## Objetivo De Usuario
 
-Validar estado de una fase sin recargar toda la ficha.
+Comprobar si una fase del proceso de la actividad está completada, sin recargar la ficha.
 
 ## Punto De Entrada
 
-Llamadas AJAX desde integraciones con `procesos` (no pantalla dedicada en actividades).
+Ficha de actividad (menú **actividades > buscar actividad** y abrir una).
+
+## Escenarios Inferidos
+
+### Ver si una fase está completada
+
+Pasos propuestos:
+1. Abrir la ficha de la actividad.
+2. Las casillas de fases reflejan si cada fase está completada; se actualizan solas al cambiar algo.
+
+Endpoints asociados:
+- `/src/actividades/actividad_fase_completada_datos`
 
 ## Endpoints Del Flujo
 

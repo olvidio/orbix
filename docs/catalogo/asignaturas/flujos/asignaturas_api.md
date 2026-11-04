@@ -2,7 +2,7 @@
 id: "asignaturas.api_soporte.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asignaturas"
-nombre: "Flujo - API asignaturas (soporte)"
+nombre: "Flujo - Datos de asignaturas"
 pantallas_principales: ["asignaturas.pantalla.api_soporte"]
 endpoints: ["/src/asignaturas/asignaturas_map_data", "/src/asignaturas/asignaturas_con_separador_data"]
 estado_revision: "revisado"
@@ -12,11 +12,26 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Datos de asignaturas consumidos por notas y profesores (sin pantalla propia).
+Datos de asignaturas que usan otros módulos (notas, profesores); no tiene pantalla propia.
 
 ## Endpoints
 
 Ver `docs/catalogo/asignaturas/api/`.
+
+## Punto De Entrada
+
+Automático: no requiere acción del usuario.
+
+## Escenarios Inferidos
+
+### Datos de asignaturas
+
+Pasos propuestos:
+1. Al elegir una asignatura en notas o profesores, la lista se carga automáticamente desde este servicio.
+
+Endpoints asociados:
+- `/src/asignaturas/asignaturas_map_data`
+- `/src/asignaturas/asignaturas_con_separador_data`
 
 ## Ruta de menú
 

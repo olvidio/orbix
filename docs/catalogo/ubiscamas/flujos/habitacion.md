@@ -2,9 +2,9 @@
 id: "ubiscamas.habitacion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubiscamas"
-nombre: "Flujo - Gestionar Habitacion"
+nombre: "Flujo - Ver las habitaciones de una casa"
 capacidad: "ubiscamas.habitacion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubiscamas.pantalla.habitacion_form"]
 fragmentos: ["ubiscamas.pantalla.habitacion_form"]
 acciones: ["crear_actualizar", "eliminar", "ver_formulario"]
 endpoints: ["/src/ubiscamas/habitacion_delete", "/src/ubiscamas/habitacion_form_data", "/src/ubiscamas/habitacion_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creación automática de camas según número indicado.
+Dar de alta, modificar o eliminar las habitaciones de una casa, y crear sus camas.
 
 ## Punto De Entrada
 
-Dossier CDC habitaciones (`select_habitaciones_cdc` en ficha ubi) o navegación desde formulario de habitación. Sin entrada de menú en el índice.
+Ficha de la casa (Direcciones > buscar, tipo casa) > dossier **Habitaciones (camas) de una cdc**. Solo está disponible si el módulo de camas está instalado en la delegación.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,37 +27,40 @@ Dossier CDC habitaciones (`select_habitaciones_cdc` en ficha ubi) o navegación 
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Ver las habitaciones de una casa
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/ubiscamas/habitacion_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Buscar la casa en **direcciones > buscar** y abrir su ficha.
+2. En «Relación de dossiers» pulsar **Habitaciones (camas) de una cdc**.
+3. Aparece la **Relación de habitaciones** de la casa (o «no hay ninguna fila» si aún no hay).
 
 Endpoints asociados:
 - `/src/ubiscamas/habitacion_delete`
+- `/src/ubiscamas/habitacion_form_data`
+- `/src/ubiscamas/habitacion_update`
 
-### Ver Formulario
+### Crear una habitación
 
 Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. En la relación de habitaciones, pulsar **crear una nueva habitación**.
+2. Se abre «Nueva habitación» con los campos **Orden**, **Nombre**, **Número de camas**, **Número de camas VIP**, **Planta**, **Tipo de lavabo** (sin especificar, NO, completo, sin ducha o exterior), **Sillón**, **Adaptada**, **Observaciones** y **Despacho**.
+3. Debajo, en **Camas**, el botón **Añadir cama** permite añadir camas una a una.
+4. Pulsar **Guardar *** para guardar: el asterisco indica que se añaden automáticamente las camas según el **Número de camas** puesto arriba. **Cancelar** sale sin guardar.
 
 Endpoints asociados:
+- `/src/ubiscamas/habitacion_delete`
 - `/src/ubiscamas/habitacion_form_data`
+- `/src/ubiscamas/habitacion_update`
+
+### Modificar o eliminar una habitación
+
+Pasos propuestos:
+1. Desde la relación de habitaciones, seleccionar la habitación para modificarla o eliminarla (no probado en pantalla: la casa de prueba no tenía habitaciones).
+
+Endpoints asociados:
+- `/src/ubiscamas/habitacion_delete`
+- `/src/ubiscamas/habitacion_form_data`
+- `/src/ubiscamas/habitacion_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

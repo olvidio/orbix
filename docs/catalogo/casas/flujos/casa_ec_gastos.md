@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "casas"
 nombre: "Flujo - Gestionar Casa Ec Gastos"
 capacidad: "casas.casa_ec_gastos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["casas.pantalla.casa_ec_gastos_lista"]
 fragmentos: ["casas.pantalla.casa_ec_gastos_lista"]
 acciones: ["guardar", "ver_formulario"]
 endpoints: ["/src/casas/casa_ec_gastos_form_data", "/src/casas/casa_ec_gastos_guardar"]
@@ -28,14 +28,6 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 - `casas.pantalla.casa_ec_gastos_lista`
 
 ## Escenarios Inferidos
-
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ### Ver Formulario
 

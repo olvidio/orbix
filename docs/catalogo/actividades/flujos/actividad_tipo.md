@@ -2,7 +2,7 @@
 id: "actividades.actividad_tipo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Cascada tipo actividad (AJAX)"
+nombre: "Flujo - Elegir el tipo de actividad paso a paso"
 capacidad: "actividades.actividad_tipo.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_select_ubi"]
 fragmentos: ["actividades.pantalla.actividad_que", "actividades.pantalla.actividad_ver"]
@@ -18,21 +18,23 @@ Desplegables dinámicos de la cascada sf/sv → asistentes → actividad → tip
 
 ## Objetivo De Usuario
 
-Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin recargar
-toda la página.
+Al cambiar uno de los desplegables que definen el tipo de actividad, actualizar los siguientes sin recargar la página.
 
 ## Punto De Entrada
 
-- `actividad_que` / ficha (`fnjs_asistentes`, `fnjs_actividad`, `fnjs_nom_tipo`, `fnjs_id_activ`).
-- `actividad_select_ubi` (`fnjs_lugar`).
+Está dentro de la búsqueda de actividades, de la ficha de actividad y de la ventana para elegir lugar; no tiene entrada de menú.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener
+### Elegir el tipo de actividad paso a paso
 
-1. onchange envía `entrada` (código parcial) y `salida` deseada.
-2. `actividad_tipo_get` devuelve HTML `<option>` o datos según salida.
-3. JS sustituye el desplegable correspondiente.
+Pasos propuestos:
+1. Elegir el primer valor (por ejemplo los asistentes: n, agd, s…).
+2. Los desplegables siguientes (actividad, tipo) se rellenan solos con las opciones válidas.
+3. Seguir eligiendo hasta completar el tipo.
+
+Endpoints asociados:
+- `/src/actividades/actividad_tipo_get`
 
 ## Endpoints Del Flujo
 

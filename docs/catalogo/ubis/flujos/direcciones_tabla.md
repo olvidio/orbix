@@ -2,9 +2,9 @@
 id: "ubis.direcciones_tabla.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direcciones Tabla"
+nombre: "Flujo - Elegir una dirección de la tabla"
 capacidad: "ubis.direcciones_tabla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direcciones_tabla"]
 fragmentos: ["ubis.pantalla.direcciones_tabla"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_tabla"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
+Mostrar las direcciones encontradas para asignar una al centro o casa, o crear otra.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Tras buscar en **añadir dirección**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir una dirección de la tabla
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar la «tabla de direcciones».
+2. Marcar la dirección que corresponde y asignarla.
+3. Si no está, pulsar **crear otra nueva**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/direcciones_tabla`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

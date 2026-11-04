@@ -2,7 +2,7 @@
 id: "planning.planning_zones_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por zonas SACD (filtros)"
+nombre: "Flujo - Elegir la zona y el periodo"
 capacidad: "planning.planning_zones_que.gestionar"
 pantallas_principales: ["planning.pantalla.planning_zones_que"]
 fragmentos: []
@@ -17,20 +17,24 @@ Entrada del planning por zonas: carga zonas permitidas y elige trimestre/activid
 
 ## Objetivo De Usuario
 
-Consultar el calendario de actividades SACD agrupadas por zona.
+Elegir la zona de sacerdotes y el trimestre o mes del planning.
 
 ## Punto De Entrada
 
-- `planning_zones_que.php` (menú por zonas o propuesta).
+Menú **dre > planning > por zonas** (también **propuestas > planing zonas**).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Preparar filtros
+### Elegir la zona y el periodo
 
-1. Abrir entrada de menú (`propuesta` opcional; distinto de `propuesta_calendario` de casas).
-2. `planning_zones_que_data` devuelve `opciones_zonas` según rol (`p-sacd` acotado; jefe añade `todo`/`todo_propias`).
-3. Elegir zona, trimestre/mes (1–6 / 101–112), año y `actividad=si|no`.
-4. Ver planning → `planning_zones_select`.
+Pasos propuestos:
+1. Abrir «trimestre o mes que interesa» y marcar un trimestre (enero-marzo, abril-junio, julio-septiembre, octubre-diciembre) o un mes concreto.
+2. Elegir el **año** y la **zona** (según tu rol, solo las tuyas o también «todo»).
+3. Marcar si se quieren ver las actividades (sí / no).
+4. Pulsar **planning vista tabla**.
+
+Endpoints asociados:
+- `/src/planning/planning_zones_que_data`
 
 ## Endpoints Del Flujo
 

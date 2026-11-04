@@ -2,9 +2,9 @@
 id: "cambios.cambio_usuario_propiedad_pref_item.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Editar condición de propiedad"
+nombre: "Flujo - Poner condición a un campo"
 capacidad: "cambios.cambio_usuario_propiedad_pref_item.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.usuario_avisos_pref_condicion"]
 fragmentos: ["cambios.pantalla.usuario_avisos_pref_condicion"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/cambios/cambio_usuario_propiedad_pref_item_data"]
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Abrir el modal para definir operador, valor y alcance de un cambio en una propiedad concreta.
+Abrir la ventana para definir operador, valor y alcance de un campo vigilado.
 
 ## Punto De Entrada
 
-`fnjs_modificar` en la tabla de propiedades → `usuario_avisos_pref_condicion`.
+Menú de usuario > **preferencias** > **gestionar avisos en cambios actividades**.
+
+## Escenarios Inferidos
+
+### Poner condición a un campo
+
+Pasos propuestos:
+1. En la tabla de campos, pulsar modificar en el campo.
+2. Elegir el operador y el valor y el alcance, y guardar la condición.
+
+Endpoints asociados:
+- `/src/cambios/cambio_usuario_propiedad_pref_item_data`
 
 ## Ruta de menú
 

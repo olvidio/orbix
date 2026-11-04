@@ -2,9 +2,9 @@
 id: "misas.ver_misas_zona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Ver Misas Zona"
+nombre: "Flujo - Consultar el plan de misas de una zona"
 capacidad: "misas.ver_misas_zona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_misas_zona"]
 fragmentos: ["misas.pantalla.ver_misas_zona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/ver_misas_zona_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo lectura, con metadatos dia/tipo en celdas).
+Consultar las misas de una zona en un rango de fechas, sin poder modificarlas.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **dre > Misas > Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Ver plan zona).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar el plan de misas de una zona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Ver plan zona**.
+2. Elegir la zona en **Plan de Misas de la zona**, el **Orden** y el **Periodo** (o fechas concretas con «otro»).
+3. Se muestra la cuadrícula de consulta; no se puede cambiar nada.
+4. Leyenda de la fila de cada sacerdote (por día): **SI** = el sacerdote está en la zona ese día; **NO** = no está en la zona ese día; **--** = ese día está en otro sitio (al pasar el ratón sale «Está en …»). El fondo rojo avisa de un problema: «Tiene dos Misas a primera hora» o «No está en la zona y tiene Misa a primera hora».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/ver_misas_zona_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

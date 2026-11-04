@@ -2,7 +2,7 @@
 id: "usuarios.check_first_login_2fa.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Check First Login 2fa"
+nombre: "Flujo - Primer acceso sin 2FA"
 capacidad: "usuarios.check_first_login_2fa.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
+Tras iniciar sesión, llevar al usuario a configurar la verificación en dos pasos si aún no la tiene.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Automático después de iniciar sesión.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Primer acceso sin 2FA
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Iniciar sesión con login y contraseña.
+2. Si el usuario no tiene la verificación en dos pasos activa, se le lleva a la pantalla de configuración.
+3. Si ya la tiene, entra directamente a la página de inicio.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/check_first_login_2fa`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

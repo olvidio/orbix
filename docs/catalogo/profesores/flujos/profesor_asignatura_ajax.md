@@ -2,9 +2,9 @@
 id: "profesores.profesor_asignatura_ajax.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Tabla AJAX profesores asignatura"
+nombre: "Flujo - Ver los profesores de una asignatura"
 capacidad: "profesores.profesor_asignatura_ajax.gestionar"
-pantallas_principales: []
+pantallas_principales: ["profesores.pantalla.profesor_asignatura_ajax"]
 fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
 acciones: ["consultar"]
 endpoints: ["/src/profesores/profesor_asignatura_ajax"]
@@ -17,11 +17,11 @@ Fragmento que completa el flujo **profesor para asignatura**.
 
 ## Objetivo De Usuario
 
-Obtener la lista de profesores para la asignatura seleccionada sin recargar la pantalla principal.
+Cargar la lista de profesores de la asignatura elegida.
 
 ## Punto De Entrada
 
-Invocado por `fnjs_profes` desde `profesor_asignatura_que` al cambiar `id_asignatura`.
+Menú **vest > buscar persona > profesor para asignatura**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,12 +29,11 @@ Invocado por `fnjs_profes` desde `profesor_asignatura_que` al cambiar `id_asigna
 
 ## Escenarios Inferidos
 
-### Consultar
+### Ver los profesores de una asignatura
 
-Pasos:
-1. El usuario cambia la asignatura en el desplegable.
-2. POST a `profesor_asignatura_ajax.php` con `id_asignatura`.
-3. Se inserta HTML de tabla en el contenedor de la pantalla padre.
+Pasos propuestos:
+1. Elegir la asignatura en el desplegable.
+2. La lista de profesores se actualiza en la misma pantalla.
 
 Endpoints asociados:
 - `/src/profesores/profesor_asignatura_ajax`

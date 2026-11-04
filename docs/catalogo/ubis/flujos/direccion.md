@@ -2,9 +2,9 @@
 id: "ubis.direccion.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direccion"
+nombre: "Flujo - Guardar una dirección"
 capacidad: "ubis.direccion.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direccion_update"]
 fragmentos: ["ubis.pantalla.direccion_update"]
 acciones: ["crear_actualizar"]
 endpoints: ["/src/ubis/direccion_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Crea o modifica una dirección y su relación con el ubi (principal, propietario).
+Guardar los datos de la dirección de un centro o casa.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Menú **scdl > direcciones > buscar**: buscar, pulsar el nombre del centro o casa en la tabla y usar «Editar: **centro** / **dirección** / **telecos**» de la ficha.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,13 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Guardar una dirección
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Rellenar **Nombre sede**, **Dirección**, **Dirección postal**, **Código postal**, **Población**, **Provincia**, **País**, **Comentarios dirección**, **Fecha introducción de datos**, **Latitud** y **Longitud**; marcar **Propietario** o **Principal** si procede (hay un enlace **ver ejemplo dirección**).
+3. Pulsar **Guardar Cambios**.
+4. Con **Añadir Dirección** se asigna otra dirección al centro y con **Quitar Dirección** se le quita la actual.
 
 Endpoints asociados:
 - `/src/ubis/direccion_update`

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Mover Tabla"
 capacidad: "devel_db_admin.mover_tabla.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_mover"]
 fragmentos: ["devel_db_admin.pantalla.db_mover"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/mover_tabla"]

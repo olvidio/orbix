@@ -2,9 +2,9 @@
 id: "asistentes.lista_asis_conjunto_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Lista Asis Conjunto Activ"
+nombre: "Flujo - Ver las plazas de varias actividades"
 capacidad: "asistentes.lista_asis_conjunto_activ.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.lista_asis_conjunto_activ"]
 fragmentos: ["asistentes.pantalla.lista_asis_conjunto_activ"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_asis_conjunto_activ_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Listado conjunto de plazas en varias actividades.
-
+Ver el listado conjunto de plazas y asistentes de varias actividades.
 
 ## Punto De Entrada
 
-Pantalla `lista_asis_conjunto_activ` (`frontend/asistentes/controller/`).
-
+Selección de varias actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,14 @@ Pantalla `lista_asis_conjunto_activ` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver las plazas de varias actividades
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar las actividades.
+2. Elegir el listado conjunto: se muestran las plazas y asistentes de todas ellas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/lista_asis_conjunto_activ_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

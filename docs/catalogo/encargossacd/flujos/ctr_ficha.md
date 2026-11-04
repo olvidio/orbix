@@ -2,9 +2,9 @@
 id: "encargossacd.ctr_ficha.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Ctr Ficha"
+nombre: "Flujo - Consultar y modificar la ficha de un centro"
 capacidad: "encargossacd.ctr_ficha.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.ctr_ficha"]
 fragmentos: ["encargossacd.pantalla.ctr_ficha", "encargossacd.pantalla.ctr_ficha_update"]
 acciones: ["crear_actualizar", "obtener_datos"]
 endpoints: ["/src/encargossacd/ctr_ficha_data", "/src/encargossacd/ctr_ficha_update"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.ctr_ficha.ge
 
 ## Objetivo De Usuario
 
-Gestiona CtrFicha. Datos de la pantalla ctr_ficha: - calcula el filtro_ctr efectivo a partir del centro (cuando no viene del POST) - devuelve las opciones_seccion para el desplegable de grupo de ctrs. Reemplaza la lectura directa de repos y el acceso a EncargoAplicacionService que el frontend hacia en ctr_ficha.php. Mutacion de la ficha de atencion sacerdotal de un centro. Puerto de frontend/encargossacd/controller/ctr_ficha_update.php. Devuelve siempre ['error' => string] (vacio = exito). El controlador HTTP convierte ese resultado en JSON {success, mensaje} (el proxy legacy en frontend/ preserva el contrato "alert(rta_txt)" reemitiendo mensaje).
+Ver y modificar la atención sacerdotal de un centro: sacerdote titular, suplente, colaboradores, dedicación y exigencias.
 
 ## Punto De Entrada
 
-Menú: dre > Encargos > ficha ctr.
-
+Menú **dre > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,24 +30,17 @@ Menú: dre > Encargos > ficha ctr.
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Consultar y modificar la ficha de un centro
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Entrar en **ficha ctr**.
+2. Elegir el **grupo de ctrs** (sv, sf, sss+, igl, cgi/oc…) y luego el **centro**.
+3. Se abre la ficha con el **sacd titular**, el **Suplente**, los colaboradores, la dedicación (mañanas, tarde 1ª y 2ª hora), las exigencias del centro y las observaciones.
+4. Cambiar lo que proceda y pulsar **guardar**. Si titular y suplente son el mismo sacerdote avisa «El sacd titular y suplente deben ser distintos»; no se guarda hasta corregirlo.
 
 Endpoints asociados:
+- `/src/encargossacd/ctr_ficha_data`
 - `/src/encargossacd/ctr_ficha_update`
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 

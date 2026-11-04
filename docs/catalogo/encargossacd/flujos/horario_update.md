@@ -2,9 +2,9 @@
 id: "encargossacd.horario_update.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Horario Update"
+nombre: "Flujo - Guardar un horario de encargo"
 capacidad: "encargossacd.horario_update.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.horario_update"]
 fragmentos: ["encargossacd.pantalla.horario_update"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/horario_update_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.horario_upda
 
 ## Objetivo De Usuario
 
-Gestiona EncargoHorario. Alta/edición/baja de horario de encargo (tabla encargo_horario).
+Guardar, modificar o quitar un horario de un encargo.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Formulario de horario de encargo.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Guardar un horario de encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar día, horas y periodo.
+2. Pulsar guardar. Para quitarlo, usar eliminar y confirmar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/horario_update_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

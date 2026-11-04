@@ -2,9 +2,9 @@
 id: "personas.home_persona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "personas"
-nombre: "Flujo - Ver cabecera de persona"
+nombre: "Flujo - Ver la ficha de una persona"
 capacidad: "personas.home_persona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["personas.pantalla.home_persona"]
 fragmentos: ["personas.pantalla.home_persona"]
 acciones: ["ver_resumen", "ir_ficha", "ir_dossiers"]
 endpoints: ["/src/personas/home_persona_data"]
@@ -17,20 +17,22 @@ Muestra el resumen de una persona y enlaces a ficha y dossiers.
 
 ## Objetivo De Usuario
 
-Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por el listado.
+Ver la cabecera y los dossiers de una persona.
 
 ## Punto De Entrada
 
-- Clic en nombre del listado (`fnjs_home` o enlace HTML según preferencia `tabla_presentacion`).
-- Navegación directa con `id_nom`, `id_tabla`, `obj_pau`.
+Menú **vest > buscar persona** (por ejemplo **n r/dl**, **n de paso**, **agd r/dl**; también en vsm, vsg y scdl). Pulsar el nombre de la persona.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ver resumen
+### Ver la ficha de una persona
 
-1. Seleccionar persona en listado o abrir enlace.
-2. `home_persona` solicita `home_persona_data`.
-3. Revisar datos y lista de dossiers embebida.
+Pasos propuestos:
+1. Se muestra el nombre, la delegación y el centro (por ejemplo «dlb - Diagonal»), nacimiento, santo, celebra, profesión, stgr, teléfonos y e-mail, con el enlace **editar**.
+2. Debajo, «Relación de dossiers»: actividades a las que asiste, asignaturas que cursa, cargos en actividades, notas del stgr (tessera), stgr (docencia, certificados, títulos, etc.), traslados y última asistencia. Pulsar uno lo abre.
+
+Endpoints asociados:
+- `/src/personas/home_persona_data`
 
 ## Endpoints Del Flujo
 

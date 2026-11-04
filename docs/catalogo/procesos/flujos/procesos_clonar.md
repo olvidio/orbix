@@ -2,9 +2,9 @@
 id: "procesos.procesos_clonar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos Clonar"
+nombre: "Flujo - Clonar un proceso"
 capacidad: "procesos.procesos_clonar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_select"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/procesos_clonar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccionado, sustituyendo las tareas existentes.
+Copiar las tareas de un proceso de referencia sobre el proceso elegido, sustituyendo las que tenía.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
+Menú **sistema > procesos activ. > procesos** (Pills2: ADMIN LOCAL > procesos activ. > procesos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > proces
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Clonar un proceso
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir en **Proceso** el que se quiere rellenar.
+2. En **clonar de** elegir el proceso de referencia.
+3. Pulsar **clonar**. Atención: las tareas existentes del proceso destino se sustituyen por las del de referencia.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_clonar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

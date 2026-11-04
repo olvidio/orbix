@@ -2,7 +2,7 @@
 id: "casas.casa_ingreso.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "casas"
-nombre: "Flujo - Gestionar Casa Ingreso"
+nombre: "Flujo - Anotar el ingreso de una actividad"
 capacidad: "casas.casa_ingreso.gestionar"
 pantallas_principales: ["casas.pantalla.casa"]
 fragmentos: ["casas.pantalla.casa_ingreso_form"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `casas.casa_ingreso.gestio
 
 ## Objetivo De Usuario
 
-Gestiona CasaIngreso. Crear/actualizar el Ingreso de una actividad. Datos para el formulario de ingreso de una actividad (casa_ingreso_form). Eliminar el Ingreso de una actividad.
+Anotar o corregir los ingresos de una actividad en una casa.
 
 ## Punto De Entrada
 
-- `casas.pantalla.casa`
+Estudio económico de la casa > actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,37 +29,17 @@ Gestiona CasaIngreso. Crear/actualizar el Ingreso de una actividad. Datos para e
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Anotar el ingreso de una actividad
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/casas/casa_ingreso_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir el estudio económico de la casa y elegir la actividad.
+2. Rellenar los importes del formulario de ingreso y guardar.
+3. Para quitar el ingreso, usar eliminar y confirmar.
 
 Endpoints asociados:
 - `/src/casas/casa_ingreso_eliminar`
-
-### Ver Formulario
-
-Pasos propuestos:
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Endpoints asociados:
 - `/src/casas/casa_ingreso_form_data`
+- `/src/casas/casa_ingreso_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

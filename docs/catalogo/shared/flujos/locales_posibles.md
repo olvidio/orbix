@@ -2,7 +2,7 @@
 id: "shared.locales_posibles.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Cargar locales/idiomas"
+nombre: "Flujo - Elegir un idioma en un desplegable"
 capacidad: "shared.locales_posibles.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,23 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Obtener la lista de idiomas activos para un desplegable en pantallas que lo necesitan (certificados,
-preferencias de usuario).
+Cargar la lista de idiomas disponibles para un desplegable, en las pantallas que lo necesitan (certificados y preferencias de usuario).
 
 ## Punto De Entrada
 
-Carga auxiliar al renderizar:
+No tiene pantalla propia: se carga sola al abrir las preferencias del usuario o los certificados emitidos.
 
-- `frontend/usuarios/controller/preferencias.php`
-- `frontend/certificados/controller/certificado_emitido_ver.php`
-- `frontend/certificados/controller/certificado_emitido_imprimir.php`
+## Escenarios Inferidos
 
-## Escenarios
+### Elegir un idioma en un desplegable
 
-### Cargar desplegable
+Pasos propuestos:
+1. Abrir las preferencias de usuario o un certificado emitido.
+2. El desplegable de idioma se rellena con los idiomas activos.
+3. Elegir el idioma que corresponda.
 
-1. POST (vacío) a `/src/shared/locales_posibles`.
-2. Usar `a_locales` (`id_locale` → nombre idioma) en la vista.
+Endpoints asociados:
+- `/src/shared/locales_posibles`
 
 ## Errores Conocidos
 

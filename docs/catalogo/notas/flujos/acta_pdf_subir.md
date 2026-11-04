@@ -2,7 +2,7 @@
 id: "notas.acta_pdf_subir.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Pdf Subir"
+nombre: "Flujo - Subir el PDF firmado"
 capacidad: "notas.acta_pdf_subir.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf_subir.gest
 
 ## Objetivo De Usuario
 
-Adjuntar PDF a un acta.
+Adjuntar a un acta el PDF firmado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Subir el PDF firmado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Imprimir el acta después del último cambio y firmarla.
+2. En la ficha, elegir el fichero PDF y subirlo.
+3. Si es demasiado grande aparece «El servidor rechazó la subida: archivo o petición demasiado grandes».
+4. Desde ese momento el acta queda cerrada y no se puede modificar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_pdf_subir`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

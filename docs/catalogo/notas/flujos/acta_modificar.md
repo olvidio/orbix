@@ -2,9 +2,9 @@
 id: "notas.acta_modificar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Modificar"
+nombre: "Flujo - Modificar un acta"
 capacidad: "notas.acta_modificar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_ver"]
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/acta_modificar"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_modificar.gest
 
 ## Objetivo De Usuario
 
-Guardar cambios de un acta existente desde `acta_ver`.
+Guardar los cambios de un acta existente.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta (**actas** > abrir).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Modificar un acta
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el acta desde **actas**.
+2. Cambiar la fecha, libro, página, línea, lugar, observaciones, la asignatura o los examinadores; el número de acta ya no se cambia. La fecha es obligatoria.
+3. Pulsar **Guardar cambios acta**. Un acta que ya tiene el PDF firmado adjunto no se puede modificar.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_modificar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

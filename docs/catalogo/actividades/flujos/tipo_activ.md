@@ -2,7 +2,7 @@
 id: "actividades.tipo_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Gestionar tipos de actividad"
+nombre: "Flujo - Ver los tipos de actividad"
 capacidad: "actividades.tipo_activ.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
@@ -17,26 +17,48 @@ CRUD del catálogo local de tipos (id compuesto de 6 caracteres + nombre).
 
 ## Objetivo De Usuario
 
-Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de administración.
+Ver los tipos de actividad, crear uno nuevo, cambiar el nombre de uno existente o eliminarlo.
 
 ## Punto De Entrada
 
-`tipo_activ.php` (menú configuración).
+Menú **sistema > Configuración > gestión Tipos actividades** (Pills2: ADMIN LOCAL > Gestión tipos de actividad).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar
+### Ver los tipos de actividad
 
-1. Al cargar, AJAX `tipo_activ_lista` pinta la tabla.
+Pasos propuestos:
+1. Abrir la gestión de tipos de actividad: aparece la tabla con todos los tipos.
 
-### Crear / Actualizar
+Endpoints asociados:
+- `/src/actividades/tipo_activ_eliminar`
+- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_nuevo`
+- `/src/actividades/tipo_activ_update`
 
-1. Formulario nuevo (`tipo_activ_form_nuevo`) o modificar (`tipo_activ_form_modificar`).
-2. Guardar vía `tipo_activ_nuevo` o `tipo_activ_update`.
+### Crear o modificar un tipo de actividad
 
-### Eliminar
+Pasos propuestos:
+1. Pulsar **nuevo**, o seleccionar un tipo y pulsar **modificar**.
+2. Rellenar el formulario y guardar.
 
-1. Confirmar mensaje; POST `tipo_activ_eliminar` con `id_tipo_activ`.
+Endpoints asociados:
+- `/src/actividades/tipo_activ_eliminar`
+- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_nuevo`
+- `/src/actividades/tipo_activ_update`
+
+### Eliminar un tipo de actividad
+
+Pasos propuestos:
+1. Seleccionar el tipo y pulsar **eliminar**.
+2. Confirmar el aviso.
+
+Endpoints asociados:
+- `/src/actividades/tipo_activ_eliminar`
+- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_nuevo`
+- `/src/actividades/tipo_activ_update`
 
 ## Endpoints Del Flujo
 

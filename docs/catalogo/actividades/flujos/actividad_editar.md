@@ -2,7 +2,7 @@
 id: "actividades.actividad_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Guardar edición de actividad"
+nombre: "Flujo - Modificar una actividad"
 capacidad: "actividades.actividad_editar.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: ["actividades.pantalla.planning_casa_modificar"]
@@ -17,22 +17,24 @@ Persistir cambios de una actividad existente desde la ficha o el planning.
 
 ## Objetivo De Usuario
 
-Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y
-guardar sin cambiar el tipo.
+Modificar los datos de una actividad existente (fechas, lugar, plazas, observaciones, etc.) sin cambiar su tipo.
 
 ## Punto De Entrada
 
-- `actividad_ver` (`mod=editar`, botón *guardar cambios*).
-- `planning_casa_modificar` (mismo formulario incrustado).
+Lista de resultados de **Buscar actividad** (ACTIVIDADES > Buscar actividad, o la entrada del colectivo).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Ejecutar
+### Modificar una actividad
 
-1. Abrir ficha con `id_activ` y permiso `modificar`.
-2. Editar campos; validaciones JS de fechas/horas/tipo/organiza.
-3. `fnjs_guardar('editar')` POST a `actividad_editar`.
-4. Tras éxito, navegación atrás (`oPosicion`) o cierre del popup en planning.
+Pasos propuestos:
+1. Marcar la actividad en la lista y pulsar **datos**.
+2. Cambiar los campos que hagan falta (fechas, horas, plazas, observaciones, publicado…).
+3. Pulsar **Guardar cambios**.
+4. Si se guarda bien, se vuelve a la lista de la búsqueda; no hay mensaje de confirmación.
+
+Endpoints asociados:
+- `/src/actividades/actividad_editar`
 
 ## Endpoints Del Flujo
 

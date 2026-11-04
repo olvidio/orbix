@@ -2,9 +2,9 @@
 id: "encargossacd.comprobaciones_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Comprobaciones Ctr"
+nombre: "Flujo - Eliminar encargos de centros inexistentes"
 capacidad: "encargossacd.comprobaciones_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.comprobaciones"]
 fragmentos: ["encargossacd.pantalla.comprobaciones"]
 acciones: ["ejecutar"]
 endpoints: ["/src/encargossacd/comprobaciones_ctr"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.comprobacion
 
 ## Objetivo De Usuario
 
-Gestiona EncargoComprobacionesCtr. Elimina encargos ligados a centros inactivos y sacd huérfanos (misma lógica que el antiguo frontend/encargossacd/controller/comprobaciones.php).
+Limpiar los encargos ligados a centros que ya no existen.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Eliminar encargos de centros inexistentes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En **comprobaciones** pulsar **Eliminar encargos de centros inexistentes**.
+3. Se borran los encargos de centros inactivos y los que no tienen sacerdote.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/comprobaciones_ctr`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

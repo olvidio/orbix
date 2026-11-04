@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadestudios"
 nombre: "Flujo - Gestionar Docencia Actualizar"
 capacidad: "actividadestudios.docencia_actualizar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.actualizar_docencia"]
 fragmentos: ["actividadestudios.pantalla.actualizar_docencia"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/docencia_actualizar"]

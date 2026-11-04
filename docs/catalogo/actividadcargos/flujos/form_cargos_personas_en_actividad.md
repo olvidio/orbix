@@ -2,9 +2,9 @@
 id: "actividadcargos.form_cargos_personas_en_actividad.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadcargos"
-nombre: "Flujo - Gestionar Form Cargos Personas En Actividad"
+nombre: "Flujo - Abrir el formulario de cargo de una persona"
 capacidad: "actividadcargos.form_cargos_personas_en_actividad.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 fragmentos: ["actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadcargos/form_cargos_personas_en_actividad_data"]
@@ -17,11 +17,11 @@ Bootstrap del formulario de cargo en la vista por persona (dossier 1302).
 
 ## Objetivo De Usuario
 
-Gestionar los cargos de una persona en distintas actividades: el sistema carga el listado de actividades candidatas (en altas), valores del cargo en edición y URLs de mutación.
+Abrir el formulario para dar de alta o modificar un cargo de una persona en una actividad, con las actividades candidatas en las altas.
 
 ## Punto De Entrada
 
-Controller `frontend/actividadcargos/controller/form_cargos_personas_en_actividad.php`, invocado desde el widget 1302 (enlaces **añadir cargo de la dl** / **añadir cargo de otra dl** o **modificar cargo**).
+Relación de cargos de una persona: enlaces **añadir cargo de la dl**, **añadir cargo de otra dl** o **modificar cargo**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,14 +29,13 @@ Controller `frontend/actividadcargos/controller/form_cargos_personas_en_activida
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Abrir el formulario de cargo de una persona
 
 Pasos propuestos:
-1. El usuario abre el formulario desde el widget de relación de cargos de la persona.
-2. El controller POSTea a `form_cargos_personas_en_actividad_data` con `id_pau` (persona), `sel`, `mod`, `que_dl`, `id_tipo` según el enlace de alta.
-3. En modo `editar`, carga datos del `ActividadCargo` y fija actividad en solo lectura.
-4. En modo `nuevo`, filtra actividades por tipo y delegación (`que_dl` vacío = otras delegaciones).
-5. El front pinta desplegables y hash; el usuario completa y guarda vía `cargo_nuevo`/`cargo_editar`.
+1. Desde la relación de cargos de la persona, pulsar **añadir cargo de la dl**, **añadir cargo de otra dl** o seleccionar un cargo y pulsar **modificar cargo**.
+2. Al modificar, aparecen los datos del cargo y la actividad no se puede cambiar.
+3. Al añadir, el desplegable de actividades solo ofrece las del tipo elegido y de la propia dl (o de otras delegaciones, según el enlace).
+4. Completar el formulario y guardar.
 
 Endpoints asociados:
 - `/src/actividadcargos/form_cargos_personas_en_actividad_data`

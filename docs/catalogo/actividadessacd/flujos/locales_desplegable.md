@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadessacd"
 nombre: "Flujo - Gestionar Locales Desplegable"
 capacidad: "actividadessacd.locales_desplegable.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_txt"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/locales_desplegable_data"]
@@ -35,7 +35,7 @@ consulta este endpoint al renderizar el fragmento para construir el desplegable 
 
 Pasos:
 1. Abrir el fragmento de edición de textos desde la pantalla de comunicación.
-2. El sistema rellena el desplegable de idiomas con `a_locales`.
+2. El desplegable de idiomas se rellena con los idiomas disponibles.
 
 Endpoints asociados:
 - `/src/actividadessacd/locales_desplegable_data`

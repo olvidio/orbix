@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "cambios"
 nombre: "Flujo - Eliminar cambio anotado"
 capacidad: "cambios.cambio_usuario.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.avisos_generar"]
 fragmentos: ["cambios.pantalla.avisos_generar"]
 acciones: ["eliminar"]
 endpoints: ["/src/cambios/cambio_usuario_eliminar"]
@@ -25,7 +25,7 @@ Pantalla `avisos_generar` → acción `fnjs_borrar`.
 
 ### Eliminar
 
-1. Seleccionar una o más filas (`sel[]` = `id_item_cambio#id_usuario#sfsv#aviso_tipo`).
+1. Marcar una o más filas del listado de avisos.
 2. Confirmar borrado.
 3. El listado se refresca sin las filas eliminadas.
 

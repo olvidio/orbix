@@ -2,9 +2,9 @@
 id: "procesos.procesos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Procesos"
+nombre: "Flujo - Administrar las tareas de un proceso"
 capacidad: "procesos.procesos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_get", "procesos.pantalla.procesos_select", "procesos.pantalla.procesos_ver"]
 acciones: ["crear_actualizar", "eliminar", "obtener"]
 endpoints: ["/src/procesos/procesos_eliminar", "/src/procesos/procesos_get", "/src/procesos/procesos_update"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Administración del árbol de fases/tareas de un tipo de proceso: visualizar estructura, crear o editar tareas con dependencias y eliminar tareas existentes.
+Administrar las fases y tareas de un tipo de proceso: verlas, crear o editar tareas y eliminarlas.
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > procesos activ. > procesos.
+Menú **sistema > procesos activ. > procesos**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,35 +29,18 @@ Menú Legacy: sistema > procesos activ. > procesos. Pills2: ADMIN LOCAL > proces
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Administrar las tareas de un proceso
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Endpoints asociados:
-- `/src/procesos/procesos_update`
-
-### Eliminar
-
-Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **procesos**, elegir el proceso y pulsar **ver listado**.
+2. Crear o modificar una tarea eligiendo fase, status, oficina y de qué tarea depende; guardar.
+3. Para quitar una tarea, eliminarla y confirmar.
+4. Después, regenerar las actividades si se quiere que recojan el cambio.
 
 Endpoints asociados:
 - `/src/procesos/procesos_eliminar`
-
-### Obtener
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/procesos_get`
+- `/src/procesos/procesos_update`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

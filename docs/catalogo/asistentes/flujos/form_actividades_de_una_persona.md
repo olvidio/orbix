@@ -2,9 +2,9 @@
 id: "asistentes.form_actividades_de_una_persona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Form Actividades De Una Persona"
+nombre: "Flujo - Anotar la asistencia de una persona a una actividad"
 capacidad: "asistentes.form_actividades_de_una_persona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.form_actividades_de_una_persona"]
 fragmentos: ["asistentes.pantalla.form_actividades_de_una_persona"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/form_actividades_de_una_persona_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Gestionar asistencias en dossier 1301 (persona).
-
+Añadir o modificar la asistencia de una persona a una actividad desde su ficha.
 
 ## Punto De Entrada
 
-Pantalla `form_actividades_de_una_persona` (`frontend/asistentes/controller/`).
-
+Ficha de la persona > dossier de actividades.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ Pantalla `form_actividades_de_una_persona` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Anotar la asistencia de una persona a una actividad
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el dossier de actividades de la persona.
+2. Elegir la **actividad** (obligatoria: «debe indicar una actividad»), la **plaza**, quién es **propiedad de** la plaza, **estudios confirmados** y las **observaciones**.
+3. Pulsar **guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/form_actividades_de_una_persona_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

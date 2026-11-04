@@ -2,9 +2,9 @@
 id: "misas.crear_nuevo_periodo.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Crear Nuevo Periodo"
+nombre: "Flujo - Preparar un nuevo plan de misas"
 capacidad: "misas.crear_nuevo_periodo.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.crear_nuevo_periodo"]
 fragmentos: ["misas.pantalla.crear_nuevo_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/crear_nuevo_periodo_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de plantilla y devuelve el payload de cuadrícula para renderizar ver_cuadricula_zona.phtml.
+Crear el plan de misas de un periodo nuevo a partir de la plantilla y mostrarlo en la cuadrícula.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan.
+Menú **dre > Misas > Nuevo plan** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,16 @@ Menú Legacy: dre > Misas >  Nuevo plan. Pills2: ATENCIÓN SACD > Gestión de mi
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Preparar un nuevo plan de misas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Nuevo plan** (Preparar Plan de Misas).
+2. Elegir la zona en **Plan de Misas Zona**, el **Tipo de plantilla** (semanal, semanal y domingos o mensual, con una o tres opciones: la plantilla propone 1 o 3 sacerdotes para cada misa, por orden de prioridad; se elige el primero y solo se pasa al segundo si el primero no está o celebra en un centro con más prioridad), el **Orden** y el **Periodo** (próxima semana, próximo mes natural u otro, con fechas).
+3. Pulsar **preparar**. Aviso: «Borrará todos los datos introducidos en este periodo!!».
+4. Se muestra la cuadrícula del plan, rellenada desde la plantilla, lista para modificar: al pulsar una celda se abre la ventana **Selección de sacd** (ver «Elegir sacerdote en una celda»).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/crear_nuevo_periodo_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

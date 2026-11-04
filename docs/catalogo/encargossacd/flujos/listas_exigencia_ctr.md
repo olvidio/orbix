@@ -2,9 +2,9 @@
 id: "encargossacd.listas_exigencia_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas Exigencia Ctr"
+nombre: "Flujo - Listar las exigencias de los centros"
 capacidad: "encargossacd.listas_exigencia_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_exigencia_ctr"]
 fragmentos: ["encargossacd.pantalla.listas_exigencia_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_exigencia_ctr_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_exige
 
 ## Objetivo De Usuario
 
-Gestiona ListasExigenciaCtr. Listado de exigencias SACD por centro/iglesia. Sustituye la logica de frontend/encargossacd/controller/listas_exigencia_ctr.php.
+Sacar el listado de las exigencias de atención sacerdotal de cada centro o iglesia.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar las exigencias de los centros
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En «listados comunicaciones» elegir **exigencias ctr sv**, **exigencias ctr sf** o **exigencias igl, oc…**.
+3. Se muestra, por centro o iglesia, quién es el encargado, rector o sacerdotes y las horas exigidas por franja, por ejemplo «(4 mañana, 2 tarde 1ª hora)».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_exigencia_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

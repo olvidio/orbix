@@ -2,9 +2,9 @@
 id: "inventario.inventario_dlb.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Inventario Dlb"
+nombre: "Flujo - Imprimir el inventario de la dlb/casa"
 capacidad: "inventario.inventario_dlb.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.doc_imprimir_dlb"]
 fragmentos: ["inventario.pantalla.doc_imprimir_dlb"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/inventario_dlb"]
@@ -13,17 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Inventario Dlb
 
-Propuesta generada automaticamente desde la capacidad `inventario.inventario_dlb.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Impresión inventario DLB/casa vía `inventario_dlb`.
+Obtener el inventario impreso de los documentos de uno o varios lugares de la dlb/casa, listo para firmar.
 
 ## Punto De Entrada
 
-- `inventario.pantalla.doc_de_dlb`
-
-
+Desde **de centros o dlb > inventario de dlb/casa**, tras marcar los lugares y pulsar **Imprimir** o **Imprimir dl**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +27,17 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Imprimir el inventario de la dlb/casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar los lugares en **inventario de dlb/casa**.
+2. Pulsar **Imprimir** (o **Imprimir dl** para añadir la columna **observaciones dl**).
+3. Se muestra una hoja por lugar titulada **Inventario de documentos de** (centro y lugar), con **documento**, **id** y **observaciones**.
+4. El botón **seleccionar** y la primera columna (sin cabecera) de la hoja sirven solo para imprimir y marcar a mano en papel.
+5. Imprimir desde el navegador. Cada hoja termina con «(*) Se guarda bajo llave», el total de páginas y el espacio **Conforme (firma)**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/inventario_dlb`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

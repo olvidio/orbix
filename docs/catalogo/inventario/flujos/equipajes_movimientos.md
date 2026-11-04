@@ -2,9 +2,9 @@
 id: "inventario.equipajes_movimientos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Movimientos"
+nombre: "Flujo - Consultar los movimientos de un equipaje"
 capacidad: "inventario.equipajes_movimientos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_movimientos"]
 fragmentos: ["inventario.pantalla.equipajes_movimientos"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_movimientos"]
@@ -13,17 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Movimientos
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_movimientos.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Comparar movimientos de documentos entre equipajes seleccionados.
+Ver qué documentos se han añadido o quitado de las valijas de un equipaje.
 
 ## Punto De Entrada
 
-- `inventario.pantalla.equipajes_movimientos_que`
-
-
+Menú **Inventario > equipajes > movimientos maletas**, tras elegir el equipaje.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +27,15 @@ Comparar movimientos de documentos entre equipajes seleccionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar los movimientos de un equipaje
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **movimientos maletas**.
+2. Marcar el equipaje y pulsar **seleccionar**.
+3. Para cada valija se listan los documentos **añadir** y **quitar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_movimientos`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

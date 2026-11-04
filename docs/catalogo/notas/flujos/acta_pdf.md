@@ -2,7 +2,7 @@
 id: "notas.acta_pdf.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Pdf"
+nombre: "Flujo - Gestionar el PDF del acta"
 capacidad: "notas.acta_pdf.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_pdf.gestionar`
 
 ## Objetivo De Usuario
 
-Gestión del PDF escaneado: subir, descargar y eliminar.
+Gestionar el PDF escaneado del acta: subirlo, descargarlo o eliminarlo.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,12 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Gestionar el PDF del acta
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Subir: elegir el PDF firmado y subirlo (el acta debe haberse impreso tras el último cambio).
+2. Descargar: pulsar descargar PDF.
+3. Eliminar: quitar el PDF para poder modificar el acta de nuevo.
 
 Endpoints asociados:
 - `/src/notas/acta_pdf_eliminar`

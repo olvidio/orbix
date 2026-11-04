@@ -2,9 +2,9 @@
 id: "misas.guardar_encargo_centro.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Guardar Encargo Centro"
+nombre: "Flujo - Guardar un encargo visible para un centro"
 capacidad: "misas.guardar_encargo_centro.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/guardar_encargo_centro"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
+Hacer visible un encargo de zona en un centro, o cambiarlo.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr.
+Menú **dre > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Encargos centro. Pills2: ATENCIÓN SACD > Gestión d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar un encargo visible para un centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir zona, encargo y centro.
+2. Pulsar **Grabar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/guardar_encargo_centro`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

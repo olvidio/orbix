@@ -2,7 +2,7 @@
 id: "actividadplazas.peticiones_incorporar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadplazas"
-nombre: "Flujo - Gestionar Peticiones Incorporar"
+nombre: "Flujo - Incorporar las primeras peticiones"
 capacidad: "actividadplazas.peticiones_incorporar.gestionar"
 pantallas_principales: ["actividadplazas.pantalla.incorporar_peticion"]
 fragmentos: []
@@ -18,14 +18,11 @@ pedida, según organice la actividad mi dl u otra.
 
 ## Objetivo De Usuario
 
-Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden = 1) en asistencias
-propias con plaza, para un tipo y colectivo, sin incorporar personas que ya tienen actividad propia en
-el periodo.
+Convertir de golpe las primeras peticiones de plaza de cada persona en asistencias propias con plaza, para un tipo de actividad y un colectivo. No se incorpora a quien ya tiene una actividad propia en ese periodo.
 
 ## Punto De Entrada
 
-Menú de plazas → **Incorporar 1ª petición** (ver "Ruta de menú"). Se abre
-`actividadplazas.pantalla.incorporar_peticion`.
+Menú de plazas > **Incorporar 1ª petición**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -33,14 +30,12 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Incorporar las primeras peticiones
 
-1. Abrir **Incorporar peticiones de plazas** desde el menú (según tipo y colectivo).
-2. Leer el texto explicativo y pulsar **Continuar** (`fnjs_incorporar_peticiones`).
-3. El botón se deshabilita mientras se ejecuta; el sistema envía `sactividad` y `sasistentes` a
-   `peticiones_incorporar`.
-4. Muestra en `#resultado` cuántas peticiones se incorporaron (`incorporadas`) y el aviso de que no
-   se incorporan personas con actividad propia ya existente (`mensaje_final`).
+Pasos propuestos:
+1. Abrir **Incorporar peticiones de plazas** desde el menú (según el tipo de actividad y el colectivo).
+2. Leer el texto explicativo y pulsar **Continuar**. El botón se desactiva mientras se ejecuta.
+3. Al terminar se muestra cuántas peticiones se han incorporado, con el recordatorio de que no se incorpora a quien ya tiene actividad propia.
 
 Endpoints asociados:
 - `/src/actividadplazas/peticiones_incorporar`

@@ -2,7 +2,7 @@
 id: "actividades.tipo_activ_form.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Formulario alta tipo actividad"
+nombre: "Flujo - Crear un tipo de actividad"
 capacidad: "actividades.tipo_activ_form.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
@@ -17,11 +17,23 @@ Carga del formulario HTML para dar de alta un nuevo tipo (cascada de metadatos).
 
 ## Objetivo De Usuario
 
-Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
+Crear un tipo de actividad nuevo.
 
 ## Punto De Entrada
 
-Pantalla `tipo_activ` → botón nuevo → `tipo_activ_form_nuevo`.
+Menú **sistema > Configuración > gestión Tipos actividades** (Pills2: ADMIN LOCAL > Gestión tipos de actividad).
+
+## Escenarios Inferidos
+
+### Crear un tipo de actividad
+
+Pasos propuestos:
+1. Entrar en **gestión Tipos actividades** y pulsar **nuevo**.
+2. Se abre el formulario vacío con los desplegables por niveles.
+3. Rellenar el nombre y los niveles y guardar.
+
+Endpoints asociados:
+- `/src/actividades/tipo_activ_form_nuevo`
 
 ## Endpoints Del Flujo
 

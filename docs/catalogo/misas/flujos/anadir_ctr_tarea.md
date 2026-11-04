@@ -2,7 +2,7 @@
 id: "misas.anadir_ctr_tarea.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Anadir Ctr Tarea"
+nombre: "Flujo - Añadir o quitar un centro en la plantilla"
 capacidad: "misas.anadir_ctr_tarea.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Añade o elimina una fila de plantilla (centro asociado a tarea) en el editor de plantillas. Rama que=anadir crea Plantilla con semana=-1; rama quitar elimina por id_item.
+Añadir o quitar, en la plantilla, un centro asociado a una tarea.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar plantilla. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla.
+Menú **dre > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Añadir o quitar un centro en la plantilla
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, usar el botón de añadir fila de la tarea y elegir el centro.
+2. Para quitarlo, pulsar quitar en la fila.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/anadir_ctr_tarea`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

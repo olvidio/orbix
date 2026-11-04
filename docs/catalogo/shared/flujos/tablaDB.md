@@ -2,9 +2,9 @@
 id: "shared.tablaDB.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "shared"
-nombre: "Flujo - Persistir registro tabla genérica"
+nombre: "Flujo - Guardar o eliminar un registro de una tabla"
 capacidad: "shared.tablaDB.gestionar"
-pantallas_principales: []
+pantallas_principales: ["shared.pantalla.tablaDB_formulario_ver"]
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver", "shared.pantalla.tablaDB_lista_ver"]
 acciones: ["nuevo", "editar", "eliminar"]
 endpoints: ["/src/shared/tablaDB_update"]
@@ -15,26 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con el patrón `Info*` +
-repositorio CRUD.
+Dar de alta, modificar o eliminar un registro de cualquier tabla mantenida con la pantalla genérica de mantenimiento.
 
 ## Punto De Entrada
 
-- Formulario: `fnjs_grabar` (`mod` nuevo/editar).
-- Listado: acción eliminar con `mod=eliminar` y `sel[]`.
+Botón de guardar del formulario genérico, o botón **eliminar** de la tabla.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Nuevo / editar
+### Guardar o eliminar un registro de una tabla
 
-1. Formulario envía `$_POST` completo a `tablaDB_update` con `mod` y `clase_info`.
-2. `DatosUpdateRepo` mapea campos (check, fecha, decimal) y llama `Guardar`.
-3. Casos especiales: `ModuloInstalado` (tablas al activar), `ProfesorLatin` (id fijo).
+Pasos propuestos:
+1. En el formulario, pulsar guardar: se graba el registro nuevo o los cambios del existente.
+2. En la tabla, seleccionar una o varias filas y pulsar **eliminar** para borrarlas.
+3. Algunas tablas tienen reglas propias; por ejemplo, al activar un módulo se crean sus tablas.
 
-### Eliminar
-
-1. `mod=eliminar` con `s_pkey` o `sel[0]`.
-2. `DatosUpdateRepo::eliminar`; en módulos instalados puede ejecutar `dropTables`.
+Endpoints asociados:
+- `/src/shared/tablaDB_update`
 
 ## Errores Conocidos
 

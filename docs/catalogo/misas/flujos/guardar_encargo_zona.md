@@ -2,9 +2,9 @@
 id: "misas.guardar_encargo_zona.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Guardar Encargo Zona"
+nombre: "Flujo - Guardar un encargo de zona"
 capacidad: "misas.guardar_encargo_zona.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.ver_encargos_zona"]
 fragmentos: ["misas.pantalla.ver_encargos_zona"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/guardar_encargo_zona"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
+Crear o actualizar un encargo de zona.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos.
+Menú **dre > Misas > Modificar encargos** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: dre > Misas > Modificar encargos. Pills2: ATENCIÓN SACD > Gestió
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar un encargo de zona
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el formulario del encargo (el botón **generar** propone el nombre «tipo (lugar)») y pulsar **Grabar**.
+2. Si el encargo ya no existe aparece «No se encuentra el encargo».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/guardar_encargo_zona`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

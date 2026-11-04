@@ -2,9 +2,9 @@
 id: "encargossacd.zonas_get_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Zonas Get Select"
+nombre: "Flujo - Elegir la zona de un encargo"
 capacidad: "encargossacd.zonas_get_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/zonas_get_select_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.zonas_get_se
 
 ## Objetivo De Usuario
 
-Gestiona EncargoZonasSelect. Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en refactor.md, sin instanciar frontend\shared\web\Desplegable (responsabilidad exclusiva del frontend).
+Ofrecer las zonas de misas al crear o editar un encargo.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Formulario de encargo.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,14 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Elegir la zona de un encargo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, abrir **zona**.
+2. Elegir una de las zonas de misas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/zonas_get_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

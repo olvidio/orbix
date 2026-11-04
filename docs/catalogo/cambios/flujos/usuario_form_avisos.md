@@ -2,9 +2,9 @@
 id: "cambios.usuario_form_avisos.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Gestionar avisos del usuario"
+nombre: "Flujo - Gestionar los avisos de cambios de un usuario"
 capacidad: "cambios.usuario_form_avisos.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.usuario_form_avisos"]
 fragmentos: ["cambios.pantalla.usuario_form_avisos"]
 acciones: ["listar", "nuevo", "modificar", "eliminar"]
 endpoints: ["/src/cambios/usuario_form_avisos_data", "/src/cambios/cambio_usuario_objeto_pref_eliminar"]
@@ -15,28 +15,23 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Consultar y mantener las reglas de aviso configuradas para un usuario web.
+Ver y gestionar los avisos de cambios en actividades que recibe un usuario.
 
 ## Punto De Entrada
 
-Fragmento `usuario_form_avisos` embebido en la ficha de usuario (`quien=usuario`).
+Menú **sistema > usuarios web > lista usuarios**: buscar al usuario, pulsar **editar** en su fila. También desde las preferencias del propio usuario («gestionar avisos en cambios actividades»).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar
+### Gestionar los avisos de cambios de un usuario
 
-1. Abrir pestaña de avisos del usuario.
-2. `usuario_form_avisos_data` carga la tabla de preferencias.
+Pasos propuestos:
+1. En la ficha del usuario, apartado «avisos de cambios», se ve la tabla de avisos (o «no hay ninguna fila»).
+2. Pulsar **añadir aviso** para crear uno, o marcar una fila y modificarla o eliminarla.
 
-### Nuevo / Modificar
-
-1. Pulsar añadir o modificar (una fila seleccionada).
-2. Se abre `usuario_avisos_pref` con `salida=nuevo` o `modificar`.
-
-### Eliminar
-
-1. Seleccionar fila y pulsar eliminar.
-2. `cambio_usuario_objeto_pref_eliminar` borra la preferencia.
+Endpoints asociados:
+- `/src/cambios/usuario_form_avisos_data`
+- `/src/cambios/cambio_usuario_objeto_pref_eliminar`
 
 ## Errores Conocidos
 

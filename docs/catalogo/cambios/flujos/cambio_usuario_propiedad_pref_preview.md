@@ -2,9 +2,9 @@
 id: "cambios.cambio_usuario_propiedad_pref_preview.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cambios"
-nombre: "Flujo - Preview de condición"
+nombre: "Flujo - Previsualizar una condición"
 capacidad: "cambios.cambio_usuario_propiedad_pref_preview.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.usuario_avisos_pref"]
 fragmentos: ["cambios.pantalla.usuario_avisos_pref"]
 acciones: ["preview"]
 endpoints: ["/src/cambios/cambio_usuario_propiedad_pref_preview"]
@@ -15,12 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Ver el texto de la condición y guardar el JSON en la fila de propiedades sin persistir aún en base de
-datos (la persistencia ocurre al grabar todo).
+Ver el texto de la condición y dejarla en la tabla sin guardar todavía en la base de datos.
 
 ## Punto De Entrada
 
-`fnjs_guardar_cond` en el modal de condición.
+Menú de usuario > **preferencias** > **gestionar avisos en cambios actividades**.
+
+## Escenarios Inferidos
+
+### Previsualizar una condición
+
+Pasos propuestos:
+1. En la ventana de condición, pulsar guardar.
+2. Se muestra el texto de la condición en la fila; no se guarda definitivamente hasta grabar todo.
+
+Endpoints asociados:
+- `/src/cambios/cambio_usuario_propiedad_pref_preview`
 
 ## Ruta de menú
 

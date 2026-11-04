@@ -2,9 +2,9 @@
 id: "usuarios.grupo_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Grupo Info"
+nombre: "Flujo - Abrir un grupo para editarlo"
 capacidad: "usuarios.grupo_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.grupo_form"]
 fragmentos: ["usuarios.pantalla.grupo_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/grupo_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve el nombre de un grupo para el formulario de edición.
+Cargar el nombre de un grupo en su formulario de edición.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pulsar un grupo en la lista de grupos.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Abrir un grupo para editarlo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **grupos**, pulsar el grupo.
+2. Se carga su nombre en el formulario.
+3. Si el grupo ya no existe aparece «Grupo no encontrado».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/grupo_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

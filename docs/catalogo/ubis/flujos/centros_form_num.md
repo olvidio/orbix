@@ -2,9 +2,9 @@
 id: "ubis.centros_form_num.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Centros Form Num"
+nombre: "Flujo - Cambiar buzón, pi y cartas"
 capacidad: "ubis.centros_form_num.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.centros_form_num"]
 fragmentos: ["ubis.pantalla.centros_form_num"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/centros_form_num"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
+Cambiar el nº de buzón, de ejemplares de pi y de cartas de un centro.
 
 ## Punto De Entrada
 
-Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones > modificar centros.
+Menú **scdl > direcciones > modificar centros** (Pills2: CASAS Y CTR > direcciones > modificar centros).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: scdl > direcciones > modificar centros. Pills2: scdl > direcciones
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Cambiar buzón, pi y cartas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > pi, cartas, nº buzón**, pulsar el centro.
+2. Rellenar **nº de buzón**, **nº ejemplares pi** y **nº cartas mensuales**.
+3. Pulsar **guardar cambios**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/centros_form_num`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "asistentes.activ_pendientes_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Activ Pendientes Select"
+nombre: "Flujo - Consultar quién tiene pendiente el ca o el crt"
 capacidad: "asistentes.activ_pendientes_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.activ_pendientes_select"]
 fragmentos: ["asistentes.pantalla.activ_pendientes_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/activ_pendientes_select_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Identificar personas sin ca/crt en el curso.
-
+Saber quién tiene pendiente hacer el ca o el crt.
 
 ## Punto De Entrada
 
-Pantalla `activ_pendientes_select` (`frontend/asistentes/controller/`).
-
+Menú **vest > ca n > pendientes** (también vsm > crt > pendientes, dagd > cv > pendientes, dre > personas > ca pendientes / crt pendientes).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,15 @@ Pantalla `activ_pendientes_select` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Consultar quién tiene pendiente el ca o el crt
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción **pendientes** del colectivo que interese (numerarios, agregados o sacd).
+2. Se muestra «Personas» con la lista de quienes no han hecho todavía la actividad en el curso, o «no hay ninguna fila» si no queda nadie.
+3. Pulsar el nombre de una persona abre su ficha.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/activ_pendientes_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

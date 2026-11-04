@@ -2,9 +2,9 @@
 id: "actividades.lista_sr_csv_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Bootstrap listado CSV SR"
+nombre: "Flujo - Preparar el listado csv de sr"
 capacidad: "actividades.lista_sr_csv_que.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividades.pantalla.lista_sr_csv_que"]
 fragmentos: ["actividades.pantalla.lista_sr_csv_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividades/lista_sr_csv_que_datos"]
@@ -17,11 +17,23 @@ Valores por defecto (periodo, casas, tipos, estados) al abrir el formulario CSV 
 
 ## Objetivo De Usuario
 
-Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
+Elegir los criterios del listado de actividades de San Rafael, con la última preferencia guardada.
 
 ## Punto De Entrada
 
-Carga de `lista_sr_csv_que.php` (PostRequest en servidor).
+Menú **vsr > listas actividades > listado csv**.
+
+## Escenarios Inferidos
+
+### Preparar el listado csv de sr
+
+Pasos propuestos:
+1. Entrar en **listado csv**.
+2. El formulario aparece con los últimos valores usados.
+3. Ajustar el periodo y los criterios y pulsar para ver el listado o descargar el CSV.
+
+Endpoints asociados:
+- `/src/actividades/lista_sr_csv_que_datos`
 
 ## Endpoints Del Flujo
 

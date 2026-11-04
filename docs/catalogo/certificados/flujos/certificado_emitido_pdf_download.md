@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_pdf_download.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Pdf Download"
+nombre: "Flujo - Descargar el PDF de un certificado emitido"
 capacidad: "certificados.certificado_emitido_pdf_download.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_pdf_download"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/certificados/certificado_emitido_pdf_download"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Descargar PDF adjunto de certificado emitido.
+Descargar el PDF de un certificado emitido.
 
 ## Punto De Entrada
 
-Listado Certificados → descargar pdf.
+Menú Pills2 **ESTUDIOS > Actas y certificados > Certificados**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Descargar el PDF de un certificado emitido
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista o en el dossier, pulsar descargar.
+2. El PDF se abre en una pestaña nueva; el enlace caduca a los pocos minutos.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_pdf_download`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "actividadessacd"
 nombre: "Flujo - Gestionar Com Sacd Activ Periodo Page"
 capacidad: "actividadessacd.com_sacd_activ_periodo_page.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/actividadessacd/com_sacd_activ_periodo_page_data"]
@@ -36,7 +36,7 @@ fragmento de edición de textos (`com_sacd_txt`).
 
 Pasos:
 1. Abrir la pantalla de comunicación a los sacd.
-2. El sistema resuelve `perm_mod_txt` según el rol del usuario.
+2. Según el rol del usuario se decide si puede editar o solo ver.
 3. Si hay permiso, se muestra el enlace para editar textos.
 
 Endpoints asociados:

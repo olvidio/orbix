@@ -2,7 +2,7 @@
 id: "profesores.docencia.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "profesores"
-nombre: "Flujo - Ver docencia global"
+nombre: "Flujo - Consultar la docencia"
 capacidad: "profesores.docencia.gestionar"
 pantallas_principales: ["profesores.pantalla.docencia"]
 fragmentos: []
@@ -17,24 +17,23 @@ Consulta del registro histórico de docencia STGR de todo el claustro.
 
 ## Objetivo De Usuario
 
-Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
+Consultar la docencia impartida por los profesores: curso, asignatura, modo y acta.
 
 ## Punto De Entrada
 
-Pantalla `docencia` (`frontend/profesores/controller/docencia.php`).
+Menú **vest > actas... > ver docencia**.
 
 ## Escenarios Inferidos
 
-### Consultar
+### Consultar la docencia
 
-Pasos:
-1. Abrir **ver docencia** desde el menú `stgr2`.
-2. Revisar la tabla `tabla_docencia`.
+Pasos propuestos:
+1. Entrar en **ver docencia**.
+2. Se muestra una tabla con «apellidos, nombre», «inicio curso», «asignatura», «modo» (por ejemplo «sem. invierno» o «ca/cv») y «acta».
+3. Arriba a la derecha de la tabla hay dos iconos (lupa y guardar) para buscar en ella y exportarla.
 
 Endpoints asociados:
 - `/src/profesores/docencia`
-
-Relacionado: alimentar datos con **actualizar docencia** (`actividadestudios`) al cerrar el CA.
 
 ## Endpoints Del Flujo
 

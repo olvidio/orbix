@@ -2,9 +2,9 @@
 id: "encargossacd.listas_b.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas B"
+nombre: "Flujo - Listar la atención de iglesias, oc y lp"
 capacidad: "encargossacd.listas_b.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_b"]
 fragmentos: ["encargossacd.pantalla.listas_b"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_b_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_b.ges
 
 ## Objetivo De Usuario
 
-Gestiona ListasB. Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b). Sustituye la logica de frontend/encargossacd/controller/listas_b.php.
+Sacar el listado de atención de iglesias, obras corporativas y lugares de paso (cr 1/14, 10,b).
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar la atención de iglesias, oc y lp
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **atención iglesias, oc y lp** (o **oc y lp sf**).
+3. Se muestra el listado.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_b_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

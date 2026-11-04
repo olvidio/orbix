@@ -2,9 +2,9 @@
 id: "usuarios.perm_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Perm Activ"
+nombre: "Flujo - Añadir un permiso en actividades"
 capacidad: "usuarios.perm_activ.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.perm_activ_lista"]
 fragmentos: ["usuarios.pantalla.perm_activ_lista"]
 acciones: ["eliminar", "guardar", "listar"]
 endpoints: ["/src/usuarios/perm_activ_eliminar", "/src/usuarios/perm_activ_guardar", "/src/usuarios/perm_activ_lista"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Gestión permisos actividad-proceso de un usuario (módulo procesos).
+Dar o quitar a un usuario permisos sobre un tipo de actividad (ver, modificar, crear, borrar) según la fase en que esté la actividad.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Menú **sistema > usuarios web > lista usuarios**: buscar al usuario, pulsar **editar** en su fila.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,34 +27,30 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Añadir un permiso en actividades
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la ficha del usuario, en «Permisos en actividades», pulsar **añadir permiso**. Se abre «Añadir nuevo permiso a …».
+2. Elegir si es para actividades que organiza **la propia dl** u **otras dl**, y el tipo de actividad con **sf/sv**, **asistentes**, **actividad** y **tipo de actividad** (cuanto más concreto, más manda: «sv n crt» manda sobre «sv n»).
+3. Marcar en **afecta a** lo que se controla: datos, economic, sacd, ctr, id_tarifa, cargos, asistentes o asistentesSacd.
+4. Para cada uno elegir la **fase de referencia** y el **permiso off (sin marcar)** y **permiso on (marcado)**: nada, ocupado, ver, modificar, crear o borrar. «Ocupado» es un punto intermedio entre nada y ver: se ve que la actividad está ocupada, pero no se puede ver la información de qué es lo que ocupa. Si falta la fase de referencia, avisa «OJO! Comprobar la fase de referencia.» (el aviso es intencionado y puede salir más de una vez al cambiar los desplegables).
+5. Pulsar **guardar**. La ficha vuelve a mostrar la tabla con dl propia, tipo de actividad, afecta a, fase de referencia, permiso off y permiso on.
 
 Endpoints asociados:
 - `/src/usuarios/perm_activ_eliminar`
+- `/src/usuarios/perm_activ_guardar`
+- `/src/usuarios/perm_activ_lista`
 
-### Guardar
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Listar
+### Modificar o eliminar un permiso en actividades
 
 Pasos propuestos:
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. En la tabla «propios», marcar la fila.
+2. Pulsar **modificar** para cambiarla, o **eliminar** y confirmar «¿Esta seguro que desea borrar este permiso?».
+3. A igual nivel, los permisos propios mandan sobre los de los grupos del usuario.
 
 Endpoints asociados:
+- `/src/usuarios/perm_activ_eliminar`
+- `/src/usuarios/perm_activ_guardar`
 - `/src/usuarios/perm_activ_lista`
 
 ## Campos Y Acciones Detectadas En Pantalla

@@ -2,7 +2,7 @@
 id: "planning.planning_persona_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "planning"
-nombre: "Flujo - Planning por persona (listado)"
+nombre: "Flujo - Buscar personas y ver su planning"
 capacidad: "planning.planning_persona_select.gestionar"
 pantallas_principales: ["planning.pantalla.planning_persona_que"]
 fragmentos: ["planning.pantalla.planning_persona_select"]
@@ -17,24 +17,25 @@ Búsqueda de personas y selección para ver su planning.
 
 ## Objetivo De Usuario
 
-Encontrar personas del colectivo del menú y abrir su calendario de actividades.
+Buscar personas de la dl y ver su calendario de actividades.
 
 ## Punto De Entrada
 
-- `planning_persona_que.php` → `planning_persona_select.php`.
+Menú **scdl > planning > persona dl** (o **agd de paso**, **num de paso**, **sacd r/dl** según el menú).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Buscar y listar
+### Buscar personas y ver su planning
 
-1. Abrir entrada de menú (define `obj_pau`, `na`; `es_sacd` del menú se ignora en código).
-2. Rellenar criterios opcionales y periodo en `planning_persona_que`.
-3. `planning_persona_select_data` elige repositorio vía `obj_pau` (`getSafe` cae a `PersonaDl` si inválido); con `PersonaEx`, `na` → `id_tabla=p{na}`.
-4. Seleccionar fila(s) (`sel[]` → `sSeleccionados`) y pulsar ver planning → `planning_persona_ver`.
+Pasos propuestos:
+1. Abrir «BÚSQUEDA DE PERSONAS DE LA DL» y rellenar, si se quiere, **Nombre**, **Primer apellido**, **Segundo apellido** o **Centro**.
+2. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+3. Pulsar **Buscar**: sale «N personas encontradas» con tipo, nombre y apellidos y centro.
+4. Marcar a una o varias personas (o **marcar todos** / **desmarcar todos**) y pulsar **vista tabla** para el calendario, **vista para imprimir** o **ver actividades**.
+5. Pulsar el nombre de una persona abre su ficha.
 
-### Acciones sobre fila
-
-- Vista tabla / imprimir (`modelo=2`) / ver actividades (dossier 1301y1302) / ficha persona.
+Endpoints asociados:
+- `/src/planning/planning_persona_select_data`
 
 ## Endpoints Del Flujo
 

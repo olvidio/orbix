@@ -2,7 +2,7 @@
 id: "actividades.lista_centros_activ.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividades"
-nombre: "Flujo - Listado por centros"
+nombre: "Flujo - Ver las actividades de cada centro"
 capacidad: "actividades.lista_centros_activ.gestionar"
 pantallas_principales: ["actividades.pantalla.actividades_centro_que"]
 fragmentos: ["actividades.pantalla.lista_centros_activ"]
@@ -17,11 +17,23 @@ HTML de actividades agrupadas por centro(s) seleccionados en un periodo.
 
 ## Objetivo De Usuario
 
-Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma pantalla.
+Ver, tras elegir centro y periodo, las actividades de cada centro de sg.
 
 ## Punto De Entrada
 
-`actividades_centro_que` con `tipo_lista=crt|cv` → POST a `lista_centros_activ.php`.
+Menú **vsg > crt / cv > de cada ctr**.
+
+## Escenarios Inferidos
+
+### Ver las actividades de cada centro
+
+Pasos propuestos:
+1. Entrar en **vsg > crt** (o **cv**) **> de cada ctr**.
+2. Elegir el centro y el periodo y buscar.
+3. El listado aparece en la misma pantalla; pulsar una actividad para abrirla.
+
+Endpoints asociados:
+- `/src/actividades/lista_centros_activ_datos`
 
 ## Endpoints Del Flujo
 

@@ -2,9 +2,9 @@
 id: "ubis.direcciones_que.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Direcciones Que"
+nombre: "Flujo - Buscar una dirección existente"
 capacidad: "ubis.direcciones_que.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.direcciones_que"]
 fragmentos: ["ubis.pantalla.direcciones_que"]
 acciones: ["ejecutar"]
 endpoints: ["/src/ubis/direcciones_que"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Prepara el formulario de búsqueda de direcciones existentes para asignar a un ubi.
+Buscar una dirección que ya existe para asignarla a un centro o casa.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Ficha del centro o casa, apartado **dirección**, botón **añadir dirección**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Buscar una dirección existente
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha, pulsar **añadir dirección**.
+2. Escribir código postal, población y/o país de la dirección.
+3. Pulsar buscar para ver la tabla de direcciones.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/direcciones_que`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

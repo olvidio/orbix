@@ -2,9 +2,9 @@
 id: "zonassacd.zona_sacd_lista_tot.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "zonassacd"
-nombre: "Flujo - Gestionar Zona Sacd Lista Tot"
+nombre: "Flujo - Consultar los sacerdotes por zona"
 capacidad: "zonassacd.zona_sacd_lista_tot.gestionar"
-pantallas_principales: []
+pantallas_principales: ["zonassacd.pantalla.zona_sacd_lista_ajax"]
 fragmentos: []
 acciones: ["ejecutar"]
 endpoints: ["/src/zonassacd/zona_sacd_lista_tot"]
@@ -15,16 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Ver el listado global sacd–zona de toda la delegación (una fila por asignación). Entrada de menú Lista sacd-zona.
+Ver todos los sacerdotes con la zona o zonas que tienen asignadas.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > zonas > lista sacd-zona. Pills2: ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona.
+Menú **dre > zonas > lista sacd-zona**.
 
-## Escenarios
+## Escenarios Inferidos
 
-1. Menú «Lista sacd-zona» carga `zona_sacd_lista_ajax.php?que=get_lista_tot`.
-2. Muestra listado HTML de todos los sacd con sus zonas (endpoint `zona_sacd_lista_tot`).
+### Consultar los sacerdotes por zona
+
+Pasos propuestos:
+1. Entrar en **lista sacd-zona**.
+2. Se muestra una fila por cada sacerdote y zona asignada.
+
+Endpoints asociados:
+- `/src/zonassacd/zona_sacd_lista_tot`
 
 ## Fragmentos O Pantallas Auxiliares
 

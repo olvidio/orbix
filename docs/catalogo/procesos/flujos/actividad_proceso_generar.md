@@ -2,9 +2,9 @@
 id: "procesos.actividad_proceso_generar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Actividad Proceso Generar"
+nombre: "Flujo - Regenerar el proceso de una actividad"
 capacidad: "procesos.actividad_proceso_generar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["procesos.pantalla.actividad_proceso"]
 fragmentos: ["procesos.pantalla.actividad_proceso"]
 acciones: ["ejecutar"]
 endpoints: ["/src/procesos/actividad_proceso_generar"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Regenerar las tareas del proceso asociado a una actividad, conservando o no el estado actual según el flag «forzar».
+Regenerar las tareas del proceso de una actividad, conservando o no su estado actual.
 
 ## Punto De Entrada
 
-Sin entrada directa de menú; se ejecuta desde la pantalla embebida de proceso de actividad.
+Pestaña de proceso de la ficha de la actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Sin entrada directa de menú; se ejecuta desde la pantalla embebida de proceso d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Regenerar el proceso de una actividad
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la actividad y su pestaña de proceso.
+2. Pulsar regenerar.
+3. Marcar «forzar» si se quiere descartar el estado actual de las tareas; si no, se conserva.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/actividad_proceso_generar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

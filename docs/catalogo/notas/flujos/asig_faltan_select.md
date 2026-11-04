@@ -2,9 +2,9 @@
 id: "notas.asig_faltan_select.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Asig Faltan Select"
+nombre: "Flujo - Buscar alumnos por número de asignaturas pendientes"
 capacidad: "notas.asig_faltan_select.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.asig_faltan_select"]
 fragmentos: ["notas.pantalla.asig_faltan_select"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/asig_faltan_select_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.asig_faltan_select.
 
 ## Objetivo De Usuario
 
-Listar alumnos con hasta N asignaturas pendientes.
+Ver los alumnos a los que les faltan como mucho N asignaturas.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > buscar asig. pendientes** (Pills2: ESTUDIOS > Preparación planes estudio > Filtro alumno/asignatura).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Buscar alumnos por número de asignaturas pendientes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar asig. pendientes**.
+2. En **Búsqueda de personas por número de asignaturas** marcar **numerarios** y/o **agregados** y elegir el ciclo con el botón **bienio** o **cuadrienio** (en cuadrienio, además, **año I** y/o **año II-IV**).
+3. Escribir el **número de asignaturas que faltan** (no se incluyen las cursadas sin examinar). Marcar **incluir lista de asignaturas** si se quiere ver cuáles son.
+4. Pulsar **Buscar** (o **Borrar** para limpiar). El resultado se titula, por ejemplo, «lista de numerarios a los que faltan 2 o menos asignaturas para finalizar el cuadrienio»; si no hay nadie, «no hay ninguna fila».
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/asig_faltan_select_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

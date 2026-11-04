@@ -2,9 +2,9 @@
 id: "notas.tessera_imprimir.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Tessera Imprimir"
+nombre: "Flujo - Imprimir la tessera"
 capacidad: "notas.tessera_imprimir.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.tessera_imprimir"]
 fragmentos: ["notas.pantalla.tessera_imprimir", "notas.pantalla.tessera_imprimir_mpdf"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/tessera_imprimir_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.tessera_imprimir.ge
 
 ## Objetivo De Usuario
 
-Imprimir tessera (HTML/PDF).
+Imprimir la tessera de estudios de una persona.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Tessera de la persona.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +30,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Imprimir la tessera
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la tessera de la persona.
+2. Pulsar imprimir (HTML o PDF).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/tessera_imprimir_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

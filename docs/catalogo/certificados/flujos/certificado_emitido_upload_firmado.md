@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_upload_firmado.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Upload Firmado"
+nombre: "Flujo - Subir el certificado firmado"
 capacidad: "certificados.certificado_emitido_upload_firmado.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_upload_firmado"]
 fragmentos: ["certificados.pantalla.certificado_emitido_upload_firmado"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/certificados/certificado_emitido_upload_firmado_data"]
@@ -21,7 +21,7 @@ Subir el PDF firmado de un certificado ya emitido.
 
 ## Punto De Entrada
 
-Listado Certificados → subir pdf firmado.
+Menú Pills2 **ESTUDIOS > Actas y certificados > Certificados**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ Listado Certificados → subir pdf firmado.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Subir el certificado firmado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Imprimir y firmar el certificado.
+2. Abrir el certificado en la lista y elegir el PDF firmado.
+3. Subirlo; el certificado queda con su versión firmada.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_upload_firmado_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,9 +2,9 @@
 id: "notas.acta_listado_anual.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Acta Listado Anual"
+nombre: "Flujo - Listar las actas de un periodo"
 capacidad: "notas.acta_listado_anual.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_listado_anual"]
 fragmentos: ["notas.pantalla.acta_listado_anual"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/acta_listado_anual_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.acta_listado_anual.
 
 ## Objetivo De Usuario
 
-Consultar actas por rango de fechas en vista anual.
+Ver las actas de un periodo de fechas, por año o trimestre.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **vest > actas... > listado actas** (Pills2: ESTUDIOS > Actas y certificados > Listado de actas).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Listar las actas de un periodo
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listado actas**.
+2. En **Periodo de selección** elegir el trimestre (o todo el año) y el año, o escribir dos fechas en **entre … y …**.
+3. Se muestra la lista de actas del periodo.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/acta_listado_anual_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

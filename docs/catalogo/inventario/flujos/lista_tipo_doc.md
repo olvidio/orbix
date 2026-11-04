@@ -2,9 +2,9 @@
 id: "inventario.lista_tipo_doc.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Lista Tipo Doc"
+nombre: "Flujo - Elegir el tipo de documento"
 capacidad: "inventario.lista_tipo_doc.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.docs_asignar_que"]
 fragmentos: ["inventario.pantalla.docs_asignar_que", "inventario.pantalla.equipajes_form_add"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/lista_tipo_doc"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Lista Tipo Doc
 
-Propuesta generada automaticamente desde la capacidad `inventario.lista_tipo_doc.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona TipoDocOpciones. Opciones del desplegable de tipos de documento (lista_tipo_doc.php).
+Elegir el tipo de documento con el que se va a trabajar antes de asignarlo o de consultar a quién se ha asignado.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > documentos > asignar documento**. El desplegable de tipos de documento se carga solo al abrir la pantalla.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,15 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir el tipo de documento
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **asignar documento** desde el menú.
+2. Elegir el documento en el desplegable **seleccione un tipo de documento**.
+3. Pulsar **lista de asignados** para ver los centros que ya lo tienen, **lista de NO asignados** para ver los que no, o uno de los dos botones de asignación (**Asignar a centros (sin especificar lugar)** / **Asignar a dlb/casa (especificar lugar)**).
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/lista_tipo_doc`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

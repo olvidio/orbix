@@ -2,9 +2,9 @@
 id: "encargossacd.listas_com_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas Com Sacd"
+nombre: "Flujo - Preparar la comunicación a los sacerdotes"
 capacidad: "encargossacd.listas_com_sacd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_com_sacd"]
 fragmentos: ["encargossacd.pantalla.listas_com_sacd"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/listas_com_sacd_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_com_s
 
 ## Objetivo De Usuario
 
-Gestiona ListasComSacd. Datos para la comunicacion a los SACD. Sustituye la logica de frontend/encargossacd/controller/listas_com_sacd.php.
+Preparar el escrito que se envía a cada sacerdote con sus encargos.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,15 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Preparar la comunicación a los sacerdotes
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **comunicación a sacd Prelatura** o **comunicación a sacd sss+**.
+3. Aparece un escrito por sacerdote (en el idioma configurado, por ejemplo catalán) con la relación de sus labores y la dedicación prevista (marcando si es **coordinador**). Es una salida muy larga: un escrito por cada sacerdote.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/listas_com_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -2,7 +2,7 @@
 id: "certificados.certificado_emitido_pdf_upload.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Pdf Upload"
+nombre: "Flujo - Subir el PDF de un certificado"
 capacidad: "certificados.certificado_emitido_pdf_upload.gestionar"
 pantallas_principales: ["certificados.pantalla.certificado_emitido_pdf_upload"]
 fragmentos: []
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Subir fichero PDF al API de certificados emitidos.
+Subir el fichero PDF de un certificado emitido.
 
 ## Punto De Entrada
 
-Formulario adjuntar o upload firmado.
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Subir el PDF de un certificado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el fichero PDF en el formulario de adjuntar.
+2. Guardar. Si es demasiado grande el servidor lo rechaza con un aviso de tamaño.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_pdf_upload`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

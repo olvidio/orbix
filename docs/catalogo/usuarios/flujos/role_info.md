@@ -2,9 +2,9 @@
 id: "usuarios.role_info.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "usuarios"
-nombre: "Flujo - Gestionar Role Info"
+nombre: "Flujo - Abrir la ficha de un rol"
 capacidad: "usuarios.role_info.gestionar"
-pantallas_principales: []
+pantallas_principales: ["usuarios.pantalla.role_form"]
 fragmentos: ["usuarios.pantalla.role_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/usuarios/role_info"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
+Cargar la ficha de un rol: sus datos, si se puede editar y los grupos de menús que ya tiene.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; login, preferencias personales o fragmento/modal desde pantalla padre.
+Pulsar un rol en la lista de roles.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada de menú directa; login, preferencias personales o fragmento/modal d
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Abrir la ficha de un rol
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En **lista de roles**, pulsar el rol.
+2. Se muestran sus datos (sf, sv, pau, sacd, casas, dmz) y la tabla de grupos de menús asignados.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/usuarios/role_info`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

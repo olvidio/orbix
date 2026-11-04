@@ -2,9 +2,9 @@
 id: "encargossacd.listas_com_txt.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Listas Com Txt"
+nombre: "Flujo - Modificar los textos de las comunicaciones"
 capacidad: "encargossacd.listas_com_txt.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.listas_com_txt"]
 fragmentos: ["encargossacd.pantalla.listas_com_txt", "encargossacd.pantalla.listas_com_txt_get", "encargossacd.pantalla.listas_com_txt_update"]
 acciones: ["crear_actualizar", "obtener", "obtener_datos"]
 endpoints: ["/src/encargossacd/listas_com_txt_data", "/src/encargossacd/listas_com_txt_get", "/src/encargossacd/listas_com_txt_update"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.listas_com_t
 
 ## Objetivo De Usuario
 
-Gestiona ListasComTxt, ListasComTxtGet. Datos para la pantalla de textos de comunicacion (frontend/encargossacd/controller/listas_com_txt.php). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (com_sacd / es). Lectura del texto de comunicacion para un par (clave, idioma). Extraido de EncargoTextoListasComAjax (rama que=get_texto) para eliminar el dispatcher multiproposito (criterio refactor.md). Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de EncargoTextoListasComAjax (rama que=update) para eliminar el dispatcher multiproposito (criterio refactor.md).
+Modificar los textos fijos que llevan las comunicaciones, por idioma.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -32,32 +31,17 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Crear Actualizar
+### Modificar los textos de las comunicaciones
 
 Pasos propuestos:
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Entrar en **listados** y elegir **modificar los textos de las comunicaciones**.
+2. Elegir el tipo de texto y el idioma.
+3. Editar el texto y pulsar **guardar**. Si se deja vacío, se elimina.
 
 Endpoints asociados:
+- `/src/encargossacd/listas_com_txt_data`
+- `/src/encargossacd/listas_com_txt_get`
 - `/src/encargossacd/listas_com_txt_update`
-
-### Obtener
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
-
-### Obtener Datos
-
-Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
-
-Endpoints asociados:
-- Ninguno inferido para esta accion.
 
 ## Campos Y Acciones Detectadas En Pantalla
 

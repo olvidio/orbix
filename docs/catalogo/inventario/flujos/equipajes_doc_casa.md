@@ -2,9 +2,9 @@
 id: "inventario.equipajes_doc_casa.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes Doc Casa"
+nombre: "Flujo - Consultar los documentos de la casa y sus valijas"
 capacidad: "inventario.equipajes_doc_casa.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_doc_casa"]
 fragmentos: ["inventario.pantalla.equipajes_doc_casa", "inventario.pantalla.equipajes_imprimir"]
 acciones: ["ejecutar"]
 endpoints: ["/src/inventario/equipajes_doc_casa"]
@@ -13,15 +13,13 @@ estado_revision: "revisado"
 
 # Flujo - Gestionar Equipajes Doc Casa
 
-Propuesta generada automaticamente desde la capacidad `inventario.equipajes_doc_casa.gestionar` y sus pantallas relacionadas.
-
 ## Objetivo De Usuario
 
-Gestiona EquipajesDocCasa. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que pertenecen a la casa (se quedan siempre allí) y las valijas del equipaje.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Menú **Inventario > equipajes > hacer equipajes**: aparece al elegir un equipaje en el desplegable **escoger un equipaje**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +28,16 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Consultar la documentación de la casa y sus valijas
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes**; elegir el filtro **desde hoy**, **todo el curso** o **todos**.
+2. Elegir el equipaje en **escoger un equipaje** (aparece como «casa (fechas)»).
+3. En **documentos en** (nombre de la casa) se listan **Nombre**, **Identificador** y **Lugar** de la documentación que está en la casa.
+4. En **maletas para** (nombre de la casa) aparecen las valijas del equipaje; **nueva valija** añade otra.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/inventario/equipajes_doc_casa`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

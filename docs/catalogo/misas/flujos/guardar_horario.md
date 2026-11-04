@@ -2,9 +2,9 @@
 id: "misas.guardar_horario.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Guardar Horario"
+nombre: "Flujo - Guardar el horario de una tarea"
 capacidad: "misas.guardar_horario.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.horario_tarea"]
 fragmentos: ["misas.pantalla.horario_tarea"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/guardar_horario"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
+Guardar la hora de inicio y fin de una tarea.
 
 ## Punto De Entrada
 
-Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
+Ventana de horario de la tarea.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Sin entrada de menú directa; fragmento o modal invocado desde pantalla padre.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar el horario de una tarea
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir **Inicio** y **Fin**.
+2. Pulsar **guardar**.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/guardar_horario`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

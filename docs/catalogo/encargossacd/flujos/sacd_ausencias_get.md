@@ -2,9 +2,9 @@
 id: "encargossacd.sacd_ausencias_get.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "encargossacd"
-nombre: "Flujo - Gestionar Sacd Ausencias Get"
+nombre: "Flujo - Anotar una ausencia"
 capacidad: "encargossacd.sacd_ausencias_get.gestionar"
-pantallas_principales: []
+pantallas_principales: ["encargossacd.pantalla.sacd_ausencias_get"]
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_get"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/encargossacd/sacd_ausencias_get_data"]
@@ -17,12 +17,11 @@ Propuesta generada automaticamente desde la capacidad `encargossacd.sacd_ausenci
 
 ## Objetivo De Usuario
 
-Gestiona SacdAusenciasGet. Datos para la ficha de ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_get.php). Devuelve la lista de tipos de ausencia disponibles (encargos con prefijo 7/4) y las filas asociadas al SACD. Con historial=1 incluye todas las ausencias; sin historial solo muestra las que aun tienen vigencia.
+Ver y anotar las ausencias o actividades personales de un sacerdote.
 
 ## Punto De Entrada
 
-Fragmento AJAX embebido; sin entrada de menú directa.
-
+Menú **dre > ausencias > sacd**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -30,13 +29,17 @@ Fragmento AJAX embebido; sin entrada de menú directa.
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Anotar una ausencia
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ausencias > sacd**.
+2. Elegir el **tipo** y el **sacd**.
+3. En **ausencias/tareas** (columnas **fechas** y **horario**), elegir en **añadir actividades personales** el tipo (Clases del stgr, Ausencia, cv de un dia, 1ª Confesiones, boda, confirmación, 1ª comunión, bautizo, Tarea, rtm): aparece una fila con **inicio** y **fin** (al poner el inicio, el fin se rellena con la misma fecha). Con **ver anteriores** se ve el historial.
+4. Pulsar **Guardar**; la pantalla vuelve atrás sola. Para borrar una, dejar en blanco la fecha de inicio y la de fin.
+5. **añadir actividades personales** y **crear horario** permiten añadir otras tareas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/encargossacd/sacd_ausencias_get_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

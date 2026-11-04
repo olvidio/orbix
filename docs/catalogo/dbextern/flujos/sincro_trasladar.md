@@ -2,9 +2,9 @@
 id: "dbextern.sincro_trasladar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Trasladar a esta DL"
+nombre: "Flujo - Traer una ficha a esta dl"
 capacidad: "dbextern.sincro_trasladar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_traslados"]
 fragmentos: ["dbextern.pantalla.ver_traslados"]
 acciones: ["trasladar"]
 endpoints: ["/src/dbextern/sincro_trasladar"]
@@ -17,19 +17,23 @@ Traslado individual desde otra DL Orbix (punto 2).
 
 ## Objetivo De Usuario
 
-Traer la ficha a la DL actual; la fecha de traslado queda en hoy (aviso en pantalla).
+Traer una ficha a la delegación actual. La fecha de traslado queda en el día de hoy.
 
 ## Punto De Entrada
 
-**trasladar** en `ver_traslados` (`fnjs_trasladar`).
+Botón **trasladar** en la lista del punto 2 («Revisar traslados punto 2»).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Trasladar
+### Traer una ficha a esta dl
 
-1. Alerta informativa sobre fecha.
-2. POST `id_nom_orbix`, `dl` origen, `tipo_persona`.
-3. Fila tachada si éxito.
+Pasos propuestos:
+1. En el punto 2, pulsar **trasladar** en la persona.
+2. Aparece un aviso sobre la fecha del traslado (hoy); aceptarlo.
+3. Si se ha hecho bien, la fila aparece tachada.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_trasladar`
 
 ## Endpoints Del Flujo
 

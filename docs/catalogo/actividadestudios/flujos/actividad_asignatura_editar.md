@@ -2,9 +2,9 @@
 id: "actividadestudios.actividad_asignatura_editar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "actividadestudios"
-nombre: "Flujo - Gestionar Actividad Asignatura Editar"
+nombre: "Flujo - Modificar una asignatura de la actividad"
 capacidad: "actividadestudios.actividad_asignatura_editar.gestionar"
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 acciones: ["ejecutar"]
 endpoints: ["/src/actividadestudios/actividad_asignatura_editar"]
@@ -17,16 +17,11 @@ Edición de una asignatura impartida existente en una actividad CA.
 
 ## Objetivo De Usuario
 
-El usuario modifica profesor, fechas, tipo u otros datos de una asignatura ya impartida
-en la actividad y guarda los cambios. Sustituye el case `editar` del antiguo
-`update_3005.php`.
+Cambiar el profesor, las fechas, el tipo u otros datos de una asignatura que ya se imparte en la actividad.
 
 ## Punto De Entrada
 
-Pantalla `form_asignaturas_de_una_actividad`
-(`frontend/actividadestudios/controller/form_asignaturas_de_una_actividad.php`): desde el
-listado del dossier 3005, `fnjs_modificar` abre el form en modo edición; `fnjs_guardar`
-envía a `actividad_asignatura_editar`.
+Dossier **Asignaturas** de la actividad: botón **modificar**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,12 +29,12 @@ envía a `actividad_asignatura_editar`.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Modificar una asignatura de la actividad
 
-Pasos:
-1. En el dossier 3005, seleccionar una asignatura impartida y pulsar **modificar**.
-2. Ajustar profesor, fechas, aviso a profesor o tipo en el formulario.
-3. Pulsar **guardar**; el sistema persiste los cambios en la `ActividadAsignatura`.
+Pasos propuestos:
+1. En el dossier de asignaturas, seleccionar la asignatura y pulsar **modificar**.
+2. Ajustar el profesor, las fechas, el aviso al profesor o el tipo.
+3. Pulsar **guardar**.
 
 Endpoints asociados:
 - `/src/actividadestudios/actividad_asignatura_editar`

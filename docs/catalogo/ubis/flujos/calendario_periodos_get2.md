@@ -2,9 +2,9 @@
 id: "ubis.calendario_periodos_get2.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Calendario Periodos Get2"
+nombre: "Flujo - Ver los periodos de un año"
 capacidad: "ubis.calendario_periodos_get2.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.calendario_periodos_get2"]
 fragmentos: ["ubis.pantalla.calendario_periodos_get2"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/calendario_periodos_get2_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Lista los periodos de una casa en un año con detección de solapes.
+Listar los periodos de una casa en un año concreto y detectar solapes.
 
 ## Punto De Entrada
 
-Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
+Menú **adl > Nuevo Calendario > Definir periodos** (Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > H
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver los periodos de un año
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Definir periodos**, elegir la casa y el año y pulsar **buscar**.
+2. Aparecen los periodos de ese año; los que se pisan quedan señalados.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/calendario_periodos_get2_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

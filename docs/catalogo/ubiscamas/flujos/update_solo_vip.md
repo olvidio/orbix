@@ -2,7 +2,7 @@
 id: "ubiscamas.update_solo_vip.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubiscamas"
-nombre: "Flujo - Gestionar Update Solo Vip"
+nombre: "Flujo - Filtrar las camas VIP"
 capacidad: "ubiscamas.update_solo_vip.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
+Mostrar solo las camas VIP en la distribución de habitaciones.
 
 ## Punto De Entrada
 
-Checkbox «solo VIP» en `lista_habitaciones.phtml`. Sin entrada de menú en el índice.
+Pantalla de habitaciones de la actividad.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Filtrar las camas VIP
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la casilla «solo VIP».
+2. La lista muestra solo las camas VIP; desmarcarla para ver todas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubiscamas/update_solo_vip`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

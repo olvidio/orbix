@@ -2,9 +2,9 @@
 id: "cartaspresentacion.ubis.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "cartaspresentacion"
-nombre: "Flujo - Gestionar Ubis"
+nombre: "Flujo - Ver los centros y sus cartas"
 capacidad: "cartaspresentacion.ubis.gestionar"
-pantallas_principales: []
+pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion"]
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_ubis_lista"]
 acciones: ["listar"]
 endpoints: ["/src/cartaspresentacion/ubis_lista_data"]
@@ -17,20 +17,23 @@ Tabla interactiva de centros y su carta de presentación (sí/no).
 
 ## Objetivo De Usuario
 
-Ver qué centros tienen carta de presentación y acceder a modificar, ver ficha o quitar.
+Ver qué centros tienen carta de presentación y acceder a modificarla, ver la ficha o quitarla.
 
 ## Punto De Entrada
 
-Pantalla `cartas_presentacion`: tras pulsar **buscar**, se carga `cartas_presentacion_ubis_lista.php`
-en `#ficha2`.
+Resultado de **buscar** en la pantalla de modificar cartas de presentación.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Listar
+### Ver los centros y sus cartas
 
-1. Elegir filtro dl/regiones (+ población si `get_dl`).
-2. Pulsar **buscar** → `ubis_lista_data` con `tipo_lista` y `poblacion_sel`.
-3. Tabla con columnas director, centro, carta de presentación, dirección.
+Pasos propuestos:
+1. Elegir el filtro (delegación o regiones y, en el primer caso, la población).
+2. Pulsar **buscar**.
+3. Aparece la tabla con las columnas director, centro, carta de presentación y dirección.
+
+Endpoints asociados:
+- `/src/cartaspresentacion/ubis_lista_data`
 
 ## Endpoints Del Flujo
 

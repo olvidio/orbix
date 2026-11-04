@@ -2,9 +2,9 @@
 id: "dbextern.sincro_index.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Dashboard sincronización BDU"
+nombre: "Flujo - Ver la situación de la sincronización"
 capacidad: "dbextern.sincro_index.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.sincro_index"]
 fragmentos: ["dbextern.pantalla.sincro_index"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/dbextern/sincro_index_datos"]
@@ -17,21 +17,23 @@ Carga inicial del dashboard «Actualizar datos desde BDU».
 
 ## Objetivo De Usuario
 
-Al abrir la pantalla de sincronización, el sistema calcula los contadores de situación BDU↔Aquinate
-y prepara enlaces firmados a las subpantallas de resolución.
+Al abrir la pantalla de sincronización, ver los contadores de la situación entre la BDU y Aquinate y entrar en cada subpantalla de resolución.
 
 ## Punto De Entrada
 
-Menú «Actualizar datos desde BDU» → `sincro_index.php?tipo=<colectivo>`.
+Menú **Actualizar datos desde BDU**, con el colectivo (n, a, s o sssc).
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener datos
+### Ver la situación de la sincronización
 
-1. El menú envía `tipo` (`n`/`a`/`s`/`sssc`).
-2. El controller llama `sincro_index_datos`.
-3. Si hay error de permisos o DL, se muestra y termina.
-4. Se renderiza la tabla de 9 puntos con contadores y enlaces «ver»/«ejecutar».
+Pasos propuestos:
+1. Abrir **Actualizar datos desde BDU** y elegir el colectivo.
+2. Aparece la tabla de 9 puntos con el número de casos de cada uno y los enlaces **ver** o **ejecutar**.
+3. Si el usuario no tiene permiso o no se encuentra la delegación en listas, sale el aviso correspondiente.
+
+Endpoints asociados:
+- `/src/dbextern/sincro_index_datos`
 
 ## Endpoints Del Flujo
 

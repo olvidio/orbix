@@ -2,9 +2,9 @@
 id: "inventario.equipajes.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "inventario"
-nombre: "Flujo - Gestionar Equipajes"
+nombre: "Flujo - Ciclo completo de un equipaje"
 capacidad: "inventario.equipajes.gestionar"
-pantallas_principales: []
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 acciones: ["eliminar"]
 endpoints: ["/src/inventario/equipajes_eliminar"]
@@ -17,13 +17,11 @@ Propuesta generada automaticamente desde la capacidad `inventario.equipajes.gest
 
 ## Objetivo De Usuario
 
-Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (EGM/Whereis), impresión y eliminación.
+Ciclo de vida de los equipajes: crear, componer las valijas, imprimir y eliminar.
 
 ## Punto De Entrada
 
-- `inventario.pantalla.equipajes_ver`
-
-
+Menú **Inventario > equipajes**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,13 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Eliminar
+### Ciclo completo de un equipaje
 
 Pasos propuestos:
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Crear con **nuevo equipaje**.
+2. Componer las valijas en **hacer equipajes**.
+3. Imprimir con **imprimir equipajes**.
+4. Al terminar, eliminar el equipaje desde **hacer equipajes** (se eliminan también sus valijas).
 
 Endpoints asociados:
 - `/src/inventario/equipajes_eliminar`

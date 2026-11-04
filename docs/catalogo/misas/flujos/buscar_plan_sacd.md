@@ -2,9 +2,9 @@
 id: "misas.buscar_plan_sacd.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "misas"
-nombre: "Flujo - Gestionar Buscar Plan Sacd"
+nombre: "Flujo - Ver el plan de un sacerdote"
 capacidad: "misas.buscar_plan_sacd.gestionar"
-pantallas_principales: []
+pantallas_principales: ["misas.pantalla.buscar_plan_sacd"]
 fragmentos: ["misas.pantalla.buscar_plan_sacd"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/misas/buscar_plan_sacd_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado por rol y zona del usuario.
+Elegir sacerdote y periodo para ver su plan de misas.
 
 ## Punto De Entrada
 
-Menú Legacy: dre > Misas > Plan sacerdote. Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote.
+Menú **dre > Misas > Plan sacerdote** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ Menú Legacy: dre > Misas > Plan sacerdote. Pills2: ATENCIÓN SACD > Gestión de
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver el plan de un sacerdote
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Plan sacerdote**.
+2. Elegir el **Sacerdote** (la lista se limita según el rol y la zona del usuario) y el **Periodo**.
+3. Se muestra la lista día a día de las misas asignadas.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/misas/buscar_plan_sacd_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

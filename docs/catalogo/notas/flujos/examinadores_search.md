@@ -2,9 +2,9 @@
 id: "notas.examinadores_search.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Examinadores Search"
+nombre: "Flujo - Elegir un examinador"
 capacidad: "notas.examinadores_search.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.acta_ver"]
 fragmentos: ["notas.pantalla.acta_ver"]
 acciones: ["ejecutar"]
 endpoints: ["/src/notas/examinadores_search"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.examinadores_search
 
 ## Objetivo De Usuario
 
-Autocompletado de examinadores en formulario de acta.
+Autocompletar el nombre del examinador al rellenar un acta.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Ficha del acta.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Elegir un examinador
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, escribir parte del nombre del examinador.
+2. Elegir de la lista que aparece.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/examinadores_search`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

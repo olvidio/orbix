@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Copiar Esquema"
 capacidad: "devel_db_admin.copiar_esquema.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_copiar"]
 fragmentos: ["devel_db_admin.pantalla.db_copiar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/copiar_esquema"]

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Apptables Apps"
 capacidad: "devel_db_admin.apptables_apps.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.apptables"]
 fragmentos: ["devel_db_admin.pantalla.apptables"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/devel_db_admin/apptables_apps_data"]

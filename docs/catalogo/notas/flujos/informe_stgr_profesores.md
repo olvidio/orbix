@@ -2,9 +2,9 @@
 id: "notas.informe_stgr_profesores.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "notas"
-nombre: "Flujo - Gestionar Informe Stgr Profesores"
+nombre: "Flujo - Sacar el informe anual de profesores"
 capacidad: "notas.informe_stgr_profesores.gestionar"
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.informe_stgr_profesores"]
 fragmentos: ["notas.pantalla.informe_stgr_profesores"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/notas/informe_stgr_profesores_data"]
@@ -17,11 +17,11 @@ Propuesta generada automaticamente desde la capacidad `notas.informe_stgr_profes
 
 ## Objetivo De Usuario
 
-Generar informe anual de profesores.
+Generar el informe anual del Studium Generale de profesores.
 
 ## Punto De Entrada
 
-No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fragmento o desde otra pantalla.
+Pills2: ESTUDIOS > Datos e informes > Informe anual profesores > Con números / Con listados.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se ha detectado pantalla principal. Revisar si el flujo solo aparece como fra
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Sacar el informe anual de profesores
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual profesores** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/notas/informe_stgr_profesores_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Eliminar Esquema"
 capacidad: "devel_db_admin.eliminar_esquema.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_eliminar"]
 fragmentos: ["devel_db_admin.pantalla.db_eliminar"]
 acciones: ["ejecutar"]
 endpoints: ["/src/devel_db_admin/eliminar_esquema"]

@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "devel_db_admin"
 nombre: "Flujo - Gestionar Db Propiedades"
 capacidad: "devel_db_admin.db_propiedades.gestionar"
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.apptables", "devel_db_admin.pantalla.db_absorber_esquema_que", "devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que", "devel_db_admin.pantalla.db_mover_que"]
 fragmentos: ["devel_db_admin.pantalla.apptables", "devel_db_admin.pantalla.db_absorber_esquema_que", "devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que", "devel_db_admin.pantalla.db_mover_que"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/devel_db_admin/db_propiedades_data"]

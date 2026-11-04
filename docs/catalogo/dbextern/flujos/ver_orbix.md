@@ -2,9 +2,9 @@
 id: "dbextern.ver_orbix.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "dbextern"
-nombre: "Flujo - Revisar Aquinate sin BDU"
+nombre: "Flujo - Revisar las personas de Aquinate sin BDU"
 capacidad: "dbextern.ver_orbix.gestionar"
-pantallas_principales: []
+pantallas_principales: ["dbextern.pantalla.ver_orbix"]
 fragmentos: ["dbextern.pantalla.ver_orbix"]
 acciones: ["obtener_datos", "navegar"]
 endpoints: ["/src/dbextern/ver_orbix_datos"]
@@ -17,22 +17,24 @@ Exploración del punto 9.
 
 ## Objetivo De Usuario
 
-Revisar personas Aquinate activas sin correspondencia BDU y unir si hay candidato.
+Revisar las personas activas de Aquinate sin correspondencia en la BDU y unirlas si hay candidato.
 
 ## Punto De Entrada
 
-**ver** del punto 9 en `sincro_index` → `ver_orbix.php`.
+Enlace **ver** del punto 9 de la pantalla de sincronización.
 
-## Escenarios
+## Escenarios Inferidos
 
-### Obtener datos
+### Revisar las personas de Aquinate sin BDU
 
-1. Carga lista en `$_SESSION['DBOrbix']`.
-2. Por persona: candidatos BDU vía `id_nom_orbix`.
+Pasos propuestos:
+1. Pulsar **ver** en el punto 9.
+2. Aparece la primera persona con sus posibles candidatos de la BDU.
+3. Pulsar **unir** si hay coincidencia.
+4. Usar anterior y siguiente para recorrer la lista.
 
-### Navegar
-
-1. Anterior/siguiente sobre la cola en sesión.
+Endpoints asociados:
+- `/src/dbextern/ver_orbix_datos`
 
 ## Endpoints Del Flujo
 

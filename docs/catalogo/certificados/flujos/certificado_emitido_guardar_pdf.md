@@ -2,9 +2,9 @@
 id: "certificados.certificado_emitido_guardar_pdf.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Certificado Emitido Guardar Pdf"
+nombre: "Flujo - Guardar el certificado generado"
 capacidad: "certificados.certificado_emitido_guardar_pdf.gestionar"
-pantallas_principales: []
+pantallas_principales: ["certificados.pantalla.certificado_emitido_2_mpdf"]
 fragmentos: ["certificados.pantalla.certificado_emitido_2_mpdf"]
 acciones: ["ejecutar"]
 endpoints: ["/src/certificados/certificado_emitido_guardar_pdf"]
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Persistir el PDF generado y el número de certificado en BD.
+Guardar en el sistema el PDF generado y el número del certificado.
 
 ## Punto De Entrada
 
-Tras previsualizar en mPDF (`certificado_emitido_2_mpdf`).
+Ficha de la persona > dossier de certificados (**relación de certificados**).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ Tras previsualizar en mPDF (`certificado_emitido_2_mpdf`).
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Guardar el certificado generado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Tras generar el PDF, confirmar el guardado.
+2. El certificado queda registrado con su número y su PDF.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/certificado_emitido_guardar_pdf`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

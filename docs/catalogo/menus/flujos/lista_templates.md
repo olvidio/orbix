@@ -2,9 +2,9 @@
 id: "menus.lista_templates.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Lista Templates"
+nombre: "Flujo - Ver las plantillas de menú"
 capacidad: "menus.lista_templates.gestionar"
-pantallas_principales: []
+pantallas_principales: ["menus.pantalla.menus_importar_form"]
 fragmentos: ["menus.pantalla.menus_importar_form"]
 acciones: ["ejecutar"]
 endpoints: ["/src/menus/lista_templates"]
@@ -15,11 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Listado de plantillas ref para importación.
+Mostrar las plantillas de menú disponibles para importar.
 
 ## Punto De Entrada
 
-`menus_importar_form`.
+Menú **sistema > menus > importar**.
+
+## Escenarios Inferidos
+
+### Ver las plantillas de menú
+
+Pasos propuestos:
+1. Entrar en **importar**.
+2. Aparece la lista de plantillas de referencia; elegir una.
+
+Endpoints asociados:
+- `/src/menus/lista_templates`
 
 ## Endpoints Del Flujo
 

@@ -2,7 +2,7 @@
 id: "certificados.textos_certificados.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "certificados"
-nombre: "Flujo - Gestionar Textos Certificados"
+nombre: "Flujo - Textos legales del certificado"
 capacidad: "certificados.textos_certificados.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -17,11 +17,11 @@ Flujo revisado contra `src/certificados/` y `frontend/certificados/`.
 
 ## Objetivo De Usuario
 
-Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo).
+Textos legales que se incluyen automáticamente al generar el PDF (no requiere acción del usuario).
 
 ## Punto De Entrada
 
-Backend al llamar `certificado_emitido_imprimir_mpdf_datos`.
+Automático al generar el certificado.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -29,13 +29,14 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Textos legales del certificado
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Al emitir un certificado, el sistema incluye los textos legales en el idioma elegido.
+2. No hace falta hacer nada.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/certificados/textos_certificados`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

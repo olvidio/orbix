@@ -2,9 +2,9 @@
 id: "asistentes.lista_activ_ctr.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "asistentes"
-nombre: "Flujo - Gestionar Lista Activ Ctr"
+nombre: "Flujo - Ver las actividades por centro"
 capacidad: "asistentes.lista_activ_ctr.gestionar"
-pantallas_principales: []
+pantallas_principales: ["asistentes.pantalla.lista_activ_ctr"]
 fragmentos: ["asistentes.pantalla.lista_activ_ctr"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/asistentes/lista_activ_ctr_data"]
@@ -17,13 +17,11 @@ Flujo revisado contra código en `src/asistentes/` y `frontend/asistentes/`.
 
 ## Objetivo De Usuario
 
-Ver actividades asistidas agrupadas por centro.
-
+Ver, centro por centro, las actividades previstas de sus personas.
 
 ## Punto De Entrada
 
-Pantalla `lista_activ_ctr` (`frontend/asistentes/controller/`).
-
+Menú **vsm > ca > lista por ctr** (o crt, cve; también en vest, dagd y vsg según el colectivo).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -31,13 +29,14 @@ Pantalla `lista_activ_ctr` (`frontend/asistentes/controller/`).
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver las actividades por centro
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el periodo (ver «Elegir centro y periodo») y pulsar **Buscar**.
+2. Para cada centro (por ejemplo «Alimara») aparece una tabla «nombre / actividades previstas» con cada persona y su actividad (por ejemplo «ca n repaso Hostal Rialb (7/8/2026-29/8/2026)-dlb»), «NO HACE CA [pedida]» o «pendiente de solicitar» si aún no tiene.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/asistentes/lista_activ_ctr_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

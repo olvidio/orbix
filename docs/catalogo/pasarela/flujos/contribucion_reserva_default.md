@@ -4,7 +4,7 @@ tipo: "flujo_frontend"
 modulo: "pasarela"
 nombre: "Flujo - Default contribución reserva"
 capacidad: "pasarela.contribucion_reserva.gestionar"
-pantallas_principales: []
+pantallas_principales: ["pasarela.pantalla.contribucion_reserva_ajax"]
 fragmentos:
   - "pasarela.pantalla.contribucion_reserva_ajax"
 acciones: ["listar", "guardar", "eliminar"]
@@ -18,15 +18,24 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Cambiar porcentaje global de reserva.
+Cambiar el importe general de reserva.
 
 ## Punto De Entrada
 
-Listado contribución reserva.
+Dentro de **Contribución reserva**, con el botón de modificar el valor por defecto.
 
-## Escenarios
+## Escenarios Inferidos
 
-Form default + guardar.
+### Cambiar el importe general
+
+Pasos propuestos:
+1. Abrir el valor por defecto.
+2. Escribir un número entero de euros entre 0 y 100, que es lo que acepta la pantalla.
+3. Pulsar **guardar** (o **cancel**). Fuera de rango o vacío, el sistema avisa.
+
+Endpoints asociados:
+- `/src/pasarela/contribucion_reserva_default_data`
+- `/src/pasarela/contribucion_reserva_default_guardar`
 
 ## Endpoints Del Flujo
 

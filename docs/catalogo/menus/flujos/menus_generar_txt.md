@@ -2,7 +2,7 @@
 id: "menus.menus_generar_txt.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "menus"
-nombre: "Flujo - Gestionar Menus Generar Txt"
+nombre: "Flujo - Regenerar los textos de los menús"
 capacidad: "menus.menus_generar_txt.gestionar"
 pantallas_principales: []
 fragmentos: []
@@ -15,17 +15,22 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Regenera fichero de cadenas traducibles de etiquetas de menú.
+Regenerar el fichero de textos traducibles de las etiquetas de menú.
 
 ## Punto De Entrada
 
-Menú traducciones.
+Opción de traducciones de menús.
 
-## Escenarios
+## Escenarios Inferidos
 
-1. Ejecutar `/src/menus/menus_generar_txt`.
-2. Escribe `frontend/menus/view/traducir_menu.phtml` (incluye repeticiones de actividades).
-3. Si el destino no es escribible, falla con aviso.
+### Regenerar los textos de los menús
+
+Pasos propuestos:
+1. Ejecutar la opción de generar textos.
+2. Se actualiza el fichero que se usa para traducir los nombres de los menús.
+
+Endpoints asociados:
+- `/src/menus/menus_generar_txt`
 
 ## Endpoints Del Flujo
 

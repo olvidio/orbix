@@ -2,7 +2,7 @@
 id: "procesos.tipo_activ_proceso_asignar.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "procesos"
-nombre: "Flujo - Gestionar Tipo Activ Proceso Asignar"
+nombre: "Flujo - Asignar un proceso a un tipo de actividad"
 capacidad: "procesos.tipo_activ_proceso_asignar.gestionar"
 pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: []
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso propio (DL) o no propio.
+Asignar un tipo de proceso a un tipo de actividad (propio de la dl o no propio).
 
 ## Punto De Entrada
 
-Menú Legacy: sistema > procesos activ. > tipo activ - proceso. Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso.
+Menú **sistema > procesos activ. > tipo activ - proceso** (Pills2: ADMIN LOCAL > procesos activ. > tipo activ - proceso).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,15 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Escenarios Inferidos
 
-### Ejecutar
+### Asignar un proceso a un tipo de actividad
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tipo activ - proceso** y elegir el tipo de actividad.
+2. Elegir el proceso de la lista de posibles.
+3. Guardar. Las actividades nuevas de ese tipo usarán el proceso asignado.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/procesos/tipo_activ_proceso_asignar`
 
 ## Campos Y Acciones Detectadas En Pantalla
 

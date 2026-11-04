@@ -35,7 +35,7 @@ Pantalla `activ_sacd` (`frontend/actividadessacd/controller/activ_sacd.php`): cu
 ### Obtener Datos
 
 Pasos:
-1. Entrar desde el menú con tipo `solape`.
+1. Entrar desde la opción de solapes del menú.
 2. Elegir periodo y pulsar **buscar**.
 3. El sistema construye la tabla de sacd con sus actividades incompatibles y la leyenda de colores.
 

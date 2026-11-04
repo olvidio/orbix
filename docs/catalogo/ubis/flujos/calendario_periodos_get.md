@@ -2,9 +2,9 @@
 id: "ubis.calendario_periodos_get.gestionar.flujo"
 tipo: "flujo_frontend"
 modulo: "ubis"
-nombre: "Flujo - Gestionar Calendario Periodos Get"
+nombre: "Flujo - Ver todos los periodos de una casa"
 capacidad: "ubis.calendario_periodos_get.gestionar"
-pantallas_principales: []
+pantallas_principales: ["ubis.pantalla.calendario_periodos_get"]
 fragmentos: ["ubis.pantalla.calendario_periodos_get"]
 acciones: ["obtener_datos"]
 endpoints: ["/src/ubis/calendario_periodos_get_data"]
@@ -15,11 +15,11 @@ estado_revision: "revisado"
 
 ## Objetivo De Usuario
 
-Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio.
+Listar todos los periodos de calendario de una casa ordenados por fecha de inicio.
 
 ## Punto De Entrada
 
-Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos.
+Menú **adl > Nuevo Calendario > Definir periodos** (Pills2: ACTIVIDADES > Herramientas de calendario > Definir periodos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -27,13 +27,14 @@ Menú Legacy: adl > Nuevo Calendario > Definir periodos. Pills2: ACTIVIDADES > H
 
 ## Escenarios Inferidos
 
-### Obtener Datos
+### Ver todos los periodos de una casa
 
 Pasos propuestos:
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Definir periodos**, elegir la casa y pulsar **buscar**.
+2. Aparecen todos sus periodos por orden de fecha.
 
 Endpoints asociados:
-- Ninguno inferido para esta accion.
+- `/src/ubis/calendario_periodos_get_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
