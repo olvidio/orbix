@@ -234,10 +234,17 @@ $id_sel_value = is_array($Qid_sel)
     ? \frontend\shared\helpers\PayloadCoercion::string($Qid_sel[0] ?? '')
     : \frontend\shared\helpers\PayloadCoercion::string($Qid_sel);
 
+// Enlace para recargar esta misma lista, con sus filtros, tras una acción (duplicar, borrar, publicar…).
+$url_actualizar = HashFSignedLink::fromSpec([
+    'path' => 'frontend/actividades/controller/actividad_select.php',
+    'query' => array_merge(['continuar' => 'si'], $actividadSelectReturn),
+]);
+
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oHashSel' => $oHashSel,
+    'url_actualizar' => $url_actualizar,
     'aTiposActiv' => $aTiposActiv,
     'resultado' => $resultado,
     'perm_nueva' => $perm_nueva,

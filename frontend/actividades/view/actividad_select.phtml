@@ -4,6 +4,7 @@ use frontend\shared\security\HashF;
 
 ?>
 <script type="text/javascript" src="<?= 'frontend/actividades/view/actividades.js?' . rand(); ?>"></script>
+<script>jsForm.urlActualizar = <?= json_encode($url_actualizar ?? '') ?>;</script>
 <script>
     fnjs_borrar = function (formulario, que_val) {
         rta = fnjs_solo_uno(formulario);

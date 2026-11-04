@@ -137,8 +137,10 @@ fnjs_guardar=function(tipo='') {
                 alert("{{ "respuesta"|trans|raw }}: " + (respuesta.mensaje || 'Error desconocido'));
             } else if (tipo !== 'nuevo') {
                 // En el caso de nuevo, me quedo en el formulario.
+                alert("{{ "Cambios guardados"|trans|raw }}");
                 {{ oPosicion.jsNavAtras(1)|raw }}
             } else {
+                alert("{{ "Actividad creada"|trans|raw }}");
                 $('#modifica')[0].reset();
                 fnjs_asistentes();
                 var txt = "{{ "sin determinar"|trans|raw }}";

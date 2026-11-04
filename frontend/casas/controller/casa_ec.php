@@ -8,7 +8,7 @@ use frontend\shared\helpers\PayloadCoercion;
 
 /**
  * Pantalla `casa_ec`: filtro casa y carga AJAX de la estadística
- * económica por año (5 años). Migrada desde
+ * económica por año (6 años: el próximo y los 5 anteriores). Migrada desde
  * `apps/casas/controller/casa_ec_que.php`, cuyo JS delegaba en
  * `casas_resumen_ajax.php?que=get`. Ahora llama a
  * `frontend/casas/controller/casas_resumen_lista.php` con `cdc_sel=9`

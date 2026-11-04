@@ -87,6 +87,11 @@ jsForm.refresh = function () {
     }
 }
 jsForm.actualizar = function () {
+    // Si la lista sabe recargarse con sus filtros, se usa; si no, el comportamiento anterior.
+    if (jsForm.urlActualizar) {
+        fnjs_update_div('#main', jsForm.urlActualizar);
+        return;
+    }
     var continuar = '<input type="hidden" name="continuar" value="si">';
     $(this.form).attr('action', "frontend/actividades/controller/actividad_select.php");
     $(this.form).append(continuar);
@@ -111,7 +116,7 @@ jsForm.update = function (formulario, que) {
             this.ctxCampo = 'ctx_importar';
             break;
         case "duplicar":
-            this.Aviso = "Seguro que desa duplicar esta actividad";
+            this.Aviso = "Seguro que desea duplicar esta actividad";
             $('#mod').val(que);
             this.action = "src/actividades/actividad_duplicar";
             this.ctxCampo = 'ctx_duplicar';
