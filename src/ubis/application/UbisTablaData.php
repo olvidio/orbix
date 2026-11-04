@@ -65,7 +65,8 @@ final class UbisTablaData
         $tipo_ubi = is_string($filtros['tipo_ubi'] ?? null) ? $filtros['tipo_ubi'] : '';
 
         if (empty($aWhere) && empty($aWhereD)) {
-            return ['error' => _("debe poner algún criterio de búsqueda")];
+            // Situación prevista, no un fallo: la pantalla muestra el aviso al usuario.
+            return ['aviso_txt' => _("debe poner algún criterio de búsqueda")];
         }
 
         // ----- Buscar ubis por nombre y por dirección -----

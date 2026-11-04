@@ -38,7 +38,13 @@ if ($Qscroll_id !== '') {
     $params['scroll_id'] = PayloadCoercion::string($Qscroll_id);
 }
 
-$tabla = UbisPayload::tablaFromPayload(UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_tabla_data', $params)));
+$datosTabla = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_tabla_data', $params));
+if (!empty($datosTabla['aviso_txt'])) {
+    echo '<p class="error">' . htmlspecialchars(PayloadCoercion::string($datosTabla['aviso_txt']), ENT_QUOTES, 'UTF-8') . '</p>';
+    echo '<p><input type="button" value="' . htmlspecialchars(_("volver"), ENT_QUOTES, 'UTF-8') . '" onclick="' . htmlspecialchars($oPosicion->jsNavAtras(1), ENT_QUOTES, 'UTF-8') . '"></p>';
+    return;
+}
+$tabla = UbisPayload::tablaFromPayload($datosTabla);
 
 ListNavSupport::syncNavStateAt($oPosicion, 1, $tabla['go_back']);
 

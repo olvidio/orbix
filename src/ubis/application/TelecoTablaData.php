@@ -9,11 +9,15 @@ use src\shared\domain\DatosCampo;
 use src\shared\security\HashB;
 use src\ubis\application\services\UbiPermisos;
 use src\ubis\application\services\UbiRepositoryResolver;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TelecoUbi;
 final class TelecoTablaData
 {
     public function __construct(
         private UbiRepositoryResolver $ubiRepositoryResolver,
+        private TipoTelecoRepositoryInterface $tipoTelecoRepository,
+        private DescTelecoRepositoryInterface $descTelecoRepository,
     ) {
     }
     /**
@@ -76,9 +80,11 @@ final class TelecoTablaData
                     case 'depende':
                     case 'opciones':
                         $oRelacionado = null;
-                        if (is_string($var_1) && $var_1 !== '' && class_exists($var_1)) {
-                            $repoRelacionado = $this->ubiRepositoryResolver->getDireccionRepositoryByInterface($var_1);
-                            $oRelacionado = $repoRelacionado->findById((int) $valor_camp);
+                        // `$var_1` es el nombre de una interfaz de repositorio (class_exists no la reconoce).
+                        if ($var_1 === TipoTelecoRepositoryInterface::class) {
+                            $oRelacionado = $this->tipoTelecoRepository->findById((int) $valor_camp);
+                        } elseif ($var_1 === DescTelecoRepositoryInterface::class) {
+                            $oRelacionado = $this->descTelecoRepository->findById((int) $valor_camp);
                         }
                         if (is_string($var_2) && substr($var_2, -2) === 'Vo') {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2()?->value() ?: $valor_camp;

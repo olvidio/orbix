@@ -32,7 +32,12 @@ use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TelecoUbi;
+use src\ubis\domain\entity\TipoTeleco;
+use src\ubis\domain\value_objects\TipoTelecoName;
+use src\shared\domain\DatosCampo;
 
 final class TelecoTablaDataTest extends TestCase
 {
@@ -46,7 +51,7 @@ final class TelecoTablaDataTest extends TestCase
         $repo = $this->createMock(TelecoCtrRepositoryInterface::class);
         $repo->method('matching')->willReturn([$teleco]);
 
-        $useCase = new TelecoTablaData($this->resolver($repo));
+        $useCase = $this->useCase($repo);
         $out = $useCase->execute('Centro', 5);
 
         $this->assertCount(1, $out['a_valores']);
@@ -63,10 +68,48 @@ final class TelecoTablaDataTest extends TestCase
         $repo = $this->createMock(TelecoCtrRepositoryInterface::class);
         $repo->method('matching')->willReturn([]);
 
-        $useCase = new TelecoTablaData($this->resolver($repo));
+        $useCase = $this->useCase($repo);
         $out = $useCase->execute('Centro', 5);
 
         $this->assertSame([], $out['a_valores']);
+    }
+
+    private function useCase(TelecoCtrRepositoryInterface $repo, ?TipoTelecoRepositoryInterface $tipos = null): TelecoTablaData
+    {
+        return new TelecoTablaData(
+            $this->resolver($repo),
+            $tipos ?? $this->createMock(TipoTelecoRepositoryInterface::class),
+            $this->createMock(DescTelecoRepositoryInterface::class),
+        );
+    }
+
+    public function test_muestra_el_nombre_del_tipo_en_vez_de_su_numero(): void
+    {
+        $campo = new DatosCampo();
+        $campo->setNom_camp('id_tipo_teleco');
+        $campo->setMetodoGet('getId_tipo_teleco');
+        $campo->setEtiqueta('nombre teleco');
+        $campo->setTipo('opciones');
+        $campo->setArgument(TipoTelecoRepositoryInterface::class);
+        $campo->setArgument2('getNombreTelecoVo');
+
+        $teleco = $this->createMock(TelecoUbi::class);
+        $teleco->method('getPrimary_key')->willReturn('id_item');
+        $teleco->method('getId_item')->willReturn(1);
+        $teleco->method('getId_tipo_teleco')->willReturn(3);
+        $teleco->method('getDatosCampos')->willReturn([$campo]);
+
+        $tipo = $this->createMock(TipoTeleco::class);
+        $tipo->method('getNombreTelecoVo')->willReturn(new TipoTelecoName('móvil'));
+        $tipos = $this->createMock(TipoTelecoRepositoryInterface::class);
+        $tipos->method('findById')->with(3)->willReturn($tipo);
+
+        $repo = $this->createMock(TelecoCtrRepositoryInterface::class);
+        $repo->method('matching')->willReturn([$teleco]);
+
+        $out = $this->useCase($repo, $tipos)->execute('Centro', 5);
+
+        $this->assertContains('móvil', $out['a_valores'][0]);
     }
 
     private function resolver(?TelecoCtrRepositoryInterface $telecoCtr = null): UbiRepositoryResolver
