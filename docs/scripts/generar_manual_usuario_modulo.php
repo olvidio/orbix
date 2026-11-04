@@ -254,7 +254,7 @@ function readSection(string $module, string $section, string $expectedType): arr
 /** @return list<array{titulo: string, pasos: list<string>}> */
 function extractScenarios(string $body): array
 {
-    if (!preg_match('/^## Escenarios Inferidos\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
+    if (!preg_match('/^## Escenarios(?: Inferidos)?\R(?P<section>.*?)(?=^## |\z)/ms', $body, $m)) {
         return [];
     }
 
@@ -604,6 +604,11 @@ function renderManual(string $module, array $flows, array $screens, array $capab
     }
 
     $estado = $menuPending === 0 ? 'revisado_parcial' : 'generado';
+    // Estado fijado a mano en docs/catalogo/_estado_manual.json (criterio en ese fichero).
+    $estadoManual = json_decode((string)@file_get_contents(repoRoot() . '/docs/catalogo/_estado_manual.json'), true);
+    if (is_array($estadoManual) && isset($estadoManual[$module]) && is_string($estadoManual[$module]) && $menuPending === 0) {
+        $estado = $estadoManual[$module];
+    }
     $intro = $menuPending === 0
         ? 'Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo como guía de usuario; los detalles técnicos están en el catálogo.'
         : 'Manual generado desde `docs/catalogo`. Algunas rutas de menú siguen pendientes en el catálogo.';
