@@ -36,7 +36,7 @@ if ($sacd_selected !== '') {
 }
 $msg = '';
 if (empty($a_sacd)) {
-    $msg = _("No hay SACD disponibles porque: Usuario sin csv_id_pau, que no es jefe de zona, ni p-sacd, ni Oficial_dl, ni jefe de calendario");
+    $msg = _("Debe ser un sacd o un centro para ver este menú");
 }
 
 $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';

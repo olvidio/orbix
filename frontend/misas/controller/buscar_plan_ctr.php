@@ -63,6 +63,7 @@ $a_campos = [
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_buscar_plan_ctr' => $h_buscar_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
+    'msg' => $view === 'none' ? _("Debe ser un sacd o un centro para ver este menú") : '',
     'id_ubi_centro' => \frontend\shared\helpers\PayloadCoercion::string($data['id_ubi_centro'] ?? ''),
 ];
 

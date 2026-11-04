@@ -52,6 +52,13 @@ class BuscarPlanSacdData
         /** @var array<string, string> $a_sacd */
         $a_sacd = [];
         $aRoles = $this->roleRepository->getArrayRoles();
+        if ($id_sacd === null) {
+            // Usuario sin persona asociada (csv_id_pau vacío): no puede ver este menú.
+            return [
+                'sacd_opciones' => [],
+                'sacd_selected' => '',
+            ];
+        }
         $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
 
         if (count($cZonas) > 0) {

@@ -144,6 +144,16 @@ class BuscarPlanCtrData
             }
         } else {
             $id_sacd = $oMiUsuario->getCsvIdPauAsString();
+            if ($id_sacd === null) {
+                return [
+                    'view' => 'none',
+                    'zonas_opciones' => [],
+                    'zonas_selected' => 0,
+                    'centros_opciones' => [],
+                    'centros_selected' => '',
+                    'id_ubi_centro' => '',
+                ];
+            }
             $criterioES = Criteria::create()
                 ->where(Filter::eq(EncargoSacdField::IdNom, $id_sacd))
                 ->orderBy(EncargoSacdField::Modo)

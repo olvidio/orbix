@@ -1,4 +1,7 @@
 <div id="div_select_zona" class="no_print">
+    <?php if (!empty($msg)) { ?>
+        <span class="error"><?= $msg ?></span>
+    <?php } ?>
     <table>
         <tr>
             <th class="titulo_inv" colspan="6">
