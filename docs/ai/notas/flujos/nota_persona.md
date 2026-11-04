@@ -5,7 +5,7 @@ modulo: "notas"
 titulo: "Nota Persona"
 flujo: "notas.nota_persona.gestionar.flujo"
 preguntas: ["Como abrir el formulario en Nota Persona?"]
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 endpoints: ["/src/notas/nota_persona_form_data"]
 source: "docs/catalogo/notas/flujos/nota_persona.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Notas De Una Persona (`notas.pantalla.form_notas_de_una_persona`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `notas.pantalla.form_notas_de_una_persona`
 - `notas.pantalla.form_notas_de_una_persona`
 
 ## Objetivo

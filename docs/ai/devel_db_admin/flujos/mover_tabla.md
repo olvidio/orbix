@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Mover Tabla"
 flujo: "devel_db_admin.mover_tabla.gestionar.flujo"
 preguntas: ["Como ejecutar en Mover Tabla?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_mover"]
 fragmentos: ["devel_db_admin.pantalla.db_mover"]
 endpoints: ["/src/devel_db_admin/mover_tabla"]
 source: "docs/catalogo/devel_db_admin/flujos/mover_tabla.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Mover (`devel_db_admin.pantalla.db_mover`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_mover`
 - `devel_db_admin.pantalla.db_mover`
 
 ## Objetivo

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Calendario Periodos"
+titulo: "Consultar los periodos de una casa"
 flujo: "ubis.calendario_periodos.gestionar.flujo"
-preguntas: ["Como eliminar en Calendario Periodos?", "Como guardar en Calendario Periodos?"]
+preguntas: ["Como consultar los periodos de una casa en Consultar los periodos de una casa?", "Como borrar un periodo en Consultar los periodos de una casa?"]
 pantallas_principales: ["ubis.pantalla.calendario_periodos"]
 fragmentos: []
 endpoints: ["/src/ubis/calendario_periodos_eliminar", "/src/ubis/calendario_periodos_guardar"]
@@ -12,15 +12,15 @@ source: "docs/catalogo/ubis/flujos/calendario_periodos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Calendario Periodos
+# Ayuda IA - Consultar los periodos de una casa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Calendario Periodos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los periodos de una casa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Calendario Periodos?
-- Como guardar en Calendario Periodos?
+- Como consultar los periodos de una casa en Consultar los periodos de una casa?
+- Como borrar un periodo en Consultar los periodos de una casa?
 
 ## Donde Entrar
 
@@ -30,22 +30,24 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Consultar los periodos de una casa
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **Definir periodos**.
+2. Elegir la casa y el año y pulsar **buscar**.
+3. Se listan los periodos ordenados por fecha de inicio y se avisa si alguno se solapa con otro.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubis/calendario_periodos_eliminar`
+- `/src/ubis/calendario_periodos_guardar`
 
-## Guardar
+## Borrar un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista, pulsar eliminar en el periodo.
+2. Confirmar «¿Está seguro de borrar este periodo?».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/calendario_periodos_eliminar`
+- `/src/ubis/calendario_periodos_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -53,7 +55,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Elimina un periodo de calendario CDC identificado por id_item.
+Definir los periodos del calendario de una casa en un año y borrar los que sobran.
 
 ## Errores Documentados
 

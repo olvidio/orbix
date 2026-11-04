@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Fases Activ Cambio Tipo Html"
+titulo: "Elegir el tipo de actividad para cambiar de fase"
 flujo: "procesos.fases_activ_cambio_tipo_html.gestionar.flujo"
-preguntas: ["Como ejecutar en Fases Activ Cambio Tipo Html?"]
-pantallas_principales: []
+preguntas: ["Como elegir el tipo de actividad para cambiar de fase en Elegir el tipo de actividad para cambiar de fase?"]
+pantallas_principales: ["procesos.pantalla.fases_activ_cambio"]
 fragmentos: ["procesos.pantalla.fases_activ_cambio"]
 endpoints: ["/src/procesos/fases_activ_cambio_tipo_html"]
 source: "docs/catalogo/procesos/flujos/fases_activ_cambio_tipo_html.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Fases Activ Cambio Tipo Html
+# Ayuda IA - Elegir el tipo de actividad para cambiar de fase
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Fases Activ Cambio Tipo Html`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el tipo de actividad para cambiar de fase`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Fases Activ Cambio Tipo Html?
+- Como elegir el tipo de actividad para cambiar de fase en Elegir el tipo de actividad para cambiar de fase?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Fases Activ Cambio (`procesos.pantalla.fases_activ_cambio`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Elegir el tipo de actividad para cambiar de fase
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **cambiar de fase**.
+2. Elegir el tipo de actividad; el resto de opciones de la pantalla se adaptan a él.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/procesos/fases_activ_cambio_tipo_html`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `procesos.pantalla.fases_activ_cambio`
+- `procesos.pantalla.fases_activ_cambio`
 
 ## Objetivo
 
-Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio de fase masivo.
+Mostrar el selector de tipo de actividad en la pantalla de cambio de fase masivo.
 
 ## Errores Documentados
 

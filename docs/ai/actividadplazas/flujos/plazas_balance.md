@@ -2,39 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Plazas Balance"
+titulo: "Comparar con otra delegación"
 flujo: "actividadplazas.plazas_balance.gestionar.flujo"
-preguntas: ["Como obtener datos en Plazas Balance?"]
-pantallas_principales: []
+preguntas: ["Como comparar con otra delegación en Comparar con otra delegación?"]
+pantallas_principales: ["actividadplazas.pantalla.plazas_balance_dl"]
 fragmentos: ["actividadplazas.pantalla.plazas_balance_dl"]
 endpoints: ["/src/actividadplazas/plazas_balance_data"]
 source: "docs/catalogo/actividadplazas/flujos/plazas_balance.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Plazas Balance
+# Ayuda IA - Comparar con otra delegación
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Plazas Balance`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Comparar con otra delegación`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Plazas Balance?
+- Como comparar con otra delegación en Comparar con otra delegación?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Plazas Balance Dl (`actividadplazas.pantalla.plazas_balance_dl`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Comparar con otra delegación
 
-1. En **Balance de plazas**, elegir la delegación a comparar en el desplegable.
-2. El sistema carga el HTML del grid en `#comparativa` vía `plazas_balance_dl.php`.
-3. Ese fragmento obtiene los datos de `plazas_balance_data` (`dlA` = mi dl, `dlB` = la elegida):
-4. Las celdas de mi dl son editables (doble clic → `gestion_plazas_update`).
+1. En **Balance de plazas**, elegir en el desplegable la delegación con la que comparar.
+2. Debajo aparece la tabla: arriba, las plazas que se conceden mutuamente las dos delegaciones, y por actividad las concedidas y las libres.
+3. Las celdas de la propia delegación se pueden cambiar con doble clic; se guarda al momento.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/plazas_balance_data`
@@ -42,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadplazas.pantalla.plazas_balance_dl`
+- `actividadplazas.pantalla.plazas_balance_dl`
 
 ## Objetivo
 
-Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene cada actividad en mi delegación frente a otra delegación elegida en el desplegable.
+Comparar, para un tipo de actividad, las plazas concedidas y libres de cada actividad en la propia delegación frente a otra delegación elegida.
 
 ## Errores Documentados
 

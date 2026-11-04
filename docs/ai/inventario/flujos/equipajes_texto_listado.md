@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Equipajes Texto Listado"
+titulo: "Cambiar los textos del listado del equipaje"
 flujo: "inventario.equipajes_texto_listado.gestionar.flujo"
-preguntas: ["Como guardar en Equipajes Texto Listado?"]
-pantallas_principales: []
+preguntas: ["Como cambiar los textos del listado del equipaje en Cambiar los textos del listado del equipaje?"]
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 endpoints: ["/src/inventario/equipajes_texto_listado_guardar"]
 source: "docs/catalogo/inventario/flujos/equipajes_texto_listado.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Equipajes Texto Listado
+# Ayuda IA - Cambiar los textos del listado del equipaje
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Equipajes Texto Listado`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar los textos del listado del equipaje`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Equipajes Texto Listado?
+- Como cambiar los textos del listado del equipaje en Cambiar los textos del listado del equipaje?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Gestionar equipajes (`inventario.pantalla.equipajes_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
+## Cambiar los textos del listado del equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz (**modificar texto**) (o **introducir texto** si aún está vacío).
+2. Escribir el texto de **cabecera**, **cabecera B)**, **pie** o **texto a añadir en las maletas**.
+3. Pulsar **guardar** (o **cancel**).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/equipajes_texto_listado_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `inventario.pantalla.equipajes_ver`
 
 ## Objetivo
 
-Gestiona EquipajesTextoListado. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar el texto de cabecera, cabecera B), pie o el texto para las maletas de un equipaje.
 
 ## Limites De La Respuesta
 

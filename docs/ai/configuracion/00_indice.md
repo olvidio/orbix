@@ -21,10 +21,10 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- módulo (ficha) -> `flujos/modulos.md`
-- Definir módulos (listado) -> `flujos/modulos_select.md`
-- Configurar parámetros del esquema -> `flujos/parametros.md`
-- Periodo calendario escolar (interno) -> `flujos/periodo_calendario_escolar.md`
+- Añadir o modificar un módulo -> `flujos/modulos.md`
+- Consultar los módulos definidos -> `flujos/modulos_select.md`
+- Ver los parámetros del esquema -> `flujos/parametros.md`
+- Cambiar las fechas del curso -> `flujos/periodo_calendario_escolar.md`
 
 ## Pantallas Disponibles
 

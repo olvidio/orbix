@@ -5,7 +5,7 @@ modulo: "actividadessacd"
 titulo: "Comunicacion Activ Sacd Enviar"
 flujo: "actividadessacd.comunicacion_activ_sacd_enviar.gestionar.flujo"
 preguntas: ["Como ejecutar en Comunicacion Activ Sacd Enviar?"]
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_enviar"]
 source: "docs/catalogo/actividadessacd/flujos/comunicacion_activ_sacd_enviar.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Com Sacd Activ Periodo (`actividadessacd.pantalla.com_sacd_activ_periodo`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadessacd.pantalla.com_sacd_activ_periodo`
 - `actividadessacd.pantalla.com_sacd_activ_periodo`
 
 ## Objetivo

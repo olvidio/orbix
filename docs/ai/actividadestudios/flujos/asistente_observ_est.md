@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Asistente Observ Est"
+titulo: "Guardar las observaciones del plan de estudios"
 flujo: "actividadestudios.asistente_observ_est.gestionar.flujo"
-preguntas: ["Como ejecutar en Asistente Observ Est?"]
+preguntas: ["Como guardar las observaciones del plan de estudios en Guardar las observaciones del plan de estudios?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/actividadestudios/asistente_observ_est"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/actividadestudios/flujos/asistente_observ_est.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asistente Observ Est
+# Ayuda IA - Guardar las observaciones del plan de estudios
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asistente Observ Est`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar las observaciones del plan de estudios`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Asistente Observ Est?
+- Como guardar las observaciones del plan de estudios en Guardar las observaciones del plan de estudios?
 
 ## Donde Entrar
 
@@ -29,11 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar las observaciones del plan de estudios
 
-1. En el dossier de matrículas de una persona (1303), editar el campo de observaciones de
-2. Pulsar grabar observaciones (`fnjs_grabar_observ`).
-3. El sistema envía el formulario serializado al endpoint y refresca el fragmento si tiene éxito.
+1. En el dossier de matrículas de una persona, escribir el texto en las observaciones del plan de estudios.
+2. Pulsar el botón para grabar las observaciones.
+3. Si se guarda bien, la lista se refresca con el texto nuevo.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/asistente_observ_est`
@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario guarda las observaciones de plan de estudios (`observ_est`) de un asistente en su actividad vigente. Sustituye al case `observ_est` de `update_3103.php`.
+Guardar las observaciones sobre el plan de estudios de un asistente en su actividad.
 
 ## Errores Documentados
 

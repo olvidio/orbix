@@ -5,7 +5,7 @@ modulo: "actividadessacd"
 titulo: "Texto Comunicacion"
 flujo: "actividadessacd.texto_comunicacion.gestionar.flujo"
 preguntas: ["Como obtener datos en Texto Comunicacion?", "Como guardar en Texto Comunicacion?"]
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_txt"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 endpoints: ["/src/actividadessacd/texto_comunicacion_data", "/src/actividadessacd/texto_comunicacion_guardar"]
 source: "docs/catalogo/actividadessacd/flujos/texto_comunicacion.md"
@@ -24,7 +24,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Com Sacd Txt (`actividadessacd.pantalla.com_sacd_txt`)
 
 ## Como Responder
 
@@ -49,6 +49,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadessacd.pantalla.com_sacd_txt`
 - `actividadessacd.pantalla.com_sacd_txt`
 
 ## Objetivo

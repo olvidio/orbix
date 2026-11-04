@@ -2,39 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Matriculas"
+titulo: "Listar las matrículas de un periodo"
 flujo: "actividadestudios.matriculas.gestionar.flujo"
-preguntas: ["Como consultar el listado en Matriculas?"]
-pantallas_principales: []
+preguntas: ["Como listar las matrículas de un periodo en Listar las matrículas de un periodo?"]
+pantallas_principales: ["actividadestudios.pantalla.matriculas_lista"]
 fragmentos: ["actividadestudios.pantalla.matriculas_lista"]
 endpoints: ["/src/actividadestudios/matriculas_lista_data"]
 source: "docs/catalogo/actividadestudios/flujos/matriculas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Matriculas
+# Ayuda IA - Listar las matrículas de un periodo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Matriculas`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Listar las matrículas de un periodo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar el listado en Matriculas?
+- Como listar las matrículas de un periodo en Listar las matrículas de un periodo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Matriculas Lista (`actividadestudios.pantalla.matriculas_lista`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar el listado
+## Listar las matrículas de un periodo
 
-1. Abrir **Matrículas** desde el menú.
-2. Elegir año y periodo (por defecto `curso_ca`) y pulsar **buscar**.
-3. El sistema consulta `matriculas_lista_data` y muestra la tabla paginada.
-4. Opcionalmente, seleccionar filas para ver dossier CA o borrar matrículas.
+1. Entrar en **Matrículas**: «PERIODO DE SELECCIÓN DE ACTIVIDADES».
+2. Elegir todo el año, un trimestre, el curso ca u **otro** (con fechas) y el año.
+3. Pulsar **buscar** para ver la lista de matrículas.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/matriculas_lista_data`
@@ -42,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.matriculas_lista`
+- `actividadestudios.pantalla.matriculas_lista`
 
 ## Objetivo
 
-El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de matrículas de actividades cuyo `f_ini` cae en ese intervalo, con alumno, centro, actividad, asignatura, preceptor y nota.
+Ver las matrículas de las actividades de un periodo.
 
 ## Limites De La Respuesta
 

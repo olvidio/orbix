@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Texto De Egm"
+titulo: "Abrir el texto para modificarlo"
 flujo: "inventario.texto_de_egm.gestionar.flujo"
-preguntas: ["Como ejecutar en Texto De Egm?"]
-pantallas_principales: []
+preguntas: ["Como abrir el texto para modificarlo en Abrir el texto para modificarlo?"]
+pantallas_principales: ["inventario.pantalla.equipajes_form_texto_listado"]
 fragmentos: ["inventario.pantalla.equipajes_form_texto_listado"]
 endpoints: ["/src/inventario/texto_de_egm"]
 source: "docs/catalogo/inventario/flujos/texto_de_egm.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Texto De Egm
+# Ayuda IA - Abrir el texto para modificarlo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Texto De Egm`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir el texto para modificarlo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Texto De Egm?
+- Como abrir el texto para modificarlo en Abrir el texto para modificarlo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Editar texto listado (`inventario.pantalla.equipajes_form_texto_listado`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Abrir el texto para modificarlo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz junto a la cabecera, la cabecera B) o el pie.
+2. Se abre el cuadro con el texto actual.
+3. Cambiarlo y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/texto_de_egm`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.equipajes_form_texto_listado`
+- `inventario.pantalla.equipajes_form_texto_listado`
 
 ## Objetivo
 
-Gestiona TextoDeEgm. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar el texto que se añade a las maletas (cabecera, cabecera B, pie) para poder modificarlo.
 
 ## Limites De La Respuesta
 

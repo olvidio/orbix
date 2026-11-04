@@ -2,40 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "shared"
-titulo: "Persistir registro tabla genérica"
+titulo: "Guardar o eliminar un registro de una tabla"
 flujo: "shared.tablaDB.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como guardar o eliminar un registro de una tabla en Guardar o eliminar un registro de una tabla?"]
+pantallas_principales: ["shared.pantalla.tablaDB_formulario_ver"]
 fragmentos: ["shared.pantalla.tablaDB_formulario_ver", "shared.pantalla.tablaDB_lista_ver"]
 endpoints: ["/src/shared/tablaDB_update"]
 source: "docs/catalogo/shared/flujos/tablaDB.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Persistir registro tabla genérica
+# Ayuda IA - Guardar o eliminar un registro de una tabla
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Persistir registro tabla genérica`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar o eliminar un registro de una tabla`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como guardar o eliminar un registro de una tabla en Guardar o eliminar un registro de una tabla?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Mantenimiento genérico de tablas (formulario) (`shared.pantalla.tablaDB_formulario_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Guardar o eliminar un registro de una tabla
+
+1. En el formulario, pulsar guardar: se graba el registro nuevo o los cambios del existente.
+2. En la tabla, seleccionar una o varias filas y pulsar **eliminar** para borrarlas.
+3. Algunas tablas tienen reglas propias; por ejemplo, al activar un módulo se crean sus tablas.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/shared/tablaDB_update`
+
 ## Pantallas Y Fragmentos Relacionados
 
+- `shared.pantalla.tablaDB_formulario_ver`
 - `shared.pantalla.tablaDB_formulario_ver`
 - `shared.pantalla.tablaDB_lista_ver`
 
 ## Objetivo
 
-Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con el patrón `Info*` + repositorio CRUD.
+Dar de alta, modificar o eliminar un registro de cualquier tabla mantenida con la pantalla genérica de mantenimiento.
 
 ## Errores Documentados
 

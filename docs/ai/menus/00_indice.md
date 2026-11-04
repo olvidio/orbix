@@ -22,20 +22,20 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 ## Flujos Disponibles
 
 - Grupmenu -> `flujos/grupmenu.md`
-- Grupmenu Coleccion -> `flujos/grupmenu_coleccion.md`
-- Grupmenu Info -> `flujos/grupmenu_info.md`
-- Lista Meta Menus -> `flujos/lista_meta_menus.md`
-- Lista Templates -> `flujos/lista_templates.md`
-- Menu -> `flujos/menu.md`
-- Menu Mover -> `flujos/menu_mover.md`
-- Menus Burger Layout -> `flujos/menus_burger_layout.md`
-- Menus Exportar -> `flujos/menus_exportar.md`
+- Ver mi menú lateral -> `flujos/grupmenu_coleccion.md`
+- Editar un grupo de menús -> `flujos/grupmenu_info.md`
+- Elegir el destino de un menú -> `flujos/lista_meta_menus.md`
+- Ver las plantillas de menú -> `flujos/lista_templates.md`
+- Modificar una entrada de menú -> `flujos/menu.md`
+- Mover una entrada a otro grupo -> `flujos/menu_mover.md`
+- Ver el menú Burger o Pills -> `flujos/menus_burger_layout.md`
+- Exportar los menús -> `flujos/menus_exportar.md`
 - Menús a/desde ficheros SQL -> `flujos/menus_exportar_ref_a_ficheros.md`
-- Menus Generar Txt -> `flujos/menus_generar_txt.md`
-- Menus Get Page -> `flujos/menus_get_page.md`
-- Menus Importar -> `flujos/menus_importar.md`
+- Regenerar los textos de los menús -> `flujos/menus_generar_txt.md`
+- Ver el listado y la ficha de un menú -> `flujos/menus_get_page.md`
+- Importar una plantilla de menús -> `flujos/menus_importar.md`
 - Restaurar menús ref→DL -> `flujos/menus_importar_de_ficheros_a_ref.md`
-- Menus Legacy Layout Items -> `flujos/menus_legacy_layout_items.md`
+- Ver el menú Legacy -> `flujos/menus_legacy_layout_items.md`
 
 ## Pantallas Disponibles
 

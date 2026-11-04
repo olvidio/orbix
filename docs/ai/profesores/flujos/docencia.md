@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Ver docencia global"
+titulo: "Consultar la docencia"
 flujo: "profesores.docencia.gestionar.flujo"
-preguntas: ["Como consultar en Ver docencia global?"]
+preguntas: ["Como consultar la docencia en Consultar la docencia?"]
 pantallas_principales: ["profesores.pantalla.docencia"]
 fragmentos: []
 endpoints: ["/src/profesores/docencia"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/profesores/flujos/docencia.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ver docencia global
+# Ayuda IA - Consultar la docencia
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver docencia global`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar la docencia`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar en Ver docencia global?
+- Como consultar la docencia en Consultar la docencia?
 
 ## Donde Entrar
 
@@ -29,10 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar
+## Consultar la docencia
 
-1. Abrir **ver docencia** desde el menú `stgr2`.
-2. Revisar la tabla `tabla_docencia`.
+1. Entrar en **ver docencia**.
+2. Se muestra una tabla con «apellidos, nombre», «inicio curso», «asignatura», «modo» (por ejemplo «sem. invierno» o «ca/cv») y «acta».
+3. Arriba a la derecha de la tabla hay dos iconos (lupa y guardar) para buscar en ella y exportarla.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/profesores/docencia`
@@ -43,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
+Consultar la docencia impartida por los profesores: curso, asignatura, modo y acta.
 
 ## Limites De La Respuesta
 

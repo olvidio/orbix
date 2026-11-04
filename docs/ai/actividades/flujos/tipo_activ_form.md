@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Formulario alta tipo actividad"
+titulo: "Crear un tipo de actividad"
 flujo: "actividades.tipo_activ_form.gestionar.flujo"
-preguntas: []
+preguntas: ["Como crear un tipo de actividad en Crear un tipo de actividad?"]
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 endpoints: ["/src/actividades/tipo_activ_form_nuevo"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/tipo_activ_form.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Formulario alta tipo actividad
+# Ayuda IA - Crear un tipo de actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Formulario alta tipo actividad`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear un tipo de actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como crear un tipo de actividad en Crear un tipo de actividad?
 
 ## Donde Entrar
 
@@ -28,13 +29,22 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Crear un tipo de actividad
+
+1. Entrar en **gestión Tipos actividades** y pulsar **nuevo**.
+2. Se abre el formulario vacío con los desplegables por niveles.
+3. Rellenar el nombre y los niveles y guardar.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/tipo_activ_form_nuevo`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.tipo_activ`
 
 ## Objetivo
 
-Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
+Crear un tipo de actividad nuevo.
 
 ## Limites De La Respuesta
 

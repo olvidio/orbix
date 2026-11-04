@@ -5,7 +5,7 @@ modulo: "actividadessacd"
 titulo: "Com Sacd Activ Periodo Page"
 flujo: "actividadessacd.com_sacd_activ_periodo_page.gestionar.flujo"
 preguntas: ["Como obtener datos en Com Sacd Activ Periodo Page?"]
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 endpoints: ["/src/actividadessacd/com_sacd_activ_periodo_page_data"]
 source: "docs/catalogo/actividadessacd/flujos/com_sacd_activ_periodo_page.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Com Sacd Activ Periodo (`actividadessacd.pantalla.com_sacd_activ_periodo`)
 
 ## Como Responder
 
@@ -32,7 +32,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 ## Obtener datos
 
 1. Abrir la pantalla de comunicación a los sacd.
-2. El sistema resuelve `perm_mod_txt` según el rol del usuario.
+2. Según el rol del usuario se decide si puede editar o solo ver.
 3. Si hay permiso, se muestra el enlace para editar textos.
 
 Referencias tecnicas para verificar la respuesta:
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadessacd.pantalla.com_sacd_activ_periodo`
 - `actividadessacd.pantalla.com_sacd_activ_periodo`
 
 ## Objetivo

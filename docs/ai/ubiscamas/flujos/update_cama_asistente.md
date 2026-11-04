@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubiscamas"
-titulo: "Update Cama Asistente"
+titulo: "Asignar una cama a un asistente"
 flujo: "ubiscamas.update_cama_asistente.gestionar.flujo"
-preguntas: ["Como ejecutar en Update Cama Asistente?"]
+preguntas: ["Como asignar una cama a un asistente en Asignar una cama a un asistente?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/ubiscamas/update_cama_asistente"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/ubiscamas/flujos/update_cama_asistente.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Update Cama Asistente
+# Ayuda IA - Asignar una cama a un asistente
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Update Cama Asistente`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignar una cama a un asistente`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Update Cama Asistente?
+- Como asignar una cama a un asistente en Asignar una cama a un asistente?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Asignar una cama a un asistente
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de habitaciones, usar las flechas de asignar o desasignar cama.
+2. La asignación se guarda al momento.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubiscamas/update_cama_asistente`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Persistir la asignación cama↔asistente en la actividad actual (requiere token HashB).
+Guardar la asignación de cama a un asistente en la distribución de habitaciones.
 
 ## Errores Documentados
 

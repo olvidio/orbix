@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Cambiar tipo de actividad"
+titulo: "Cambiar el tipo de una actividad"
 flujo: "actividades.actividad_cambiar_tipo.gestionar.flujo"
-preguntas: []
+preguntas: ["Como cambiar el tipo de una actividad en Cambiar el tipo de una actividad?"]
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
 endpoints: ["/src/actividades/actividad_cambiar_tipo"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/actividad_cambiar_tipo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cambiar tipo de actividad
+# Ayuda IA - Cambiar el tipo de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar tipo de actividad`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar el tipo de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como cambiar el tipo de una actividad en Cambiar el tipo de una actividad?
 
 ## Donde Entrar
 
@@ -28,13 +29,23 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Cambiar el tipo de una actividad
+
+1. Marcar la actividad en la lista y pulsar **cambiar tipo**.
+2. Se abre un formulario con los datos de la actividad ya rellenados (aunque el título dice «Nueva actividad»).
+3. Elegir el nuevo tipo en **sf/sv**, **asistentes**, **actividad** y **tipo de actividad**.
+4. Pulsar **Guardar ficha**.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/actividad_cambiar_tipo`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.actividad_ver`
 
 ## Objetivo
 
-Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* y guardar.
+Cambiar el tipo de una actividad ya creada (sf/sv, asistentes, actividad o tipo).
 
 ## Errores Documentados
 

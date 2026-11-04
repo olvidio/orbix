@@ -2,47 +2,57 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Preferencias"
+titulo: "Cambiar las preferencias personales"
 flujo: "usuarios.preferencias.gestionar.flujo"
-preguntas: ["Como guardar en Preferencias?"]
-pantallas_principales: []
+preguntas: ["Como cambiar las preferencias personales en Cambiar las preferencias personales?", "Como gestionar los avisos de cambios en actividades en Cambiar las preferencias personales?"]
+pantallas_principales: ["usuarios.pantalla.preferencias"]
 fragmentos: []
 endpoints: ["/src/usuarios/preferencias_guardar"]
 source: "docs/catalogo/usuarios/flujos/preferencias.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Preferencias
+# Ayuda IA - Cambiar las preferencias personales
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Preferencias`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar las preferencias personales`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Preferencias?
+- Como cambiar las preferencias personales en Cambiar las preferencias personales?
+- Como gestionar los avisos de cambios en actividades en Cambiar las preferencias personales?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Preferencias (`usuarios.pantalla.preferencias`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
+## Cambiar las preferencias personales
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. En **Preferencias personales** elegir: Layout (Legacy, Burger, Pills, Pills 2), Página central de inicio (Home, Oficina, Avisos cambios actividades), Menú principal de la oficina, Estilo, Disposición menú, Presentación tablas (SlickGrid o Html), Presentación nombre/apellidos, Idioma y Zona horaria.
+3. Pulsar guardar. Algunos cambios (layout, idioma) exigen volver a entrar: la pantalla avisa «deberá volver a entrar».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/preferencias_guardar`
+
+## Gestionar los avisos de cambios en actividades
+
+1. En la parte superior de preferencias, usar **ver lista**, **ver mails sin enviar** o **gestionar avisos en cambios actividades**.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/usuarios/preferencias_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `usuarios.pantalla.preferencias`
 
 ## Objetivo
 
-Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
+Cambiar las preferencias personales: diseño del menú, página de inicio, estilo, presentación de tablas, nombres e idioma.
 
 ## Errores Documentados
 

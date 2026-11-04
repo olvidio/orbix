@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Db Lugar"
 flujo: "devel_db_admin.db_lugar.gestionar.flujo"
 preguntas: ["Como ejecutar en Db Lugar?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que"]
 fragmentos: ["devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que"]
 endpoints: ["/src/devel_db_admin/db_lugar"]
 source: "docs/catalogo/devel_db_admin/flujos/db_lugar.md"
@@ -23,7 +23,9 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Cambiar Nombre Que (`devel_db_admin.pantalla.db_cambiar_nombre_que`)
+- Db Crear Esquema Que (`devel_db_admin.pantalla.db_crear_esquema_que`)
+- Db Eliminar Esquema Que (`devel_db_admin.pantalla.db_eliminar_esquema_que`)
 
 ## Como Responder
 
@@ -40,6 +42,9 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_cambiar_nombre_que`
+- `devel_db_admin.pantalla.db_crear_esquema_que`
+- `devel_db_admin.pantalla.db_eliminar_esquema_que`
 - `devel_db_admin.pantalla.db_cambiar_nombre_que`
 - `devel_db_admin.pantalla.db_crear_esquema_que`
 - `devel_db_admin.pantalla.db_eliminar_esquema_que`

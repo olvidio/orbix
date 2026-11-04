@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Asignaturas Search"
+titulo: "Elegir una asignatura"
 flujo: "notas.asignaturas_search.gestionar.flujo"
-preguntas: ["Como ejecutar en Asignaturas Search?"]
-pantallas_principales: []
+preguntas: ["Como elegir una asignatura en Elegir una asignatura?"]
+pantallas_principales: ["notas.pantalla.acta_ver"]
 fragmentos: ["notas.pantalla.acta_ver"]
 endpoints: ["/src/notas/asignaturas_search"]
 source: "docs/catalogo/notas/flujos/asignaturas_search.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asignaturas Search
+# Ayuda IA - Elegir una asignatura
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignaturas Search`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir una asignatura`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Asignaturas Search?
+- Como elegir una asignatura en Elegir una asignatura?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Acta Ver (`notas.pantalla.acta_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Elegir una asignatura
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, escribir parte del nombre de la asignatura.
+2. Elegir de la lista que aparece.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/asignaturas_search`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.acta_ver`
+- `notas.pantalla.acta_ver`
 
 ## Objetivo
 
-Autocompletado de asignaturas en formulario de acta.
+Autocompletar el nombre de la asignatura al rellenar un acta.
 
 ## Limites De La Respuesta
 

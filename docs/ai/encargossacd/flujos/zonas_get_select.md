@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Zonas Get Select"
+titulo: "Elegir la zona de un encargo"
 flujo: "encargossacd.zonas_get_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Zonas Get Select?"]
-pantallas_principales: []
+preguntas: ["Como elegir la zona de un encargo en Elegir la zona de un encargo?"]
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 endpoints: ["/src/encargossacd/zonas_get_select_data"]
 source: "docs/catalogo/encargossacd/flujos/zonas_get_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Zonas Get Select
+# Ayuda IA - Elegir la zona de un encargo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Zonas Get Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir la zona de un encargo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Zonas Get Select?
+- Como elegir la zona de un encargo en Elegir la zona de un encargo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Encargo Ver (`encargossacd.pantalla.encargo_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir la zona de un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, abrir **zona**.
+2. Elegir una de las zonas de misas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/zonas_get_select_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.encargo_ver`
+- `encargossacd.pantalla.encargo_ver`
 
 ## Objetivo
 
-Gestiona EncargoZonasSelect. Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en refactor.md, sin instanciar frontend\shared\web\Desplegable (responsabilidad exclusiva del frontend).
+Ofrecer las zonas de misas al crear o editar un encargo.
 
 ## Limites De La Respuesta
 

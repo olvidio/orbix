@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Asistente Plaza Asignar"
+titulo: "Asignar plaza a varios asistentes"
 flujo: "asistentes.asistente_plaza_asignar.gestionar.flujo"
-preguntas: ["Como ejecutar en Asistente Plaza Asignar?"]
+preguntas: ["Como asignar plaza a varios asistentes en Asignar plaza a varios asistentes?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/asistentes/asistente_plaza_asignar"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/asistentes/flujos/asistente_plaza_asignar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asistente Plaza Asignar
+# Ayuda IA - Asignar plaza a varios asistentes
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asistente Plaza Asignar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignar plaza a varios asistentes`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Asistente Plaza Asignar?
+- Como asignar plaza a varios asistentes en Asignar plaza a varios asistentes?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Asignar plaza a varios asistentes
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de asistentes, marcar los que corresponda.
+2. Elegir asignar plaza y la plaza que se quiere dar.
+3. Confirmar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/asistente_plaza_asignar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Asignar plaza común a varios asistentes seleccionados.
+Asignar una plaza común a varios asistentes marcados a la vez.
 
 ## Errores Documentados
 

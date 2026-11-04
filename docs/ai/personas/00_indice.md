@@ -21,14 +21,14 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Ver cabecera de persona -> `flujos/home_persona.md`
-- Guardar o eliminar persona -> `flujos/persona.md`
-- Publicar persona hacia otra DL -> `flujos/persona_publicar.md`
-- Abrir ficha de persona -> `flujos/personas_editar.md`
+- Ver la ficha de una persona -> `flujos/home_persona.md`
+- Guardar los datos personales -> `flujos/persona.md`
+- Publicar una persona hacia otra dl -> `flujos/persona_publicar.md`
+- Abrir los datos personales de una persona -> `flujos/personas_editar.md`
 - Buscar y listar personas -> `flujos/personas_select.md`
-- Guardar nivel STGR -> `flujos/stgr.md`
-- Cambiar nivel STGR (formulario) -> `flujos/stgr_cambio.md`
-- Trasladar persona -> `flujos/traslado.md`
+- Guardar el nivel stgr -> `flujos/stgr.md`
+- Cambiar el nivel stgr de una persona -> `flujos/stgr_cambio.md`
+- Trasladar a una persona -> `flujos/traslado.md`
 
 ## Pantallas Disponibles
 

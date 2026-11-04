@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Propuestas Lista"
+titulo: "Ver la lista de propuestas"
 flujo: "encargossacd.propuestas_lista.gestionar.flujo"
-preguntas: ["Como obtener lista en Propuestas Lista?", "Como asignar / cambiar sacd en Propuestas Lista?", "Como info / dedicación en Propuestas Lista?"]
+preguntas: ["Como ver la lista de propuestas en Ver la lista de propuestas?", "Como asignar o cambiar el sacd de un encargo en Ver la lista de propuestas?", "Como ver el detalle o cambiar la dedicación en Ver la lista de propuestas?"]
 pantallas_principales: ["encargossacd.pantalla.propuestas_lista"]
 fragmentos: ["encargossacd.pantalla.propuestas_ajax"]
 endpoints: ["/src/encargossacd/opciones_seccion_data", "/src/encargossacd/propuestas_ajax"]
@@ -12,16 +12,16 @@ source: "docs/catalogo/encargossacd/flujos/propuestas_lista.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Propuestas Lista
+# Ayuda IA - Ver la lista de propuestas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Propuestas Lista`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver la lista de propuestas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener lista en Propuestas Lista?
-- Como asignar / cambiar sacd en Propuestas Lista?
-- Como info / dedicación en Propuestas Lista?
+- Como ver la lista de propuestas en Ver la lista de propuestas?
+- Como asignar o cambiar el sacd de un encargo en Ver la lista de propuestas?
+- Como ver el detalle o cambiar la dedicación en Ver la lista de propuestas?
 
 ## Donde Entrar
 
@@ -31,31 +31,34 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener lista
+## Ver la lista de propuestas
 
-1. Carga opciones de sección (`opciones_seccion_data`).
-2. Al cambiar `filtro_ctr` o al recargar: `que=get_lista` vía FE ajax.
-3. Inyecta HTML en `#lista` o alert del mensaje de error.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Asignar / cambiar sacd
-
-1. Click en nombre → `lista_sacd` (desplegable).
-2. Cambio en desplegable → `cmb_sacd` (alta/update/borrar colaborador vacío).
-3. Actualiza fila o cierra popup.
+1. Abrir **modificar propuestas** desde el menú de propuestas.
+2. Elegir la sección y, si se quiere, filtrar por centro; la lista se actualiza sola.
+3. Si algo falla, sale un aviso con el mensaje.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/opciones_seccion_data`
+- `/src/encargossacd/propuestas_ajax`
 
-## Info / dedicación
+## Asignar o cambiar el sacd de un encargo
 
-1. `info` o `dedicacion` abren popup HTML.
-2. Guardar horario: `dedicacion_update` y refresca lista.
+1. Pulsar el nombre del sacd de un encargo: se abre un desplegable.
+2. Elegir el sacd. Si se deja un colaborador en blanco, se borra.
+3. La fila se actualiza y el desplegable se cierra.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/opciones_seccion_data`
+- `/src/encargossacd/propuestas_ajax`
+
+## Ver el detalle o cambiar la dedicación
+
+1. Pulsar la información o la dedicación de un encargo: se abre una ventana.
+2. Para cambiar el horario, modificarlo y guardar; la lista se refresca.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/encargossacd/opciones_seccion_data`
+- `/src/encargossacd/propuestas_ajax`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -64,7 +67,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Filtrar centros, ver encargos propuestos y cambiar SACD titular/suplente/colaborador o dedicación m/t/v antes de aprobar.
+Filtrar por centro, ver los encargos propuestos y cambiar el sacd titular, suplente o colaborador, o su dedicación (mañanas, tardes, vespertino), antes de aprobar las propuestas. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Errores Documentados
 

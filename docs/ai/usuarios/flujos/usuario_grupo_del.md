@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario Grupo Del"
+titulo: "Quitar un grupo a un usuario"
 flujo: "usuarios.usuario_grupo_del.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario Grupo Del?"]
-pantallas_principales: []
+preguntas: ["Como quitar un grupo a un usuario en Quitar un grupo a un usuario?"]
+pantallas_principales: ["usuarios.pantalla.usuario_form"]
 fragmentos: ["usuarios.pantalla.usuario_form"]
 endpoints: ["/src/usuarios/usuario_grupo_del"]
 source: "docs/catalogo/usuarios/flujos/usuario_grupo_del.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario Grupo Del
+# Ayuda IA - Quitar un grupo a un usuario
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario Grupo Del`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Quitar un grupo a un usuario`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario Grupo Del?
+- Como quitar un grupo a un usuario en Quitar un grupo a un usuario?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Form (`usuarios.pantalla.usuario_form`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Quitar un grupo a un usuario
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario y pulsar **quitar de un grupo de permisos**.
+2. En la tabla pulsar **quitar** en la fila del grupo (sin confirmación).
+3. La lista de grupos se actualiza.
+4. Si aparece «Operación no autorizada», volver a abrir la ficha y repetir.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_grupo_del`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.usuario_form`
+- `usuarios.pantalla.usuario_form`
 
 ## Objetivo
 
-Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
+Quitar un grupo de permisos a un usuario.
 
 ## Errores Documentados
 

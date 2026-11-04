@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Posibles Preceptores"
+titulo: "Elegir el preceptor de una nota"
 flujo: "notas.posibles_preceptores.gestionar.flujo"
-preguntas: ["Como obtener datos en Posibles Preceptores?"]
-pantallas_principales: []
+preguntas: ["Como elegir el preceptor de una nota en Elegir el preceptor de una nota?"]
+pantallas_principales: ["notas.pantalla.form_notas_de_una_persona"]
 fragmentos: ["notas.pantalla.form_notas_de_una_persona"]
 endpoints: ["/src/notas/posibles_preceptores_data"]
 source: "docs/catalogo/notas/flujos/posibles_preceptores.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Posibles Preceptores
+# Ayuda IA - Elegir el preceptor de una nota
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Posibles Preceptores`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el preceptor de una nota`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Posibles Preceptores?
+- Como elegir el preceptor de una nota en Elegir el preceptor de una nota?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Notas De Una Persona (`notas.pantalla.form_notas_de_una_persona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir el preceptor de una nota
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de nota, abrir **preceptor**.
+2. Elegir de la lista.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/posibles_preceptores_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.form_notas_de_una_persona`
+- `notas.pantalla.form_notas_de_una_persona`
 
 ## Objetivo
 
-Elegir preceptor en formulario de nota.
+Ofrecer los posibles preceptores al anotar una nota.
 
 ## Limites De La Respuesta
 

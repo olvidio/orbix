@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Informe Stgr Profesores"
+titulo: "Sacar el informe anual de profesores"
 flujo: "notas.informe_stgr_profesores.gestionar.flujo"
-preguntas: ["Como obtener datos en Informe Stgr Profesores?"]
-pantallas_principales: []
+preguntas: ["Como sacar el informe anual de profesores en Sacar el informe anual de profesores?"]
+pantallas_principales: ["notas.pantalla.informe_stgr_profesores"]
 fragmentos: ["notas.pantalla.informe_stgr_profesores"]
 endpoints: ["/src/notas/informe_stgr_profesores_data"]
 source: "docs/catalogo/notas/flujos/informe_stgr_profesores.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Informe Stgr Profesores
+# Ayuda IA - Sacar el informe anual de profesores
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Informe Stgr Profesores`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Sacar el informe anual de profesores`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Informe Stgr Profesores?
+- Como sacar el informe anual de profesores en Sacar el informe anual de profesores?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Informe Stgr Profesores (`notas.pantalla.informe_stgr_profesores`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Sacar el informe anual de profesores
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual profesores** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/informe_stgr_profesores_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.informe_stgr_profesores`
+- `notas.pantalla.informe_stgr_profesores`
 
 ## Objetivo
 
-Generar informe anual de profesores.
+Generar el informe anual del Studium Generale de profesores.
 
 ## Limites De La Respuesta
 

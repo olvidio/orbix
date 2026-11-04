@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Doc Asignar Ctr"
+titulo: "Guardar la asignación a centros"
 flujo: "inventario.doc_asignar_ctr.gestionar.flujo"
-preguntas: ["Como guardar en Doc Asignar Ctr?"]
-pantallas_principales: []
+preguntas: ["Como guardar la asignación a centros en Guardar la asignación a centros?"]
+pantallas_principales: ["inventario.pantalla.doc_asignar_ctr"]
 fragmentos: ["inventario.pantalla.doc_asignar_ctr"]
 endpoints: ["/src/inventario/doc_asignar_ctr_guardar"]
 source: "docs/catalogo/inventario/flujos/doc_asignar_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Doc Asignar Ctr
+# Ayuda IA - Guardar la asignación a centros
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Doc Asignar Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar la asignación a centros`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Doc Asignar Ctr?
+- Como guardar la asignación a centros en Guardar la asignación a centros?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Formulario asignar a centros (`inventario.pantalla.doc_asignar_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
+## Guardar la asignación a centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Asignar a centros (sin especificar lugar)**, marcar los centros y pulsar para continuar. En la pantalla siguiente completar, para cada centro, el número de registro (propone «último + 1») o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/doc_asignar_ctr_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.doc_asignar_ctr`
+- `inventario.pantalla.doc_asignar_ctr`
 
 ## Objetivo
 
-Gestiona DocAsignarCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los centros elegidos.
 
 ## Limites De La Respuesta
 

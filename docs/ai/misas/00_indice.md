@@ -21,38 +21,38 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Anadir Ctr Tarea -> `flujos/anadir_ctr_tarea.md`
-- Buscar Plan Ctr -> `flujos/buscar_plan_ctr.md`
-- Buscar Plan Sacd -> `flujos/buscar_plan_sacd.md`
-- Cambiar Status -> `flujos/cambiar_status.md`
-- Crear Nuevo Periodo -> `flujos/crear_nuevo_periodo.md`
-- Cuadricula -> `flujos/cuadricula.md`
-- Desplegable Encargos -> `flujos/desplegable_encargos.md`
-- Desplegable Sacd -> `flujos/desplegable_sacd.md`
-- Eliminar Encargo Centro -> `flujos/eliminar_encargo_centro.md`
-- Eliminar Encargo Zona -> `flujos/eliminar_encargo_zona.md`
-- Guardar Encargo Centro -> `flujos/guardar_encargo_centro.md`
-- Guardar Encargo Zona -> `flujos/guardar_encargo_zona.md`
-- Guardar Horario -> `flujos/guardar_horario.md`
-- Horario Tarea -> `flujos/horario_tarea.md`
-- Importar Plantilla -> `flujos/importar_plantilla.md`
-- Modificar Encargos -> `flujos/modificar_encargos.md`
-- Modificar Encargos Centros -> `flujos/modificar_encargos_centros.md`
-- Modificar Iniciales Sacd Zona -> `flujos/modificar_iniciales_sacd_zona.md`
-- Modificar Plantilla -> `flujos/modificar_plantilla.md`
-- Nuevo Status -> `flujos/nuevo_status.md`
-- Plan De Misas Pantalla -> `flujos/plan_de_misas_pantalla.md`
-- Quitar Horario -> `flujos/quitar_horario.md`
-- Update Iniciales -> `flujos/update_iniciales.md`
-- Ver Cuadricula Zona -> `flujos/ver_cuadricula_zona.md`
-- Ver Encargos Centros -> `flujos/ver_encargos_centros.md`
-- Ver Encargos Zona -> `flujos/ver_encargos_zona.md`
-- Ver Iniciales Zona -> `flujos/ver_iniciales_zona.md`
-- Ver Misas Zona -> `flujos/ver_misas_zona.md`
-- Ver Plan Ctr -> `flujos/ver_plan_ctr.md`
-- Ver Plan Sacd -> `flujos/ver_plan_sacd.md`
-- Zona Sacd Datos -> `flujos/zona_sacd_datos.md`
-- Zona Sacd Datos Put -> `flujos/zona_sacd_datos_put.md`
+- Añadir o quitar un centro en la plantilla -> `flujos/anadir_ctr_tarea.md`
+- Ver el plan de misas de un centro -> `flujos/buscar_plan_ctr.md`
+- Ver el plan de un sacerdote -> `flujos/buscar_plan_sacd.md`
+- Cambiar el estado del plan -> `flujos/cambiar_status.md`
+- Preparar un nuevo plan de misas -> `flujos/crear_nuevo_periodo.md`
+- Editar una celda del plan de misas -> `flujos/cuadricula.md`
+- Elegir encargo de la zona -> `flujos/desplegable_encargos.md`
+- Elegir sacerdote en una celda -> `flujos/desplegable_sacd.md`
+- Quitar un encargo visible para un centro -> `flujos/eliminar_encargo_centro.md`
+- Eliminar un encargo de zona -> `flujos/eliminar_encargo_zona.md`
+- Guardar un encargo visible para un centro -> `flujos/guardar_encargo_centro.md`
+- Guardar un encargo de zona -> `flujos/guardar_encargo_zona.md`
+- Guardar el horario de una tarea -> `flujos/guardar_horario.md`
+- Poner horario a una tarea -> `flujos/horario_tarea.md`
+- Importar otra plantilla -> `flujos/importar_plantilla.md`
+- Elegir la zona de los encargos -> `flujos/modificar_encargos.md`
+- Elegir la zona de los encargos visibles por centro -> `flujos/modificar_encargos_centros.md`
+- Elegir la zona de las iniciales -> `flujos/modificar_iniciales_sacd_zona.md`
+- Modificar la plantilla de una zona -> `flujos/modificar_plantilla.md`
+- Aplicar un nuevo estado a un periodo -> `flujos/nuevo_status.md`
+- Elegir zona, orden y periodo del plan -> `flujos/plan_de_misas_pantalla.md`
+- Quitar el horario de una tarea -> `flujos/quitar_horario.md`
+- Guardar iniciales y color -> `flujos/update_iniciales.md`
+- Ver y modificar el plan de una zona -> `flujos/ver_cuadricula_zona.md`
+- Hacer visible un encargo para un centro -> `flujos/ver_encargos_centros.md`
+- los encargos de una zona -> `flujos/ver_encargos_zona.md`
+- Cambiar iniciales y color de un sacerdote -> `flujos/ver_iniciales_zona.md`
+- Consultar el plan de misas de una zona -> `flujos/ver_misas_zona.md`
+- Consultar el plan de un centro -> `flujos/ver_plan_ctr.md`
+- Consultar el plan de un sacerdote -> `flujos/ver_plan_sacd.md`
+- Consultar la disponibilidad semanal de un sacerdote -> `flujos/zona_sacd_datos.md`
+- Cambiar la disponibilidad semanal de un sacerdote -> `flujos/zona_sacd_datos_put.md`
 
 ## Pantallas Disponibles
 

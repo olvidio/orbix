@@ -5,7 +5,7 @@ modulo: "actividadestudios"
 titulo: "Matricula"
 flujo: "actividadestudios.matricula.gestionar.flujo"
 preguntas: ["Como crear en Matricula?", "Como eliminar en Matricula?"]
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_matriculas_de_una_persona", "actividadestudios.pantalla.matriculas_lista", "actividadestudios.pantalla.matriculas_pendientes"]
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona", "actividadestudios.pantalla.matriculas_lista", "actividadestudios.pantalla.matriculas_pendientes"]
 endpoints: ["/src/actividadestudios/matricula_eliminar", "/src/actividadestudios/matricula_nueva"]
 source: "docs/catalogo/actividadestudios/flujos/matricula.md"
@@ -24,7 +24,9 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Matriculas De Una Persona (`actividadestudios.pantalla.form_matriculas_de_una_persona`)
+- Matriculas Lista (`actividadestudios.pantalla.matriculas_lista`)
+- Matriculas Pendientes (`actividadestudios.pantalla.matriculas_pendientes`)
 
 ## Como Responder
 
@@ -32,18 +34,12 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Crear
 
-1. Desde la lista de asistentes, seleccionar uno y **plan estudios**.
-2. Pulsar **matricular en una asignatura** (primero de los botones). El desplegable
-   solo muestra asignaturas que ya están en el CA y en las que el alumno aún no está matriculado.
-3. Elegir asignatura (y preceptor si aplica) y **guardar**.
-4. **añadir asignatura** abre el catálogo del plan. Si esa asignatura ya está en el CA,
-   aparece el aviso de duplicado; al continuar se matricula y se crea una nueva oferta
-   en esta dl (preceptor u otro profesor). En el listado 1303, si la asignatura está
-   duplicada (otra dl), el nombre lleva delante la sigla `(dlxx)`. **matricular automáticamente** cubre el lote según el plan.
+1. En dossier 1303 o 3103, pulsar **nuevo** para abrir el formulario de matrícula.
+2. Elegir nivel, asignatura y opciones de preceptor.
+3. Pulsar **guardar**; el sistema crea la matrícula y actualiza dossiers 1303/3103.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/matricula_nueva`
-- `/src/actividadestudios/form_matriculas_de_una_persona_data`
 
 ## Eliminar
 
@@ -59,6 +55,9 @@ Referencias tecnicas para verificar la respuesta:
 - `actividadestudios.pantalla.form_matriculas_de_una_persona`
 - `actividadestudios.pantalla.matriculas_lista`
 - `actividadestudios.pantalla.matriculas_pendientes`
+- `actividadestudios.pantalla.form_matriculas_de_una_persona`
+- `actividadestudios.pantalla.matriculas_lista`
+- `actividadestudios.pantalla.matriculas_pendientes`
 
 ## Objetivo
 
@@ -71,8 +70,6 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 - `hay un error, no se ha guardado`
 - `no encuentro asignatura para ese nivel`
 - `no encuentro la matricula`
-- `debe poner una asignatura`
-- `Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor`
 
 ## Limites De La Respuesta
 

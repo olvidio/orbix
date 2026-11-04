@@ -2,39 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "cambios"
-titulo: "Cargar propiedades vigilables"
+titulo: "Elegir qué campos vigilar"
 flujo: "cambios.cambio_usuario_objeto_pref_propiedades.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como elegir qué campos vigilar en Elegir qué campos vigilar?"]
+pantallas_principales: ["cambios.pantalla.usuario_avisos_pref_propiedades"]
 fragmentos: ["cambios.pantalla.usuario_avisos_pref_propiedades"]
 endpoints: ["/src/cambios/cambio_usuario_objeto_pref_propiedades_data"]
 source: "docs/catalogo/cambios/flujos/cambio_usuario_objeto_pref_propiedades.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cargar propiedades vigilables
+# Ayuda IA - Elegir qué campos vigilar
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cargar propiedades vigilables`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir qué campos vigilar`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como elegir qué campos vigilar en Elegir qué campos vigilar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Tabla de propiedades (`cambios.pantalla.usuario_avisos_pref_propiedades`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Elegir qué campos vigilar
+
+1. Elegir el objeto.
+2. Aparece la tabla de campos; marcar los que se quieren vigilar.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/cambios/cambio_usuario_objeto_pref_propiedades_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
+- `cambios.pantalla.usuario_avisos_pref_propiedades`
 - `cambios.pantalla.usuario_avisos_pref_propiedades`
 
 ## Objetivo
 
-Mostrar la tabla de campos del objeto que pueden vigilarse, con el estado guardado preseleccionado.
+Mostrar los campos del objeto que se pueden vigilar, con el estado guardado.
 
 ## Errores Documentados
 

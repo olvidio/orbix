@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Direcciones Tabla"
+titulo: "Elegir una dirección de la tabla"
 flujo: "ubis.direcciones_tabla.gestionar.flujo"
-preguntas: ["Como ejecutar en Direcciones Tabla?"]
-pantallas_principales: []
+preguntas: ["Como elegir una dirección de la tabla en Elegir una dirección de la tabla?"]
+pantallas_principales: ["ubis.pantalla.direcciones_tabla"]
 fragmentos: ["ubis.pantalla.direcciones_tabla"]
 endpoints: ["/src/ubis/direcciones_tabla"]
 source: "docs/catalogo/ubis/flujos/direcciones_tabla.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Direcciones Tabla
+# Ayuda IA - Elegir una dirección de la tabla
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Direcciones Tabla`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir una dirección de la tabla`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Direcciones Tabla?
+- Como elegir una dirección de la tabla en Elegir una dirección de la tabla?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Direcciones Tabla (`ubis.pantalla.direcciones_tabla`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Elegir una dirección de la tabla
 
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar la «tabla de direcciones».
+2. Marcar la dirección que corresponde y asignarla.
+3. Si no está, pulsar **crear otra nueva**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/direcciones_tabla`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.direcciones_tabla`
+- `ubis.pantalla.direcciones_tabla`
 
 ## Objetivo
 
-Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
+Mostrar las direcciones encontradas para asignar una al centro o casa, o crear otra.
 
 ## Errores Documentados
 

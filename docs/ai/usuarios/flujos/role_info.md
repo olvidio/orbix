@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Role Info"
+titulo: "Abrir la ficha de un rol"
 flujo: "usuarios.role_info.gestionar.flujo"
-preguntas: ["Como ejecutar en Role Info?"]
-pantallas_principales: []
+preguntas: ["Como abrir la ficha de un rol en Abrir la ficha de un rol?"]
+pantallas_principales: ["usuarios.pantalla.role_form"]
 fragmentos: ["usuarios.pantalla.role_form"]
 endpoints: ["/src/usuarios/role_info"]
 source: "docs/catalogo/usuarios/flujos/role_info.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Role Info
+# Ayuda IA - Abrir la ficha de un rol
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Role Info`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir la ficha de un rol`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Role Info?
+- Como abrir la ficha de un rol en Abrir la ficha de un rol?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Role Form (`usuarios.pantalla.role_form`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Abrir la ficha de un rol
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **lista de roles**, pulsar el rol.
+2. Se muestran sus datos (sf, sv, pau, sacd, casas, dmz) y la tabla de grupos de menús asignados.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/role_info`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.role_form`
+- `usuarios.pantalla.role_form`
 
 ## Objetivo
 
-Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
+Cargar la ficha de un rol: sus datos, si se puede editar y los grupos de menús que ya tiene.
 
 ## Errores Documentados
 

@@ -21,9 +21,9 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Relacion Tarifa -> `flujos/relacion_tarifa.md`
-- Tarifa Ubi -> `flujos/tarifa_ubi.md`
-- Tipo Tarifa -> `flujos/tipo_tarifa.md`
+- Asignar una tarifa a un tipo de actividad -> `flujos/relacion_tarifa.md`
+- Consultar las tarifas de una casa -> `flujos/tarifa_ubi.md`
+- Mantener los tipos de tarifa -> `flujos/tipo_tarifa.md`
 
 ## Pantallas Disponibles
 

@@ -4,8 +4,8 @@ subtipo: "flujo"
 modulo: "casas"
 titulo: "Casa Ec Gastos"
 flujo: "casas.casa_ec_gastos.gestionar.flujo"
-preguntas: ["Como guardar en Casa Ec Gastos?", "Como abrir el formulario en Casa Ec Gastos?"]
-pantallas_principales: []
+preguntas: ["Como abrir el formulario en Casa Ec Gastos?"]
+pantallas_principales: ["casas.pantalla.casa_ec_gastos_lista"]
 fragmentos: ["casas.pantalla.casa_ec_gastos_lista"]
 endpoints: ["/src/casas/casa_ec_gastos_form_data", "/src/casas/casa_ec_gastos_guardar"]
 source: "docs/catalogo/casas/flujos/casa_ec_gastos.md"
@@ -19,23 +19,15 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Casa Ec Gastos?
 - Como abrir el formulario en Casa Ec Gastos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Casa Ec Gastos Lista (`casas.pantalla.casa_ec_gastos_lista`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Abrir el formulario
 
@@ -48,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `casas.pantalla.casa_ec_gastos_lista`
 - `casas.pantalla.casa_ec_gastos_lista`
 
 ## Objetivo

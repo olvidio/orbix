@@ -2,39 +2,48 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "zonassacd"
-titulo: "Zona Sacd Lista Tot"
+titulo: "Consultar los sacerdotes por zona"
 flujo: "zonassacd.zona_sacd_lista_tot.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como consultar los sacerdotes por zona en Consultar los sacerdotes por zona?"]
+pantallas_principales: ["zonassacd.pantalla.zona_sacd_lista_ajax"]
 fragmentos: []
 endpoints: ["/src/zonassacd/zona_sacd_lista_tot"]
 source: "docs/catalogo/zonassacd/flujos/zona_sacd_lista_tot.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Zona Sacd Lista Tot
+# Ayuda IA - Consultar los sacerdotes por zona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Zona Sacd Lista Tot`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los sacerdotes por zona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como consultar los sacerdotes por zona en Consultar los sacerdotes por zona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Zona Sacd Lista Ajax (`zonassacd.pantalla.zona_sacd_lista_ajax`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Consultar los sacerdotes por zona
+
+1. Entrar en **lista sacd-zona**.
+2. Se muestra una fila por cada sacerdote y zona asignada.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/zonassacd/zona_sacd_lista_tot`
+
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `zonassacd.pantalla.zona_sacd_lista_ajax`
 
 ## Objetivo
 
-Ver el listado global sacd–zona de toda la delegación (una fila por asignación). Entrada de menú Lista sacd-zona.
+Ver todos los sacerdotes con la zona o zonas que tienen asignadas.
 
 ## Errores Documentados
 

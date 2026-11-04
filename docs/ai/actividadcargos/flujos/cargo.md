@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadcargos"
-titulo: "Cargo"
+titulo: "Añadir un cargo"
 flujo: "actividadcargos.cargo.gestionar.flujo"
-preguntas: ["Como crear en Cargo?", "Como eliminar en Cargo?"]
+preguntas: ["Como añadir un cargo en Añadir un cargo?", "Como quitar un cargo en Añadir un cargo?"]
 pantallas_principales: []
 fragmentos: ["actividadcargos.pantalla.select_cargos_de_actividad", "actividadcargos.pantalla.select_cargos_personas_en_actividad"]
 endpoints: ["/src/actividadcargos/cargo_eliminar", "/src/actividadcargos/cargo_nuevo"]
@@ -12,15 +12,15 @@ source: "docs/catalogo/actividadcargos/flujos/cargo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cargo
+# Ayuda IA - Añadir un cargo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cargo`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Añadir un cargo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear en Cargo?
-- Como eliminar en Cargo?
+- Como añadir un cargo en Añadir un cargo?
+- Como quitar un cargo en Añadir un cargo?
 
 ## Donde Entrar
 
@@ -30,27 +30,28 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear
+## Añadir un cargo
 
-1. Abrir el dossier de cargos (actividad o persona).
-2. Pulsar el enlace **añadir …** del colectivo o tipo de actividad permitido.
-3. Completar el formulario **Cargo de una actividad** (persona/actividad, tipo de cargo, AGD, observaciones; en altas, **¿asiste?** si aplica).
+1. Abrir el dossier de cargos, de la actividad o de la persona.
+2. Pulsar el enlace **añadir …** del colectivo o tipo de actividad que corresponda.
+3. Completar el formulario **Cargo de una actividad**: persona o actividad, tipo de cargo, agd, observaciones y, en las altas, **¿asiste?** si procede.
 4. Pulsar **Guardar datos del cargo**.
-5. Comprobar que la fila aparece en la relación de cargos (y en asistentes si marcó **¿asiste?**).
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Eliminar
-
-1. En la relación de cargos, marcar **una sola fila**.
-2. Pulsar **quitar cargo**.
-3. Leer el aviso de confirmación (puede indicar borrado del asistente si `des`/`vcsd` y tipo `s`/`sg`).
-4. Confirmar.
-5. El listado se refresca automáticamente (`fnjs_actualizar`).
+5. Comprobar que la fila aparece en la relación de cargos (y en asistentes, si se marcó **¿asiste?**).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadcargos/cargo_eliminar`
+- `/src/actividadcargos/cargo_nuevo`
+
+## Quitar un cargo
+
+1. En la relación de cargos, marcar **una sola fila**.
+2. Pulsar **quitar cargo**.
+3. Leer el aviso de confirmación; puede avisar de que también se borra al asistente si se trata del tipo s o sg y el usuario es de des o vcsd.
+4. Confirmar. El listado se actualiza solo.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividadcargos/cargo_eliminar`
+- `/src/actividadcargos/cargo_nuevo`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -59,7 +60,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Ver, añadir y quitar cargos de personas en actividades. La consulta y los enlaces de alta se hacen en el widget; la alta concreta pasa por el formulario (`cargo_nuevo`); la baja es directa vía `cargo_eliminar`.
+Ver, añadir y quitar cargos de personas en actividades. Se consulta y se pulsa el enlace de alta en la relación de cargos; el alta se hace en un formulario y la baja es directa.
 
 ## Errores Documentados
 

@@ -2,39 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "personas"
-titulo: "Guardar o eliminar persona"
+titulo: "Guardar los datos personales"
 flujo: "personas.persona.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como guardar los datos personales en Guardar los datos personales?"]
+pantallas_principales: ["personas.pantalla.personas_editar"]
 fragmentos: ["personas.pantalla.personas_editar"]
 endpoints: ["/src/personas/persona_update", "/src/personas/persona_eliminar"]
 source: "docs/catalogo/personas/flujos/persona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Guardar o eliminar persona
+# Ayuda IA - Guardar los datos personales
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar o eliminar persona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar los datos personales`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como guardar los datos personales en Guardar los datos personales?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ficha de persona (`personas.pantalla.personas_editar`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Guardar los datos personales
+
+1. En «DATOS PERSONALES» cambiar los campos necesarios.
+2. Pulsar **Guardar Cambios** (solo si tu rol lo permite).
+3. Si hay un problema el servidor lo avisa con un mensaje.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/personas/persona_update`
+- `/src/personas/persona_eliminar`
+
 ## Pantallas Y Fragmentos Relacionados
 
+- `personas.pantalla.personas_editar`
 - `personas.pantalla.personas_editar`
 
 ## Objetivo
 
-Guardar cambios en la ficha o eliminar un registro de la propia delegación.
+Guardar o eliminar los datos personales de una persona.
 
 ## Errores Documentados
 

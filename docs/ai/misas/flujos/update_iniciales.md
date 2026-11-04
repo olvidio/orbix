@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Update Iniciales"
+titulo: "Guardar iniciales y color"
 flujo: "misas.update_iniciales.gestionar.flujo"
-preguntas: ["Como ejecutar en Update Iniciales?"]
-pantallas_principales: []
+preguntas: ["Como guardar iniciales y color en Guardar iniciales y color?"]
+pantallas_principales: ["misas.pantalla.ver_iniciales_zona"]
 fragmentos: ["misas.pantalla.ver_iniciales_zona"]
 endpoints: ["/src/misas/update_iniciales"]
 source: "docs/catalogo/misas/flujos/update_iniciales.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Update Iniciales
+# Ayuda IA - Guardar iniciales y color
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Update Iniciales`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar iniciales y color`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Update Iniciales?
+- Como guardar iniciales y color en Guardar iniciales y color?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver Iniciales Zona (`misas.pantalla.ver_iniciales_zona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar iniciales y color
 
-1. Revisar manualmente los pasos de esta accion.
+1. Cambiar las iniciales o el color en la fila.
+2. Se guardan al salir de la celda.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/update_iniciales`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.ver_iniciales_zona`
+- `misas.pantalla.ver_iniciales_zona`
 
 ## Objetivo
 
-Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
+Guardar las iniciales y el color de un sacerdote.
 
 ## Errores Documentados
 

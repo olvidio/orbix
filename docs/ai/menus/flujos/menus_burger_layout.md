@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "menus"
-titulo: "Menus Burger Layout"
+titulo: "Ver el menú Burger o Pills"
 flujo: "menus.menus_burger_layout.gestionar.flujo"
-preguntas: []
+preguntas: ["Como ver el menú burger o pills en Ver el menú Burger o Pills?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_burger_layout_data"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/menus/flujos/menus_burger_layout.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Menus Burger Layout
+# Ayuda IA - Ver el menú Burger o Pills
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Menus Burger Layout`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el menú Burger o Pills`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como ver el menú burger o pills en Ver el menú Burger o Pills?
 
 ## Donde Entrar
 
@@ -28,13 +29,21 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Ver el menú burger o pills
+
+1. Elegir el layout en **preferencias**.
+2. Al entrar, el menú aparece anidado según el rol del usuario.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/menus/menus_burger_layout_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Árbol anidado + HTML utilidades para layouts modernos (H-dlpv).
+Cargar el árbol de menús de los diseños modernos (Burger, Pills, Pills 2).
 
 ## Limites De La Respuesta
 

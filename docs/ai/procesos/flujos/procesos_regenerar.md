@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Procesos Regenerar"
+titulo: "Regenerar las actividades de un proceso"
 flujo: "procesos.procesos_regenerar.gestionar.flujo"
-preguntas: ["Como ejecutar en Procesos Regenerar?"]
-pantallas_principales: []
+preguntas: ["Como regenerar las actividades de un proceso en Regenerar las actividades de un proceso?"]
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_select"]
 endpoints: ["/src/procesos/procesos_regenerar"]
 source: "docs/catalogo/procesos/flujos/procesos_regenerar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Procesos Regenerar
+# Ayuda IA - Regenerar las actividades de un proceso
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Procesos Regenerar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Regenerar las actividades de un proceso`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Procesos Regenerar?
+- Como regenerar las actividades de un proceso en Regenerar las actividades de un proceso?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Procesos Select (`procesos.pantalla.procesos_select`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Regenerar las actividades de un proceso
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir el proceso.
+2. Pulsar **rehacer los procesos de las actividades**. Las tareas de las actividades asociadas se recalculan a partir de la definición actual de fases y tareas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/procesos/procesos_regenerar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `procesos.pantalla.procesos_select`
+- `procesos.pantalla.procesos_select`
 
 ## Objetivo
 
-Regenerar masivamente las tareas de proceso de las actividades asociadas a un tipo de proceso, a partir de la definición de fases/tareas del proceso.
+Regenerar las tareas de todas las actividades que usan un tipo de proceso, tras cambiar su definición.
 
 ## Errores Documentados
 

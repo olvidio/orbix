@@ -2,38 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Form Matriculas De Una Persona"
+titulo: "Matricular o modificar la matrícula de una persona"
 flujo: "actividadestudios.form_matriculas_de_una_persona.gestionar.flujo"
-preguntas: ["Como obtener datos en Form Matriculas De Una Persona?"]
-pantallas_principales: []
+preguntas: ["Como matricular o modificar la matrícula de una persona en Matricular o modificar la matrícula de una persona?"]
+pantallas_principales: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 endpoints: ["/src/actividadestudios/form_matriculas_de_una_persona_data"]
 source: "docs/catalogo/actividadestudios/flujos/form_matriculas_de_una_persona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Form Matriculas De Una Persona
+# Ayuda IA - Matricular o modificar la matrícula de una persona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Form Matriculas De Una Persona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Matricular o modificar la matrícula de una persona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Form Matriculas De Una Persona?
+- Como matricular o modificar la matrícula de una persona en Matricular o modificar la matrícula de una persona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Matriculas De Una Persona (`actividadestudios.pantalla.form_matriculas_de_una_persona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Matricular o modificar la matrícula de una persona
 
-1. En el dossier de matrículas de una persona (1303, desde asistentes → plan estudios), pulsar **matricular en una asignatura** o **añadir asignatura**.
-2. El sistema carga el formulario con `id_nom`, `id_activ`. Con **matricular en una asignatura** (`modo=matricular_ca`) el desplegable son las asignaturas ya ofertadas en el CA; si la oferta es de otra dl (o hay dos copias), el nombre lleva la sigla entre paréntesis.
-3. En **añadir asignatura** se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
+1. En el dossier de matrículas, pulsar **nuevo** o seleccionar una matrícula y pulsar **modificar**.
+2. Se abre el formulario con los desplegables de nivel, asignatura y preceptor; al cambiar uno se actualizan los demás.
+3. Rellenar los datos y guardar.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/form_matriculas_de_una_persona_data`
@@ -41,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.form_matriculas_de_una_persona`
+- `actividadestudios.pantalla.form_matriculas_de_una_persona`
 
 ## Objetivo
 
-El usuario abre el formulario para matricular o editar la matrícula de una persona. **Matricular en una asignatura** solo ofrece las que ya existen en el CA. **Añadir asignatura** usa el catálogo del plan; si ya está en el CA pide confirmación y al continuar crea una nueva oferta. En el listado del plan (1303) las copias de otra dl muestran la sigla entre paréntesis delante del nombre.
+Abrir el formulario para matricular a una persona en una asignatura de una actividad, o para cambiar esa matrícula: nivel, asignatura, preceptor y datos de la actividad.
 
 ## Limites De La Respuesta
 

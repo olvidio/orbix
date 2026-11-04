@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "zonassacd"
-titulo: "Zona Sacd Ajax"
+titulo: "las zonas de un sacerdote"
 flujo: "zonassacd.zona_sacd_ajax.gestionar.flujo"
-preguntas: []
+preguntas: ["Como gestionar las zonas de un sacerdote en las zonas de un sacerdote?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/zonassacd/zona_sacd_ajax"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/zonassacd/flujos/zona_sacd_ajax.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Zona Sacd Ajax
+# Ayuda IA - las zonas de un sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Zona Sacd Ajax`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `las zonas de un sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como gestionar las zonas de un sacerdote en las zonas de un sacerdote?
 
 ## Donde Entrar
 
@@ -28,13 +29,22 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Gestionar las zonas de un sacerdote
+
+1. Elegir la zona en «Lista de sacd de la zona».
+2. Usar **modificar**, **cambiar asignación zona** o **añadir asignación iglesia/cgi** sobre los sacerdotes marcados.
+3. La tabla se vuelve a cargar con los cambios.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/zonassacd/zona_sacd_ajax`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Endpoint legacy sin implementación; funcionalidad repartida en zona_sacd_lista, zona_sacd_update y zona_sacd_lista_tot.
+Cargar la lista de sacerdotes de la zona elegida y guardar los cambios de días y de zona.
 
 ## Errores Documentados
 

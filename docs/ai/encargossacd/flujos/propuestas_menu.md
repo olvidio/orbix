@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Propuestas Menu"
+titulo: "Crear la tabla de propuestas"
 flujo: "encargossacd.propuestas_menu.gestionar.flujo"
-preguntas: ["Como crear tabla staging en Propuestas Menu?", "Como aprobar propuestas en Propuestas Menu?", "Como navegar a modificar / listados en Propuestas Menu?"]
+preguntas: ["Como crear la tabla de propuestas en Crear la tabla de propuestas?", "Como aprobar las propuestas en Crear la tabla de propuestas?", "Como abrir la edición o los listados en Crear la tabla de propuestas?"]
 pantallas_principales: ["encargossacd.pantalla.propuestas_menu"]
 fragmentos: ["encargossacd.pantalla.propuestas_aprobar", "encargossacd.pantalla.propuestas_ajax"]
 endpoints: ["/src/encargossacd/propuestas_ajax", "/src/encargossacd/propuestas_aprobar"]
@@ -12,16 +12,16 @@ source: "docs/catalogo/encargossacd/flujos/propuestas_menu.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Propuestas Menu
+# Ayuda IA - Crear la tabla de propuestas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Propuestas Menu`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear la tabla de propuestas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear tabla staging en Propuestas Menu?
-- Como aprobar propuestas en Propuestas Menu?
-- Como navegar a modificar / listados en Propuestas Menu?
+- Como crear la tabla de propuestas en Crear la tabla de propuestas?
+- Como aprobar las propuestas en Crear la tabla de propuestas?
+- Como abrir la edición o los listados en Crear la tabla de propuestas?
 
 ## Donde Entrar
 
@@ -31,30 +31,33 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear tabla staging
+## Crear la tabla de propuestas
 
-1. Confirm JS («Elimina la tabla…»).
-2. POST a FE `propuestas_ajax.php?que=crear_tabla` → API `propuestas_ajax`.
-3. Alert si `success !== true`.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Aprobar propuestas
-
-1. Confirm JS (aviso de ~30 s e irreversibilidad).
-2. Carga FE `propuestas_aprobar.php` → API `propuestas_aprobar`.
-3. Muestra texto «Hecho!» en `#main`.
+1. Pulsar la opción para crear la tabla de propuestas.
+2. Confirmar el aviso: elimina la tabla anterior y la crea de nuevo.
+3. Si no se ha podido crear, sale un aviso.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/propuestas_ajax`
+- `/src/encargossacd/propuestas_aprobar`
 
-## Navegar a modificar / listados
+## Aprobar las propuestas
 
-1. `fnjs_update_div` hacia `propuestas_lista`, `propuestas_lista_sacd` o `propuestas_lista_enc`.
+1. Pulsar **aprobar**.
+2. Leer y confirmar el aviso: tarda unos 30 segundos y no se puede deshacer.
+3. Al terminar aparece «Hecho!».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/propuestas_ajax`
+- `/src/encargossacd/propuestas_aprobar`
+
+## Abrir la edición o los listados
+
+1. Elegir **modificar propuestas**, **listado propuestas por sacd** o **listado propuestas por encargos**; se abre en la misma ventana.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/encargossacd/propuestas_ajax`
+- `/src/encargossacd/propuestas_aprobar`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -64,7 +67,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la edición / listados de propuestas.
+Desde la pantalla de propuestas: volver a crear la tabla de trabajo, aprobar los cambios y pasarlos a los datos reales, o abrir la edición y los listados de propuestas. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Errores Documentados
 

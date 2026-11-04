@@ -2,50 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Sacd Ausencias"
+titulo: "Guardar las ausencias de un sacerdote"
 flujo: "encargossacd.sacd_ausencias.gestionar.flujo"
-preguntas: ["Como crear o modificar en Sacd Ausencias?"]
-pantallas_principales: []
+preguntas: ["Como guardar las ausencias de un sacerdote en Guardar las ausencias de un sacerdote?"]
+pantallas_principales: ["encargossacd.pantalla.sacd_ausencias"]
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_update"]
 endpoints: ["/src/encargossacd/sacd_ausencias_update"]
 source: "docs/catalogo/encargossacd/flujos/sacd_ausencias.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sacd Ausencias
+# Ayuda IA - Guardar las ausencias de un sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sacd Ausencias`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar las ausencias de un sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Sacd Ausencias?
+- Como guardar las ausencias de un sacerdote en Guardar las ausencias de un sacerdote?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Sacd Ausencias (`encargossacd.pantalla.sacd_ausencias`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Guardar las ausencias de un sacerdote
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir el tipo y el sacd.
+2. Rellenar fechas de inicio y fin y el tipo de ausencia; para borrar una, dejar las dos fechas en blanco.
+3. Pulsar **guardar**.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/encargossacd/sacd_ausencias_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `encargossacd.pantalla.sacd_ausencias`
 - `encargossacd.pantalla.sacd_ausencias_update`
 
 ## Objetivo
 
-Gestiona SacdAusencias. Guarda/modifica las ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_update.php). Devuelve ['error' => bool, 'mensajes' => string] donde mensajes acumula los errores de guardado/eliminacion para mostrar al usuario.
+Guardar o modificar las ausencias y otras tareas de un sacerdote.
 
 ## Errores Documentados
 

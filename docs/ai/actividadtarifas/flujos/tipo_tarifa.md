@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadtarifas"
-titulo: "Tipo Tarifa"
+titulo: "Mantener los tipos de tarifa"
 flujo: "actividadtarifas.tipo_tarifa.gestionar.flujo"
-preguntas: ["Como crear o modificar en Tipo Tarifa?", "Como eliminar en Tipo Tarifa?", "Como consultar el listado en Tipo Tarifa?", "Como abrir el formulario en Tipo Tarifa?"]
+preguntas: ["Como mantener los tipos de tarifa en Mantener los tipos de tarifa?"]
 pantallas_principales: ["actividadtarifas.pantalla.tarifa"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_form", "actividadtarifas.pantalla.tarifa_lista"]
 endpoints: ["/src/actividadtarifas/tipo_tarifa_eliminar", "/src/actividadtarifas/tipo_tarifa_form_data", "/src/actividadtarifas/tipo_tarifa_lista_data", "/src/actividadtarifas/tipo_tarifa_update"]
@@ -12,17 +12,14 @@ source: "docs/catalogo/actividadtarifas/flujos/tipo_tarifa.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Tipo Tarifa
+# Ayuda IA - Mantener los tipos de tarifa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Tipo Tarifa`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Mantener los tipos de tarifa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Tipo Tarifa?
-- Como eliminar en Tipo Tarifa?
-- Como consultar el listado en Tipo Tarifa?
-- Como abrir el formulario en Tipo Tarifa?
+- Como mantener los tipos de tarifa en Mantener los tipos de tarifa?
 
 ## Donde Entrar
 
@@ -32,44 +29,18 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Mantener los tipos de tarifa
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadtarifas/tipo_tarifa_update`
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **definir tarifa**: aparece el listado de tarifas.
+2. Para crear una, pulsar nuevo; escribir la **letra**, el **modo** y las **observaciones**, y pulsar **guardar** (o **cancel**).
+3. Para modificar, pulsar la tarifa, cambiar los datos y **guardar**.
+4. Para quitarla, abrirla y pulsar **eliminar**, confirmando.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadtarifas/tipo_tarifa_eliminar`
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadtarifas/tipo_tarifa_lista_data`
-
-## Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Referencias tecnicas para verificar la respuesta:
 - `/src/actividadtarifas/tipo_tarifa_form_data`
+- `/src/actividadtarifas/tipo_tarifa_lista_data`
+- `/src/actividadtarifas/tipo_tarifa_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -79,7 +50,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones). Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tipo Tarifa).
+Mantener el catálogo de tipos de tarifa: cada uno con su letra, su modo y observaciones.
 
 ## Errores Documentados
 

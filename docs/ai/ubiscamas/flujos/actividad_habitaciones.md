@@ -2,39 +2,40 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubiscamas"
-titulo: "Actividad Habitaciones"
+titulo: "Asignar camas a los asistentes"
 flujo: "ubiscamas.actividad_habitaciones.gestionar.flujo"
-preguntas: ["Como consultar el listado en Actividad Habitaciones?"]
-pantallas_principales: []
+preguntas: ["Como asignar camas a los asistentes en Asignar camas a los asistentes?"]
+pantallas_principales: ["ubiscamas.pantalla.lista_habitaciones", "ubiscamas.pantalla.lista_habitaciones_distribucion", "ubiscamas.pantalla.lista_habitaciones_nombres"]
 fragmentos: ["ubiscamas.pantalla.lista_habitaciones", "ubiscamas.pantalla.lista_habitaciones_distribucion", "ubiscamas.pantalla.lista_habitaciones_nombres"]
 endpoints: ["/src/ubiscamas/actividad_habitaciones_lista"]
 source: "docs/catalogo/ubiscamas/flujos/actividad_habitaciones.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Habitaciones
+# Ayuda IA - Asignar camas a los asistentes
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Habitaciones`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignar camas a los asistentes`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar el listado en Actividad Habitaciones?
+- Como asignar camas a los asistentes en Asignar camas a los asistentes?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista Habitaciones (`ubiscamas.pantalla.lista_habitaciones`)
+- Lista Habitaciones Distribucion (`ubiscamas.pantalla.lista_habitaciones_distribucion`)
+- Lista Habitaciones Nombres (`ubiscamas.pantalla.lista_habitaciones_nombres`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar el listado
+## Asignar camas a los asistentes
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir las habitaciones de la actividad; se ofrece **lista por habitaciones** o **lista por nombre**.
+2. Arrastrar al asistente a la cama o usar las flechas de asignar y desasignar.
+3. Marcar **solo VIP** para ver únicamente las camas VIP.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubiscamas/actividad_habitaciones_lista`
@@ -44,10 +45,13 @@ Referencias tecnicas para verificar la respuesta:
 - `ubiscamas.pantalla.lista_habitaciones`
 - `ubiscamas.pantalla.lista_habitaciones_distribucion`
 - `ubiscamas.pantalla.lista_habitaciones_nombres`
+- `ubiscamas.pantalla.lista_habitaciones`
+- `ubiscamas.pantalla.lista_habitaciones_distribucion`
+- `ubiscamas.pantalla.lista_habitaciones_nombres`
 
 ## Objetivo
 
-Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-and-drop), activar modo solo VIP y abrir vistas de distribución o nombres.
+Ver las camas de la casa de una actividad y asignar a cada asistente su cama.
 
 ## Errores Documentados
 

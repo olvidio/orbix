@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Grupo Info"
+titulo: "Abrir un grupo para editarlo"
 flujo: "usuarios.grupo_info.gestionar.flujo"
-preguntas: ["Como ejecutar en Grupo Info?"]
-pantallas_principales: []
+preguntas: ["Como abrir un grupo para editarlo en Abrir un grupo para editarlo?"]
+pantallas_principales: ["usuarios.pantalla.grupo_form"]
 fragmentos: ["usuarios.pantalla.grupo_form"]
 endpoints: ["/src/usuarios/grupo_info"]
 source: "docs/catalogo/usuarios/flujos/grupo_info.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Grupo Info
+# Ayuda IA - Abrir un grupo para editarlo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Grupo Info`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir un grupo para editarlo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Grupo Info?
+- Como abrir un grupo para editarlo en Abrir un grupo para editarlo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Grupo Form (`usuarios.pantalla.grupo_form`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Abrir un grupo para editarlo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **grupos**, pulsar el grupo.
+2. Se carga su nombre en el formulario.
+3. Si el grupo ya no existe aparece «Grupo no encontrado».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/grupo_info`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.grupo_form`
+- `usuarios.pantalla.grupo_form`
 
 ## Objetivo
 
-Devuelve el nombre de un grupo para el formulario de edición.
+Cargar el nombre de un grupo en su formulario de edición.
 
 ## Errores Documentados
 

@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Encargo Lst Tipo Enc"
+titulo: "Elegir el tipo de encargo"
 flujo: "encargossacd.encargo_lst_tipo_enc.gestionar.flujo"
-preguntas: ["Como obtener datos en Encargo Lst Tipo Enc?"]
-pantallas_principales: []
+preguntas: ["Como elegir el tipo de encargo en Elegir el tipo de encargo?"]
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 endpoints: ["/src/encargossacd/encargo_lst_tipo_enc_data"]
 source: "docs/catalogo/encargossacd/flujos/encargo_lst_tipo_enc.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Encargo Lst Tipo Enc
+# Ayuda IA - Elegir el tipo de encargo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Encargo Lst Tipo Enc`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el tipo de encargo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Encargo Lst Tipo Enc?
+- Como elegir el tipo de encargo en Elegir el tipo de encargo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Encargo Ver (`encargossacd.pantalla.encargo_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir el tipo de encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, elegir el **grupo**.
+2. El desplegable **tipo encargo** muestra solo los tipos de ese grupo.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/encargo_lst_tipo_enc_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.encargo_ver`
+- `encargossacd.pantalla.encargo_ver`
 
 ## Objetivo
 
-Gestiona EncargoLstTipoEnc. Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (id_tipo_enc ~ ^grupo).
+Ofrecer los tipos de encargo que corresponden al grupo elegido.
 
 ## Limites De La Respuesta
 

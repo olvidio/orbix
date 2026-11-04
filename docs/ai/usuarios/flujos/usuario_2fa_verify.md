@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario 2fa Verify"
+titulo: "Verificar el código"
 flujo: "usuarios.usuario_2fa_verify.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario 2fa Verify?"]
-pantallas_principales: []
+preguntas: ["Como verificar el código en Verificar el código?"]
+pantallas_principales: ["usuarios.pantalla.usuario_form_2fa"]
 fragmentos: ["usuarios.pantalla.usuario_form_2fa"]
 endpoints: ["/src/usuarios/usuario_2fa_verify"]
 source: "docs/catalogo/usuarios/flujos/usuario_2fa_verify.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario 2fa Verify
+# Ayuda IA - Verificar el código
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario 2fa Verify`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Verificar el código`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario 2fa Verify?
+- Como verificar el código en Verificar el código?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Form 2fa (`usuarios.pantalla.usuario_form_2fa`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Verificar el código
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escanear el QR con la aplicación.
+2. Escribir en **Código de verificación** el número que muestra.
+3. Si es correcto se permite activar 2FA; si no, aparece «Código de verificación inválido».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_2fa_verify`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.usuario_form_2fa`
+- `usuarios.pantalla.usuario_form_2fa`
 
 ## Objetivo
 
-Valida código TOTP contra secret provisional (paso previo a activar 2FA).
+Comprobar el código de la aplicación de autenticación antes de activar la verificación en dos pasos.
 
 ## Errores Documentados
 

@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "pasarela"
-flujos: 14
+flujos: 15
 pantallas: 12
 endpoints: 21
 estado_revision: "generado"
@@ -34,6 +34,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Selector tipo en exportar -> `flujos/exportar_que_actividad_tipo_html.md`
 - nombres particulares -> `flujos/nombre.md`
 - Alta/edición nombre por tipo -> `flujos/nombre_excepcion.md`
+- Menú de parámetros de la pasarela -> `flujos/parametros_menu.md`
 - Texto descriptivo del tipo -> `flujos/tipo_activ_txt.md`
 
 ## Pantallas Disponibles

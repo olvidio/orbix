@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario Guardar Pwd"
+titulo: "Cambiar la contraseña"
 flujo: "usuarios.usuario_guardar_pwd.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario Guardar Pwd?"]
-pantallas_principales: []
+preguntas: ["Como cambiar la contraseña en Cambiar la contraseña?"]
+pantallas_principales: ["usuarios.pantalla.usuario_form_pwd"]
 fragmentos: ["usuarios.pantalla.usuario_form_pwd"]
 endpoints: ["/src/usuarios/usuario_guardar_pwd"]
 source: "docs/catalogo/usuarios/flujos/usuario_guardar_pwd.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario Guardar Pwd
+# Ayuda IA - Cambiar la contraseña
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario Guardar Pwd`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar la contraseña`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario Guardar Pwd?
+- Como cambiar la contraseña en Cambiar la contraseña?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Form Pwd (`usuarios.pantalla.usuario_form_pwd`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Cambiar la contraseña
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir la nueva contraseña en **password** y repetirla en **confirma password**.
+2. La contraseña debe tener más de 8 caracteres e incluir al menos una mayúscula, un número y un carácter especial (no se admiten comillas dobles).
+3. Pulsar **guardar**. Si no coinciden o no es válida aparecen «error: passwords no coincidentes» o «error: password no válido».
+4. Al guardar bien se muestra «paswword guardado» y se quita la obligación de cambiarla.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_guardar_pwd`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.usuario_form_pwd`
+- `usuarios.pantalla.usuario_form_pwd`
 
 ## Objetivo
 
-Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
+Cambiar la contraseña de un usuario cumpliendo los requisitos de seguridad.
 
 ## Errores Documentados
 

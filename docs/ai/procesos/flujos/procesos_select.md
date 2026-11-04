@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Procesos Select"
+titulo: "Elegir el proceso que se quiere administrar"
 flujo: "procesos.procesos_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Procesos Select?"]
-pantallas_principales: []
+preguntas: ["Como elegir el proceso que se quiere administrar en Elegir el proceso que se quiere administrar?"]
+pantallas_principales: ["procesos.pantalla.procesos_select"]
 fragmentos: ["procesos.pantalla.procesos_select"]
 endpoints: ["/src/procesos/procesos_select_data"]
 source: "docs/catalogo/procesos/flujos/procesos_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Procesos Select
+# Ayuda IA - Elegir el proceso que se quiere administrar
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Procesos Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el proceso que se quiere administrar`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Procesos Select?
+- Como elegir el proceso que se quiere administrar en Elegir el proceso que se quiere administrar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Procesos Select (`procesos.pantalla.procesos_select`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir el proceso que se quiere administrar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **procesos**.
+2. En **Proceso** elegir el tipo (actividad n, agd, sacd, sg, sr, estudios, general…; hay variantes «(no dl)»).
+3. Pulsar **ver listado** para abrir sus fases y tareas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/procesos/procesos_select_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `procesos.pantalla.procesos_select`
+- `procesos.pantalla.procesos_select`
 
 ## Objetivo
 
-Carga inicial de la pantalla de administración de procesos: opciones del desplegable de tipo de proceso y hashes de navegación.
+Elegir el tipo de proceso de actividades que se quiere revisar o modificar, y clonar sus tareas desde otro.
 
 ## Errores Documentados
 

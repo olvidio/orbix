@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Acta Pdf Subir"
+titulo: "Subir el PDF firmado"
 flujo: "notas.acta_pdf_subir.gestionar.flujo"
-preguntas: ["Como ejecutar en Acta Pdf Subir?"]
+preguntas: ["Como subir el pdf firmado en Subir el PDF firmado?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/notas/acta_pdf_subir"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/notas/flujos/acta_pdf_subir.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Acta Pdf Subir
+# Ayuda IA - Subir el PDF firmado
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Acta Pdf Subir`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Subir el PDF firmado`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Acta Pdf Subir?
+- Como subir el pdf firmado en Subir el PDF firmado?
 
 ## Donde Entrar
 
@@ -29,12 +29,15 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Subir el pdf firmado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Imprimir el acta después del último cambio y firmarla.
+2. En la ficha, elegir el fichero PDF y subirlo.
+3. Si es demasiado grande aparece «El servidor rechazó la subida: archivo o petición demasiado grandes».
+4. Desde ese momento el acta queda cerrada y no se puede modificar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/acta_pdf_subir`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +45,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Adjuntar PDF a un acta.
+Adjuntar a un acta el PDF firmado.
 
 ## Limites De La Respuesta
 

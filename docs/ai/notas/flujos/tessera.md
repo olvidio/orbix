@@ -5,7 +5,7 @@ modulo: "notas"
 titulo: "Tessera"
 flujo: "notas.tessera.gestionar.flujo"
 preguntas: ["Como copiar en Tessera?"]
-pantallas_principales: []
+pantallas_principales: ["notas.pantalla.tessera_copiar_select"]
 fragmentos: ["notas.pantalla.tessera_copiar_select"]
 endpoints: ["/src/notas/tessera_copiar"]
 source: "docs/catalogo/notas/flujos/tessera.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Tessera Copiar Select (`notas.pantalla.tessera_copiar_select`)
 
 ## Como Responder
 
@@ -41,6 +41,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `notas.pantalla.tessera_copiar_select`
 - `notas.pantalla.tessera_copiar_select`
 
 ## Objetivo

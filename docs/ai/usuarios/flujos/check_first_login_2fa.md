@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Check First Login 2fa"
+titulo: "Primer acceso sin 2FA"
 flujo: "usuarios.check_first_login_2fa.gestionar.flujo"
-preguntas: ["Como ejecutar en Check First Login 2fa?"]
+preguntas: ["Como primer acceso sin 2fa en Primer acceso sin 2FA?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/usuarios/check_first_login_2fa"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/usuarios/flujos/check_first_login_2fa.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Check First Login 2fa
+# Ayuda IA - Primer acceso sin 2FA
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Check First Login 2fa`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Primer acceso sin 2FA`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Check First Login 2fa?
+- Como primer acceso sin 2fa en Primer acceso sin 2FA?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Primer acceso sin 2fa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Iniciar sesión con login y contraseña.
+2. Si el usuario no tiene la verificación en dos pasos activa, se le lleva a la pantalla de configuración.
+3. Si ya la tiene, entra directamente a la página de inicio.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/check_first_login_2fa`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
+Tras iniciar sesión, llevar al usuario a configurar la verificación en dos pasos si aún no la tiene.
 
 ## Errores Documentados
 

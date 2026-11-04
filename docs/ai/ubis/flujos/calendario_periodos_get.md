@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Calendario Periodos Get"
+titulo: "Ver todos los periodos de una casa"
 flujo: "ubis.calendario_periodos_get.gestionar.flujo"
-preguntas: ["Como obtener datos en Calendario Periodos Get?"]
-pantallas_principales: []
+preguntas: ["Como ver todos los periodos de una casa en Ver todos los periodos de una casa?"]
+pantallas_principales: ["ubis.pantalla.calendario_periodos_get"]
 fragmentos: ["ubis.pantalla.calendario_periodos_get"]
 endpoints: ["/src/ubis/calendario_periodos_get_data"]
 source: "docs/catalogo/ubis/flujos/calendario_periodos_get.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Calendario Periodos Get
+# Ayuda IA - Ver todos los periodos de una casa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Calendario Periodos Get`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver todos los periodos de una casa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Calendario Periodos Get?
+- Como ver todos los periodos de una casa en Ver todos los periodos de una casa?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Calendario Periodos Get (`ubis.pantalla.calendario_periodos_get`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver todos los periodos de una casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Definir periodos**, elegir la casa y pulsar **buscar**.
+2. Aparecen todos sus periodos por orden de fecha.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/calendario_periodos_get_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.calendario_periodos_get`
+- `ubis.pantalla.calendario_periodos_get`
 
 ## Objetivo
 
-Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio.
+Listar todos los periodos de calendario de una casa ordenados por fecha de inicio.
 
 ## Errores Documentados
 

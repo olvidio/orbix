@@ -21,37 +21,37 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Acta -> `flujos/acta.md`
-- Acta Imprimir Presentacion -> `flujos/acta_imprimir_presentacion.md`
-- Acta Listado Anual -> `flujos/acta_listado_anual.md`
-- Acta Modificar -> `flujos/acta_modificar.md`
-- Acta Pdf -> `flujos/acta_pdf.md`
-- Acta Pdf Download -> `flujos/acta_pdf_download.md`
-- Acta Pdf Subir -> `flujos/acta_pdf_subir.md`
-- Acta Select -> `flujos/acta_select.md`
-- Acta Ver -> `flujos/acta_ver.md`
-- Actividades Buscar -> `flujos/actividades_buscar.md`
-- Asig Faltan Personas Select -> `flujos/asig_faltan_personas_select.md`
-- Asig Faltan Select -> `flujos/asig_faltan_select.md`
-- Asignaturas Pendientes -> `flujos/asignaturas_pendientes.md`
-- Asignaturas Pendientes Resumen -> `flujos/asignaturas_pendientes_resumen.md`
-- Asignaturas Search -> `flujos/asignaturas_search.md`
-- Buscar Acta -> `flujos/buscar_acta.md`
-- Comprobar Notas Constants -> `flujos/comprobar_notas_constants.md`
-- Comprobar Notas Page -> `flujos/comprobar_notas_page.md`
-- Examinadores Search -> `flujos/examinadores_search.md`
-- Informe Stgr Agd -> `flujos/informe_stgr_agd.md`
-- Informe Stgr N -> `flujos/informe_stgr_n.md`
-- Informe Stgr Profesores -> `flujos/informe_stgr_profesores.md`
+- Crear un acta -> `flujos/acta.md`
+- Imprimir un acta -> `flujos/acta_imprimir_presentacion.md`
+- Listar las actas de un periodo -> `flujos/acta_listado_anual.md`
+- Modificar un acta -> `flujos/acta_modificar.md`
+- el PDF del acta -> `flujos/acta_pdf.md`
+- Descargar el PDF de un acta -> `flujos/acta_pdf_download.md`
+- Subir el PDF firmado -> `flujos/acta_pdf_subir.md`
+- Buscar un acta -> `flujos/acta_select.md`
+- Ver o modificar la cabecera del acta -> `flujos/acta_ver.md`
+- Vincular una actividad al acta -> `flujos/actividades_buscar.md`
+- Buscar los alumnos que deben una asignatura -> `flujos/asig_faltan_personas_select.md`
+- Buscar alumnos por número de asignaturas pendientes -> `flujos/asig_faltan_select.md`
+- Consultar el cuadro alumnos-asignaturas -> `flujos/asignaturas_pendientes.md`
+- Consultar el resumen de pendientes -> `flujos/asignaturas_pendientes_resumen.md`
+- Elegir una asignatura -> `flujos/asignaturas_search.md`
+- Elegir el acta de una nota -> `flujos/buscar_acta.md`
+- Preparar la comprobación de notas -> `flujos/comprobar_notas_constants.md`
+- Comprobar los datos de notas -> `flujos/comprobar_notas_page.md`
+- Elegir un examinador -> `flujos/examinadores_search.md`
+- Sacar el informe anual de agregados -> `flujos/informe_stgr_agd.md`
+- Sacar el informe anual de numerarios -> `flujos/informe_stgr_n.md`
+- Sacar el informe anual de profesores -> `flujos/informe_stgr_profesores.md`
 - Nota Persona -> `flujos/nota_persona.md`
-- Persona Nota -> `flujos/persona_nota.md`
-- Persona Nota Editar -> `flujos/persona_nota_editar.md`
-- Posibles Opcionales -> `flujos/posibles_opcionales.md`
-- Posibles Preceptores -> `flujos/posibles_preceptores.md`
+- Añadir una nota -> `flujos/persona_nota.md`
+- Modificar una nota -> `flujos/persona_nota_editar.md`
+- Elegir una opcional -> `flujos/posibles_opcionales.md`
+- Elegir el preceptor de una nota -> `flujos/posibles_preceptores.md`
 - Tessera -> `flujos/tessera.md`
-- Tessera Copiar Select -> `flujos/tessera_copiar_select.md`
-- Tessera Imprimir -> `flujos/tessera_imprimir.md`
-- Tessera Ver -> `flujos/tessera_ver.md`
+- Copiar una tessera a otra persona -> `flujos/tessera_copiar_select.md`
+- Imprimir la tessera -> `flujos/tessera_imprimir.md`
+- Consultar la tessera de una persona -> `flujos/tessera_ver.md`
 
 ## Pantallas Disponibles
 

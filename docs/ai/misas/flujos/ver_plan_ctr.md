@@ -2,48 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Ver Plan Ctr"
+titulo: "Consultar el plan de un centro"
 flujo: "misas.ver_plan_ctr.gestionar.flujo"
-preguntas: ["Como obtener datos en Ver Plan Ctr?"]
-pantallas_principales: []
+preguntas: ["Como consultar el plan de un centro en Consultar el plan de un centro?"]
+pantallas_principales: ["misas.pantalla.ver_plan_ctr"]
 fragmentos: ["misas.pantalla.imprimir_plan_ctr", "misas.pantalla.ver_plan_ctr"]
 endpoints: ["/src/misas/ver_plan_ctr_data"]
 source: "docs/catalogo/misas/flujos/ver_plan_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ver Plan Ctr
+# Ayuda IA - Consultar el plan de un centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver Plan Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar el plan de un centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Ver Plan Ctr?
+- Como consultar el plan de un centro en Consultar el plan de un centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver Plan Ctr (`misas.pantalla.ver_plan_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Consultar el plan de un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Plan centro**, elegir zona, centro y periodo.
+2. Leer la cuadrícula; las iniciales de la leyenda identifican a cada sacerdote.
+3. Se puede imprimir desde la propia pantalla.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/ver_plan_ctr_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `misas.pantalla.ver_plan_ctr`
 - `misas.pantalla.imprimir_plan_ctr`
 - `misas.pantalla.ver_plan_ctr`
 
 ## Objetivo
 
-Genera la cuadrícula del plan de misas por centro: encargos en filas, días en columnas, con leyenda de sacds.
+Mostrar el plan de misas de un centro: encargos en filas y días en columnas, con leyenda de sacerdotes.
 
 ## Errores Documentados
 

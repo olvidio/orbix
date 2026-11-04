@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Emitido Imprimir Mpdf"
+titulo: "Obtener el PDF del certificado"
 flujo: "certificados.certificado_emitido_imprimir_mpdf.gestionar.flujo"
-preguntas: ["Como obtener datos en Certificado Emitido Imprimir Mpdf?"]
-pantallas_principales: []
+preguntas: ["Como obtener el pdf del certificado en Obtener el PDF del certificado?"]
+pantallas_principales: ["certificados.pantalla.certificado_emitido_imprimir_mpdf"]
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir_mpdf"]
 endpoints: ["/src/certificados/certificado_emitido_imprimir_mpdf_datos"]
 source: "docs/catalogo/certificados/flujos/certificado_emitido_imprimir_mpdf.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Emitido Imprimir Mpdf
+# Ayuda IA - Obtener el PDF del certificado
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Emitido Imprimir Mpdf`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Obtener el PDF del certificado`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Certificado Emitido Imprimir Mpdf?
+- Como obtener el pdf del certificado en Obtener el PDF del certificado?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Emitido Imprimir Mpdf (`certificados.pantalla.certificado_emitido_imprimir_mpdf`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Obtener el pdf del certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Emitir el certificado desde la ficha del alumno.
+2. El PDF se genera automáticamente y se abre para imprimir o guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_emitido_imprimir_mpdf_datos`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `certificados.pantalla.certificado_emitido_imprimir_mpdf`
+- `certificados.pantalla.certificado_emitido_imprimir_mpdf`
 
 ## Objetivo
 
-Generar el PDF del certificado con notas y textos traducidos.
+Generar el PDF del certificado con las notas y los textos traducidos al idioma elegido.
 
 ## Limites De La Respuesta
 

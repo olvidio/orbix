@@ -2,48 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Propuestas Lista Enc"
+titulo: "Ver las propuestas por encargos"
 flujo: "encargossacd.propuestas_lista_enc.gestionar.flujo"
-preguntas: ["Como obtener datos en Propuestas Lista Enc?"]
-pantallas_principales: []
+preguntas: ["Como ver las propuestas por encargos en Ver las propuestas por encargos?"]
+pantallas_principales: ["encargossacd.pantalla.propuestas_lista_enc"]
 fragmentos: ["encargossacd.pantalla.propuestas_lista_enc"]
 endpoints: ["/src/encargossacd/propuestas_lista_enc_data"]
 source: "docs/catalogo/encargossacd/flujos/propuestas_lista_enc.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Propuestas Lista Enc
+# Ayuda IA - Ver las propuestas por encargos
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Propuestas Lista Enc`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver las propuestas por encargos`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Propuestas Lista Enc?
+- Como ver las propuestas por encargos en Ver las propuestas por encargos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Propuestas Lista Enc (`encargossacd.pantalla.propuestas_lista_enc`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver las propuestas por encargos
 
-1. FE llama `propuestas_lista_enc_data` con `filtro_ctr` (opcional).
-2. Si `error` → echo del mensaje; si no → echo de `html`.
+1. Abrir **listado propuestas por encargos**.
+2. Si se quiere, filtrar por centro.
+3. Se muestra el listado. Si todavía no se ha creado la tabla de propuestas, avisa «Debe crear la tabla de propuestas».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/propuestas_lista_enc_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.propuestas_lista_enc`
+- `encargossacd.pantalla.propuestas_lista_enc`
 
 ## Objetivo
 
-Ver el estado de las propuestas por encargos tras (o durante) la edición staging.
+Ver cómo van las propuestas, por encargos, después (o durante) la edición. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Errores Documentados
 

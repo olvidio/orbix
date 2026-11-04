@@ -21,12 +21,12 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Consultar congresos -> `flujos/congresos.md`
-- Ver docencia global -> `flujos/docencia.md`
-- Ver ficha profesor STGR -> `flujos/ficha_profesor_stgr.md`
-- Consultar claustro -> `flujos/lista_por_departamentos.md`
-- Tabla AJAX profesores asignatura -> `flujos/profesor_asignatura_ajax.md`
-- Buscar profesor para asignatura -> `flujos/profesor_asignatura_que.md`
+- Consultar la asistencia a congresos -> `flujos/congresos.md`
+- Consultar la docencia -> `flujos/docencia.md`
+- Consultar la ficha de un profesor -> `flujos/ficha_profesor_stgr.md`
+- Ver el claustro por departamentos -> `flujos/lista_por_departamentos.md`
+- Ver los profesores de una asignatura -> `flujos/profesor_asignatura_ajax.md`
+- Buscar profesores para una asignatura -> `flujos/profesor_asignatura_que.md`
 
 ## Pantallas Disponibles
 

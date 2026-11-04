@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Absorber Esquema"
 flujo: "devel_db_admin.absorber_esquema.gestionar.flujo"
 preguntas: ["Como ejecutar en Absorber Esquema?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_absorber_esquema"]
 fragmentos: ["devel_db_admin.pantalla.db_absorber_esquema"]
 endpoints: ["/src/devel_db_admin/absorber_esquema"]
 source: "docs/catalogo/devel_db_admin/flujos/absorber_esquema.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Absorber Esquema (`devel_db_admin.pantalla.db_absorber_esquema`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_absorber_esquema`
 - `devel_db_admin.pantalla.db_absorber_esquema`
 
 ## Objetivo

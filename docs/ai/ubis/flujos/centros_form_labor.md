@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Centros Form Labor"
+titulo: "Cambiar el tipo de labor"
 flujo: "ubis.centros_form_labor.gestionar.flujo"
-preguntas: ["Como ejecutar en Centros Form Labor?"]
-pantallas_principales: []
+preguntas: ["Como cambiar el tipo de labor en Cambiar el tipo de labor?"]
+pantallas_principales: ["ubis.pantalla.centros_form_labor"]
 fragmentos: ["ubis.pantalla.centros_form_labor"]
 endpoints: ["/src/ubis/centros_form_labor"]
 source: "docs/catalogo/ubis/flujos/centros_form_labor.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Form Labor
+# Ayuda IA - Cambiar el tipo de labor
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Form Labor`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar el tipo de labor`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Centros Form Labor?
+- Como cambiar el tipo de labor en Cambiar el tipo de labor?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Centros Form Labor (`ubis.pantalla.centros_form_labor`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Cambiar el tipo de labor
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > labor**, pulsar el centro.
+2. Elegir el **tipo de labor** y pulsar **guardar cambios**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/centros_form_labor`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.centros_form_labor`
+- `ubis.pantalla.centros_form_labor`
 
 ## Objetivo
 
-Carga datos del formulario modal de tipo de labor de un centro DL.
+Cambiar el tipo de labor de un centro.
 
 ## Errores Documentados
 

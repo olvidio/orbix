@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Centros"
+titulo: "Guardar los datos de un centro"
 flujo: "ubis.centros.gestionar.flujo"
-preguntas: ["Como crear o modificar en Centros?"]
+preguntas: ["Como guardar los datos de un centro en Guardar los datos de un centro?"]
 pantallas_principales: ["ubis.pantalla.centros_que"]
 fragmentos: ["ubis.pantalla.centros_form_labor", "ubis.pantalla.centros_form_num", "ubis.pantalla.centros_form_plazas"]
 endpoints: ["/src/ubis/centros_update"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/ubis/flujos/centros.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros
+# Ayuda IA - Guardar los datos de un centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar los datos de un centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Centros?
+- Como guardar los datos de un centro en Guardar los datos de un centro?
 
 ## Donde Entrar
 
@@ -29,12 +29,10 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Guardar los datos de un centro
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir **labor**, **pi, cartas, nº buzón** o **sede, plazas** y pulsar **buscar**.
+2. Abrir el centro, cambiar el bloque y pulsar **guardar cambios**.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubis/centros_update`
@@ -48,7 +46,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
+Guardar los cambios de un centro de la dl: labor, números o plazas.
 
 ## Errores Documentados
 

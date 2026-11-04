@@ -2,67 +2,62 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Actividad Asignatura"
+titulo: "Añadir una asignatura a la actividad"
 flujo: "actividadestudios.actividad_asignatura.gestionar.flujo"
-preguntas: ["Como crear en Actividad Asignatura?", "Como eliminar en Actividad Asignatura?"]
-pantallas_principales: []
+preguntas: ["Como añadir una asignatura a la actividad en Añadir una asignatura a la actividad?", "Como eliminar una asignatura de la actividad en Añadir una asignatura a la actividad?"]
+pantallas_principales: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 fragmentos: ["actividadestudios.pantalla.form_asignaturas_de_una_actividad"]
 endpoints: ["/src/actividadestudios/actividad_asignatura_eliminar", "/src/actividadestudios/actividad_asignatura_nueva"]
 source: "docs/catalogo/actividadestudios/flujos/actividad_asignatura.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Asignatura
+# Ayuda IA - Añadir una asignatura a la actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Asignatura`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Añadir una asignatura a la actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear en Actividad Asignatura?
-- Como eliminar en Actividad Asignatura?
+- Como añadir una asignatura a la actividad en Añadir una asignatura a la actividad?
+- Como eliminar una asignatura de la actividad en Añadir una asignatura a la actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Asignaturas De Una Actividad (`actividadestudios.pantalla.form_asignaturas_de_una_actividad`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear
+## Añadir una asignatura a la actividad
 
-1. En el dossier 3005 de una actividad, pulsar **nuevo** para abrir el formulario de alta.
-2. Elegir asignatura, profesor, fechas y tipo; pulsar **guardar**.
-3. Si esa asignatura ya está en la actividad (incluida otra dl), aparece un aviso:
-   «Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor». Cancelar vuelve al listado; aceptar guarda.
-4. Si no hay duplicado (o se confirmó), el sistema crea la `ActividadAsignatura` y abre el dossier 3005.
-   En el listado, si la misma asignatura está en más de una dl, el nombre lleva delante
-   la sigla entre paréntesis (`(dlxx) …`) para distinguirlas.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadestudios/actividad_asignatura_nueva`
-
-## Eliminar
-
-1. En el listado de asignaturas del dossier 3005, seleccionar una fila.
-2. Pulsar **quitar asignatura** y confirmar el aviso genérico.
-3. Si hay alumnos matriculados, aparece un segundo aviso con el número y las dl
-   (p. ej. «Hay 3 alumnos matriculados (dlbv: 2, dlxx: 1). Si continúa se borrarán
-   también esas matrículas.»). Cancelar no borra nada; aceptar elimina la oferta
-   y esas matrículas de esta dl.
-4. Si no hay matriculados, se elimina solo la asignatura impartida y se refresca el listado.
+1. En el dossier de asignaturas de la actividad, pulsar **nuevo**.
+2. Elegir la asignatura, el profesor, las fechas y el tipo, y pulsar **guardar**.
+3. Se vuelve al dossier de asignaturas con la nueva asignatura en la lista.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/actividad_asignatura_eliminar`
+- `/src/actividadestudios/actividad_asignatura_nueva`
+
+## Eliminar una asignatura de la actividad
+
+1. En la lista de asignaturas del dossier, seleccionar la fila.
+2. Pulsar **borrar** y confirmar.
+3. La asignatura desaparece de la lista.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividadestudios/actividad_asignatura_eliminar`
+- `/src/actividadestudios/actividad_asignatura_nueva`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.form_asignaturas_de_una_actividad`
+- `actividadestudios.pantalla.form_asignaturas_de_una_actividad`
 
 ## Objetivo
 
-El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o elimina una existente desde el dossier de asignaturas. Si al quitar hay matriculados, se advierte (cuántos y de qué dl) y al confirmar se borran también esas matrículas. Sustituye los cases `nuevo` y `eliminar` del antiguo `update_3005.php`.
+Añadir una asignatura impartida en la actividad (con su profesor, fechas y tipo) o eliminar una que ya está, desde el dossier de asignaturas.
 
 ## Errores Documentados
 
@@ -71,7 +66,6 @@ El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas
 - `hay un error, no se ha creado`
 - `no encuentro la asignatura`
 - `sólo se puede eliminar una asignatura desde el dossier de la actividad`
-- `Ya existe esta asignatura en esta actividad. Solamente debería continuar si quiere hacerla con preceptor u otro profesor`
 
 ## Limites De La Respuesta
 

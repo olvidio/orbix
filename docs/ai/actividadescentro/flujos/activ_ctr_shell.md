@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadescentro"
-titulo: "Activ Ctr Shell"
+titulo: "Abrir la asignación de centros encargados"
 flujo: "actividadescentro.activ_ctr_shell.gestionar.flujo"
-preguntas: ["Como obtener datos en Activ Ctr Shell?"]
-pantallas_principales: []
+preguntas: ["Como abrir la asignación de centros encargados en Abrir la asignación de centros encargados?"]
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/activ_ctr_shell_data"]
 source: "docs/catalogo/actividadescentro/flujos/activ_ctr_shell.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Activ Ctr Shell
+# Ayuda IA - Abrir la asignación de centros encargados
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Activ Ctr Shell`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir la asignación de centros encargados`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Activ Ctr Shell?
+- Como abrir la asignación de centros encargados en Abrir la asignación de centros encargados?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Activ Ctr (`actividadescentro.pantalla.activ_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Abrir la asignación de centros encargados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la pantalla de centros encargados.
+2. La pantalla se prepara sola y muestra los filtros de periodo.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadescentro/activ_ctr_shell_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadescentro.pantalla.activ_ctr`
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Al abrir la pantalla de asignación de centros encargados, el sistema resuelve el colectivo (`tipo`, que puede remaparse a `sf*` en el semestre de formación) y firma las URLs AJAX que usará el resto de acciones. Es un paso transparente para el usuario, previo a mostrar los filtros de periodo.
+Preparar la pantalla de asignación de centros encargados antes de mostrar los filtros de periodo.
 
 ## Limites De La Respuesta
 

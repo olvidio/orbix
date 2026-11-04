@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Centros Opciones"
+titulo: "Elegir un centro en un desplegable"
 flujo: "ubis.centros_opciones.gestionar.flujo"
-preguntas: ["Como obtener datos en Centros Opciones?"]
+preguntas: ["Como elegir un centro en un desplegable en Elegir un centro en un desplegable?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/ubis/centros_opciones_data"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/ubis/flujos/centros_opciones.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Opciones
+# Ayuda IA - Elegir un centro en un desplegable
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Opciones`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir un centro en un desplegable`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Centros Opciones?
+- Como elegir un centro en un desplegable en Elegir un centro en un desplegable?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir un centro en un desplegable
 
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de centro, abrir el desplegable.
+2. La lista se carga según el filtro de la pantalla; elegir uno.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/centros_opciones_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de centros que usan los desplegables de otras pantallas.
 
 ## Errores Documentados
 

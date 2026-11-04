@@ -21,12 +21,12 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Carta Presentacion -> `flujos/carta_presentacion.md`
-- Cartas Presentacion -> `flujos/cartas_presentacion.md`
-- Cartas Presentacion Buscar -> `flujos/cartas_presentacion_buscar.md`
-- Cartas Presentacion Shell -> `flujos/cartas_presentacion_shell.md`
-- Poblaciones -> `flujos/poblaciones.md`
-- Ubis -> `flujos/ubis.md`
+- Dar de alta o modificar la carta de un centro -> `flujos/carta_presentacion.md`
+- Ver el listado de cartas -> `flujos/cartas_presentacion.md`
+- Buscar cartas de presentación -> `flujos/cartas_presentacion_buscar.md`
+- Buscar los centros -> `flujos/cartas_presentacion_shell.md`
+- Elegir la población -> `flujos/poblaciones.md`
+- Ver los centros y sus cartas -> `flujos/ubis.md`
 
 ## Pantallas Disponibles
 

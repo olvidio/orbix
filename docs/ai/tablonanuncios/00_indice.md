@@ -21,7 +21,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- API tablon anuncios -> `flujos/api_tablon.md`
+- Anuncios del tablón -> `flujos/api_tablon.md`
 
 ## Pantallas Disponibles
 

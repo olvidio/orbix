@@ -2,67 +2,54 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Actividad Proceso"
+titulo: "Ver y avanzar el proceso de una actividad"
 flujo: "procesos.actividad_proceso.gestionar.flujo"
-preguntas: ["Como crear o modificar en Actividad Proceso?", "Como obtener en Actividad Proceso?", "Como obtener datos en Actividad Proceso?"]
-pantallas_principales: []
+preguntas: ["Como ver y avanzar el proceso de una actividad en Ver y avanzar el proceso de una actividad?"]
+pantallas_principales: ["procesos.pantalla.actividad_proceso"]
 fragmentos: ["procesos.pantalla.actividad_proceso", "procesos.pantalla.actividad_proceso_get"]
 endpoints: ["/src/procesos/actividad_proceso_data", "/src/procesos/actividad_proceso_get", "/src/procesos/actividad_proceso_update"]
 source: "docs/catalogo/procesos/flujos/actividad_proceso.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Proceso
+# Ayuda IA - Ver y avanzar el proceso de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Proceso`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver y avanzar el proceso de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Actividad Proceso?
-- Como obtener en Actividad Proceso?
-- Como obtener datos en Actividad Proceso?
+- Como ver y avanzar el proceso de una actividad en Ver y avanzar el proceso de una actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Actividad Proceso (`procesos.pantalla.actividad_proceso`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Ver y avanzar el proceso de una actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Marcar la actividad y pulsar **proceso**.
+2. Se muestra el título, el enlace **(dossiers)** y «Fases de la actividad», con la opción **forzar** y una fila por fase y tarea.
+3. Marcar las tareas hechas, escribir observaciones y guardar.
+4. Si el proceso de la actividad no se ha generado bien, aparece un error del tipo «La fase del proceso tipo: 6, fase: 2, tarea: 0»; los procesos se generan al crear la actividad, así que este error indica un dato incompleto de esa actividad; en ese caso hay que regenerar el proceso.
 
 Referencias tecnicas para verificar la respuesta:
+- `/src/procesos/actividad_proceso_data`
+- `/src/procesos/actividad_proceso_get`
 - `/src/procesos/actividad_proceso_update`
-
-## Obtener
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Obtener datos
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `procesos.pantalla.actividad_proceso`
 - `procesos.pantalla.actividad_proceso`
 - `procesos.pantalla.actividad_proceso_get`
 
 ## Objetivo
 
-Consulta y edición del proceso de una actividad: ver tareas por fase, marcar completado, guardar observaciones y actualizar el estado de cada tarea.
+Ver y avanzar las fases del proceso de una actividad (tareas completadas, observaciones).
 
 ## Errores Documentados
 

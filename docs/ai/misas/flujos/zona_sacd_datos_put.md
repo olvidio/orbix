@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Zona Sacd Datos Put"
+titulo: "Cambiar la disponibilidad semanal de un sacerdote"
 flujo: "misas.zona_sacd_datos_put.gestionar.flujo"
-preguntas: ["Como ejecutar en Zona Sacd Datos Put?"]
+preguntas: ["Como cambiar la disponibilidad semanal de un sacerdote en Cambiar la disponibilidad semanal de un sacerdote?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/misas/zona_sacd_datos_put"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/misas/flujos/zona_sacd_datos_put.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Zona Sacd Datos Put
+# Ayuda IA - Cambiar la disponibilidad semanal de un sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Zona Sacd Datos Put`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar la disponibilidad semanal de un sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Zona Sacd Datos Put?
+- Como cambiar la disponibilidad semanal de un sacerdote en Cambiar la disponibilidad semanal de un sacerdote?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Cambiar la disponibilidad semanal de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar o desmarcar los días de la semana.
+2. Guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/zona_sacd_datos_put`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
+Guardar los días de la semana en que un sacerdote está disponible en una zona.
 
 ## Errores Documentados
 

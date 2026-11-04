@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Listas Exigencia Ctr"
+titulo: "Listar las exigencias de los centros"
 flujo: "encargossacd.listas_exigencia_ctr.gestionar.flujo"
-preguntas: ["Como obtener datos en Listas Exigencia Ctr?"]
-pantallas_principales: []
+preguntas: ["Como listar las exigencias de los centros en Listar las exigencias de los centros?"]
+pantallas_principales: ["encargossacd.pantalla.listas_exigencia_ctr"]
 fragmentos: ["encargossacd.pantalla.listas_exigencia_ctr"]
 endpoints: ["/src/encargossacd/listas_exigencia_ctr_data"]
 source: "docs/catalogo/encargossacd/flujos/listas_exigencia_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Listas Exigencia Ctr
+# Ayuda IA - Listar las exigencias de los centros
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Listas Exigencia Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Listar las exigencias de los centros`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Listas Exigencia Ctr?
+- Como listar las exigencias de los centros en Listar las exigencias de los centros?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Listas Exigencia Ctr (`encargossacd.pantalla.listas_exigencia_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Listar las exigencias de los centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En «listados comunicaciones» elegir **exigencias ctr sv**, **exigencias ctr sf** o **exigencias igl, oc…**.
+3. Se muestra, por centro o iglesia, quién es el encargado, rector o sacerdotes y las horas exigidas por franja, por ejemplo «(4 mañana, 2 tarde 1ª hora)».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/listas_exigencia_ctr_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.listas_exigencia_ctr`
+- `encargossacd.pantalla.listas_exigencia_ctr`
 
 ## Objetivo
 
-Gestiona ListasExigenciaCtr. Listado de exigencias SACD por centro/iglesia. Sustituye la logica de frontend/encargossacd/controller/listas_exigencia_ctr.php.
+Sacar el listado de las exigencias de atención sacerdotal de cada centro o iglesia.
 
 ## Limites De La Respuesta
 

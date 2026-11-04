@@ -2,47 +2,57 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Horario Tarea"
+titulo: "Poner horario a una tarea"
 flujo: "misas.horario_tarea.gestionar.flujo"
-preguntas: ["Como obtener datos en Horario Tarea?"]
-pantallas_principales: []
+preguntas: ["Como poner horario a una tarea en Poner horario a una tarea?", "Como quitar el horario de una tarea en Poner horario a una tarea?"]
+pantallas_principales: ["misas.pantalla.horario_tarea"]
 fragmentos: ["misas.pantalla.horario_tarea"]
 endpoints: ["/src/misas/horario_tarea_data"]
 source: "docs/catalogo/misas/flujos/horario_tarea.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Horario Tarea
+# Ayuda IA - Poner horario a una tarea
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Horario Tarea`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Poner horario a una tarea`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Horario Tarea?
+- Como poner horario a una tarea en Poner horario a una tarea?
+- Como quitar el horario de una tarea en Poner horario a una tarea?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Horario Tarea (`misas.pantalla.horario_tarea`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Poner horario a una tarea
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, abrir el horario de la tarea.
+2. Escribir **Inicio** y **Fin** y pulsar **guardar**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/horario_tarea_data`
+
+## Quitar el horario de una tarea
+
+1. Abrir el horario de la tarea y pulsar **quitar el actual**.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/misas/horario_tarea_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.horario_tarea`
+- `misas.pantalla.horario_tarea`
 
 ## Objetivo
 
-Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
+Ver y fijar la hora de inicio y fin de una tarea (encargo) en la plantilla.
 
 ## Errores Documentados
 

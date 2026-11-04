@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Modificar Iniciales Sacd Zona"
+titulo: "Elegir la zona de las iniciales"
 flujo: "misas.modificar_iniciales_sacd_zona.gestionar.flujo"
-preguntas: ["Como obtener datos en Modificar Iniciales Sacd Zona?"]
-pantallas_principales: []
+preguntas: ["Como elegir la zona de las iniciales en Elegir la zona de las iniciales?"]
+pantallas_principales: ["misas.pantalla.modificar_iniciales_sacd_zona"]
 fragmentos: ["misas.pantalla.modificar_iniciales_sacd_zona"]
 endpoints: ["/src/misas/modificar_iniciales_sacd_zona_data"]
 source: "docs/catalogo/misas/flujos/modificar_iniciales_sacd_zona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Modificar Iniciales Sacd Zona
+# Ayuda IA - Elegir la zona de las iniciales
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Modificar Iniciales Sacd Zona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir la zona de las iniciales`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Modificar Iniciales Sacd Zona?
+- Como elegir la zona de las iniciales en Elegir la zona de las iniciales?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Modificar Iniciales Sacd Zona (`misas.pantalla.modificar_iniciales_sacd_zona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir la zona de las iniciales
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Iniciales sacd**.
+2. Elegir la zona en **Iniciales sacerdotes de la zona**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/modificar_iniciales_sacd_zona_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.modificar_iniciales_sacd_zona`
+- `misas.pantalla.modificar_iniciales_sacd_zona`
 
 ## Objetivo
 
-Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
+Elegir la zona cuyas iniciales de sacerdotes se quieren editar.
 
 ## Errores Documentados
 

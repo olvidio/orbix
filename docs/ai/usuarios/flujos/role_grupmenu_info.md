@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Role Grupmenu Info"
+titulo: "Ver los grupos disponibles"
 flujo: "usuarios.role_grupmenu_info.gestionar.flujo"
-preguntas: ["Como ejecutar en Role Grupmenu Info?"]
-pantallas_principales: []
+preguntas: ["Como ver los grupos disponibles en Ver los grupos disponibles?"]
+pantallas_principales: ["usuarios.pantalla.role_grupmenu"]
 fragmentos: ["usuarios.pantalla.role_grupmenu"]
 endpoints: ["/src/usuarios/role_grupmenu_info"]
 source: "docs/catalogo/usuarios/flujos/role_grupmenu_info.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Role Grupmenu Info
+# Ayuda IA - Ver los grupos disponibles
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Role Grupmenu Info`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver los grupos disponibles`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Role Grupmenu Info?
+- Como ver los grupos disponibles en Ver los grupos disponibles?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Role Grupmenu (`usuarios.pantalla.role_grupmenu`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Ver los grupos disponibles
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del rol, pulsar **añadir grup menu**.
+2. Aparece la lista de grupos de menús que el rol aún no tiene.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/role_grupmenu_info`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.role_grupmenu`
+- `usuarios.pantalla.role_grupmenu`
 
 ## Objetivo
 
-Lista grupmenus disponibles para añadir a un rol.
+Mostrar los grupos de menús que se pueden añadir a un rol.
 
 ## Errores Documentados
 

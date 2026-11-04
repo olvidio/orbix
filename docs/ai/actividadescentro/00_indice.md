@@ -21,13 +21,13 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Activ Ctr Shell -> `flujos/activ_ctr_shell.md`
+- Abrir la asignación de centros encargados -> `flujos/activ_ctr_shell.md`
 - Centro Encargado -> `flujos/centro_encargado.md`
 - Centro Encargado Asignar -> `flujos/centro_encargado_asignar.md`
 - Centro Encargado Reordenar -> `flujos/centro_encargado_reordenar.md`
-- Centros Disponibles -> `flujos/centros_disponibles.md`
-- Centros Encargados -> `flujos/centros_encargados.md`
-- Lista Actividades Ctr -> `flujos/lista_actividades_ctr.md`
+- Asignar un centro encargado -> `flujos/centros_disponibles.md`
+- Ver los centros encargados actualizados -> `flujos/centros_encargados.md`
+- Consultar las actividades y sus centros encargados -> `flujos/lista_actividades_ctr.md`
 
 ## Pantallas Disponibles
 

@@ -2,58 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Teleco"
+titulo: "Eliminar una telecomunicación"
 flujo: "ubis.teleco.gestionar.flujo"
-preguntas: ["Como eliminar en Teleco?", "Como guardar en Teleco?"]
-pantallas_principales: []
+preguntas: ["Como eliminar una telecomunicación en Eliminar una telecomunicación?"]
+pantallas_principales: ["ubis.pantalla.teleco_editar", "ubis.pantalla.teleco_tabla"]
 fragmentos: []
 endpoints: ["/src/ubis/teleco_eliminar", "/src/ubis/teleco_guardar"]
 source: "docs/catalogo/ubis/flujos/teleco.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Teleco
+# Ayuda IA - Eliminar una telecomunicación
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Teleco`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Eliminar una telecomunicación`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Teleco?
-- Como guardar en Teleco?
+- Como eliminar una telecomunicación en Eliminar una telecomunicación?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Teleco Editar (`ubis.pantalla.teleco_editar`)
+- Teleco Tabla (`ubis.pantalla.teleco_tabla`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Eliminar una telecomunicación
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En **telecos**, marcar el registro y pulsar **eliminar**.
+2. Confirmar el aviso «¿Está seguro que desea eliminar este registro?».
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubis/teleco_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/teleco_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `ubis.pantalla.teleco_editar`
+- `ubis.pantalla.teleco_tabla`
 
 ## Objetivo
 
-Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
+Eliminar una telecomunicación de un centro o casa.
 
 ## Errores Documentados
 

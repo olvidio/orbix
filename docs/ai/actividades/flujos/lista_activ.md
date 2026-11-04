@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Tabla listado actividades"
+titulo: "Ver el listado de actividades"
 flujo: "actividades.lista_activ.gestionar.flujo"
-preguntas: []
+preguntas: ["Como ver el listado de actividades en Ver el listado de actividades?"]
 pantallas_principales: ["actividades.pantalla.lista_activ_que"]
 fragmentos: ["actividades.pantalla.lista_activ"]
 endpoints: ["/src/actividades/lista_activ_datos"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/lista_activ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Tabla listado actividades
+# Ayuda IA - Ver el listado de actividades
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Tabla listado actividades`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el listado de actividades`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como ver el listado de actividades en Ver el listado de actividades?
 
 ## Donde Entrar
 
@@ -28,6 +29,15 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Ver el listado de actividades
+
+1. Rellenar el formulario con el tipo de actividad, el periodo y las secciones; si no se ponen fechas, se toma el curso actual.
+2. Pulsar buscar.
+3. Aparece la tabla de actividades que cumplen los filtros.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/lista_activ_datos`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.lista_activ_que`
@@ -35,7 +45,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `actividad_que`.
+Ver la tabla de actividades después de enviar los filtros del formulario de búsqueda.
 
 ## Limites De La Respuesta
 

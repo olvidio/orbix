@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Modificar Encargos"
+titulo: "Elegir la zona de los encargos"
 flujo: "misas.modificar_encargos.gestionar.flujo"
-preguntas: ["Como obtener datos en Modificar Encargos?"]
-pantallas_principales: []
+preguntas: ["Como elegir la zona de los encargos en Elegir la zona de los encargos?"]
+pantallas_principales: ["misas.pantalla.modificar_encargos"]
 fragmentos: ["misas.pantalla.modificar_encargos"]
 endpoints: ["/src/misas/modificar_encargos_data"]
 source: "docs/catalogo/misas/flujos/modificar_encargos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Modificar Encargos
+# Ayuda IA - Elegir la zona de los encargos
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Modificar Encargos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir la zona de los encargos`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Modificar Encargos?
+- Como elegir la zona de los encargos en Elegir la zona de los encargos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Modificar Encargos (`misas.pantalla.modificar_encargos`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir la zona de los encargos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar encargos**.
+2. Elegir la zona en **Encargos de la zona** y el **Orden**.
+3. Se abre la lista de encargos de esa zona.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/modificar_encargos_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.modificar_encargos`
+- `misas.pantalla.modificar_encargos`
 
 ## Objetivo
 
-Devuelve zonas permitidas y criterios de orden para la pantalla modificar encargos de zona.
+Elegir la zona para crear y modificar sus encargos (tareas de misa).
 
 ## Errores Documentados
 

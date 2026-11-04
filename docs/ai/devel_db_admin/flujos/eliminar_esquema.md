@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Eliminar Esquema"
 flujo: "devel_db_admin.eliminar_esquema.gestionar.flujo"
 preguntas: ["Como ejecutar en Eliminar Esquema?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_eliminar"]
 fragmentos: ["devel_db_admin.pantalla.db_eliminar"]
 endpoints: ["/src/devel_db_admin/eliminar_esquema"]
 source: "docs/catalogo/devel_db_admin/flujos/eliminar_esquema.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Eliminar (`devel_db_admin.pantalla.db_eliminar`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_eliminar`
 - `devel_db_admin.pantalla.db_eliminar`
 
 ## Objetivo

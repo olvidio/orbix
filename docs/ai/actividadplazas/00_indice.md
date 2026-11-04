@@ -21,15 +21,15 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Gestion Plazas -> `flujos/gestion_plazas.md`
-- Peticiones -> `flujos/peticiones.md`
-- Peticiones Activ -> `flujos/peticiones_activ.md`
-- Peticiones Incorporar -> `flujos/peticiones_incorporar.md`
-- Plazas Balance -> `flujos/plazas_balance.md`
-- Plazas Balance Que -> `flujos/plazas_balance_que.md`
-- Plazas Ceder -> `flujos/plazas_ceder.md`
-- Posibles Propietarios -> `flujos/posibles_propietarios.md`
-- Resumen Plazas -> `flujos/resumen_plazas.md`
+- Ver el reparto de plazas de un periodo -> `flujos/gestion_plazas.md`
+- Guardar las peticiones de una persona -> `flujos/peticiones.md`
+- Abrir las peticiones de una persona -> `flujos/peticiones_activ.md`
+- Incorporar las primeras peticiones -> `flujos/peticiones_incorporar.md`
+- Comparar con otra delegación -> `flujos/plazas_balance.md`
+- Abrir el balance de plazas -> `flujos/plazas_balance_que.md`
+- Ceder plazas a otra delegación -> `flujos/plazas_ceder.md`
+- Elegir la delegación propietaria de la plaza -> `flujos/posibles_propietarios.md`
+- Ver el resumen de plazas de una actividad -> `flujos/resumen_plazas.md`
 
 ## Pantallas Disponibles
 

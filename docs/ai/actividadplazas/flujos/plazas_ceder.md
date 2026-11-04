@@ -2,39 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Plazas Ceder"
+titulo: "Ceder plazas a otra delegación"
 flujo: "actividadplazas.plazas_ceder.gestionar.flujo"
-preguntas: ["Como ejecutar en Plazas Ceder?"]
-pantallas_principales: []
+preguntas: ["Como ceder plazas a otra delegación en Ceder plazas a otra delegación?"]
+pantallas_principales: ["actividadplazas.pantalla.resumen_plazas"]
 fragmentos: ["actividadplazas.pantalla.resumen_plazas"]
 endpoints: ["/src/actividadplazas/plazas_ceder"]
 source: "docs/catalogo/actividadplazas/flujos/plazas_ceder.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Plazas Ceder
+# Ayuda IA - Ceder plazas a otra delegación
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Plazas Ceder`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ceder plazas a otra delegación`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Plazas Ceder?
+- Como ceder plazas a otra delegación en Ceder plazas a otra delegación?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Resumen Plazas (`actividadplazas.pantalla.resumen_plazas`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Ceder plazas a otra delegación
 
 1. Abrir el resumen de plazas de la actividad.
-2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación destino.
-3. Pulsar **Guardar** (`fnjs_guardar`): envía `id_activ`, `num_plazas` y `region_dl` a
-4. Si tiene éxito, la pantalla se recarga (`fnjs_actualizar`) mostrando el nuevo reparto.
+2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación que las recibe.
+3. Pulsar **Guardar**.
+4. La pantalla se recarga y muestra el nuevo reparto.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/plazas_ceder`
@@ -42,10 +42,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadplazas.pantalla.resumen_plazas`
+- `actividadplazas.pantalla.resumen_plazas`
 
 ## Objetivo
 
-Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otra delegación y confirmar el cambio.
+Desde el resumen de plazas de una actividad, indicar cuántas plazas se ceden a otra delegación y confirmar el cambio.
 
 ## Errores Documentados
 

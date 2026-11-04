@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "tablonanuncios"
-titulo: "API tablon anuncios"
+titulo: "Anuncios del tablón"
 flujo: "tablonanuncios.api_tablon.gestionar.flujo"
-preguntas: []
+preguntas: ["Como anuncios del tablón en Anuncios del tablón?"]
 pantallas_principales: ["tablonanuncios.pantalla.api_tablon"]
 fragmentos: []
 endpoints: ["/src/tablonanuncios/tablon_anuncios_data"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/tablonanuncios/flujos/tablonanuncios_api.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - API tablon anuncios
+# Ayuda IA - Anuncios del tablón
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `API tablon anuncios`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Anuncios del tablón`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como anuncios del tablón en Anuncios del tablón?
 
 ## Donde Entrar
 
@@ -28,13 +29,20 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Anuncios del tablón
+
+1. Los anuncios publicados desde otras aplicaciones aparecen en el tablón; no hay que hacer nada en Orbix.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/tablonanuncios/tablon_anuncios_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `tablonanuncios.pantalla.api_tablon`
 
 ## Objetivo
 
-Publicacion/consulta de anuncios via API (integracion externa o legacy).
+Publicación y consulta de anuncios desde integraciones externas; no tiene pantalla propia.
 
 ## Limites De La Respuesta
 

@@ -4,7 +4,7 @@ subtipo: "indice"
 modulo: "actividadcargos"
 flujos: 4
 pantallas: 2
-endpoints: 6
+endpoints: 5
 estado_revision: "generado"
 ---
 
@@ -21,10 +21,10 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Cargo -> `flujos/cargo.md`
+- Añadir un cargo -> `flujos/cargo.md`
 - Cargo Editar -> `flujos/cargo_editar.md`
-- Form Cargos De Actividad -> `flujos/form_cargos_de_actividad.md`
-- Form Cargos Personas En Actividad -> `flujos/form_cargos_personas_en_actividad.md`
+- Añadir o modificar un cargo en una actividad -> `flujos/form_cargos_de_actividad.md`
+- Abrir el formulario de cargo de una persona -> `flujos/form_cargos_personas_en_actividad.md`
 
 ## Pantallas Disponibles
 

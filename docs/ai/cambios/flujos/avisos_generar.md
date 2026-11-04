@@ -5,7 +5,7 @@ modulo: "cambios"
 titulo: "Consultar y purgar cambios"
 flujo: "cambios.avisos_generar.gestionar.flujo"
 preguntas: []
-pantallas_principales: []
+pantallas_principales: ["cambios.pantalla.avisos_generar"]
 fragmentos: ["cambios.pantalla.avisos_generar"]
 endpoints: ["/src/cambios/avisos_generar_lista_data", "/src/cambios/avisos_generar_tabla", "/src/cambios/cambio_usuario_eliminar", "/src/cambios/cambio_usuario_eliminar_hasta_fecha"]
 source: "docs/catalogo/cambios/flujos/avisos_generar.md"
@@ -22,7 +22,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista de cambios (`cambios.pantalla.avisos_generar`)
 
 ## Como Responder
 
@@ -30,6 +30,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `cambios.pantalla.avisos_generar`
 - `cambios.pantalla.avisos_generar`
 
 ## Objetivo

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Peticiones Incorporar"
+titulo: "Incorporar las primeras peticiones"
 flujo: "actividadplazas.peticiones_incorporar.gestionar.flujo"
-preguntas: ["Como ejecutar en Peticiones Incorporar?"]
+preguntas: ["Como incorporar las primeras peticiones en Incorporar las primeras peticiones?"]
 pantallas_principales: ["actividadplazas.pantalla.incorporar_peticion"]
 fragmentos: []
 endpoints: ["/src/actividadplazas/peticiones_incorporar"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/actividadplazas/flujos/peticiones_incorporar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Peticiones Incorporar
+# Ayuda IA - Incorporar las primeras peticiones
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Peticiones Incorporar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Incorporar las primeras peticiones`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Peticiones Incorporar?
+- Como incorporar las primeras peticiones en Incorporar las primeras peticiones?
 
 ## Donde Entrar
 
@@ -29,12 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Incorporar las primeras peticiones
 
-1. Abrir **Incorporar peticiones de plazas** desde el menú (según tipo y colectivo).
-2. Leer el texto explicativo y pulsar **Continuar** (`fnjs_incorporar_peticiones`).
-3. El botón se deshabilita mientras se ejecuta; el sistema envía `sactividad` y `sasistentes` a
-4. Muestra en `#resultado` cuántas peticiones se incorporaron (`incorporadas`) y el aviso de que no
+1. Abrir **Incorporar peticiones de plazas** desde el menú (según el tipo de actividad y el colectivo).
+2. Leer el texto explicativo y pulsar **Continuar**. El botón se desactiva mientras se ejecuta.
+3. Al terminar se muestra cuántas peticiones se han incorporado, con el recordatorio de que no se incorpora a quien ya tiene actividad propia.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/peticiones_incorporar`
@@ -45,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden = 1) en asistencias propias con plaza, para un tipo y colectivo, sin incorporar personas que ya tienen actividad propia en el periodo.
+Convertir de golpe las primeras peticiones de plaza de cada persona en asistencias propias con plaza, para un tipo de actividad y un colectivo. No se incorpora a quien ya tiene una actividad propia en ese periodo.
 
 ## Errores Documentados
 

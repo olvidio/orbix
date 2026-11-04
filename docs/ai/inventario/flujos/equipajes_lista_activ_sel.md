@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Equipajes Lista Activ Sel"
+titulo: "Nombrar el equipaje"
 flujo: "inventario.equipajes_lista_activ_sel.gestionar.flujo"
-preguntas: ["Como ejecutar en Equipajes Lista Activ Sel?"]
-pantallas_principales: []
+preguntas: ["Como nombrar el equipaje en Nombrar el equipaje?"]
+pantallas_principales: ["inventario.pantalla.equipajes_form_nuevo"]
 fragmentos: ["inventario.pantalla.equipajes_form_nuevo"]
 endpoints: ["/src/inventario/equipajes_lista_activ_sel"]
 source: "docs/catalogo/inventario/flujos/equipajes_lista_activ_sel.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Equipajes Lista Activ Sel
+# Ayuda IA - Nombrar el equipaje
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Equipajes Lista Activ Sel`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Nombrar el equipaje`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Equipajes Lista Activ Sel?
+- Como nombrar el equipaje en Nombrar el equipaje?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Fragmento selección actividades (`inventario.pantalla.equipajes_form_nuevo`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Nombrar el equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar las actividades y pulsar **seleccionar**.
+2. En la ventana aparece el **nombre del equipaje** ya propuesto como «casa (fechas)»; se puede cambiar.
+3. Pulsar **guardar** (o **cancel** para cerrar sin crear nada).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/equipajes_lista_activ_sel`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.equipajes_form_nuevo`
+- `inventario.pantalla.equipajes_form_nuevo`
 
 ## Objetivo
 
-Gestiona EquipajesListaActivSel. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ponerle nombre al equipaje formado con las actividades marcadas.
 
 ## Limites De La Respuesta
 

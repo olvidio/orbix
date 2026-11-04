@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Guardar Encargo Centro"
+titulo: "Guardar un encargo visible para un centro"
 flujo: "misas.guardar_encargo_centro.gestionar.flujo"
-preguntas: ["Como ejecutar en Guardar Encargo Centro?"]
-pantallas_principales: []
+preguntas: ["Como guardar un encargo visible para un centro en Guardar un encargo visible para un centro?"]
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 endpoints: ["/src/misas/guardar_encargo_centro"]
 source: "docs/catalogo/misas/flujos/guardar_encargo_centro.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Guardar Encargo Centro
+# Ayuda IA - Guardar un encargo visible para un centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar Encargo Centro`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar un encargo visible para un centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Guardar Encargo Centro?
+- Como guardar un encargo visible para un centro en Guardar un encargo visible para un centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver Encargos Centros (`misas.pantalla.ver_encargos_centros`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar un encargo visible para un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir zona, encargo y centro.
+2. Pulsar **Grabar**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/guardar_encargo_centro`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.ver_encargos_centros`
+- `misas.pantalla.ver_encargos_centros`
 
 ## Objetivo
 
-Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
+Hacer visible un encargo de zona en un centro, o cambiarlo.
 
 ## Errores Documentados
 

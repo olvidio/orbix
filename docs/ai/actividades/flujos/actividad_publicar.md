@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "actividades"
 titulo: "Publicar actividades"
 flujo: "actividades.actividad_publicar.gestionar.flujo"
-preguntas: []
+preguntas: ["Como publicar actividades en Publicar actividades?"]
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.actividad_que", "actividades.pantalla.actividad_select"]
 endpoints: ["/src/actividades/actividad_publicar"]
@@ -19,6 +19,7 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como publicar actividades en Publicar actividades?
 
 ## Donde Entrar
 
@@ -28,6 +29,16 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Publicar actividades
+
+1. Abrir **publicar activ** del menú.
+2. Buscar las actividades de la propia dl que aún no están publicadas.
+3. En la lista, marcar las filas y pulsar **publicar**.
+4. Comprobar en el listado que ya aparecen como publicadas.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/actividad_publicar`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.actividad_que`
@@ -35,7 +46,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
+Buscar actividades que aún no están publicadas y publicarlas de golpe.
 
 ## Errores Documentados
 

@@ -21,13 +21,13 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Planning por casas (filtros) -> `flujos/planning_casa_que.md`
-- Planning por casas (calendario) -> `flujos/planning_casa_ver.md`
-- Planning por centro (calendario) -> `flujos/planning_ctr_select.md`
-- Planning por persona (listado) -> `flujos/planning_persona_select.md`
-- Planning por persona (calendario) -> `flujos/planning_persona_ver.md`
-- Planning por zonas SACD (filtros) -> `flujos/planning_zones_que.md`
-- Planning por zonas SACD (calendario) -> `flujos/planning_zones_select.md`
+- Elegir las casas y el periodo del planning -> `flujos/planning_casa_que.md`
+- Ver el calendario de casas -> `flujos/planning_casa_ver.md`
+- Ver el planning de las personas de un centro -> `flujos/planning_ctr_select.md`
+- Buscar personas y ver su planning -> `flujos/planning_persona_select.md`
+- Ver el calendario de una persona -> `flujos/planning_persona_ver.md`
+- Elegir la zona y el periodo -> `flujos/planning_zones_que.md`
+- Ver el planning de una zona -> `flujos/planning_zones_select.md`
 
 ## Pantallas Disponibles
 

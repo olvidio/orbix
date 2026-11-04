@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario Grupo Del Lst"
+titulo: "Ver los grupos que se pueden quitar"
 flujo: "usuarios.usuario_grupo_del_lst.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario Grupo Del Lst?"]
-pantallas_principales: []
+preguntas: ["Como ver los grupos que se pueden quitar en Ver los grupos que se pueden quitar?"]
+pantallas_principales: ["usuarios.pantalla.usuario_grupo_del_lst"]
 fragmentos: ["usuarios.pantalla.usuario_grupo_del_lst"]
 endpoints: ["/src/usuarios/usuario_grupo_del_lst"]
 source: "docs/catalogo/usuarios/flujos/usuario_grupo_del_lst.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario Grupo Del Lst
+# Ayuda IA - Ver los grupos que se pueden quitar
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario Grupo Del Lst`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver los grupos que se pueden quitar`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario Grupo Del Lst?
+- Como ver los grupos que se pueden quitar en Ver los grupos que se pueden quitar?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Grupo Del Lst (`usuarios.pantalla.usuario_grupo_del_lst`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Ver los grupos que se pueden quitar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **quitar de un grupo de permisos**.
+2. Aparece la lista de grupos asignados.
+3. En la tabla pulsar **quitar** en la fila del grupo: se retira al instante, sin pedir confirmación (ver «Quitar un grupo a un usuario»).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_grupo_del_lst`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.usuario_grupo_del_lst`
+- `usuarios.pantalla.usuario_grupo_del_lst`
 
 ## Objetivo
 
-Lista grupos ya asignados al usuario con acción quitar.
+Mostrar los grupos que el usuario ya tiene, para poder quitarle alguno.
 
 ## Errores Documentados
 

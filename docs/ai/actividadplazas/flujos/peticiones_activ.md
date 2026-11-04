@@ -2,39 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Peticiones Activ"
+titulo: "Abrir las peticiones de una persona"
 flujo: "actividadplazas.peticiones_activ.gestionar.flujo"
-preguntas: ["Como obtener datos en Peticiones Activ?"]
-pantallas_principales: []
+preguntas: ["Como abrir las peticiones de una persona en Abrir las peticiones de una persona?"]
+pantallas_principales: ["actividadplazas.pantalla.peticiones_activ"]
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 endpoints: ["/src/actividadplazas/peticiones_activ_data"]
 source: "docs/catalogo/actividadplazas/flujos/peticiones_activ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Peticiones Activ
+# Ayuda IA - Abrir las peticiones de una persona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Peticiones Activ`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir las peticiones de una persona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Peticiones Activ?
+- Como abrir las peticiones de una persona en Abrir las peticiones de una persona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Peticiones Activ (`actividadplazas.pantalla.peticiones_activ`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Abrir las peticiones de una persona
 
-1. Desde un listado de personas (n / a / agd), abrir las peticiones de plaza de una persona.
-2. El sistema carga `peticiones_activ_data` con `id_nom` y `sactividad`.
-3. Devuelve las actividades candidatas y las peticiones actuales; limpia peticiones antiguas ya no
-4. Pinta los desplegables (`DesplegableArray`) precargados con el orden de prioridad; el usuario
+1. Desde un listado de personas (n, a o agd), seleccionar a la persona.
+2. Aparecen las actividades que puede pedir y las peticiones que ya tenía; las que ya no están disponibles se descartan.
+3. Los desplegables salen con el orden de prioridad guardado. Se pueden cambiar y guardar, o borrar todo (ver «Guardar las peticiones de una persona»).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/peticiones_activ_data`
@@ -42,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadplazas.pantalla.peticiones_activ`
+- `actividadplazas.pantalla.peticiones_activ`
 
 ## Objetivo
 
-Consultar y preparar la edición de las peticiones de plaza de una persona: ver su nombre, las actividades disponibles del tipo y las peticiones ya guardadas, listas para reordenar o ampliar.
+Ver las peticiones de plaza de una persona: su nombre, las actividades disponibles del tipo elegido y las peticiones ya guardadas, listas para reordenar o ampliar.
 
 ## Limites De La Respuesta
 

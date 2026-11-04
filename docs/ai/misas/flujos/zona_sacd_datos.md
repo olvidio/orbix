@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Zona Sacd Datos"
+titulo: "Consultar la disponibilidad semanal de un sacerdote"
 flujo: "misas.zona_sacd_datos.gestionar.flujo"
-preguntas: ["Como obtener en Zona Sacd Datos?"]
+preguntas: ["Como consultar la disponibilidad semanal de un sacerdote en Consultar la disponibilidad semanal de un sacerdote?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/misas/zona_sacd_datos_get"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/misas/flujos/zona_sacd_datos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Zona Sacd Datos
+# Ayuda IA - Consultar la disponibilidad semanal de un sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Zona Sacd Datos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar la disponibilidad semanal de un sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener en Zona Sacd Datos?
+- Como consultar la disponibilidad semanal de un sacerdote en Consultar la disponibilidad semanal de un sacerdote?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener
+## Consultar la disponibilidad semanal de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ventana de disponibilidad del sacerdote en la zona.
+2. Se muestran marcados los días de la semana disponibles.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/zona_sacd_datos_get`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona para el modal zona_sacd.
+Ver los días de la semana en que un sacerdote está disponible en una zona.
 
 ## Errores Documentados
 

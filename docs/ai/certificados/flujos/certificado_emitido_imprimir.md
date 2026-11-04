@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Emitido Imprimir"
+titulo: "Emitir un certificado nuevo"
 flujo: "certificados.certificado_emitido_imprimir.gestionar.flujo"
-preguntas: ["Como obtener datos en Certificado Emitido Imprimir?"]
-pantallas_principales: []
+preguntas: ["Como emitir un certificado nuevo en Emitir un certificado nuevo?"]
+pantallas_principales: ["certificados.pantalla.certificado_emitido_imprimir"]
 fragmentos: ["certificados.pantalla.certificado_emitido_imprimir"]
 endpoints: ["/src/certificados/certificado_emitido_imprimir_datos"]
 source: "docs/catalogo/certificados/flujos/certificado_emitido_imprimir.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Emitido Imprimir
+# Ayuda IA - Emitir un certificado nuevo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Emitido Imprimir`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Emitir un certificado nuevo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Certificado Emitido Imprimir?
+- Como emitir un certificado nuevo en Emitir un certificado nuevo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Emitido Imprimir (`certificados.pantalla.certificado_emitido_imprimir`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Emitir un certificado nuevo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del alumno.
+2. En el dossier de certificados elegir emitir un certificado nuevo.
+3. Elegir el idioma y los datos del certificado y pulsar imprimir.
+4. Se genera el PDF con las notas y los textos legales en el idioma elegido.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_emitido_imprimir_datos`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `certificados.pantalla.certificado_emitido_imprimir`
+- `certificados.pantalla.certificado_emitido_imprimir`
 
 ## Objetivo
 
-Preparar datos e iniciar impresión de certificado nuevo para un alumno.
+Preparar los datos de un certificado nuevo de un alumno y empezar su impresión.
 
 ## Limites De La Respuesta
 

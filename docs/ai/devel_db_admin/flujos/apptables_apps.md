@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Apptables Apps"
 flujo: "devel_db_admin.apptables_apps.gestionar.flujo"
 preguntas: ["Como obtener datos en Apptables Apps?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.apptables"]
 fragmentos: ["devel_db_admin.pantalla.apptables"]
 endpoints: ["/src/devel_db_admin/apptables_apps_data"]
 source: "docs/catalogo/devel_db_admin/flujos/apptables_apps.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Apptables (`devel_db_admin.pantalla.apptables`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.apptables`
 - `devel_db_admin.pantalla.apptables`
 
 ## Objetivo

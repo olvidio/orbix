@@ -2,47 +2,48 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Recibido Pdf Download"
+titulo: "Descargar el PDF de un certificado recibido"
 flujo: "certificados.certificado_recibido_pdf_download.gestionar.flujo"
-preguntas: ["Como ejecutar en Certificado Recibido Pdf Download?"]
-pantallas_principales: []
+preguntas: ["Como descargar el pdf de un certificado recibido en Descargar el PDF de un certificado recibido?"]
+pantallas_principales: ["certificados.pantalla.certificado_recibido_pdf_download"]
 fragmentos: []
 endpoints: ["/src/certificados/certificado_recibido_pdf_download"]
 source: "docs/catalogo/certificados/flujos/certificado_recibido_pdf_download.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Recibido Pdf Download
+# Ayuda IA - Descargar el PDF de un certificado recibido
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Recibido Pdf Download`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Descargar el PDF de un certificado recibido`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Certificado Recibido Pdf Download?
+- Como descargar el pdf de un certificado recibido en Descargar el PDF de un certificado recibido?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Recibido Pdf Download (`certificados.pantalla.certificado_recibido_pdf_download`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Descargar el pdf de un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de certificados, pulsar descargar en el certificado recibido.
+2. El PDF se abre en una pestaña nueva.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_recibido_pdf_download`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `certificados.pantalla.certificado_recibido_pdf_download`
 
 ## Objetivo
 
-Descargar PDF de certificado recibido.
+Descargar el PDF de un certificado recibido.
 
 ## Limites De La Respuesta
 

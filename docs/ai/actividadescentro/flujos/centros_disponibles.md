@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadescentro"
-titulo: "Centros Disponibles"
+titulo: "Asignar un centro encargado"
 flujo: "actividadescentro.centros_disponibles.gestionar.flujo"
-preguntas: ["Como obtener datos en Centros Disponibles?"]
-pantallas_principales: []
+preguntas: ["Como asignar un centro encargado en Asignar un centro encargado?"]
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centros_disponibles_data"]
 source: "docs/catalogo/actividadescentro/flujos/centros_disponibles.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Disponibles
+# Ayuda IA - Asignar un centro encargado
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Disponibles`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignar un centro encargado`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Centros Disponibles?
+- Como asignar un centro encargado en Asignar un centro encargado?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Activ Ctr (`actividadescentro.pantalla.activ_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Asignar un centro encargado
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la fila de la actividad, pulsar **nuevo**.
+2. Se listan los centros candidatos (para sg, con el nº de actividades del periodo y la distancia en días a su actividad más próxima).
+3. Elegir el centro para asignarlo.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadescentro/centros_disponibles_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadescentro.pantalla.activ_ctr`
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Al pulsar **nuevo** en una actividad, el usuario ve la lista de centros candidatos (filtrada por el colectivo `tipo`) para elegir cuál asignar como encargado. Para el tipo `sg` la lista incluye, por centro, el número de actividades en el periodo y la diferencia de días con su actividad más próxima, para ayudar a repartir la carga.
+Ver los centros candidatos para asignar como encargados de una actividad.
 
 ## Limites De La Respuesta
 

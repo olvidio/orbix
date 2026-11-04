@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Asistente Mover"
+titulo: "Mover un asistente a otra actividad"
 flujo: "asistentes.asistente_mover.gestionar.flujo"
-preguntas: ["Como obtener datos en Asistente Mover?"]
-pantallas_principales: []
+preguntas: ["Como mover un asistente a otra actividad en Mover un asistente a otra actividad?"]
+pantallas_principales: ["asistentes.pantalla.asistente_mover"]
 fragmentos: ["asistentes.pantalla.asistente_mover"]
 endpoints: ["/src/asistentes/asistente_mover_data"]
 source: "docs/catalogo/asistentes/flujos/asistente_mover.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asistente Mover
+# Ayuda IA - Mover un asistente a otra actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asistente Mover`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Mover un asistente a otra actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Asistente Mover?
+- Como mover un asistente a otra actividad en Mover un asistente a otra actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Asistente Mover (`asistentes.pantalla.asistente_mover`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Mover un asistente a otra actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar al asistente en la lista y elegir mover.
+2. En **mover a** elegir la actividad de destino (del mismo tipo) y, si se quiere, escribir **observaciones**.
+3. Pulsar **guardar** (o **cancelar**).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/asistente_mover_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.asistente_mover`
+- `asistentes.pantalla.asistente_mover`
 
 ## Objetivo
 
-Mover asistente de una actividad a otra del mismo tipo.
+Pasar un asistente de una actividad a otra del mismo tipo.
 
 ## Limites De La Respuesta
 

@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario Preferencias"
+titulo: "Abrir las preferencias"
 flujo: "usuarios.usuario_preferencias.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario Preferencias?"]
-pantallas_principales: []
+preguntas: ["Como abrir las preferencias en Abrir las preferencias?"]
+pantallas_principales: ["usuarios.pantalla.preferencias"]
 fragmentos: ["usuarios.pantalla.preferencias"]
 endpoints: ["/src/usuarios/usuario_preferencias"]
 source: "docs/catalogo/usuarios/flujos/usuario_preferencias.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario Preferencias
+# Ayuda IA - Abrir las preferencias
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario Preferencias`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir las preferencias`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario Preferencias?
+- Como abrir las preferencias en Abrir las preferencias?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Preferencias (`usuarios.pantalla.preferencias`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Abrir las preferencias
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. La pantalla muestra los valores que ya tiene guardados el usuario.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_preferencias`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `usuarios.pantalla.preferencias`
+- `usuarios.pantalla.preferencias`
 
 ## Objetivo
 
-Carga datos iniciales de la pantalla preferencias.
+Cargar los valores actuales de las preferencias personales al abrir la pantalla.
 
 ## Errores Documentados
 

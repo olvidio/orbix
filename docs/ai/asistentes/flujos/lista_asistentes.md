@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Lista Asistentes"
+titulo: "Ver la relación de asistentes de una actividad"
 flujo: "asistentes.lista_asistentes.gestionar.flujo"
-preguntas: ["Como obtener datos en Lista Asistentes?"]
-pantallas_principales: []
+preguntas: ["Como ver la relación de asistentes de una actividad en Ver la relación de asistentes de una actividad?"]
+pantallas_principales: ["asistentes.pantalla.lista_asistentes"]
 fragmentos: ["asistentes.pantalla.lista_asistentes"]
 endpoints: ["/src/asistentes/lista_asistentes_data"]
 source: "docs/catalogo/asistentes/flujos/lista_asistentes.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Asistentes
+# Ayuda IA - Ver la relación de asistentes de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Asistentes`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver la relación de asistentes de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Lista Asistentes?
+- Como ver la relación de asistentes de una actividad en Ver la relación de asistentes de una actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista Asistentes (`asistentes.pantalla.lista_asistentes`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver la relación de asistentes de una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la actividad en la lista y pulsar **lista** (nombres) o **lista cl** (con más datos).
+2. Aparece el título de la actividad y «Relación de asistentes» numerada.
+3. **lista**: nombre y dl (o centro) de cada asistente. **lista cl**: además estudios, profesión, edad, eap y observaciones de la actividad.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/lista_asistentes_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.lista_asistentes`
+- `asistentes.pantalla.lista_asistentes`
 
 ## Objetivo
 
-Consultar listado de asistentes de una actividad.
+Ver la relación de asistentes de una actividad (botones **lista cl** y **lista**).
 
 ## Limites De La Respuesta
 

@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Guardar Encargo Zona"
+titulo: "Guardar un encargo de zona"
 flujo: "misas.guardar_encargo_zona.gestionar.flujo"
-preguntas: ["Como ejecutar en Guardar Encargo Zona?"]
-pantallas_principales: []
+preguntas: ["Como guardar un encargo de zona en Guardar un encargo de zona?"]
+pantallas_principales: ["misas.pantalla.ver_encargos_zona"]
 fragmentos: ["misas.pantalla.ver_encargos_zona"]
 endpoints: ["/src/misas/guardar_encargo_zona"]
 source: "docs/catalogo/misas/flujos/guardar_encargo_zona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Guardar Encargo Zona
+# Ayuda IA - Guardar un encargo de zona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar Encargo Zona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar un encargo de zona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Guardar Encargo Zona?
+- Como guardar un encargo de zona en Guardar un encargo de zona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver Encargos Zona (`misas.pantalla.ver_encargos_zona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar un encargo de zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el formulario del encargo (el botón **generar** propone el nombre «tipo (lugar)») y pulsar **Grabar**.
+2. Si el encargo ya no existe aparece «No se encuentra el encargo».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/guardar_encargo_zona`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.ver_encargos_zona`
+- `misas.pantalla.ver_encargos_zona`
 
 ## Objetivo
 
-Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
+Crear o actualizar un encargo de zona.
 
 ## Errores Documentados
 

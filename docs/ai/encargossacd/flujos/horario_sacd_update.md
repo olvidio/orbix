@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Horario Sacd Update"
+titulo: "Guardar un horario de sacerdote"
 flujo: "encargossacd.horario_sacd_update.gestionar.flujo"
-preguntas: ["Como obtener datos en Horario Sacd Update?"]
-pantallas_principales: []
+preguntas: ["Como guardar un horario de sacerdote en Guardar un horario de sacerdote?"]
+pantallas_principales: ["encargossacd.pantalla.horario_sacd_update"]
 fragmentos: ["encargossacd.pantalla.horario_sacd_update"]
 endpoints: ["/src/encargossacd/horario_sacd_update_data"]
 source: "docs/catalogo/encargossacd/flujos/horario_sacd_update.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Horario Sacd Update
+# Ayuda IA - Guardar un horario de sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Horario Sacd Update`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar un horario de sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Horario Sacd Update?
+- Como guardar un horario de sacerdote en Guardar un horario de sacerdote?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Horario Sacd Update (`encargossacd.pantalla.horario_sacd_update`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Guardar un horario de sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el horario y pulsar **guardar horario**.
+2. Para borrarlo, **eliminar horario** y confirmar «¿Está seguro que desea borrar este horario?».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/horario_sacd_update_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.horario_sacd_update`
+- `encargossacd.pantalla.horario_sacd_update`
 
 ## Objetivo
 
-Gestiona EncargoSacdHorario. Alta/edición/baja de horario de encargo sacd (encargo_sacd_horario).
+Guardar, modificar o quitar el horario de un sacerdote en un encargo.
 
 ## Limites De La Respuesta
 

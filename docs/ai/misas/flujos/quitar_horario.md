@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Quitar Horario"
+titulo: "Quitar el horario de una tarea"
 flujo: "misas.quitar_horario.gestionar.flujo"
-preguntas: ["Como ejecutar en Quitar Horario?"]
-pantallas_principales: []
+preguntas: ["Como quitar el horario de una tarea en Quitar el horario de una tarea?"]
+pantallas_principales: ["misas.pantalla.horario_tarea"]
 fragmentos: ["misas.pantalla.horario_tarea"]
 endpoints: ["/src/misas/quitar_horario"]
 source: "docs/catalogo/misas/flujos/quitar_horario.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Quitar Horario
+# Ayuda IA - Quitar el horario de una tarea
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Quitar Horario`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Quitar el horario de una tarea`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Quitar Horario?
+- Como quitar el horario de una tarea en Quitar el horario de una tarea?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Horario Tarea (`misas.pantalla.horario_tarea`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Quitar el horario de una tarea
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el horario de la tarea.
+2. Pulsar **quitar el actual**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/quitar_horario`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.horario_tarea`
+- `misas.pantalla.horario_tarea`
 
 ## Objetivo
 
-Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+Quitar el horario asignado a una tarea de la plantilla.
 
 ## Errores Documentados
 

@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Acta Listado Anual"
+titulo: "Listar las actas de un periodo"
 flujo: "notas.acta_listado_anual.gestionar.flujo"
-preguntas: ["Como obtener datos en Acta Listado Anual?"]
-pantallas_principales: []
+preguntas: ["Como listar las actas de un periodo en Listar las actas de un periodo?"]
+pantallas_principales: ["notas.pantalla.acta_listado_anual"]
 fragmentos: ["notas.pantalla.acta_listado_anual"]
 endpoints: ["/src/notas/acta_listado_anual_data"]
 source: "docs/catalogo/notas/flujos/acta_listado_anual.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Acta Listado Anual
+# Ayuda IA - Listar las actas de un periodo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Acta Listado Anual`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Listar las actas de un periodo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Acta Listado Anual?
+- Como listar las actas de un periodo en Listar las actas de un periodo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Acta Listado Anual (`notas.pantalla.acta_listado_anual`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Listar las actas de un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listado actas**.
+2. En **Periodo de selección** elegir el trimestre (o todo el año) y el año, o escribir dos fechas en **entre … y …**.
+3. Se muestra la lista de actas del periodo.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/acta_listado_anual_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.acta_listado_anual`
+- `notas.pantalla.acta_listado_anual`
 
 ## Objetivo
 
-Consultar actas por rango de fechas en vista anual.
+Ver las actas de un periodo de fechas, por año o trimestre.
 
 ## Limites De La Respuesta
 

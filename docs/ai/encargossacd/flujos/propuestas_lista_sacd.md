@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Propuestas Lista Sacd"
+titulo: "Ver las propuestas por sacd"
 flujo: "encargossacd.propuestas_lista_sacd.gestionar.flujo"
-preguntas: ["Como obtener datos en Propuestas Lista Sacd?"]
+preguntas: ["Como ver las propuestas por sacd en Ver las propuestas por sacd?"]
 pantallas_principales: ["encargossacd.pantalla.propuestas_lista_sacd"]
 fragmentos: []
 endpoints: ["/src/encargossacd/propuestas_lista_sacd_data"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/encargossacd/flujos/propuestas_lista_sacd.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Propuestas Lista Sacd
+# Ayuda IA - Ver las propuestas por sacd
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Propuestas Lista Sacd`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver las propuestas por sacd`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Propuestas Lista Sacd?
+- Como ver las propuestas por sacd en Ver las propuestas por sacd?
 
 ## Donde Entrar
 
@@ -29,13 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver las propuestas por sacd
 
-1. FE pasa `sel` a `propuestas_lista_sacd_data`.
-2. Renderiza `propuestas_lista_sacd.phtml` con `array_modo`.
+1. Abrir **listado propuestas por sacd**.
+2. Se muestra, por cada sacd, la lista de encargos propuestos, lista para imprimir.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/propuestas_lista_sacd_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -43,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API también `sssc`).
+Revisar, e imprimir si hace falta, los encargos propuestos para cada sacd. (Redactado desde el código; no contrastado con la pantalla.)
 
 ## Limites De La Respuesta
 

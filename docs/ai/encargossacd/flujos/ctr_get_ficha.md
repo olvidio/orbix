@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Ctr Get Ficha"
+titulo: "Abrir la ficha de un centro"
 flujo: "encargossacd.ctr_get_ficha.gestionar.flujo"
-preguntas: ["Como obtener datos en Ctr Get Ficha?"]
-pantallas_principales: []
+preguntas: ["Como abrir la ficha de un centro en Abrir la ficha de un centro?"]
+pantallas_principales: ["encargossacd.pantalla.ctr_get_ficha"]
 fragmentos: ["encargossacd.pantalla.ctr_get_ficha"]
 endpoints: ["/src/encargossacd/ctr_get_ficha_data"]
 source: "docs/catalogo/encargossacd/flujos/ctr_get_ficha.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ctr Get Ficha
+# Ayuda IA - Abrir la ficha de un centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ctr Get Ficha`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir la ficha de un centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Ctr Get Ficha?
+- Como abrir la ficha de un centro en Abrir la ficha de un centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ctr Get Ficha (`encargossacd.pantalla.ctr_get_ficha`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Abrir la ficha de un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha ctr**, elegir el grupo y el centro.
+2. La ficha aparece como «Atención ctr (nombre del centro)» con **sacd titular**, casilla **cl**, **dedicación** (mañanas, tarde 1ª hora, tarde 2ª hora), **Suplente**, colaboradores, **observaciones** y **exigencias del ctr**. En **Selección de sacd** las casillas **prelatura** y **sss+** limitan qué sacerdotes salen en las listas.
+3. Para añadir un colaborador, pulsar **añadir sacd colaborador**; para fijar horas, **crear horario**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/ctr_get_ficha_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.ctr_get_ficha`
+- `encargossacd.pantalla.ctr_get_ficha`
 
 ## Objetivo
 
-Gestiona CtrGetFicha. Lectura de la ficha de atencion sacerdotal de un centro. Puerto del antiguo frontend/encargossacd/controller/ctr_get_ficha.php. Devuelve arrays planos/estructurados para que el controlador frontend arme frontend\shared\web\Desplegable y la HTML sin instanciar nada de src\.
+Cargar la ficha de atención sacerdotal del centro elegido.
 
 ## Limites De La Respuesta
 

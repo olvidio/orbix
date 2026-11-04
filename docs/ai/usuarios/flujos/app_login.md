@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "App Login"
+titulo: "Entrar desde la app móvil"
 flujo: "usuarios.app_login.gestionar.flujo"
-preguntas: ["Como ejecutar en App Login?"]
+preguntas: ["Como entrar desde la app móvil en Entrar desde la app móvil?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/usuarios/app_login"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/usuarios/flujos/app_login.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - App Login
+# Ayuda IA - Entrar desde la app móvil
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `App Login`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Entrar desde la app móvil`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en App Login?
+- Como entrar desde la app móvil en Entrar desde la app móvil?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Entrar desde la app móvil
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la app e indicar usuario, contraseña y esquema.
+2. Si el usuario tiene 2FA, escribir el código de verificación.
+3. Si falta usuario o contraseña aparece «Usuario y contraseña obligatorios».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/app_login`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Autenticación app móvil con credenciales y 2FA opcional.
+Iniciar sesión desde la aplicación móvil con usuario, contraseña y, si procede, código 2FA.
 
 ## Errores Documentados
 

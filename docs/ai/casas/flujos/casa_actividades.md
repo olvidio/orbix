@@ -2,39 +2,37 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "casas"
-titulo: "Casa Actividades"
+titulo: "Consultar las actividades de una casa"
 flujo: "casas.casa_actividades.gestionar.flujo"
-preguntas: ["Como consultar el listado en Casa Actividades?"]
-pantallas_principales: []
+preguntas: ["Como consultar las actividades de una casa en Consultar las actividades de una casa?"]
+pantallas_principales: ["casas.pantalla.casa_actividades_lista"]
 fragmentos: ["casas.pantalla.casa_actividades_lista"]
 endpoints: ["/src/casas/casa_actividades_lista_data"]
 source: "docs/catalogo/casas/flujos/casa_actividades.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Casa Actividades
+# Ayuda IA - Consultar las actividades de una casa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Casa Actividades`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar las actividades de una casa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar el listado en Casa Actividades?
+- Como consultar las actividades de una casa en Consultar las actividades de una casa?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Casa Actividades Lista (`casas.pantalla.casa_actividades_lista`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar el listado
+## Consultar las actividades de una casa
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir el estudio económico de la casa y elegir el periodo.
+2. Aparece la lista de actividades; pulsar una para abrir su ficha.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/casas/casa_actividades_lista_data`
@@ -42,10 +40,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `casas.pantalla.casa_actividades_lista`
+- `casas.pantalla.casa_actividades_lista`
 
 ## Objetivo
 
-Gestiona CasaActividades. Listado de actividades por casa y periodo (casa_actividades_lista).
+Ver las actividades de una casa en un periodo.
 
 ## Limites De La Respuesta
 

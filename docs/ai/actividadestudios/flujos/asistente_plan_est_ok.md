@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Asistente Plan Est Ok"
+titulo: "Confirmar el plan de estudios"
 flujo: "actividadestudios.asistente_plan_est_ok.gestionar.flujo"
-preguntas: ["Como ejecutar en Asistente Plan Est Ok?"]
+preguntas: ["Como confirmar el plan de estudios en Confirmar el plan de estudios?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/actividadestudios/asistente_plan_est_ok"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/actividadestudios/flujos/asistente_plan_est_ok.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asistente Plan Est Ok
+# Ayuda IA - Confirmar el plan de estudios
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asistente Plan Est Ok`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Confirmar el plan de estudios`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Asistente Plan Est Ok?
+- Como confirmar el plan de estudios en Confirmar el plan de estudios?
 
 ## Donde Entrar
 
@@ -29,11 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Confirmar el plan de estudios
 
-1. En el dossier de matrículas de una persona (1303), marcar o confirmar el plan de estudios.
-2. Pulsar la acción de confirmar plan (`fnjs_grabar_est`).
-3. El sistema actualiza el flag `est_ok` del asistente y refresca el fragmento.
+1. En el dossier de matrículas de una persona, marcar la casilla de plan de estudios confirmado.
+2. Pulsar el botón de confirmar el plan.
+3. La lista se refresca y el plan queda como confirmado.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/asistente_plan_est_ok`
@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario marca el plan de estudios de un asistente como confirmado (`est_ok`). Sustituye al case `plan` de `update_3103.php`.
+Marcar como confirmado el plan de estudios de un asistente.
 
 ## Errores Documentados
 

@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "inventario"
-flujos: 42
+flujos: 44
 pantallas: 34
 endpoints: 43
 estado_revision: "generado"
@@ -21,48 +21,50 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Cabecera Pie Txt -> `flujos/cabecera_pie_txt.md`
-- Doc Asignar Ctr -> `flujos/doc_asignar_ctr.md`
-- Doc Asignar Dlb -> `flujos/doc_asignar_dlb.md`
-- Documentos -> `flujos/documentos.md`
-- Equipajes -> `flujos/equipajes.md`
-- Equipajes Add Doc -> `flujos/equipajes_add_doc.md`
-- Equipajes Del Doc -> `flujos/equipajes_del_doc.md`
-- Equipajes Doc Casa -> `flujos/equipajes_doc_casa.md`
-- Equipajes Egm -> `flujos/equipajes_egm.md`
-- Equipajes Eliminar Grupo -> `flujos/equipajes_eliminar_grupo.md`
-- Equipajes Lista Activ Equipaje -> `flujos/equipajes_lista_activ_equipaje.md`
-- Equipajes Lista Activ Periodo -> `flujos/equipajes_lista_activ_periodo.md`
-- Equipajes Lista Activ Sel -> `flujos/equipajes_lista_activ_sel.md`
-- Equipajes Movimientos -> `flujos/equipajes_movimientos.md`
-- Equipajes Nuevo -> `flujos/equipajes_nuevo.md`
-- Equipajes Texto Listado -> `flujos/equipajes_texto_listado.md`
-- Equipajes Update Grupo -> `flujos/equipajes_update_grupo.md`
-- Inventario Css Inline -> `flujos/inventario_css_inline.md`
-- Inventario Ctr -> `flujos/inventario_ctr.md`
-- Inventario Dlb -> `flujos/inventario_dlb.md`
-- Lista Casas Posibles Periodo -> `flujos/lista_casas_posibles_periodo.md`
-- Lista Colecciones -> `flujos/lista_colecciones.md`
-- Lista De Ctr -> `flujos/lista_de_ctr.md`
-- Lista De Ctr Con Docs -> `flujos/lista_de_ctr_con_docs.md`
-- Lista Docs Asignados Por Tipo -> `flujos/lista_docs_asignados_por_tipo.md`
-- Lista Docs Asignar Ctr -> `flujos/lista_docs_asignar_ctr.md`
-- Lista Docs Asignar Dlb -> `flujos/lista_docs_asignar_dlb.md`
-- Lista Docs Con Observaciones -> `flujos/lista_docs_con_observaciones.md`
-- Lista Docs De Ctr -> `flujos/lista_docs_de_ctr.md`
-- Lista Docs De Dlb -> `flujos/lista_docs_de_dlb.md`
-- Lista Docs De Egm -> `flujos/lista_docs_de_egm.md`
-- Lista Docs De Lugar -> `flujos/lista_docs_de_lugar.md`
-- Lista Docs En Busqueda -> `flujos/lista_docs_en_busqueda.md`
-- Lista Docs Libres -> `flujos/lista_docs_libres.md`
-- Lista Docs No Asignados Por Tipo -> `flujos/lista_docs_no_asignados_por_tipo.md`
-- Lista Docs Perdidos -> `flujos/lista_docs_perdidos.md`
-- Lista Equipajes Desde Fecha -> `flujos/lista_equipajes_desde_fecha.md`
-- Lista Equipajes Posibles Maletas -> `flujos/lista_equipajes_posibles_maletas.md`
-- Lista Lugares De Ubi -> `flujos/lista_lugares_de_ubi.md`
-- Lista Tipo Doc -> `flujos/lista_tipo_doc.md`
-- Texto De Egm -> `flujos/texto_de_egm.md`
-- Traslado Doc -> `flujos/traslado_doc.md`
+- Editar los textos tipo -> `flujos/cabecera_pie_txt.md`
+- Guardar la asignación a centros -> `flujos/doc_asignar_ctr.md`
+- Guardar la asignación a la dlb/casa -> `flujos/doc_asignar_dlb.md`
+- Modificar varios documentos a la vez -> `flujos/documentos.md`
+- Ciclo completo de un equipaje -> `flujos/equipajes.md`
+- Añadir un documento a una valija -> `flujos/equipajes_add_doc.md`
+- Quitar un documento de una valija -> `flujos/equipajes_del_doc.md`
+- Consultar los documentos de la casa y sus valijas -> `flujos/equipajes_doc_casa.md`
+- Imprimir un equipaje -> `flujos/equipajes_egm.md`
+- Eliminar una valija -> `flujos/equipajes_eliminar_grupo.md`
+- Consultar las actividades de un equipaje -> `flujos/equipajes_lista_activ_equipaje.md`
+- Elegir las actividades del equipaje -> `flujos/equipajes_lista_activ_periodo.md`
+- Nombrar el equipaje -> `flujos/equipajes_lista_activ_sel.md`
+- Consultar los movimientos de un equipaje -> `flujos/equipajes_movimientos.md`
+- Crear un equipaje nuevo -> `flujos/equipajes_nuevo.md`
+- Cambiar los textos del listado del equipaje -> `flujos/equipajes_texto_listado.md`
+- Crear una valija con documentos -> `flujos/equipajes_update_grupo.md`
+- Qué hace al imprimir -> `flujos/inventario_css_inline.md`
+- Imprimir el inventario de centros -> `flujos/inventario_ctr.md`
+- Imprimir el inventario de la dlb/casa -> `flujos/inventario_dlb.md`
+- Elegir inventario de centros o de dlb/casa -> `flujos/inventario_que.md`
+- Consultar las casas del periodo -> `flujos/lista_casas_posibles_periodo.md`
+- Agrupar un listado por colección -> `flujos/lista_colecciones.md`
+- Elegir el centro de origen y de destino -> `flujos/lista_de_ctr.md`
+- Elegir centros para asignar un documento -> `flujos/lista_de_ctr_con_docs.md`
+- Consultar los centros que tienen el documento -> `flujos/lista_docs_asignados_por_tipo.md`
+- Rellenar la asignación a centros -> `flujos/lista_docs_asignar_ctr.md`
+- Rellenar la asignación a la dlb/casa -> `flujos/lista_docs_asignar_dlb.md`
+- Consultar los documentos con observaciones -> `flujos/lista_docs_con_observaciones.md`
+- Buscar los documentos que se van a trasladar -> `flujos/lista_docs_de_ctr.md`
+- Elegir lugares para asignar un documento -> `flujos/lista_docs_de_dlb.md`
+- Ver los documentos de una valija -> `flujos/lista_docs_de_egm.md`
+- Ver los documentos de la casa -> `flujos/lista_docs_de_lugar.md`
+- Consultar los documentos pendientes -> `flujos/lista_docs_en_busqueda.md`
+- Elegir un documento libre -> `flujos/lista_docs_libres.md`
+- Consultar los centros que no tienen el documento -> `flujos/lista_docs_no_asignados_por_tipo.md`
+- Consultar los documentos perdidos -> `flujos/lista_docs_perdidos.md`
+- Cambiar los equipajes que se ven -> `flujos/lista_equipajes_desde_fecha.md`
+- Crear una valija nueva -> `flujos/lista_equipajes_posibles_maletas.md`
+- Elegir el lugar dentro del centro -> `flujos/lista_lugares_de_ubi.md`
+- Elegir el tipo de documento -> `flujos/lista_tipo_doc.md`
+- Consultar y mantener las tablas del inventario -> `flujos/tablas_inventario.md`
+- Abrir el texto para modificarlo -> `flujos/texto_de_egm.md`
+- Trasladar documentos a otro centro -> `flujos/traslado_doc.md`
 
 ## Pantallas Disponibles
 

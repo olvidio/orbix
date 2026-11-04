@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "casas"
-titulo: "Grupo"
+titulo: "los grupos de casas"
 flujo: "casas.grupo.gestionar.flujo"
-preguntas: ["Como crear o modificar en Grupo?", "Como eliminar en Grupo?", "Como consultar el listado en Grupo?", "Como abrir el formulario en Grupo?"]
+preguntas: ["Como gestionar los grupos de casas en los grupos de casas?"]
 pantallas_principales: ["casas.pantalla.grupo"]
 fragmentos: ["casas.pantalla.grupo_form", "casas.pantalla.grupo_lista"]
 endpoints: ["/src/casas/grupo_eliminar", "/src/casas/grupo_form_data", "/src/casas/grupo_lista_data", "/src/casas/grupo_update"]
@@ -12,17 +12,14 @@ source: "docs/catalogo/casas/flujos/grupo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Grupo
+# Ayuda IA - los grupos de casas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Grupo`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `los grupos de casas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Grupo?
-- Como eliminar en Grupo?
-- Como consultar el listado en Grupo?
-- Como abrir el formulario en Grupo?
+- Como gestionar los grupos de casas en los grupos de casas?
 
 ## Donde Entrar
 
@@ -32,44 +29,18 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Gestionar los grupos de casas
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/casas/grupo_update`
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **grupos**: aparece la lista de **grupos de casas**.
+2. Para crear uno, pulsar nuevo; elegir la **Casa Madre** y la **Casa dependiente** (deben ser dos casas distintas) y pulsar **guardar**.
+3. Para cambiarlo, abrir la relación, modificar y **guardar**; para quitarlo, eliminarla.
+4. Aviso: en la estadística económica las casas de un mismo grupo se recalculan conjuntamente.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/casas/grupo_eliminar`
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/casas/grupo_lista_data`
-
-## Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Referencias tecnicas para verificar la respuesta:
 - `/src/casas/grupo_form_data`
+- `/src/casas/grupo_lista_data`
+- `/src/casas/grupo_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -79,7 +50,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona GrupoCasa. Crea o actualiza un GrupoCasa. Datos del formulario GrupoCasa (nuevo/editar). Elimina un GrupoCasa. Listado de GrupoCasa (relaciones padre ↔ hijo).
+Agrupar casas: indicar qué casa es la madre y cuáles dependen de ella.
 
 ## Errores Documentados
 

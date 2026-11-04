@@ -2,39 +2,41 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario 2fa"
+titulo: "Activar la verificación en dos pasos"
 flujo: "usuarios.usuario_2fa.gestionar.flujo"
-preguntas: ["Como crear o modificar en Usuario 2fa?"]
-pantallas_principales: []
+preguntas: ["Como activar la verificación en dos pasos en Activar la verificación en dos pasos?"]
+pantallas_principales: ["usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_reset_2fa"]
 fragmentos: ["usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_reset_2fa"]
 endpoints: ["/src/usuarios/usuario_2fa_update"]
 source: "docs/catalogo/usuarios/flujos/usuario_2fa.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario 2fa
+# Ayuda IA - Activar la verificación en dos pasos
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario 2fa`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Activar la verificación en dos pasos`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Usuario 2fa?
+- Como activar la verificación en dos pasos en Activar la verificación en dos pasos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Form 2fa (`usuarios.pantalla.usuario_form_2fa`)
+- Usuario Reset 2fa (`usuarios.pantalla.usuario_reset_2fa`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Activar la verificación en dos pasos
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Descargar una aplicación de autenticación (Google Authenticator, Microsoft Authenticator o Authy).
+2. Escanear el **Código QR** o escribir la **Clave secreta**.
+3. Escribir el **Código de verificación** que muestra la aplicación y marcar **Activar autenticación de dos factores**.
+4. Guardar. Desde ese momento, en cada acceso se pide contraseña y código.
+5. Si falta el código aparece «Se requiere un código de verificación para activar 2FA».
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/usuarios/usuario_2fa_update`
@@ -43,10 +45,12 @@ Referencias tecnicas para verificar la respuesta:
 
 - `usuarios.pantalla.usuario_form_2fa`
 - `usuarios.pantalla.usuario_reset_2fa`
+- `usuarios.pantalla.usuario_form_2fa`
+- `usuarios.pantalla.usuario_reset_2fa`
 
 ## Objetivo
 
-Configuración autenticación dos factores del usuario.
+Activar o desactivar la verificación en dos pasos (2FA) de un usuario.
 
 ## Errores Documentados
 

@@ -2,71 +2,52 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubiscamas"
-titulo: "Cama"
+titulo: "camas"
 flujo: "ubiscamas.cama.gestionar.flujo"
-preguntas: ["Como crear o modificar en Cama?", "Como eliminar en Cama?", "Como abrir el formulario en Cama?"]
-pantallas_principales: []
+preguntas: ["Como gestionar camas en camas?"]
+pantallas_principales: ["ubiscamas.pantalla.cama_form"]
 fragmentos: ["ubiscamas.pantalla.cama_form"]
 endpoints: ["/src/ubiscamas/cama_delete", "/src/ubiscamas/cama_form_data", "/src/ubiscamas/cama_update"]
 source: "docs/catalogo/ubiscamas/flujos/cama.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cama
+# Ayuda IA - camas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cama`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `camas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Cama?
-- Como eliminar en Cama?
-- Como abrir el formulario en Cama?
+- Como gestionar camas en camas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Cama Form (`ubiscamas.pantalla.cama_form`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Gestionar camas
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/ubiscamas/cama_update`
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Guardar antes la habitación y pulsar **Añadir cama**.
+2. Rellenar **Descripción** y marcar **VIP** o **Larga**; pulsar **Guardar**.
+3. Para cambiar o quitar una cama, usar **Editar** o **Eliminar** en su fila.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubiscamas/cama_delete`
-
-## Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Referencias tecnicas para verificar la respuesta:
 - `/src/ubiscamas/cama_form_data`
+- `/src/ubiscamas/cama_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubiscamas.pantalla.cama_form`
+- `ubiscamas.pantalla.cama_form`
 
 ## Objetivo
 
-Crear, editar o eliminar camas individuales asociadas a una habitación.
+Crear, editar o eliminar camas individuales de una habitación.
 
 ## Errores Documentados
 

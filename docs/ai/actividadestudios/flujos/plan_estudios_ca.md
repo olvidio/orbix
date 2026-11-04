@@ -2,38 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Plan Estudios Ca"
+titulo: "Ver el plan de estudios de una actividad"
 flujo: "actividadestudios.plan_estudios_ca.gestionar.flujo"
-preguntas: ["Como obtener datos en Plan Estudios Ca?"]
-pantallas_principales: []
+preguntas: ["Como ver el plan de estudios de una actividad en Ver el plan de estudios de una actividad?"]
+pantallas_principales: ["actividadestudios.pantalla.plan_estudios_ca"]
 fragmentos: ["actividadestudios.pantalla.plan_estudios_ca"]
 endpoints: ["/src/actividadestudios/plan_estudios_ca_data"]
 source: "docs/catalogo/actividadestudios/flujos/plan_estudios_ca.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Plan Estudios Ca
+# Ayuda IA - Ver el plan de estudios de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Plan Estudios Ca`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el plan de estudios de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Plan Estudios Ca?
+- Como ver el plan de estudios de una actividad en Ver el plan de estudios de una actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Plan Estudios Ca (`actividadestudios.pantalla.plan_estudios_ca`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver el plan de estudios de una actividad
 
-1. En `actividad_select`, seleccionar una actividad CA.
-2. Pulsar la acción **plan estudios**.
-3. El sistema consulta `plan_estudios_ca_data` y muestra el informe completo.
+1. Marcar una actividad de tipo ca y pulsar **plan estudios**.
+2. Se muestra el título de la actividad con **Director de estudios** (para nombrarlo hay que ir al dossier de cargos de la actividad), **Profesores**, **Preceptores** y **Asistentes**.
+3. Debajo, cada asistente con su plan; «???» indica que no hay dato.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/plan_estudios_ca_data`
@@ -41,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.plan_estudios_ca`
+- `actividadestudios.pantalla.plan_estudios_ca`
 
 ## Objetivo
 
-El usuario consulta el plan de estudios de una actividad CA: director de estudios, preceptores, profesores por asignatura y alumnos con sus asignaturas matriculadas y observaciones de plan (`observ_est`).
+Ver el plan de estudios de una actividad (director de estudios, profesores, preceptores y asistentes).
 
 ## Limites De La Respuesta
 

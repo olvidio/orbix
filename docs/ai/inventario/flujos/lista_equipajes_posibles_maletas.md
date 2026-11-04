@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Lista Equipajes Posibles Maletas"
+titulo: "Crear una valija nueva"
 flujo: "inventario.lista_equipajes_posibles_maletas.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista Equipajes Posibles Maletas?"]
-pantallas_principales: []
+preguntas: ["Como crear una valija nueva en Crear una valija nueva?"]
+pantallas_principales: ["inventario.pantalla.equipajes_posibles_maletas"]
 fragmentos: ["inventario.pantalla.equipajes_posibles_maletas"]
 endpoints: ["/src/inventario/lista_equipajes_posibles_maletas"]
 source: "docs/catalogo/inventario/flujos/lista_equipajes_posibles_maletas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Equipajes Posibles Maletas
+# Ayuda IA - Crear una valija nueva
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Equipajes Posibles Maletas`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear una valija nueva`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista Equipajes Posibles Maletas?
+- Como crear una valija nueva en Crear una valija nueva?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Elegir maleta/grupo (`inventario.pantalla.equipajes_posibles_maletas`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Crear una valija nueva
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, elegir el equipaje.
+2. Pulsar **nueva valija**.
+3. El sistema propone el siguiente número («valija» + número) para la nueva maleta.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/lista_equipajes_posibles_maletas`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.equipajes_posibles_maletas`
+- `inventario.pantalla.equipajes_posibles_maletas`
 
 ## Objetivo
 
-Gestiona ListaEquipajesPosiblesMaletas. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Calcular el nombre de la siguiente valija (maleta) que se puede crear en un equipaje.
 
 ## Limites De La Respuesta
 

@@ -31,7 +31,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Obtener datos
 
-1. Tras una asignación, reordenación o borrado, el sistema actualiza la celda `<id_activ>_sacds`.
+1. Tras una asignación, reordenación o borrado, la celda de sacd de esa actividad se actualiza sola.
 2. Se repintan los sacd encargados con sus enlaces de menú contextual.
 
 Referencias tecnicas para verificar la respuesta:

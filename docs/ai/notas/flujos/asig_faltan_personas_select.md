@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Asig Faltan Personas Select"
+titulo: "Buscar los alumnos que deben una asignatura"
 flujo: "notas.asig_faltan_personas_select.gestionar.flujo"
-preguntas: ["Como obtener datos en Asig Faltan Personas Select?"]
-pantallas_principales: []
+preguntas: ["Como buscar los alumnos que deben una asignatura en Buscar los alumnos que deben una asignatura?"]
+pantallas_principales: ["notas.pantalla.asig_faltan_personas_select"]
 fragmentos: ["notas.pantalla.asig_faltan_personas_select"]
 endpoints: ["/src/notas/asig_faltan_personas_select_data"]
 source: "docs/catalogo/notas/flujos/asig_faltan_personas_select.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asig Faltan Personas Select
+# Ayuda IA - Buscar los alumnos que deben una asignatura
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asig Faltan Personas Select`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Buscar los alumnos que deben una asignatura`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Asig Faltan Personas Select?
+- Como buscar los alumnos que deben una asignatura en Buscar los alumnos que deben una asignatura?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Asig Faltan Personas Select (`notas.pantalla.asig_faltan_personas_select`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Buscar los alumnos que deben una asignatura
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar asig. pendientes**.
+2. En **Búsqueda de personas por asignatura** marcar **numerarios** o **agregados**, el ciclo (**bienio**, **cuadrienio**, **año I**, **año II-IV**) y elegir la **Asignatura**.
+3. Pulsar **Buscar** (o **Borrar** para limpiar).
+4. Se muestra la lista de alumnos que la deben.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/asig_faltan_personas_select_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.asig_faltan_personas_select`
+- `notas.pantalla.asig_faltan_personas_select`
 
 ## Objetivo
 
-Listar alumnos que deben una asignatura.
+Ver qué alumnos deben una asignatura concreta.
 
 ## Limites De La Respuesta
 

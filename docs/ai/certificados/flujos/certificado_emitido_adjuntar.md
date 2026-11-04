@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Emitido Adjuntar"
+titulo: "Adjuntar un certificado emitido"
 flujo: "certificados.certificado_emitido_adjuntar.gestionar.flujo"
-preguntas: ["Como obtener datos en Certificado Emitido Adjuntar?"]
-pantallas_principales: []
+preguntas: ["Como adjuntar un certificado emitido en Adjuntar un certificado emitido?"]
+pantallas_principales: ["certificados.pantalla.certificado_emitido_adjuntar"]
 fragmentos: ["certificados.pantalla.certificado_emitido_adjuntar"]
 endpoints: ["/src/certificados/certificado_emitido_adjuntar_data"]
 source: "docs/catalogo/certificados/flujos/certificado_emitido_adjuntar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Emitido Adjuntar
+# Ayuda IA - Adjuntar un certificado emitido
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Emitido Adjuntar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Adjuntar un certificado emitido`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Certificado Emitido Adjuntar?
+- Como adjuntar un certificado emitido en Adjuntar un certificado emitido?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Emitido Adjuntar (`certificados.pantalla.certificado_emitido_adjuntar`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Adjuntar un certificado emitido
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la persona y su dossier de certificados.
+2. Pulsar **adjuntar nuevo certificado**.
+3. Rellenar los datos y elegir el PDF.
+4. Guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_emitido_adjuntar_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `certificados.pantalla.certificado_emitido_adjuntar`
+- `certificados.pantalla.certificado_emitido_adjuntar`
 
 ## Objetivo
 
-Adjuntar PDF de certificado emitido a una persona.
+Adjuntar a una persona un PDF de un certificado ya emitido.
 
 ## Limites De La Respuesta
 

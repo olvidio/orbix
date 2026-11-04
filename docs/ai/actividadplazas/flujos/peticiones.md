@@ -2,60 +2,62 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Peticiones"
+titulo: "Guardar las peticiones de una persona"
 flujo: "actividadplazas.peticiones.gestionar.flujo"
-preguntas: ["Como guardar en Peticiones?", "Como eliminar en Peticiones?"]
-pantallas_principales: []
+preguntas: ["Como guardar las peticiones de una persona en Guardar las peticiones de una persona?", "Como borrar las peticiones de una persona en Guardar las peticiones de una persona?"]
+pantallas_principales: ["actividadplazas.pantalla.peticiones_activ"]
 fragmentos: ["actividadplazas.pantalla.peticiones_activ"]
 endpoints: ["/src/actividadplazas/peticiones_eliminar", "/src/actividadplazas/peticiones_guardar"]
 source: "docs/catalogo/actividadplazas/flujos/peticiones.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Peticiones
+# Ayuda IA - Guardar las peticiones de una persona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Peticiones`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar las peticiones de una persona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Peticiones?
-- Como eliminar en Peticiones?
+- Como guardar las peticiones de una persona en Guardar las peticiones de una persona?
+- Como borrar las peticiones de una persona en Guardar las peticiones de una persona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Peticiones Activ (`actividadplazas.pantalla.peticiones_activ`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
+## Guardar las peticiones de una persona
 
-1. En la pantalla de peticiones, ordenar las actividades con los desplegables (`DesplegableArray`).
-2. Añadir filas con **más actividades** (`fnjs_mas_actividades`) si hace falta.
-3. Pulsar el botón de guardar (`fnjs_guardar`): envía `id_nom`, `sactividad` y la lista ordenada a
-4. Si tiene éxito, vuelve atrás (`fnjs_nav_atras`).
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadplazas/peticiones_guardar`
-
-## Eliminar
-
-1. En la misma pantalla, pulsar **Borrar** (`fnjs_borrar`).
-2. El sistema elimina todas las peticiones de esa persona+tipo vía `peticiones_eliminar`.
-3. Si tiene éxito, refresca la pantalla (`fnjs_actualizar`).
+1. En la pantalla de peticiones, ordenar las actividades con los desplegables: la primera es la preferida.
+2. Si hacen falta más filas, pulsar **más actividades**.
+3. Pulsar **guardar**. Las peticiones anteriores de esa persona se sustituyen por las nuevas, en ese orden.
+4. Al terminar, la pantalla vuelve a la anterior.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/peticiones_eliminar`
+- `/src/actividadplazas/peticiones_guardar`
+
+## Borrar las peticiones de una persona
+
+1. En la misma pantalla, pulsar **Borrar**.
+2. Se eliminan todas las peticiones de esa persona para ese tipo de actividad y la pantalla se refresca.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividadplazas/peticiones_eliminar`
+- `/src/actividadplazas/peticiones_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadplazas.pantalla.peticiones_activ`
+- `actividadplazas.pantalla.peticiones_activ`
 
 ## Objetivo
 
-Definir (o borrar) la lista priorizada de actividades que una persona solicita como petición de plaza para un tipo y colectivo (`n`, `a`, `agd`).
+Definir, o borrar, la lista ordenada de actividades que pide una persona como plaza, para un tipo de actividad y un colectivo (n, a o agd).
 
 ## Errores Documentados
 

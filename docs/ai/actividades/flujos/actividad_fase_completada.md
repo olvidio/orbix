@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Consultar fase completada"
+titulo: "Ver si una fase está completada"
 flujo: "actividades.actividad_fase_completada.gestionar.flujo"
-preguntas: []
+preguntas: ["Como ver si una fase está completada en Ver si una fase está completada?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/actividades/actividad_fase_completada_datos"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/actividad_fase_completada.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Consultar fase completada
+# Ayuda IA - Ver si una fase está completada
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar fase completada`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver si una fase está completada`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como ver si una fase está completada en Ver si una fase está completada?
 
 ## Donde Entrar
 
@@ -28,13 +29,21 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Ver si una fase está completada
+
+1. Abrir la ficha de la actividad.
+2. Las casillas de fases reflejan si cada fase está completada; se actualizan solas al cambiar algo.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/actividad_fase_completada_datos`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Validar estado de una fase sin recargar toda la ficha.
+Comprobar si una fase del proceso de la actividad está completada, sin recargar la ficha.
 
 ## Limites De La Respuesta
 

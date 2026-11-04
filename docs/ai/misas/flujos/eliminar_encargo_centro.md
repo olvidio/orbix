@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Eliminar Encargo Centro"
+titulo: "Quitar un encargo visible para un centro"
 flujo: "misas.eliminar_encargo_centro.gestionar.flujo"
-preguntas: ["Como ejecutar en Eliminar Encargo Centro?"]
-pantallas_principales: []
+preguntas: ["Como quitar un encargo visible para un centro en Quitar un encargo visible para un centro?"]
+pantallas_principales: ["misas.pantalla.ver_encargos_centros"]
 fragmentos: ["misas.pantalla.ver_encargos_centros"]
 endpoints: ["/src/misas/eliminar_encargo_centro"]
 source: "docs/catalogo/misas/flujos/eliminar_encargo_centro.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Eliminar Encargo Centro
+# Ayuda IA - Quitar un encargo visible para un centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Eliminar Encargo Centro`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Quitar un encargo visible para un centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Eliminar Encargo Centro?
+- Como quitar un encargo visible para un centro en Quitar un encargo visible para un centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ver Encargos Centros (`misas.pantalla.ver_encargos_centros`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Quitar un encargo visible para un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo-centro y pulsar **Eliminar encargo**.
+2. Confirmar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/eliminar_encargo_centro`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.ver_encargos_centros`
+- `misas.pantalla.ver_encargos_centros`
 
 ## Objetivo
 
-Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
+Quitar un encargo de la vista de un centro.
 
 ## Errores Documentados
 

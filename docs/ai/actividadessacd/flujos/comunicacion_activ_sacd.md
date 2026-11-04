@@ -5,7 +5,7 @@ modulo: "actividadessacd"
 titulo: "Comunicacion Activ Sacd"
 flujo: "actividadessacd.comunicacion_activ_sacd.gestionar.flujo"
 preguntas: ["Como obtener datos en Comunicacion Activ Sacd?"]
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_activ_periodo"]
 endpoints: ["/src/actividadessacd/comunicacion_activ_sacd_data"]
 source: "docs/catalogo/actividadessacd/flujos/comunicacion_activ_sacd.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Com Sacd Activ Periodo (`actividadessacd.pantalla.com_sacd_activ_periodo`)
 
 ## Como Responder
 
@@ -32,7 +32,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 ## Obtener datos
 
 1. Seleccionar periodo en la barra de filtros (o entrar con un sacd preseleccionado).
-2. Pulsar **buscar** (o auto-carga si `AUTO_CARGAR`).
+2. Pulsar **buscar** (en algunos casos la lista se carga sola al abrir la pantalla).
 3. El sistema pinta el listado por sacd con actividades, textos y leyenda.
 
 Referencias tecnicas para verificar la respuesta:
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadessacd.pantalla.com_sacd_activ_periodo`
 - `actividadessacd.pantalla.com_sacd_activ_periodo`
 
 ## Objetivo

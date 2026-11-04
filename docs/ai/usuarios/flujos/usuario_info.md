@@ -2,39 +2,44 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Usuario Info"
+titulo: "Ver el resumen de un usuario en su ficha"
 flujo: "usuarios.usuario_info.gestionar.flujo"
-preguntas: ["Como ejecutar en Usuario Info?"]
-pantallas_principales: []
+preguntas: ["Como ver el resumen de un usuario en su ficha en Ver el resumen de un usuario en su ficha?"]
+pantallas_principales: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_form_mail", "usuarios.pantalla.usuario_form_pwd"]
 fragmentos: ["usuarios.pantalla.usuario_form", "usuarios.pantalla.usuario_form_2fa", "usuarios.pantalla.usuario_form_mail", "usuarios.pantalla.usuario_form_pwd"]
 endpoints: ["/src/usuarios/usuario_info"]
 source: "docs/catalogo/usuarios/flujos/usuario_info.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Usuario Info
+# Ayuda IA - Ver el resumen de un usuario en su ficha
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Usuario Info`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el resumen de un usuario en su ficha`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Usuario Info?
+- Como ver el resumen de un usuario en su ficha en Ver el resumen de un usuario en su ficha?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Usuario Form (`usuarios.pantalla.usuario_form`)
+- Usuario Form 2fa (`usuarios.pantalla.usuario_form_2fa`)
+- Usuario Form Mail (`usuarios.pantalla.usuario_form_mail`)
+- Usuario Form Pwd (`usuarios.pantalla.usuario_form_pwd`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Ver el resumen de un usuario en su ficha
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de un usuario desde **lista usuarios**.
+2. La cabecera muestra el login, el correo y los grupos asignados; no hay que hacer nada más.
+3. Si el usuario no existe aparece «Usuario no encontrado».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/usuario_info`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,10 +47,14 @@ Referencias tecnicas para verificar la respuesta:
 - `usuarios.pantalla.usuario_form_2fa`
 - `usuarios.pantalla.usuario_form_mail`
 - `usuarios.pantalla.usuario_form_pwd`
+- `usuarios.pantalla.usuario_form`
+- `usuarios.pantalla.usuario_form_2fa`
+- `usuarios.pantalla.usuario_form_mail`
+- `usuarios.pantalla.usuario_form_pwd`
 
 ## Objetivo
 
-Resumen usuario para cabecera ficha (grupos, login, email).
+Calcular el resumen del usuario (grupos, login, correo) que se muestra en la cabecera de su ficha.
 
 ## Errores Documentados
 

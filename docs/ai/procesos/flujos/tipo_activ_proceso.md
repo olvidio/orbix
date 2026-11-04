@@ -2,50 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Tipo Activ Proceso"
+titulo: "Consultar los procesos de cada tipo de actividad"
 flujo: "procesos.tipo_activ_proceso.gestionar.flujo"
-preguntas: ["Como consultar el listado en Tipo Activ Proceso?"]
-pantallas_principales: []
+preguntas: ["Como consultar los procesos de cada tipo de actividad en Consultar los procesos de cada tipo de actividad?"]
+pantallas_principales: ["procesos.pantalla.tipo_activ_proceso"]
 fragmentos: ["procesos.pantalla.tipo_activ_proceso_lista"]
 endpoints: ["/src/procesos/tipo_activ_proceso_lista"]
 source: "docs/catalogo/procesos/flujos/tipo_activ_proceso.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Tipo Activ Proceso
+# Ayuda IA - Consultar los procesos de cada tipo de actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Tipo Activ Proceso`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los procesos de cada tipo de actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar el listado en Tipo Activ Proceso?
+- Como consultar los procesos de cada tipo de actividad en Consultar los procesos de cada tipo de actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Tipo Activ Proceso (`procesos.pantalla.tipo_activ_proceso`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar el listado
+## Consultar los procesos de cada tipo de actividad
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Entrar en **tipo activ - proceso**.
+2. Se lista cada tipo de actividad con su proceso (propio y no propio); pulsar uno para cambiarlo.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/procesos/tipo_activ_proceso_lista`
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `procesos.pantalla.tipo_activ_proceso`
 - `procesos.pantalla.tipo_activ_proceso_lista`
 
 ## Objetivo
 
-Listado de tipos de actividad con el proceso asignado (propio y no propio) para su gestión desde la pantalla de asignación.
+Ver los tipos de actividad con el proceso que tienen asignado.
 
 ## Errores Documentados
 

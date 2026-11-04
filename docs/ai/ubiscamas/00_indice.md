@@ -21,11 +21,11 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Actividad Habitaciones -> `flujos/actividad_habitaciones.md`
-- Cama -> `flujos/cama.md`
-- Habitacion -> `flujos/habitacion.md`
-- Update Cama Asistente -> `flujos/update_cama_asistente.md`
-- Update Solo Vip -> `flujos/update_solo_vip.md`
+- Asignar camas a los asistentes -> `flujos/actividad_habitaciones.md`
+- camas -> `flujos/cama.md`
+- Ver las habitaciones de una casa -> `flujos/habitacion.md`
+- Asignar una cama a un asistente -> `flujos/update_cama_asistente.md`
+- Filtrar las camas VIP -> `flujos/update_solo_vip.md`
 
 ## Pantallas Disponibles
 

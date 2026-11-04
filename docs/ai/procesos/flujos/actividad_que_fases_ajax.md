@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "procesos"
-titulo: "Actividad Que Fases Ajax"
+titulo: "Filtrar actividades por fases"
 flujo: "procesos.actividad_que_fases_ajax.gestionar.flujo"
-preguntas: ["Como ejecutar en Actividad Que Fases Ajax?"]
+preguntas: ["Como filtrar actividades por fases en Filtrar actividades por fases?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/procesos/actividad_que_fases_ajax"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/procesos/flujos/actividad_que_fases_ajax.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Actividad Que Fases Ajax
+# Ayuda IA - Filtrar actividades por fases
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Actividad Que Fases Ajax`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Filtrar actividades por fases`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Actividad Que Fases Ajax?
+- Como filtrar actividades por fases en Filtrar actividades por fases?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Filtrar actividades por fases
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la búsqueda de actividades, elegir el tipo.
+2. Aparecen las fases posibles como casillas para marcar las que deben estar completadas (fases_on) o no (fases_off).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/procesos/actividad_que_fases_ajax`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Devolver las fases aplicables a un tipo de actividad para construir los checkboxes de filtro `fases_on` / `fases_off` en la búsqueda de actividades.
+Mostrar las fases de un tipo de actividad para marcarlas en el filtro de búsqueda de actividades.
 
 ## Errores Documentados
 

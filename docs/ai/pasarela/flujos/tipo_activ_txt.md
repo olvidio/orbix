@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "pasarela"
 titulo: "Texto descriptivo del tipo"
 flujo: "pasarela.tipo_activ_txt.gestionar.flujo"
-preguntas: []
+preguntas: ["Como ver el nombre del tipo al editar en Texto descriptivo del tipo?"]
 pantallas_principales: []
 fragmentos: [""]
 endpoints: [""]
@@ -19,6 +19,7 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como ver el nombre del tipo al editar en Texto descriptivo del tipo?
 
 ## Donde Entrar
 
@@ -27,6 +28,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
+
+## Ver el nombre del tipo al editar
+
+1. Abrir una fila de un parámetro (fecha de activación, nombre o contribución).
+2. El sistema muestra el nombre completo del tipo de actividad (sección, asistentes y actividad) para saber qué se está editando.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/pasarela/tipo_activ_txt_data`
 
 ## Pantallas Y Fragmentos Relacionados
 

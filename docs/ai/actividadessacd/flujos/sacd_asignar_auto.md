@@ -33,7 +33,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 1. Leer el texto que describe el criterio de asignación automática.
 2. Pulsar **continuar**.
-3. El sistema procesa y muestra el resultado (`asignadas`, `sin_asignar`) sin recargar la página.
+3. El sistema procesa y muestra el resultado (cuántas actividades se han asignado y cuántas quedan sin asignar) sin recargar la página.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadessacd/sacd_asignar_auto`

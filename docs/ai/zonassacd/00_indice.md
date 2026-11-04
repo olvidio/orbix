@@ -21,11 +21,11 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Zona Ctr -> `flujos/zona_ctr.md`
-- Zona Ctr Ajax -> `flujos/zona_ctr_ajax.md`
-- Zona Sacd -> `flujos/zona_sacd.md`
-- Zona Sacd Ajax -> `flujos/zona_sacd_ajax.md`
-- Zona Sacd Lista Tot -> `flujos/zona_sacd_lista_tot.md`
+- Consultar y reasignar los centros de una zona -> `flujos/zona_ctr.md`
+- las zonas de un centro -> `flujos/zona_ctr_ajax.md`
+- Consultar los sacerdotes de una zona -> `flujos/zona_sacd.md`
+- las zonas de un sacerdote -> `flujos/zona_sacd_ajax.md`
+- Consultar los sacerdotes por zona -> `flujos/zona_sacd_lista_tot.md`
 
 ## Pantallas Disponibles
 

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "casas"
-titulo: "Casa Ingreso"
+titulo: "Anotar el ingreso de una actividad"
 flujo: "casas.casa_ingreso.gestionar.flujo"
-preguntas: ["Como crear o modificar en Casa Ingreso?", "Como eliminar en Casa Ingreso?", "Como abrir el formulario en Casa Ingreso?"]
+preguntas: ["Como anotar el ingreso de una actividad en Anotar el ingreso de una actividad?"]
 pantallas_principales: ["casas.pantalla.casa"]
 fragmentos: ["casas.pantalla.casa_ingreso_form"]
 endpoints: ["/src/casas/casa_ingreso_eliminar", "/src/casas/casa_ingreso_form_data", "/src/casas/casa_ingreso_update"]
@@ -12,16 +12,14 @@ source: "docs/catalogo/casas/flujos/casa_ingreso.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Casa Ingreso
+# Ayuda IA - Anotar el ingreso de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Casa Ingreso`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Anotar el ingreso de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Casa Ingreso?
-- Como eliminar en Casa Ingreso?
-- Como abrir el formulario en Casa Ingreso?
+- Como anotar el ingreso de una actividad en Anotar el ingreso de una actividad?
 
 ## Donde Entrar
 
@@ -31,34 +29,16 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Anotar el ingreso de una actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/casas/casa_ingreso_update`
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir el estudio económico de la casa y elegir la actividad.
+2. Rellenar los importes del formulario de ingreso y guardar.
+3. Para quitar el ingreso, usar eliminar y confirmar.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/casas/casa_ingreso_eliminar`
-
-## Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Referencias tecnicas para verificar la respuesta:
 - `/src/casas/casa_ingreso_form_data`
+- `/src/casas/casa_ingreso_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -67,7 +47,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona CasaIngreso. Crear/actualizar el Ingreso de una actividad. Datos para el formulario de ingreso de una actividad (casa_ingreso_form). Eliminar el Ingreso de una actividad.
+Anotar o corregir los ingresos de una actividad en una casa.
 
 ## Errores Documentados
 

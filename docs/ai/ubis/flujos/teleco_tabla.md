@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Teleco Tabla"
+titulo: "Consultar las telecomunicaciones"
 flujo: "ubis.teleco_tabla.gestionar.flujo"
-preguntas: ["Como ejecutar en Teleco Tabla?"]
-pantallas_principales: []
+preguntas: ["Como consultar las telecomunicaciones en Consultar las telecomunicaciones?"]
+pantallas_principales: ["ubis.pantalla.teleco_tabla"]
 fragmentos: ["ubis.pantalla.teleco_tabla"]
 endpoints: ["/src/ubis/teleco_tabla"]
 source: "docs/catalogo/ubis/flujos/teleco_tabla.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Teleco Tabla
+# Ayuda IA - Consultar las telecomunicaciones
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Teleco Tabla`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar las telecomunicaciones`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Teleco Tabla?
+- Como consultar las telecomunicaciones en Consultar las telecomunicaciones?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Teleco Tabla (`ubis.pantalla.teleco_tabla`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar las telecomunicaciones
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **telecos** en «Editar:».
+2. Se muestra «Telecomunicaciones de un centro o casa» con Id_ubi, nombre del teleco (hoy sale su número de tipo), descripción, número o siglas y observaciones.
+3. Los botones son **modificar** y **eliminar** (sobre las filas marcadas) y **nuevo**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/teleco_tabla`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.teleco_tabla`
+- `ubis.pantalla.teleco_tabla`
 
 ## Objetivo
 
-Lista las telecomunicaciones de un centro o casa con botones según permisos.
+Ver las telecomunicaciones (teléfonos, fax, e-mails, web) de un centro o casa.
 
 ## Errores Documentados
 

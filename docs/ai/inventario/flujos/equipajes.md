@@ -2,50 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Equipajes"
+titulo: "Ciclo completo de un equipaje"
 flujo: "inventario.equipajes.gestionar.flujo"
-preguntas: ["Como eliminar en Equipajes?"]
-pantallas_principales: []
+preguntas: ["Como ciclo completo de un equipaje en Ciclo completo de un equipaje?"]
+pantallas_principales: ["inventario.pantalla.equipajes_ver"]
 fragmentos: []
 endpoints: ["/src/inventario/equipajes_eliminar"]
 source: "docs/catalogo/inventario/flujos/equipajes.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Equipajes
+# Ayuda IA - Ciclo completo de un equipaje
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Equipajes`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ciclo completo de un equipaje`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Equipajes?
+- Como ciclo completo de un equipaje en Ciclo completo de un equipaje?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Gestionar equipajes (`inventario.pantalla.equipajes_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Ciclo completo de un equipaje
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Crear con **nuevo equipaje**.
+2. Componer las valijas en **hacer equipajes**.
+3. Imprimir con **imprimir equipajes**.
+4. Al terminar, eliminar el equipaje desde **hacer equipajes** (se eliminan también sus valijas).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/inventario/equipajes_eliminar`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `inventario.pantalla.equipajes_ver`
 
 ## Objetivo
 
-Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (EGM/Whereis), impresión y eliminación.
+Ciclo de vida de los equipajes: crear, componer las valijas, imprimir y eliminar.
 
 ## Errores Documentados
 

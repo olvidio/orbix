@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Db Propiedades"
 flujo: "devel_db_admin.db_propiedades.gestionar.flujo"
 preguntas: ["Como obtener datos en Db Propiedades?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.apptables", "devel_db_admin.pantalla.db_absorber_esquema_que", "devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que", "devel_db_admin.pantalla.db_mover_que"]
 fragmentos: ["devel_db_admin.pantalla.apptables", "devel_db_admin.pantalla.db_absorber_esquema_que", "devel_db_admin.pantalla.db_cambiar_nombre_que", "devel_db_admin.pantalla.db_crear_esquema_que", "devel_db_admin.pantalla.db_eliminar_esquema_que", "devel_db_admin.pantalla.db_mover_que"]
 endpoints: ["/src/devel_db_admin/db_propiedades_data"]
 source: "docs/catalogo/devel_db_admin/flujos/db_propiedades.md"
@@ -23,7 +23,12 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Apptables (`devel_db_admin.pantalla.apptables`)
+- Db Absorber Esquema Que (`devel_db_admin.pantalla.db_absorber_esquema_que`)
+- Db Cambiar Nombre Que (`devel_db_admin.pantalla.db_cambiar_nombre_que`)
+- Db Crear Esquema Que (`devel_db_admin.pantalla.db_crear_esquema_que`)
+- Db Eliminar Esquema Que (`devel_db_admin.pantalla.db_eliminar_esquema_que`)
+- Db Mover Que (`devel_db_admin.pantalla.db_mover_que`)
 
 ## Como Responder
 
@@ -40,6 +45,12 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.apptables`
+- `devel_db_admin.pantalla.db_absorber_esquema_que`
+- `devel_db_admin.pantalla.db_cambiar_nombre_que`
+- `devel_db_admin.pantalla.db_crear_esquema_que`
+- `devel_db_admin.pantalla.db_eliminar_esquema_que`
+- `devel_db_admin.pantalla.db_mover_que`
 - `devel_db_admin.pantalla.apptables`
 - `devel_db_admin.pantalla.db_absorber_esquema_que`
 - `devel_db_admin.pantalla.db_cambiar_nombre_que`

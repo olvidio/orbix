@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "profesores"
-titulo: "Buscar profesor para asignatura"
+titulo: "Buscar profesores para una asignatura"
 flujo: "profesores.profesor_asignatura_que.gestionar.flujo"
-preguntas: ["Como consultar en Buscar profesor para asignatura?"]
+preguntas: ["Como buscar profesores para una asignatura en Buscar profesores para una asignatura?"]
 pantallas_principales: ["profesores.pantalla.profesor_asignatura_que"]
 fragmentos: ["profesores.pantalla.profesor_asignatura_ajax"]
 endpoints: ["/src/profesores/profesor_asignatura_que", "/src/profesores/profesor_asignatura_ajax"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/profesores/flujos/profesor_asignatura_que.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Buscar profesor para asignatura
+# Ayuda IA - Buscar profesores para una asignatura
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Buscar profesor para asignatura`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Buscar profesores para una asignatura`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como consultar en Buscar profesor para asignatura?
+- Como buscar profesores para una asignatura en Buscar profesores para una asignatura?
 
 ## Donde Entrar
 
@@ -29,14 +29,15 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Consultar
+## Buscar profesores para una asignatura
 
-1. Abrir **profesor para asignatura** desde el menú.
-2. Elegir asignatura en el desplegable (`fnjs_profes`).
-3. Revisar la tabla AJAX con profesores, centro, docencia y contacto.
+1. Entrar en «Profesores que pueden impartir una asignatura».
+2. Elegir la **Asignatura** en el desplegable.
+3. Debajo aparece la lista de profesores que pueden darla, o «no hay ninguna fila» si no hay ninguno registrado.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/profesores/profesor_asignatura_que`
+- `/src/profesores/profesor_asignatura_ajax`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -45,7 +46,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Elegir asignatura y ver candidatos (departamento + ampliación) con datos de contacto y docencia previa, como apoyo antes de asignar en el curso académico.
+Saber qué profesores pueden impartir una asignatura.
 
 ## Limites De La Respuesta
 

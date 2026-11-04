@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Casas Opciones"
+titulo: "Elegir una casa en un desplegable"
 flujo: "ubis.casas_opciones.gestionar.flujo"
-preguntas: ["Como obtener datos en Casas Opciones?"]
+preguntas: ["Como elegir una casa en un desplegable en Elegir una casa en un desplegable?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/ubis/casas_opciones_data"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/ubis/flujos/casas_opciones.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Casas Opciones
+# Ayuda IA - Elegir una casa en un desplegable
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Casas Opciones`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir una casa en un desplegable`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Casas Opciones?
+- Como elegir una casa en un desplegable en Elegir una casa en un desplegable?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir una casa en un desplegable
 
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de casa, abrir el desplegable.
+2. La lista se carga filtrada por el tipo de casa y la delegación que corresponda; elegir una.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/casas_opciones_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de casas que usan los desplegables de otras pantallas.
 
 ## Errores Documentados
 

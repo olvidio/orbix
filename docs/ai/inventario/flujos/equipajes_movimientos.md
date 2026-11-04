@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Equipajes Movimientos"
+titulo: "Consultar los movimientos de un equipaje"
 flujo: "inventario.equipajes_movimientos.gestionar.flujo"
-preguntas: ["Como ejecutar en Equipajes Movimientos?"]
-pantallas_principales: []
+preguntas: ["Como consultar los movimientos de un equipaje en Consultar los movimientos de un equipaje?"]
+pantallas_principales: ["inventario.pantalla.equipajes_movimientos"]
 fragmentos: ["inventario.pantalla.equipajes_movimientos"]
 endpoints: ["/src/inventario/equipajes_movimientos"]
 source: "docs/catalogo/inventario/flujos/equipajes_movimientos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Equipajes Movimientos
+# Ayuda IA - Consultar los movimientos de un equipaje
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Equipajes Movimientos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los movimientos de un equipaje`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Equipajes Movimientos?
+- Como consultar los movimientos de un equipaje en Consultar los movimientos de un equipaje?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Movimientos maletas — resultado (`inventario.pantalla.equipajes_movimientos`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar los movimientos de un equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **movimientos maletas**.
+2. Marcar el equipaje y pulsar **seleccionar**.
+3. Para cada valija se listan los documentos **añadir** y **quitar**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/equipajes_movimientos`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.equipajes_movimientos`
+- `inventario.pantalla.equipajes_movimientos`
 
 ## Objetivo
 
-Comparar movimientos de documentos entre equipajes seleccionados.
+Ver qué documentos se han añadido o quitado de las valijas de un equipaje.
 
 ## Limites De La Respuesta
 

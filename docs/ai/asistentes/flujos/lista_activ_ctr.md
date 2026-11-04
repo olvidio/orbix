@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Lista Activ Ctr"
+titulo: "Ver las actividades por centro"
 flujo: "asistentes.lista_activ_ctr.gestionar.flujo"
-preguntas: ["Como obtener datos en Lista Activ Ctr?"]
-pantallas_principales: []
+preguntas: ["Como ver las actividades por centro en Ver las actividades por centro?"]
+pantallas_principales: ["asistentes.pantalla.lista_activ_ctr"]
 fragmentos: ["asistentes.pantalla.lista_activ_ctr"]
 endpoints: ["/src/asistentes/lista_activ_ctr_data"]
 source: "docs/catalogo/asistentes/flujos/lista_activ_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Activ Ctr
+# Ayuda IA - Ver las actividades por centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Activ Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver las actividades por centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Lista Activ Ctr?
+- Como ver las actividades por centro en Ver las actividades por centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista Activ Ctr (`asistentes.pantalla.lista_activ_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver las actividades por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el periodo (ver «Elegir centro y periodo») y pulsar **Buscar**.
+2. Para cada centro (por ejemplo «Alimara») aparece una tabla «nombre / actividades previstas» con cada persona y su actividad (por ejemplo «ca n repaso Hostal Rialb (7/8/2026-29/8/2026)-dlb»), «NO HACE CA [pedida]» o «pendiente de solicitar» si aún no tiene.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/lista_activ_ctr_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.lista_activ_ctr`
+- `asistentes.pantalla.lista_activ_ctr`
 
 ## Objetivo
 
-Ver actividades asistidas agrupadas por centro.
+Ver, centro por centro, las actividades previstas de sus personas.
 
 ## Limites De La Respuesta
 

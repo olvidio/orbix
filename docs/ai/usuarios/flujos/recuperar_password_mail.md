@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Recuperar Password Mail"
+titulo: "Recuperar la contraseña por correo"
 flujo: "usuarios.recuperar_password_mail.gestionar.flujo"
-preguntas: ["Como ejecutar en Recuperar Password Mail?"]
-pantallas_principales: []
+preguntas: ["Como recuperar la contraseña por correo en Recuperar la contraseña por correo?"]
+pantallas_principales: ["usuarios.pantalla.recuperar_password"]
 fragmentos: []
 endpoints: ["/src/usuarios/recuperar_password_mail"]
 source: "docs/catalogo/usuarios/flujos/recuperar_password_mail.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Recuperar Password Mail
+# Ayuda IA - Recuperar la contraseña por correo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Recuperar Password Mail`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Recuperar la contraseña por correo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Recuperar Password Mail?
+- Como recuperar la contraseña por correo en Recuperar la contraseña por correo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Recuperar Password (`usuarios.pantalla.recuperar_password`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Recuperar la contraseña por correo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la pantalla de acceso, pulsar el enlace de ayuda para recuperar la contraseña.
+2. Indicar el login.
+3. El sistema envía al correo del usuario una contraseña temporal y marca que debe cambiarla al entrar.
+4. Con la temporal, iniciar sesión y elegir una contraseña nueva.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/recuperar_password_mail`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `usuarios.pantalla.recuperar_password`
 
 ## Objetivo
 
-Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
+Recuperar el acceso cuando se ha olvidado la contraseña: envía por correo una contraseña temporal.
 
 ## Errores Documentados
 

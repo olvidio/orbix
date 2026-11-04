@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Lista Asis Conjunto Activ"
+titulo: "Ver las plazas de varias actividades"
 flujo: "asistentes.lista_asis_conjunto_activ.gestionar.flujo"
-preguntas: ["Como obtener datos en Lista Asis Conjunto Activ?"]
-pantallas_principales: []
+preguntas: ["Como ver las plazas de varias actividades en Ver las plazas de varias actividades?"]
+pantallas_principales: ["asistentes.pantalla.lista_asis_conjunto_activ"]
 fragmentos: ["asistentes.pantalla.lista_asis_conjunto_activ"]
 endpoints: ["/src/asistentes/lista_asis_conjunto_activ_data"]
 source: "docs/catalogo/asistentes/flujos/lista_asis_conjunto_activ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Asis Conjunto Activ
+# Ayuda IA - Ver las plazas de varias actividades
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Asis Conjunto Activ`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver las plazas de varias actividades`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Lista Asis Conjunto Activ?
+- Como ver las plazas de varias actividades en Ver las plazas de varias actividades?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista Asis Conjunto Activ (`asistentes.pantalla.lista_asis_conjunto_activ`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver las plazas de varias actividades
 
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar las actividades.
+2. Elegir el listado conjunto: se muestran las plazas y asistentes de todas ellas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/lista_asis_conjunto_activ_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.lista_asis_conjunto_activ`
+- `asistentes.pantalla.lista_asis_conjunto_activ`
 
 ## Objetivo
 
-Listado conjunto de plazas en varias actividades.
+Ver el listado conjunto de plazas y asistentes de varias actividades.
 
 ## Limites De La Respuesta
 

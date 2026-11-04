@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Listas D"
+titulo: "Listar la tabla por sacerdote"
 flujo: "encargossacd.listas_d.gestionar.flujo"
-preguntas: ["Como obtener datos en Listas D?"]
-pantallas_principales: []
+preguntas: ["Como listar la tabla por sacerdote en Listar la tabla por sacerdote?"]
+pantallas_principales: ["encargossacd.pantalla.listas_d"]
 fragmentos: ["encargossacd.pantalla.listas_d"]
 endpoints: ["/src/encargossacd/listas_d_data"]
 source: "docs/catalogo/encargossacd/flujos/listas_d.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Listas D
+# Ayuda IA - Listar la tabla por sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Listas D`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Listar la tabla por sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Listas D?
+- Como listar la tabla por sacerdote en Listar la tabla por sacerdote?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Listas D (`encargossacd.pantalla.listas_d`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Listar la tabla por sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **tabla por sacd** o **tabla por sacd sf**.
+3. Se muestra, por sacerdote y ciudad, la lista de centros con el nº de horas (por ejemplo Raset 3, Moneders 5), incluidos estudio y descanso.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/listas_d_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.listas_d`
+- `encargossacd.pantalla.listas_d`
 
 ## Objetivo
 
-Gestiona ListasD. Genera el listado "d" de atencion SACD (cr 9/20, 10). Sustituye la logica de frontend/encargossacd/controller/listas_d.php. La vista original devolvia dos tablas HTML sueltas (cabecera + listado); aqui se componen ambas en Html para que el frontend solo tenga que volcarlas al cliente.
+Sacar la tabla por sacerdote (cr 9/20, 10), para sv o sf.
 
 ## Limites De La Respuesta
 

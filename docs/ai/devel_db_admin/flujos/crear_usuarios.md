@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Crear Usuarios"
 flujo: "devel_db_admin.crear_usuarios.gestionar.flujo"
 preguntas: ["Como ejecutar en Crear Usuarios?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_crear_usuarios"]
 fragmentos: ["devel_db_admin.pantalla.db_crear_usuarios"]
 endpoints: ["/src/devel_db_admin/crear_usuarios"]
 source: "docs/catalogo/devel_db_admin/flujos/crear_usuarios.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Crear Usuarios (`devel_db_admin.pantalla.db_crear_usuarios`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_crear_usuarios`
 - `devel_db_admin.pantalla.db_crear_usuarios`
 
 ## Objetivo

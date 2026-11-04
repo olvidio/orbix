@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Recibido Modificar"
+titulo: "Modificar un certificado recibido"
 flujo: "certificados.certificado_recibido_modificar.gestionar.flujo"
-preguntas: ["Como obtener datos en Certificado Recibido Modificar?"]
-pantallas_principales: []
+preguntas: ["Como modificar un certificado recibido en Modificar un certificado recibido?"]
+pantallas_principales: ["certificados.pantalla.certificado_recibido_modificar"]
 fragmentos: ["certificados.pantalla.certificado_recibido_modificar"]
 endpoints: ["/src/certificados/certificado_recibido_modificar_data"]
 source: "docs/catalogo/certificados/flujos/certificado_recibido_modificar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Recibido Modificar
+# Ayuda IA - Modificar un certificado recibido
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Recibido Modificar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Modificar un certificado recibido`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Certificado Recibido Modificar?
+- Como modificar un certificado recibido en Modificar un certificado recibido?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Recibido Modificar (`certificados.pantalla.certificado_recibido_modificar`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Modificar un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de certificados, pulsar el certificado recibido.
+2. Cambiar los datos y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_recibido_modificar_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `certificados.pantalla.certificado_recibido_modificar`
+- `certificados.pantalla.certificado_recibido_modificar`
 
 ## Objetivo
 
-Modificar metadatos de certificado recibido.
+Corregir los datos de un certificado recibido.
 
 ## Limites De La Respuesta
 

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Posibles Propietarios"
+titulo: "Elegir la delegación propietaria de la plaza"
 flujo: "actividadplazas.posibles_propietarios.gestionar.flujo"
-preguntas: ["Como obtener datos en Posibles Propietarios?"]
+preguntas: ["Como elegir la delegación propietaria de la plaza en Elegir la delegación propietaria de la plaza?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/actividadplazas/posibles_propietarios_data"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/actividadplazas/flujos/posibles_propietarios.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Posibles Propietarios
+# Ayuda IA - Elegir la delegación propietaria de la plaza
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Posibles Propietarios`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir la delegación propietaria de la plaza`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Posibles Propietarios?
+- Como elegir la delegación propietaria de la plaza en Elegir la delegación propietaria de la plaza?
 
 ## Donde Entrar
 
@@ -29,11 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Elegir la delegación propietaria de la plaza
 
-1. Abrir el formulario de asistencia (persona↔actividad) desde el módulo asistentes.
-2. Al cargar o cambiar persona/actividad, el frontend solicita `posibles_propietarios_data` con
-3. El sistema devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`,
+1. Abrir el formulario de asistencia, bien desde una persona o bien desde una actividad.
+2. En **propiedad de** aparecen solo las delegaciones posibles para esa combinación; por defecto sale preseleccionada la propia delegación.
+3. Elegir la que corresponda y guardar el formulario.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/posibles_propietarios_data`
@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Al editar la asistencia de una persona en una actividad (o viceversa), elegir qué delegación es propietaria de la plaza entre las opciones válidas para esa combinación persona+actividad.
+Al editar la asistencia de una persona a una actividad, elegir qué delegación es la propietaria de la plaza entre las opciones válidas para esa persona y esa actividad.
 
 ## Errores Documentados
 

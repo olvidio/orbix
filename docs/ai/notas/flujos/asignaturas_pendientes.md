@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Asignaturas Pendientes"
+titulo: "Consultar el cuadro alumnos-asignaturas"
 flujo: "notas.asignaturas_pendientes.gestionar.flujo"
-preguntas: ["Como obtener datos en Asignaturas Pendientes?"]
-pantallas_principales: []
+preguntas: ["Como consultar el cuadro alumnos-asignaturas en Consultar el cuadro alumnos-asignaturas?"]
+pantallas_principales: ["notas.pantalla.asignaturas_pendientes"]
 fragmentos: ["notas.pantalla.asignaturas_pendientes"]
 endpoints: ["/src/notas/asignaturas_pendientes_data"]
 source: "docs/catalogo/notas/flujos/asignaturas_pendientes.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asignaturas Pendientes
+# Ayuda IA - Consultar el cuadro alumnos-asignaturas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignaturas Pendientes`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar el cuadro alumnos-asignaturas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Asignaturas Pendientes?
+- Como consultar el cuadro alumnos-asignaturas en Consultar el cuadro alumnos-asignaturas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Asignaturas Pendientes (`notas.pantalla.asignaturas_pendientes`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Consultar el cuadro alumnos-asignaturas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tabla alumnos-asignaturas**.
+2. Se muestra una fila por alumno y una columna por asignatura, con lo que le falta.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/asignaturas_pendientes_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `notas.pantalla.asignaturas_pendientes`
+- `notas.pantalla.asignaturas_pendientes`
 
 ## Objetivo
 
-Consultar matriz de asignaturas pendientes por alumno.
+Ver el cuadro de alumnos y asignaturas pendientes de cada uno.
 
 ## Limites De La Respuesta
 

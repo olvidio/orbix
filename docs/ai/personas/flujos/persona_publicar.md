@@ -2,39 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "personas"
-titulo: "Publicar persona hacia otra DL"
+titulo: "Publicar una persona hacia otra dl"
 flujo: "personas.persona_publicar.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como publicar una persona hacia otra dl en Publicar una persona hacia otra dl?"]
+pantallas_principales: ["personas.pantalla.persona_publicar_form"]
 fragmentos: ["personas.pantalla.persona_publicar_form"]
 endpoints: ["/src/personas/persona_publicar_form_data", "/src/personas/persona_publicar"]
 source: "docs/catalogo/personas/flujos/persona_publicar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Publicar persona hacia otra DL
+# Ayuda IA - Publicar una persona hacia otra dl
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Publicar persona hacia otra DL`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Publicar una persona hacia otra dl`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como publicar una persona hacia otra dl en Publicar una persona hacia otra dl?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Publicar persona (`personas.pantalla.persona_publicar_form`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Publicar una persona hacia otra dl
+
+1. En la lista de personas, seleccionar a la persona y pulsar **publicar**.
+2. Se abre un formulario con su nombre y un desplegable de delegaciones; elegir la delegación destino (es obligatorio).
+3. Guardar. Sale el aviso «persona publicada» y se vuelve a la lista.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/personas/persona_publicar_form_data`
+- `/src/personas/persona_publicar`
+
 ## Pantallas Y Fragmentos Relacionados
 
+- `personas.pantalla.persona_publicar_form`
 - `personas.pantalla.persona_publicar_form`
 
 ## Objetivo
 
-Compartir temporalmente una persona con otra delegación sin trasladarla.
+Compartir temporalmente una persona con otra delegación, sin trasladarla.
 
 ## Errores Documentados
 

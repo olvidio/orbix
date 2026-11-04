@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Nivel STGR por defecto"
+titulo: "Elegir el tipo y el nivel STGR"
 flujo: "actividades.actividad_nivel_stgr_default.gestionar.flujo"
-preguntas: []
+preguntas: ["Como elegir el tipo y el nivel stgr en Elegir el tipo y el nivel STGR?"]
 pantallas_principales: ["actividades.pantalla.actividad_ver"]
 fragmentos: []
 endpoints: ["/src/actividades/actividad_nivel_stgr_default_datos"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/actividad_nivel_stgr_default.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Nivel STGR por defecto
+# Ayuda IA - Elegir el tipo y el nivel STGR
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Nivel STGR por defecto`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el tipo y el nivel STGR`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como elegir el tipo y el nivel stgr en Elegir el tipo y el nivel STGR?
 
 ## Donde Entrar
 
@@ -28,13 +29,21 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Elegir el tipo y el nivel stgr
+
+1. En la ficha, elegir el tipo de actividad.
+2. El desplegable de nivel STGR se pre-rellena con el nivel habitual para ese tipo; se puede cambiar.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/actividad_nivel_stgr_default_datos`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.actividad_ver`
 
 ## Objetivo
 
-Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel habitual.
+Al elegir el tipo de actividad, rellenar solo el nivel STGR habitual.
 
 ## Limites De La Respuesta
 

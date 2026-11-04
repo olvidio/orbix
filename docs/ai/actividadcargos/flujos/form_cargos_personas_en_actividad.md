@@ -2,40 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadcargos"
-titulo: "Form Cargos Personas En Actividad"
+titulo: "Abrir el formulario de cargo de una persona"
 flujo: "actividadcargos.form_cargos_personas_en_actividad.gestionar.flujo"
-preguntas: ["Como obtener datos en Form Cargos Personas En Actividad?"]
-pantallas_principales: []
+preguntas: ["Como abrir el formulario de cargo de una persona en Abrir el formulario de cargo de una persona?"]
+pantallas_principales: ["actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 fragmentos: ["actividadcargos.pantalla.form_cargos_personas_en_actividad"]
 endpoints: ["/src/actividadcargos/form_cargos_personas_en_actividad_data"]
 source: "docs/catalogo/actividadcargos/flujos/form_cargos_personas_en_actividad.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Form Cargos Personas En Actividad
+# Ayuda IA - Abrir el formulario de cargo de una persona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Form Cargos Personas En Actividad`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Abrir el formulario de cargo de una persona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Form Cargos Personas En Actividad?
+- Como abrir el formulario de cargo de una persona en Abrir el formulario de cargo de una persona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Cargos Personas En Actividad (`actividadcargos.pantalla.form_cargos_personas_en_actividad`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Abrir el formulario de cargo de una persona
 
-1. El usuario abre el formulario desde el widget de relación de cargos de la persona.
-2. El controller POSTea a `form_cargos_personas_en_actividad_data` con `id_pau` (persona), `sel`, `mod`, `que_dl`, `id_tipo` según el enlace de alta.
-3. En modo `editar`, carga datos del `ActividadCargo` y fija actividad en solo lectura.
-4. En modo `nuevo`, filtra actividades por tipo y delegación (`que_dl` vacío = otras delegaciones).
-5. El front pinta desplegables y hash; el usuario completa y guarda vía `cargo_nuevo`/`cargo_editar`.
+1. Desde la relación de cargos de la persona, pulsar **añadir cargo de la dl**, **añadir cargo de otra dl** o seleccionar un cargo y pulsar **modificar cargo**.
+2. Al modificar, aparecen los datos del cargo y la actividad no se puede cambiar.
+3. Al añadir, el desplegable de actividades solo ofrece las del tipo elegido y de la propia dl (o de otras delegaciones, según el enlace).
+4. Completar el formulario y guardar.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadcargos/form_cargos_personas_en_actividad_data`
@@ -43,10 +42,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadcargos.pantalla.form_cargos_personas_en_actividad`
+- `actividadcargos.pantalla.form_cargos_personas_en_actividad`
 
 ## Objetivo
 
-Gestionar los cargos de una persona en distintas actividades: el sistema carga el listado de actividades candidatas (en altas), valores del cargo en edición y URLs de mutación.
+Abrir el formulario para dar de alta o modificar un cargo de una persona en una actividad, con las actividades candidatas en las altas.
 
 ## Errores Documentados
 

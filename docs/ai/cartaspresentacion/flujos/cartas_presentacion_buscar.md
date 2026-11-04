@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "cartaspresentacion"
-titulo: "Cartas Presentacion Buscar"
+titulo: "Buscar cartas de presentación"
 flujo: "cartaspresentacion.cartas_presentacion_buscar.gestionar.flujo"
-preguntas: []
+preguntas: ["Como buscar cartas de presentación en Buscar cartas de presentación?"]
 pantallas_principales: ["cartaspresentacion.pantalla.cartas_presentacion_buscar"]
 fragmentos: ["cartaspresentacion.pantalla.cartas_presentacion_lista"]
 endpoints: ["/src/cartaspresentacion/cartas_presentacion_buscar_data", "/src/cartaspresentacion/cartas_presentacion_lista_data"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/cartaspresentacion/flujos/cartas_presentacion_buscar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Cartas Presentacion Buscar
+# Ayuda IA - Buscar cartas de presentación
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Cartas Presentacion Buscar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Buscar cartas de presentación`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como buscar cartas de presentación en Buscar cartas de presentación?
 
 ## Donde Entrar
 
@@ -28,6 +29,16 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Buscar cartas de presentación
+
+1. Abrir **buscar**: se cargan los desplegables de filtro.
+2. Rellenar los filtros y pulsar **buscar**.
+3. Los resultados aparecen debajo, en el mismo formato que las listas.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/cartaspresentacion/cartas_presentacion_buscar_data`
+- `/src/cartaspresentacion/cartas_presentacion_lista_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `cartaspresentacion.pantalla.cartas_presentacion_buscar`
@@ -35,7 +46,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Encontrar cartas de presentación que cumplan criterios geográficos o de delegación.
+Encontrar cartas de presentación según criterios geográficos o de delegación.
 
 ## Limites De La Respuesta
 

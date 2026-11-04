@@ -5,7 +5,7 @@ modulo: "actividadessacd"
 titulo: "Locales Desplegable"
 flujo: "actividadessacd.locales_desplegable.gestionar.flujo"
 preguntas: ["Como obtener datos en Locales Desplegable?"]
-pantallas_principales: []
+pantallas_principales: ["actividadessacd.pantalla.com_sacd_txt"]
 fragmentos: ["actividadessacd.pantalla.com_sacd_txt"]
 endpoints: ["/src/actividadessacd/locales_desplegable_data"]
 source: "docs/catalogo/actividadessacd/flujos/locales_desplegable.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Com Sacd Txt (`actividadessacd.pantalla.com_sacd_txt`)
 
 ## Como Responder
 
@@ -32,13 +32,14 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 ## Obtener datos
 
 1. Abrir el fragmento de edición de textos desde la pantalla de comunicación.
-2. El sistema rellena el desplegable de idiomas con `a_locales`.
+2. El desplegable de idiomas se rellena con los idiomas disponibles.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadessacd/locales_desplegable_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadessacd.pantalla.com_sacd_txt`
 - `actividadessacd.pantalla.com_sacd_txt`
 
 ## Objetivo

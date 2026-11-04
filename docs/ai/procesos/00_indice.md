@@ -21,23 +21,23 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Actividad Proceso -> `flujos/actividad_proceso.md`
-- Actividad Proceso Generar -> `flujos/actividad_proceso_generar.md`
-- Actividad Que Fases Ajax -> `flujos/actividad_que_fases_ajax.md`
-- Fases Activ Cambio -> `flujos/fases_activ_cambio.md`
-- Fases Activ Cambio Tipo Html -> `flujos/fases_activ_cambio_tipo_html.md`
-- Procesos -> `flujos/procesos.md`
-- Procesos Clonar -> `flujos/procesos_clonar.md`
-- Procesos Depende -> `flujos/procesos_depende.md`
-- Procesos Get Listado -> `flujos/procesos_get_listado.md`
-- Procesos Regenerar -> `flujos/procesos_regenerar.md`
-- Procesos Select -> `flujos/procesos_select.md`
-- Procesos Ver -> `flujos/procesos_ver.md`
-- Tipo Activ Proceso -> `flujos/tipo_activ_proceso.md`
-- Tipo Activ Proceso Asignar -> `flujos/tipo_activ_proceso_asignar.md`
-- Tipo Activ Proceso Lst Posibles -> `flujos/tipo_activ_proceso_lst_posibles.md`
-- Usuario Perm Activ -> `flujos/usuario_perm_activ.md`
-- Usuario Perm Activ Ajax -> `flujos/usuario_perm_activ_ajax.md`
+- Ver y avanzar el proceso de una actividad -> `flujos/actividad_proceso.md`
+- Regenerar el proceso de una actividad -> `flujos/actividad_proceso_generar.md`
+- Filtrar actividades por fases -> `flujos/actividad_que_fases_ajax.md`
+- Cambiar de fase varias actividades -> `flujos/fases_activ_cambio.md`
+- Elegir el tipo de actividad para cambiar de fase -> `flujos/fases_activ_cambio_tipo_html.md`
+- Administrar las tareas de un proceso -> `flujos/procesos.md`
+- Clonar un proceso -> `flujos/procesos_clonar.md`
+- Elegir de qué tarea depende -> `flujos/procesos_depende.md`
+- Consultar y modificar las tareas de un proceso -> `flujos/procesos_get_listado.md`
+- Regenerar las actividades de un proceso -> `flujos/procesos_regenerar.md`
+- Elegir el proceso que se quiere administrar -> `flujos/procesos_select.md`
+- Crear o modificar una tarea de un proceso -> `flujos/procesos_ver.md`
+- Consultar los procesos de cada tipo de actividad -> `flujos/tipo_activ_proceso.md`
+- Asignar un proceso a un tipo de actividad -> `flujos/tipo_activ_proceso_asignar.md`
+- Ver los procesos asignables a un tipo de actividad -> `flujos/tipo_activ_proceso_lst_posibles.md`
+- Definir un permiso de actividades de un usuario -> `flujos/usuario_perm_activ.md`
+- Elegir la fase de referencia -> `flujos/usuario_perm_activ_ajax.md`
 
 ## Pantallas Disponibles
 

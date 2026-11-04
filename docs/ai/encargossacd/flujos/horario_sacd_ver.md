@@ -2,47 +2,51 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Horario Sacd Ver"
+titulo: "Crear o modificar el horario de un sacerdote"
 flujo: "encargossacd.horario_sacd_ver.gestionar.flujo"
-preguntas: ["Como obtener datos en Horario Sacd Ver?"]
-pantallas_principales: []
+preguntas: ["Como crear o modificar el horario de un sacerdote en Crear o modificar el horario de un sacerdote?"]
+pantallas_principales: ["encargossacd.pantalla.horario_sacd_ver"]
 fragmentos: ["encargossacd.pantalla.horario_sacd_ver"]
 endpoints: ["/src/encargossacd/horario_sacd_ver_data"]
 source: "docs/catalogo/encargossacd/flujos/horario_sacd_ver.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Horario Sacd Ver
+# Ayuda IA - Crear o modificar el horario de un sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Horario Sacd Ver`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Crear o modificar el horario de un sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Horario Sacd Ver?
+- Como crear o modificar el horario de un sacerdote en Crear o modificar el horario de un sacerdote?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Horario Sacd Ver (`encargossacd.pantalla.horario_sacd_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Crear o modificar el horario de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha, pulsar **crear horario**.
+2. Indicar **dia**, **hora inicio**, **hora fin** y el periodo (**activo desde** / **hasta**).
+3. Se pueden **añadir horario** y **generar excepciones** (antes del / después del).
+4. Pulsar **guardar horario**; **eliminar horario** pide confirmación.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/horario_sacd_ver_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.horario_sacd_ver`
+- `encargossacd.pantalla.horario_sacd_ver`
 
 ## Objetivo
 
-Gestiona EncargoSacdHorarioVer. Datos del formulario horario sacd (ficha tareas).
+Ver el formulario de horario de un sacerdote en un encargo, con excepciones antes o después de una fecha.
 
 ## Limites De La Respuesta
 

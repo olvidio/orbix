@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Duplicar actividad"
+titulo: "Duplicar una actividad"
 flujo: "actividades.actividad_duplicar.gestionar.flujo"
-preguntas: []
+preguntas: ["Como duplicar una actividad en Duplicar una actividad?"]
 pantallas_principales: []
 fragmentos: ["actividades.pantalla.actividad_select"]
 endpoints: ["/src/actividades/actividad_duplicar"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/actividades/flujos/actividad_duplicar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Duplicar actividad
+# Ayuda IA - Duplicar una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Duplicar actividad`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Duplicar una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como duplicar una actividad en Duplicar una actividad?
 
 ## Donde Entrar
 
@@ -28,13 +29,22 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Duplicar una actividad
+
+1. Marcar la actividad en la lista y pulsar **duplicar**.
+2. Confirmar el aviso «Seguro que desea duplicar esta actividad».
+3. La copia se llama «dup » + el nombre original y conserva fechas y plazas; la lista se vuelve a cargar con la búsqueda por defecto, así que hay que buscar de nuevo para ver la copia.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/actividad_duplicar`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividades.pantalla.actividad_select`
 
 ## Objetivo
 
-Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
+Crear una copia de una actividad con las mismas fechas, plazas y demás datos.
 
 ## Errores Documentados
 

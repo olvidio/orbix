@@ -5,7 +5,7 @@ modulo: "actividadestudios"
 titulo: "Matricula Editar"
 flujo: "actividadestudios.matricula_editar.gestionar.flujo"
 preguntas: ["Como ejecutar en Matricula Editar?"]
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 fragmentos: ["actividadestudios.pantalla.form_matriculas_de_una_persona"]
 endpoints: ["/src/actividadestudios/matricula_editar"]
 source: "docs/catalogo/actividadestudios/flujos/matricula_editar.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Matriculas De Una Persona (`actividadestudios.pantalla.form_matriculas_de_una_persona`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadestudios.pantalla.form_matriculas_de_una_persona`
 - `actividadestudios.pantalla.form_matriculas_de_una_persona`
 
 ## Objetivo

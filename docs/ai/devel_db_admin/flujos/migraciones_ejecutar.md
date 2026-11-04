@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Migraciones Ejecutar"
 flujo: "devel_db_admin.migraciones_ejecutar.gestionar.flujo"
 preguntas: ["Como ejecutar en Migraciones Ejecutar?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.migraciones_ejecutar"]
 fragmentos: ["devel_db_admin.pantalla.migraciones_ejecutar", "devel_db_admin.pantalla.migraciones_lista"]
 endpoints: ["/src/devel_db_admin/migraciones_ejecutar"]
 source: "docs/catalogo/devel_db_admin/flujos/migraciones_ejecutar.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Migraciones Ejecutar (`devel_db_admin.pantalla.migraciones_ejecutar`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.migraciones_ejecutar`
 - `devel_db_admin.pantalla.migraciones_ejecutar`
 - `devel_db_admin.pantalla.migraciones_lista`
 

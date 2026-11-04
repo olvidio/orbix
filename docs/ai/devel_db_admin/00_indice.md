@@ -30,7 +30,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Db Lugar -> `flujos/db_lugar.md`
 - Db Propiedades -> `flujos/db_propiedades.md`
 - Eliminar Esquema -> `flujos/eliminar_esquema.md`
-- Migraciones -> `flujos/migraciones.md`
+- Aplicar las migraciones pendientes -> `flujos/migraciones.md`
 - Migraciones Ejecutar -> `flujos/migraciones_ejecutar.md`
 - Migraciones Quitar Registro -> `flujos/migraciones_quitar_registro.md`
 - Mover Tabla -> `flujos/mover_tabla.md`

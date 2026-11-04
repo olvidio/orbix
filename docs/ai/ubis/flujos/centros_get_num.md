@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Centros Get Num"
+titulo: "Consultar o cambiar buzón, pi y cartas"
 flujo: "ubis.centros_get_num.gestionar.flujo"
-preguntas: ["Como ejecutar en Centros Get Num?"]
-pantallas_principales: []
+preguntas: ["Como consultar o cambiar buzón, pi y cartas en Consultar o cambiar buzón, pi y cartas?"]
+pantallas_principales: ["ubis.pantalla.centros_get_num"]
 fragmentos: ["ubis.pantalla.centros_get_num"]
 endpoints: ["/src/ubis/centros_get_num"]
 source: "docs/catalogo/ubis/flujos/centros_get_num.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Get Num
+# Ayuda IA - Consultar o cambiar buzón, pi y cartas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Get Num`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar o cambiar buzón, pi y cartas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Centros Get Num?
+- Como consultar o cambiar buzón, pi y cartas en Consultar o cambiar buzón, pi y cartas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Centros Get Num (`ubis.pantalla.centros_get_num`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar o cambiar buzón, pi y cartas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **pi, cartas, nº buzón**; pulsar **buscar**.
+2. Se muestra la lista con el nº de buzón, nº de ejemplares de pi y nº de cartas.
+3. Pulsar un centro para editar sus números.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/centros_get_num`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.centros_get_num`
+- `ubis.pantalla.centros_get_num`
 
 ## Objetivo
 
-Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
+Listar los centros de la dl con su nº de buzón, ejemplares de pi y cartas, para editarlos.
 
 ## Errores Documentados
 

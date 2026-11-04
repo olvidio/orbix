@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Form Actividades De Una Persona"
+titulo: "Anotar la asistencia de una persona a una actividad"
 flujo: "asistentes.form_actividades_de_una_persona.gestionar.flujo"
-preguntas: ["Como obtener datos en Form Actividades De Una Persona?"]
-pantallas_principales: []
+preguntas: ["Como anotar la asistencia de una persona a una actividad en Anotar la asistencia de una persona a una actividad?"]
+pantallas_principales: ["asistentes.pantalla.form_actividades_de_una_persona"]
 fragmentos: ["asistentes.pantalla.form_actividades_de_una_persona"]
 endpoints: ["/src/asistentes/form_actividades_de_una_persona_data"]
 source: "docs/catalogo/asistentes/flujos/form_actividades_de_una_persona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Form Actividades De Una Persona
+# Ayuda IA - Anotar la asistencia de una persona a una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Form Actividades De Una Persona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Anotar la asistencia de una persona a una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Form Actividades De Una Persona?
+- Como anotar la asistencia de una persona a una actividad en Anotar la asistencia de una persona a una actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Form Actividades De Una Persona (`asistentes.pantalla.form_actividades_de_una_persona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Anotar la asistencia de una persona a una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el dossier de actividades de la persona.
+2. Elegir la **actividad** (obligatoria: «debe indicar una actividad»), la **plaza**, quién es **propiedad de** la plaza, **estudios confirmados** y las **observaciones**.
+3. Pulsar **guardar**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/form_actividades_de_una_persona_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.form_actividades_de_una_persona`
+- `asistentes.pantalla.form_actividades_de_una_persona`
 
 ## Objetivo
 
-Gestionar asistencias en dossier 1301 (persona).
+Añadir o modificar la asistencia de una persona a una actividad desde su ficha.
 
 ## Limites De La Respuesta
 

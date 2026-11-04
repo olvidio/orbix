@@ -2,47 +2,52 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Sacd Ausencias Get"
+titulo: "Anotar una ausencia"
 flujo: "encargossacd.sacd_ausencias_get.gestionar.flujo"
-preguntas: ["Como obtener datos en Sacd Ausencias Get?"]
-pantallas_principales: []
+preguntas: ["Como anotar una ausencia en Anotar una ausencia?"]
+pantallas_principales: ["encargossacd.pantalla.sacd_ausencias_get"]
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_get"]
 endpoints: ["/src/encargossacd/sacd_ausencias_get_data"]
 source: "docs/catalogo/encargossacd/flujos/sacd_ausencias_get.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sacd Ausencias Get
+# Ayuda IA - Anotar una ausencia
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sacd Ausencias Get`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Anotar una ausencia`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Sacd Ausencias Get?
+- Como anotar una ausencia en Anotar una ausencia?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Sacd Ausencias Get (`encargossacd.pantalla.sacd_ausencias_get`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Anotar una ausencia
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ausencias > sacd**.
+2. Elegir el **tipo** y el **sacd**.
+3. En **ausencias/tareas** (columnas **fechas** y **horario**), elegir en **añadir actividades personales** el tipo (Clases del stgr, Ausencia, cv de un dia, 1ª Confesiones, boda, confirmación, 1ª comunión, bautizo, Tarea, rtm): aparece una fila con **inicio** y **fin** (al poner el inicio, el fin se rellena con la misma fecha). Con **ver anteriores** se ve el historial.
+4. Pulsar **Guardar**; la pantalla vuelve atrás sola. Para borrar una, dejar en blanco la fecha de inicio y la de fin.
+5. **añadir actividades personales** y **crear horario** permiten añadir otras tareas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/sacd_ausencias_get_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.sacd_ausencias_get`
+- `encargossacd.pantalla.sacd_ausencias_get`
 
 ## Objetivo
 
-Gestiona SacdAusenciasGet. Datos para la ficha de ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_get.php). Devuelve la lista de tipos de ausencia disponibles (encargos con prefijo 7/4) y las filas asociadas al SACD. Con historial=1 incluye todas las ausencias; sin historial solo muestra las que aun tienen vigencia.
+Ver y anotar las ausencias o actividades personales de un sacerdote.
 
 ## Limites De La Respuesta
 

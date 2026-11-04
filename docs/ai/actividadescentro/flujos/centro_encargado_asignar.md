@@ -5,7 +5,7 @@ modulo: "actividadescentro"
 titulo: "Centro Encargado Asignar"
 flujo: "actividadescentro.centro_encargado_asignar.gestionar.flujo"
 preguntas: ["Como ejecutar en Centro Encargado Asignar?"]
-pantallas_principales: []
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centro_encargado_asignar"]
 source: "docs/catalogo/actividadescentro/flujos/centro_encargado_asignar.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Activ Ctr (`actividadescentro.pantalla.activ_ctr`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadescentro.pantalla.activ_ctr`
 - `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo

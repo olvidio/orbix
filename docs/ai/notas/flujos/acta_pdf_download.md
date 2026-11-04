@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Acta Pdf Download"
+titulo: "Descargar el PDF de un acta"
 flujo: "notas.acta_pdf_download.gestionar.flujo"
-preguntas: ["Como ejecutar en Acta Pdf Download?"]
+preguntas: ["Como descargar el pdf de un acta en Descargar el PDF de un acta?"]
 pantallas_principales: ["notas.pantalla.acta_pdf_download"]
 fragmentos: []
 endpoints: ["/src/notas/acta_pdf_download"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/notas/flujos/acta_pdf_download.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Acta Pdf Download
+# Ayuda IA - Descargar el PDF de un acta
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Acta Pdf Download`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Descargar el PDF de un acta`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Acta Pdf Download?
+- Como descargar el pdf de un acta en Descargar el PDF de un acta?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Descargar el pdf de un acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **actas**, marcar el acta.
+2. Pulsar descargar PDF: se abre en una pestaña nueva (el enlace caduca a los pocos minutos).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/acta_pdf_download`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Descargar PDF con token firmado.
+Descargar el PDF firmado de un acta.
 
 ## Limites De La Respuesta
 

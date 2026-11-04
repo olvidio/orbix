@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Emitido Pdf Upload"
+titulo: "Subir el PDF de un certificado"
 flujo: "certificados.certificado_emitido_pdf_upload.gestionar.flujo"
-preguntas: ["Como ejecutar en Certificado Emitido Pdf Upload?"]
+preguntas: ["Como subir el pdf de un certificado en Subir el PDF de un certificado?"]
 pantallas_principales: ["certificados.pantalla.certificado_emitido_pdf_upload"]
 fragmentos: []
 endpoints: ["/src/certificados/certificado_emitido_pdf_upload"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/certificados/flujos/certificado_emitido_pdf_upload.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Emitido Pdf Upload
+# Ayuda IA - Subir el PDF de un certificado
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Emitido Pdf Upload`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Subir el PDF de un certificado`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Certificado Emitido Pdf Upload?
+- Como subir el pdf de un certificado en Subir el PDF de un certificado?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Subir el pdf de un certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el fichero PDF en el formulario de adjuntar.
+2. Guardar. Si es demasiado grande el servidor lo rechaza con un aviso de tamaño.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_emitido_pdf_upload`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Subir fichero PDF al API de certificados emitidos.
+Subir el fichero PDF de un certificado emitido.
 
 ## Limites De La Respuesta
 

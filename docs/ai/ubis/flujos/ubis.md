@@ -2,60 +2,43 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Ubis"
+titulo: "Eliminar un centro o una casa"
 flujo: "ubis.ubis.gestionar.flujo"
-preguntas: ["Como eliminar en Ubis?", "Como guardar en Ubis?", "Como consultar el listado en Ubis?"]
-pantallas_principales: []
+preguntas: ["Como eliminar un centro o una casa en Eliminar un centro o una casa?"]
+pantallas_principales: ["ubis.pantalla.ubis_eliminar", "ubis.pantalla.ubis_lista", "ubis.pantalla.ubis_update"]
 fragmentos: ["ubis.pantalla.ubis_eliminar", "ubis.pantalla.ubis_lista", "ubis.pantalla.ubis_update"]
 endpoints: ["/src/ubis/ubis_eliminar", "/src/ubis/ubis_guardar", "/src/ubis/ubis_lista_data"]
 source: "docs/catalogo/ubis/flujos/ubis.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Ubis
+# Ayuda IA - Eliminar un centro o una casa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Ubis`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Eliminar un centro o una casa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Ubis?
-- Como guardar en Ubis?
-- Como consultar el listado en Ubis?
+- Como eliminar un centro o una casa en Eliminar un centro o una casa?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Ubis Eliminar (`ubis.pantalla.ubis_eliminar`)
+- Ubis Lista (`ubis.pantalla.ubis_lista`)
+- Ubis Update (`ubis.pantalla.ubis_update`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Eliminar un centro o una casa
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir la ficha, o marcar el centro o casa en la tabla de resultados.
+2. Pulsar **eliminar** y confirmar «¿Está seguro que desea borrar este centro?» (o «esta casa»).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubis/ubis_eliminar`
-
-## Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
+- `/src/ubis/ubis_guardar`
 - `/src/ubis/ubis_lista_data`
 
 ## Pantallas Y Fragmentos Relacionados
@@ -63,10 +46,13 @@ Referencias tecnicas para verificar la respuesta:
 - `ubis.pantalla.ubis_eliminar`
 - `ubis.pantalla.ubis_lista`
 - `ubis.pantalla.ubis_update`
+- `ubis.pantalla.ubis_eliminar`
+- `ubis.pantalla.ubis_lista`
+- `ubis.pantalla.ubis_update`
 
 ## Objetivo
 
-Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
+Eliminar un centro o una casa.
 
 ## Errores Documentados
 

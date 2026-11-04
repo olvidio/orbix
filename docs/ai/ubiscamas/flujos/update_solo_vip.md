@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubiscamas"
-titulo: "Update Solo Vip"
+titulo: "Filtrar las camas VIP"
 flujo: "ubiscamas.update_solo_vip.gestionar.flujo"
-preguntas: ["Como ejecutar en Update Solo Vip?"]
+preguntas: ["Como filtrar las camas vip en Filtrar las camas VIP?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/ubiscamas/update_solo_vip"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/ubiscamas/flujos/update_solo_vip.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Update Solo Vip
+# Ayuda IA - Filtrar las camas VIP
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Update Solo Vip`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Filtrar las camas VIP`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Update Solo Vip?
+- Como filtrar las camas vip en Filtrar las camas VIP?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Filtrar las camas vip
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la casilla «solo VIP».
+2. La lista muestra solo las camas VIP; desmarcarla para ver todas.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubiscamas/update_solo_vip`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
+Mostrar solo las camas VIP en la distribución de habitaciones.
 
 ## Errores Documentados
 

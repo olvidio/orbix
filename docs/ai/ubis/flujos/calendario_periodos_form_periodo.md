@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Calendario Periodos Form Periodo"
+titulo: "Modificar un periodo"
 flujo: "ubis.calendario_periodos_form_periodo.gestionar.flujo"
-preguntas: ["Como obtener datos en Calendario Periodos Form Periodo?"]
-pantallas_principales: []
+preguntas: ["Como modificar un periodo en Modificar un periodo?"]
+pantallas_principales: ["ubis.pantalla.calendario_periodos_form_periodo"]
 fragmentos: ["ubis.pantalla.calendario_periodos_form_periodo"]
 endpoints: ["/src/ubis/calendario_periodos_form_periodo_data"]
 source: "docs/catalogo/ubis/flujos/calendario_periodos_form_periodo.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Calendario Periodos Form Periodo
+# Ayuda IA - Modificar un periodo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Calendario Periodos Form Periodo`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Modificar un periodo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Calendario Periodos Form Periodo?
+- Como modificar un periodo en Modificar un periodo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Calendario Periodos Form Periodo (`ubis.pantalla.calendario_periodos_form_periodo`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Modificar un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de periodos de la casa, pulsar el periodo.
+2. Cambiar fechas o sección y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/calendario_periodos_form_periodo_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.calendario_periodos_form_periodo`
+- `ubis.pantalla.calendario_periodos_form_periodo`
 
 ## Objetivo
 
-Carga los campos del formulario de edición de un periodo de calendario existente.
+Abrir el formulario de un periodo ya existente para modificarlo.
 
 ## Errores Documentados
 

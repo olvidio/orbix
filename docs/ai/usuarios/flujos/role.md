@@ -2,70 +2,75 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Role"
+titulo: "Consultar los roles"
 flujo: "usuarios.role.gestionar.flujo"
-preguntas: ["Como eliminar en Role?", "Como guardar en Role?", "Como consultar el listado en Role?"]
-pantallas_principales: []
+preguntas: ["Como consultar los roles en Consultar los roles?", "Como asignar grupos de menús a un rol en Consultar los roles?", "Como quitar un grupo de menús a un rol en Consultar los roles?"]
+pantallas_principales: ["usuarios.pantalla.role_lista"]
 fragmentos: ["usuarios.pantalla.role_form", "usuarios.pantalla.role_lista"]
 endpoints: ["/src/usuarios/role_eliminar", "/src/usuarios/role_guardar", "/src/usuarios/role_lista"]
 source: "docs/catalogo/usuarios/flujos/role.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Role
+# Ayuda IA - Consultar los roles
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Role`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los roles`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Role?
-- Como guardar en Role?
-- Como consultar el listado en Role?
+- Como consultar los roles en Consultar los roles?
+- Como asignar grupos de menús a un rol en Consultar los roles?
+- Como quitar un grupo de menús a un rol en Consultar los roles?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Role Lista (`usuarios.pantalla.role_lista`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Consultar los roles
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **lista de roles**.
+2. Los roles son comunes a todas las delegaciones y solo los modifica el superusuario.
+3. Pulsar un rol para ver su ficha y los grupos de menús que tiene.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
+- `/src/usuarios/role_lista`
 
-## Guardar
+## Asignar grupos de menús a un rol
 
-1. Revisar manualmente los pasos de esta accion.
-
-Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir la ficha del rol.
+2. Pulsar **añadir grup menu** y marcar los grupos de menús que se quieren dar.
+3. Guardar. Los grupos de menús son propios de cada delegación (sv y sf distintos) y los puede modificar el administrador.
 
 Referencias tecnicas para verificar la respuesta:
+- `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
+- `/src/usuarios/role_lista`
+
+## Quitar un grupo de menús a un rol
+
+1. En la ficha del rol, en la tabla de grupos de menús, elegir el que se quiere quitar y confirmar.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/usuarios/role_eliminar`
+- `/src/usuarios/role_guardar`
 - `/src/usuarios/role_lista`
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `usuarios.pantalla.role_lista`
 - `usuarios.pantalla.role_form`
 - `usuarios.pantalla.role_lista`
 
 ## Objetivo
 
-Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar grupmenus.
+Consultar los roles y asignar a cada uno los grupos de menús de la delegación.
 
 ## Errores Documentados
 

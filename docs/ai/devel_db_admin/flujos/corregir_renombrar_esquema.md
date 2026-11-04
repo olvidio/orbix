@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Corregir Renombrar Esquema"
 flujo: "devel_db_admin.corregir_renombrar_esquema.gestionar.flujo"
 preguntas: ["Como ejecutar en Corregir Renombrar Esquema?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_corregir_renombrar_esquema"]
 fragmentos: ["devel_db_admin.pantalla.db_corregir_renombrar_esquema"]
 endpoints: ["/src/devel_db_admin/corregir_renombrar_esquema"]
 source: "docs/catalogo/devel_db_admin/flujos/corregir_renombrar_esquema.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Corregir Renombrar Esquema (`devel_db_admin.pantalla.db_corregir_renombrar_esquema`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_corregir_renombrar_esquema`
 - `devel_db_admin.pantalla.db_corregir_renombrar_esquema`
 
 ## Objetivo

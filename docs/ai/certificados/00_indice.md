@@ -21,24 +21,24 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Certificado Emitido -> `flujos/certificado_emitido.md`
-- Certificado Emitido Adjuntar -> `flujos/certificado_emitido_adjuntar.md`
-- Certificado Emitido Enviar -> `flujos/certificado_emitido_enviar.md`
-- Certificado Emitido Guardar Pdf -> `flujos/certificado_emitido_guardar_pdf.md`
-- Certificado Emitido Imprimir -> `flujos/certificado_emitido_imprimir.md`
-- Certificado Emitido Imprimir Mpdf -> `flujos/certificado_emitido_imprimir_mpdf.md`
-- Certificado Emitido Lista -> `flujos/certificado_emitido_lista.md`
-- Certificado Emitido Pdf Download -> `flujos/certificado_emitido_pdf_download.md`
-- Certificado Emitido Pdf Upload -> `flujos/certificado_emitido_pdf_upload.md`
-- Certificado Emitido Upload Firmado -> `flujos/certificado_emitido_upload_firmado.md`
-- Certificado Emitido Ver -> `flujos/certificado_emitido_ver.md`
-- Certificado Recibido -> `flujos/certificado_recibido.md`
-- Certificado Recibido Adjuntar -> `flujos/certificado_recibido_adjuntar.md`
-- Certificado Recibido Modificar -> `flujos/certificado_recibido_modificar.md`
-- Certificado Recibido Pdf Download -> `flujos/certificado_recibido_pdf_download.md`
-- Certificado Recibido Pdf Upload -> `flujos/certificado_recibido_pdf_upload.md`
-- Certificados Locales -> `flujos/certificados_locales.md`
-- Textos Certificados -> `flujos/textos_certificados.md`
+- Emitir, guardar o eliminar un certificado -> `flujos/certificado_emitido.md`
+- Adjuntar un certificado emitido -> `flujos/certificado_emitido_adjuntar.md`
+- Enviar un certificado a otra delegación -> `flujos/certificado_emitido_enviar.md`
+- Guardar el certificado generado -> `flujos/certificado_emitido_guardar_pdf.md`
+- Emitir un certificado nuevo -> `flujos/certificado_emitido_imprimir.md`
+- Obtener el PDF del certificado -> `flujos/certificado_emitido_imprimir_mpdf.md`
+- Buscar y ver los certificados emitidos -> `flujos/certificado_emitido_lista.md`
+- Descargar el PDF de un certificado emitido -> `flujos/certificado_emitido_pdf_download.md`
+- Subir el PDF de un certificado -> `flujos/certificado_emitido_pdf_upload.md`
+- Subir el certificado firmado -> `flujos/certificado_emitido_upload_firmado.md`
+- Consultar un certificado emitido -> `flujos/certificado_emitido_ver.md`
+- certificados recibidos -> `flujos/certificado_recibido.md`
+- Registrar un certificado recibido -> `flujos/certificado_recibido_adjuntar.md`
+- Modificar un certificado recibido -> `flujos/certificado_recibido_modificar.md`
+- Descargar el PDF de un certificado recibido -> `flujos/certificado_recibido_pdf_download.md`
+- Subir el PDF de un certificado recibido -> `flujos/certificado_recibido_pdf_upload.md`
+- Elegir el idioma del certificado -> `flujos/certificados_locales.md`
+- Textos legales del certificado -> `flujos/textos_certificados.md`
 
 ## Pantallas Disponibles
 

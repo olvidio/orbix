@@ -21,42 +21,42 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Calendario Periodos -> `flujos/calendario_periodos.md`
-- Calendario Periodos Form Periodo -> `flujos/calendario_periodos_form_periodo.md`
-- Calendario Periodos Get -> `flujos/calendario_periodos_get.md`
-- Calendario Periodos Get2 -> `flujos/calendario_periodos_get2.md`
-- Calendario Periodos Nuevo -> `flujos/calendario_periodos_nuevo.md`
-- Casas Opciones -> `flujos/casas_opciones.md`
-- Centros -> `flujos/centros.md`
-- Centros Form Labor -> `flujos/centros_form_labor.md`
-- Centros Form Num -> `flujos/centros_form_num.md`
-- Centros Form Plazas -> `flujos/centros_form_plazas.md`
-- Centros Get Labor -> `flujos/centros_get_labor.md`
-- Centros Get Num -> `flujos/centros_get_num.md`
-- Centros Get Plazas -> `flujos/centros_get_plazas.md`
-- Centros Opciones -> `flujos/centros_opciones.md`
-- Delegacion Que -> `flujos/delegacion_que.md`
-- Delegaciones Region Stgr -> `flujos/delegaciones_region_stgr.md`
-- Direccion -> `flujos/direccion.md`
-- Direcciones Asignar -> `flujos/direcciones_asignar.md`
-- Direcciones Editar -> `flujos/direcciones_editar.md`
-- Direcciones Que -> `flujos/direcciones_que.md`
-- Direcciones Quitar -> `flujos/direcciones_quitar.md`
-- Direcciones Tabla -> `flujos/direcciones_tabla.md`
-- Home Ubis -> `flujos/home_ubis.md`
-- List Ctr -> `flujos/list_ctr.md`
-- Lista Ctrs -> `flujos/lista_ctrs.md`
-- Teleco -> `flujos/teleco.md`
-- Teleco Desc -> `flujos/teleco_desc.md`
-- Teleco Editar -> `flujos/teleco_editar.md`
-- Teleco Tabla -> `flujos/teleco_tabla.md`
-- Trasladar Ubis -> `flujos/trasladar_ubis.md`
-- Ubis -> `flujos/ubis.md`
-- Ubis Buscar -> `flujos/ubis_buscar.md`
-- Ubis Editar -> `flujos/ubis_editar.md`
-- Ubis Editar Load -> `flujos/ubis_editar_load.md`
-- Ubis Editar Normalize Dl -> `flujos/ubis_editar_normalize_dl.md`
-- Ubis Tabla -> `flujos/ubis_tabla.md`
+- Consultar los periodos de una casa -> `flujos/calendario_periodos.md`
+- Modificar un periodo -> `flujos/calendario_periodos_form_periodo.md`
+- Ver todos los periodos de una casa -> `flujos/calendario_periodos_get.md`
+- Ver los periodos de un año -> `flujos/calendario_periodos_get2.md`
+- Crear un periodo nuevo -> `flujos/calendario_periodos_nuevo.md`
+- Elegir una casa en un desplegable -> `flujos/casas_opciones.md`
+- Guardar los datos de un centro -> `flujos/centros.md`
+- Cambiar el tipo de labor -> `flujos/centros_form_labor.md`
+- Cambiar buzón, pi y cartas -> `flujos/centros_form_num.md`
+- Cambiar plazas y sede -> `flujos/centros_form_plazas.md`
+- Consultar o cambiar el tipo de labor de los centros -> `flujos/centros_get_labor.md`
+- Consultar o cambiar buzón, pi y cartas -> `flujos/centros_get_num.md`
+- Consultar o cambiar plazas y sede -> `flujos/centros_get_plazas.md`
+- Elegir un centro en un desplegable -> `flujos/centros_opciones.md`
+- Elegir la delegación de destino -> `flujos/delegacion_que.md`
+- Elegir región y delegación -> `flujos/delegaciones_region_stgr.md`
+- Guardar una dirección -> `flujos/direccion.md`
+- Asignar una dirección existente -> `flujos/direcciones_asignar.md`
+- Modificar la dirección -> `flujos/direcciones_editar.md`
+- Buscar una dirección existente -> `flujos/direcciones_que.md`
+- Quitar una dirección del centro o casa -> `flujos/direcciones_quitar.md`
+- Elegir una dirección de la tabla -> `flujos/direcciones_tabla.md`
+- Ver el resumen de un centro o casa -> `flujos/home_ubis.md`
+- Listar centros o casas -> `flujos/list_ctr.md`
+- Consultar los sacerdotes por centro -> `flujos/lista_ctrs.md`
+- Eliminar una telecomunicación -> `flujos/teleco.md`
+- Elegir la descripción de una teleco -> `flujos/teleco_desc.md`
+- Añadir o editar una telecomunicación -> `flujos/teleco_editar.md`
+- Consultar las telecomunicaciones -> `flujos/teleco_tabla.md`
+- Trasladar centros o casas -> `flujos/trasladar_ubis.md`
+- Eliminar un centro o una casa -> `flujos/ubis.md`
+- Buscar un centro o una casa -> `flujos/ubis_buscar.md`
+- Rellenar la ficha de un centro o casa -> `flujos/ubis_editar.md`
+- Abrir la ficha de un centro o casa -> `flujos/ubis_editar_load.md`
+- Ficha de un centro o casa de la propia delegación -> `flujos/ubis_editar_normalize_dl.md`
+- Trabajar con los resultados de la búsqueda -> `flujos/ubis_tabla.md`
 
 ## Pantallas Disponibles
 

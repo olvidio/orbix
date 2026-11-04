@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Trasladar Ubis"
+titulo: "Trasladar centros o casas"
 flujo: "ubis.trasladar_ubis.gestionar.flujo"
-preguntas: ["Como ejecutar en Trasladar Ubis?"]
-pantallas_principales: []
+preguntas: ["Como trasladar centros o casas en Trasladar centros o casas?"]
+pantallas_principales: ["ubis.pantalla.trasladar_ubis"]
 fragmentos: ["ubis.pantalla.trasladar_ubis"]
 endpoints: ["/src/ubis/trasladar_ubis"]
 source: "docs/catalogo/ubis/flujos/trasladar_ubis.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Trasladar Ubis
+# Ayuda IA - Trasladar centros o casas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Trasladar Ubis`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Trasladar centros o casas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Trasladar Ubis?
+- Como trasladar centros o casas en Trasladar centros o casas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Trasladar Ubis (`ubis.pantalla.trasladar_ubis`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Trasladar centros o casas
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **listados**, marcar uno o varios centros o casas.
+2. Elegir la delegación en **Trasladar a** y pulsar **Trasladar**.
+3. Comprobar el listado: los trasladados ya no pertenecen a la delegación de origen.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/trasladar_ubis`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.trasladar_ubis`
+- `ubis.pantalla.trasladar_ubis`
 
 ## Objetivo
 
-Traslada centros y casas seleccionados a otra delegación destino.
+Pasar los centros o casas seleccionados a otra delegación.
 
 ## Errores Documentados
 

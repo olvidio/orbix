@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "casas"
-flujos: 9
+flujos: 10
 pantallas: 14
 endpoints: 15
 estado_revision: "generado"
@@ -21,15 +21,16 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Calendario Ubi Resumen -> `flujos/calendario_ubi_resumen.md`
-- Casa Actividades -> `flujos/casa_actividades.md`
+- Consultar la previsión económica de una casa -> `flujos/calendario_ubi_resumen.md`
+- Consultar las actividades de una casa -> `flujos/casa_actividades.md`
+- Consultar estadística económica por años -> `flujos/casa_ec.md`
 - Casa Ec Gastos -> `flujos/casa_ec_gastos.md`
-- Casa Ingreso -> `flujos/casa_ingreso.md`
-- Casa Ingresos -> `flujos/casa_ingresos.md`
-- Casas Resumen -> `flujos/casas_resumen.md`
-- Grupo -> `flujos/grupo.md`
-- Ingreso Plazas Previstas -> `flujos/ingreso_plazas_previstas.md`
-- Prevision Asistentes -> `flujos/prevision_asistentes.md`
+- Anotar el ingreso de una actividad -> `flujos/casa_ingreso.md`
+- Consultar los ingresos de una casa -> `flujos/casa_ingresos.md`
+- Consultar la estadística económica de las casas -> `flujos/casas_resumen.md`
+- los grupos de casas -> `flujos/grupo.md`
+- Corregir los asistentes previstos -> `flujos/ingreso_plazas_previstas.md`
+- Consultar la previsión de asistentes -> `flujos/prevision_asistentes.md`
 
 ## Pantallas Disponibles
 

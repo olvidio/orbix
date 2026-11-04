@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Copiar Esquema"
 flujo: "devel_db_admin.copiar_esquema.gestionar.flujo"
 preguntas: ["Como ejecutar en Copiar Esquema?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_copiar"]
 fragmentos: ["devel_db_admin.pantalla.db_copiar"]
 endpoints: ["/src/devel_db_admin/copiar_esquema"]
 source: "docs/catalogo/devel_db_admin/flujos/copiar_esquema.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Copiar (`devel_db_admin.pantalla.db_copiar`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_copiar`
 - `devel_db_admin.pantalla.db_copiar`
 
 ## Objetivo

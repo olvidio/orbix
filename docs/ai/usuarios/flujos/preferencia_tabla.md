@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Preferencia Tabla"
+titulo: "Reutilizar la presentación de una tabla"
 flujo: "usuarios.preferencia_tabla.gestionar.flujo"
-preguntas: ["Como obtener en Preferencia Tabla?"]
+preguntas: ["Como reutilizar la presentación de una tabla en Reutilizar la presentación de una tabla?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/usuarios/preferencia_tabla_get"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/usuarios/flujos/preferencia_tabla.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Preferencia Tabla
+# Ayuda IA - Reutilizar la presentación de una tabla
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Preferencia Tabla`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Reutilizar la presentación de una tabla`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener en Preferencia Tabla?
+- Como reutilizar la presentación de una tabla en Reutilizar la presentación de una tabla?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener
+## Reutilizar la presentación de una tabla
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir cualquier listado en formato SlickGrid.
+2. Ajustar columnas si se desea; se guardan para las siguientes veces.
+3. La opción global se elige en **preferencias**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/preferencia_tabla_get`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
+Recordar cómo prefiere el usuario ver cada tabla (anchos, orden) para presentarla igual la próxima vez.
 
 ## Errores Documentados
 

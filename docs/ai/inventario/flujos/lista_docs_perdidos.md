@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Lista Docs Perdidos"
+titulo: "Consultar los documentos perdidos"
 flujo: "inventario.lista_docs_perdidos.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista Docs Perdidos?"]
-pantallas_principales: []
+preguntas: ["Como consultar los documentos perdidos en Consultar los documentos perdidos?"]
+pantallas_principales: ["inventario.pantalla.docs_perdidos"]
 fragmentos: ["inventario.pantalla.docs_perdidos"]
 endpoints: ["/src/inventario/lista_docs_perdidos"]
 source: "docs/catalogo/inventario/flujos/lista_docs_perdidos.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Docs Perdidos
+# Ayuda IA - Consultar los documentos perdidos
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Docs Perdidos`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Consultar los documentos perdidos`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista Docs Perdidos?
+- Como consultar los documentos perdidos en Consultar los documentos perdidos?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Documentos perdidos (`inventario.pantalla.docs_perdidos`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Consultar los documentos perdidos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs perdidos**.
+2. Leer el listado: **centro - lugar**, **documento**, **número** y **fecha perdido**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/lista_docs_perdidos`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.docs_perdidos`
+- `inventario.pantalla.docs_perdidos`
 
 ## Objetivo
 
-Gestiona ListaDocsPerdidos. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos dados por perdidos.
 
 ## Limites De La Respuesta
 

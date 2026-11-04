@@ -21,38 +21,38 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Comprobaciones Ctr -> `flujos/comprobaciones_ctr.md`
-- Ctr Ficha -> `flujos/ctr_ficha.md`
-- Ctr Get Ficha -> `flujos/ctr_get_ficha.md`
-- Ctr Get Select -> `flujos/ctr_get_select.md`
-- Encargo Horario Select -> `flujos/encargo_horario_select.md`
-- Encargo Lst Tipo Enc -> `flujos/encargo_lst_tipo_enc.md`
-- Encargo Select -> `flujos/encargo_select.md`
-- Encargo Ver -> `flujos/encargo_ver.md`
-- Encargo Ver Editar -> `flujos/encargo_ver_editar.md`
-- Horario Sacd Update -> `flujos/horario_sacd_update.md`
-- Horario Sacd Ver -> `flujos/horario_sacd_ver.md`
-- Horario Update -> `flujos/horario_update.md`
-- Horario Ver -> `flujos/horario_ver.md`
-- Listas A -> `flujos/listas_a.md`
-- Listas B -> `flujos/listas_b.md`
-- Listas C -> `flujos/listas_c.md`
-- Listas Cl -> `flujos/listas_cl.md`
-- Listas Com Ctr -> `flujos/listas_com_ctr.md`
-- Listas Com Sacd -> `flujos/listas_com_sacd.md`
-- Listas Com Txt -> `flujos/listas_com_txt.md`
-- Listas D -> `flujos/listas_d.md`
-- Listas Exigencia Ctr -> `flujos/listas_exigencia_ctr.md`
-- Propuestas Lista -> `flujos/propuestas_lista.md`
-- Propuestas Lista Enc -> `flujos/propuestas_lista_enc.md`
-- Propuestas Lista Sacd -> `flujos/propuestas_lista_sacd.md`
-- Propuestas Menu -> `flujos/propuestas_menu.md`
-- Sacd Ausencias -> `flujos/sacd_ausencias.md`
-- Sacd Ausencias Get -> `flujos/sacd_ausencias_get.md`
-- Sacd Ausencias Jefe Zona -> `flujos/sacd_ausencias_jefe_zona.md`
-- Sacd Ficha -> `flujos/sacd_ficha.md`
-- Sacd Select -> `flujos/sacd_select.md`
-- Zonas Get Select -> `flujos/zonas_get_select.md`
+- Eliminar encargos de centros inexistentes -> `flujos/comprobaciones_ctr.md`
+- Consultar y modificar la ficha de un centro -> `flujos/ctr_ficha.md`
+- Abrir la ficha de un centro -> `flujos/ctr_get_ficha.md`
+- Elegir un centro -> `flujos/ctr_get_select.md`
+- Consultar los horarios de un encargo -> `flujos/encargo_horario_select.md`
+- Elegir el tipo de encargo -> `flujos/encargo_lst_tipo_enc.md`
+- Buscar un encargo -> `flujos/encargo_select.md`
+- Modificar un encargo -> `flujos/encargo_ver.md`
+- Guardar los cambios de un encargo -> `flujos/encargo_ver_editar.md`
+- Guardar un horario de sacerdote -> `flujos/horario_sacd_update.md`
+- Crear o modificar el horario de un sacerdote -> `flujos/horario_sacd_ver.md`
+- Guardar un horario de encargo -> `flujos/horario_update.md`
+- Ver o crear un horario de encargo -> `flujos/horario_ver.md`
+- Listar la atención de los centros -> `flujos/listas_a.md`
+- Listar la atención de iglesias, oc y lp -> `flujos/listas_b.md`
+- Listar los encargos por sacerdote -> `flujos/listas_c.md`
+- Listar los centros de la sss+ -> `flujos/listas_cl.md`
+- Preparar la comunicación a los centros -> `flujos/listas_com_ctr.md`
+- Preparar la comunicación a los sacerdotes -> `flujos/listas_com_sacd.md`
+- Modificar los textos de las comunicaciones -> `flujos/listas_com_txt.md`
+- Listar la tabla por sacerdote -> `flujos/listas_d.md`
+- Listar las exigencias de los centros -> `flujos/listas_exigencia_ctr.md`
+- Ver la lista de propuestas -> `flujos/propuestas_lista.md`
+- Ver las propuestas por encargos -> `flujos/propuestas_lista_enc.md`
+- Ver las propuestas por sacd -> `flujos/propuestas_lista_sacd.md`
+- Crear la tabla de propuestas -> `flujos/propuestas_menu.md`
+- Guardar las ausencias de un sacerdote -> `flujos/sacd_ausencias.md`
+- Anotar una ausencia -> `flujos/sacd_ausencias_get.md`
+- Anotar ausencias de los sacerdotes de la zona -> `flujos/sacd_ausencias_jefe_zona.md`
+- Consultar y modificar la ficha de un sacerdote -> `flujos/sacd_ficha.md`
+- Elegir un sacerdote -> `flujos/sacd_select.md`
+- Elegir la zona de un encargo -> `flujos/zonas_get_select.md`
 
 ## Pantallas Disponibles
 

@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Recibido Pdf Upload"
+titulo: "Subir el PDF de un certificado recibido"
 flujo: "certificados.certificado_recibido_pdf_upload.gestionar.flujo"
-preguntas: ["Como ejecutar en Certificado Recibido Pdf Upload?"]
+preguntas: ["Como subir el pdf de un certificado recibido en Subir el PDF de un certificado recibido?"]
 pantallas_principales: ["certificados.pantalla.certificado_recibido_pdf_upload"]
 fragmentos: ["certificados.pantalla.certificado_recibido_adjuntar", "certificados.pantalla.certificado_recibido_modificar"]
 endpoints: ["/src/certificados/certificado_recibido_pdf_upload"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/certificados/flujos/certificado_recibido_pdf_upload.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Recibido Pdf Upload
+# Ayuda IA - Subir el PDF de un certificado recibido
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Recibido Pdf Upload`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Subir el PDF de un certificado recibido`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Certificado Recibido Pdf Upload?
+- Como subir el pdf de un certificado recibido en Subir el PDF de un certificado recibido?
 
 ## Donde Entrar
 
@@ -29,12 +29,12 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Subir el pdf de un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de adjuntar, elegir el PDF y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_recibido_pdf_upload`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Subir PDF de certificado recibido.
+Subir el PDF de un certificado recibido.
 
 ## Limites De La Respuesta
 

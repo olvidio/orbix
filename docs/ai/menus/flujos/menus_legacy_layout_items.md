@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "menus"
-titulo: "Menus Legacy Layout Items"
+titulo: "Ver el menú Legacy"
 flujo: "menus.menus_legacy_layout_items.gestionar.flujo"
-preguntas: []
+preguntas: ["Como ver el menú legacy en Ver el menú Legacy?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/menus/menus_legacy_layout_items_data"]
@@ -12,13 +12,14 @@ source: "docs/catalogo/menus/flujos/menus_legacy_layout_items.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Menus Legacy Layout Items
+# Ayuda IA - Ver el menú Legacy
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Menus Legacy Layout Items`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el menú Legacy`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como ver el menú legacy en Ver el menú Legacy?
 
 ## Donde Entrar
 
@@ -28,13 +29,21 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Ver el menú legacy
+
+1. Iniciar sesión con layout Legacy (se elige en **preferencias**).
+2. La barra lateral muestra los grupos permitidos para el usuario.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/menus/menus_legacy_layout_items_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - Ninguna pantalla relacionada.
 
 ## Objetivo
 
-Ítems visibles para barra lateral layout H-dlbv.
+Cargar los ítems visibles del menú del diseño Legacy.
 
 ## Limites De La Respuesta
 

@@ -21,11 +21,11 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Dossiers Lista Fichas -> `flujos/dossiers_lista_fichas.md`
-- Dossiers Ver Pantalla -> `flujos/dossiers_ver_pantalla.md`
-- Perm Dossier Ver -> `flujos/perm_dossier_ver.md`
-- Perm Dossiers -> `flujos/perm_dossiers.md`
-- Tipo Dossier -> `flujos/tipo_dossier.md`
+- Ver la relación de dossiers -> `flujos/dossiers_lista_fichas.md`
+- Abrir un dossier -> `flujos/dossiers_ver_pantalla.md`
+- Consultar o cambiar los permisos de un dossier -> `flujos/perm_dossier_ver.md`
+- Elegir los dossiers a configurar -> `flujos/perm_dossiers.md`
+- Guardar o eliminar un tipo de dossier -> `flujos/tipo_dossier.md`
 
 ## Pantallas Disponibles
 

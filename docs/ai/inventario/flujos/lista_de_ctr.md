@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Lista De Ctr"
+titulo: "Elegir el centro de origen y de destino"
 flujo: "inventario.lista_de_ctr.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista De Ctr?"]
-pantallas_principales: []
+preguntas: ["Como elegir el centro de origen y de destino en Elegir el centro de origen y de destino?"]
+pantallas_principales: ["inventario.pantalla.traslado_doc_que"]
 fragmentos: ["inventario.pantalla.traslado_doc_que"]
 endpoints: ["/src/inventario/lista_de_ctr"]
 source: "docs/catalogo/inventario/flujos/lista_de_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista De Ctr
+# Ayuda IA - Elegir el centro de origen y de destino
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista De Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir el centro de origen y de destino`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista De Ctr?
+- Como elegir el centro de origen y de destino en Elegir el centro de origen y de destino?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Traslado de documentos — filtro (`inventario.pantalla.traslado_doc_que`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Elegir el centro de origen y de destino
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **traslado de doc**.
+2. Elegir el centro de origen en su desplegable.
+3. Elegir el centro de destino en el segundo desplegable.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/lista_de_ctr`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.traslado_doc_que`
+- `inventario.pantalla.traslado_doc_que`
 
 ## Objetivo
 
-Gestiona ListaDeCtr. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar la lista de centros disponibles como origen y destino en el traslado de documentos.
 
 ## Limites De La Respuesta
 

@@ -21,39 +21,39 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- App Login -> `flujos/app_login.md`
-- App Session -> `flujos/app_session.md`
-- Borrar Pwd -> `flujos/borrar_pwd.md`
-- Check First Login 2fa -> `flujos/check_first_login_2fa.md`
-- Grupo -> `flujos/grupo.md`
-- Grupo Info -> `flujos/grupo_info.md`
-- Mails Contactos Region -> `flujos/mails_contactos_region.md`
-- Perm Activ -> `flujos/perm_activ.md`
-- Perm Menu -> `flujos/perm_menu.md`
-- Perm Menu Info -> `flujos/perm_menu_info.md`
-- Preferencia Tabla -> `flujos/preferencia_tabla.md`
-- Preferencias -> `flujos/preferencias.md`
-- Recuperar 2fa Mail -> `flujos/recuperar_2fa_mail.md`
-- Recuperar Password Mail -> `flujos/recuperar_password_mail.md`
-- Role -> `flujos/role.md`
-- Role Grupmenu Add -> `flujos/role_grupmenu_add.md`
-- Role Grupmenu Del -> `flujos/role_grupmenu_del.md`
-- Role Grupmenu Info -> `flujos/role_grupmenu_info.md`
-- Role Info -> `flujos/role_info.md`
-- Usuario -> `flujos/usuario.md`
-- Usuario 2fa -> `flujos/usuario_2fa.md`
-- Usuario 2fa Info -> `flujos/usuario_2fa_info.md`
-- Usuario 2fa Verify -> `flujos/usuario_2fa_verify.md`
-- Usuario Ayuda Info -> `flujos/usuario_ayuda_info.md`
-- Usuario Check Pwd -> `flujos/usuario_check_pwd.md`
-- Usuario Grupo Add -> `flujos/usuario_grupo_add.md`
-- Usuario Grupo Del -> `flujos/usuario_grupo_del.md`
-- Usuario Grupo Del Lst -> `flujos/usuario_grupo_del_lst.md`
-- Usuario Grupo Lst -> `flujos/usuario_grupo_lst.md`
-- Usuario Guardar Mail -> `flujos/usuario_guardar_mail.md`
-- Usuario Guardar Pwd -> `flujos/usuario_guardar_pwd.md`
-- Usuario Info -> `flujos/usuario_info.md`
-- Usuario Preferencias -> `flujos/usuario_preferencias.md`
+- Entrar desde la app móvil -> `flujos/app_login.md`
+- Reabrir la app con sesión activa -> `flujos/app_session.md`
+- Borrar las contraseñas en pruebas -> `flujos/borrar_pwd.md`
+- Primer acceso sin 2FA -> `flujos/check_first_login_2fa.md`
+- Buscar un grupo -> `flujos/grupo.md`
+- Abrir un grupo para editarlo -> `flujos/grupo_info.md`
+- Ver los contactos de la región -> `flujos/mails_contactos_region.md`
+- Añadir un permiso en actividades -> `flujos/perm_activ.md`
+- Añadir un permiso de menú -> `flujos/perm_menu.md`
+- Abrir el formulario de permiso de menú -> `flujos/perm_menu_info.md`
+- Reutilizar la presentación de una tabla -> `flujos/preferencia_tabla.md`
+- Cambiar las preferencias personales -> `flujos/preferencias.md`
+- Reiniciar el 2FA por correo -> `flujos/recuperar_2fa_mail.md`
+- Recuperar la contraseña por correo -> `flujos/recuperar_password_mail.md`
+- Consultar los roles -> `flujos/role.md`
+- Añadir grupos de menús a un rol -> `flujos/role_grupmenu_add.md`
+- Quitar un grupo de menús -> `flujos/role_grupmenu_del.md`
+- Ver los grupos disponibles -> `flujos/role_grupmenu_info.md`
+- Abrir la ficha de un rol -> `flujos/role_info.md`
+- Buscar un usuario -> `flujos/usuario.md`
+- Activar la verificación en dos pasos -> `flujos/usuario_2fa.md`
+- Ver el estado y el QR -> `flujos/usuario_2fa_info.md`
+- Verificar el código -> `flujos/usuario_2fa_verify.md`
+- Consultar el correo asociado -> `flujos/usuario_ayuda_info.md`
+- Validar una contraseña al escribirla -> `flujos/usuario_check_pwd.md`
+- Asignar un grupo a un usuario -> `flujos/usuario_grupo_add.md`
+- Quitar un grupo a un usuario -> `flujos/usuario_grupo_del.md`
+- Ver los grupos que se pueden quitar -> `flujos/usuario_grupo_del_lst.md`
+- Elegir un grupo para añadir -> `flujos/usuario_grupo_lst.md`
+- Cambiar el correo -> `flujos/usuario_guardar_mail.md`
+- Cambiar la contraseña -> `flujos/usuario_guardar_pwd.md`
+- Ver el resumen de un usuario en su ficha -> `flujos/usuario_info.md`
+- Abrir las preferencias -> `flujos/usuario_preferencias.md`
 
 ## Pantallas Disponibles
 

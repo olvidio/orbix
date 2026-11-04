@@ -2,39 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividades"
-titulo: "Listados calendario nuevo"
+titulo: "Sacar un listado del calendario"
 flujo: "actividades.calendario_listas.gestionar.flujo"
-preguntas: []
-pantallas_principales: []
+preguntas: ["Como sacar un listado del calendario en Sacar un listado del calendario?"]
+pantallas_principales: ["actividades.pantalla.calendario_listas"]
 fragmentos: ["actividades.pantalla.calendario_listas"]
 endpoints: ["/src/actividades/calendario_listas_datos"]
 source: "docs/catalogo/actividades/flujos/calendario_listas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Listados calendario nuevo
+# Ayuda IA - Sacar un listado del calendario
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Listados calendario nuevo`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Sacar un listado del calendario`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como sacar un listado del calendario en Sacar un listado del calendario?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Listados calendario (casas/oficinas) (`actividades.pantalla.calendario_listas`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Sacar un listado del calendario
+
+1. Entrar en **Nuevo calendario > listados** y elegir el tipo de listado: por oficinas, de la oficina propia, casas comunes, todas las casas (sf o sv).
+2. Elegir el periodo.
+3. Se muestra la tabla de actividades; pulsar una para abrir su ficha.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/actividades/calendario_listas_datos`
+
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividades.pantalla.calendario_listas`
 - `actividades.pantalla.calendario_listas`
 
 ## Objetivo
 
-Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla de actividades.
+Sacar listados del calendario de actividades por oficina o por casas, en un periodo.
 
 ## Errores Documentados
 

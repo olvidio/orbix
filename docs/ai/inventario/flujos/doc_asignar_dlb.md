@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Doc Asignar Dlb"
+titulo: "Guardar la asignación a la dlb/casa"
 flujo: "inventario.doc_asignar_dlb.gestionar.flujo"
-preguntas: ["Como guardar en Doc Asignar Dlb?"]
-pantallas_principales: []
+preguntas: ["Como guardar la asignación a la dlb/casa en Guardar la asignación a la dlb/casa?"]
+pantallas_principales: ["inventario.pantalla.doc_asignar_dlb"]
 fragmentos: ["inventario.pantalla.doc_asignar_dlb"]
 endpoints: ["/src/inventario/doc_asignar_dlb_guardar"]
 source: "docs/catalogo/inventario/flujos/doc_asignar_dlb.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Doc Asignar Dlb
+# Ayuda IA - Guardar la asignación a la dlb/casa
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Doc Asignar Dlb`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar la asignación a la dlb/casa`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como guardar en Doc Asignar Dlb?
+- Como guardar la asignación a la dlb/casa en Guardar la asignación a la dlb/casa?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Formulario asignar DLB (`inventario.pantalla.doc_asignar_dlb`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Guardar
+## Guardar la asignación a la dlb/casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Completar el número de registro o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/doc_asignar_dlb_guardar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `inventario.pantalla.doc_asignar_dlb`
+- `inventario.pantalla.doc_asignar_dlb`
 
 ## Objetivo
 
-Gestiona DocAsignarDlb. Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los lugares de la dlb/casa elegidos.
 
 ## Limites De La Respuesta
 

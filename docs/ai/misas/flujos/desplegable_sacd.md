@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Desplegable Sacd"
+titulo: "Elegir sacerdote en una celda"
 flujo: "misas.desplegable_sacd.gestionar.flujo"
-preguntas: ["Como ejecutar en Desplegable Sacd?"]
+preguntas: ["Como elegir sacerdote en una celda en Elegir sacerdote en una celda?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/misas/desplegable_sacd"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/misas/flujos/desplegable_sacd.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Desplegable Sacd
+# Ayuda IA - Elegir sacerdote en una celda
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Desplegable Sacd`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Elegir sacerdote en una celda`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Desplegable Sacd?
+- Como elegir sacerdote en una celda en Elegir sacerdote en una celda?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Elegir sacerdote en una celda
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plan**, pulsar la celda del día y encargo.
+2. En **Selección de sacd** marcar qué sacerdotes se quieren ver: **libre a 1a hora**, **zona** (por defecto), **dl** o **de paso**; después elegir el **Sacerdote** de la lista, que solo muestra los disponibles ese día.
+3. Indicar **Inicio**, **Fin** y **Observaciones** si procede y pulsar **Save**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/desplegable_sacd`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtrando por disponibilidad según flags de selección y día.
+Ofrecer, al pulsar una celda de la cuadrícula, los sacerdotes disponibles ese día.
 
 ## Errores Documentados
 

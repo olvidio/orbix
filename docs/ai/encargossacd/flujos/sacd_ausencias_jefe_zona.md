@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Sacd Ausencias Jefe Zona"
+titulo: "Anotar ausencias de los sacerdotes de la zona"
 flujo: "encargossacd.sacd_ausencias_jefe_zona.gestionar.flujo"
-preguntas: ["Como obtener datos en Sacd Ausencias Jefe Zona?"]
-pantallas_principales: []
+preguntas: ["Como anotar ausencias de los sacerdotes de la zona en Anotar ausencias de los sacerdotes de la zona?"]
+pantallas_principales: ["encargossacd.pantalla.sacd_ausencias_jefe_zona"]
 fragmentos: ["encargossacd.pantalla.sacd_ausencias_jefe_zona"]
 endpoints: ["/src/encargossacd/sacd_ausencias_jefe_zona_data"]
 source: "docs/catalogo/encargossacd/flujos/sacd_ausencias_jefe_zona.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Sacd Ausencias Jefe Zona
+# Ayuda IA - Anotar ausencias de los sacerdotes de la zona
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Sacd Ausencias Jefe Zona`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Anotar ausencias de los sacerdotes de la zona`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Sacd Ausencias Jefe Zona?
+- Como anotar ausencias de los sacerdotes de la zona en Anotar ausencias de los sacerdotes de la zona?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Sacd Ausencias Jefe Zona (`encargossacd.pantalla.sacd_ausencias_jefe_zona`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Anotar ausencias de los sacerdotes de la zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Ausencias**.
+2. Elegir el **sacd** de la lista (los de la zona del jefe; el oficial de la dl ve todos).
+3. Rellenar sus ausencias como en «Anotar una ausencia».
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/sacd_ausencias_jefe_zona_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.sacd_ausencias_jefe_zona`
+- `encargossacd.pantalla.sacd_ausencias_jefe_zona`
 
 ## Objetivo
 
-Gestiona SacdAusenciasJefeZona. Datos para el listado de SACDs susceptibles de gestionar ausencias desde la ficha de jefe de zona (frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php). Recopila los SACDs de la(s) zona(s) del jefe y, cuando corresponde (Oficial_dl o jefe de calendario), la totalidad de SACDs activos. El array se devuelve ordenado por iniciales para alimentar el desplegable.
+Que el jefe de zona anote las ausencias de los sacerdotes de su zona.
 
 ## Limites De La Respuesta
 

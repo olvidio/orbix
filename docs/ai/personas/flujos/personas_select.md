@@ -4,7 +4,7 @@ subtipo: "flujo"
 modulo: "personas"
 titulo: "Buscar y listar personas"
 flujo: "personas.personas_select.gestionar.flujo"
-preguntas: []
+preguntas: ["Como buscar y listar personas en Buscar y listar personas?"]
 pantallas_principales: ["personas.pantalla.personas_que", "personas.pantalla.personas_select"]
 fragmentos: []
 endpoints: ["/src/personas/personas_select_data"]
@@ -19,6 +19,7 @@ Usa este documento para responder preguntas de usuario sobre como trabajar con `
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
+- Como buscar y listar personas en Buscar y listar personas?
 
 ## Donde Entrar
 
@@ -29,6 +30,15 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
+## Buscar y listar personas
+
+1. Abrir «Búsqueda de personas» (por ejemplo «numerarios»). Elegir **realizar una búsqueda exacta** (no / sí) y escribir **Nombre**, **Primer apellido**, **Segundo apellido** o **centro**.
+2. Pulsar **Buscar**: sale «N personas encontradas» con una tabla.
+3. Pulsar el nombre de una persona abre su ficha. Para actuar sobre una o varias, marcarlas y pulsar un botón: **cambio de ctr**, **ver dossiers**, **ficha**, **ver actividades**, **ver tessera**, **modificar stgr**, **imprimir tessera**, **ver notas**, **posibles ca**, **petición ca**, **petición crt**, **plan estudios**, **ficha profesor stgr**, **copiar tessera**, **publicar** o **atención actividades**.
+
+Referencias tecnicas para verificar la respuesta:
+- `/src/personas/personas_select_data`
+
 ## Pantallas Y Fragmentos Relacionados
 
 - `personas.pantalla.personas_que`
@@ -36,7 +46,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Objetivo
 
-Encontrar personas del colectivo indicado por el menú, revisar resultados y lanzar acciones (ficha, dossiers, STGR, traslado, módulos satélite).
+Buscar personas y trabajar con las que salgan: abrir su ficha, ver sus actividades, notas, tessera, trasladarlas, etc.
 
 ## Errores Documentados
 

@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Centros Form Num"
+titulo: "Cambiar buzón, pi y cartas"
 flujo: "ubis.centros_form_num.gestionar.flujo"
-preguntas: ["Como ejecutar en Centros Form Num?"]
-pantallas_principales: []
+preguntas: ["Como cambiar buzón, pi y cartas en Cambiar buzón, pi y cartas?"]
+pantallas_principales: ["ubis.pantalla.centros_form_num"]
 fragmentos: ["ubis.pantalla.centros_form_num"]
 endpoints: ["/src/ubis/centros_form_num"]
 source: "docs/catalogo/ubis/flujos/centros_form_num.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Form Num
+# Ayuda IA - Cambiar buzón, pi y cartas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Form Num`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Cambiar buzón, pi y cartas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Centros Form Num?
+- Como cambiar buzón, pi y cartas en Cambiar buzón, pi y cartas?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Centros Form Num (`ubis.pantalla.centros_form_num`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Cambiar buzón, pi y cartas
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > pi, cartas, nº buzón**, pulsar el centro.
+2. Rellenar **nº de buzón**, **nº ejemplares pi** y **nº cartas mensuales**.
+3. Pulsar **guardar cambios**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/centros_form_num`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.centros_form_num`
+- `ubis.pantalla.centros_form_num`
 
 ## Objetivo
 
-Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
+Cambiar el nº de buzón, de ejemplares de pi y de cartas de un centro.
 
 ## Errores Documentados
 

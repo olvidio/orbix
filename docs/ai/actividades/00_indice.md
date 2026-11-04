@@ -21,34 +21,34 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Crear y eliminar actividad -> `flujos/actividad.md`
-- Cambiar tipo de actividad -> `flujos/actividad_cambiar_tipo.md`
-- Duplicar actividad -> `flujos/actividad_duplicar.md`
-- Guardar edición de actividad -> `flujos/actividad_editar.md`
-- Consultar fase completada -> `flujos/actividad_fase_completada.md`
-- Prefill fases completadas -> `flujos/actividad_fases_completadas.md`
-- Importar actividad de otra dl -> `flujos/actividad_importar.md`
-- Nivel STGR por defecto -> `flujos/actividad_nivel_stgr_default.md`
-- Ejecutar generación nuevo curso -> `flujos/actividad_nuevo_curso_ejecutar.md`
-- Permiso crear actividad -> `flujos/actividad_permiso_crear.md`
+- Crear una actividad -> `flujos/actividad.md`
+- Cambiar el tipo de una actividad -> `flujos/actividad_cambiar_tipo.md`
+- Duplicar una actividad -> `flujos/actividad_duplicar.md`
+- Modificar una actividad -> `flujos/actividad_editar.md`
+- Ver si una fase está completada -> `flujos/actividad_fase_completada.md`
+- Ver las fases completadas de una actividad -> `flujos/actividad_fases_completadas.md`
+- Importar actividades de otra dl -> `flujos/actividad_importar.md`
+- Elegir el tipo y el nivel STGR -> `flujos/actividad_nivel_stgr_default.md`
+- Generar las actividades de un nuevo curso -> `flujos/actividad_nuevo_curso_ejecutar.md`
+- Crear una actividad con o sin permiso -> `flujos/actividad_permiso_crear.md`
 - Publicar actividades -> `flujos/actividad_publicar.md`
-- Selector tipo en buscar actividad -> `flujos/actividad_que.md`
-- Filtros extra buscar actividad -> `flujos/actividad_que_filtros.md`
-- Listar resultados buscar actividad -> `flujos/actividad_select.md`
-- Desplegables lugar (popup) -> `flujos/actividad_select_ubi_desplegable.md`
-- Etiquetas de estado actividad -> `flujos/actividad_status_labels.md`
-- Cascada tipo actividad (AJAX) -> `flujos/actividad_tipo.md`
-- Cargar datos de ficha actividad -> `flujos/actividad_ver.md`
-- Listados calendario nuevo -> `flujos/calendario_listas.md`
-- Tabla listado actividades -> `flujos/lista_activ.md`
-- Listado actividades SG -> `flujos/lista_actividades_sg.md`
-- Listado por centros -> `flujos/lista_centros_activ.md`
-- Resultado listado CSV SR -> `flujos/lista_sr_csv.md`
-- Bootstrap listado CSV SR -> `flujos/lista_sr_csv_que.md`
-- tipos de actividad -> `flujos/tipo_activ.md`
-- Formulario alta tipo actividad -> `flujos/tipo_activ_form.md`
-- Formulario editar tipo actividad -> `flujos/tipo_activ_form_modificar.md`
-- Metadatos cascada tipo actividad -> `flujos/tipo_activ_metadata.md`
+- Elegir el tipo de actividad al buscar -> `flujos/actividad_que.md`
+- Usar los filtros adicionales -> `flujos/actividad_que_filtros.md`
+- Ver y trabajar con la lista de actividades encontradas -> `flujos/actividad_select.md`
+- Elegir el lugar de una actividad -> `flujos/actividad_select_ubi_desplegable.md`
+- Ver el estado de una actividad -> `flujos/actividad_status_labels.md`
+- Elegir el tipo de actividad paso a paso -> `flujos/actividad_tipo.md`
+- Abrir la ficha de una actividad -> `flujos/actividad_ver.md`
+- Sacar un listado del calendario -> `flujos/calendario_listas.md`
+- Ver el listado de actividades -> `flujos/lista_activ.md`
+- Consultar las actividades de sg -> `flujos/lista_actividades_sg.md`
+- Ver las actividades de cada centro -> `flujos/lista_centros_activ.md`
+- Ver o descargar el listado de sr -> `flujos/lista_sr_csv.md`
+- Preparar el listado csv de sr -> `flujos/lista_sr_csv_que.md`
+- Ver los tipos de actividad -> `flujos/tipo_activ.md`
+- Crear un tipo de actividad -> `flujos/tipo_activ_form.md`
+- Modificar un tipo de actividad -> `flujos/tipo_activ_form_modificar.md`
+- Elegir los niveles de un tipo -> `flujos/tipo_activ_metadata.md`
 
 ## Pantallas Disponibles
 

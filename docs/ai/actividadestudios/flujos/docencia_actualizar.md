@@ -5,7 +5,7 @@ modulo: "actividadestudios"
 titulo: "Docencia Actualizar"
 flujo: "actividadestudios.docencia_actualizar.gestionar.flujo"
 preguntas: ["Como ejecutar en Docencia Actualizar?"]
-pantallas_principales: []
+pantallas_principales: ["actividadestudios.pantalla.actualizar_docencia"]
 fragmentos: ["actividadestudios.pantalla.actualizar_docencia"]
 endpoints: ["/src/actividadestudios/docencia_actualizar"]
 source: "docs/catalogo/actividadestudios/flujos/docencia_actualizar.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Actualizar Docencia (`actividadestudios.pantalla.actualizar_docencia`)
 
 ## Como Responder
 
@@ -41,6 +41,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `actividadestudios.pantalla.actualizar_docencia`
 - `actividadestudios.pantalla.actualizar_docencia`
 
 ## Objetivo

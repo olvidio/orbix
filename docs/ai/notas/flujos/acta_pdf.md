@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Acta Pdf"
+titulo: "el PDF del acta"
 flujo: "notas.acta_pdf.gestionar.flujo"
-preguntas: ["Como eliminar en Acta Pdf?"]
+preguntas: ["Como gestionar el pdf del acta en el PDF del acta?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/notas/acta_pdf_eliminar"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/notas/flujos/acta_pdf.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Acta Pdf
+# Ayuda IA - el PDF del acta
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Acta Pdf`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `el PDF del acta`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como eliminar en Acta Pdf?
+- Como gestionar el pdf del acta en el PDF del acta?
 
 ## Donde Entrar
 
@@ -29,12 +29,11 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Eliminar
+## Gestionar el pdf del acta
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Subir: elegir el PDF firmado y subirlo (el acta debe haberse impreso tras el último cambio).
+2. Descargar: pulsar descargar PDF.
+3. Eliminar: quitar el PDF para poder modificar el acta de nuevo.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/notas/acta_pdf_eliminar`
@@ -45,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestión del PDF escaneado: subir, descargar y eliminar.
+Gestionar el PDF escaneado del acta: subirlo, descargarlo o eliminarlo.
 
 ## Errores Documentados
 

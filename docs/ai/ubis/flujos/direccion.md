@@ -2,39 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Direccion"
+titulo: "Guardar una dirección"
 flujo: "ubis.direccion.gestionar.flujo"
-preguntas: ["Como crear o modificar en Direccion?"]
-pantallas_principales: []
+preguntas: ["Como guardar una dirección en Guardar una dirección?"]
+pantallas_principales: ["ubis.pantalla.direccion_update"]
 fragmentos: ["ubis.pantalla.direccion_update"]
 endpoints: ["/src/ubis/direccion_update"]
 source: "docs/catalogo/ubis/flujos/direccion.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Direccion
+# Ayuda IA - Guardar una dirección
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Direccion`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar una dirección`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Direccion?
+- Como guardar una dirección en Guardar una dirección?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Direccion Update (`ubis.pantalla.direccion_update`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Guardar una dirección
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Rellenar **Nombre sede**, **Dirección**, **Dirección postal**, **Código postal**, **Población**, **Provincia**, **País**, **Comentarios dirección**, **Fecha introducción de datos**, **Latitud** y **Longitud**; marcar **Propietario** o **Principal** si procede (hay un enlace **ver ejemplo dirección**).
+3. Pulsar **Guardar Cambios**.
+4. Con **Añadir Dirección** se asigna otra dirección al centro y con **Quitar Dirección** se le quita la actual.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/ubis/direccion_update`
@@ -42,10 +42,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.direccion_update`
+- `ubis.pantalla.direccion_update`
 
 ## Objetivo
 
-Crea o modifica una dirección y su relación con el ubi (principal, propietario).
+Guardar los datos de la dirección de un centro o casa.
 
 ## Errores Documentados
 

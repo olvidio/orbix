@@ -2,47 +2,48 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "certificados"
-titulo: "Certificado Emitido Pdf Download"
+titulo: "Descargar el PDF de un certificado emitido"
 flujo: "certificados.certificado_emitido_pdf_download.gestionar.flujo"
-preguntas: ["Como ejecutar en Certificado Emitido Pdf Download?"]
-pantallas_principales: []
+preguntas: ["Como descargar el pdf de un certificado emitido en Descargar el PDF de un certificado emitido?"]
+pantallas_principales: ["certificados.pantalla.certificado_emitido_pdf_download"]
 fragmentos: []
 endpoints: ["/src/certificados/certificado_emitido_pdf_download"]
 source: "docs/catalogo/certificados/flujos/certificado_emitido_pdf_download.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Certificado Emitido Pdf Download
+# Ayuda IA - Descargar el PDF de un certificado emitido
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Certificado Emitido Pdf Download`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Descargar el PDF de un certificado emitido`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Certificado Emitido Pdf Download?
+- Como descargar el pdf de un certificado emitido en Descargar el PDF de un certificado emitido?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Certificado Emitido Pdf Download (`certificados.pantalla.certificado_emitido_pdf_download`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Descargar el pdf de un certificado emitido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista o en el dossier, pulsar descargar.
+2. El PDF se abre en una pestaña nueva; el enlace caduca a los pocos minutos.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/certificados/certificado_emitido_pdf_download`
 
 ## Pantallas Y Fragmentos Relacionados
 
-- Ninguna pantalla relacionada.
+- `certificados.pantalla.certificado_emitido_pdf_download`
 
 ## Objetivo
 
-Descargar PDF adjunto de certificado emitido.
+Descargar el PDF de un certificado emitido.
 
 ## Limites De La Respuesta
 

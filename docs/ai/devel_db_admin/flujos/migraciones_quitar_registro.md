@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Migraciones Quitar Registro"
 flujo: "devel_db_admin.migraciones_quitar_registro.gestionar.flujo"
 preguntas: ["Como ejecutar en Migraciones Quitar Registro?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.migraciones_lista"]
 fragmentos: ["devel_db_admin.pantalla.migraciones_lista"]
 endpoints: ["/src/devel_db_admin/migraciones_quitar_registro"]
 source: "docs/catalogo/devel_db_admin/flujos/migraciones_quitar_registro.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Migraciones Lista (`devel_db_admin.pantalla.migraciones_lista`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.migraciones_lista`
 - `devel_db_admin.pantalla.migraciones_lista`
 
 ## Objetivo

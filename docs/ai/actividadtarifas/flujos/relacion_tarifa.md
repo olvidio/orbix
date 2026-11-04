@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadtarifas"
-titulo: "Relacion Tarifa"
+titulo: "Asignar una tarifa a un tipo de actividad"
 flujo: "actividadtarifas.relacion_tarifa.gestionar.flujo"
-preguntas: ["Como crear o modificar en Relacion Tarifa?", "Como eliminar en Relacion Tarifa?", "Como consultar el listado en Relacion Tarifa?", "Como abrir el formulario en Relacion Tarifa?"]
+preguntas: ["Como asignar una tarifa a un tipo de actividad en Asignar una tarifa a un tipo de actividad?"]
 pantallas_principales: ["actividadtarifas.pantalla.tarifa_tipo_actividad"]
 fragmentos: ["actividadtarifas.pantalla.tarifa_tipo_actividad_form", "actividadtarifas.pantalla.tarifa_tipo_actividad_lista"]
 endpoints: ["/src/actividadtarifas/relacion_tarifa_eliminar", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_lista_data", "/src/actividadtarifas/relacion_tarifa_update"]
@@ -12,17 +12,14 @@ source: "docs/catalogo/actividadtarifas/flujos/relacion_tarifa.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Relacion Tarifa
+# Ayuda IA - Asignar una tarifa a un tipo de actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Relacion Tarifa`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Asignar una tarifa a un tipo de actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como crear o modificar en Relacion Tarifa?
-- Como eliminar en Relacion Tarifa?
-- Como consultar el listado en Relacion Tarifa?
-- Como abrir el formulario en Relacion Tarifa?
+- Como asignar una tarifa a un tipo de actividad en Asignar una tarifa a un tipo de actividad?
 
 ## Donde Entrar
 
@@ -32,44 +29,17 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Crear o modificar
+## Asignar una tarifa a un tipo de actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadtarifas/relacion_tarifa_update`
-
-## Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **tarifa <-> tipos actividad**.
+2. Elegir el tipo de actividad (obligatorio: «debe indicar el tipo de actividad») y la tarifa (obligatoria: «debe indicar la id_tarifa»).
+3. Guardar. Para cambiar la relación existente, abrirla, elegir otra tarifa y guardar; para quitarla, eliminarla.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadtarifas/relacion_tarifa_eliminar`
-
-## Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-Referencias tecnicas para verificar la respuesta:
-- `/src/actividadtarifas/relacion_tarifa_lista_data`
-
-## Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
-
-Referencias tecnicas para verificar la respuesta:
 - `/src/actividadtarifas/relacion_tarifa_form_data`
+- `/src/actividadtarifas/relacion_tarifa_lista_data`
+- `/src/actividadtarifas/relacion_tarifa_update`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -79,7 +49,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad. Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Relacion Tarifa).
+Decidir qué tipo de tarifa corresponde a cada tipo de actividad.
 
 ## Errores Documentados
 

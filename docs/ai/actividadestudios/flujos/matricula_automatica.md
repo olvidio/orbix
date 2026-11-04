@@ -2,39 +2,38 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Matricula Automatica"
+titulo: "Matricular a todos automáticamente"
 flujo: "actividadestudios.matricula_automatica.gestionar.flujo"
-preguntas: ["Como ejecutar en Matricula Automatica?"]
-pantallas_principales: []
+preguntas: ["Como matricular a todos automáticamente en Matricular a todos automáticamente?"]
+pantallas_principales: ["actividadestudios.pantalla.matricular"]
 fragmentos: ["actividadestudios.pantalla.matricular"]
 endpoints: ["/src/actividadestudios/matricula_automatica"]
 source: "docs/catalogo/actividadestudios/flujos/matricula_automatica.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Matricula Automatica
+# Ayuda IA - Matricular a todos automáticamente
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Matricula Automatica`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Matricular a todos automáticamente`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Matricula Automatica?
+- Como matricular a todos automáticamente en Matricular a todos automáticamente?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Matricular (`actividadestudios.pantalla.matricular`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Matricular a todos automáticamente
 
-1. Abrir **matricular a todos** desde el menú (o desde búsqueda de persona con selección).
-2. El sistema recibe `id_pau`/`sel` (persona concreta) o procesa todas las personas activas.
-3. Para cada persona, borra matrículas previas si el plan no está confirmado y recalcula.
-4. Se muestra el mensaje resumen en `matricular.phtml`.
+1. Al pulsar la opción de menú sale primero un aviso: «Se van a matricular automáticamente todas las personas. Si el plan de estudios de una persona no está confirmado, se borrarán sus matrículas anteriores. ¿Quiere continuar?». Con **volver** no se hace nada; con **continuar** se ejecuta la matriculación para todas las personas, sin más confirmación.
+2. Para cada persona con ca o cv asignado, el sistema recalcula sus asignaturas (respetando las ya aprobadas y los topes de opcionales) y crea las matrículas; si el plan no está confirmado, borra antes las matrículas previas.
+3. La pantalla muestra un mensaje por cada persona con la que no se hizo nada, por ejemplo «no se ha hecho nada con Sánchez Andreu, Enrique: no tiene asignado ca».
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/matricula_automatica`
@@ -42,10 +41,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.matricular`
+- `actividadestudios.pantalla.matricular`
 
 ## Objetivo
 
-El usuario ejecuta la matriculación automática de una o todas las personas activas: el sistema determina la actividad de estudios vigente (`ca-n`, `cv-agd`), recalcula asignaturas matriculables respetando aprobadas y topes de opcionales, y crea las matrículas. Sustituye `apps/actividadestudios/controller/matricular.php`.
+Matricular automáticamente en las asignaturas del ca o la cv a todas las personas que tienen actividad de estudios asignada.
 
 ## Limites De La Respuesta
 

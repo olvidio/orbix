@@ -21,20 +21,20 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Activ Pendientes Select -> `flujos/activ_pendientes_select.md`
-- Asistente -> `flujos/asistente.md`
-- Asistente Mover -> `flujos/asistente_mover.md`
-- Asistente Plaza Asignar -> `flujos/asistente_plaza_asignar.md`
-- Form Actividades De Una Persona -> `flujos/form_actividades_de_una_persona.md`
-- Form Asistentes A Una Actividad -> `flujos/form_asistentes_a_una_actividad.md`
-- Lista Activ Ctr -> `flujos/lista_activ_ctr.md`
-- Lista Asis Conjunto Activ -> `flujos/lista_asis_conjunto_activ.md`
-- Lista Asistentes -> `flujos/lista_asistentes.md`
-- Lista Est Ctr -> `flujos/lista_est_ctr.md`
-- Lista Ultim Que Ctr -> `flujos/lista_ultim_que_ctr.md`
-- Lista Ultima Activ -> `flujos/lista_ultima_activ.md`
-- Que Ctr -> `flujos/que_ctr.md`
-- Tabla Peticiones -> `flujos/tabla_peticiones.md`
+- Consultar quién tiene pendiente el ca o el crt -> `flujos/activ_pendientes_select.md`
+- los asistentes de una actividad -> `flujos/asistente.md`
+- Mover un asistente a otra actividad -> `flujos/asistente_mover.md`
+- Asignar plaza a varios asistentes -> `flujos/asistente_plaza_asignar.md`
+- Anotar la asistencia de una persona a una actividad -> `flujos/form_actividades_de_una_persona.md`
+- Modificar los datos de un asistente en una actividad -> `flujos/form_asistentes_a_una_actividad.md`
+- Ver las actividades por centro -> `flujos/lista_activ_ctr.md`
+- Ver las plazas de varias actividades -> `flujos/lista_asis_conjunto_activ.md`
+- Ver la relación de asistentes de una actividad -> `flujos/lista_asistentes.md`
+- Ver los estudios matriculados por centro -> `flujos/lista_est_ctr.md`
+- Preparar el informe de última asistencia -> `flujos/lista_ultim_que_ctr.md`
+- Consultar quién no ha asistido recientemente -> `flujos/lista_ultima_activ.md`
+- Elegir centro y periodo -> `flujos/que_ctr.md`
+- Ver las otras peticiones de los asistentes -> `flujos/tabla_peticiones.md`
 
 ## Pantallas Disponibles
 

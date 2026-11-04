@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Anadir Ctr Tarea"
+titulo: "Añadir o quitar un centro en la plantilla"
 flujo: "misas.anadir_ctr_tarea.gestionar.flujo"
-preguntas: ["Como ejecutar en Anadir Ctr Tarea?"]
+preguntas: ["Como añadir o quitar un centro en la plantilla en Añadir o quitar un centro en la plantilla?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/misas/anadir_ctr_tarea"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/misas/flujos/anadir_ctr_tarea.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Anadir Ctr Tarea
+# Ayuda IA - Añadir o quitar un centro en la plantilla
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Anadir Ctr Tarea`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Añadir o quitar un centro en la plantilla`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Anadir Ctr Tarea?
+- Como añadir o quitar un centro en la plantilla en Añadir o quitar un centro en la plantilla?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Añadir o quitar un centro en la plantilla
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, usar el botón de añadir fila de la tarea y elegir el centro.
+2. Para quitarlo, pulsar quitar en la fila.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/anadir_ctr_tarea`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Añade o elimina una fila de plantilla (centro asociado a tarea) en el editor de plantillas. Rama que=anadir crea Plantilla con semana=-1; rama quitar elimina por id_item.
+Añadir o quitar, en la plantilla, un centro asociado a una tarea.
 
 ## Errores Documentados
 

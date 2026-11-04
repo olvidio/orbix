@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Listas C"
+titulo: "Listar los encargos por sacerdote"
 flujo: "encargossacd.listas_c.gestionar.flujo"
-preguntas: ["Como obtener datos en Listas C?"]
-pantallas_principales: []
+preguntas: ["Como listar los encargos por sacerdote en Listar los encargos por sacerdote?"]
+pantallas_principales: ["encargossacd.pantalla.listas_c"]
 fragmentos: ["encargossacd.pantalla.listas_c"]
 endpoints: ["/src/encargossacd/listas_c_data"]
 source: "docs/catalogo/encargossacd/flujos/listas_c.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Listas C
+# Ayuda IA - Listar los encargos por sacerdote
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Listas C`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Listar los encargos por sacerdote`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Listas C?
+- Como listar los encargos por sacerdote en Listar los encargos por sacerdote?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Listas C (`encargossacd.pantalla.listas_c`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Listar los encargos por sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **por sacd**.
+3. Se muestra cada sacerdote (agrupados por ciudad) con sus encargos y la dedicación entre paréntesis, por ejemplo «cl de: Raset (1 tarde 2ª hora)», «atención de: Ribalera (2 tarde 1ª hora)», estudio o descanso.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/listas_c_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.listas_c`
+- `encargossacd.pantalla.listas_c`
 
 ## Objetivo
 
-Gestiona ListasC. Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c). Sustituye la logica de frontend/encargossacd/controller/listas_c.php.
+Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 
 ## Limites De La Respuesta
 

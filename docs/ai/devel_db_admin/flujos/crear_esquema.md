@@ -5,7 +5,7 @@ modulo: "devel_db_admin"
 titulo: "Crear Esquema"
 flujo: "devel_db_admin.crear_esquema.gestionar.flujo"
 preguntas: ["Como ejecutar en Crear Esquema?"]
-pantallas_principales: []
+pantallas_principales: ["devel_db_admin.pantalla.db_crear_esquema"]
 fragmentos: ["devel_db_admin.pantalla.db_crear_esquema"]
 endpoints: ["/src/devel_db_admin/crear_esquema"]
 source: "docs/catalogo/devel_db_admin/flujos/crear_esquema.md"
@@ -23,7 +23,7 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Db Crear Esquema (`devel_db_admin.pantalla.db_crear_esquema`)
 
 ## Como Responder
 
@@ -40,6 +40,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Pantallas Y Fragmentos Relacionados
 
+- `devel_db_admin.pantalla.db_crear_esquema`
 - `devel_db_admin.pantalla.db_crear_esquema`
 
 ## Objetivo

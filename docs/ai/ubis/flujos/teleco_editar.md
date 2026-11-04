@@ -2,47 +2,50 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "ubis"
-titulo: "Teleco Editar"
+titulo: "Añadir o editar una telecomunicación"
 flujo: "ubis.teleco_editar.gestionar.flujo"
-preguntas: ["Como ejecutar en Teleco Editar?"]
-pantallas_principales: []
+preguntas: ["Como añadir o editar una telecomunicación en Añadir o editar una telecomunicación?"]
+pantallas_principales: ["ubis.pantalla.teleco_editar"]
 fragmentos: ["ubis.pantalla.teleco_editar"]
 endpoints: ["/src/ubis/teleco_editar"]
 source: "docs/catalogo/ubis/flujos/teleco_editar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Teleco Editar
+# Ayuda IA - Añadir o editar una telecomunicación
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Teleco Editar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Añadir o editar una telecomunicación`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Teleco Editar?
+- Como añadir o editar una telecomunicación en Añadir o editar una telecomunicación?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Teleco Editar (`ubis.pantalla.teleco_editar`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Añadir o editar una telecomunicación
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **telecos** pulsar **nuevo**, o marcar un registro y pulsar **modificar**.
+2. Elegir el **Tipo teleco** (correo electrónico, fax, página web, teléfono fijo o teléfono móvil); entonces el desplegable **Descripción** se rellena con las opciones de ese tipo (por ejemplo otros, de la casa, dirección, administración, sacd). Escribir el **Número** y, si hace falta, las **Observaciones**.
+3. Pulsar **Guardar Cambios**. Vuelve a la ficha y el número aparece junto a los demás teléfonos.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/ubis/teleco_editar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `ubis.pantalla.teleco_editar`
+- `ubis.pantalla.teleco_editar`
 
 ## Objetivo
 
-Carga el formulario de alta/edición de una telecomunicación de un ubi.
+Añadir una telecomunicación o modificar una existente.
 
 ## Errores Documentados
 

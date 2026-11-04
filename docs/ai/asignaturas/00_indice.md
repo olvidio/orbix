@@ -21,7 +21,7 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- API asignaturas (soporte) -> `flujos/api_soporte.md`
+- Datos de asignaturas -> `flujos/api_soporte.md`
 
 ## Pantallas Disponibles
 

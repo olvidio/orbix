@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadescentro"
-titulo: "Centros Encargados"
+titulo: "Ver los centros encargados actualizados"
 flujo: "actividadescentro.centros_encargados.gestionar.flujo"
-preguntas: ["Como obtener datos en Centros Encargados?"]
-pantallas_principales: []
+preguntas: ["Como ver los centros encargados actualizados en Ver los centros encargados actualizados?"]
+pantallas_principales: ["actividadescentro.pantalla.activ_ctr"]
 fragmentos: ["actividadescentro.pantalla.activ_ctr"]
 endpoints: ["/src/actividadescentro/centros_encargados_data"]
 source: "docs/catalogo/actividadescentro/flujos/centros_encargados.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Centros Encargados
+# Ayuda IA - Ver los centros encargados actualizados
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Centros Encargados`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver los centros encargados actualizados`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Centros Encargados?
+- Como ver los centros encargados actualizados en Ver los centros encargados actualizados?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Activ Ctr (`actividadescentro.pantalla.activ_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver los centros encargados actualizados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Asignar, reordenar o quitar un centro.
+2. La celda de la actividad se refresca sola con la lista al día.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/actividadescentro/centros_encargados_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadescentro.pantalla.activ_ctr`
+- `actividadescentro.pantalla.activ_ctr`
 
 ## Objetivo
 
-Tras asignar, reordenar o eliminar un centro encargado, la celda de esa actividad se refresca con la lista actualizada de centros y el flag `permite_modificar` (que decide si cada centro se pinta como enlace o como texto plano). Es un paso automático, no una acción explícita del usuario.
+Refrescar la lista de centros encargados de una actividad tras asignar, reordenar o quitar uno.
 
 ## Limites De La Respuesta
 

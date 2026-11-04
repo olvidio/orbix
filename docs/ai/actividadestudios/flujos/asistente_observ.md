@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "Asistente Observ"
+titulo: "Guardar las observaciones de un asistente"
 flujo: "actividadestudios.asistente_observ.gestionar.flujo"
-preguntas: ["Como ejecutar en Asistente Observ?"]
+preguntas: ["Como guardar las observaciones de un asistente en Guardar las observaciones de un asistente?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/actividadestudios/asistente_observ"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/actividadestudios/flujos/asistente_observ.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Asistente Observ
+# Ayuda IA - Guardar las observaciones de un asistente
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Asistente Observ`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar las observaciones de un asistente`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Asistente Observ?
+- Como guardar las observaciones de un asistente en Guardar las observaciones de un asistente?
 
 ## Donde Entrar
 
@@ -29,11 +29,10 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar las observaciones de un asistente
 
-1. Desde el contexto de un asistente en una actividad, editar el campo `observ`.
-2. Enviar `id_activ`, `id_nom` (o `id_pau`) y `observ` al endpoint.
-3. El sistema localiza al asistente y persiste el texto.
+1. Esta acción no se puede lanzar desde las pantallas actuales.
+2. Las observaciones de un asistente se editan desde su ficha de asistencia (ver el apartado de asistentes).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/asistente_observ`
@@ -44,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario guarda el texto de observaciones generales (`observ`) de un asistente en una actividad. Sustituye al case `observ` de `update_3103.php`.
+Guardar el texto de observaciones generales de un asistente en una actividad.
 
 ## Errores Documentados
 

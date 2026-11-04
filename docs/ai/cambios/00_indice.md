@@ -24,14 +24,14 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Consultar y purgar cambios -> `flujos/avisos_generar.md`
 - Eliminar cambio anotado -> `flujos/cambio_usuario.md`
 - Purgar cambios hasta fecha -> `flujos/cambio_usuario_eliminar_hasta_fecha.md`
-- Guardar objeto de aviso -> `flujos/cambio_usuario_objeto_pref.md`
-- Actualizar fases de referencia -> `flujos/cambio_usuario_objeto_pref_fases.md`
-- Cargar propiedades vigilables -> `flujos/cambio_usuario_objeto_pref_propiedades.md`
-- Sincronizar propiedades -> `flujos/cambio_usuario_propiedad_pref_guardar_todas.md`
-- Editar condición de propiedad -> `flujos/cambio_usuario_propiedad_pref_item.md`
-- Preview de condición -> `flujos/cambio_usuario_propiedad_pref_preview.md`
-- Configurar preferencia de aviso -> `flujos/usuario_avisos_pref.md`
-- avisos del usuario -> `flujos/usuario_form_avisos.md`
+- Crear un aviso de cambios -> `flujos/cambio_usuario_objeto_pref.md`
+- Elegir la fase de un aviso -> `flujos/cambio_usuario_objeto_pref_fases.md`
+- Elegir qué campos vigilar -> `flujos/cambio_usuario_objeto_pref_propiedades.md`
+- Guardar los avisos -> `flujos/cambio_usuario_propiedad_pref_guardar_todas.md`
+- Poner condición a un campo -> `flujos/cambio_usuario_propiedad_pref_item.md`
+- Previsualizar una condición -> `flujos/cambio_usuario_propiedad_pref_preview.md`
+- Configurar un aviso de cambios en actividades -> `flujos/usuario_avisos_pref.md`
+- los avisos de cambios de un usuario -> `flujos/usuario_form_avisos.md`
 
 ## Pantallas Disponibles
 

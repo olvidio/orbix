@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "encargossacd"
-titulo: "Encargo Ver Editar"
+titulo: "Guardar los cambios de un encargo"
 flujo: "encargossacd.encargo_ver_editar.gestionar.flujo"
-preguntas: ["Como ejecutar en Encargo Ver Editar?"]
-pantallas_principales: []
+preguntas: ["Como guardar los cambios de un encargo en Guardar los cambios de un encargo?"]
+pantallas_principales: ["encargossacd.pantalla.encargo_ver"]
 fragmentos: ["encargossacd.pantalla.encargo_ver"]
 endpoints: ["/src/encargossacd/encargo_ver_editar"]
 source: "docs/catalogo/encargossacd/flujos/encargo_ver_editar.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Encargo Ver Editar
+# Ayuda IA - Guardar los cambios de un encargo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Encargo Ver Editar`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Guardar los cambios de un encargo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Encargo Ver Editar?
+- Como guardar los cambios de un encargo en Guardar los cambios de un encargo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Encargo Ver (`encargossacd.pantalla.encargo_ver`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Guardar los cambios de un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Modificar los campos del encargo.
+2. Pulsar **modificar encargo**.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/encargossacd/encargo_ver_editar`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `encargossacd.pantalla.encargo_ver`
+- `encargossacd.pantalla.encargo_ver`
 
 ## Objetivo
 
-Gestiona EncargoVerEditar. Actualización de encargo desde encargo_ver (antes encargo_ajax.php que=editar).
+Guardar los cambios hechos en un encargo.
 
 ## Limites De La Respuesta
 

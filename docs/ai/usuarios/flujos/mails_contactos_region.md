@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "usuarios"
-titulo: "Mails Contactos Region"
+titulo: "Ver los contactos de la región"
 flujo: "usuarios.mails_contactos_region.gestionar.flujo"
-preguntas: ["Como ejecutar en Mails Contactos Region?"]
+preguntas: ["Como ver los contactos de la región en Ver los contactos de la región?"]
 pantallas_principales: ["usuarios.pantalla.mails_contactos_region"]
 fragmentos: []
 endpoints: ["/src/usuarios/mails_contactos_region"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/usuarios/flujos/mails_contactos_region.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Mails Contactos Region
+# Ayuda IA - Ver los contactos de la región
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Mails Contactos Region`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver los contactos de la región`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Mails Contactos Region?
+- Como ver los contactos de la región en Ver los contactos de la región?
 
 ## Donde Entrar
 
@@ -29,12 +29,13 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Ver los contactos de la región
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ayuda de acceso.
+2. Consultar la lista de contactos y escribir al que corresponda.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/usuarios/mails_contactos_region`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +43,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
+Mostrar los correos de contacto de los administradores de la región para pedir ayuda de acceso.
 
 ## Errores Documentados
 

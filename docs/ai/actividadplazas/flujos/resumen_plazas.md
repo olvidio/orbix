@@ -2,39 +2,39 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadplazas"
-titulo: "Resumen Plazas"
+titulo: "Ver el resumen de plazas de una actividad"
 flujo: "actividadplazas.resumen_plazas.gestionar.flujo"
-preguntas: ["Como obtener datos en Resumen Plazas?"]
-pantallas_principales: []
+preguntas: ["Como ver el resumen de plazas de una actividad en Ver el resumen de plazas de una actividad?"]
+pantallas_principales: ["actividadplazas.pantalla.resumen_plazas"]
 fragmentos: ["actividadplazas.pantalla.resumen_plazas"]
 endpoints: ["/src/actividadplazas/resumen_plazas_data"]
 source: "docs/catalogo/actividadplazas/flujos/resumen_plazas.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Resumen Plazas
+# Ayuda IA - Ver el resumen de plazas de una actividad
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Resumen Plazas`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver el resumen de plazas de una actividad`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Resumen Plazas?
+- Como ver el resumen de plazas de una actividad en Ver el resumen de plazas de una actividad?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Resumen Plazas (`actividadplazas.pantalla.resumen_plazas`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver el resumen de plazas de una actividad
 
-1. Desde una actividad, abrir la opción de plazas/resumen.
-2. El sistema carga `resumen_plazas_data` con el desglose por delegación y totales.
-3. Muestra avisos si la actividad no está publicada o si solo se ven las ocupadas por la propia dl
-4. Pinta la tabla (calendario, cedidas, conseguidas, disponibles, ocupadas, libres) y el desplegable
+1. Marcar la actividad y pulsar **plazas**.
+2. Si solo se ven las plazas de la propia dl, avisa «Sólo se ven las ocupadas por la propia dl».
+3. La tabla tiene una fila por delegación con **calendario**, **cedidas**, **conseguidas**, **total**, **ocupadas** y **libres**; debajo de cada una se indica a quién cedió o de quién consiguió plazas (por ejemplo «1 a dlb», «3 de dlmE») y una fila de **totales**.
+4. Debajo hay un bloque «ceder [número] plazas a [delegación] **Guardar**» (ver «Ceder plazas»).
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadplazas/resumen_plazas_data`
@@ -42,10 +42,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadplazas.pantalla.resumen_plazas`
+- `actividadplazas.pantalla.resumen_plazas`
 
 ## Objetivo
 
-Ver el estado completo de plazas de una actividad (por dl y totales), comprobar avisos de publicación o visibilidad, y acceder al formulario para ceder plazas a otra delegación.
+Ver cuántas plazas tiene cada delegación en una actividad y ceder plazas a otra.
 
 ## Limites De La Respuesta
 

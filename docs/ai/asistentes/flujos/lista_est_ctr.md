@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "asistentes"
-titulo: "Lista Est Ctr"
+titulo: "Ver los estudios matriculados por centro"
 flujo: "asistentes.lista_est_ctr.gestionar.flujo"
-preguntas: ["Como obtener datos en Lista Est Ctr?"]
-pantallas_principales: []
+preguntas: ["Como ver los estudios matriculados por centro en Ver los estudios matriculados por centro?"]
+pantallas_principales: ["asistentes.pantalla.lista_est_ctr"]
 fragmentos: ["asistentes.pantalla.lista_est_ctr"]
 endpoints: ["/src/asistentes/lista_est_ctr_data"]
 source: "docs/catalogo/asistentes/flujos/lista_est_ctr.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Est Ctr
+# Ayuda IA - Ver los estudios matriculados por centro
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Est Ctr`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Ver los estudios matriculados por centro`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Lista Est Ctr?
+- Como ver los estudios matriculados por centro en Ver los estudios matriculados por centro?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Lista Est Ctr (`asistentes.pantalla.lista_est_ctr`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Ver los estudios matriculados por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el curso y pulsar **Buscar**.
+2. Debería aparecer, por centro, la lista de personas con sus estudios matriculados (pantalla no comprobada en la instancia).
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/asistentes/lista_est_ctr_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `asistentes.pantalla.lista_est_ctr`
+- `asistentes.pantalla.lista_est_ctr`
 
 ## Objetivo
 
-Ver estudios matriculados por centro.
+Ver, centro por centro, los estudios en los que están matriculadas sus personas.
 
 ## Limites De La Respuesta
 

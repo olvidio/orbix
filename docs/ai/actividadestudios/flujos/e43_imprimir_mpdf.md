@@ -2,38 +2,37 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "actividadestudios"
-titulo: "E43 Imprimir Mpdf"
+titulo: "Imprimir el certificado E43"
 flujo: "actividadestudios.e43_imprimir_mpdf.gestionar.flujo"
-preguntas: ["Como obtener datos en E43 Imprimir Mpdf?"]
-pantallas_principales: []
+preguntas: ["Como imprimir el certificado e43 en Imprimir el certificado E43?"]
+pantallas_principales: ["actividadestudios.pantalla.e43_imprimir_mpdf"]
 fragmentos: ["actividadestudios.pantalla.e43_imprimir_mpdf"]
 endpoints: ["/src/actividadestudios/e43_imprimir_mpdf_data"]
 source: "docs/catalogo/actividadestudios/flujos/e43_imprimir_mpdf.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - E43 Imprimir Mpdf
+# Ayuda IA - Imprimir el certificado E43
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `E43 Imprimir Mpdf`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Imprimir el certificado E43`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en E43 Imprimir Mpdf?
+- Como imprimir el certificado e43 en Imprimir el certificado E43?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- E43 Imprimir Mpdf (`actividadestudios.pantalla.e43_imprimir_mpdf`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Imprimir el certificado e43
 
-1. En la pantalla E43, pulsar **imprimir** (abre ventana con `e43_2_mpdf.php`).
-2. El controlador consulta `e43_imprimir_mpdf_data`.
-3. Se renderiza el certificado con estilos `e43_mpdf.css` listo para imprimir/exportar.
+1. En la pantalla del certificado E43, pulsar **imprimir**.
+2. Se abre una ventana con el certificado listo para imprimir o guardar como PDF.
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividadestudios/e43_imprimir_mpdf_data`
@@ -41,10 +40,11 @@ Referencias tecnicas para verificar la respuesta:
 ## Pantallas Y Fragmentos Relacionados
 
 - `actividadestudios.pantalla.e43_imprimir_mpdf`
+- `actividadestudios.pantalla.e43_imprimir_mpdf`
 
 ## Objetivo
 
-El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mismos datos que la pantalla E43 y los renderiza en la plantilla imprimible (`e43_imprimir_mpdf.php` / `e43_2_mpdf.php`).
+Imprimir el certificado E43 de un alumno en PDF, con los mismos datos que se ven en pantalla.
 
 ## Limites De La Respuesta
 

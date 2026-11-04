@@ -2,47 +2,49 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "misas"
-titulo: "Nuevo Status"
+titulo: "Aplicar un nuevo estado a un periodo"
 flujo: "misas.nuevo_status.gestionar.flujo"
-preguntas: ["Como ejecutar en Nuevo Status?"]
-pantallas_principales: []
+preguntas: ["Como aplicar un nuevo estado a un periodo en Aplicar un nuevo estado a un periodo?"]
+pantallas_principales: ["misas.pantalla.cambiar_status"]
 fragmentos: ["misas.pantalla.cambiar_status"]
 endpoints: ["/src/misas/nuevo_status"]
 source: "docs/catalogo/misas/flujos/nuevo_status.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Nuevo Status
+# Ayuda IA - Aplicar un nuevo estado a un periodo
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Nuevo Status`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Aplicar un nuevo estado a un periodo`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Nuevo Status?
+- Como aplicar un nuevo estado a un periodo en Aplicar un nuevo estado a un periodo?
 
 ## Donde Entrar
 
-- Pantalla pendiente de revisar.
+- Cambiar Status (`misas.pantalla.cambiar_status`)
 
 ## Como Responder
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Aplicar un nuevo estado a un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Cambiar estado**, elegir zona, periodo y **Nuevo estado**.
+2. Pulsar **cambiar**. Los sacerdotes o centros pasan a ver el plan según el estado elegido.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/misas/nuevo_status`
 
 ## Pantallas Y Fragmentos Relacionados
 
 - `misas.pantalla.cambiar_status`
+- `misas.pantalla.cambiar_status`
 
 ## Objetivo
 
-Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
+Aplicar el nuevo estado a todas las misas de una zona en un rango de fechas.
 
 ## Errores Documentados
 

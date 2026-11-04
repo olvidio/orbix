@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "notas"
-titulo: "Comprobar Notas Constants"
+titulo: "Preparar la comprobación de notas"
 flujo: "notas.comprobar_notas_constants.gestionar.flujo"
-preguntas: ["Como obtener datos en Comprobar Notas Constants?"]
+preguntas: ["Como preparar la comprobación de notas en Preparar la comprobación de notas?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/notas/comprobar_notas_constants_data"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/notas/flujos/comprobar_notas_constants.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Comprobar Notas Constants
+# Ayuda IA - Preparar la comprobación de notas
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Comprobar Notas Constants`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Preparar la comprobación de notas`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como obtener datos en Comprobar Notas Constants?
+- Como preparar la comprobación de notas en Preparar la comprobación de notas?
 
 ## Donde Entrar
 
@@ -29,12 +29,12 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Obtener datos
+## Preparar la comprobación de notas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Al abrir **Comprobar datos** las constantes se cargan automáticamente.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/notas/comprobar_notas_constants_data`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +42,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Cargar constantes VO antes de ejecutar comprobaciones.
+Cargar las constantes que usan las comprobaciones de notas.
 
 ## Limites De La Respuesta
 

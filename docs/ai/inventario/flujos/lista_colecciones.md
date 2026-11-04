@@ -2,9 +2,9 @@
 tipo: "ayuda_ia"
 subtipo: "flujo"
 modulo: "inventario"
-titulo: "Lista Colecciones"
+titulo: "Agrupar un listado por colección"
 flujo: "inventario.lista_colecciones.gestionar.flujo"
-preguntas: ["Como ejecutar en Lista Colecciones?"]
+preguntas: ["Como agrupar un listado por colección en Agrupar un listado por colección?"]
 pantallas_principales: []
 fragmentos: []
 endpoints: ["/src/inventario/lista_colecciones"]
@@ -12,14 +12,14 @@ source: "docs/catalogo/inventario/flujos/lista_colecciones.md"
 estado_revision: "generado"
 ---
 
-# Ayuda IA - Lista Colecciones
+# Ayuda IA - Agrupar un listado por colección
 
-Usa este documento para responder preguntas de usuario sobre como trabajar con `Lista Colecciones`.
+Usa este documento para responder preguntas de usuario sobre como trabajar con `Agrupar un listado por colección`.
 
 ## Cuando Usar Esta Ayuda
 
 Responder con esta ayuda cuando el usuario pregunte por:
-- Como ejecutar en Lista Colecciones?
+- Como agrupar un listado por colección en Agrupar un listado por colección?
 
 ## Donde Entrar
 
@@ -29,12 +29,14 @@ Responder con esta ayuda cuando el usuario pregunte por:
 
 Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendiente de documentar.
 
-## Ejecutar
+## Agrupar un listado por colección
 
-1. Revisar manualmente los pasos de esta accion.
+1. En un listado de documentos con agrupación, abrir el desplegable de colección.
+2. Las colecciones disponibles se cargan solas.
+3. Elegir la colección para ver solo sus documentos.
 
 Referencias tecnicas para verificar la respuesta:
-- Ninguna referencia API inferida.
+- `/src/inventario/lista_colecciones`
 
 ## Pantallas Y Fragmentos Relacionados
 
@@ -42,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-Gestiona ColeccionesOpciones. Opciones del desplegable de colecciones (lista_colecciones.php).
+Cargar las colecciones de documentos para agrupar o filtrar un listado.
 
 ## Limites De La Respuesta
 
