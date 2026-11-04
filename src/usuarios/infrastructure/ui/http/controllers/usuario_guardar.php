@@ -74,6 +74,17 @@ if (empty($Qid_usuario)) {
         return;
     }
 }
+// Login ya tomado por otro usuario: mensaje claro en vez de error de base de datos.
+$cMismoLogin = $UsuarioRepository->matching(
+    \src\shared\domain\criteria\Criteria::create()
+        ->where(\src\shared\domain\criteria\Filter::eq(\src\usuarios\domain\criteria\UsuarioField::Usuario, $Qusuario))
+);
+foreach ($cMismoLogin as $oOtro) {
+    if ((int)$oOtro->getId_usuario() !== (int)$oUsuario->getId_usuario()) {
+        ContestarJson::enviar(_("Ese nombre de usuario ya está en uso, elija otro"), 'none');
+        return;
+    }
+}
 $oUsuario->setUsuarioVo(new Username($Qusuario));
 $oUsuario->setid_role($Qid_role);
 $oUsuario->setEmailVo(!empty($Qemail) ? new Email($Qemail) : null);

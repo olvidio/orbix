@@ -82,7 +82,7 @@ class PasswordHasher
             $txt_err .= _("El nombre de usuario No puede estar en el password");
         }
 
-        if (strlen($password) < 8) {
+        if (strlen($password) <= 8) {
             $txt_err .= $txt_err === '' ? '' : "\n";
             $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe tener más de 8 caracteres");
@@ -107,7 +107,7 @@ class PasswordHasher
             $numCriteria++;
         }
 
-        if ($numCriteria < 3) {
+        if (!$uppercase || !$number || !$specialChars) {
             $txt_err .= $txt_err === '' ? '' : "\n";
             $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un caracter especial");
