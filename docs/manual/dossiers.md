@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "dossiers"
 flujos: 5
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - dossiers
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Dossiers Lista Fichas
+## Ver la relación de dossiers
 
 ### Para Que Sirve
 
-Mostrar la tabla de carpetas de dossiers disponibles para la entidad actual, con iconos de permiso y enlace a cada ficha (`href_ver` firmado en frontend).
+Ver las carpetas (dossiers) disponibles de una persona, actividad o centro/casa y qué puede hacer el usuario en cada una.
 
 ### Donde Entrar
 
@@ -27,7 +27,11 @@ Mostrar la tabla de carpetas de dossiers disponibles para la entidad actual, con
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver la relación de dossiers
+
+1. Abrir la ficha de la persona, actividad o centro/casa y pulsar dossiers.
+2. Aparece la **relación de dossiers** con un símbolo por carpeta: **dossier modificable**, **dossier de sólo lectura** o **dossier sin permisos**.
+3. Pulsar una carpeta con permiso para abrirla.
 
 ### Errores O Avisos Frecuentes
 
@@ -42,12 +46,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `dossiers.dossiers_lista_fichas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dossiers/flujos/dossiers_lista_fichas.md`
 
-## Dossiers Ver Pantalla
+## Abrir un dossier
 
 ### Para Que Sirve
 
-- Abrir y navegar los dossiers de una persona, actividad o ubi: cabecera, relación de carpetas o ficha con widgets embebidos (matrículas, asistentes, certificados, tablas genéricas).
-- Reutilizado desde `home_persona`, `home_ubis`, `actividad_ver` y otras pantallas vía `fnjs_update_div`.
+Abrir y recorrer los dossiers de una persona, actividad o centro/casa: cabecera, relación de carpetas y el contenido de cada una (matrículas, asistentes, certificados, tablas).
 
 ### Donde Entrar
 
@@ -57,7 +60,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Abrir un dossier
+
+1. Desde la ficha, pulsar dossiers y luego la carpeta que interesa.
+2. Se muestra su contenido; según el permiso se puede solo consultar o también modificar.
+3. Usar los enlaces de la cabecera para volver a la relación de dossiers o a la ficha de origen.
 
 ### Errores O Avisos Frecuentes
 
@@ -77,11 +84,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `dossiers.dossiers_ver_pantalla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dossiers/flujos/dossiers_ver_pantalla.md`
 
-## Perm Dossier Ver
+## Consultar o cambiar los permisos de un dossier
 
 ### Para Que Sirve
 
-Consultar o modificar la definición y máscaras de permiso de un `TipoDossier` concreto; volver al listado tras guardar o eliminar.
+Ver o cambiar la definición y los permisos de un tipo de dossier, y volver a la lista.
 
 ### Donde Entrar
 
@@ -91,7 +98,12 @@ Consultar o modificar la definición y máscaras de permiso de un `TipoDossier` 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Consultar o cambiar los permisos de un dossier
+
+1. En la lista de **perm_dossiers**, abrir el tipo de dossier.
+2. Revisar su descripción, el código y las máscaras de permiso. «depende_modificar» activo implica que solo modificará la oficina correspondiente (agd para los agd, sm para los n, sg para los s).
+3. El formulario también muestra campos técnicos editables (**tabla_from**, **tabla_to**, **clase**, **código**). Es intencionado que un administrador de delegación pueda cambiarlos, pero conviene no tocarlos salvo que se sepa lo que se hace.
+4. Pulsar **guardar cambios**; después se vuelve a la lista.
 
 ### Errores O Avisos Frecuentes
 
@@ -106,11 +118,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `dossiers.perm_dossier_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dossiers/flujos/perm_dossier_ver.md`
 
-## Perm Dossiers
+## Elegir los dossiers a configurar
 
 ### Para Que Sirve
 
-Elegir el ámbito de tipos de dossier (personas/ubis/actividades) y abrir la edición de permisos de cada tipo desde el menú de administración.
+Elegir si se quieren configurar los dossiers de personas, centros/casas o actividades, y abrir los permisos de cada tipo.
 
 ### Donde Entrar
 
@@ -120,7 +132,11 @@ Elegir el ámbito de tipos de dossier (personas/ubis/actividades) y abrir la edi
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir los dossiers a configurar
+
+1. Entrar en **perm_dossiers** y elegir **personas**, **ubis** o **actividades**.
+2. Aparece la lista de **dossiers seleccionados**.
+3. Pulsar **ver o modificar permisos** del tipo que interese.
 
 ### Errores O Avisos Frecuentes
 
@@ -135,11 +151,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `dossiers.perm_dossiers.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/dossiers/flujos/perm_dossiers.md`
 
-## Tipo Dossier
+## Guardar o eliminar un tipo de dossier
 
 ### Para Que Sirve
 
-Persistir cambios (`tipo_dossier_guardar`) o eliminar (`tipo_dossier_eliminar`) un tipo de dossier desde el formulario `perm_dossier_ver` (solo administradores `admin_sv`/`admin_sf`).
+Guardar o eliminar un tipo de dossier (solo administradores).
 
 ### Donde Entrar
 
@@ -149,7 +165,11 @@ Persistir cambios (`tipo_dossier_guardar`) o eliminar (`tipo_dossier_eliminar`) 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Guardar o eliminar un tipo de dossier
+
+1. Abrir el tipo de dossier desde **perm_dossiers**.
+2. Pulsar **guardar cambios** para aplicar, o **eliminar** y confirmar para quitarlo.
+3. Solo los administradores (admin_sv/admin_sf) pueden hacerlo.
 
 ### Errores O Avisos Frecuentes
 

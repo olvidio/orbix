@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "usuarios"
 flujos: 33
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - usuarios
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## App Login
+## Entrar desde la app móvil
 
 ### Para Que Sirve
 
-Autenticación app móvil con credenciales y 2FA opcional.
+Iniciar sesión desde la aplicación móvil con usuario, contraseña y, si procede, código 2FA.
 
 ### Donde Entrar
 
@@ -27,9 +27,11 @@ Autenticación app móvil con credenciales y 2FA opcional.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Entrar desde la app móvil
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la app e indicar usuario, contraseña y esquema.
+2. Si el usuario tiene 2FA, escribir el código de verificación.
+3. Si falta usuario o contraseña aparece «Usuario y contraseña obligatorios».
 
 ### Errores O Avisos Frecuentes
 
@@ -43,11 +45,11 @@ Autenticación app móvil con credenciales y 2FA opcional.
 - Flujo: `usuarios.app_login.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/app_login.md`
 
-## App Session
+## Reabrir la app con sesión activa
 
 ### Para Que Sirve
 
-Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales).
+Al arrancar la app móvil, comprobar si ya hay una sesión abierta para no pedir de nuevo las credenciales.
 
 ### Donde Entrar
 
@@ -57,9 +59,10 @@ Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Reabrir la app con sesión activa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la app.
+2. Si la sesión sigue vigente entra directamente; si no, muestra la pantalla de acceso.
 
 ### Errores O Avisos Frecuentes
 
@@ -70,24 +73,25 @@ Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales
 - Flujo: `usuarios.app_session.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/app_session.md`
 
-## Borrar Pwd
+## Borrar las contraseñas en pruebas
 
 ### Para Que Sirve
 
-- Herramienta de pruebas: resetea contraseñas al login en todos los esquemas (excepto superadmin id_role=1).
-- Solo WEBDIR=pruebas o Docker.
+Herramienta de pruebas: borra las contraseñas de todos los usuarios (salvo el superadministrador) para poder entrar sin ellas.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Borrar Todos Pwd (frontend/usuarios/controller/borrar_todos_pwd.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Borrar las contraseñas en pruebas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción del menú **sistema**.
+2. Confirmar la acción: afecta a todos los esquemas.
+3. Solo funciona en la base de pruebas; en producción aparece «Sólo se puede borrar en la base de datos de pruebas».
 
 ### Errores O Avisos Frecuentes
 
@@ -100,11 +104,11 @@ Comprueba si hay sesión autenticada al arrancar la app móvil (sin credenciales
 - Flujo: `usuarios.borrar_pwd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/borrar_pwd.md`
 
-## Check First Login 2fa
+## Primer acceso sin 2FA
 
 ### Para Que Sirve
 
-Tras login web, redirige a configuración 2FA si el usuario no la tiene activada; si no, continúa al home.
+Tras iniciar sesión, llevar al usuario a configurar la verificación en dos pasos si aún no la tiene.
 
 ### Donde Entrar
 
@@ -114,9 +118,11 @@ Tras login web, redirige a configuración 2FA si el usuario no la tiene activada
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Primer acceso sin 2FA
 
-1. Revisar manualmente los pasos de esta accion.
+1. Iniciar sesión con login y contraseña.
+2. Si el usuario no tiene la verificación en dos pasos activa, se le lleva a la pantalla de configuración.
+3. Si ya la tiene, entra directamente a la página de inicio.
 
 ### Errores O Avisos Frecuentes
 
@@ -127,11 +133,11 @@ Tras login web, redirige a configuración 2FA si el usuario no la tiene activada
 - Flujo: `usuarios.check_first_login_2fa.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/check_first_login_2fa.md`
 
-## Grupo
+## Buscar un grupo
 
 ### Para Que Sirve
 
-Administración de grupos de permisos: listar, alta/edición y borrado.
+Administrar los grupos de permisos que se asignan a los usuarios: crear, renombrar y eliminar.
 
 ### Donde Entrar
 
@@ -141,23 +147,25 @@ Administración de grupos de permisos: listar, alta/edición y borrado.
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Buscar un grupo
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **grupos**.
+2. Escribir parte del nombre en **Nombre** y pulsar **Buscar**.
 
-#### Guardar
+#### Crear un grupo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar **NUEVO GRUPO**.
+2. Escribir el nombre. Convención de la pantalla: poner entre paréntesis si el grupo se refiere a menús (m), permisos (p) o ambos (m+p).
+3. Guardar.
 
-#### Consultar el listado
+#### Cambiar el nombre de un grupo
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Pulsar el grupo en la lista, modificar el nombre y guardar.
+
+#### Eliminar un grupo
+
+1. Marcar el grupo en la lista y pulsar eliminar.
+2. Confirmar. Si hay un error aparece «hay un error, no se ha eliminado».
 
 ### Errores O Avisos Frecuentes
 
@@ -169,11 +177,11 @@ Administración de grupos de permisos: listar, alta/edición y borrado.
 - Flujo: `usuarios.grupo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/grupo.md`
 
-## Grupo Info
+## Abrir un grupo para editarlo
 
 ### Para Que Sirve
 
-Devuelve el nombre de un grupo para el formulario de edición.
+Cargar el nombre de un grupo en su formulario de edición.
 
 ### Donde Entrar
 
@@ -183,9 +191,11 @@ Devuelve el nombre de un grupo para el formulario de edición.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Abrir un grupo para editarlo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **grupos**, pulsar el grupo.
+2. Se carga su nombre en el formulario.
+3. Si el grupo ya no existe aparece «Grupo no encontrado».
 
 ### Errores O Avisos Frecuentes
 
@@ -196,11 +206,11 @@ Devuelve el nombre de un grupo para el formulario de edición.
 - Flujo: `usuarios.grupo_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/grupo_info.md`
 
-## Mails Contactos Region
+## Ver los contactos de la región
 
 ### Para Que Sirve
 
-Devuelve contactos email de usuarios regionales con permisos de oficina relevantes (pantalla recuperación).
+Mostrar los correos de contacto de los administradores de la región para pedir ayuda de acceso.
 
 ### Donde Entrar
 
@@ -210,9 +220,10 @@ Devuelve contactos email de usuarios regionales con permisos de oficina relevant
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los contactos de la región
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ayuda de acceso.
+2. Consultar la lista de contactos y escribir al que corresponda.
 
 ### Errores O Avisos Frecuentes
 
@@ -223,11 +234,11 @@ Devuelve contactos email de usuarios regionales con permisos de oficina relevant
 - Flujo: `usuarios.mails_contactos_region.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/mails_contactos_region.md`
 
-## Perm Activ
+## Añadir un permiso en actividades
 
 ### Para Que Sirve
 
-Gestión permisos actividad-proceso de un usuario (módulo procesos).
+Dar o quitar a un usuario permisos sobre un tipo de actividad (ver, modificar, crear, borrar) según la fase en que esté la actividad.
 
 ### Donde Entrar
 
@@ -237,23 +248,19 @@ Gestión permisos actividad-proceso de un usuario (módulo procesos).
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Añadir un permiso en actividades
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la ficha del usuario, en «Permisos en actividades», pulsar **añadir permiso**. Se abre «Añadir nuevo permiso a …».
+2. Elegir si es para actividades que organiza **la propia dl** u **otras dl**, y el tipo de actividad con **sf/sv**, **asistentes**, **actividad** y **tipo de actividad** (cuanto más concreto, más manda: «sv n crt» manda sobre «sv n»).
+3. Marcar en **afecta a** lo que se controla: datos, economic, sacd, ctr, id_tarifa, cargos, asistentes o asistentesSacd.
+4. Para cada uno elegir la **fase de referencia** y el **permiso off (sin marcar)** y **permiso on (marcado)**: nada, ocupado, ver, modificar, crear o borrar. «Ocupado» es un punto intermedio entre nada y ver: se ve que la actividad está ocupada, pero no se puede ver la información de qué es lo que ocupa. Si falta la fase de referencia, avisa «OJO! Comprobar la fase de referencia.» (el aviso es intencionado y puede salir más de una vez al cambiar los desplegables).
+5. Pulsar **guardar**. La ficha vuelve a mostrar la tabla con dl propia, tipo de actividad, afecta a, fase de referencia, permiso off y permiso on.
 
-#### Guardar
+#### Modificar o eliminar un permiso en actividades
 
-1. Revisar manualmente los pasos de esta accion.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. En la tabla «propios», marcar la fila.
+2. Pulsar **modificar** para cambiarla, o **eliminar** y confirmar «¿Esta seguro que desea borrar este permiso?».
+3. A igual nivel, los permisos propios mandan sobre los de los grupos del usuario.
 
 ### Errores O Avisos Frecuentes
 
@@ -265,38 +272,30 @@ Gestión permisos actividad-proceso de un usuario (módulo procesos).
 - Flujo: `usuarios.perm_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/perm_activ.md`
 
-## Perm Menu
+## Añadir un permiso de menú
 
 ### Para Que Sirve
 
-Gestión permisos menú DL de un usuario desde su ficha.
+Ver, añadir y quitar los permisos sobre menús de un usuario desde su ficha.
 
 ### Donde Entrar
 
-- Grupo Form (frontend/usuarios/controller/grupo_form.php)
 - Perm Menu Form (frontend/usuarios/controller/perm_menu_form.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Añadir un permiso de menú
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Abrir la ficha del usuario.
+2. Pulsar **añadir grup menu** y elegir el grupo de menús.
+3. Guardar.
 
-#### Guardar
+#### Quitar un permiso de menú
 
-1. Revisar manualmente los pasos de esta accion.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Elegir la fila en la tabla de la ficha y pulsar quitar.
+2. Confirmar «¿Esta seguro que desea borrar este permiso?».
 
 ### Errores O Avisos Frecuentes
 
@@ -308,11 +307,11 @@ Gestión permisos menú DL de un usuario desde su ficha.
 - Flujo: `usuarios.perm_menu.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/perm_menu.md`
 
-## Perm Menu Info
+## Abrir el formulario de permiso de menú
 
 ### Para Que Sirve
 
-Carga formulario modal de permiso menú (nuevo o edición).
+Cargar el formulario (nuevo o de edición) de un permiso de menú.
 
 ### Donde Entrar
 
@@ -322,9 +321,11 @@ Carga formulario modal de permiso menú (nuevo o edición).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Abrir el formulario de permiso de menú
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar añadir (o la fila a editar).
+2. Se abre el formulario con el grupo de menús elegible.
+3. Si el grupo ya no existe aparece «Grupo no encontrado».
 
 ### Errores O Avisos Frecuentes
 
@@ -335,11 +336,11 @@ Carga formulario modal de permiso menú (nuevo o edición).
 - Flujo: `usuarios.perm_menu_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/perm_menu_info.md`
 
-## Preferencia Tabla
+## Reutilizar la presentación de una tabla
 
 ### Para Que Sirve
 
-Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabla+idioma).
+Recordar cómo prefiere el usuario ver cada tabla (anchos, orden) para presentarla igual la próxima vez.
 
 ### Donde Entrar
 
@@ -349,9 +350,11 @@ Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabl
 
 ### Tareas Habituales
 
-#### Obtener
+#### Reutilizar la presentación de una tabla
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir cualquier listado en formato SlickGrid.
+2. Ajustar columnas si se desea; se guardan para las siguientes veces.
+3. La opción global se elige en **preferencias**.
 
 ### Errores O Avisos Frecuentes
 
@@ -362,23 +365,29 @@ Devuelve preferencias de presentación de tablas (global y SlickGrid por id_tabl
 - Flujo: `usuarios.preferencia_tabla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/preferencia_tabla.md`
 
-## Preferencias
+## Cambiar las preferencias personales
 
 ### Para Que Sirve
 
-Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
+Cambiar las preferencias personales: diseño del menú, página de inicio, estilo, presentación de tablas, nombres e idioma.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Preferencias (frontend/usuarios/controller/preferencias.php)
 - **Legacy:** menú usuario > preferencias
 - **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
-#### Guardar
+#### Cambiar las preferencias personales
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. En **Preferencias personales** elegir: Layout (Legacy, Burger, Pills, Pills 2), Página central de inicio (Home, Oficina, Avisos cambios actividades), Menú principal de la oficina, Estilo, Disposición menú, Presentación tablas (SlickGrid o Html), Presentación nombre/apellidos, Idioma y Zona horaria.
+3. Pulsar guardar. Algunos cambios (layout, idioma) exigen volver a entrar: la pantalla avisa «deberá volver a entrar».
+
+#### Gestionar los avisos de cambios en actividades
+
+1. En la parte superior de preferencias, usar **ver lista**, **ver mails sin enviar** o **gestionar avisos en cambios actividades**.
 
 ### Errores O Avisos Frecuentes
 
@@ -389,23 +398,26 @@ Ajuste preferencias personales: layout, inicio, idioma, tablas y estilo.
 - Flujo: `usuarios.preferencias.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/preferencias.md`
 
-## Recuperar 2fa Mail
+## Reiniciar el 2FA por correo
 
 ### Para Que Sirve
 
-Recuperación 2FA: genera código/link y envía mail al usuario.
+Recuperar el acceso cuando se ha perdido la aplicación de autenticación: envía un enlace por correo para reiniciar el 2FA.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Recuperar 2fa (frontend/usuarios/controller/recuperar_2fa.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Reiniciar el 2FA por correo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la pantalla de acceso, pulsar el enlace de ayuda del 2FA.
+2. Indicar el login y el esquema.
+3. Se envía un correo con un enlace; al usarlo se desactiva el 2FA y hay que configurarlo de nuevo.
+4. Si el usuario no tiene correo registrado aparece «No hay email asociado a este usuario»; hay que pedir al administrador que lo restablezca.
 
 ### Errores O Avisos Frecuentes
 
@@ -419,23 +431,26 @@ Recuperación 2FA: genera código/link y envía mail al usuario.
 - Flujo: `usuarios.recuperar_2fa_mail.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/recuperar_2fa_mail.md`
 
-## Recuperar Password Mail
+## Recuperar la contraseña por correo
 
 ### Para Que Sirve
 
-Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y envía mail.
+Recuperar el acceso cuando se ha olvidado la contraseña: envía por correo una contraseña temporal.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Recuperar Password (frontend/usuarios/controller/recuperar_password.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Recuperar la contraseña por correo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la pantalla de acceso, pulsar el enlace de ayuda para recuperar la contraseña.
+2. Indicar el login.
+3. El sistema envía al correo del usuario una contraseña temporal y marca que debe cambiarla al entrar.
+4. Con la temporal, iniciar sesión y elegir una contraseña nueva.
 
 ### Errores O Avisos Frecuentes
 
@@ -452,38 +467,35 @@ Recuperación contraseña: genera pwd temporal, marca cambio obligatorio y enví
 - Flujo: `usuarios.recuperar_password_mail.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/recuperar_password_mail.md`
 
-## Role
+## Consultar los roles
 
 ### Para Que Sirve
 
-Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar grupmenus.
+Consultar los roles y asignar a cada uno los grupos de menús de la delegación.
 
 ### Donde Entrar
 
-- Role Form (frontend/usuarios/controller/role_form.php)
 - Role Lista (frontend/usuarios/controller/role_lista.php)
 - **Legacy:** sistema > usuarios web > lista de roles
 - **Pills2:** ADMIN LOCAL > usuarios web > lista de roles
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Consultar los roles
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **lista de roles**.
+2. Los roles son comunes a todas las delegaciones y solo los modifica el superusuario.
+3. Pulsar un rol para ver su ficha y los grupos de menús que tiene.
 
-#### Guardar
+#### Asignar grupos de menús a un rol
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del rol.
+2. Pulsar **añadir grup menu** y marcar los grupos de menús que se quieren dar.
+3. Guardar. Los grupos de menús son propios de cada delegación (sv y sf distintos) y los puede modificar el administrador.
 
-#### Consultar el listado
+#### Quitar un grupo de menús a un rol
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. En la ficha del rol, en la tabla de grupos de menús, elegir el que se quiere quitar y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -495,11 +507,11 @@ Administración de roles: listar, crear/editar flags sf/sv/pau/dmz y asignar gru
 - Flujo: `usuarios.role.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/role.md`
 
-## Role Grupmenu Add
+## Añadir grupos de menús a un rol
 
 ### Para Que Sirve
 
-Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
+Añadir a un rol los grupos de menús marcados.
 
 ### Donde Entrar
 
@@ -509,9 +521,11 @@ Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Añadir grupos de menús a un rol
 
-1. Revisar manualmente los pasos de esta accion.
+1. Pulsar **añadir grup menu** en la ficha del rol.
+2. Marcar uno o varios grupos de la lista.
+3. Guardar. Si no se marca ninguno aparece «debe seleccionar uno».
 
 ### Errores O Avisos Frecuentes
 
@@ -523,11 +537,11 @@ Asocia grupmenu a rol (tokens sel `id_role#id_grupmenu`).
 - Flujo: `usuarios.role_grupmenu_add.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/role_grupmenu_add.md`
 
-## Role Grupmenu Del
+## Quitar un grupo de menús
 
 ### Para Que Sirve
 
-Quita asociación grupmenu↔rol por id_item.
+Quitar un grupo de menús de un rol.
 
 ### Donde Entrar
 
@@ -537,9 +551,11 @@ Quita asociación grupmenu↔rol por id_item.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar un grupo de menús
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del rol, elegir el grupo en la tabla.
+2. Pulsar quitar y confirmar.
+3. Si el registro ya no existe aparece «no existe el registro».
 
 ### Errores O Avisos Frecuentes
 
@@ -552,11 +568,11 @@ Quita asociación grupmenu↔rol por id_item.
 - Flujo: `usuarios.role_grupmenu_del.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/role_grupmenu_del.md`
 
-## Role Grupmenu Info
+## Ver los grupos disponibles
 
 ### Para Que Sirve
 
-Lista grupmenus disponibles para añadir a un rol.
+Mostrar los grupos de menús que se pueden añadir a un rol.
 
 ### Donde Entrar
 
@@ -566,9 +582,10 @@ Lista grupmenus disponibles para añadir a un rol.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los grupos disponibles
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del rol, pulsar **añadir grup menu**.
+2. Aparece la lista de grupos de menús que el rol aún no tiene.
 
 ### Errores O Avisos Frecuentes
 
@@ -579,11 +596,11 @@ Lista grupmenus disponibles para añadir a un rol.
 - Flujo: `usuarios.role_grupmenu_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/role_grupmenu_info.md`
 
-## Role Info
+## Abrir la ficha de un rol
 
 ### Para Que Sirve
 
-Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
+Cargar la ficha de un rol: sus datos, si se puede editar y los grupos de menús que ya tiene.
 
 ### Donde Entrar
 
@@ -593,9 +610,10 @@ Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Abrir la ficha de un rol
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **lista de roles**, pulsar el rol.
+2. Se muestran sus datos (sf, sv, pau, sacd, casas, dmz) y la tabla de grupos de menús asignados.
 
 ### Errores O Avisos Frecuentes
 
@@ -607,44 +625,51 @@ Carga ficha rol: datos, permiso de edición y tabla grupmenus ya asignados.
 - Flujo: `usuarios.role_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/role_info.md`
 
-## Usuario
+## Buscar un usuario
 
 ### Para Que Sirve
 
-Administración de usuarios web: listar, alta/edición en ficha, borrado y asignación grupos/permisos.
+Dar de alta, consultar, modificar y eliminar usuarios web de la delegación, y asignarles grupos de permisos y permisos propios.
 
 ### Donde Entrar
 
-- Usuario Form (frontend/usuarios/controller/usuario_form.php)
 - Usuario Lista (frontend/usuarios/controller/usuario_lista.php)
 - **Legacy:** sistema > usuarios web > lista usuarios
 - **Pills2:** ADMIN LOCAL > usuarios web > lista usuarios
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Buscar un usuario
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **sistema > usuarios web > lista usuarios**.
+2. Escribir parte del nombre en **Nombre** y pulsar **Buscar**, o usar **Buscar en todas las columnas** sobre la tabla.
+3. Pulsar el login del usuario para abrir su ficha.
 
-#### Guardar
+#### Crear un usuario
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista, pulsar **NUEVO USUARIO**.
+2. Rellenar **Login** y elegir el **Role** (admin, casa, centro sv, director, oficial_dl, p-sacd, supervisor).
+3. Escribir un **Password** (debe cumplir los requisitos de seguridad; si se deja vacío en un usuario existente no se cambia).
+4. Marcar **Cambio password** si se quiere obligar a cambiarlo al primer acceso, y **¿tiene doble factor activado?** si procede.
+5. Escribir el **Email** y pulsar **guardar datos usuario**.
+6. Al guardar aparece la ficha completa con grupos y permisos.
 
-#### Consultar el listado
+#### Modificar un usuario
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir la ficha desde la lista.
+2. Cambiar login, nombre a mostrar, role, email o las casillas, y pulsar **guardar datos usuario**.
+3. Para cambiar la contraseña, escribir la nueva en **Password** (se comprueba su fortaleza antes de guardar).
 
-#### Abrir el formulario
+#### Asignar grupos de permisos
 
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. En la ficha, apartado **grupos**, pulsar **añadir un grupo de permisos** y, en la tabla, **añadir** en la fila del grupo (se asigna al instante).
+2. Para retirarlo, pulsar **quitar de un grupo de permisos** y **quitar** en la fila del grupo.
+3. Aviso de la pantalla: si el usuario tiene varios grupos, sus permisos deberían ser independientes porque no hay preferencia entre ellos.
+
+#### Eliminar un usuario
+
+1. En la lista, marcar el usuario y pulsar el botón de eliminar.
+2. Confirmar el mensaje «¿Está seguro que desea borrar este usuario?».
 
 ### Errores O Avisos Frecuentes
 
@@ -656,11 +681,11 @@ Administración de usuarios web: listar, alta/edición en ficha, borrado y asign
 - Flujo: `usuarios.usuario.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario.md`
 
-## Usuario 2fa
+## Activar la verificación en dos pasos
 
 ### Para Que Sirve
 
-Configuración autenticación dos factores del usuario.
+Activar o desactivar la verificación en dos pasos (2FA) de un usuario.
 
 ### Donde Entrar
 
@@ -671,12 +696,13 @@ Configuración autenticación dos factores del usuario.
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Activar la verificación en dos pasos
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Descargar una aplicación de autenticación (Google Authenticator, Microsoft Authenticator o Authy).
+2. Escanear el **Código QR** o escribir la **Clave secreta**.
+3. Escribir el **Código de verificación** que muestra la aplicación y marcar **Activar autenticación de dos factores**.
+4. Guardar. Desde ese momento, en cada acceso se pide contraseña y código.
+5. Si falta el código aparece «Se requiere un código de verificación para activar 2FA».
 
 ### Errores O Avisos Frecuentes
 
@@ -690,11 +716,11 @@ Configuración autenticación dos factores del usuario.
 - Flujo: `usuarios.usuario_2fa.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_2fa.md`
 
-## Usuario 2fa Info
+## Ver el estado y el QR
 
 ### Para Que Sirve
 
-Estado 2FA del usuario para formulario configuración.
+Mostrar el estado de la verificación en dos pasos del usuario y los datos para configurarla.
 
 ### Donde Entrar
 
@@ -704,9 +730,10 @@ Estado 2FA del usuario para formulario configuración.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver el estado y el QR
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la configuración de **autenticación de dos factores (2FA)**.
+2. Se muestra si está activada y, si no, el **Código QR** y la **Clave secreta** para configurarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -718,11 +745,11 @@ Estado 2FA del usuario para formulario configuración.
 - Flujo: `usuarios.usuario_2fa_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_2fa_info.md`
 
-## Usuario 2fa Verify
+## Verificar el código
 
 ### Para Que Sirve
 
-Valida código TOTP contra secret provisional (paso previo a activar 2FA).
+Comprobar el código de la aplicación de autenticación antes de activar la verificación en dos pasos.
 
 ### Donde Entrar
 
@@ -732,9 +759,11 @@ Valida código TOTP contra secret provisional (paso previo a activar 2FA).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Verificar el código
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escanear el QR con la aplicación.
+2. Escribir en **Código de verificación** el número que muestra.
+3. Si es correcto se permite activar 2FA; si no, aparece «Código de verificación inválido».
 
 ### Errores O Avisos Frecuentes
 
@@ -746,23 +775,27 @@ Valida código TOTP contra secret provisional (paso previo a activar 2FA).
 - Flujo: `usuarios.usuario_2fa_verify.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_2fa_verify.md`
 
-## Usuario Ayuda Info
+## Consultar el correo asociado
 
 ### Para Que Sirve
 
-Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
+En la pantalla de ayuda de acceso, mostrar el correo (ofuscado) asociado al login y el contacto del administrador regional.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Ayuda 2fa Reset (frontend/usuarios/controller/ayuda_2fa_reset.php)
+- Ayuda Acceso (frontend/usuarios/controller/ayuda_acceso.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar el correo asociado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ayuda de acceso.
+2. Escribir el login válido.
+3. Se muestra el correo parcialmente oculto al que llegarán los avisos y el contacto del administrador.
+4. Si el login no es válido aparece «Debe ingresar un nombre de usuario válido».
 
 ### Errores O Avisos Frecuentes
 
@@ -775,11 +808,11 @@ Ayuda acceso login: email ofuscado del usuario y contacto admin regional.
 - Flujo: `usuarios.usuario_ayuda_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_ayuda_info.md`
 
-## Usuario Check Pwd
+## Validar una contraseña al escribirla
 
 ### Para Que Sirve
 
-Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson).
+Comprobar, antes de guardar, que la contraseña escrita cumple los requisitos.
 
 ### Donde Entrar
 
@@ -790,9 +823,11 @@ Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Validar una contraseña al escribirla
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir la contraseña en el formulario.
+2. Al pulsar guardar se comprueba automáticamente.
+3. Si no cumple, sale un aviso «password error» con el motivo y no se guarda. La regla: más de 8 caracteres e incluir al menos una letra mayúscula, un número y un carácter especial. Ejemplos: «abc» falla por corta; «abcdefgh1» falla por no tener mayúscula ni carácter especial.
 
 ### Errores O Avisos Frecuentes
 
@@ -803,11 +838,11 @@ Valida fortaleza de contraseña (JsonResponse directo, no envelope ContestarJson
 - Flujo: `usuarios.usuario_check_pwd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_check_pwd.md`
 
-## Usuario Grupo Add
+## Asignar un grupo a un usuario
 
 ### Para Que Sirve
 
-Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
+Asignar un grupo de permisos a un usuario.
 
 ### Donde Entrar
 
@@ -817,9 +852,12 @@ Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Asignar un grupo a un usuario
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario y pulsar **añadir un grupo de permisos**.
+2. En la tabla pulsar **añadir** en la fila del grupo.
+3. La lista de grupos de la ficha se actualiza.
+4. Si la operación caduca o no está permitida aparece «Operación no autorizada»; hay que volver a abrir la ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -831,11 +869,11 @@ Asocia grupo permisos a usuario (ctx HashB `usuario_grupo_add`).
 - Flujo: `usuarios.usuario_grupo_add.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_grupo_add.md`
 
-## Usuario Grupo Del
+## Quitar un grupo a un usuario
 
 ### Para Que Sirve
 
-Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
+Quitar un grupo de permisos a un usuario.
 
 ### Donde Entrar
 
@@ -845,9 +883,12 @@ Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar un grupo a un usuario
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario y pulsar **quitar de un grupo de permisos**.
+2. En la tabla pulsar **quitar** en la fila del grupo (sin confirmación).
+3. La lista de grupos se actualiza.
+4. Si aparece «Operación no autorizada», volver a abrir la ficha y repetir.
 
 ### Errores O Avisos Frecuentes
 
@@ -859,11 +900,11 @@ Quita grupo permisos del usuario (ctx HashB `usuario_grupo_del`).
 - Flujo: `usuarios.usuario_grupo_del.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_grupo_del.md`
 
-## Usuario Grupo Del Lst
+## Ver los grupos que se pueden quitar
 
 ### Para Que Sirve
 
-Lista grupos ya asignados al usuario con acción quitar.
+Mostrar los grupos que el usuario ya tiene, para poder quitarle alguno.
 
 ### Donde Entrar
 
@@ -873,9 +914,11 @@ Lista grupos ya asignados al usuario con acción quitar.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los grupos que se pueden quitar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **quitar de un grupo de permisos**.
+2. Aparece la lista de grupos asignados.
+3. En la tabla pulsar **quitar** en la fila del grupo: se retira al instante, sin pedir confirmación (ver «Quitar un grupo a un usuario»).
 
 ### Errores O Avisos Frecuentes
 
@@ -886,11 +929,11 @@ Lista grupos ya asignados al usuario con acción quitar.
 - Flujo: `usuarios.usuario_grupo_del_lst.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_grupo_del_lst.md`
 
-## Usuario Grupo Lst
+## Elegir un grupo para añadir
 
 ### Para Que Sirve
 
-Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados).
+Mostrar los grupos de permisos que se pueden añadir a un usuario (los que aún no tiene).
 
 ### Donde Entrar
 
@@ -900,9 +943,11 @@ Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir un grupo para añadir
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **añadir un grupo de permisos**.
+2. Aparece la lista de grupos disponibles, sin los que el usuario ya tiene.
+3. En la tabla (columnas **grupo**, **sección**, **acción**) pulsar **añadir** en la fila del grupo: se asigna al instante (ver «Asignar un grupo a un usuario»).
 
 ### Errores O Avisos Frecuentes
 
@@ -913,23 +958,25 @@ Lista grupos disponibles para asignar al usuario (id ~ ^5, excluye ya asignados)
 - Flujo: `usuarios.usuario_grupo_lst.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_grupo_lst.md`
 
-## Usuario Guardar Mail
+## Cambiar el correo
 
 ### Para Que Sirve
 
-Actualiza email del usuario (preferencias o admin).
+Cambiar el correo electrónico de un usuario.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Usuario Form Mail (frontend/usuarios/controller/usuario_form_mail.php)
 - **Legacy:** menú usuario > preferencias
 - **Pills2:** menú usuario > preferencias
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar el correo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del usuario (o las preferencias personales).
+2. Escribir el nuevo correo en **Email** y pulsar **guardar**.
+3. El correo se usa para la recuperación de contraseña y de la verificación en dos pasos.
 
 ### Errores O Avisos Frecuentes
 
@@ -941,11 +988,11 @@ Actualiza email del usuario (preferencias o admin).
 - Flujo: `usuarios.usuario_guardar_mail.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_guardar_mail.md`
 
-## Usuario Guardar Pwd
+## Cambiar la contraseña
 
 ### Para Que Sirve
 
-Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
+Cambiar la contraseña de un usuario cumpliendo los requisitos de seguridad.
 
 ### Donde Entrar
 
@@ -955,9 +1002,12 @@ Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar la contraseña
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir la nueva contraseña en **password** y repetirla en **confirma password**.
+2. La contraseña debe tener más de 8 caracteres e incluir al menos una mayúscula, un número y un carácter especial (no se admiten comillas dobles).
+3. Pulsar **guardar**. Si no coinciden o no es válida aparecen «error: passwords no coincidentes» o «error: password no válido».
+4. Al guardar bien se muestra «paswword guardado» y se quita la obligación de cambiarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -969,11 +1019,11 @@ Cambia contraseña tras validar fortaleza; limpia flag cambio_password.
 - Flujo: `usuarios.usuario_guardar_pwd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_guardar_pwd.md`
 
-## Usuario Info
+## Ver el resumen de un usuario en su ficha
 
 ### Para Que Sirve
 
-Resumen usuario para cabecera ficha (grupos, login, email).
+Calcular el resumen del usuario (grupos, login, correo) que se muestra en la cabecera de su ficha.
 
 ### Donde Entrar
 
@@ -986,9 +1036,11 @@ Resumen usuario para cabecera ficha (grupos, login, email).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver el resumen de un usuario en su ficha
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de un usuario desde **lista usuarios**.
+2. La cabecera muestra el login, el correo y los grupos asignados; no hay que hacer nada más.
+3. Si el usuario no existe aparece «Usuario no encontrado».
 
 ### Errores O Avisos Frecuentes
 
@@ -1000,11 +1052,11 @@ Resumen usuario para cabecera ficha (grupos, login, email).
 - Flujo: `usuarios.usuario_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/usuarios/flujos/usuario_info.md`
 
-## Usuario Preferencias
+## Abrir las preferencias
 
 ### Para Que Sirve
 
-Carga datos iniciales de la pantalla preferencias.
+Cargar los valores actuales de las preferencias personales al abrir la pantalla.
 
 ### Donde Entrar
 
@@ -1014,9 +1066,10 @@ Carga datos iniciales de la pantalla preferencias.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Abrir las preferencias
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **preferencias** en el menú de usuario.
+2. La pantalla muestra los valores que ya tiene guardados el usuario.
 
 ### Errores O Avisos Frecuentes
 

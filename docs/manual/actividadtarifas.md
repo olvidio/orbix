@@ -13,12 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Relacion Tarifa
+## Asignar una tarifa a un tipo de actividad
 
 ### Para Que Sirve
 
-- Definir qué tipo de tarifa del catálogo corresponde a cada tipo de actividad.
-- Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Relacion Tarifa).
+Decidir qué tipo de tarifa corresponde a cada tipo de actividad.
 
 ### Donde Entrar
 
@@ -28,32 +27,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Asignar una tarifa a un tipo de actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Entrar en **tarifa <-> tipos actividad**.
+2. Elegir el tipo de actividad (obligatorio: «debe indicar el tipo de actividad») y la tarifa (obligatoria: «debe indicar la id_tarifa»).
+3. Guardar. Para cambiar la relación existente, abrirla, elegir otra tarifa y guardar; para quitarla, eliminarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -77,12 +55,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `actividadtarifas.relacion_tarifa.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadtarifas/flujos/relacion_tarifa.md`
 
-## Tarifa Ubi
+## Consultar las tarifas de una casa
 
 ### Para Que Sirve
 
-- Consultar y mantener las tarifas económicas de una casa para un año: listado, alta, edición, eliminación, copia desde el año anterior y actualización en lote desde el estudio económico.
-- Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tarifa Ubi).
+Consultar y mantener las tarifas de una casa para un año: importes por tipo de tarifa y serie.
 
 ### Donde Entrar
 
@@ -92,46 +69,22 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Actualizar importes en lote
+#### Consultar las tarifas de una casa
 
-1. Abrir la pantalla o proceso que permite actualizacion en lote.
-2. Revisar el conjunto de registros afectados.
-3. Ejecutar la actualizacion.
-4. Comprobar importes o valores recalculados.
+1. Entrar en **tarifas por casa y año**.
+2. Elegir la casa y el año y pulsar **buscar**.
+3. Se listan sus tarifas con el importe en €.
 
-#### Copiar
+#### Crear o modificar una tarifa de una casa
 
-1. Cargar listado de casa/año destino.
-2. Pulsar copiar tarifas del año anterior (solo si hay `token_copiar`).
-3. Confirmar; el cliente reenvía la cápsula `ctx_copiar` (HashB) sin inspeccionarla.
-4. **Nota:** la operación devuelve hoy «función pendiente de reimplementar».
+1. En el listado, pulsar nuevo (o la tarifa a cambiar).
+2. Elegir la **tarifa**, la **serie** y escribir el importe (**nuevo importe**).
+3. Pulsar **guardar**; **eliminar** la quita (con confirmación).
 
-#### Crear o modificar
+#### Copiar las tarifas del año anterior
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Si aparece el botón de copiar, pulsarlo y confirmar.
+2. Aviso: hoy la operación responde «función pendiente de reimplementar» (ver D-TAR-1).
 
 ### Errores O Avisos Frecuentes
 
@@ -158,12 +111,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `actividadtarifas.tarifa_ubi.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadtarifas/flujos/tarifa_ubi.md`
 
-## Tipo Tarifa
+## Mantener los tipos de tarifa
 
 ### Para Que Sirve
 
-- Mantener el catálogo maestro de tipos de tarifa (letra, modo, observaciones).
-- Plantilla de redacción revisada en `docs/manual/actividadtarifas.md` (sección Tipo Tarifa).
+Mantener el catálogo de tipos de tarifa: cada uno con su letra, su modo y observaciones.
 
 ### Donde Entrar
 
@@ -173,32 +125,12 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Mantener los tipos de tarifa
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Entrar en **definir tarifa**: aparece el listado de tarifas.
+2. Para crear una, pulsar nuevo; escribir la **letra**, el **modo** y las **observaciones**, y pulsar **guardar** (o **cancel**).
+3. Para modificar, pulsar la tarifa, cambiar los datos y **guardar**.
+4. Para quitarla, abrirla y pulsar **eliminar**, confirmando.
 
 ### Errores O Avisos Frecuentes
 

@@ -13,12 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Activ Ctr Shell
+## Abrir la asignación de centros encargados
 
 ### Para Que Sirve
 
-- Al abrir la pantalla de asignación de centros encargados, el sistema resuelve el colectivo (`tipo`, que puede remaparse a `sf*` en el semestre de formación) y firma las URLs AJAX que usará el resto de acciones.
-- Es un paso transparente para el usuario, previo a mostrar los filtros de periodo.
+Preparar la pantalla de asignación de centros encargados antes de mostrar los filtros de periodo.
 
 ### Donde Entrar
 
@@ -31,9 +30,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir la asignación de centros encargados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la pantalla de centros encargados.
+2. La pantalla se prepara sola y muestra los filtros de periodo.
 
 ### Errores O Avisos Frecuentes
 
@@ -162,12 +162,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 - Flujo: `actividadescentro.centro_encargado_reordenar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadescentro/flujos/centro_encargado_reordenar.md`
 
-## Centros Disponibles
+## Asignar un centro encargado
 
 ### Para Que Sirve
 
-- Al pulsar **nuevo** en una actividad, el usuario ve la lista de centros candidatos (filtrada por el colectivo `tipo`) para elegir cuál asignar como encargado.
-- Para el tipo `sg` la lista incluye, por centro, el número de actividades en el periodo y la diferencia de días con su actividad más próxima, para ayudar a repartir la carga.
+Ver los centros candidatos para asignar como encargados de una actividad.
 
 ### Donde Entrar
 
@@ -180,9 +179,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Asignar un centro encargado
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la fila de la actividad, pulsar **nuevo**.
+2. Se listan los centros candidatos (para sg, con el nº de actividades del periodo y la distancia en días a su actividad más próxima).
+3. Elegir el centro para asignarlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -197,12 +198,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 - Flujo: `actividadescentro.centros_disponibles.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadescentro/flujos/centros_disponibles.md`
 
-## Centros Encargados
+## Ver los centros encargados actualizados
 
 ### Para Que Sirve
 
-- Tras asignar, reordenar o eliminar un centro encargado, la celda de esa actividad se refresca con la lista actualizada de centros y el flag `permite_modificar` (que decide si cada centro se pinta como enlace o como texto plano).
-- Es un paso automático, no una acción explícita del usuario.
+Refrescar la lista de centros encargados de una actividad tras asignar, reordenar o quitar uno.
 
 ### Donde Entrar
 
@@ -215,9 +215,10 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver los centros encargados actualizados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Asignar, reordenar o quitar un centro.
+2. La celda de la actividad se refresca sola con la lista al día.
 
 ### Errores O Avisos Frecuentes
 
@@ -232,11 +233,11 @@ El usuario quita un centro de la lista de encargados de una actividad.
 - Flujo: `actividadescentro.centros_encargados.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadescentro/flujos/centros_encargados.md`
 
-## Lista Actividades Ctr
+## Consultar las actividades y sus centros encargados
 
 ### Para Que Sirve
 
-El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de actividades del colectivo (`tipo`) en ese periodo y, por cada una, los centros encargados actuales y los flags de permiso (modificar / crear centros) que deciden qué acciones se ofrecen.
+Ver las actividades de un periodo con los centros encargados actuales.
 
 ### Donde Entrar
 
@@ -249,9 +250,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar las actividades y sus centros encargados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el periodo.
+2. Pulsar **buscar**.
+3. Se muestra la tabla de actividades con sus centros encargados; según los permisos aparecen los botones para modificar o crear.
 
 ### Errores O Avisos Frecuentes
 

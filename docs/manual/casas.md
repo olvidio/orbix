@@ -1,7 +1,7 @@
 ---
 tipo: "manual_usuario"
 modulo: "casas"
-flujos: 9
+flujos: 10
 estado_revision: "revisado_parcial"
 ---
 
@@ -13,25 +13,25 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Calendario Ubi Resumen
+## Consultar la previsión económica de una casa
 
 ### Para Que Sirve
 
-- Gestiona CalendarioUbiResumen.
-- Datos del estudio económico de una casa (calendario_ubi_resumen).
+Ver el estudio económico de una casa: ocupación, ingresos y gastos.
 
 ### Donde Entrar
 
 - Calendario Ubi Resumen (frontend/casas/controller/calendario_ubi_resumen.php)
-- Calendario Ubi Resumen Body (frontend/casas/controller/calendario_ubi_resumen_body.php)
 - **Legacy:** adl > Nuevo Calendario > Previsión económica
 - **Pills2:** ACTIVIDADES > Estadísticas económicas > Previsión económica
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar la previsión económica de una casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Previsión económica**.
+2. Elegir la casa y el periodo.
+3. Se muestra el estudio económico.
 
 ### Errores O Avisos Frecuentes
 
@@ -46,12 +46,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.calendario_ubi_resumen.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/calendario_ubi_resumen.md`
 
-## Casa Actividades
+## Consultar las actividades de una casa
 
 ### Para Que Sirve
 
-- Gestiona CasaActividades.
-- Listado de actividades por casa y periodo (casa_actividades_lista).
+Ver las actividades de una casa en un periodo.
 
 ### Donde Entrar
 
@@ -61,12 +60,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Consultar las actividades de una casa
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir el estudio económico de la casa y elegir el periodo.
+2. Aparece la lista de actividades; pulsar una para abrir su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -80,6 +77,47 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 - Flujo: `casas.casa_actividades.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/casa_actividades.md`
+
+## Consultar estadística económica por años
+
+### Para Que Sirve
+
+Ver, para las casas elegidas, cómo han evolucionado la ocupación, los ingresos, los gastos y el superávit en los últimos años, y desplegar el detalle por actividad.
+
+### Donde Entrar
+
+- Casa Ec (frontend/casas/controller/casa_ec.php)
+- **Legacy:** adl > Gestión casas > estadística por años
+- **Legacy (variante):** adl > Nuevo Calendario > Estadística por años
+- **Pills2:** CASAS Y CTR > Gestión casas > estadística por años
+- **Pills2 (variante):** ACTIVIDADES > Estadísticas económicas > Estadística por años
+
+### Tareas Habituales
+
+#### Consultar la estadística de una casa
+
+1. Abrir **estadística por años** desde el menú.
+2. Elegir la casa en el desplegable del recuadro **RESUMEN ECONÓMICO**.
+3. Pulsar **buscar**.
+4. Leer la tabla que aparece debajo: una fila por año, con días ocupados, nº días x nº asistentes (previsto y real), ingresos previstos y reales acumulados, gastos reales, aportación real dl y superávit. Las columnas **%** indican el porcentaje respecto al total.
+5. Solo se cuentan las actividades que no están borradas: los estados son proyecto, actual, terminada y borrable (1 a 4), y se excluye «borrable».
+6. Si una casa pertenece a un grupo de casas, el superávit se calcula para el conjunto del grupo, no para cada casa por separado.
+7. Pulsar **mostrar detalles** en la fila de un año para ver las actividades de esa casa (ocupación sv/sf e ingresos sv/sf). **ocultar detalles** lo pliega.
+
+#### Consultar varias casas
+
+1. Abrir **estadística por años** y elegir una casa.
+2. Al elegir una casa aparece debajo otro desplegable para elegir otra; repite hasta tener todas las casas que interesen.
+3. Pulsar **buscar**: la tabla muestra cada casa con sus años y los totales por año.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `casas.casa_ec.consultar.flujo`
+- Fichero catalogo: `docs/catalogo/casas/flujos/casa_ec.md`
 
 ## Casa Ec Gastos
 
@@ -99,10 +137,6 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - **Pills2:** CASAS Y CTR > Gestión casas > gastos casas
 
 ### Tareas Habituales
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
 
 #### Abrir el formulario
 
@@ -126,14 +160,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.casa_ec_gastos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/casa_ec_gastos.md`
 
-## Casa Ingreso
+## Anotar el ingreso de una actividad
 
 ### Para Que Sirve
 
-- Gestiona CasaIngreso.
-- Crear/actualizar el Ingreso de una actividad.
-- Datos para el formulario de ingreso de una actividad (casa_ingreso_form).
-- Eliminar el Ingreso de una actividad.
+Anotar o corregir los ingresos de una actividad en una casa.
 
 ### Donde Entrar
 
@@ -143,25 +174,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Anotar el ingreso de una actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Abrir el estudio económico de la casa y elegir la actividad.
+2. Rellenar los importes del formulario de ingreso y guardar.
+3. Para quitar el ingreso, usar eliminar y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -184,12 +201,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.casa_ingreso.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/casa_ingreso.md`
 
-## Casa Ingresos
+## Consultar los ingresos de una casa
 
 ### Para Que Sirve
 
-- Gestiona CasaIngresos.
-- Listado económico de actividades por casa (casa_ingresos_lista).
+Ver los ingresos de las actividades de una casa en un periodo.
 
 ### Donde Entrar
 
@@ -199,12 +215,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Consultar los ingresos de una casa
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir el estudio económico de la casa y elegir el periodo.
+2. Se muestra la tabla de actividades con sus ingresos.
 
 ### Errores O Avisos Frecuentes
 
@@ -219,27 +233,25 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.casa_ingresos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/casa_ingresos.md`
 
-## Casas Resumen
+## Consultar la estadística económica de las casas
 
 ### Para Que Sirve
 
-- Gestiona CasasResumen.
-- Use case: resumen económico de casas (dias ocupados, asistentes previstos/reales, ingresos, gastos, aportaciones, superávit).
-- Sucesor de apps/casas/controller/casas_resumen_ajax.php.
-- Dos modos: - que='' → un único periodo (año/trimestre/rango) por casa.
-- - que!='' → estadística por año (5 años) por casa.
+Ver el resumen económico de las casas: días ocupados, asistentes previstos y reales, ingresos, gastos, aportaciones y superávit.
 
 ### Donde Entrar
 
-- Casas Resumen Lista (frontend/casas/controller/casas_resumen_lista.php)
+- Casas Resumen (frontend/casas/controller/casas_resumen.php)
 - **Legacy:** adl > Gestión casas > estadística  por casas
 - **Pills2:** CASAS Y CTR > Gestión casas > estadística  por casas
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar la estadística económica de las casas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **estadística por casas**.
+2. Elegir las casas y el periodo (un año, trimestre o varios periodos).
+3. Se muestra la tabla de resumen por casa.
 
 ### Errores O Avisos Frecuentes
 
@@ -254,15 +266,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.casas_resumen.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/casas_resumen.md`
 
-## Grupo
+## los grupos de casas
 
 ### Para Que Sirve
 
-- Gestiona GrupoCasa.
-- Crea o actualiza un GrupoCasa.
-- Datos del formulario GrupoCasa (nuevo/editar).
-- Elimina un GrupoCasa.
-- Listado de GrupoCasa (relaciones padre ↔ hijo).
+Agrupar casas: indicar qué casa es la madre y cuáles dependen de ella.
 
 ### Donde Entrar
 
@@ -272,32 +280,12 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Gestionar los grupos de casas
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Entrar en **grupos**: aparece la lista de **grupos de casas**.
+2. Para crear uno, pulsar nuevo; elegir la **Casa Madre** y la **Casa dependiente** (deben ser dos casas distintas) y pulsar **guardar**.
+3. Para cambiarlo, abrir la relación, modificar y **guardar**; para quitarlo, eliminarla.
+4. Aviso: en la estadística económica las casas de un mismo grupo se recalculan conjuntamente.
 
 ### Errores O Avisos Frecuentes
 
@@ -320,12 +308,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.grupo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/grupo.md`
 
-## Ingreso Plazas Previstas
+## Corregir los asistentes previstos
 
 ### Para Que Sirve
 
-- Gestiona IngresoPlazasPrevistas.
-- Actualiza num_asistentes_previstos de un Ingreso desde la TablaEditable de prevision_asistentes.
+Cambiar el número de asistentes previstos de una actividad en la previsión.
 
 ### Donde Entrar
 
@@ -335,12 +322,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Corregir los asistentes previstos
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Abrir **previsión asistentes**.
+2. Hacer doble clic en la celda del número de asistentes previstos, escribir el valor y confirmar.
+3. Se guarda al salir de la celda.
 
 ### Errores O Avisos Frecuentes
 
@@ -356,12 +342,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `casas.ingreso_plazas_previstas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/casas/flujos/ingreso_plazas_previstas.md`
 
-## Prevision Asistentes
+## Consultar la previsión de asistentes
 
 ### Para Que Sirve
 
-- Gestiona PrevisionAsistentes.
-- Datos de la pantalla prevision_asistentes.
+Ver la previsión de asistentes de las casas.
 
 ### Donde Entrar
 
@@ -371,9 +356,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar la previsión de asistentes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **previsión asistentes**.
+2. Elegir el periodo y las casas.
+3. Se muestra la tabla con los asistentes previstos.
 
 ### Errores O Avisos Frecuentes
 

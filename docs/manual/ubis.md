@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "ubis"
 flujos: 36
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - ubis
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Calendario Periodos
+## Consultar los periodos de una casa
 
 ### Para Que Sirve
 
-Elimina un periodo de calendario CDC identificado por id_item.
+Definir los periodos del calendario de una casa en un año y borrar los que sobran.
 
 ### Donde Entrar
 
@@ -27,16 +27,16 @@ Elimina un periodo de calendario CDC identificado por id_item.
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Consultar los periodos de una casa
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Entrar en **Definir periodos**.
+2. Elegir la casa y el año y pulsar **buscar**.
+3. Se listan los periodos ordenados por fecha de inicio y se avisa si alguno se solapa con otro.
 
-#### Guardar
+#### Borrar un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista, pulsar eliminar en el periodo.
+2. Confirmar «¿Está seguro de borrar este periodo?».
 
 ### Errores O Avisos Frecuentes
 
@@ -49,11 +49,11 @@ Elimina un periodo de calendario CDC identificado por id_item.
 - Flujo: `ubis.calendario_periodos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/calendario_periodos.md`
 
-## Calendario Periodos Form Periodo
+## Modificar un periodo
 
 ### Para Que Sirve
 
-Carga los campos del formulario de edición de un periodo de calendario existente.
+Abrir el formulario de un periodo ya existente para modificarlo.
 
 ### Donde Entrar
 
@@ -63,9 +63,10 @@ Carga los campos del formulario de edición de un periodo de calendario existent
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Modificar un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de periodos de la casa, pulsar el periodo.
+2. Cambiar fechas o sección y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -76,11 +77,11 @@ Carga los campos del formulario de edición de un periodo de calendario existent
 - Flujo: `ubis.calendario_periodos_form_periodo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/calendario_periodos_form_periodo.md`
 
-## Calendario Periodos Get
+## Ver todos los periodos de una casa
 
 ### Para Que Sirve
 
-Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio.
+Listar todos los periodos de calendario de una casa ordenados por fecha de inicio.
 
 ### Donde Entrar
 
@@ -90,9 +91,10 @@ Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver todos los periodos de una casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Definir periodos**, elegir la casa y pulsar **buscar**.
+2. Aparecen todos sus periodos por orden de fecha.
 
 ### Errores O Avisos Frecuentes
 
@@ -103,11 +105,11 @@ Devuelve todos los periodos de calendario de una casa ordenados por fecha inicio
 - Flujo: `ubis.calendario_periodos_get.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/calendario_periodos_get.md`
 
-## Calendario Periodos Get2
+## Ver los periodos de un año
 
 ### Para Que Sirve
 
-Lista los periodos de una casa en un año con detección de solapes.
+Listar los periodos de una casa en un año concreto y detectar solapes.
 
 ### Donde Entrar
 
@@ -117,9 +119,10 @@ Lista los periodos de una casa en un año con detección de solapes.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver los periodos de un año
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Definir periodos**, elegir la casa y el año y pulsar **buscar**.
+2. Aparecen los periodos de ese año; los que se pisan quedan señalados.
 
 ### Errores O Avisos Frecuentes
 
@@ -130,11 +133,11 @@ Lista los periodos de una casa en un año con detección de solapes.
 - Flujo: `ubis.calendario_periodos_get2.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/calendario_periodos_get2.md`
 
-## Calendario Periodos Nuevo
+## Crear un periodo nuevo
 
 ### Para Que Sirve
 
-Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último periodo del año.
+Abrir el formulario de alta de un periodo ya relleno con la fecha siguiente al último.
 
 ### Donde Entrar
 
@@ -144,9 +147,11 @@ Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Crear un periodo nuevo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Definir periodos**, elegir la casa y el año y pulsar el botón de nuevo periodo.
+2. El formulario propone como inicio el día siguiente al último periodo y su misma sección (sf/sv).
+3. Ajustar las fechas y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -157,11 +162,11 @@ Precarga el formulario de alta de periodo con fecha siguiente y sfsv del último
 - Flujo: `ubis.calendario_periodos_nuevo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/calendario_periodos_nuevo.md`
 
-## Casas Opciones
+## Elegir una casa en un desplegable
 
 ### Para Que Sirve
 
-Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de casas que usan los desplegables de otras pantallas.
 
 ### Donde Entrar
 
@@ -171,9 +176,10 @@ Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir una casa en un desplegable
 
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de casa, abrir el desplegable.
+2. La lista se carga filtrada por el tipo de casa y la delegación que corresponda; elegir una.
 
 ### Errores O Avisos Frecuentes
 
@@ -184,11 +190,11 @@ Devuelve opciones de casas filtradas para desplegables compartidos del frontend.
 - Flujo: `ubis.casas_opciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/casas_opciones.md`
 
-## Centros
+## Guardar los datos de un centro
 
 ### Para Que Sirve
 
-Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plazas).
+Guardar los cambios de un centro de la dl: labor, números o plazas.
 
 ### Donde Entrar
 
@@ -198,12 +204,10 @@ Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plaza
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Guardar los datos de un centro
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir **labor**, **pi, cartas, nº buzón** o **sede, plazas** y pulsar **buscar**.
+2. Abrir el centro, cambiar el bloque y pulsar **guardar cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -214,11 +218,11 @@ Actualiza parcialmente un centro DL según el bloque enviado (labor, num o plaza
 - Flujo: `ubis.centros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros.md`
 
-## Centros Form Labor
+## Cambiar el tipo de labor
 
 ### Para Que Sirve
 
-Carga datos del formulario modal de tipo de labor de un centro DL.
+Cambiar el tipo de labor de un centro.
 
 ### Donde Entrar
 
@@ -228,9 +232,10 @@ Carga datos del formulario modal de tipo de labor de un centro DL.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar el tipo de labor
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > labor**, pulsar el centro.
+2. Elegir el **tipo de labor** y pulsar **guardar cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -241,11 +246,11 @@ Carga datos del formulario modal de tipo de labor de un centro DL.
 - Flujo: `ubis.centros_form_labor.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_form_labor.md`
 
-## Centros Form Num
+## Cambiar buzón, pi y cartas
 
 ### Para Que Sirve
 
-Carga datos del formulario modal de números (buzón, pi, cartas) de un centro DL.
+Cambiar el nº de buzón, de ejemplares de pi y de cartas de un centro.
 
 ### Donde Entrar
 
@@ -255,9 +260,11 @@ Carga datos del formulario modal de números (buzón, pi, cartas) de un centro D
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar buzón, pi y cartas
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > pi, cartas, nº buzón**, pulsar el centro.
+2. Rellenar **nº de buzón**, **nº ejemplares pi** y **nº cartas mensuales**.
+3. Pulsar **guardar cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -268,11 +275,11 @@ Carga datos del formulario modal de números (buzón, pi, cartas) de un centro D
 - Flujo: `ubis.centros_form_num.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_form_num.md`
 
-## Centros Form Plazas
+## Cambiar plazas y sede
 
 ### Para Que Sirve
 
-Carga datos del formulario modal de plazas y sede de un centro DL.
+Cambiar las plazas, las habitaciones individuales y la marca de sede de un centro.
 
 ### Donde Entrar
 
@@ -282,9 +289,11 @@ Carga datos del formulario modal de plazas y sede de un centro DL.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar plazas y sede
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **modificar centros > sede, plazas**, pulsar el centro.
+2. Rellenar **plazas**, **habitaciones individuales** y marcar si es sede.
+3. Pulsar **guardar cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -295,11 +304,11 @@ Carga datos del formulario modal de plazas y sede de un centro DL.
 - Flujo: `ubis.centros_form_plazas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_form_plazas.md`
 
-## Centros Get Labor
+## Consultar o cambiar el tipo de labor de los centros
 
 ### Para Que Sirve
 
-Lista todos los centros DL activos con su tipo de centro y tipo de labor.
+Listar los centros de la dl con su tipo de centro y tipo de labor, para editarlos.
 
 ### Donde Entrar
 
@@ -309,9 +318,11 @@ Lista todos los centros DL activos con su tipo de centro y tipo de labor.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar o cambiar el tipo de labor de los centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **labor** en el desplegable; pulsar **buscar**.
+2. Se muestra la lista de centros con su tipo de centro y de labor.
+3. Pulsar un centro para abrir el formulario de edición.
 
 ### Errores O Avisos Frecuentes
 
@@ -322,11 +333,11 @@ Lista todos los centros DL activos con su tipo de centro y tipo de labor.
 - Flujo: `ubis.centros_get_labor.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_get_labor.md`
 
-## Centros Get Num
+## Consultar o cambiar buzón, pi y cartas
 
 ### Para Que Sirve
 
-Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
+Listar los centros de la dl con su nº de buzón, ejemplares de pi y cartas, para editarlos.
 
 ### Donde Entrar
 
@@ -336,9 +347,11 @@ Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar o cambiar buzón, pi y cartas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **pi, cartas, nº buzón**; pulsar **buscar**.
+2. Se muestra la lista con el nº de buzón, nº de ejemplares de pi y nº de cartas.
+3. Pulsar un centro para editar sus números.
 
 ### Errores O Avisos Frecuentes
 
@@ -349,11 +362,11 @@ Lista centros DL activos con sus datos numéricos de buzón, pi y cartas.
 - Flujo: `ubis.centros_get_num.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_get_num.md`
 
-## Centros Get Plazas
+## Consultar o cambiar plazas y sede
 
 ### Para Que Sirve
 
-Lista centros DL activos con plazas, habitaciones individuales y flag sede.
+Listar los centros de la dl con plazas, habitaciones individuales y si son sede, para editarlos.
 
 ### Donde Entrar
 
@@ -363,9 +376,11 @@ Lista centros DL activos con plazas, habitaciones individuales y flag sede.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar o cambiar plazas y sede
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **modificar centros** y elegir **sede, plazas**; pulsar **buscar**.
+2. Se muestra la lista con plazas, habitaciones individuales y la marca de sede.
+3. Pulsar un centro para editarlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -376,11 +391,11 @@ Lista centros DL activos con plazas, habitaciones individuales y flag sede.
 - Flujo: `ubis.centros_get_plazas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_get_plazas.md`
 
-## Centros Opciones
+## Elegir un centro en un desplegable
 
 ### Para Que Sirve
 
-Devuelve opciones de centros filtradas para desplegables compartidos del frontend.
+Proporcionar la lista de centros que usan los desplegables de otras pantallas.
 
 ### Donde Entrar
 
@@ -390,9 +405,10 @@ Devuelve opciones de centros filtradas para desplegables compartidos del fronten
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir un centro en un desplegable
 
-1. Revisar manualmente los pasos de esta accion.
+1. En cualquier formulario con selector de centro, abrir el desplegable.
+2. La lista se carga según el filtro de la pantalla; elegir uno.
 
 ### Errores O Avisos Frecuentes
 
@@ -403,11 +419,11 @@ Devuelve opciones de centros filtradas para desplegables compartidos del fronten
 - Flujo: `ubis.centros_opciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/centros_opciones.md`
 
-## Delegacion Que
+## Elegir la delegación de destino
 
 ### Para Que Sirve
 
-Devuelve delegaciones destino disponibles para el traslado de ubis.
+Ofrecer las delegaciones a las que se pueden trasladar los centros o casas marcados.
 
 ### Donde Entrar
 
@@ -417,9 +433,11 @@ Devuelve delegaciones destino disponibles para el traslado de ubis.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la delegación de destino
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el listado, marcar los centros o casas a trasladar.
+2. Pulsar trasladar.
+3. En **Trasladar a**, elegir la delegación y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -430,11 +448,11 @@ Devuelve delegaciones destino disponibles para el traslado de ubis.
 - Flujo: `ubis.delegacion_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/delegacion_que.md`
 
-## Delegaciones Region Stgr
+## Elegir región y delegación
 
 ### Para Que Sirve
 
-Lista delegaciones de una región STGR para desplegables dependientes.
+Rellenar el desplegable de delegaciones cuando se elige una región del Studium.
 
 ### Donde Entrar
 
@@ -444,9 +462,10 @@ Lista delegaciones de una región STGR para desplegables dependientes.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir región y delegación
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir la región.
+2. El desplegable de delegaciones se actualiza con las delegaciones de esa región; elegir una.
 
 ### Errores O Avisos Frecuentes
 
@@ -457,11 +476,11 @@ Lista delegaciones de una región STGR para desplegables dependientes.
 - Flujo: `ubis.delegaciones_region_stgr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/delegaciones_region_stgr.md`
 
-## Direccion
+## Guardar una dirección
 
 ### Para Que Sirve
 
-Crea o modifica una dirección y su relación con el ubi (principal, propietario).
+Guardar los datos de la dirección de un centro o casa.
 
 ### Donde Entrar
 
@@ -471,12 +490,12 @@ Crea o modifica una dirección y su relación con el ubi (principal, propietario
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Guardar una dirección
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Rellenar **Nombre sede**, **Dirección**, **Dirección postal**, **Código postal**, **Población**, **Provincia**, **País**, **Comentarios dirección**, **Fecha introducción de datos**, **Latitud** y **Longitud**; marcar **Propietario** o **Principal** si procede (hay un enlace **ver ejemplo dirección**).
+3. Pulsar **Guardar Cambios**.
+4. Con **Añadir Dirección** se asigna otra dirección al centro y con **Quitar Dirección** se le quita la actual.
 
 ### Errores O Avisos Frecuentes
 
@@ -489,11 +508,11 @@ Crea o modifica una dirección y su relación con el ubi (principal, propietario
 - Flujo: `ubis.direccion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direccion.md`
 
-## Direcciones Asignar
+## Asignar una dirección existente
 
 ### Para Que Sirve
 
-Asocia una dirección existente a un ubi sin marcarla como propietaria.
+Asociar una dirección ya existente a un centro o casa.
 
 ### Donde Entrar
 
@@ -503,9 +522,11 @@ Asocia una dirección existente a un ubi sin marcarla como propietaria.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Asignar una dirección existente
 
-1. Revisar manualmente los pasos de esta accion.
+1. Buscar la dirección y marcarla en la tabla.
+2. Pulsar asignar.
+3. La dirección aparece en la ficha del centro o casa; no se marca como propietaria.
 
 ### Errores O Avisos Frecuentes
 
@@ -516,11 +537,11 @@ Asocia una dirección existente a un ubi sin marcarla como propietaria.
 - Flujo: `ubis.direcciones_asignar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direcciones_asignar.md`
 
-## Direcciones Editar
+## Modificar la dirección
 
 ### Para Que Sirve
 
-Carga la ficha de edición de direcciones de un ubi, con navegación entre varias direcciones.
+Modificar la dirección de un centro o casa y gestionar su plano.
 
 ### Donde Entrar
 
@@ -530,9 +551,12 @@ Carga la ficha de edición de direcciones de un ubi, con navegación entre varia
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Modificar la dirección
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Cambiar los campos que hagan falta (dirección, código postal, población, provincia, país, latitud y longitud, comentarios).
+3. Para el plano: **ver plano**, **adjuntar plano** o **eliminar plano**.
+4. Pulsar **Guardar Cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -543,11 +567,11 @@ Carga la ficha de edición de direcciones de un ubi, con navegación entre varia
 - Flujo: `ubis.direcciones_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direcciones_editar.md`
 
-## Direcciones Que
+## Buscar una dirección existente
 
 ### Para Que Sirve
 
-Prepara el formulario de búsqueda de direcciones existentes para asignar a un ubi.
+Buscar una dirección que ya existe para asignarla a un centro o casa.
 
 ### Donde Entrar
 
@@ -557,9 +581,11 @@ Prepara el formulario de búsqueda de direcciones existentes para asignar a un u
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Buscar una dirección existente
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha, pulsar **añadir dirección**.
+2. Escribir código postal, población y/o país de la dirección.
+3. Pulsar buscar para ver la tabla de direcciones.
 
 ### Errores O Avisos Frecuentes
 
@@ -570,11 +596,11 @@ Prepara el formulario de búsqueda de direcciones existentes para asignar a un u
 - Flujo: `ubis.direcciones_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direcciones_que.md`
 
-## Direcciones Quitar
+## Quitar una dirección del centro o casa
 
 ### Para Que Sirve
 
-Desvincula una dirección del ubi según el índice en la lista CSV de ids.
+Quitar la dirección de un centro o casa sin borrarla.
 
 ### Donde Entrar
 
@@ -584,9 +610,11 @@ Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar una dirección del centro o casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **dirección** en «Editar:».
+2. Pulsar **Quitar Dirección**.
+3. La dirección deja de aparecer en el centro o casa, pero sigue existiendo para otros.
 
 ### Errores O Avisos Frecuentes
 
@@ -597,11 +625,11 @@ Desvincula una dirección del ubi según el índice en la lista CSV de ids.
 - Flujo: `ubis.direcciones_quitar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direcciones_quitar.md`
 
-## Direcciones Tabla
+## Elegir una dirección de la tabla
 
 ### Para Que Sirve
 
-Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
+Mostrar las direcciones encontradas para asignar una al centro o casa, o crear otra.
 
 ### Donde Entrar
 
@@ -611,9 +639,11 @@ Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir una dirección de la tabla
 
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar la «tabla de direcciones».
+2. Marcar la dirección que corresponde y asignarla.
+3. Si no está, pulsar **crear otra nueva**.
 
 ### Errores O Avisos Frecuentes
 
@@ -624,11 +654,11 @@ Busca direcciones por cp/ciudad/país y muestra tabla para asignar al ubi.
 - Flujo: `ubis.direcciones_tabla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/direcciones_tabla.md`
 
-## Home Ubis
+## Ver el resumen de un centro o casa
 
 ### Para Que Sirve
 
-Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objetos pau/dir.
+Mostrar la ficha resumen de un centro o casa con su dirección y telecomunicaciones.
 
 ### Donde Entrar
 
@@ -638,9 +668,10 @@ Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objeto
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el resumen de un centro o casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el centro o casa.
+2. Aparecen los apartados **dirección** y **telecos**, cada uno con su botón **editar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -651,11 +682,11 @@ Construye la ficha resumen de un ubi con dirección, telecomunicaciones y objeto
 - Flujo: `ubis.home_ubis.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/home_ubis.md`
 
-## List Ctr
+## Listar centros o casas
 
 ### Para Que Sirve
 
-Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.
+Sacar un listado de centros o casas de una delegación o del exterior, con teléfonos y enlaces a la ficha.
 
 ### Donde Entrar
 
@@ -665,9 +696,18 @@ Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar centros o casas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **Localización** (la propia dl, otras o «otras») y el **Tipo de ubi**: solo centros de n, todos los ctr de la dl, solo centros de agd, de s, de sss+, obras corporativas, casas de retiros y de cv, colegios o resto de casas cdc.
+3. Pulsar **listar**.
+4. Pulsar un nombre para abrir su ficha; la tabla admite **Buscar en todas las columnas**.
+
+#### Trasladar centros o casas a otra delegación
+
+1. En el listado, marcar los centros o casas.
+2. Pulsar el botón de trasladar y elegir la delegación destino.
+3. Confirmar con **Trasladar** (o **Cancelar**).
 
 ### Errores O Avisos Frecuentes
 
@@ -678,11 +718,11 @@ Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos 
 - Flujo: `ubis.list_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/list_ctr.md`
 
-## Lista Ctrs
+## Consultar los sacerdotes por centro
 
 ### Para Que Sirve
 
-Lista centros tipo s de la delegación con el número de sacerdotes asignados en cada uno.
+Ver los centros de tipo s de la delegación con el número de sacerdotes asignados a cada uno.
 
 ### Donde Entrar
 
@@ -692,9 +732,10 @@ Lista centros tipo s de la delegación con el número de sacerdotes asignados en
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar los sacerdotes por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **lista ctr i nº s**.
+2. Se muestra la tabla con cada centro y el número de sacerdotes que tiene.
 
 ### Errores O Avisos Frecuentes
 
@@ -705,30 +746,25 @@ Lista centros tipo s de la delegación con el número de sacerdotes asignados en
 - Flujo: `ubis.lista_ctrs.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/lista_ctrs.md`
 
-## Teleco
+## Eliminar una telecomunicación
 
 ### Para Que Sirve
 
-Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
+Eliminar una telecomunicación de un centro o casa.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Teleco Editar (frontend/ubis/controller/teleco_editar.php)
+- Teleco Tabla (frontend/ubis/controller/teleco_tabla.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Eliminar una telecomunicación
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
+1. En **telecos**, marcar el registro y pulsar **eliminar**.
+2. Confirmar el aviso «¿Está seguro que desea eliminar este registro?».
 
 ### Errores O Avisos Frecuentes
 
@@ -739,11 +775,11 @@ Elimina una o más telecomunicaciones del ubi por claves primarias codificadas.
 - Flujo: `ubis.teleco.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/teleco.md`
 
-## Teleco Desc
+## Elegir la descripción de una teleco
 
 ### Para Que Sirve
 
-Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
+Ofrecer las descripciones de telecomunicación según el tipo elegido.
 
 ### Donde Entrar
 
@@ -753,12 +789,10 @@ Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Elegir la descripción de una teleco
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. En el formulario de teleco, elegir el tipo.
+2. El desplegable de descripción se rellena con las opciones de ese tipo.
 
 ### Errores O Avisos Frecuentes
 
@@ -769,11 +803,11 @@ Devuelve descripciones de telecomunicación dependientes del tipo seleccionado.
 - Flujo: `ubis.teleco_desc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/teleco_desc.md`
 
-## Teleco Editar
+## Añadir o editar una telecomunicación
 
 ### Para Que Sirve
 
-Carga el formulario de alta/edición de una telecomunicación de un ubi.
+Añadir una telecomunicación o modificar una existente.
 
 ### Donde Entrar
 
@@ -783,9 +817,11 @@ Carga el formulario de alta/edición de una telecomunicación de un ubi.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Añadir o editar una telecomunicación
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **telecos** pulsar **nuevo**, o marcar un registro y pulsar **modificar**.
+2. Elegir el **Tipo teleco** (correo electrónico, fax, página web, teléfono fijo o teléfono móvil); entonces el desplegable **Descripción** se rellena con las opciones de ese tipo (por ejemplo otros, de la casa, dirección, administración, sacd). Escribir el **Número** y, si hace falta, las **Observaciones**.
+3. Pulsar **Guardar Cambios**. Vuelve a la ficha y el número aparece junto a los demás teléfonos.
 
 ### Errores O Avisos Frecuentes
 
@@ -796,11 +832,11 @@ Carga el formulario de alta/edición de una telecomunicación de un ubi.
 - Flujo: `ubis.teleco_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/teleco_editar.md`
 
-## Teleco Tabla
+## Consultar las telecomunicaciones
 
 ### Para Que Sirve
 
-Lista las telecomunicaciones de un centro o casa con botones según permisos.
+Ver las telecomunicaciones (teléfonos, fax, e-mails, web) de un centro o casa.
 
 ### Donde Entrar
 
@@ -810,9 +846,11 @@ Lista las telecomunicaciones de un centro o casa con botones según permisos.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar las telecomunicaciones
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha pulsar **telecos** en «Editar:».
+2. Se muestra «Telecomunicaciones de un centro o casa» con Id_ubi, nombre del teleco (hoy sale su número de tipo), descripción, número o siglas y observaciones.
+3. Los botones son **modificar** y **eliminar** (sobre las filas marcadas) y **nuevo**.
 
 ### Errores O Avisos Frecuentes
 
@@ -823,11 +861,11 @@ Lista las telecomunicaciones de un centro o casa con botones según permisos.
 - Flujo: `ubis.teleco_tabla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/teleco_tabla.md`
 
-## Trasladar Ubis
+## Trasladar centros o casas
 
 ### Para Que Sirve
 
-Traslada centros y casas seleccionados a otra delegación destino.
+Pasar los centros o casas seleccionados a otra delegación.
 
 ### Donde Entrar
 
@@ -837,9 +875,11 @@ Traslada centros y casas seleccionados a otra delegación destino.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Trasladar centros o casas
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **listados**, marcar uno o varios centros o casas.
+2. Elegir la delegación en **Trasladar a** y pulsar **Trasladar**.
+3. Comprobar el listado: los trasladados ya no pertenecen a la delegación de origen.
 
 ### Errores O Avisos Frecuentes
 
@@ -850,11 +890,11 @@ Traslada centros y casas seleccionados a otra delegación destino.
 - Flujo: `ubis.trasladar_ubis.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/trasladar_ubis.md`
 
-## Ubis
+## Eliminar un centro o una casa
 
 ### Para Que Sirve
 
-Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
+Eliminar un centro o una casa.
 
 ### Donde Entrar
 
@@ -866,23 +906,10 @@ Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Eliminar un centro o una casa
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir la ficha, o marcar el centro o casa en la tabla de resultados.
+2. Pulsar **eliminar** y confirmar «¿Está seguro que desea borrar este centro?» (o «esta casa»).
 
 ### Errores O Avisos Frecuentes
 
@@ -894,11 +921,11 @@ Elimina un ubi (centro o casa) del repositorio correspondiente a obj_pau.
 - Flujo: `ubis.ubis.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis.md`
 
-## Ubis Buscar
+## Buscar un centro o una casa
 
 ### Para Que Sirve
 
-Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
+Buscar un centro o una casa por nombre, población, región o país, y llegar a su ficha.
 
 ### Donde Entrar
 
@@ -908,9 +935,19 @@ Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar un centro o una casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar**. Aparece el formulario **Buscar centro o casa**.
+2. Escribir parte del **Nombre de la casa o centro**, la **Población**, o elegir **Región** o **País**. Se puede marcar «buscar ubis fuera de uso» para incluir los dados de baja.
+3. Pulsar **buscar**: aparece la tabla de resultados.
+4. Pulsar el nombre para abrir la ficha.
+5. Si no hay resultados sale «no existe este centro o casa».
+
+#### Buscar con más opciones
+
+1. En el formulario, pulsar **buscar otras opciones**.
+2. Elegir **Tipo** (Centro, Casa o Todos) y **Localización** (de la propia r/dl, de otra r/dl o todos), además del nombre y la población.
+3. Pulsar **buscar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -921,11 +958,11 @@ Devuelve opciones de desplegables para el formulario de búsqueda de ubis.
 - Flujo: `ubis.ubis_buscar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis_buscar.md`
 
-## Ubis Editar
+## Rellenar la ficha de un centro o casa
 
 ### Para Que Sirve
 
-Devuelve desplegables dependientes para el formulario de edición de ubi.
+Cambiar los datos básicos de un centro o casa: delegación, nombre, tipo, labor, observaciones y números.
 
 ### Donde Entrar
 
@@ -935,9 +972,14 @@ Devuelve desplegables dependientes para el formulario de edición de ubi.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Rellenar la ficha de un centro o casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del centro (aparece su nombre, la dl, la dirección, los teléfonos, fax y e-mails y la «Relación de dossiers»).
+2. Pulsar **centro** en «Editar:».
+3. Rellenar **Región o delegación**, **En uso**, **Región**, **Nombre del centro**, **¿puede ser cdc?**, **Tipo de centro** (por ejemplo «colegio oc»), **Tipo de labor** (sr, n, agd, sg, club, bachilleres, univ, jóvenes, mayores, sss+), **Observaciones** y **Centro padre**.
+4. Más abajo están **Nº ejemplares pi**, **Nº cartas**, **Nº cartas mensuales**, **Nº de buzón**, **Habitaciones individuales** y **Plazas**.
+5. Pulsar **Guardar Cambios**. El botón **Eliminar** borra el centro (pide confirmación).
+6. Al cambiar un desplegable, el siguiente se rellena con las opciones válidas.
 
 ### Errores O Avisos Frecuentes
 
@@ -948,11 +990,11 @@ Devuelve desplegables dependientes para el formulario de edición de ubi.
 - Flujo: `ubis.ubis_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis_editar.md`
 
-## Ubis Editar Load
+## Abrir la ficha de un centro o casa
 
 ### Para Que Sirve
 
-Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de delegación.
+Cargar la ficha completa de un centro o casa para consultarla, modificarla o darla de alta.
 
 ### Donde Entrar
 
@@ -962,9 +1004,11 @@ Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir la ficha de un centro o casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Buscar el centro o casa y pulsar su nombre.
+2. La ficha se abre con sus datos: nombre, tipo, región o delegación, plazas, observaciones y, aparte, dirección y telecomunicaciones.
+3. Para modificar, cambiar los campos y pulsar **guardar cambios**.
 
 ### Errores O Avisos Frecuentes
 
@@ -979,11 +1023,11 @@ Carga la ficha completa de un ubi para edición o alta, normalizando obj_pau de 
 - Flujo: `ubis.ubis_editar_load.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis_editar_load.md`
 
-## Ubis Editar Normalize Dl
+## Ficha de un centro o casa de la propia delegación
 
 ### Para Que Sirve
 
-Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del usuario.
+Ajuste interno: si la ficha pertenece a la propia delegación, se trata como centro/casa de la dl y se habilitan todos sus campos.
 
 ### Donde Entrar
 
@@ -993,9 +1037,10 @@ Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ficha de un centro o casa de la propia delegación
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de un centro o casa de la propia delegación.
+2. Se muestran todos los campos editables; en los de otras delegaciones, solo consulta.
 
 ### Errores O Avisos Frecuentes
 
@@ -1006,11 +1051,11 @@ Ajusta obj_pau a CentroDl/CasaDl cuando la ficha pertenece a la delegación del 
 - Flujo: `ubis.ubis_editar_normalize_dl.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubis/flujos/ubis_editar_normalize_dl.md`
 
-## Ubis Tabla
+## Trabajar con los resultados de la búsqueda
 
 ### Para Que Sirve
 
-Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.
+Mostrar la tabla de centros y casas encontrados y permitir abrir, crear, eliminar o trasladar.
 
 ### Donde Entrar
 
@@ -1020,9 +1065,12 @@ Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla nave
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Trabajar con los resultados de la búsqueda
 
-1. Revisar manualmente los pasos de esta accion.
+1. Tras buscar, aparece «Tabla de toda las casas y centros».
+2. Pulsar un nombre para abrir su ficha.
+3. Para crear uno nuevo, usar el botón **Centro** o **Casa** (solo aparecen si se buscó con un tipo y una localización distintos de «todos»; con «todos» la pantalla solo ofrece **buscar otras opciones** y avisa «OJO!: para crear un centro/casa debe especificar el tipo de centro/casa»).
+4. Para quitar uno, marcarlo y pulsar eliminar; confirmar «¿Está seguro que desea borrar este ubi?».
 
 ### Errores O Avisos Frecuentes
 

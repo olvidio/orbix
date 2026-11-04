@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "notas"
 flujos: 31
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - notas
@@ -13,33 +13,32 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Acta
+## Crear un acta
 
 ### Para Que Sirve
 
-Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta_nueva`), modificar (`acta_modificar`) o eliminar (`acta_eliminar`), con PDF e impresión.
+Ciclo completo de un acta: listarla, abrirla, crearla, modificarla o eliminarla, con PDF e impresión.
 
 ### Donde Entrar
 
 - Acta Select (frontend/notas/controller/acta_select.php)
-- Acta Ver (frontend/notas/controller/acta_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/dossier)
 
 ### Tareas Habituales
 
-#### Crear
+#### Crear un acta
 
-1. En `acta_select`, pulsar **añadir acta** (`fnjs_nuevo`).
-2. Se abre `acta_ver` en modo nuevo; rellenar asignatura, actividad, fechas y tribunal.
-3. Guardar (`fnjs_guardar_acta` → `acta_nueva`).
+1. Entrar en **actas** y pulsar nueva acta: se abre **DATOS DEL ACTA**.
+2. El **Acta** viene propuesta con el siguiente número de la delegación (por ejemplo «dlb 39/26», con «última = dlb 38/26»); se puede cambiar, con formato num/aa.
+3. Rellenar la **Fecha acta** (obligatoria), **Libro**, **Página**, **Línea**, **Lugar** y **Observaciones**.
+4. Elegir la **Asignatura** escribiendo parte del nombre y eligiendo de la lista (es obligatoria aunque la pantalla no lo avise; si falta sale un error técnico, D-NOT-2).
+5. En **Tribunal**, escribir el **Examinador** (con **Más** se añaden más).
+6. Pulsar **Guardar cambios acta**. Después, abriendo el acta, aparece **Alumnos del acta** (al principio «Todavía no hay notas asociadas a este acta») y **Añadir alumno al acta**.
 
-#### Eliminar
+#### Eliminar un acta
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En **actas**, marcar el acta y pulsar eliminar; confirmar «esto eliminará los datos del acta, pero no las notas que mantendrán el número de acta». Las notas ya puestas siguen existiendo con ese número de acta.
 
 ### Errores O Avisos Frecuentes
 
@@ -55,11 +54,11 @@ Ciclo completo de actas: listar en `acta_select`, abrir `acta_ver`, crear (`acta
 - Flujo: `notas.acta.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta.md`
 
-## Acta Imprimir Presentacion
+## Imprimir un acta
 
 ### Para Que Sirve
 
-Obtener datos de presentación e imprimir acta (HTML/PDF).
+Preparar el acta para imprimirla (cara A delante y cara B detrás) o sacarla en PDF.
 
 ### Donde Entrar
 
@@ -70,9 +69,11 @@ Obtener datos de presentación e imprimir acta (HTML/PDF).
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Imprimir un acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el acta en **actas**.
+2. Pulsar imprimir: aparecen **Cara A (delante)** y **Cara B (detrás)**, o la opción **PDF**.
+3. Imprimir antes de subir el PDF firmado: el acta debe imprimirse después de su último cambio.
 
 ### Errores O Avisos Frecuentes
 
@@ -92,11 +93,11 @@ Obtener datos de presentación e imprimir acta (HTML/PDF).
 - Flujo: `notas.acta_imprimir_presentacion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_imprimir_presentacion.md`
 
-## Acta Listado Anual
+## Listar las actas de un periodo
 
 ### Para Que Sirve
 
-Consultar actas por rango de fechas en vista anual.
+Ver las actas de un periodo de fechas, por año o trimestre.
 
 ### Donde Entrar
 
@@ -106,9 +107,11 @@ Consultar actas por rango de fechas en vista anual.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar las actas de un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listado actas**.
+2. En **Periodo de selección** elegir el trimestre (o todo el año) y el año, o escribir dos fechas en **entre … y …**.
+3. Se muestra la lista de actas del periodo.
 
 ### Errores O Avisos Frecuentes
 
@@ -123,11 +126,11 @@ Consultar actas por rango de fechas en vista anual.
 - Flujo: `notas.acta_listado_anual.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_listado_anual.md`
 
-## Acta Modificar
+## Modificar un acta
 
 ### Para Que Sirve
 
-Guardar cambios de un acta existente desde `acta_ver`.
+Guardar los cambios de un acta existente.
 
 ### Donde Entrar
 
@@ -137,9 +140,11 @@ Guardar cambios de un acta existente desde `acta_ver`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Modificar un acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el acta desde **actas**.
+2. Cambiar la fecha, libro, página, línea, lugar, observaciones, la asignatura o los examinadores; el número de acta ya no se cambia. La fecha es obligatoria.
+3. Pulsar **Guardar cambios acta**. Un acta que ya tiene el PDF firmado adjunto no se puede modificar.
 
 ### Errores O Avisos Frecuentes
 
@@ -154,11 +159,11 @@ Guardar cambios de un acta existente desde `acta_ver`.
 - Flujo: `notas.acta_modificar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_modificar.md`
 
-## Acta Pdf
+## el PDF del acta
 
 ### Para Que Sirve
 
-Gestión del PDF escaneado: subir, descargar y eliminar.
+Gestionar el PDF escaneado del acta: subirlo, descargarlo o eliminarlo.
 
 ### Donde Entrar
 
@@ -168,12 +173,11 @@ Gestión del PDF escaneado: subir, descargar y eliminar.
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Gestionar el PDF del acta
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Subir: elegir el PDF firmado y subirlo (el acta debe haberse impreso tras el último cambio).
+2. Descargar: pulsar descargar PDF.
+3. Eliminar: quitar el PDF para poder modificar el acta de nuevo.
 
 ### Errores O Avisos Frecuentes
 
@@ -188,11 +192,11 @@ Gestión del PDF escaneado: subir, descargar y eliminar.
 - Flujo: `notas.acta_pdf.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_pdf.md`
 
-## Acta Pdf Download
+## Descargar el PDF de un acta
 
 ### Para Que Sirve
 
-Descargar PDF con token firmado.
+Descargar el PDF firmado de un acta.
 
 ### Donde Entrar
 
@@ -202,9 +206,10 @@ Descargar PDF con token firmado.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Descargar el PDF de un acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **actas**, marcar el acta.
+2. Pulsar descargar PDF: se abre en una pestaña nueva (el enlace caduca a los pocos minutos).
 
 ### Errores O Avisos Frecuentes
 
@@ -221,11 +226,11 @@ Descargar PDF con token firmado.
 - Flujo: `notas.acta_pdf_download.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_pdf_download.md`
 
-## Acta Pdf Subir
+## Subir el PDF firmado
 
 ### Para Que Sirve
 
-Adjuntar PDF a un acta.
+Adjuntar a un acta el PDF firmado.
 
 ### Donde Entrar
 
@@ -235,9 +240,12 @@ Adjuntar PDF a un acta.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Subir el PDF firmado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Imprimir el acta después del último cambio y firmarla.
+2. En la ficha, elegir el fichero PDF y subirlo.
+3. Si es demasiado grande aparece «El servidor rechazó la subida: archivo o petición demasiado grandes».
+4. Desde ese momento el acta queda cerrada y no se puede modificar.
 
 ### Errores O Avisos Frecuentes
 
@@ -245,6 +253,7 @@ Adjuntar PDF a un acta.
 - `No se puede subir el archivo %s`
 - `No se puede leer el archivo %s`
 - `No se puede abrir el archivo %s`
+- `Debe imprimir el acta después del último cambio antes de subir el PDF firmado`
 
 ### Permisos
 
@@ -255,11 +264,11 @@ Adjuntar PDF a un acta.
 - Flujo: `notas.acta_pdf_subir.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_pdf_subir.md`
 
-## Acta Select
+## Buscar un acta
 
 ### Para Que Sirve
 
-Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o descargar PDF.
+Buscar actas del curso y abrir, modificar, imprimir o descargar su PDF.
 
 ### Donde Entrar
 
@@ -269,9 +278,17 @@ Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o desca
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar un acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **actas**.
+2. Escribir en el buscador el número de acta con formato nn/aa (por ejemplo 12/21). Se pueden usar comodines: un punto (.) es cualquier carácter y .* cualquier cantidad de caracteres (por ejemplo «dlm. 2/19» devuelve dlmE 2/19, dlmO 2/19…).
+3. En una delegación solo se buscan las actas de la propia delegación o región; una región con delegaciones busca en todas.
+4. Pulsar el acta de la tabla para abrirla.
+
+#### Imprimir o descargar un acta
+
+1. En la tabla, marcar el acta.
+2. Elegir imprimir o descargar el PDF.
 
 ### Errores O Avisos Frecuentes
 
@@ -286,11 +303,11 @@ Buscar y seleccionar actas del curso; navegar a ver, modificar, imprimir o desca
 - Flujo: `notas.acta_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_select.md`
 
-## Acta Ver
+## Ver o modificar la cabecera del acta
 
 ### Para Que Sirve
 
-Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
+Consultar o modificar la cabecera de un acta (asignatura, fechas, libro, tribunal, PDF) y, cuando se abre desde el listado de actas, ver las notas ya grabadas y añadir un alumno.
 
 ### Donde Entrar
 
@@ -300,22 +317,23 @@ Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal,
 
 ### Tareas Habituales
 
-#### Ver / editar cabecera
+#### Ver o modificar la cabecera del acta
 
-1. Abrir acta desde el listado o desde la actividad.
-2. Cargar cabecera (`acta_ver_form_data`).
-3. Guardar alta (`acta_nueva`) o cambios (`acta_modificar`).
+1. Abrir el acta desde el listado o desde la actividad.
+2. Se muestra la cabecera con los datos del acta.
+3. Para un acta nueva, rellenarla y guardar; para uno existente, corregir lo que haga falta y guardar los cambios.
 
-#### Listado de notas (solo standalone)
+#### Ver las notas del acta
 
-1. Con acta existente (no modo nueva) y asignatura válida, la UI pide `acta_ver_notas_listado_data`.
-2. Se muestra tabla id/nombre/nota/situación; avisos si hay notas sin acceso al nombre.
+1. Con un acta ya creada y con asignatura, debajo de la cabecera aparece la tabla de alumnos con su nombre, nota y situación.
+2. Si de alguna nota no se puede ver el nombre, sale un aviso.
 
-#### Añadir alumno (solo standalone + permiso escritura + sin PDF)
+#### Añadir un alumno al acta
 
-1. Pedir `acta_ver_add_persona_form_data` (desplegable de candidatos).
-2. Elegir persona, nota y máximo; enviar `acta_ver_add_persona`.
-3. Recargar listado / mensaje de esquema de escritura.
+1. Solo está disponible desde el listado de actas, con permiso de escritura y si el acta no tiene el PDF firmado.
+2. Elegir a la persona en el desplegable de candidatos (de la dl o publicados para la dl; no salen quienes están en repaso ni quienes ya tienen nota de esa asignatura).
+3. Escribir la nota y la nota máxima y guardar.
+4. El listado se recarga con el alumno añadido.
 
 ### Errores O Avisos Frecuentes
 
@@ -340,11 +358,11 @@ Consultar o modificar la cabecera del acta (asignatura, fechas, libro, tribunal,
 - Flujo: `notas.acta_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/acta_ver.md`
 
-## Actividades Buscar
+## Vincular una actividad al acta
 
 ### Para Que Sirve
 
-Seleccionar actividad CA vinculada al acta.
+Elegir la actividad de estudios (CA) a la que corresponde el acta.
 
 ### Donde Entrar
 
@@ -354,9 +372,10 @@ Seleccionar actividad CA vinculada al acta.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Vincular una actividad al acta
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, pulsar para seleccionar la actividad.
+2. Elegir la **organización** y la **actividad** y pulsar **seleccionar la actividad** y **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -371,11 +390,11 @@ Seleccionar actividad CA vinculada al acta.
 - Flujo: `notas.actividades_buscar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/actividades_buscar.md`
 
-## Asig Faltan Personas Select
+## Buscar los alumnos que deben una asignatura
 
 ### Para Que Sirve
 
-Listar alumnos que deben una asignatura.
+Ver qué alumnos deben una asignatura concreta.
 
 ### Donde Entrar
 
@@ -385,9 +404,12 @@ Listar alumnos que deben una asignatura.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar los alumnos que deben una asignatura
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar asig. pendientes**.
+2. En **Búsqueda de personas por asignatura** marcar **numerarios** o **agregados**, el ciclo (**bienio**, **cuadrienio**, **año I**, **año II-IV**) y elegir la **Asignatura**.
+3. Pulsar **Buscar** (o **Borrar** para limpiar).
+4. Se muestra la lista de alumnos que la deben.
 
 ### Errores O Avisos Frecuentes
 
@@ -403,11 +425,11 @@ Listar alumnos que deben una asignatura.
 - Flujo: `notas.asig_faltan_personas_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/asig_faltan_personas_select.md`
 
-## Asig Faltan Select
+## Buscar alumnos por número de asignaturas pendientes
 
 ### Para Que Sirve
 
-Listar alumnos con hasta N asignaturas pendientes.
+Ver los alumnos a los que les faltan como mucho N asignaturas.
 
 ### Donde Entrar
 
@@ -417,9 +439,12 @@ Listar alumnos con hasta N asignaturas pendientes.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar alumnos por número de asignaturas pendientes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **buscar asig. pendientes**.
+2. En **Búsqueda de personas por número de asignaturas** marcar **numerarios** y/o **agregados** y elegir el ciclo con el botón **bienio** o **cuadrienio** (en cuadrienio, además, **año I** y/o **año II-IV**).
+3. Escribir el **número de asignaturas que faltan** (no se incluyen las cursadas sin examinar). Marcar **incluir lista de asignaturas** si se quiere ver cuáles son.
+4. Pulsar **Buscar** (o **Borrar** para limpiar). El resultado se titula, por ejemplo, «lista de numerarios a los que faltan 2 o menos asignaturas para finalizar el cuadrienio»; si no hay nadie, «no hay ninguna fila».
 
 ### Errores O Avisos Frecuentes
 
@@ -434,11 +459,11 @@ Listar alumnos con hasta N asignaturas pendientes.
 - Flujo: `notas.asig_faltan_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/asig_faltan_select.md`
 
-## Asignaturas Pendientes
+## Consultar el cuadro alumnos-asignaturas
 
 ### Para Que Sirve
 
-Consultar matriz de asignaturas pendientes por alumno.
+Ver el cuadro de alumnos y asignaturas pendientes de cada uno.
 
 ### Donde Entrar
 
@@ -448,9 +473,10 @@ Consultar matriz de asignaturas pendientes por alumno.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar el cuadro alumnos-asignaturas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tabla alumnos-asignaturas**.
+2. Se muestra una fila por alumno y una columna por asignatura, con lo que le falta.
 
 ### Errores O Avisos Frecuentes
 
@@ -465,11 +491,11 @@ Consultar matriz de asignaturas pendientes por alumno.
 - Flujo: `notas.asignaturas_pendientes.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/asignaturas_pendientes.md`
 
-## Asignaturas Pendientes Resumen
+## Consultar el resumen de pendientes
 
 ### Para Que Sirve
 
-Ver resumen de pendientes por asignatura.
+Ver, para cada asignatura, cuántos alumnos la tienen pendiente.
 
 ### Donde Entrar
 
@@ -479,9 +505,10 @@ Ver resumen de pendientes por asignatura.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar el resumen de pendientes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **resumen pendientes**.
+2. Cada fila es una asignatura (con sus créditos y año). Las columnas dan el número de alumnos que la tienen pendiente: las que empiezan por **n** son numerarios y las que empiezan por **a** son agregados. Después de la letra va el curso en que está el alumno: **b** = bienio, **c1** = cuadrienio año I, **c2** = cuadrienio año II. La columna **total** suma b + c1 + c2. Así, nb, nc1, nc2 y ntotal son numerarios; ab, ac1, ac2 y atotal son agregados.
 
 ### Errores O Avisos Frecuentes
 
@@ -496,11 +523,11 @@ Ver resumen de pendientes por asignatura.
 - Flujo: `notas.asignaturas_pendientes_resumen.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/asignaturas_pendientes_resumen.md`
 
-## Asignaturas Search
+## Elegir una asignatura
 
 ### Para Que Sirve
 
-Autocompletado de asignaturas en formulario de acta.
+Autocompletar el nombre de la asignatura al rellenar un acta.
 
 ### Donde Entrar
 
@@ -510,9 +537,10 @@ Autocompletado de asignaturas en formulario de acta.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir una asignatura
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, escribir parte del nombre de la asignatura.
+2. Elegir de la lista que aparece.
 
 ### Errores O Avisos Frecuentes
 
@@ -527,11 +555,11 @@ Autocompletado de asignaturas en formulario de acta.
 - Flujo: `notas.asignaturas_search.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/asignaturas_search.md`
 
-## Buscar Acta
+## Elegir el acta de una nota
 
 ### Para Que Sirve
 
-Autocompletar/búsqueda de acta al rellenar notas.
+Ayudar a elegir un acta mientras se rellenan las notas de una persona.
 
 ### Donde Entrar
 
@@ -541,9 +569,10 @@ Autocompletar/búsqueda de acta al rellenar notas.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir el acta de una nota
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de nota, empezar a escribir el número del acta en **acta** (formato num/aa).
+2. Elegir de la lista que aparece.
 
 ### Errores O Avisos Frecuentes
 
@@ -558,11 +587,11 @@ Autocompletar/búsqueda de acta al rellenar notas.
 - Flujo: `notas.buscar_acta.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/buscar_acta.md`
 
-## Comprobar Notas Constants
+## Preparar la comprobación de notas
 
 ### Para Que Sirve
 
-Cargar constantes VO antes de ejecutar comprobaciones.
+Cargar las constantes que usan las comprobaciones de notas.
 
 ### Donde Entrar
 
@@ -572,9 +601,9 @@ Cargar constantes VO antes de ejecutar comprobaciones.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Preparar la comprobación de notas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Al abrir **Comprobar datos** las constantes se cargan automáticamente.
 
 ### Errores O Avisos Frecuentes
 
@@ -589,11 +618,11 @@ Cargar constantes VO antes de ejecutar comprobaciones.
 - Flujo: `notas.comprobar_notas_constants.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/comprobar_notas_constants.md`
 
-## Comprobar Notas Page
+## Comprobar los datos de notas
 
 ### Para Que Sirve
 
-Ejecutar comprobaciones y mostrar HTML de incidencias.
+Ejecutar las comprobaciones de los datos de notas y ver las incidencias.
 
 ### Donde Entrar
 
@@ -603,9 +632,11 @@ Ejecutar comprobaciones y mostrar HTML de incidencias.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Comprobar los datos de notas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Comprobar datos n** (o **agd**).
+2. La pantalla ejecuta las comprobaciones y muestra el listado de incidencias.
+3. Corregir los datos de las personas afectadas y volver a comprobar.
 
 ### Errores O Avisos Frecuentes
 
@@ -620,11 +651,11 @@ Ejecutar comprobaciones y mostrar HTML de incidencias.
 - Flujo: `notas.comprobar_notas_page.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/comprobar_notas_page.md`
 
-## Examinadores Search
+## Elegir un examinador
 
 ### Para Que Sirve
 
-Autocompletado de examinadores en formulario de acta.
+Autocompletar el nombre del examinador al rellenar un acta.
 
 ### Donde Entrar
 
@@ -634,9 +665,10 @@ Autocompletado de examinadores en formulario de acta.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir un examinador
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del acta, escribir parte del nombre del examinador.
+2. Elegir de la lista que aparece.
 
 ### Errores O Avisos Frecuentes
 
@@ -651,11 +683,11 @@ Autocompletado de examinadores en formulario de acta.
 - Flujo: `notas.examinadores_search.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/examinadores_search.md`
 
-## Informe Stgr Agd
+## Sacar el informe anual de agregados
 
 ### Para Que Sirve
 
-Generar informe anual de agregados (números o listados).
+Generar el informe anual del Studium Generale de agregados.
 
 ### Donde Entrar
 
@@ -665,9 +697,10 @@ Generar informe anual de agregados (números o listados).
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Sacar el informe anual de agregados
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual agd** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 ### Errores O Avisos Frecuentes
 
@@ -682,11 +715,11 @@ Generar informe anual de agregados (números o listados).
 - Flujo: `notas.informe_stgr_agd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/informe_stgr_agd.md`
 
-## Informe Stgr N
+## Sacar el informe anual de numerarios
 
 ### Para Que Sirve
 
-Generar informe anual de numerarios.
+Generar el informe anual del Studium Generale de numerarios.
 
 ### Donde Entrar
 
@@ -696,9 +729,10 @@ Generar informe anual de numerarios.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Sacar el informe anual de numerarios
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual n** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 ### Errores O Avisos Frecuentes
 
@@ -713,11 +747,11 @@ Generar informe anual de numerarios.
 - Flujo: `notas.informe_stgr_n.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/informe_stgr_n.md`
 
-## Informe Stgr Profesores
+## Sacar el informe anual de profesores
 
 ### Para Que Sirve
 
-Generar informe anual de profesores.
+Generar el informe anual del Studium Generale de profesores.
 
 ### Donde Entrar
 
@@ -727,9 +761,10 @@ Generar informe anual de profesores.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Sacar el informe anual de profesores
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Informe anual profesores** y elegir **Con números** o **Con listados**.
+2. Se genera el informe del curso.
 
 ### Errores O Avisos Frecuentes
 
@@ -778,11 +813,11 @@ Formulario completo de nota: carga (`nota_persona_form_data`) y mutaciones.
 - Flujo: `notas.nota_persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/nota_persona.md`
 
-## Persona Nota
+## Añadir una nota
 
 ### Para Que Sirve
 
-Alta de nota en dossier 1011 (`persona_nota_nueva`).
+Apuntar a una persona una asignatura aprobada, con su nota y el acta o certificado.
 
 ### Donde Entrar
 
@@ -792,16 +827,19 @@ Alta de nota en dossier 1011 (`persona_nota_nueva`).
 
 ### Tareas Habituales
 
-#### Crear
+#### Añadir una nota
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el dossier de notas de la persona (se titula «Notas del stgr»; sin notas dice «no hay ninguna fila») y pulsar **añadir nota**.
+2. Se abre «asignaturas aprobadas». Elegir si procede de un **acta** o de un **certificado**: delegación (por ejemplo dlb) y número (formato num/aa, por ejemplo 38/26).
+3. Elegir la **Asignatura**, escribir la **nota** (y «sobre» cuánto, por defecto 10), la **situación** (por ejemplo «nota numérica») y la **fecha acta**.
+4. Marcar **preceptor** si procede, elegir la **época** (sin especificar, ca o semestre invierno), la actividad en **cursada en** (enlace **añadir ca**) y un **detalle** opcional.
+5. Pulsar **Guardar** una sola vez (un doble clic no guarda la nota dos veces). Una asignatura que ya tiene nota deja de salir en el desplegable de asignaturas, así que no se puede guardar dos veces. Sale el aviso «Nota guardada en el esquema H-dlbv» (el nombre del esquema es intencionado) y vuelve la tabla con asignatura, nota (por ejemplo «Cum laude (8/10)»), acta, fecha acta, preceptor, época (ca, semestre invierno o sin especificar), detalle y cursada en.
+6. Si se guarda dos veces la misma nota, quedan dos filas iguales.
 
-#### Eliminar
+#### Quitar una nota
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la tabla de notas marcar la fila y pulsar **borrar asignatura**.
+2. Confirmar «¿Está seguro que desea borrar la nota de esta asignatura?».
 
 ### Errores O Avisos Frecuentes
 
@@ -820,11 +858,11 @@ Alta de nota en dossier 1011 (`persona_nota_nueva`).
 - Flujo: `notas.persona_nota.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/persona_nota.md`
 
-## Persona Nota Editar
+## Modificar una nota
 
 ### Para Que Sirve
 
-Edición de nota existente.
+Corregir los datos de una nota ya apuntada a una persona.
 
 ### Donde Entrar
 
@@ -834,9 +872,11 @@ Edición de nota existente.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Modificar una nota
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la tabla de notas marcar la fila y pulsar **modificar nota**.
+2. Cambiar los datos que hagan falta (nota, acta, fecha, época…).
+3. Pulsar **Guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -853,11 +893,11 @@ Edición de nota existente.
 - Flujo: `notas.persona_nota_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/persona_nota_editar.md`
 
-## Posibles Opcionales
+## Elegir una opcional
 
 ### Para Que Sirve
 
-Consultar opcionales disponibles al editar nota.
+Ofrecer las asignaturas opcionales disponibles al editar una nota.
 
 ### Donde Entrar
 
@@ -867,9 +907,10 @@ Consultar opcionales disponibles al editar nota.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir una opcional
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de nota, elegir una asignatura opcional.
+2. La lista muestra solo las opcionales que se pueden anotar.
 
 ### Errores O Avisos Frecuentes
 
@@ -884,11 +925,11 @@ Consultar opcionales disponibles al editar nota.
 - Flujo: `notas.posibles_opcionales.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/posibles_opcionales.md`
 
-## Posibles Preceptores
+## Elegir el preceptor de una nota
 
 ### Para Que Sirve
 
-Elegir preceptor en formulario de nota.
+Ofrecer los posibles preceptores al anotar una nota.
 
 ### Donde Entrar
 
@@ -898,9 +939,10 @@ Elegir preceptor en formulario de nota.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir el preceptor de una nota
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de nota, abrir **preceptor**.
+2. Elegir de la lista.
 
 ### Errores O Avisos Frecuentes
 
@@ -949,11 +991,11 @@ Flujo tessera: ver, imprimir y copiar entre personas.
 - Flujo: `notas.tessera.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/tessera.md`
 
-## Tessera Copiar Select
+## Copiar una tessera a otra persona
 
 ### Para Que Sirve
 
-Elegir destino y ejecutar copia de tessera.
+Copiar la tessera de una persona a otra con el mismo primer apellido (por ejemplo de numerario a agregado).
 
 ### Donde Entrar
 
@@ -963,9 +1005,11 @@ Elegir destino y ejecutar copia de tessera.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Copiar una tessera a otra persona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la tessera de la persona.
+2. En **copiar la tesera de … a**, elegir la persona destino: se listan las personas con el mismo primer apellido entre numerarios y agregados.
+3. Pulsar **copiar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -980,24 +1024,24 @@ Elegir destino y ejecutar copia de tessera.
 - Flujo: `notas.tessera_copiar_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/tessera_copiar_select.md`
 
-## Tessera Imprimir
+## Imprimir la tessera
 
 ### Para Que Sirve
 
-Imprimir tessera (HTML/PDF).
+Imprimir la tessera de estudios de una persona.
 
 ### Donde Entrar
 
 - Tessera Imprimir (frontend/notas/controller/tessera_imprimir.php)
-- Tessera Imprimir Mpdf (frontend/notas/controller/tessera_imprimir_mpdf.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Imprimir la tessera
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la tessera de la persona.
+2. Pulsar imprimir (HTML o PDF).
 
 ### Errores O Avisos Frecuentes
 
@@ -1012,11 +1056,11 @@ Imprimir tessera (HTML/PDF).
 - Flujo: `notas.tessera_imprimir.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/notas/flujos/tessera_imprimir.md`
 
-## Tessera Ver
+## Consultar la tessera de una persona
 
 ### Para Que Sirve
 
-Visualizar tessera de estudios.
+Ver la tessera de estudios de una persona: asignaturas hechas y créditos, de filosofía y teología.
 
 ### Donde Entrar
 
@@ -1026,9 +1070,10 @@ Visualizar tessera de estudios.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar la tessera de una persona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la tessera de la persona.
+2. Aparecen el número de asignaturas y créditos realizados en el curso y en total, separados por filosofía y teología, y lo que queda pendiente.
 
 ### Errores O Avisos Frecuentes
 

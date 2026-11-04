@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "menus"
 flujos: 15
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - menus
@@ -21,8 +21,10 @@ Alta/edición/baja de grupos de menú.
 
 ### Donde Entrar
 
-- Grupmenu Lista (frontend/menus/controller/grupmenu_lista.php)
 - Grupmenu Form (frontend/menus/controller/grupmenu_form.php)
+- Grupmenu Lista (frontend/menus/controller/grupmenu_lista.php)
+- Menus Get (frontend/menus/controller/menus_get.php)
+- Menus Que (frontend/menus/controller/menus_que.php)
 - Entrada de menú (TablaDB, no `grupmenu_lista.php`):
 - **Legacy:** sistema > usuarios web > grup menu
 - **Pills2:** sistema > usuarios web > grup menu · ADMIN LOCAL > usuarios web > grup menu
@@ -30,7 +32,11 @@ Alta/edición/baja de grupos de menú.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Via pantallas Orbix
+
+1. En la lista de grupos de menú, pulsar **nuevo** o seleccionar uno y pulsar **modificar**: se abre el formulario.
+2. En un alta el formulario sale vacío; al modificar sale con los datos del grupo. Pulsar **guardar**.
+3. Para eliminar un grupo, seleccionarlo y pulsar **eliminar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -51,11 +57,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.grupmenu.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/grupmenu.md`
 
-## Grupmenu Coleccion
+## Ver mi menú lateral
 
 ### Para Que Sirve
 
-Grupos e ítems autorizados para menú lateral en index.
+Cargar los grupos e ítems de menú que puede ver el usuario en el menú lateral.
 
 ### Donde Entrar
 
@@ -65,7 +71,10 @@ Grupos e ítems autorizados para menú lateral en index.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver mi menú lateral
+
+1. Iniciar sesión.
+2. El menú lateral muestra solo los grupos y opciones autorizados para el rol del usuario.
 
 ### Errores O Avisos Frecuentes
 
@@ -80,11 +89,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.grupmenu_coleccion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/grupmenu_coleccion.md`
 
-## Grupmenu Info
+## Editar un grupo de menús
 
 ### Para Que Sirve
 
-Precarga formulario edición grupmenu.
+Cargar el formulario de edición de un grupo de menús.
 
 ### Donde Entrar
 
@@ -94,7 +103,10 @@ Precarga formulario edición grupmenu.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Editar un grupo de menús
+
+1. En el gestor de menús, abrir el grupo.
+2. Cambiar su nombre y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -109,11 +121,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.grupmenu_info.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/grupmenu_info.md`
 
-## Lista Meta Menus
+## Elegir el destino de un menú
 
 ### Para Que Sirve
 
-Opciones de destino URL/módulo al editar un ítem (metamenús globales).
+Ofrecer los destinos posibles (módulo o URL) al editar una entrada de menú.
 
 ### Donde Entrar
 
@@ -123,7 +135,10 @@ Opciones de destino URL/módulo al editar un ítem (metamenús globales).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir el destino de un menú
+
+1. En la ficha de la entrada, abrir el desplegable de destino.
+2. Elegir la pantalla o módulo al que debe llevar.
 
 ### Errores O Avisos Frecuentes
 
@@ -134,11 +149,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.lista_meta_menus.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/lista_meta_menus.md`
 
-## Lista Templates
+## Ver las plantillas de menú
 
 ### Para Que Sirve
 
-Listado de plantillas ref para importación.
+Mostrar las plantillas de menú disponibles para importar.
 
 ### Donde Entrar
 
@@ -148,7 +163,10 @@ Listado de plantillas ref para importación.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver las plantillas de menú
+
+1. Entrar en **importar**.
+2. Aparece la lista de plantillas de referencia; elegir una.
 
 ### Errores O Avisos Frecuentes
 
@@ -159,21 +177,26 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.lista_templates.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/lista_templates.md`
 
-## Menu
+## Modificar una entrada de menú
 
 ### Para Que Sirve
 
-Alta, edición, copia, movimiento y borrado de entradas del árbol (`aux_menus`) enlazadas a un metamenu.
+Ver, cambiar, copiar, mover, crear o borrar entradas de los menús de un grupo.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Menus Get (frontend/menus/controller/menus_get.php)
 - **Legacy:** sistema > menus > seleccionar
 - **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Modificar una entrada de menú
+
+1. Entrar en **seleccionar** y elegir el **grupo** (vsm, scdl, dre, sistema…). Se muestra el árbol de entradas con su orden (por ejemplo 10,50,40), el nombre, «[ok]» y los roles que lo ven entre paréntesis.
+2. Pulsar una entrada para editarla: **orden**, **es ok?**, **texto menu**, **meta** (la pantalla a la que lleva), **parametros** y los **permisos** (una casilla por rol; **todos** y **ninguno** marcan o desmarcan todas).
+3. Pulsar **guardar**, o **cancelar** para salir.
+4. Con **eliminar** se borra la entrada; con **nuevo** se crea otra en el grupo elegido (si no hay grupo avisa «debe seleccionar un grupo de menu para poder añadir un menu»); **mover a** y **copiar en** la pasan o copian a otro grupo.
 
 ### Errores O Avisos Frecuentes
 
@@ -191,22 +214,26 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menu.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menu.md`
 
-## Menu Mover
+## Mover una entrada a otro grupo
 
 ### Para Que Sirve
 
-Cambiar grupmenu de un ítem desde ficha.
+Pasar una entrada de menú a otro grupo.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Menus Get (frontend/menus/controller/menus_get.php)
 - **Legacy:** sistema > menus > seleccionar
 - **Pills2:** sistema > menus > seleccionar · ADMIN GLOBAL > menus > seleccionar
 - (Acción de ficha del gestor; no tiene menú propio.)
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Mover una entrada a otro grupo
+
+1. Abrir la entrada en el gestor de menús.
+2. Elegir el grupo de destino en el desplegable junto a **mover a**.
+3. Pulsar **mover a**.
 
 ### Errores O Avisos Frecuentes
 
@@ -219,11 +246,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menu_mover.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menu_mover.md`
 
-## Menus Burger Layout
+## Ver el menú Burger o Pills
 
 ### Para Que Sirve
 
-Árbol anidado + HTML utilidades para layouts modernos (H-dlpv).
+Cargar el árbol de menús de los diseños modernos (Burger, Pills, Pills 2).
 
 ### Donde Entrar
 
@@ -233,7 +260,10 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el menú Burger o Pills
+
+1. Elegir el layout en **preferencias**.
+2. Al entrar, el menú aparece anidado según el rol del usuario.
 
 ### Errores O Avisos Frecuentes
 
@@ -244,11 +274,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menus_burger_layout.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_burger_layout.md`
 
-## Menus Exportar
+## Exportar los menús
 
 ### Para Que Sirve
 
-Persiste menú actual en tablas ref de BD pública.
+Guardar el menú actual como plantilla de referencia en la base pública.
 
 ### Donde Entrar
 
@@ -258,7 +288,11 @@ Persiste menú actual en tablas ref de BD pública.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Exportar los menús
+
+1. Entrar en **Exportar** (menú **sistema > menus > Exportar**). Se abre un formulario con el campo **Guardar como** y el botón **guardar**.
+2. Escribir el nombre de la plantilla y pulsar **guardar**: el menú local pasa a ser la plantilla de referencia que otras delegaciones pueden importar.
+3. Si ya existe una plantilla con ese nombre, la pantalla pregunta si se quiere reemplazar.
 
 ### Errores O Avisos Frecuentes
 
@@ -284,7 +318,13 @@ Respaldar o restaurar la referencia de menús vía ficheros SQL en disco.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Exportar a ficheros
+
+1. Lanzar la acción de exportar: se escriben ficheros SQL con los menús en la carpeta `log/menus/` del servidor (debe tener permiso de escritura).
+
+#### Importar desde ficheros
+
+1. Lanzar la acción de importar: se cargan en la base de datos los menús de los ficheros SQL; el resultado queda anotado en `log/menus/menus.log`.
 
 ### Errores O Avisos Frecuentes
 
@@ -299,11 +339,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menus_exportar_ref_a_ficheros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_exportar_ref_a_ficheros.md`
 
-## Menus Generar Txt
+## Regenerar los textos de los menús
 
 ### Para Que Sirve
 
-Regenera fichero de cadenas traducibles de etiquetas de menú.
+Regenerar el fichero de textos traducibles de las etiquetas de menú.
 
 ### Donde Entrar
 
@@ -313,7 +353,10 @@ Regenera fichero de cadenas traducibles de etiquetas de menú.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Regenerar los textos de los menús
+
+1. Ejecutar la opción de generar textos.
+2. Se actualiza el fichero que se usa para traducir los nombres de los menús.
 
 ### Errores O Avisos Frecuentes
 
@@ -328,11 +371,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menus_generar_txt.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_generar_txt.md`
 
-## Menus Get Page
+## Ver el listado y la ficha de un menú
 
 ### Para Que Sirve
 
-Builder AJAX lista vs edición en gestor de menús.
+Mostrar, dentro del gestor de menús, el listado de un grupo o la ficha de una entrada.
 
 ### Donde Entrar
 
@@ -342,7 +385,10 @@ Builder AJAX lista vs edición en gestor de menús.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el listado y la ficha de un menú
+
+1. En el gestor de menús, elegir el grupo.
+2. El listado se carga en la misma pantalla; pulsar una entrada para abrir su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -353,11 +399,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menus_get_page.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_get_page.md`
 
-## Menus Importar
+## Importar una plantilla de menús
 
 ### Para Que Sirve
 
-Sustituye menús locales por una plantilla seleccionada.
+Sustituir los menús locales por los de una plantilla de referencia.
 
 ### Donde Entrar
 
@@ -367,7 +413,11 @@ Sustituye menús locales por una plantilla seleccionada.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Importar una plantilla de menús
+
+1. Entrar en **importar**: «Escoger menus de referencia».
+2. Elegir la plantilla en el desplegable (por ejemplo Aes, Ceb, Aut-sep-2025…).
+3. Pulsar **importar**. Los menús locales se sustituyen por los de la plantilla y se pierden los cambios locales.
 
 ### Errores O Avisos Frecuentes
 
@@ -386,12 +436,20 @@ Dejar los menús del esquema (o de todas las DL si dlb) como la referencia por d
 
 ### Donde Entrar
 
-- Restaurar menús ref→DL (`frontend/menus/controller/menus_importar_de_ficheros_a_ref.php`)
+- Restaurar menús ref→DL (frontend/menus/controller/menus_importar_de_ficheros_a_ref.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Confirmar (`seguro=2`)
+
+1. Abrir la pantalla: salen los mensajes de advertencia y el enlace **continuar**.
+2. Si la delegación es dlb, aparece además el enlace **Poner todas las dl igual**.
+
+#### Ejecutar (`seguro=1`)
+
+1. El proceso recorre las delegaciones (salta la `H-Hv`).
+2. Copia los menús de referencia a los de cada delegación; en la sf no toca los grupos de menú por rol.
 
 ### Errores O Avisos Frecuentes
 
@@ -406,11 +464,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `menus.menus_importar_de_ficheros_a_ref.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_importar_de_ficheros_a_ref.md`
 
-## Menus Legacy Layout Items
+## Ver el menú Legacy
 
 ### Para Que Sirve
 
-Ítems visibles para barra lateral layout H-dlbv.
+Cargar los ítems visibles del menú del diseño Legacy.
 
 ### Donde Entrar
 
@@ -420,7 +478,10 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el menú Legacy
+
+1. Iniciar sesión con layout Legacy (se elige en **preferencias**).
+2. La barra lateral muestra los grupos permitidos para el usuario.
 
 ### Errores O Avisos Frecuentes
 

@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "actividadcargos"
 flujos: 4
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - actividadcargos
@@ -13,12 +13,12 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Cargo
+## Añadir un cargo
 
 ### Para Que Sirve
 
 - Ver, añadir y quitar cargos de personas en actividades.
-- La consulta y los enlaces de alta se hacen en el widget; la alta concreta pasa por el formulario (`cargo_nuevo`); la baja es directa vía `cargo_eliminar`.
+- Se consulta y se pulsa el enlace de alta en la relación de cargos; el alta se hace en un formulario y la baja es directa.
 
 ### Donde Entrar
 
@@ -28,21 +28,20 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Crear
+#### Añadir un cargo
 
-1. Abrir el dossier de cargos (actividad o persona).
-2. Pulsar el enlace **añadir …** del colectivo o tipo de actividad permitido.
-3. Completar el formulario **Cargo de una actividad** (persona/actividad, tipo de cargo, AGD, observaciones; en altas, **¿asiste?** si aplica).
+1. Abrir el dossier de cargos, de la actividad o de la persona.
+2. Pulsar el enlace **añadir …** del colectivo o tipo de actividad que corresponda.
+3. Completar el formulario **Cargo de una actividad**: persona o actividad, tipo de cargo, agd, observaciones y, en las altas, **¿asiste?** si procede.
 4. Pulsar **Guardar datos del cargo**.
-5. Comprobar que la fila aparece en la relación de cargos (y en asistentes si marcó **¿asiste?**).
+5. Comprobar que la fila aparece en la relación de cargos (y en asistentes, si se marcó **¿asiste?**).
 
-#### Eliminar
+#### Quitar un cargo
 
 1. En la relación de cargos, marcar **una sola fila**.
 2. Pulsar **quitar cargo**.
-3. Leer el aviso de confirmación (puede indicar borrado del asistente si `des`/`vcsd` y tipo `s`/`sg`).
-4. Confirmar.
-5. El listado se refresca automáticamente (`fnjs_actualizar`).
+3. Leer el aviso de confirmación; puede avisar de que también se borra al asistente si se trata del tipo s o sg y el usuario es de des o vcsd.
+4. Confirmar. El listado se actualiza solo.
 
 ### Errores O Avisos Frecuentes
 
@@ -104,11 +103,11 @@ Guardar cambios en un cargo existente: tipo de cargo, flag AGD, observaciones y,
 - Flujo: `actividadcargos.cargo_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadcargos/flujos/cargo_editar.md`
 
-## Form Cargos De Actividad
+## Añadir o modificar un cargo en una actividad
 
 ### Para Que Sirve
 
-Asignar o editar el cargo de una persona en una actividad: el sistema carga desplegables, valores actuales, hash de campos y URLs de mutación antes de mostrar el formulario.
+Añadir o modificar un cargo de una persona en una actividad.
 
 ### Donde Entrar
 
@@ -117,13 +116,17 @@ Asignar o editar el cargo de una persona en una actividad: el sistema carga desp
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Añadir o modificar un cargo en una actividad
 
-1. El usuario abre el formulario desde el widget de relación de cargos (modo `nuevo` o `editar`).
-2. El controller POSTea a `form_cargos_de_actividad_data` con contexto del dossier (`pau`, `id_pau`, `obj_pau`, `sel`, `mod`, `permiso`).
-3. El backend devuelve payload con desplegables (`personas_select`, `cargos_select`), valores (`observ`, `chk`), flags (`show_asis`, `id_nom_real`) y `hash_form_config`.
-4. El front compone HTML de desplegables y hash; pinta el formulario en el bloque AJAX.
-5. Si falta contexto válido, puede devolver `redir: go_atras` o `error`.
+1. Pulsar **añadir n** / **añadir agd** en «Relación de cargos», o marcar a un asistente y pulsar **añadir cargo** / **modificar cargo**.
+2. Se abre «Cargo de una actividad» con el nombre del asistente y los campos **Cargo** (desplegable, por ejemplo «d»), **¿Puede ser agd?** y **Observaciones**.
+3. Pulsar **Guardar datos del cargo**, o **Cancelar** para salir sin guardar.
+
+#### Ver los cargos de una actividad
+
+1. Marcar la actividad en la lista y pulsar **cargos**.
+2. Se abre «Relación de cargos» con el enlace **( dossiers )**; sin cargos indica «no hay ninguna fila».
+3. Los botones **añadir n** y **añadir agd** abren el formulario de cargo.
 
 ### Errores O Avisos Frecuentes
 
@@ -140,11 +143,11 @@ Asignar o editar el cargo de una persona en una actividad: el sistema carga desp
 - Flujo: `actividadcargos.form_cargos_de_actividad.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadcargos/flujos/form_cargos_de_actividad.md`
 
-## Form Cargos Personas En Actividad
+## Abrir el formulario de cargo de una persona
 
 ### Para Que Sirve
 
-Gestionar los cargos de una persona en distintas actividades: el sistema carga el listado de actividades candidatas (en altas), valores del cargo en edición y URLs de mutación.
+Abrir el formulario para dar de alta o modificar un cargo de una persona en una actividad, con las actividades candidatas en las altas.
 
 ### Donde Entrar
 
@@ -153,13 +156,12 @@ Gestionar los cargos de una persona en distintas actividades: el sistema carga e
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir el formulario de cargo de una persona
 
-1. El usuario abre el formulario desde el widget de relación de cargos de la persona.
-2. El controller POSTea a `form_cargos_personas_en_actividad_data` con `id_pau` (persona), `sel`, `mod`, `que_dl`, `id_tipo` según el enlace de alta.
-3. En modo `editar`, carga datos del `ActividadCargo` y fija actividad en solo lectura.
-4. En modo `nuevo`, filtra actividades por tipo y delegación (`que_dl` vacío = otras delegaciones).
-5. El front pinta desplegables y hash; el usuario completa y guarda vía `cargo_nuevo`/`cargo_editar`.
+1. Desde la relación de cargos de la persona, pulsar **añadir cargo de la dl**, **añadir cargo de otra dl** o seleccionar un cargo y pulsar **modificar cargo**.
+2. Al modificar, aparecen los datos del cargo y la actividad no se puede cambiar.
+3. Al añadir, el desplegable de actividades solo ofrece las del tipo elegido y de la propia dl (o de otras delegaciones, según el enlace).
+4. Completar el formulario y guardar.
 
 ### Errores O Avisos Frecuentes
 

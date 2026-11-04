@@ -13,20 +13,30 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Carta Presentacion
+## Dar de alta o modificar la carta de un centro
 
 ### Para Que Sirve
 
-Dar de alta, modificar o quitar los datos de presentación de un centro concreto.
+Dar de alta, modificar o quitar los datos de presentación de un centro.
 
 ### Donde Entrar
 
-- Cartas Presentacion Form (frontend/cartaspresentacion/controller/cartas_presentacion_form.php)
+- Cartas Presentacion (frontend/cartaspresentacion/controller/cartas_presentacion.php)
 - sin entrada de menú en el índice (subflujo de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Dar de alta o modificar la carta de un centro
+
+1. En la lista, pulsar **director** en la fila del centro.
+2. Se abre el formulario; si el centro no tiene carta, sale vacío y se crea al guardar. No se pueden modificar datos de otra delegación.
+3. Rellenar nombre, teléfono, e-mail, zona y observaciones.
+4. Pulsar **Guardar**.
+
+#### Quitar la carta de un centro
+
+1. En una fila que ya tiene carta, pulsar **quitar**.
+2. Confirmar el aviso.
 
 ### Errores O Avisos Frecuentes
 
@@ -46,21 +56,30 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cartaspresentacion.carta_presentacion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/carta_presentacion.md`
 
-## Cartas Presentacion
+## Ver el listado de cartas
 
 ### Para Que Sirve
 
-Consultar todas las cartas de presentación organizadas por tipo de labor, delegación y población.
+Consultar todas las cartas de presentación agrupadas por tipo de labor, delegación y población.
 
 ### Donde Entrar
 
-- Cartas Presentacion Lista (frontend/cartaspresentacion/controller/cartas_presentacion_lista.php)
+- Cartas Presentacion (frontend/cartaspresentacion/controller/cartas_presentacion.php)
 - **Legacy:** scdl > direcciones > cartas presentacion > lista dl / lista todo
 - **Pills2:** scdl > direcciones > cartas presentacion > lista dl / lista todo
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el listado de cartas
+
+1. Abrir **lista dl** o **lista todo**.
+2. Aparecen las tablas agrupadas con los datos de contacto.
+3. Los centros con el tipo de labor mal configurado salen en un aviso al final de la página.
+
+#### Ver el listado filtrado
+
+1. Abrir **buscar**, rellenar los filtros y pulsar **buscar**.
+2. Los resultados aparecen debajo.
 
 ### Errores O Avisos Frecuentes
 
@@ -75,11 +94,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cartaspresentacion.cartas_presentacion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/cartas_presentacion.md`
 
-## Cartas Presentacion Buscar
+## Buscar cartas de presentación
 
 ### Para Que Sirve
 
-Encontrar cartas de presentación que cumplan criterios geográficos o de delegación.
+Encontrar cartas de presentación según criterios geográficos o de delegación.
 
 ### Donde Entrar
 
@@ -89,7 +108,11 @@ Encontrar cartas de presentación que cumplan criterios geográficos o de delega
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar cartas de presentación
+
+1. Abrir **buscar**: se cargan los desplegables de filtro.
+2. Rellenar los filtros y pulsar **buscar**.
+3. Los resultados aparecen debajo, en el mismo formato que las listas.
 
 ### Errores O Avisos Frecuentes
 
@@ -105,7 +128,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cartaspresentacion.cartas_presentacion_buscar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/cartas_presentacion_buscar.md`
 
-## Cartas Presentacion Shell
+## Buscar los centros
 
 ### Para Que Sirve
 
@@ -119,7 +142,20 @@ Mantener los datos de presentación (director, contacto, zona) de los centros de
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar los centros
+
+1. Abrir **modificar**: sale el formulario de selección.
+2. Elegir «según dl» y, si procede, la población (con «según r» no hay población).
+3. Pulsar **buscar**: debajo aparece la tabla de centros.
+
+#### Modificar la carta de un centro
+
+1. Pulsar **director** en la fila del centro: se abre una ventana.
+2. Rellenar los campos y pulsar **guardar**; la lista se actualiza.
+
+#### Quitar una carta
+
+1. En las filas con carta, pulsar **quitar** y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -140,11 +176,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cartaspresentacion.cartas_presentacion_shell.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/cartas_presentacion_shell.md`
 
-## Poblaciones
+## Elegir la población
 
 ### Para Que Sirve
 
-Filtrar el listado de centros por población dentro de la delegación (modo `get_dl`).
+Filtrar la lista de centros por población dentro de la delegación.
 
 ### Donde Entrar
 
@@ -153,7 +189,10 @@ Filtrar el listado de centros por población dentro de la delegación (modo `get
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir la población
+
+1. En «según dl» elegir la opción de la delegación: se rellena el desplegable de poblaciones.
+2. Elegir la población. Si se elige «según r», el desplegable de población se oculta.
 
 ### Errores O Avisos Frecuentes
 
@@ -168,20 +207,24 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cartaspresentacion.poblaciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cartaspresentacion/flujos/poblaciones.md`
 
-## Ubis
+## Ver los centros y sus cartas
 
 ### Para Que Sirve
 
-Ver qué centros tienen carta de presentación y acceder a modificar, ver ficha o quitar.
+Ver qué centros tienen carta de presentación y acceder a modificarla, ver la ficha o quitarla.
 
 ### Donde Entrar
 
-- Cartas Presentacion Ubis Lista (frontend/cartaspresentacion/controller/cartas_presentacion_ubis_lista.php)
+- Cartas Presentacion (frontend/cartaspresentacion/controller/cartas_presentacion.php)
 - sin entrada de menú en el índice (fragmento de `cartas_presentacion` > modificar).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver los centros y sus cartas
+
+1. Elegir el filtro (delegación o regiones y, en el primer caso, la población).
+2. Pulsar **buscar**.
+3. Aparece la tabla con las columnas director, centro, carta de presentación y dirección.
 
 ### Errores O Avisos Frecuentes
 

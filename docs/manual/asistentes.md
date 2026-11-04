@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "asistentes"
 flujos: 14
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - asistentes
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Activ Pendientes Select
+## Consultar quién tiene pendiente el ca o el crt
 
 ### Para Que Sirve
 
-Identificar personas sin ca/crt en el curso.
+Saber quién tiene pendiente hacer el ca o el crt.
 
 ### Donde Entrar
 
@@ -27,9 +27,11 @@ Identificar personas sin ca/crt en el curso.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar quién tiene pendiente el ca o el crt
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción **pendientes** del colectivo que interese (numerarios, agregados o sacd).
+2. Se muestra «Personas» con la lista de quienes no han hecho todavía la actividad en el curso, o «no hay ninguna fila» si no queda nadie.
+3. Pulsar el nombre de una persona abre su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -44,11 +46,11 @@ Identificar personas sin ca/crt en el curso.
 - Flujo: `asistentes.activ_pendientes_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/activ_pendientes_select.md`
 
-## Asistente
+## los asistentes de una actividad
 
 ### Para Que Sirve
 
-Alta, edición, eliminación y movimiento de asistencia a actividades.
+Ver y gestionar los asistentes de una actividad: quién está, estado de su plaza, añadir, cambiar de actividad y quitar.
 
 ### Donde Entrar
 
@@ -57,16 +59,19 @@ Alta, edición, eliminación y movimiento de asistencia a actividades.
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Gestionar los asistentes de una actividad
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Marcar la actividad y pulsar **asistentes**. Se abre «Relación de asistentes» con un enlace **( dossiers )** y una tabla (nombre, dl, propio, estudios, observaciones, teléfono, mail, ctr, propietario de la plaza…).
+2. El color de cada fila indica su estado: **pedida**, **en espera**, **asignada** o **confirmada** (la leyenda está debajo).
+3. Marcar una o varias filas (Ctrl+clic o Mayús+clic para varias) y pulsar **modificar asistencia**, **cambiar actividad**, **borrar asistencia**, **transferir a históricos**, **añadir cargo**, **modificar cargo**, **quitar cargo**, **plan estudios** o **E43**.
+4. Bajo la tabla se indican las plazas (por ejemplo «plazas actividad: 31» y «dlb: 1 (de las 1 cedidas por dlmE) => ocupadas=1/(1) libres=0»).
+5. Para añadir a alguien de la dl, pulsar **+ n** o **+ agd** (según el colectivo) en «Añadir asistente de la dl».
 
-#### Guardar
+#### Mover un asistente a otra actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar al asistente y pulsar **cambiar actividad**.
+2. Se abre «Mover a:» con las actividades del mismo tipo, cada una con sus «plazas libres/concedidas».
+3. Elegir la actividad de destino y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -88,11 +93,11 @@ Alta, edición, eliminación y movimiento de asistencia a actividades.
 - Flujo: `asistentes.asistente.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/asistente.md`
 
-## Asistente Mover
+## Mover un asistente a otra actividad
 
 ### Para Que Sirve
 
-Mover asistente de una actividad a otra del mismo tipo.
+Pasar un asistente de una actividad a otra del mismo tipo.
 
 ### Donde Entrar
 
@@ -101,9 +106,11 @@ Mover asistente de una actividad a otra del mismo tipo.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Mover un asistente a otra actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar al asistente en la lista y elegir mover.
+2. En **mover a** elegir la actividad de destino (del mismo tipo) y, si se quiere, escribir **observaciones**.
+3. Pulsar **guardar** (o **cancelar**).
 
 ### Errores O Avisos Frecuentes
 
@@ -118,11 +125,11 @@ Mover asistente de una actividad a otra del mismo tipo.
 - Flujo: `asistentes.asistente_mover.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/asistente_mover.md`
 
-## Asistente Plaza Asignar
+## Asignar plaza a varios asistentes
 
 ### Para Que Sirve
 
-Asignar plaza común a varios asistentes seleccionados.
+Asignar una plaza común a varios asistentes marcados a la vez.
 
 ### Donde Entrar
 
@@ -131,9 +138,11 @@ Asignar plaza común a varios asistentes seleccionados.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Asignar plaza a varios asistentes
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de asistentes, marcar los que corresponda.
+2. Elegir asignar plaza y la plaza que se quiere dar.
+3. Confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -150,11 +159,11 @@ Asignar plaza común a varios asistentes seleccionados.
 - Flujo: `asistentes.asistente_plaza_asignar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/asistente_plaza_asignar.md`
 
-## Form Actividades De Una Persona
+## Anotar la asistencia de una persona a una actividad
 
 ### Para Que Sirve
 
-Gestionar asistencias en dossier 1301 (persona).
+Añadir o modificar la asistencia de una persona a una actividad desde su ficha.
 
 ### Donde Entrar
 
@@ -163,9 +172,11 @@ Gestionar asistencias en dossier 1301 (persona).
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Anotar la asistencia de una persona a una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el dossier de actividades de la persona.
+2. Elegir la **actividad** (obligatoria: «debe indicar una actividad»), la **plaza**, quién es **propiedad de** la plaza, **estudios confirmados** y las **observaciones**.
+3. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -183,11 +194,11 @@ Gestionar asistencias en dossier 1301 (persona).
 - Flujo: `asistentes.form_actividades_de_una_persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/form_actividades_de_una_persona.md`
 
-## Form Asistentes A Una Actividad
+## Modificar los datos de un asistente en una actividad
 
 ### Para Que Sirve
 
-Gestionar asistente en dossier 3101 (actividad).
+Editar los datos de un asistente en una actividad (plaza, observaciones, falta, estudios confirmados).
 
 ### Donde Entrar
 
@@ -196,9 +207,11 @@ Gestionar asistente en dossier 3101 (actividad).
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Modificar los datos de un asistente en una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. En «Relación de asistentes», marcar a la persona y pulsar **modificar asistencia** (o **+ n** / **+ agd** para añadir a alguien).
+2. Se abre «Asistente a una actividad» con el nombre y los campos **propio**, **falta**, **estudios confirmados**, **Observaciones actividad**, **Observaciones estudios**, **plaza** (pedida, en espera, asignada o confirmada) y **propiedad de** (la dl dueña de la plaza, con «n de m» plazas).
+3. Pulsar **Guardar datos del asistente**, o **Guardar y añadir otro asistente** para seguir con otra persona.
 
 ### Errores O Avisos Frecuentes
 
@@ -215,11 +228,11 @@ Gestionar asistente en dossier 3101 (actividad).
 - Flujo: `asistentes.form_asistentes_a_una_actividad.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/form_asistentes_a_una_actividad.md`
 
-## Lista Activ Ctr
+## Ver las actividades por centro
 
 ### Para Que Sirve
 
-Ver actividades asistidas agrupadas por centro.
+Ver, centro por centro, las actividades previstas de sus personas.
 
 ### Donde Entrar
 
@@ -229,9 +242,10 @@ Ver actividades asistidas agrupadas por centro.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver las actividades por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el periodo (ver «Elegir centro y periodo») y pulsar **Buscar**.
+2. Para cada centro (por ejemplo «Alimara») aparece una tabla «nombre / actividades previstas» con cada persona y su actividad (por ejemplo «ca n repaso Hostal Rialb (7/8/2026-29/8/2026)-dlb»), «NO HACE CA [pedida]» o «pendiente de solicitar» si aún no tiene.
 
 ### Errores O Avisos Frecuentes
 
@@ -246,11 +260,11 @@ Ver actividades asistidas agrupadas por centro.
 - Flujo: `asistentes.lista_activ_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_activ_ctr.md`
 
-## Lista Asis Conjunto Activ
+## Ver las plazas de varias actividades
 
 ### Para Que Sirve
 
-Listado conjunto de plazas en varias actividades.
+Ver el listado conjunto de plazas y asistentes de varias actividades.
 
 ### Donde Entrar
 
@@ -259,9 +273,10 @@ Listado conjunto de plazas en varias actividades.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver las plazas de varias actividades
 
-1. Revisar manualmente los pasos de esta accion.
+1. Seleccionar las actividades.
+2. Elegir el listado conjunto: se muestran las plazas y asistentes de todas ellas.
 
 ### Errores O Avisos Frecuentes
 
@@ -276,11 +291,11 @@ Listado conjunto de plazas en varias actividades.
 - Flujo: `asistentes.lista_asis_conjunto_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_asis_conjunto_activ.md`
 
-## Lista Asistentes
+## Ver la relación de asistentes de una actividad
 
 ### Para Que Sirve
 
-Consultar listado de asistentes de una actividad.
+Ver la relación de asistentes de una actividad (botones **lista cl** y **lista**).
 
 ### Donde Entrar
 
@@ -289,9 +304,11 @@ Consultar listado de asistentes de una actividad.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver la relación de asistentes de una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la actividad en la lista y pulsar **lista** (nombres) o **lista cl** (con más datos).
+2. Aparece el título de la actividad y «Relación de asistentes» numerada.
+3. **lista**: nombre y dl (o centro) de cada asistente. **lista cl**: además estudios, profesión, edad, eap y observaciones de la actividad.
 
 ### Errores O Avisos Frecuentes
 
@@ -306,11 +323,11 @@ Consultar listado de asistentes de una actividad.
 - Flujo: `asistentes.lista_asistentes.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_asistentes.md`
 
-## Lista Est Ctr
+## Ver los estudios matriculados por centro
 
 ### Para Que Sirve
 
-Ver estudios matriculados por centro.
+Ver, centro por centro, los estudios en los que están matriculadas sus personas.
 
 ### Donde Entrar
 
@@ -320,9 +337,10 @@ Ver estudios matriculados por centro.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver los estudios matriculados por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir los centros y el curso y pulsar **Buscar**.
+2. Debería aparecer, por centro, la lista de personas con sus estudios matriculados (pantalla no comprobada en la instancia).
 
 ### Errores O Avisos Frecuentes
 
@@ -337,11 +355,11 @@ Ver estudios matriculados por centro.
 - Flujo: `asistentes.lista_est_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_est_ctr.md`
 
-## Lista Ultim Que Ctr
+## Preparar el informe de última asistencia
 
 ### Para Que Sirve
 
-Elegir centro para informe de última asistencia.
+Elegir centro y curso para el informe de última asistencia (quién no ha ido al crt o a la cv).
 
 ### Donde Entrar
 
@@ -351,9 +369,11 @@ Elegir centro para informe de última asistencia.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Preparar el informe de última asistencia
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción que interese (este curso o el curso pasado).
+2. Elegir el centro.
+3. Se muestra el informe.
 
 ### Errores O Avisos Frecuentes
 
@@ -368,11 +388,11 @@ Elegir centro para informe de última asistencia.
 - Flujo: `asistentes.lista_ultim_que_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_ultim_que_ctr.md`
 
-## Lista Ultima Activ
+## Consultar quién no ha asistido recientemente
 
 ### Para Que Sirve
 
-Informe de personas s sin asistencia reciente.
+Informe de las personas s que no han asistido recientemente al crt o a la cv.
 
 ### Donde Entrar
 
@@ -382,9 +402,10 @@ Informe de personas s sin asistencia reciente.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar quién no ha asistido recientemente
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la opción **s que no han ido al crt** (o a la **cv**) del curso actual o del anterior.
+2. Se muestra la lista con la fecha de su última asistencia.
 
 ### Errores O Avisos Frecuentes
 
@@ -399,11 +420,11 @@ Informe de personas s sin asistencia reciente.
 - Flujo: `asistentes.lista_ultima_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/lista_ultima_activ.md`
 
-## Que Ctr
+## Elegir centro y periodo
 
 ### Para Que Sirve
 
-Filtrar por centro y periodo antes de listados por centros.
+Elegir de qué centros se quiere ver las actividades de sus personas y en qué periodo.
 
 ### Donde Entrar
 
@@ -413,12 +434,12 @@ Filtrar por centro y periodo antes de listados por centros.
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Elegir centro y periodo
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir «Actividades de personas por centros de la delegación» (pregunta «¿qué centro interesa?»).
+2. Elegir **Todos los numerarios**, **Todos ctr numerarios jóvenes**, **Todos ctr numerarios mayores**, **Todos los agregados**, **Todos los de sss+** u **Otro...** (y entonces el centro concreto).
+3. En «PERIODO DE INICIO O FINALIZACIÓN DE LAS ACTIVIDADES» elegir curso ca, curso crt, todo el año u **otro** (con fechas) y el año.
+4. Pulsar **Buscar** (**Borrar** limpia el formulario). Si el resultado es grande, tarda unos segundos (hasta unos 10 con todos los numerarios y todo el año, lo que se considera aceptable) y muestra «Cargando...».
 
 ### Errores O Avisos Frecuentes
 
@@ -433,11 +454,11 @@ Filtrar por centro y periodo antes de listados por centros.
 - Flujo: `asistentes.que_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/asistentes/flujos/que_ctr.md`
 
-## Tabla Peticiones
+## Ver las otras peticiones de los asistentes
 
 ### Para Que Sirve
 
-Ver peticiones de plaza y mover asistente a actividad preferida.
+Ver las peticiones de plaza de las personas que quieren asistir a la actividad.
 
 ### Donde Entrar
 
@@ -446,9 +467,11 @@ Ver peticiones de plaza y mover asistente a actividad preferida.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver las otras peticiones de los asistentes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la actividad y pulsar **otras peticiones**.
+2. Se muestra el título de la actividad y una tabla «nombre / peticiones (libres/concedidas)» con cada persona que ha pedido plaza y sus otras peticiones.
+3. Si no hay peticiones, la tabla sale vacía.
 
 ### Errores O Avisos Frecuentes
 

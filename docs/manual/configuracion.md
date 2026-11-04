@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## módulo (ficha)
+## Añadir o modificar un módulo
 
 ### Para Que Sirve
 
-Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módulos/apps requeridos) de uno existente.
+Dar de alta un módulo nuevo, o cambiar el nombre, la descripción y las dependencias (módulos y aplicaciones que necesita) de uno existente.
 
 ### Donde Entrar
 
@@ -27,7 +27,16 @@ Dar de alta un módulo nuevo o editar nombre, descripción y dependencias (módu
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Añadir o modificar un módulo
+
+1. En la lista de módulos, pulsar **añadir módulo**, o seleccionar uno y pulsar **modificar**.
+2. Aparece el formulario con los módulos y aplicaciones disponibles. Las aplicaciones que necesitan otros módulos salen marcadas y no se pueden desmarcar.
+3. Rellenar o cambiar el nombre, la descripción y las dependencias (al marcar o desmarcar una casilla, el cambio se guarda al momento).
+4. Pulsar **Guardar cambios** para volver a la lista.
+
+#### Eliminar un módulo
+
+1. Se hace desde la lista de módulos, no desde el formulario (ver «Consultar los módulos definidos»).
 
 ### Errores O Avisos Frecuentes
 
@@ -42,11 +51,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `configuracion.modulos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/configuracion/flujos/modulos.md`
 
-## Definir módulos (listado)
+## Consultar los módulos definidos
 
 ### Para Que Sirve
 
-Consultar los módulos definidos en el esquema y acceder a alta, edición o baja de cada uno.
+Ver los módulos definidos en el esquema y acceder al alta, la modificación o la baja de cada uno.
 
 ### Donde Entrar
 
@@ -56,7 +65,24 @@ Consultar los módulos definidos en el esquema y acceder a alta, edición o baja
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Consultar los módulos definidos
+
+1. Abrir **definir módulos**: aparece la tabla de módulos con sus dependencias.
+
+#### Añadir un módulo
+
+1. Pulsar **añadir módulo** y seguir los pasos de «Añadir o modificar un módulo».
+
+#### Modificar un módulo
+
+1. Seleccionar una sola fila.
+2. Pulsar **modificar**.
+
+#### Eliminar un módulo
+
+1. Seleccionar la fila y pulsar el botón de eliminar.
+2. Confirmar.
+3. La lista se refresca; si no se puede borrar, sale un aviso con el motivo.
 
 ### Errores O Avisos Frecuentes
 
@@ -71,11 +97,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `configuracion.modulos_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/configuracion/flujos/modulos_select.md`
 
-## Configurar parámetros del esquema
+## Ver los parámetros del esquema
 
 ### Para Que Sirve
 
-Consultar y modificar los parámetros globales del esquema (curso escolar, certificados, idioma, ámbito territorial, gestión de calendario, etc.).
+Consultar y cambiar los parámetros generales del esquema: curso escolar, certificados, idioma, ámbito territorial, gestión de calendario, etc.
 
 ### Donde Entrar
 
@@ -85,7 +111,15 @@ Consultar y modificar los parámetros globales del esquema (curso escolar, certi
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver los parámetros del esquema
+
+1. Abrir **config esquema**: aparece un bloque por cada parámetro con su valor actual.
+
+#### Cambiar un parámetro
+
+1. Editar el bloque que interese.
+2. Los periodos del stgr y del crt se escriben como día y mes de inicio y de fin; el resto de parámetros llevan un solo valor (texto, opción o desplegable).
+3. Pulsar **Guardar**: sale el aviso «se ha guardado correctamente».
 
 ### Errores O Avisos Frecuentes
 
@@ -100,11 +134,12 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `configuracion.parametros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/configuracion/flujos/parametros.md`
 
-## Periodo calendario escolar (interno)
+## Cambiar las fechas del curso
 
 ### Para Que Sirve
 
-No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso STGR y CRT (caché en sesión o BD) para que `Periodo` calcule rangos de fechas en listados y filtros de calendario.
+- No hay pantalla de usuario: es un dato interno.
+- Los listados y filtros de calendario usan las fechas de inicio y fin del curso del stgr y del crt para calcular sus periodos.
 
 ### Donde Entrar
 
@@ -113,7 +148,10 @@ No hay pantalla de usuario: el frontend obtiene fechas de inicio/fin de curso ST
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Cambiar las fechas del curso
+
+1. Abrir **config esquema** (ver «Cambiar un parámetro»).
+2. Cambiar el periodo del curso del stgr o del crt y guardar; los listados de calendario usarán las nuevas fechas.
 
 ### Errores O Avisos Frecuentes
 

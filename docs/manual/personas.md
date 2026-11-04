@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "personas"
 flujos: 8
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - personas
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Ver cabecera de persona
+## Ver la ficha de una persona
 
 ### Para Que Sirve
 
-Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por el listado.
+Ver la cabecera y los dossiers de una persona.
 
 ### Donde Entrar
 
@@ -26,7 +26,10 @@ Consultar datos básicos y acceder a la ficha completa o dossiers sin pasar por 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver la ficha de una persona
+
+1. Se muestra el nombre, la delegación y el centro (por ejemplo «dlb - Diagonal»), nacimiento, santo, celebra, profesión, stgr, teléfonos y e-mail, con el enlace **editar**.
+2. Debajo, «Relación de dossiers»: actividades a las que asiste, asignaturas que cursa, cargos en actividades, notas del stgr (tessera), stgr (docencia, certificados, títulos, etc.), traslados y última asistencia. Pulsar uno lo abre.
 
 ### Errores O Avisos Frecuentes
 
@@ -42,11 +45,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.home_persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/home_persona.md`
 
-## Guardar o eliminar persona
+## Guardar los datos personales
 
 ### Para Que Sirve
 
-Guardar cambios en la ficha o eliminar un registro de la propia delegación.
+Guardar o eliminar los datos personales de una persona.
 
 ### Donde Entrar
 
@@ -55,7 +58,11 @@ Guardar cambios en la ficha o eliminar un registro de la propia delegación.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Guardar los datos personales
+
+1. En «DATOS PERSONALES» cambiar los campos necesarios.
+2. Pulsar **Guardar Cambios** (solo si tu rol lo permite).
+3. Si hay un problema el servidor lo avisa con un mensaje.
 
 ### Errores O Avisos Frecuentes
 
@@ -73,11 +80,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/persona.md`
 
-## Publicar persona hacia otra DL
+## Publicar una persona hacia otra dl
 
 ### Para Que Sirve
 
-Compartir temporalmente una persona con otra delegación sin trasladarla.
+Compartir temporalmente una persona con otra delegación, sin trasladarla.
 
 ### Donde Entrar
 
@@ -86,7 +93,11 @@ Compartir temporalmente una persona con otra delegación sin trasladarla.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Publicar una persona hacia otra dl
+
+1. En la lista de personas, seleccionar a la persona y pulsar **publicar**.
+2. Se abre un formulario con su nombre y un desplegable de delegaciones; elegir la delegación destino (es obligatorio).
+3. Guardar. Sale el aviso «persona publicada» y se vuelve a la lista.
 
 ### Errores O Avisos Frecuentes
 
@@ -108,11 +119,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.persona_publicar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/persona_publicar.md`
 
-## Abrir ficha de persona
+## Abrir los datos personales de una persona
 
 ### Para Que Sirve
 
-Crear una persona nueva o editar la ficha existente con los campos del colectivo correspondiente.
+Abrir los datos personales de una persona para consultarlos o cambiarlos, o dar de alta una persona.
 
 ### Donde Entrar
 
@@ -121,7 +132,10 @@ Crear una persona nueva o editar la ficha existente con los campos del colectivo
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Abrir los datos personales de una persona
+
+1. En la ficha pulsar **editar**. Se abre «DATOS PERSONALES» con **Delegación**, **Trato**, **Nombre**, **Apelativo**, **nx1**, **Primer apellido**, **nx2**, **Segundo Apellido**, **Lugar de nacimiento**, **Fecha Nacimiento**, **Situacion**, **Fecha situación**, **Idioma preferido**, **Profesión**, **sacd**, **Stgr**, **eap**, **inc**, **Fecha inc**, **ce**, **Lugar ce**, **Año inicio ce**, **Año fin ce** y **Observaciones**.
+2. Al lado aparece el **Centro-sede**.
 
 ### Errores O Avisos Frecuentes
 
@@ -141,7 +155,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Para Que Sirve
 
-Encontrar personas del colectivo indicado por el menú, revisar resultados y lanzar acciones (ficha, dossiers, STGR, traslado, módulos satélite).
+Buscar personas y trabajar con las que salgan: abrir su ficha, ver sus actividades, notas, tessera, trasladarlas, etc.
 
 ### Donde Entrar
 
@@ -152,7 +166,11 @@ Encontrar personas del colectivo indicado por el menú, revisar resultados y lan
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar y listar personas
+
+1. Abrir «Búsqueda de personas» (por ejemplo «numerarios»). Elegir **realizar una búsqueda exacta** (no / sí) y escribir **Nombre**, **Primer apellido**, **Segundo apellido** o **centro**.
+2. Pulsar **Buscar**: sale «N personas encontradas» con una tabla.
+3. Pulsar el nombre de una persona abre su ficha. Para actuar sobre una o varias, marcarlas y pulsar un botón: **cambio de ctr**, **ver dossiers**, **ficha**, **ver actividades**, **ver tessera**, **modificar stgr**, **imprimir tessera**, **ver notas**, **posibles ca**, **petición ca**, **petición crt**, **plan estudios**, **ficha profesor stgr**, **copiar tessera**, **publicar** o **atención actividades**.
 
 ### Errores O Avisos Frecuentes
 
@@ -169,11 +187,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.personas_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/personas_select.md`
 
-## Guardar nivel STGR
+## Guardar el nivel stgr
 
 ### Para Que Sirve
 
-Actualizar el nivel STGR de una persona del listado.
+Guardar el nivel de estudios (stgr) elegido para una persona.
 
 ### Donde Entrar
 
@@ -182,7 +200,10 @@ Actualizar el nivel STGR de una persona del listado.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Guardar el nivel stgr
+
+1. Elegir el nivel en el desplegable y pulsar **Guardar**.
+2. No sale mensaje: se vuelve a la lista de personas. El nuevo nivel se ve en la ficha de la persona (campo «stgr»).
 
 ### Errores O Avisos Frecuentes
 
@@ -199,11 +220,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.stgr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/stgr.md`
 
-## Cambiar nivel STGR (formulario)
+## Cambiar el nivel stgr de una persona
 
 ### Para Que Sirve
 
-Ver el nivel actual y las opciones disponibles antes de guardar el cambio.
+Abrir el formulario para cambiar el nivel de estudios (stgr) de una persona.
 
 ### Donde Entrar
 
@@ -212,7 +233,11 @@ Ver el nivel actual y las opciones disponibles antes de guardar el cambio.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Cambiar el nivel stgr de una persona
+
+1. Marcar exactamente una persona en la lista y pulsar **modificar stgr**.
+2. Se abre «Cambiar el stgr» con su nombre y el desplegable de niveles: Bienio, Cuadrienio Año I, Cuadrienio Año II-IV, Repaso, centro estudios, Baja temporal, ap, pa, o ad, sin estudios, est. Ecles., bienio-cuadrienio.
+3. Elegir el nivel y pulsar **Guardar** (sigue en el flujo «Guardar nivel stgr»).
 
 ### Errores O Avisos Frecuentes
 
@@ -228,11 +253,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `personas.stgr_cambio.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/personas/flujos/stgr_cambio.md`
 
-## Trasladar persona
+## Trasladar a una persona
 
 ### Para Que Sirve
 
-Mover una persona a otro centro o delegación, documentando fechas y situación.
+Cambiar a una persona de centro o de delegación, con fecha y situación.
 
 ### Donde Entrar
 
@@ -241,7 +266,12 @@ Mover una persona a otro centro o delegación, documentando fechas y situación.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Trasladar a una persona
+
+1. Marcar una persona y pulsar **cambio de ctr**.
+2. Se muestra una tabla Tipo / Origen / Destino / Fecha: en la fila **Centro** (origen, por ejemplo «Diagonal») elegir el centro de destino y la fecha; en la fila **Delegación** (origen, por ejemplo «dlb») elegir la delegación de destino y la fecha.
+3. Elegir la **Situación** (por ejemplo «Alta») y pulsar **Actualizar cambios**.
+4. Las personas de paso publicadas no se pueden trasladar.
 
 ### Errores O Avisos Frecuentes
 

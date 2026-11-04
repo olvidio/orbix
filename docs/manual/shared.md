@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Cargar locales/idiomas
+## Elegir un idioma en un desplegable
 
 ### Para Que Sirve
 
-Obtener la lista de idiomas activos para un desplegable en pantallas que lo necesitan (certificados, preferencias de usuario).
+Cargar la lista de idiomas disponibles para un desplegable, en las pantallas que lo necesitan (certificados y preferencias de usuario).
 
 ### Donde Entrar
 
@@ -27,7 +27,11 @@ Obtener la lista de idiomas activos para un desplegable en pantallas que lo nece
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir un idioma en un desplegable
+
+1. Abrir las preferencias de usuario o un certificado emitido.
+2. El desplegable de idioma se rellena con los idiomas activos.
+3. Elegir el idioma que corresponda.
 
 ### Errores O Avisos Frecuentes
 
@@ -42,21 +46,24 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `shared.locales_posibles.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/locales_posibles.md`
 
-## Persistir registro tabla genérica
+## Guardar o eliminar un registro de una tabla
 
 ### Para Que Sirve
 
-Dar de alta, modificar o eliminar un registro en cualquier tabla mantenida con el patrón `Info*` + repositorio CRUD.
+Dar de alta, modificar o eliminar un registro de cualquier tabla mantenida con la pantalla genérica de mantenimiento.
 
 ### Donde Entrar
 
 - Mantenimiento genérico de tablas (formulario) (frontend/shared/controller/tablaDB_formulario_ver.php)
-- Mantenimiento genérico de tablas (listado) (frontend/shared/controller/tablaDB_lista_ver.php)
 - sin entrada directa; mutación desde listado/formulario cuya ruta depende de `clase_info`.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Guardar o eliminar un registro de una tabla
+
+1. En el formulario, pulsar guardar: se graba el registro nuevo o los cambios del existente.
+2. En la tabla, seleccionar una o varias filas y pulsar **eliminar** para borrarlas.
+3. Algunas tablas tienen reglas propias; por ejemplo, al activar un módulo se crean sus tablas.
 
 ### Errores O Avisos Frecuentes
 
@@ -72,11 +79,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `shared.tablaDB.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/tablaDB.md`
 
-## Búsqueda previa al listado
+## Buscar antes de listar
 
 ### Para Que Sirve
 
-Filtrar registros antes de mostrar la tabla en mantenimientos que definen criterios de búsqueda.
+Filtrar los registros antes de ver la tabla, en los mantenimientos que piden criterios de búsqueda.
 
 ### Donde Entrar
 
@@ -85,7 +92,11 @@ Filtrar registros antes de mostrar la tabla en mantenimientos que definen criter
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar antes de listar
+
+1. Abrir el mantenimiento desde el menú: aparece primero el formulario de criterios.
+2. Rellenar los criterios que interesen.
+3. Pulsar buscar: se muestra la tabla con los registros que cumplen.
 
 ### Errores O Avisos Frecuentes
 
@@ -100,13 +111,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `shared.tablaDB_buscar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/tablaDB_buscar.md`
 
-## Desplegable dependiente
+## Cambiar un campo que condiciona otro
 
 ### Para Que Sirve
 
-- Actualizar las opciones de un campo hijo cuando cambia el valor del campo padre en un formulario `tablaDB` (p.
-- ej.
-- centro → lugar en inventario).
+Actualizar las opciones de un campo cuando cambia el valor de otro del que depende en un formulario de mantenimiento (por ejemplo, al cambiar el centro se actualizan los lugares en inventario).
 
 ### Donde Entrar
 
@@ -115,7 +124,10 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Cambiar un campo que condiciona otro
+
+1. En el formulario, cambiar el desplegable principal (por ejemplo el centro).
+2. El desplegable dependiente (por ejemplo el lugar) se rellena con las opciones válidas para ese valor.
 
 ### Errores O Avisos Frecuentes
 
@@ -130,11 +142,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `shared.tablaDB_depende.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/tablaDB_depende.md`
 
-## Formulario tabla genérica
+## Crear o modificar un registro
 
 ### Para Que Sirve
 
-Crear o modificar un registro en el mantenimiento genérico de tablas.
+Crear o modificar un registro en un mantenimiento genérico de tablas.
 
 ### Donde Entrar
 
@@ -143,7 +155,12 @@ Crear o modificar un registro en el mantenimiento genérico de tablas.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Crear o modificar un registro
+
+1. En la tabla, pulsar **nuevo**, o seleccionar una fila y pulsar **modificar**.
+2. Aparece el formulario con los campos del registro; en una modificación salen con sus valores.
+3. Rellenar los campos; las fechas se comprueban antes de enviar.
+4. Pulsar guardar: se vuelve a la tabla.
 
 ### Errores O Avisos Frecuentes
 
@@ -159,11 +176,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `shared.tablaDB_formulario.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/shared/flujos/tablaDB_formulario.md`
 
-## Listar y mantener tabla genérica
+## Buscar y listar los registros
 
 ### Para Que Sirve
 
-Consultar y mantener registros de tablas de configuración enlazadas desde el menú (asignaturas, ubis, inventario, procesos, etc.) mediante el shell común `tablaDB`.
+Consultar y mantener los registros de tablas de configuración que se abren desde el menú (asignaturas, ubicaciones, inventario, procesos…) con la misma pantalla genérica.
 
 ### Donde Entrar
 
@@ -173,7 +190,16 @@ Consultar y mantener registros de tablas de configuración enlazadas desde el me
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar y listar los registros
+
+1. Abrir la tabla desde el menú.
+2. Si el mantenimiento pide criterios, rellenarlos y pulsar buscar.
+3. Aparece la tabla; se puede ordenar por varias columnas.
+
+#### Añadir, modificar o eliminar un registro
+
+1. Pulsar **nuevo** para añadir, o seleccionar una fila y pulsar **modificar** (ver «Crear o modificar un registro»).
+2. Para eliminar, seleccionar la fila, pulsar **eliminar** y confirmar.
 
 ### Errores O Avisos Frecuentes
 

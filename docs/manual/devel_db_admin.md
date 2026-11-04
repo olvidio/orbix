@@ -324,11 +324,11 @@ Eliminar esquema DL y trasladar datos a resto.
 - Flujo: `devel_db_admin.eliminar_esquema.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/devel_db_admin/flujos/eliminar_esquema.md`
 
-## Migraciones
+## Aplicar las migraciones pendientes
 
 ### Para Que Sirve
 
-Revisar y aplicar migraciones SQL del repositorio.
+Revisar y aplicar las migraciones SQL pendientes de la base de datos (herramienta de desarrollo).
 
 ### Donde Entrar
 
@@ -338,12 +338,12 @@ Revisar y aplicar migraciones SQL del repositorio.
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Aplicar las migraciones pendientes
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Entrar en **actualizar DB**: aparece la lista de migraciones de base de datos.
+2. Revisar las pendientes (las de estructura se ejecutan primero en la base principal y luego en la réplica de lectura).
+3. Pulsar para aplicarlas y esperar a «ejecutando...»; al terminar se reactivan las suscripciones.
+4. Para anotar una como aplicada sin ejecutarla, usar quitar registro.
 
 ### Errores O Avisos Frecuentes
 
@@ -367,7 +367,6 @@ Ejecutar migraciones seleccionadas o hasta prefijo.
 ### Donde Entrar
 
 - Migraciones Ejecutar (frontend/devel_db_admin/controller/migraciones_ejecutar.php)
-- Migraciones Lista (frontend/devel_db_admin/controller/migraciones_lista.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 

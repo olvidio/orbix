@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "encargossacd"
 flujos: 32
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - encargossacd
@@ -13,12 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Comprobaciones Ctr
+## Eliminar encargos de centros inexistentes
 
 ### Para Que Sirve
 
-- Gestiona EncargoComprobacionesCtr.
-- Elimina encargos ligados a centros inactivos y sacd huérfanos (misma lógica que el antiguo frontend/encargossacd/controller/comprobaciones.php).
+Limpiar los encargos ligados a centros que ya no existen.
 
 ### Donde Entrar
 
@@ -28,9 +27,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Eliminar encargos de centros inexistentes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En **comprobaciones** pulsar **Eliminar encargos de centros inexistentes**.
+3. Se borran los encargos de centros inactivos y los que no tienen sacerdote.
 
 ### Errores O Avisos Frecuentes
 
@@ -41,37 +42,26 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.comprobaciones_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/comprobaciones_ctr.md`
 
-## Ctr Ficha
+## Consultar y modificar la ficha de un centro
 
 ### Para Que Sirve
 
-- Gestiona CtrFicha.
-- Datos de la pantalla ctr_ficha: - calcula el filtro_ctr efectivo a partir del centro (cuando no viene del POST) - devuelve las opciones_seccion para el desplegable de grupo de ctrs.
-- Reemplaza la lectura directa de repos y el acceso a EncargoAplicacionService que el frontend hacia en ctr_ficha.php.
-- Mutacion de la ficha de atencion sacerdotal de un centro.
-- Puerto de frontend/encargossacd/controller/ctr_ficha_update.php.
-- Devuelve siempre ['error' => string] (vacio = exito).
-- El controlador HTTP convierte ese resultado en JSON {success, mensaje} (el proxy legacy en frontend/ preserva el contrato "alert(rta_txt)" reemitiendo mensaje).
+Ver y modificar la atención sacerdotal de un centro: sacerdote titular, suplente, colaboradores, dedicación y exigencias.
 
 ### Donde Entrar
 
 - Ctr Ficha (frontend/encargossacd/controller/ctr_ficha.php)
-- Ctr Ficha Update (frontend/encargossacd/controller/ctr_ficha_update.php)
 - **Legacy:** dre > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Consultar y modificar la ficha de un centro
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Obtener Datos
-
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ficha ctr**.
+2. Elegir el **grupo de ctrs** (sv, sf, sss+, igl, cgi/oc…) y luego el **centro**.
+3. Se abre la ficha con el **sacd titular**, el **Suplente**, los colaboradores, la dedicación (mañanas, tarde 1ª y 2ª hora), las exigencias del centro y las observaciones.
+4. Cambiar lo que proceda y pulsar **guardar**. Si titular y suplente son el mismo sacerdote avisa «El sacd titular y suplente deben ser distintos»; no se guarda hasta corregirlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -87,14 +77,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.ctr_ficha.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/ctr_ficha.md`
 
-## Ctr Get Ficha
+## Abrir la ficha de un centro
 
 ### Para Que Sirve
 
-- Gestiona CtrGetFicha.
-- Lectura de la ficha de atencion sacerdotal de un centro.
-- Puerto del antiguo frontend/encargossacd/controller/ctr_get_ficha.php.
-- Devuelve arrays planos/estructurados para que el controlador frontend arme frontend\shared\web\Desplegable y la HTML sin instanciar nada de src\.
+Cargar la ficha de atención sacerdotal del centro elegido.
 
 ### Donde Entrar
 
@@ -104,9 +91,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir la ficha de un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha ctr**, elegir el grupo y el centro.
+2. La ficha aparece como «Atención ctr (nombre del centro)» con **sacd titular**, casilla **cl**, **dedicación** (mañanas, tarde 1ª hora, tarde 2ª hora), **Suplente**, colaboradores, **observaciones** y **exigencias del ctr**. En **Selección de sacd** las casillas **prelatura** y **sss+** limitan qué sacerdotes salen en las listas.
+3. Para añadir un colaborador, pulsar **añadir sacd colaborador**; para fijar horas, **crear horario**.
 
 ### Errores O Avisos Frecuentes
 
@@ -122,27 +111,24 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.ctr_get_ficha.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/ctr_get_ficha.md`
 
-## Ctr Get Select
+## Elegir un centro
 
 ### Para Que Sirve
 
-- Gestiona EncargoCtrSelect.
-- Payload JSON para el desplegable de centros segun filtro (y zona opcional).
-- Devuelve el contrato estandar definido en refactor.md (id, name, opciones, selected, blanco, val_blanco, action) para que el frontend monte el <select> con fnjs_construir_desplegable (o el modelo frontend/encargossacd/model/DesplCentros).
-- Importante: esta clase vive en capa application y por tanto **no** puede instanciar frontend\shared\web\Desplegable (ver refactor.md).
+Rellenar el desplegable de centros según el grupo elegido.
 
 ### Donde Entrar
 
 - Ctr Ficha (frontend/encargossacd/controller/ctr_ficha.php)
-- Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha ctr**, elegir el **grupo de ctrs**.
+2. El desplegable **centro** se rellena con los centros de ese grupo; elegir uno.
 
 ### Errores O Avisos Frecuentes
 
@@ -153,13 +139,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.ctr_get_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/ctr_get_select.md`
 
-## Encargo Horario Select
+## Consultar los horarios de un encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoHorarioSelect.
-- Datos para la lista de horarios de un encargo (encargo_horario_select).
-- Se devuelven ya precalculados el texto descriptivo del horario y las fechas formateadas para que el frontend solo arme frontend\shared\web\Lista.
+Ver los horarios de un encargo y añadir otro.
 
 ### Donde Entrar
 
@@ -169,9 +153,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar los horarios de un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo.
+2. Aparece la lista **horario de** el encargo.
+3. Pulsar **añadir horario** para crear uno nuevo, o un horario para modificarlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -182,12 +168,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.encargo_horario_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/encargo_horario_select.md`
 
-## Encargo Lst Tipo Enc
+## Elegir el tipo de encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoLstTipoEnc.
-- Payload de desplegable de tipos de encargo filtrados por prefijo de grupo (id_tipo_enc ~ ^grupo).
+Ofrecer los tipos de encargo que corresponden al grupo elegido.
 
 ### Donde Entrar
 
@@ -197,9 +182,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir el tipo de encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, elegir el **grupo**.
+2. El desplegable **tipo encargo** muestra solo los tipos de ese grupo.
 
 ### Errores O Avisos Frecuentes
 
@@ -210,13 +196,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.encargo_lst_tipo_enc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/encargo_lst_tipo_enc.md`
 
-## Encargo Select
+## Buscar un encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoSelect.
-- Datos para la lista de encargos (encargo_select).
-- El frontend construye la frontend\shared\web\Lista y los enlaces; aqui devolvemos unicamente los datos planos de cada fila.
+Buscar los encargos existentes y acceder a su ficha, o crear uno nuevo.
 
 ### Donde Entrar
 
@@ -226,9 +210,16 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ver encargo**.
+2. Rellenar los criterios de **buscar un encargo** y pulsar **buscar**.
+3. Pulsar el encargo en la tabla para abrirlo (o usar **Buscar en todas las columnas**).
+
+#### Crear un encargo
+
+1. Pulsar **añadir encargo**.
+2. Rellenar el formulario (ver «Modificar un encargo») y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -239,39 +230,35 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.encargo_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/encargo_select.md`
 
-## Encargo Ver
+## Modificar un encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoVer.
-- Alta de encargo desde el formulario de encargo_ver (antes encargo_ajax.php que=nuevo).
-- Borrado desde lista encargo_select (antes encargo_ajax.php que=eliminar).
-- Datos para la pantalla encargo_ver (nuevo / editar encargo).
-- El frontend arma los frontend\shared\web\Desplegable a partir de los arrays devueltos.
+Crear, ver, modificar o eliminar un encargo (atención de un centro, zona, etc.).
 
 ### Donde Entrar
 
-- Encargo Select (frontend/encargossacd/controller/encargo_select.php)
 - Encargo Ver (frontend/encargossacd/controller/encargo_ver.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Crear
+#### Modificar un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo desde **ver encargo**.
+2. Cambiar el **grupo**, el **tipo encargo**, el **centro** o la **zona**, el **lugar**, la **descripción** y el **idioma**.
+3. Pulsar **modificar encargo**.
 
-#### Eliminar
+#### Crear un encargo nuevo
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En **ver encargo** pulsar **añadir encargo**.
+2. Elegir el **tipo de encargo** («escoger el tipo de encargo»), el centro o zona y la descripción.
+3. Pulsar **nuevo encargo** (o **generar**).
 
-#### Obtener Datos
+#### Eliminar un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la tabla de encargos, marcar el encargo y eliminarlo; confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -287,12 +274,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.encargo_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/encargo_ver.md`
 
-## Encargo Ver Editar
+## Guardar los cambios de un encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoVerEditar.
-- Actualización de encargo desde encargo_ver (antes encargo_ajax.php que=editar).
+Guardar los cambios hechos en un encargo.
 
 ### Donde Entrar
 
@@ -302,9 +288,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar los cambios de un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Modificar los campos del encargo.
+2. Pulsar **modificar encargo**.
 
 ### Errores O Avisos Frecuentes
 
@@ -317,12 +304,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.encargo_ver_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/encargo_ver_editar.md`
 
-## Horario Sacd Update
+## Guardar un horario de sacerdote
 
 ### Para Que Sirve
 
-- Gestiona EncargoSacdHorario.
-- Alta/edición/baja de horario de encargo sacd (encargo_sacd_horario).
+Guardar, modificar o quitar el horario de un sacerdote en un encargo.
 
 ### Donde Entrar
 
@@ -332,9 +318,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Guardar un horario de sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el horario y pulsar **guardar horario**.
+2. Para borrarlo, **eliminar horario** y confirmar «¿Está seguro que desea borrar este horario?».
 
 ### Errores O Avisos Frecuentes
 
@@ -348,12 +335,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.horario_sacd_update.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/horario_sacd_update.md`
 
-## Horario Sacd Ver
+## Crear o modificar el horario de un sacerdote
 
 ### Para Que Sirve
 
-- Gestiona EncargoSacdHorarioVer.
-- Datos del formulario horario sacd (ficha tareas).
+Ver el formulario de horario de un sacerdote en un encargo, con excepciones antes o después de una fecha.
 
 ### Donde Entrar
 
@@ -363,9 +349,12 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Crear o modificar el horario de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha, pulsar **crear horario**.
+2. Indicar **dia**, **hora inicio**, **hora fin** y el periodo (**activo desde** / **hasta**).
+3. Se pueden **añadir horario** y **generar excepciones** (antes del / después del).
+4. Pulsar **guardar horario**; **eliminar horario** pide confirmación.
 
 ### Errores O Avisos Frecuentes
 
@@ -376,12 +365,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.horario_sacd_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/horario_sacd_ver.md`
 
-## Horario Update
+## Guardar un horario de encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoHorario.
-- Alta/edición/baja de horario de encargo (tabla encargo_horario).
+Guardar, modificar o quitar un horario de un encargo.
 
 ### Donde Entrar
 
@@ -391,9 +379,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Guardar un horario de encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar día, horas y periodo.
+2. Pulsar guardar. Para quitarlo, usar eliminar y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -407,12 +396,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.horario_update.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/horario_update.md`
 
-## Horario Ver
+## Ver o crear un horario de encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoHorarioVer.
-- Datos del formulario de horario de encargo (no sacd).
+Ver el formulario de horario de un encargo (días, horas, nº de sacerdotes, periodo de vigencia).
 
 ### Donde Entrar
 
@@ -422,9 +410,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver o crear un horario de encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de horarios, pulsar **añadir horario** o un horario existente.
+2. Indicar **dia**, **hora inicio**, **hora fin**, **nº de sacd** y el periodo (**activo desde** / **hasta**).
 
 ### Errores O Avisos Frecuentes
 
@@ -435,14 +424,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.horario_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/horario_ver.md`
 
-## Listas A
+## Listar la atención de los centros
 
 ### Para Que Sirve
 
-- Gestiona ListasA.
-- Genera el listado de atencion SACD "a" (cr 9/05, Anexo2, 9.4 a).
-- Sustituye la logica que habia en frontend/encargossacd/controller/listas_a.php.
-- Devuelve el HTML completo junto con los textos de cabecera, listos para inyectarlos en la vista listas.phtml.
+Sacar el listado de atención de centros de sv y sf (cr 1/14, 10,a).
 
 ### Donde Entrar
 
@@ -452,9 +438,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar la atención de los centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En «listados de encargos para cr» elegir **atención ctr sv** o **atención ctr sf**.
+3. Se muestra el listado, listo para imprimir: cabecera con el **Curso** (por ejemplo 1/9/2026 - 31/8/2027), «dlb» y la referencia «ref. cr 1/14, 10, a)»; luego «1. ctr de n» con cada centro y sus sacerdotes. Si un sacerdote asignado ya no existe, el listado lo dice («No encuentro a nadie con id_nom: …»); hay que corregir ese encargo.
 
 ### Errores O Avisos Frecuentes
 
@@ -465,13 +453,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_a.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_a.md`
 
-## Listas B
+## Listar la atención de iglesias, oc y lp
 
 ### Para Que Sirve
 
-- Gestiona ListasB.
-- Genera el listado de atencion SACD "b" (cr 9/05, Anexo2, 9.4 b).
-- Sustituye la logica de frontend/encargossacd/controller/listas_b.php.
+Sacar el listado de atención de iglesias, obras corporativas y lugares de paso (cr 1/14, 10,b).
 
 ### Donde Entrar
 
@@ -481,9 +467,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar la atención de iglesias, oc y lp
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **atención iglesias, oc y lp** (o **oc y lp sf**).
+3. Se muestra el listado.
 
 ### Errores O Avisos Frecuentes
 
@@ -494,13 +482,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_b.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_b.md`
 
-## Listas C
+## Listar los encargos por sacerdote
 
 ### Para Que Sirve
 
-- Gestiona ListasC.
-- Genera el listado de atencion SACD "c" (cr 9/05, Anexo2, 9.4 c).
-- Sustituye la logica de frontend/encargossacd/controller/listas_c.php.
+Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 
 ### Donde Entrar
 
@@ -510,9 +496,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar los encargos por sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **por sacd**.
+3. Se muestra cada sacerdote (agrupados por ciudad) con sus encargos y la dedicación entre paréntesis, por ejemplo «cl de: Raset (1 tarde 2ª hora)», «atención de: Ribalera (2 tarde 1ª hora)», estudio o descanso.
 
 ### Errores O Avisos Frecuentes
 
@@ -528,14 +516,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_c.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_c.md`
 
-## Listas Cl
+## Listar los centros de la sss+
 
 ### Para Que Sirve
 
-- Gestiona ListasCl.
-- Listado de cl para cr, restringido a los centros de la sss+.
-- Sustituye la logica de frontend/encargossacd/controller/listas_cl.php (era una plantilla con SQL crudo).
-- Devuelve el HTML completo listo para volcarlo al cliente; el frontend se limita a pasar sf y a echo del resultado.
+Sacar el listado de los centros de la sss+ (cr 1/14, 10,c).
 
 ### Donde Entrar
 
@@ -545,9 +530,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar los centros de la sss+
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **cl sss+**.
+3. Se muestra el listado.
 
 ### Errores O Avisos Frecuentes
 
@@ -558,15 +545,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_cl.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_cl.md`
 
-## Listas Com Ctr
+## Preparar la comunicación a los centros
 
 ### Para Que Sirve
 
-- Gestiona ListasComCtr.
-- Datos para la comunicacion a los centros.
-- Sustituye la logica de frontend/encargossacd/controller/listas_com_ctr.php.
-- El modelo de salida replica el consumido por la vista listas_com_ctr.phtml: - array_atn_sacd[nombre_ubi] con titular, suplente, colaboradores y el texto de comunicacion traducido al idioma del idioma actual.
-- - origen_txt cabecera de emisor y lugar_fecha pie.
+Preparar el escrito que se envía a cada centro con su sacerdote titular, suplente y colaboradores.
 
 ### Donde Entrar
 
@@ -576,9 +559,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Preparar la comunicación a los centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **comunicación a los centros sv** (o **sf**).
+3. Aparece un escrito por centro con **titular**, **suplente** y **colaboradores**, en el idioma del centro, con cabecera y lugar/fecha (por ejemplo «Barcelona, 3.11.2026»). El curso que aparece en el texto («para el curso …») se calcula solo, según la fecha de hoy (el curso empieza en septiembre); el resto del texto se cambia en **modificar los textos de las comunicaciones**.
 
 ### Errores O Avisos Frecuentes
 
@@ -589,13 +574,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_com_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_com_ctr.md`
 
-## Listas Com Sacd
+## Preparar la comunicación a los sacerdotes
 
 ### Para Que Sirve
 
-- Gestiona ListasComSacd.
-- Datos para la comunicacion a los SACD.
-- Sustituye la logica de frontend/encargossacd/controller/listas_com_sacd.php.
+Preparar el escrito que se envía a cada sacerdote con sus encargos.
 
 ### Donde Entrar
 
@@ -605,9 +588,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Preparar la comunicación a los sacerdotes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **comunicación a sacd Prelatura** o **comunicación a sacd sss+**.
+3. Aparece un escrito por sacerdote (en el idioma configurado, por ejemplo catalán) con la relación de sus labores y la dedicación prevista (marcando si es **coordinador**). Es una salida muy larga: un escrito por cada sacerdote.
 
 ### Errores O Avisos Frecuentes
 
@@ -618,43 +603,25 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_com_sacd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_com_sacd.md`
 
-## Listas Com Txt
+## Modificar los textos de las comunicaciones
 
 ### Para Que Sirve
 
-- Gestiona ListasComTxt, ListasComTxtGet.
-- Datos para la pantalla de textos de comunicacion (frontend/encargossacd/controller/listas_com_txt.php).
-- Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (com_sacd / es).
-- Lectura del texto de comunicacion para un par (clave, idioma).
-- Extraido de EncargoTextoListasComAjax (rama que=get_texto) para eliminar el dispatcher multiproposito (criterio refactor.md).
-- Mutacion del texto de comunicacion para un par (clave, idioma).
-- Si el texto llega vacio, se elimina la fila.
-- Extraido de EncargoTextoListasComAjax (rama que=update) para eliminar el dispatcher multiproposito (criterio refactor.md).
+Modificar los textos fijos que llevan las comunicaciones, por idioma.
 
 ### Donde Entrar
 
 - Listas Com Txt (frontend/encargossacd/controller/listas_com_txt.php)
-- Listas Com Txt Get (frontend/encargossacd/controller/listas_com_txt_get.php)
-- Listas Com Txt Update (frontend/encargossacd/controller/listas_com_txt_update.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Modificar los textos de las comunicaciones
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Obtener
-
-1. Revisar manualmente los pasos de esta accion.
-
-#### Obtener Datos
-
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados** y elegir **modificar los textos de las comunicaciones**.
+2. Elegir el tipo de texto y el idioma.
+3. Editar el texto y pulsar **guardar**. Si se deja vacío, se elimina.
 
 ### Errores O Avisos Frecuentes
 
@@ -665,14 +632,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_com_txt.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_com_txt.md`
 
-## Listas D
+## Listar la tabla por sacerdote
 
 ### Para Que Sirve
 
-- Gestiona ListasD.
-- Genera el listado "d" de atencion SACD (cr 9/20, 10).
-- Sustituye la logica de frontend/encargossacd/controller/listas_d.php.
-- La vista original devolvia dos tablas HTML sueltas (cabecera + listado); aqui se componen ambas en Html para que el frontend solo tenga que volcarlas al cliente.
+Sacar la tabla por sacerdote (cr 9/20, 10), para sv o sf.
 
 ### Donde Entrar
 
@@ -682,9 +646,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar la tabla por sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. Elegir **tabla por sacd** o **tabla por sacd sf**.
+3. Se muestra, por sacerdote y ciudad, la lista de centros con el nº de horas (por ejemplo Raset 3, Moneders 5), incluidos estudio y descanso.
 
 ### Errores O Avisos Frecuentes
 
@@ -700,13 +666,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_d.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_d.md`
 
-## Listas Exigencia Ctr
+## Listar las exigencias de los centros
 
 ### Para Que Sirve
 
-- Gestiona ListasExigenciaCtr.
-- Listado de exigencias SACD por centro/iglesia.
-- Sustituye la logica de frontend/encargossacd/controller/listas_exigencia_ctr.php.
+Sacar el listado de las exigencias de atención sacerdotal de cada centro o iglesia.
 
 ### Donde Entrar
 
@@ -716,9 +680,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Listar las exigencias de los centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **listados**.
+2. En «listados comunicaciones» elegir **exigencias ctr sv**, **exigencias ctr sf** o **exigencias igl, oc…**.
+3. Se muestra, por centro o iglesia, quién es el encargado, rector o sacerdotes y las horas exigidas por franja, por ejemplo «(4 mañana, 2 tarde 1ª hora)».
 
 ### Errores O Avisos Frecuentes
 
@@ -729,11 +695,12 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `encargossacd.listas_exigencia_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_exigencia_ctr.md`
 
-## Propuestas Lista
+## Ver la lista de propuestas
 
 ### Para Que Sirve
 
-Filtrar centros, ver encargos propuestos y cambiar SACD titular/suplente/colaborador o dedicación m/t/v antes de aprobar.
+- Filtrar por centro, ver los encargos propuestos y cambiar el sacd titular, suplente o colaborador, o su dedicación (mañanas, tardes, vespertino), antes de aprobar las propuestas.
+- (Redactado desde el código; no contrastado con la pantalla.).
 
 ### Donde Entrar
 
@@ -743,22 +710,22 @@ Filtrar centros, ver encargos propuestos y cambiar SACD titular/suplente/colabor
 
 ### Tareas Habituales
 
-#### Obtener lista
+#### Ver la lista de propuestas
 
-1. Carga opciones de sección (`opciones_seccion_data`).
-2. Al cambiar `filtro_ctr` o al recargar: `que=get_lista` vía FE ajax.
-3. Inyecta HTML en `#lista` o alert del mensaje de error.
+1. Abrir **modificar propuestas** desde el menú de propuestas.
+2. Elegir la sección y, si se quiere, filtrar por centro; la lista se actualiza sola.
+3. Si algo falla, sale un aviso con el mensaje.
 
-#### Asignar / cambiar SACD
+#### Asignar o cambiar el sacd de un encargo
 
-1. Click en nombre → `lista_sacd` (desplegable).
-2. Cambio en desplegable → `cmb_sacd` (alta/update/borrar colaborador vacío).
-3. Actualiza fila o cierra popup.
+1. Pulsar el nombre del sacd de un encargo: se abre un desplegable.
+2. Elegir el sacd. Si se deja un colaborador en blanco, se borra.
+3. La fila se actualiza y el desplegable se cierra.
 
-#### Info / dedicación
+#### Ver el detalle o cambiar la dedicación
 
-1. `info` o `dedicacion` abren popup HTML.
-2. Guardar horario: `dedicacion_update` y refresca lista.
+1. Pulsar la información o la dedicación de un encargo: se abre una ventana.
+2. Para cambiar el horario, modificarlo y guardar; la lista se refresca.
 
 ### Errores O Avisos Frecuentes
 
@@ -772,11 +739,12 @@ Filtrar centros, ver encargos propuestos y cambiar SACD titular/suplente/colabor
 - Flujo: `encargossacd.propuestas_lista.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista.md`
 
-## Propuestas Lista Enc
+## Ver las propuestas por encargos
 
 ### Para Que Sirve
 
-Ver el estado de las propuestas por encargos tras (o durante) la edición staging.
+- Ver cómo van las propuestas, por encargos, después (o durante) la edición.
+- (Redactado desde el código; no contrastado con la pantalla.).
 
 ### Donde Entrar
 
@@ -786,10 +754,11 @@ Ver el estado de las propuestas por encargos tras (o durante) la edición stagin
 
 ### Tareas Habituales
 
-#### Obtener datos
+#### Ver las propuestas por encargos
 
-1. FE llama `propuestas_lista_enc_data` con `filtro_ctr` (opcional).
-2. Si `error` → echo del mensaje; si no → echo de `html`.
+1. Abrir **listado propuestas por encargos**.
+2. Si se quiere, filtrar por centro.
+3. Se muestra el listado. Si todavía no se ha creado la tabla de propuestas, avisa «Debe crear la tabla de propuestas».
 
 ### Errores O Avisos Frecuentes
 
@@ -800,11 +769,12 @@ Ver el estado de las propuestas por encargos tras (o durante) la edición stagin
 - Flujo: `encargossacd.propuestas_lista_enc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista_enc.md`
 
-## Propuestas Lista Sacd
+## Ver las propuestas por sacd
 
 ### Para Que Sirve
 
-Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API también `sssc`).
+- Revisar, e imprimir si hace falta, los encargos propuestos para cada sacd.
+- (Redactado desde el código; no contrastado con la pantalla.).
 
 ### Donde Entrar
 
@@ -814,10 +784,10 @@ Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API t
 
 ### Tareas Habituales
 
-#### Obtener datos
+#### Ver las propuestas por sacd
 
-1. FE pasa `sel` a `propuestas_lista_sacd_data`.
-2. Renderiza `propuestas_lista_sacd.phtml` con `array_modo`.
+1. Abrir **listado propuestas por sacd**.
+2. Se muestra, por cada sacd, la lista de encargos propuestos, lista para imprimir.
 
 ### Errores O Avisos Frecuentes
 
@@ -828,11 +798,12 @@ Revisar/imprimir encargos propuestos de cada SACD (`sel=nagd` desde menú; API t
 - Flujo: `encargossacd.propuestas_lista_sacd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_lista_sacd.md`
 
-## Propuestas Menu
+## Crear la tabla de propuestas
 
 ### Para Que Sirve
 
-Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la edición / listados de propuestas.
+- Desde la pantalla de propuestas: volver a crear la tabla de trabajo, aprobar los cambios y pasarlos a los datos reales, o abrir la edición y los listados de propuestas.
+- (Redactado desde el código; no contrastado con la pantalla.).
 
 ### Donde Entrar
 
@@ -842,21 +813,21 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 
 ### Tareas Habituales
 
-#### Crear tabla staging
+#### Crear la tabla de propuestas
 
-1. Confirm JS («Elimina la tabla…»).
-2. POST a FE `propuestas_ajax.php?que=crear_tabla` → API `propuestas_ajax`.
-3. Alert si `success !== true`.
+1. Pulsar la opción para crear la tabla de propuestas.
+2. Confirmar el aviso: elimina la tabla anterior y la crea de nuevo.
+3. Si no se ha podido crear, sale un aviso.
 
-#### Aprobar propuestas
+#### Aprobar las propuestas
 
-1. Confirm JS (aviso de ~30 s e irreversibilidad).
-2. Carga FE `propuestas_aprobar.php` → API `propuestas_aprobar`.
-3. Muestra texto «Hecho!» en `#main`.
+1. Pulsar **aprobar**.
+2. Leer y confirmar el aviso: tarda unos 30 segundos y no se puede deshacer.
+3. Al terminar aparece «Hecho!».
 
-#### Navegar a modificar / listados
+#### Abrir la edición o los listados
 
-1. `fnjs_update_div` hacia `propuestas_lista`, `propuestas_lista_sacd` o `propuestas_lista_enc`.
+1. Elegir **modificar propuestas**, **listado propuestas por sacd** o **listado propuestas por encargos**; se abre en la misma ventana.
 
 ### Errores O Avisos Frecuentes
 
@@ -868,28 +839,25 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.propuestas_menu.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/propuestas_menu.md`
 
-## Sacd Ausencias
+## Guardar las ausencias de un sacerdote
 
 ### Para Que Sirve
 
-- Gestiona SacdAusencias.
-- Guarda/modifica las ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_update.php).
-- Devuelve ['error' => bool, 'mensajes' => string] donde mensajes acumula los errores de guardado/eliminacion para mostrar al usuario.
+Guardar o modificar las ausencias y otras tareas de un sacerdote.
 
 ### Donde Entrar
 
-- Sacd Ausencias Update (frontend/encargossacd/controller/sacd_ausencias_update.php)
+- Sacd Ausencias (frontend/encargossacd/controller/sacd_ausencias.php)
 - **Legacy:** dre > ausencias > sacd
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Guardar las ausencias de un sacerdote
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Elegir el tipo y el sacd.
+2. Rellenar fechas de inicio y fin y el tipo de ausencia; para borrar una, dejar las dos fechas en blanco.
+3. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -900,14 +868,11 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.sacd_ausencias.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/sacd_ausencias.md`
 
-## Sacd Ausencias Get
+## Anotar una ausencia
 
 ### Para Que Sirve
 
-- Gestiona SacdAusenciasGet.
-- Datos para la ficha de ausencias de un SACD (frontend/encargossacd/controller/sacd_ausencias_get.php).
-- Devuelve la lista de tipos de ausencia disponibles (encargos con prefijo 7/4) y las filas asociadas al SACD.
-- Con historial=1 incluye todas las ausencias; sin historial solo muestra las que aun tienen vigencia.
+Ver y anotar las ausencias o actividades personales de un sacerdote.
 
 ### Donde Entrar
 
@@ -917,9 +882,13 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Anotar una ausencia
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ausencias > sacd**.
+2. Elegir el **tipo** y el **sacd**.
+3. En **ausencias/tareas** (columnas **fechas** y **horario**), elegir en **añadir actividades personales** el tipo (Clases del stgr, Ausencia, cv de un dia, 1ª Confesiones, boda, confirmación, 1ª comunión, bautizo, Tarea, rtm): aparece una fila con **inicio** y **fin** (al poner el inicio, el fin se rellena con la misma fecha). Con **ver anteriores** se ve el historial.
+4. Pulsar **Guardar**; la pantalla vuelve atrás sola. Para borrar una, dejar en blanco la fecha de inicio y la de fin.
+5. **añadir actividades personales** y **crear horario** permiten añadir otras tareas.
 
 ### Errores O Avisos Frecuentes
 
@@ -930,14 +899,11 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.sacd_ausencias_get.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/sacd_ausencias_get.md`
 
-## Sacd Ausencias Jefe Zona
+## Anotar ausencias de los sacerdotes de la zona
 
 ### Para Que Sirve
 
-- Gestiona SacdAusenciasJefeZona.
-- Datos para el listado de SACDs susceptibles de gestionar ausencias desde la ficha de jefe de zona (frontend/encargossacd/controller/sacd_ausencias_jefe_zona.php).
-- Recopila los SACDs de la(s) zona(s) del jefe y, cuando corresponde (Oficial_dl o jefe de calendario), la totalidad de SACDs activos.
-- El array se devuelve ordenado por iniciales para alimentar el desplegable.
+Que el jefe de zona anote las ausencias de los sacerdotes de su zona.
 
 ### Donde Entrar
 
@@ -947,9 +913,11 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Anotar ausencias de los sacerdotes de la zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Ausencias**.
+2. Elegir el **sacd** de la lista (los de la zona del jefe; el oficial de la dl ve todos).
+3. Rellenar sus ausencias como en «Anotar una ausencia».
 
 ### Errores O Avisos Frecuentes
 
@@ -960,34 +928,27 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.sacd_ausencias_jefe_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/sacd_ausencias_jefe_zona.md`
 
-## Sacd Ficha
+## Consultar y modificar la ficha de un sacerdote
 
 ### Para Que Sirve
 
-- Gestiona SacdFicha.
-- Datos para la ficha de encargos de un SACD (sacd_ficha_ajax?que=ficha).
-- Porta la lectura del antiguo controlador frontend y devuelve un payload estructurado con los encargos y sus dedicaciones (horario del centro y del SACD ya calculadas como texto cuando mod_horario=3).
-- Mutacion de la ficha de encargos de un SACD (sacd_ficha_ajax?que=update).
-- Porta la logica del antiguo controlador frontend, haciendo la misma actualizacion de dedicaciones por modulo y de observaciones.
+Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 
 ### Donde Entrar
 
-- Sacd Ficha Ajax (frontend/encargossacd/controller/sacd_ficha_ajax.php)
+- Sacd Ficha (frontend/encargossacd/controller/sacd_ficha.php)
 - **Legacy:** dre > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Consultar y modificar la ficha de un sacerdote
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Obtener Datos
-
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **ficha sacd**; la pantalla se titula «fase real».
+2. Elegir el **tipo** (n, agd, sss+, cp) y luego el sacerdote en **Sacd:**.
+3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial dre»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
+4. Para añadir otro encargo, elegir en **añadir encargo** (estudio, descanso, retiro, otros).
+5. Escribir o cambiar las **observaciones** si hace falta y pulsar **Guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -1006,12 +967,11 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.sacd_ficha.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/sacd_ficha.md`
 
-## Sacd Select
+## Elegir un sacerdote
 
 ### Para Que Sirve
 
-- Gestiona SacdSelect.
-- Opciones para el desplegable de SACDs filtrados por tabla (sacd_ficha_ajax?que=get_select).
+Rellenar el desplegable de sacerdotes según el tipo elegido.
 
 ### Donde Entrar
 
@@ -1021,9 +981,10 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **ficha sacd** o **ausencias**, elegir el **tipo**.
+2. El desplegable **sacd** se rellena con los sacerdotes de ese tipo; elegir uno.
 
 ### Errores O Avisos Frecuentes
 
@@ -1034,13 +995,11 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 - Flujo: `encargossacd.sacd_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/sacd_select.md`
 
-## Zonas Get Select
+## Elegir la zona de un encargo
 
 ### Para Que Sirve
 
-- Gestiona EncargoZonasSelect.
-- Payload JSON para el desplegable de zonas (grupo «zonas misas»).
-- Devuelve el contrato estandar definido en refactor.md, sin instanciar frontend\shared\web\Desplegable (responsabilidad exclusiva del frontend).
+Ofrecer las zonas de misas al crear o editar un encargo.
 
 ### Donde Entrar
 
@@ -1050,9 +1009,10 @@ Desde el hub: regenerar tabla staging, aprobar cambios a producción, o abrir la
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la zona de un encargo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de encargo, abrir **zona**.
+2. Elegir una de las zonas de misas.
 
 ### Errores O Avisos Frecuentes
 

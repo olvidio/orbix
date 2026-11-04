@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "procesos"
 flujos: 17
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - procesos
@@ -13,35 +13,26 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Actividad Proceso
+## Ver y avanzar el proceso de una actividad
 
 ### Para Que Sirve
 
-Consulta y edición del proceso de una actividad: ver tareas por fase, marcar completado, guardar observaciones y actualizar el estado de cada tarea.
+Ver y avanzar las fases del proceso de una actividad (tareas completadas, observaciones).
 
 ### Donde Entrar
 
 - Actividad Proceso (frontend/procesos/controller/actividad_proceso.php)
-- Actividad Proceso Get (frontend/procesos/controller/actividad_proceso_get.php)
 - **Legacy:** sin entrada de menú en el índice
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Ver y avanzar el proceso de una actividad
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Obtener
-
-1. Revisar manualmente los pasos de esta accion.
-
-#### Obtener Datos
-
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la actividad y pulsar **proceso**.
+2. Se muestra el título, el enlace **(dossiers)** y «Fases de la actividad», con la opción **forzar** y una fila por fase y tarea.
+3. Marcar las tareas hechas, escribir observaciones y guardar.
+4. Si el proceso de la actividad no se ha generado bien, aparece un error del tipo «La fase del proceso tipo: 6, fase: 2, tarea: 0»; los procesos se generan al crear la actividad, así que este error indica un dato incompleto de esa actividad; en ese caso hay que regenerar el proceso.
 
 ### Errores O Avisos Frecuentes
 
@@ -58,11 +49,11 @@ Consulta y edición del proceso de una actividad: ver tareas por fase, marcar co
 - Flujo: `procesos.actividad_proceso.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/actividad_proceso.md`
 
-## Actividad Proceso Generar
+## Regenerar el proceso de una actividad
 
 ### Para Que Sirve
 
-Regenerar las tareas del proceso asociado a una actividad, conservando o no el estado actual según el flag «forzar».
+Regenerar las tareas del proceso de una actividad, conservando o no su estado actual.
 
 ### Donde Entrar
 
@@ -72,9 +63,11 @@ Regenerar las tareas del proceso asociado a una actividad, conservando o no el e
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Regenerar el proceso de una actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la actividad y su pestaña de proceso.
+2. Pulsar regenerar.
+3. Marcar «forzar» si se quiere descartar el estado actual de las tareas; si no, se conserva.
 
 ### Errores O Avisos Frecuentes
 
@@ -89,11 +82,11 @@ Regenerar las tareas del proceso asociado a una actividad, conservando o no el e
 - Flujo: `procesos.actividad_proceso_generar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/actividad_proceso_generar.md`
 
-## Actividad Que Fases Ajax
+## Filtrar actividades por fases
 
 ### Para Que Sirve
 
-Devolver las fases aplicables a un tipo de actividad para construir los checkboxes de filtro `fases_on` / `fases_off` en la búsqueda de actividades.
+Mostrar las fases de un tipo de actividad para marcarlas en el filtro de búsqueda de actividades.
 
 ### Donde Entrar
 
@@ -103,9 +96,10 @@ Devolver las fases aplicables a un tipo de actividad para construir los checkbox
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Filtrar actividades por fases
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la búsqueda de actividades, elegir el tipo.
+2. Aparecen las fases posibles como casillas para marcar las que deben estar completadas (fases_on) o no (fases_off).
 
 ### Errores O Avisos Frecuentes
 
@@ -120,38 +114,25 @@ Devolver las fases aplicables a un tipo de actividad para construir los checkbox
 - Flujo: `procesos.actividad_que_fases_ajax.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/actividad_que_fases_ajax.md`
 
-## Fases Activ Cambio
+## Cambiar de fase varias actividades
 
 ### Para Que Sirve
 
-Cambio masivo de fase en actividades: filtrar por tipo, periodo y fase destino; listar candidatas; marcar o desmarcar la tarea de la fase nueva en las actividades seleccionadas.
+Cambiar de fase varias actividades a la vez.
 
 ### Donde Entrar
 
 - Fases Activ Cambio (frontend/procesos/controller/fases_activ_cambio.php)
-- Fases Activ Cambio Lista (frontend/procesos/controller/fases_activ_cambio_lista.php)
 - **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
 - **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Cambiar de fase varias actividades
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Consultar el listado
-
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
-
-#### Obtener
-
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el tipo de actividad, el periodo y la fase destino y listar.
+2. Marcar las actividades que pasan a la fase nueva.
+3. Pulsar para aplicar el cambio.
 
 ### Errores O Avisos Frecuentes
 
@@ -168,11 +149,11 @@ Cambio masivo de fase en actividades: filtrar por tipo, periodo y fase destino; 
 - Flujo: `procesos.fases_activ_cambio.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/fases_activ_cambio.md`
 
-## Fases Activ Cambio Tipo Html
+## Elegir el tipo de actividad para cambiar de fase
 
 ### Para Que Sirve
 
-Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio de fase masivo.
+Mostrar el selector de tipo de actividad en la pantalla de cambio de fase masivo.
 
 ### Donde Entrar
 
@@ -182,9 +163,10 @@ Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir el tipo de actividad para cambiar de fase
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **cambiar de fase**.
+2. Elegir el tipo de actividad; el resto de opciones de la pantalla se adaptan a él.
 
 ### Errores O Avisos Frecuentes
 
@@ -199,39 +181,26 @@ Generar el HTML del selector de tipo de actividad usado en la pantalla de cambio
 - Flujo: `procesos.fases_activ_cambio_tipo_html.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/fases_activ_cambio_tipo_html.md`
 
-## Procesos
+## Administrar las tareas de un proceso
 
 ### Para Que Sirve
 
-Administración del árbol de fases/tareas de un tipo de proceso: visualizar estructura, crear o editar tareas con dependencias y eliminar tareas existentes.
+Administrar las fases y tareas de un tipo de proceso: verlas, crear o editar tareas y eliminarlas.
 
 ### Donde Entrar
 
-- Procesos Get (frontend/procesos/controller/procesos_get.php)
 - Procesos Select (frontend/procesos/controller/procesos_select.php)
-- Procesos Ver (frontend/procesos/controller/procesos_ver.php)
 - **Legacy:** sistema > procesos activ. > procesos
 - **Pills2:** ADMIN LOCAL > procesos activ. > procesos
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Administrar las tareas de un proceso
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Obtener
-
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **procesos**, elegir el proceso y pulsar **ver listado**.
+2. Crear o modificar una tarea eligiendo fase, status, oficina y de qué tarea depende; guardar.
+3. Para quitar una tarea, eliminarla y confirmar.
+4. Después, regenerar las actividades si se quiere que recojan el cambio.
 
 ### Errores O Avisos Frecuentes
 
@@ -251,11 +220,11 @@ Administración del árbol de fases/tareas de un tipo de proceso: visualizar est
 - Flujo: `procesos.procesos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos.md`
 
-## Procesos Clonar
+## Clonar un proceso
 
 ### Para Que Sirve
 
-Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccionado, sustituyendo las tareas existentes.
+Copiar las tareas de un proceso de referencia sobre el proceso elegido, sustituyendo las que tenía.
 
 ### Donde Entrar
 
@@ -265,9 +234,11 @@ Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccion
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Clonar un proceso
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir en **Proceso** el que se quiere rellenar.
+2. En **clonar de** elegir el proceso de referencia.
+3. Pulsar **clonar**. Atención: las tareas existentes del proceso destino se sustituyen por las del de referencia.
 
 ### Errores O Avisos Frecuentes
 
@@ -282,11 +253,11 @@ Clonar las tareas de un tipo de proceso de referencia sobre el proceso seleccion
 - Flujo: `procesos.procesos_clonar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_clonar.md`
 
-## Procesos Depende
+## Elegir de qué tarea depende
 
 ### Para Que Sirve
 
-Actualización dinámica del desplegable de tareas dependientes al cambiar la fase o fase previa en el formulario de edición de una tarea de proceso.
+Actualizar la lista de tareas de las que puede depender una tarea al cambiar la fase.
 
 ### Donde Entrar
 
@@ -296,9 +267,10 @@ Actualización dinámica del desplegable de tareas dependientes al cambiar la fa
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir de qué tarea depende
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de tarea, cambiar la fase o la fase previa.
+2. El desplegable de tareas dependientes se actualiza con las tareas posibles; elegir una.
 
 ### Errores O Avisos Frecuentes
 
@@ -313,11 +285,11 @@ Actualización dinámica del desplegable de tareas dependientes al cambiar la fa
 - Flujo: `procesos.procesos_depende.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_depende.md`
 
-## Procesos Get Listado
+## Consultar y modificar las tareas de un proceso
 
 ### Para Que Sirve
 
-Visualización en formato tabla de las fases/tareas de un tipo de proceso, con acciones de modificar y eliminar cada tarea.
+Ver las fases y tareas de un tipo de proceso en forma de tabla, con acciones para modificar o eliminar cada tarea.
 
 ### Donde Entrar
 
@@ -327,9 +299,12 @@ Visualización en formato tabla de las fases/tareas de un tipo de proceso, con a
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar y modificar las tareas de un proceso
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir el proceso y pulsar **ver listado**.
+2. Se muestra una tabla con cada fase y tarea.
+3. Pulsar una tarea para modificarla, o su botón de eliminar para quitarla (con confirmación).
+4. Para añadir una tarea, elegir el proceso y pulsar **nuevo**.
 
 ### Errores O Avisos Frecuentes
 
@@ -344,11 +319,11 @@ Visualización en formato tabla de las fases/tareas de un tipo de proceso, con a
 - Flujo: `procesos.procesos_get_listado.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_get_listado.md`
 
-## Procesos Regenerar
+## Regenerar las actividades de un proceso
 
 ### Para Que Sirve
 
-Regenerar masivamente las tareas de proceso de las actividades asociadas a un tipo de proceso, a partir de la definición de fases/tareas del proceso.
+Regenerar las tareas de todas las actividades que usan un tipo de proceso, tras cambiar su definición.
 
 ### Donde Entrar
 
@@ -358,9 +333,10 @@ Regenerar masivamente las tareas de proceso de las actividades asociadas a un ti
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Regenerar las actividades de un proceso
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **procesos**, elegir el proceso.
+2. Pulsar **rehacer los procesos de las actividades**. Las tareas de las actividades asociadas se recalculan a partir de la definición actual de fases y tareas.
 
 ### Errores O Avisos Frecuentes
 
@@ -375,11 +351,11 @@ Regenerar masivamente las tareas de proceso de las actividades asociadas a un ti
 - Flujo: `procesos.procesos_regenerar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_regenerar.md`
 
-## Procesos Select
+## Elegir el proceso que se quiere administrar
 
 ### Para Que Sirve
 
-Carga inicial de la pantalla de administración de procesos: opciones del desplegable de tipo de proceso y hashes de navegación.
+Elegir el tipo de proceso de actividades que se quiere revisar o modificar, y clonar sus tareas desde otro.
 
 ### Donde Entrar
 
@@ -389,9 +365,11 @@ Carga inicial de la pantalla de administración de procesos: opciones del desple
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir el proceso que se quiere administrar
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **procesos**.
+2. En **Proceso** elegir el tipo (actividad n, agd, sacd, sg, sr, estudios, general…; hay variantes «(no dl)»).
+3. Pulsar **ver listado** para abrir sus fases y tareas.
 
 ### Errores O Avisos Frecuentes
 
@@ -406,11 +384,11 @@ Carga inicial de la pantalla de administración de procesos: opciones del desple
 - Flujo: `procesos.procesos_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_select.md`
 
-## Procesos Ver
+## Crear o modificar una tarea de un proceso
 
 ### Para Que Sirve
 
-Carga del formulario modal de alta o edición de una tarea dentro de un tipo de proceso, con desplegables de fases, tareas, status, oficina y dependencias.
+Crear o modificar una tarea dentro de un tipo de proceso: fase, status, oficina y tareas de las que depende.
 
 ### Donde Entrar
 
@@ -420,9 +398,11 @@ Carga del formulario modal de alta o edición de una tarea dentro de un tipo de 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Crear o modificar una tarea de un proceso
 
-1. Revisar manualmente los pasos de esta accion.
+1. Desde el listado del proceso, pulsar **nuevo** en la pantalla de selección de proceso (o una tarea existente del listado).
+2. Elegir la fase, la tarea, el status, la oficina y la fase o tarea previa de la que depende.
+3. Guardar. Al guardar, las actividades que usen este proceso deberán regenerarse para recoger el cambio.
 
 ### Errores O Avisos Frecuentes
 
@@ -437,26 +417,24 @@ Carga del formulario modal de alta o edición de una tarea dentro de un tipo de 
 - Flujo: `procesos.procesos_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/procesos_ver.md`
 
-## Tipo Activ Proceso
+## Consultar los procesos de cada tipo de actividad
 
 ### Para Que Sirve
 
-Listado de tipos de actividad con el proceso asignado (propio y no propio) para su gestión desde la pantalla de asignación.
+Ver los tipos de actividad con el proceso que tienen asignado.
 
 ### Donde Entrar
 
-- Tipo Activ Proceso Lista (frontend/procesos/controller/tipo_activ_proceso_lista.php)
+- Tipo Activ Proceso (frontend/procesos/controller/tipo_activ_proceso.php)
 - **Legacy:** sistema > procesos activ. > tipo activ - proceso
 - **Pills2:** ADMIN LOCAL > procesos activ. > tipo activ - proceso
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Consultar los procesos de cada tipo de actividad
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Entrar en **tipo activ - proceso**.
+2. Se lista cada tipo de actividad con su proceso (propio y no propio); pulsar uno para cambiarlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -471,11 +449,11 @@ Listado de tipos de actividad con el proceso asignado (propio y no propio) para 
 - Flujo: `procesos.tipo_activ_proceso.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/tipo_activ_proceso.md`
 
-## Tipo Activ Proceso Asignar
+## Asignar un proceso a un tipo de actividad
 
 ### Para Que Sirve
 
-Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso propio (DL) o no propio.
+Asignar un tipo de proceso a un tipo de actividad (propio de la dl o no propio).
 
 ### Donde Entrar
 
@@ -485,9 +463,11 @@ Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso p
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Asignar un proceso a un tipo de actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tipo activ - proceso** y elegir el tipo de actividad.
+2. Elegir el proceso de la lista de posibles.
+3. Guardar. Las actividades nuevas de ese tipo usarán el proceso asignado.
 
 ### Errores O Avisos Frecuentes
 
@@ -502,11 +482,11 @@ Asignar un tipo de proceso a un tipo de actividad, distinguiendo entre proceso p
 - Flujo: `procesos.tipo_activ_proceso_asignar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/tipo_activ_proceso_asignar.md`
 
-## Tipo Activ Proceso Lst Posibles
+## Ver los procesos asignables a un tipo de actividad
 
 ### Para Que Sirve
 
-Obtener y mostrar la mini-tabla de procesos que el usuario puede asignar a un tipo de actividad concreto (propio o no propio).
+Mostrar los procesos que se pueden asignar a un tipo de actividad.
 
 ### Donde Entrar
 
@@ -516,9 +496,11 @@ Obtener y mostrar la mini-tabla de procesos que el usuario puede asignar a un ti
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los procesos asignables a un tipo de actividad
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **tipo activ - proceso**.
+2. Elegir el tipo de actividad (propio de la dl o no propio).
+3. Se muestra la mini-tabla de procesos posibles.
 
 ### Errores O Avisos Frecuentes
 
@@ -533,11 +515,11 @@ Obtener y mostrar la mini-tabla de procesos que el usuario puede asignar a un ti
 - Flujo: `procesos.tipo_activ_proceso_lst_posibles.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/tipo_activ_proceso_lst_posibles.md`
 
-## Usuario Perm Activ
+## Definir un permiso de actividades de un usuario
 
 ### Para Que Sirve
 
-Carga de la pantalla de alta o edición de permisos de actividad para un usuario: tipo de actividad, filas de ámbitos afectados y desplegables de fase y permisos.
+Dar de alta o modificar un permiso de actividades de un usuario: tipo de actividad, ámbito, fase y permiso.
 
 ### Donde Entrar
 
@@ -547,9 +529,12 @@ Carga de la pantalla de alta o edición de permisos de actividad para un usuario
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Definir un permiso de actividades de un usuario
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ficha del usuario, pulsar **añadir permiso**.
+2. Elegir el tipo de actividad y el ámbito (propia dl u otras).
+3. Elegir la fase de referencia y el permiso.
+4. Guardar. Manda el nivel más concreto («sv n crt» sobre «sv n»).
 
 ### Errores O Avisos Frecuentes
 
@@ -564,11 +549,11 @@ Carga de la pantalla de alta o edición de permisos de actividad para un usuario
 - Flujo: `procesos.usuario_perm_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/procesos/flujos/usuario_perm_activ.md`
 
-## Usuario Perm Activ Ajax
+## Elegir la fase de referencia
 
 ### Para Que Sirve
 
-Actualizar dinámicamente las opciones del desplegable `fase_ref[]` al cambiar el tipo de actividad o la delegación en la pantalla de permisos de actividad de usuario.
+Actualizar las fases disponibles al cambiar el tipo de actividad o la delegación en el permiso de un usuario.
 
 ### Donde Entrar
 
@@ -578,9 +563,10 @@ Actualizar dinámicamente las opciones del desplegable `fase_ref[]` al cambiar e
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir la fase de referencia
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el permiso, cambiar el tipo de actividad o la delegación.
+2. El desplegable de fase de referencia se actualiza con las fases válidas.
 
 ### Errores O Avisos Frecuentes
 

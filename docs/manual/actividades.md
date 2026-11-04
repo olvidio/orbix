@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "actividades"
 flujos: 28
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - actividades
@@ -13,12 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Crear y eliminar actividad
+## Crear una actividad
 
 ### Para Que Sirve
 
-- - **Crear:** rellenar la ficha en modo *nuevo* y guardar (`actividad_nuevo`).
-- - **Eliminar:** seleccionar actividad(es) en un listado y confirmar borrado (`actividad_eliminar`).
+Dar de alta una actividad nueva o borrar una existente.
 
 ### Donde Entrar
 
@@ -29,7 +28,19 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Crear una actividad
+
+1. Pulsar **nueva actividad…** debajo de la lista (o la opción de nueva actividad del menú). Se abre «Nueva actividad» con el estado «proyecto».
+2. Elegir el tipo: **sf/sv**, **asistentes**, **actividad** y **tipo de actividad** (es obligatorio concretar los dos últimos; si no, avisa «debe concretar la actividad en el tipo de actividad» o «debe concretar el tipo de actividad»).
+3. Rellenar el nombre (o pulsar **generar** para que lo proponga), las fechas y los demás datos: **Estado**, **Nombre actividad** (con el enlace **generar**), **Fecha inicio**, **Hora inicio**, **Fecha fin**, **Hora fin**, **dl/r que organiza**, **Plazas totales**, **Lugar**, **Tarifa**, **Precio**, **Observaciones**, **Repetición anual por**, **Nivel de stgr**, **publicado** (sí/no) e **Idioma**.
+4. Pulsar **Crear ficha**.
+5. La actividad queda creada; el formulario se vacía y no muestra mensaje. Para verla, buscarla con **Buscar actividad** (estado «proyecto» o «cualquiera»).
+
+#### Borrar una actividad
+
+1. En la lista, marcar **una** actividad y pulsar **borrar**.
+2. Confirmar «¿Está seguro que desea borrar esta actividad?».
+3. La actividad desaparece al volver a buscar.
 
 ### Errores O Avisos Frecuentes
 
@@ -57,11 +68,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad.md`
 
-## Cambiar tipo de actividad
+## Cambiar el tipo de una actividad
 
 ### Para Que Sirve
 
-Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* y guardar.
+Cambiar el tipo de una actividad ya creada (sf/sv, asistentes, actividad o tipo).
 
 ### Donde Entrar
 
@@ -70,7 +81,12 @@ Seleccionar un nuevo tipo en la cascada, confirmar aviso de vuelta a *proyecto* 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Cambiar el tipo de una actividad
+
+1. Marcar la actividad en la lista y pulsar **cambiar tipo**.
+2. Se abre un formulario con los datos de la actividad ya rellenados (aunque el título dice «Nueva actividad»).
+3. Elegir el nuevo tipo en **sf/sv**, **asistentes**, **actividad** y **tipo de actividad**.
+4. Pulsar **Guardar ficha**.
 
 ### Errores O Avisos Frecuentes
 
@@ -87,11 +103,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_cambiar_tipo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_cambiar_tipo.md`
 
-## Duplicar actividad
+## Duplicar una actividad
 
 ### Para Que Sirve
 
-Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
+Crear una copia de una actividad con las mismas fechas, plazas y demás datos.
 
 ### Donde Entrar
 
@@ -100,7 +116,11 @@ Seleccionar actividad origen y duplicarla (nueva ficha en proyecto).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Duplicar una actividad
+
+1. Marcar la actividad en la lista y pulsar **duplicar**.
+2. Confirmar el aviso «Seguro que desea duplicar esta actividad».
+3. La copia se llama «dup » + el nombre original y conserva fechas y plazas; la lista se vuelve a cargar con la búsqueda por defecto, así que hay que buscar de nuevo para ver la copia.
 
 ### Errores O Avisos Frecuentes
 
@@ -119,11 +139,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_duplicar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_duplicar.md`
 
-## Guardar edición de actividad
+## Modificar una actividad
 
 ### Para Que Sirve
 
-Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y guardar sin cambiar el tipo.
+Modificar los datos de una actividad existente (fechas, lugar, plazas, observaciones, etc.) sin cambiar su tipo.
 
 ### Donde Entrar
 
@@ -132,7 +152,12 @@ Modificar campos de la actividad (fechas, lugar, plazas, observaciones, etc.) y 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Modificar una actividad
+
+1. Marcar la actividad en la lista y pulsar **datos**.
+2. Cambiar los campos que hagan falta (fechas, horas, plazas, observaciones, publicado…).
+3. Pulsar **Guardar cambios**.
+4. Si se guarda bien, se vuelve a la lista de la búsqueda; no hay mensaje de confirmación.
 
 ### Errores O Avisos Frecuentes
 
@@ -151,11 +176,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_editar.md`
 
-## Consultar fase completada
+## Ver si una fase está completada
 
 ### Para Que Sirve
 
-Validar estado de una fase sin recargar toda la ficha.
+Comprobar si una fase del proceso de la actividad está completada, sin recargar la ficha.
 
 ### Donde Entrar
 
@@ -164,7 +189,10 @@ Validar estado de una fase sin recargar toda la ficha.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver si una fase está completada
+
+1. Abrir la ficha de la actividad.
+2. Las casillas de fases reflejan si cada fase está completada; se actualizan solas al cambiar algo.
 
 ### Errores O Avisos Frecuentes
 
@@ -179,11 +207,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_fase_completada.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_fase_completada.md`
 
-## Prefill fases completadas
+## Ver las fases completadas de una actividad
 
 ### Para Que Sirve
 
-Ver checkboxes de fases coherentes con el estado real del proceso al editar/crear.
+Mostrar en la ficha las fases completadas coherentes con el estado real del proceso.
 
 ### Donde Entrar
 
@@ -192,7 +220,10 @@ Ver checkboxes de fases coherentes con el estado real del proceso al editar/crea
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver las fases completadas de una actividad
+
+1. Abrir la ficha de una actividad existente o crear una nueva.
+2. Las casillas de fase aparecen marcadas según el estado real del proceso.
 
 ### Errores O Avisos Frecuentes
 
@@ -207,11 +238,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_fases_completadas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_fases_completadas.md`
 
-## Importar actividad de otra dl
+## Importar actividades de otra dl
 
 ### Para Que Sirve
 
-Buscar actividades externas (`modo=importar`), seleccionar una o varias e importarlas.
+Buscar actividades de otra delegación o región, elegir una o varias e importarlas a la propia.
 
 ### Donde Entrar
 
@@ -223,7 +254,12 @@ Buscar actividades externas (`modo=importar`), seleccionar una o varias e import
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Importar actividades de otra dl
+
+1. Abrir la opción de importar del menú.
+2. Rellenar el formulario de búsqueda y pulsar buscar para localizar la actividad de origen.
+3. En la lista, marcar las actividades que se quieren importar y pulsar **importar**.
+4. Revisar los mensajes: sale uno por cada actividad importada o con error.
 
 ### Errores O Avisos Frecuentes
 
@@ -238,11 +274,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_importar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_importar.md`
 
-## Nivel STGR por defecto
+## Elegir el tipo y el nivel STGR
 
 ### Para Que Sirve
 
-Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel habitual.
+Al elegir el tipo de actividad, rellenar solo el nivel STGR habitual.
 
 ### Donde Entrar
 
@@ -251,7 +287,10 @@ Al concretar tipo de actividad, el desplegable STGR se pre-rellena con el nivel 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir el tipo y el nivel STGR
+
+1. En la ficha, elegir el tipo de actividad.
+2. El desplegable de nivel STGR se pre-rellena con el nivel habitual para ese tipo; se puede cambiar.
 
 ### Errores O Avisos Frecuentes
 
@@ -262,11 +301,12 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_nivel_stgr_default.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_nivel_stgr_default.md`
 
-## Ejecutar generación nuevo curso
+## Generar las actividades de un nuevo curso
 
 ### Para Que Sirve
 
-Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar varios minutos).
+- Confirmar los años de origen y destino y lanzar la generación de las actividades del nuevo curso.
+- Puede tardar varios minutos.
 
 ### Donde Entrar
 
@@ -276,7 +316,12 @@ Confirmar años en `actividad_nuevo_curso` y lanzar la generación (puede tardar
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Generar las actividades de un nuevo curso
+
+1. Leer los avisos sobre lo que se borra y lo que se crea.
+2. Elegir el **año de destino** y el **año de origen**.
+3. Enviar el formulario y esperar a que termine.
+4. Revisar el resumen o, si se ha pedido, el listado de actividades creadas.
 
 ### Errores O Avisos Frecuentes
 
@@ -291,11 +336,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_nuevo_curso_ejecutar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_nuevo_curso_ejecutar.md`
 
-## Permiso crear actividad
+## Crear una actividad con o sin permiso
 
 ### Para Que Sirve
 
-Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos de proceso.
+Al crear una actividad nueva, permitir o bloquear el formulario según los permisos de proceso del usuario.
 
 ### Donde Entrar
 
@@ -304,7 +349,11 @@ Al crear ficha nueva, el sistema bloquea o permite el formulario según permisos
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Crear una actividad con o sin permiso
+
+1. Abrir una actividad nueva.
+2. Si el usuario tiene permiso de crear para ese tipo, el formulario está activo.
+3. Si no, el formulario se muestra bloqueado y hay que pedir el permiso.
 
 ### Errores O Avisos Frecuentes
 
@@ -323,7 +372,7 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 
 ### Para Que Sirve
 
-Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
+Buscar actividades que aún no están publicadas y publicarlas de golpe.
 
 ### Donde Entrar
 
@@ -335,7 +384,12 @@ Buscar actividades en modo publicar, seleccionar y ejecutar publicación masiva.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Publicar actividades
+
+1. Abrir **publicar activ** del menú.
+2. Buscar las actividades de la propia dl que aún no están publicadas.
+3. En la lista, marcar las filas y pulsar **publicar**.
+4. Comprobar en el listado que ya aparecen como publicadas.
 
 ### Errores O Avisos Frecuentes
 
@@ -350,11 +404,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_publicar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_publicar.md`
 
-## Selector tipo en buscar actividad
+## Elegir el tipo de actividad al buscar
 
 ### Para Que Sirve
 
-Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables coherentes con permisos y parámetros (`sasistentes`, `sactividad`, `ssfsv`).
+Elegir el tipo de actividad (sf/sv, asistentes, actividad y tipo) en la pantalla de búsqueda; los cuatro desplegables van encadenados.
 
 ### Donde Entrar
 
@@ -363,7 +417,17 @@ Al cargar `actividad_que` o el bloque tipo del planning, ver desplegables cohere
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir el tipo de actividad al buscar
+
+1. Abrir **Buscar actividad**. Según la entrada de menú, algunos desplegables ya vienen rellenados.
+2. En **sf/sv** elegir sv, sf o reservada.
+3. En **asistentes** elegir n, agd, s, sg, sssc o sr.
+4. En **actividad** elegir crt, ca, cv, cve o cv-crt.
+5. En **tipo de actividad** elegir el tipo concreto (la lista depende de lo elegido antes; «(sin especificar)» no filtra por tipo).
+6. Marcar el **estado** (proyecto, actual, terminada, borrable o cualquiera) y, si hace falta, las fases **marcadas** / **sin marcar**; no se puede elegir la misma fase en las dos.
+7. Escribir parte del nombre en **el nombre contiene** si se conoce.
+8. En **periodo** elegir todo el año, un trimestre, un curso o un año concreto; con **otro** hay que indicar fecha de inicio y de fin («debe introducir la fecha inicio/fin del periodo»).
+9. Pulsar **buscar**; se abre la lista de actividades que cumplen todo.
 
 ### Errores O Avisos Frecuentes
 
@@ -378,11 +442,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_que.md`
 
-## Filtros extra buscar actividad
+## Usar los filtros adicionales
 
 ### Para Que Sirve
 
-Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para usuarios `ctr`).
+Ver los filtros adicionales de la búsqueda de actividades: lugar, organiza y publicada.
 
 ### Donde Entrar
 
@@ -391,7 +455,12 @@ Tras abrir buscar actividad, ver filtros adicionales según rol (ocultos para us
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Usar los filtros adicionales
+
+1. Abrir **Buscar actividad**; los filtros extra se cargan solos debajo del formulario (no aparecen para usuarios de centro).
+2. Elegir el filtro de **lugar** (según país o dl, o lugar concreto) y, si interesa, **organiza**.
+3. En **publicada** elegir **si**, **no** o **todas**.
+4. Pulsar **buscar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -406,11 +475,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_que_filtros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_que_filtros.md`
 
-## Listar resultados buscar actividad
+## Ver y trabajar con la lista de actividades encontradas
 
 ### Para Que Sirve
 
-Ver listado tras buscar, con enlaces a ficha, importar, publicar o seleccionar según modo.
+Ver las actividades que cumplen la búsqueda y trabajar con las que se marquen: abrir su ficha, duplicarlas, borrarlas, cambiar su tipo o ir a sus asistentes, cargos, plazas o proceso.
 
 ### Donde Entrar
 
@@ -419,7 +488,14 @@ Ver listado tras buscar, con enlaces a ficha, importar, publicar o seleccionar s
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver y trabajar con la lista de actividades encontradas
+
+1. Tras **buscar** aparece el título «N actividades encontradas (M sin permiso) entre fecha y fecha» y una tabla con inicio, fin, actividad, horas, sf/sv, tarifa, Sacd, dl org, centro, observaciones e idioma.
+2. Si hay muchas filas, antes de la tabla aparece un aviso y hay que confirmar que se quiere continuar.
+3. Marcar la casilla de la actividad (o de varias, según el botón) y pulsar una de las acciones: **datos**, **duplicar**, **borrar**, **cambiar tipo**, **cargos**, **lista cl**, **asistentes**, **otras peticiones**, **lista**, **plazas**, **proceso**, **asignaturas**, **plan estudios**, **listas de clase** o **posibles asignaturas**.
+4. Pulsar el nombre de una actividad abre directamente su ficha.
+5. Debajo de la tabla, **nueva actividad del mismo tipo** y **nueva actividad sv n** (el tipo que se buscó) crean una actividad nueva.
+6. **realizar otra búsqueda** (arriba) vuelve al formulario de búsqueda.
 
 ### Errores O Avisos Frecuentes
 
@@ -434,11 +510,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_select.md`
 
-## Desplegables lugar (popup)
+## Elegir el lugar de una actividad
 
 ### Para Que Sirve
 
-Al elegir modo historial o región, cargar casas/ubis candidatas antes de confirmar.
+En la ventana para elegir lugar, al escoger buscar por historial o por región, cargar las casas o ubicaciones candidatas antes de confirmar.
 
 ### Donde Entrar
 
@@ -447,7 +523,11 @@ Al elegir modo historial o región, cargar casas/ubis candidatas antes de confir
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir el lugar de una actividad
+
+1. En la ventana de lugar, elegir el tipo de búsqueda (por ejemplo historial o región) y quién organiza.
+2. Se carga el desplegable de casas o ubicaciones posibles.
+3. Al elegir una, se rellenan los datos de lugar en la pantalla desde la que se abrió la ventana.
 
 ### Errores O Avisos Frecuentes
 
@@ -463,11 +543,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_select_ubi_desplegable.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_select_ubi_desplegable.md`
 
-## Etiquetas de estado actividad
+## Ver el estado de una actividad
 
 ### Para Que Sirve
 
-Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o planning.
+Mostrar los nombres de estado correctos (proyecto, publicada, terminada…) según la sección y los permisos.
 
 ### Donde Entrar
 
@@ -476,7 +556,10 @@ Ver nombres de estado correctos según sf/sv y permisos al abrir ficha o plannin
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el estado de una actividad
+
+1. Abrir la ficha de la actividad o el planning.
+2. El desplegable de estado muestra los nombres que corresponden a su sección (sf/sv) y a los permisos del usuario.
 
 ### Errores O Avisos Frecuentes
 
@@ -487,11 +570,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_status_labels.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_status_labels.md`
 
-## Cascada tipo actividad (AJAX)
+## Elegir el tipo de actividad paso a paso
 
 ### Para Que Sirve
 
-Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin recargar toda la página.
+Al cambiar uno de los desplegables que definen el tipo de actividad, actualizar los siguientes sin recargar la página.
 
 ### Donde Entrar
 
@@ -500,7 +583,11 @@ Al cambiar un nivel de la cascada, actualizar los desplegables dependientes sin 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir el tipo de actividad paso a paso
+
+1. Elegir el primer valor (por ejemplo los asistentes: n, agd, s…).
+2. Los desplegables siguientes (actividad, tipo) se rellenan solos con las opciones válidas.
+3. Seguir eligiendo hasta completar el tipo.
 
 ### Errores O Avisos Frecuentes
 
@@ -515,11 +602,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_tipo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_tipo.md`
 
-## Cargar datos de ficha actividad
+## Abrir la ficha de una actividad
 
 ### Para Que Sirve
 
-Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos necesarios para pintar la ficha sin acceder a `src/` desde el navegador.
+Abrir la ficha de una actividad (o el formulario de una nueva) con todos sus datos.
 
 ### Donde Entrar
 
@@ -528,7 +615,13 @@ Al abrir ver/editar/nuevo/planning, el sistema carga en servidor los datos neces
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Abrir la ficha de una actividad
+
+1. Buscar la actividad y marcar su casilla en la lista.
+2. Pulsar **datos** (o pulsar el nombre de la actividad).
+3. Se abre «DATOS ACTIVIDAD» con el título de la actividad, el enlace **(dossiers)** y el tipo (sf/sv, asistentes, actividad y tipo de actividad, solo lectura).
+4. Los campos son: **Estado**, **Nombre actividad** (con el enlace **generar**), **Fecha inicio**, **Hora inicio**, **Fecha fin**, **Hora fin**, **dl/r que organiza**, **Plazas totales**, **Lugar**, **Tarifa**, **Precio**, **Observaciones**, **Repetición anual por**, **Nivel de stgr**, **publicado** (sí/no) e **Idioma**.
+5. Según los permisos, la ficha se puede modificar o es solo de consulta.
 
 ### Errores O Avisos Frecuentes
 
@@ -543,11 +636,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.actividad_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/actividad_ver.md`
 
-## Listados calendario nuevo
+## Sacar un listado del calendario
 
 ### Para Que Sirve
 
-Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla de actividades.
+Sacar listados del calendario de actividades por oficina o por casas, en un periodo.
 
 ### Donde Entrar
 
@@ -558,7 +651,11 @@ Desde menú *Nuevo calendario > listados*, elegir informe y periodo; ver tabla d
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Sacar un listado del calendario
+
+1. Entrar en **Nuevo calendario > listados** y elegir el tipo de listado: por oficinas, de la oficina propia, casas comunes, todas las casas (sf o sv).
+2. Elegir el periodo.
+3. Se muestra la tabla de actividades; pulsar una para abrir su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -573,11 +670,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.calendario_listas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/calendario_listas.md`
 
-## Tabla listado actividades
+## Ver el listado de actividades
 
 ### Para Que Sirve
 
-Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `actividad_que`.
+Ver la tabla de actividades después de enviar los filtros del formulario de búsqueda.
 
 ### Donde Entrar
 
@@ -587,7 +684,11 @@ Ver tabla de actividades tras enviar filtros desde `lista_activ_que` o `activida
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el listado de actividades
+
+1. Rellenar el formulario con el tipo de actividad, el periodo y las secciones; si no se ponen fechas, se toma el curso actual.
+2. Pulsar buscar.
+3. Aparece la tabla de actividades que cumplen los filtros.
 
 ### Errores O Avisos Frecuentes
 
@@ -602,11 +703,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.lista_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/lista_activ.md`
 
-## Listado actividades SG
+## Consultar las actividades de sg
 
 ### Para Que Sirve
 
-Consultar actividades SG de la r/dl o del centro, filtrar y abrir fichas desde la tabla.
+Consultar las actividades de San Gabriel (crt o cv) de la r/dl o de un centro, filtrar y abrir las fichas.
 
 ### Donde Entrar
 
@@ -616,7 +717,11 @@ Consultar actividades SG de la r/dl o del centro, filtrar y abrir fichas desde l
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Consultar las actividades de sg
+
+1. Entrar en **vsg > crt** (o **cv**) **> de la r/dl**.
+2. Elegir el periodo y otros filtros y buscar.
+3. Pulsar una actividad de la tabla para abrir su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -631,11 +736,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.lista_actividades_sg.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/lista_actividades_sg.md`
 
-## Listado por centros
+## Ver las actividades de cada centro
 
 ### Para Que Sirve
 
-Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma pantalla.
+Ver, tras elegir centro y periodo, las actividades de cada centro de sg.
 
 ### Donde Entrar
 
@@ -645,7 +750,11 @@ Tras elegir centro y periodo en *de cada ctr*, ver el listado AJAX en la misma p
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver las actividades de cada centro
+
+1. Entrar en **vsg > crt** (o **cv**) **> de cada ctr**.
+2. Elegir el centro y el periodo y buscar.
+3. El listado aparece en la misma pantalla; pulsar una actividad para abrirla.
 
 ### Errores O Avisos Frecuentes
 
@@ -660,11 +769,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.lista_centros_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/lista_centros_activ.md`
 
-## Resultado listado CSV SR
+## Ver o descargar el listado de sr
 
 ### Para Que Sirve
 
-Visualizar listado o descargar CSV para San Rafael.
+Ver el listado de actividades de San Rafael o descargarlo como CSV.
 
 ### Donde Entrar
 
@@ -674,7 +783,10 @@ Visualizar listado o descargar CSV para San Rafael.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver o descargar el listado de sr
+
+1. Desde el formulario de **listado csv**, elegir ver en pantalla o descargar CSV.
+2. Si se descarga, abrir el fichero con una hoja de cálculo.
 
 ### Errores O Avisos Frecuentes
 
@@ -689,11 +801,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.lista_sr_csv.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/lista_sr_csv.md`
 
-## Bootstrap listado CSV SR
+## Preparar el listado csv de sr
 
 ### Para Que Sirve
 
-Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
+Elegir los criterios del listado de actividades de San Rafael, con la última preferencia guardada.
 
 ### Donde Entrar
 
@@ -703,7 +815,11 @@ Ver el formulario pre-rellenado con la última preferencia guardada del usuario.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Preparar el listado csv de sr
+
+1. Entrar en **listado csv**.
+2. El formulario aparece con los últimos valores usados.
+3. Ajustar el periodo y los criterios y pulsar para ver el listado o descargar el CSV.
 
 ### Errores O Avisos Frecuentes
 
@@ -718,11 +834,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.lista_sr_csv_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/lista_sr_csv_que.md`
 
-## tipos de actividad
+## Ver los tipos de actividad
 
 ### Para Que Sirve
 
-Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de administración.
+Ver los tipos de actividad, crear uno nuevo, cambiar el nombre de uno existente o eliminarlo.
 
 ### Donde Entrar
 
@@ -732,7 +848,19 @@ Listar tipos, crear uno nuevo, renombrar o eliminar desde la pantalla de adminis
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver los tipos de actividad
+
+1. Abrir la gestión de tipos de actividad: aparece la tabla con todos los tipos.
+
+#### Crear o modificar un tipo de actividad
+
+1. Pulsar **nuevo**, o seleccionar un tipo y pulsar **modificar**.
+2. Rellenar el formulario y guardar.
+
+#### Eliminar un tipo de actividad
+
+1. Seleccionar el tipo y pulsar **eliminar**.
+2. Confirmar el aviso.
 
 ### Errores O Avisos Frecuentes
 
@@ -751,11 +879,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.tipo_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ.md`
 
-## Formulario alta tipo actividad
+## Crear un tipo de actividad
 
 ### Para Que Sirve
 
-Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
+Crear un tipo de actividad nuevo.
 
 ### Donde Entrar
 
@@ -765,7 +893,11 @@ Pulsar *nuevo* en gestión de tipos y ver el formulario vacío con desplegables.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Crear un tipo de actividad
+
+1. Entrar en **gestión Tipos actividades** y pulsar **nuevo**.
+2. Se abre el formulario vacío con los desplegables por niveles.
+3. Rellenar el nombre y los niveles y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -780,11 +912,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.tipo_activ_form.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_form.md`
 
-## Formulario editar tipo actividad
+## Modificar un tipo de actividad
 
 ### Para Que Sirve
 
-Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
+Modificar el nombre de un tipo de actividad existente.
 
 ### Donde Entrar
 
@@ -794,7 +926,11 @@ Elegir tipo en la lista y abrir formulario con nombre actual para modificar.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Modificar un tipo de actividad
+
+1. En **gestión Tipos actividades**, pulsar modificar en el tipo.
+2. Se abre el formulario con el nombre actual.
+3. Cambiarlo y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -809,11 +945,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `actividades.tipo_activ_form_modificar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividades/flujos/tipo_activ_form_modificar.md`
 
-## Metadatos cascada tipo actividad
+## Elegir los niveles de un tipo
 
 ### Para Que Sirve
 
-Al cambiar un nivel en el formulario de tipos, actualizar los siguientes desplegables.
+Al cambiar un nivel en el formulario de tipos, actualizar los desplegables siguientes.
 
 ### Donde Entrar
 
@@ -823,7 +959,10 @@ Al cambiar un nivel en el formulario de tipos, actualizar los siguientes despleg
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir los niveles de un tipo
+
+1. En el formulario de tipos, elegir el primer nivel.
+2. Los desplegables siguientes se actualizan con las opciones que corresponden.
 
 ### Errores O Avisos Frecuentes
 

@@ -1,8 +1,8 @@
 ---
 tipo: "manual_usuario"
 modulo: "inventario"
-flujos: 42
-estado_revision: "revisado_parcial"
+flujos: 44
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - inventario
@@ -13,28 +13,27 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Cabecera Pie Txt
+## Editar los textos tipo
 
 ### Para Que Sirve
 
-Editar textos globales de cabecera/pie para impresión de equipajes.
+Fijar los textos tipo que llevan por defecto los equipajes impresos: cabecera, cabecera para el material que envía la dl y pie de firma.
 
 ### Donde Entrar
 
 - Textos cabecera/pie equipajes (frontend/inventario/controller/cabecera_pie_txt.php)
-- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
 - **Legacy:** scdl > Inventario > equipajes > tipos de texto
 - **Pills2:** —
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Editar los textos tipo
 
-1. Revisar manualmente los pasos de esta accion.
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **tipos de texto**.
+2. Modificar la **cabecera tipo para equipajes** (instrucciones para comprobar el inventario de la casa al llegar y al marchar).
+3. Modificar la **cabecera para equipajes tipo B) (que envía la dl)** (instrucciones para el material que lleva la delegación y se devuelve al final).
+4. Modificar el **pie tipo para equipajes** (lista de lo que se deja en la casa) y el texto **para la firma en equipajes** (observaciones, fecha y firma).
+5. Pulsar **guardar**; aparece «textos guardados correctamente».
 
 ### Errores O Avisos Frecuentes
 
@@ -49,12 +48,11 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 - Flujo: `inventario.cabecera_pie_txt.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/cabecera_pie_txt.md`
 
-## Doc Asignar Ctr
+## Guardar la asignación a centros
 
 ### Para Que Sirve
 
-- Gestiona DocAsignarCtr.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los centros elegidos.
 
 ### Donde Entrar
 
@@ -64,9 +62,11 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ### Tareas Habituales
 
-#### Guardar
+#### Guardar la asignación a centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Asignar a centros (sin especificar lugar)**, marcar los centros y pulsar para continuar. En la pantalla siguiente completar, para cada centro, el número de registro (propone «último + 1») o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 ### Errores O Avisos Frecuentes
 
@@ -81,12 +81,11 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 - Flujo: `inventario.doc_asignar_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/doc_asignar_ctr.md`
 
-## Doc Asignar Dlb
+## Guardar la asignación a la dlb/casa
 
 ### Para Que Sirve
 
-- Gestiona DocAsignarDlb.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar la asignación de un documento a los lugares de la dlb/casa elegidos.
 
 ### Donde Entrar
 
@@ -96,9 +95,11 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 
 ### Tareas Habituales
 
-#### Guardar
+#### Guardar la asignación a la dlb/casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Completar el número de registro o de ejemplares y las fechas **recibido** y **asignado**.
+2. Pulsar **guardar**.
+3. Si hay algún problema aparece un aviso **respuesta**; si va bien, la pantalla vuelve atrás sola.
 
 ### Errores O Avisos Frecuentes
 
@@ -114,11 +115,11 @@ Editar textos globales de cabecera/pie para impresión de equipajes.
 - Flujo: `inventario.doc_asignar_dlb.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/doc_asignar_dlb.md`
 
-## Documentos
+## Modificar varios documentos a la vez
 
 ### Para Que Sirve
 
-Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, listados asignados/no asignados, formularios CTR/DLB.
+Cambiar de golpe fechas, numeración o estado de varios documentos a la vez.
 
 ### Donde Entrar
 
@@ -128,9 +129,13 @@ Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, list
 
 ### Tareas Habituales
 
-#### Guardar
+#### Modificar varios documentos a la vez
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **Inventario > documentos > por sigla**.
+2. Elegir el **tipo de documento** y pulsar **Buscar**.
+3. En el listado, marcar los documentos que se quieren cambiar y pulsar **Modificar por bloques**. Si falta el tipo o no hay documentos marcados avisa «Debe seleccionar un tipo de documento» o «Debe seleccionar algún documento».
+4. En «campos a modificar en los documentos seleccionados», **marcar la casilla «modificar» de cada campo que se quiere cambiar** y escribir su valor: **fecha recibido**, **fecha asignado**, **eliminado** (sí/no), **fecha eliminado**, **número inicial**, **número final**. Los campos sin marcar no se tocan; un campo marcado y vacío borra el valor.
+5. Pulsar **guardar** (o **cancel** para salir sin cambios). Si no se marca ningún campo avisa «Debe marcar al menos un campo a modificar». Al guardar bien aparece «guardado» y el listado se actualiza.
 
 ### Errores O Avisos Frecuentes
 
@@ -146,26 +151,26 @@ Asignación y consulta de documentos por tipo: selector `docs_asignar_que`, list
 - Flujo: `inventario.documentos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/documentos.md`
 
-## Equipajes
+## Ciclo completo de un equipaje
 
 ### Para Que Sirve
 
-Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (EGM/Whereis), impresión y eliminación.
+Ciclo de vida de los equipajes: crear, componer las valijas, imprimir y eliminar.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** scdl > Inventario > equipajes > hacer equipajes
 - **Pills2:** —
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Ciclo completo de un equipaje
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. Crear con **nuevo equipaje**.
+2. Componer las valijas en **hacer equipajes**.
+3. Imprimir con **imprimir equipajes**.
+4. Al terminar, eliminar el equipaje desde **hacer equipajes** (se eliminan también sus valijas).
 
 ### Errores O Avisos Frecuentes
 
@@ -181,24 +186,26 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes.md`
 
-## Equipajes Add Doc
+## Añadir un documento a una valija
 
 ### Para Que Sirve
 
-- Gestiona EquipajesAddDoc.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Meter un documento en una valija del equipaje.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Añadir un documento a una valija
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **añadir documento**.
+3. Elegir el **tipo de documento**; se listan los ejemplares libres. Marcar el ejemplar y pulsar **añadir** (o **cancel**).
+4. El documento aparece en la valija; si falla se muestra el aviso **respuesta**.
 
 ### Errores O Avisos Frecuentes
 
@@ -213,24 +220,26 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_add_doc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_add_doc.md`
 
-## Equipajes Del Doc
+## Quitar un documento de una valija
 
 ### Para Que Sirve
 
-- Gestiona EquipajesDelDoc.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Sacar un documento de una valija del equipaje.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar un documento de una valija
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **quitar documento**.
+3. Marcar los documentos a quitar y pulsar el botón de quitar (**Cancel** para salir sin cambios).
+4. Los documentos dejan de estar en la valija; si falla se muestra el aviso **respuesta**.
 
 ### Errores O Avisos Frecuentes
 
@@ -245,25 +254,26 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_del_doc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_del_doc.md`
 
-## Equipajes Doc Casa
+## Consultar los documentos de la casa y sus valijas
 
 ### Para Que Sirve
 
-- Gestiona EquipajesDocCasa.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que pertenecen a la casa (se quedan siempre allí) y las valijas del equipaje.
 
 ### Donde Entrar
 
 - Docs por casa (equipaje) (frontend/inventario/controller/equipajes_doc_casa.php)
-- Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar la documentación de la casa y sus valijas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes**; elegir el filtro **desde hoy**, **todo el curso** o **todos**.
+2. Elegir el equipaje en **escoger un equipaje** (aparece como «casa (fechas)»).
+3. En **documentos en** (nombre de la casa) se listan **Nombre**, **Identificador** y **Lugar** de la documentación que está en la casa.
+4. En **maletas para** (nombre de la casa) aparecen las valijas del equipaje; **nueva valija** añade otra.
 
 ### Errores O Avisos Frecuentes
 
@@ -278,25 +288,34 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_doc_casa.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_doc_casa.md`
 
-## Equipajes Egm
+## Imprimir un equipaje
 
 ### Para Que Sirve
 
-- Gestiona EquipajesEgm.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Preparar e imprimir el equipaje de una casa: el inventario de lo que hay en la casa más el material que lleva la delegación, con espacio para observaciones y firma.
 
 ### Donde Entrar
 
-- Docs por casa (equipaje) (frontend/inventario/controller/equipajes_doc_casa.php)
 - Imprimir equipaje (frontend/inventario/controller/equipajes_imprimir.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Imprimir un equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **imprimir equipajes** y elegir el filtro **desde hoy**, **todo el curso** o **todos**.
+2. Elegir el equipaje en **escoger un equipaje**.
+3. Se muestra la hoja «(casa): Inventario de publicaciones internas» con las actividades del equipaje y la cabecera.
+4. Revisar el apartado **A) Documentación que pertenece a la casa y se queda siempre allí** (con los ejemplares y numeración de cada documento).
+5. Si el equipaje tiene valijas, revisar el apartado **B) Documentación que envía la Delegación**, con cada valija y sus documentos.
+6. Comprobar el pie y el bloque final de **Observacions** y **data i firma**.
+7. Imprimir desde el navegador. Los lápices de **modificar texto** no salen en el papel.
+
+#### Ver las valijas de un equipaje
+
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En **maletas para** (nombre de la casa) se listan las valijas con sus documentos.
 
 ### Errores O Avisos Frecuentes
 
@@ -311,24 +330,26 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_egm.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_egm.md`
 
-## Equipajes Eliminar Grupo
+## Eliminar una valija
 
 ### Para Que Sirve
 
-- Gestiona EquipajesEliminarGrupo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Borrar una valija entera del equipaje.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Eliminar una valija
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En la valija, pulsar **eliminar valija**.
+3. Confirmar la pregunta «¿Está seguro de borrar este grupo?».
+4. La valija desaparece del equipaje y los documentos que llevaba dejan de estar en ella (siguen existiendo).
 
 ### Errores O Avisos Frecuentes
 
@@ -343,12 +364,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_eliminar_grupo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_eliminar_grupo.md`
 
-## Equipajes Lista Activ Equipaje
+## Consultar las actividades de un equipaje
 
 ### Para Que Sirve
 
-- Gestiona EquipajesListaActivEquipaje.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Mostrar, en el equipaje impreso, las actividades que lo forman.
 
 ### Donde Entrar
 
@@ -358,9 +378,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver las actividades del equipaje impreso
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **imprimir equipajes** y elegir el equipaje.
+2. Bajo el título «Inventario de publicaciones internas» aparecen las actividades del equipaje con sus fechas.
+3. No hay nada que rellenar: se genera solo.
 
 ### Errores O Avisos Frecuentes
 
@@ -375,12 +397,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_lista_activ_equipaje.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_lista_activ_equipaje.md`
 
-## Equipajes Lista Activ Periodo
+## Elegir las actividades del equipaje
 
 ### Para Que Sirve
 
-- Gestiona EquipajesListaActivPeriodo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver las actividades de una casa en el periodo elegido, para marcar las que irán en el mismo equipaje.
 
 ### Donde Entrar
 
@@ -390,9 +411,12 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Marcar las actividades del equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **nuevo equipaje**, elegir periodo y casa.
+2. Leer la lista: **empieza**, **termina**, **actividad** y **observaciones**.
+3. Marcar las actividades que viajan juntas.
+4. Pulsar **seleccionar** para ponerle nombre al equipaje.
 
 ### Errores O Avisos Frecuentes
 
@@ -407,12 +431,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_lista_activ_periodo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_lista_activ_periodo.md`
 
-## Equipajes Lista Activ Sel
+## Nombrar el equipaje
 
 ### Para Que Sirve
 
-- Gestiona EquipajesListaActivSel.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ponerle nombre al equipaje formado con las actividades marcadas.
 
 ### Donde Entrar
 
@@ -422,9 +445,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Nombrar el equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar las actividades y pulsar **seleccionar**.
+2. En la ventana aparece el **nombre del equipaje** ya propuesto como «casa (fechas)»; se puede cambiar.
+3. Pulsar **guardar** (o **cancel** para cerrar sin crear nada).
 
 ### Errores O Avisos Frecuentes
 
@@ -439,11 +464,11 @@ Ciclo de vida de equipajes: alta (`equipajes_nuevo`), composición de maletas (E
 - Flujo: `inventario.equipajes_lista_activ_sel.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_lista_activ_sel.md`
 
-## Equipajes Movimientos
+## Consultar los movimientos de un equipaje
 
 ### Para Que Sirve
 
-Comparar movimientos de documentos entre equipajes seleccionados.
+Ver qué documentos se han añadido o quitado de las valijas de un equipaje.
 
 ### Donde Entrar
 
@@ -453,9 +478,11 @@ Comparar movimientos de documentos entre equipajes seleccionados.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los movimientos de un equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **movimientos maletas**.
+2. Marcar el equipaje y pulsar **seleccionar**.
+3. Para cada valija se listan los documentos **añadir** y **quitar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -470,23 +497,29 @@ Comparar movimientos de documentos entre equipajes seleccionados.
 - Flujo: `inventario.equipajes_movimientos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_movimientos.md`
 
-## Equipajes Nuevo
+## Crear un equipaje nuevo
 
 ### Para Que Sirve
 
-Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuevo_guardar`.
+Crear un equipaje: la documentación que se lleva a una casa para las actividades de unas fechas.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Nuevo equipaje (frontend/inventario/controller/equipajes_nuevo.php)
 - **Legacy:** scdl > Inventario > equipajes > nuevo equipaje
 - **Pills2:** —
 
 ### Tareas Habituales
 
-#### Guardar
+#### Crear un equipaje nuevo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **nuevo equipaje**.
+2. En **periodo de selección de actividades** elegir el periodo (**todo el año**, un trimestre, **curso ca**, **curso crt** u **otro**), el año, o las fechas **entre … y …**.
+3. Pulsar **ver las casas donde se realizan las actividades**.
+4. Elegir la casa en el desplegable que aparece; se muestran las actividades de esa casa en el periodo.
+5. Marcar las actividades que van en el mismo equipaje y pulsar **seleccionar**.
+6. El **nombre del equipaje** viene propuesto como «casa (fechas)»; se puede cambiar. Pulsar **guardar**.
+7. La pantalla pasa a **hacer equipajes** con el equipaje ya creado.
 
 ### Errores O Avisos Frecuentes
 
@@ -501,24 +534,25 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 - Flujo: `inventario.equipajes_nuevo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_nuevo.md`
 
-## Equipajes Texto Listado
+## Cambiar los textos del listado del equipaje
 
 ### Para Que Sirve
 
-- Gestiona EquipajesTextoListado.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Guardar el texto de cabecera, cabecera B), pie o el texto para las maletas de un equipaje.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Guardar
+#### Cambiar los textos del listado del equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz (**modificar texto**) (o **introducir texto** si aún está vacío).
+2. Escribir el texto de **cabecera**, **cabecera B)**, **pie** o **texto a añadir en las maletas**.
+3. Pulsar **guardar** (o **cancel**).
 
 ### Errores O Avisos Frecuentes
 
@@ -533,24 +567,26 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 - Flujo: `inventario.equipajes_texto_listado.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_texto_listado.md`
 
-## Equipajes Update Grupo
+## Crear una valija con documentos
 
 ### Para Que Sirve
 
-- Gestiona EquipajesUpdateGrupo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Crear una valija o cambiar los documentos que lleva.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Gestionar equipajes (frontend/inventario/controller/equipajes_ver.php)
 - **Legacy:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 - **Pills2:** sin entrada de menú en el índice (fragmento/AJAX/dossier)
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Crear una valija
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** y elegir el equipaje.
+2. En **maletas para** (casa), pulsar **nueva valija**: aparece una fila «valija1» (el número va subiendo) con una lista de maletas.
+3. Elegir la maleta (por ejemplo «Maleta» o «Maleta Rialb 1 (color groc)»): se muestran los documentos que lleva.
+4. La valija queda creada en el equipaje; aparecerá en la hoja impresa como «valija1: Maleta».
 
 ### Errores O Avisos Frecuentes
 
@@ -565,12 +601,11 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 - Flujo: `inventario.equipajes_update_grupo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/equipajes_update_grupo.md`
 
-## Inventario Css Inline
+## Qué hace al imprimir
 
 ### Para Que Sirve
 
-- Gestiona InventarioCssInline.
-- CSS embebido para impresión de inventario (inventario.css.php en disco).
+Dar formato de impresión (márgenes, cabecera y pie de página) a las hojas de inventario.
 
 ### Donde Entrar
 
@@ -581,9 +616,11 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Qué hace al imprimir
 
-1. Revisar manualmente los pasos de esta accion.
+1. Generar un inventario con **Imprimir ctr**, **Imprimir** o **Imprimir dl**.
+2. El formato se aplica solo; no hay nada que configurar.
+3. Si la hoja sale mal maquetada, avisar a mantenimiento.
 
 ### Errores O Avisos Frecuentes
 
@@ -598,11 +635,11 @@ Crear equipaje: periodo, casa, actividades, nombre; persiste con `equipajes_nuev
 - Flujo: `inventario.inventario_css_inline.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/inventario_css_inline.md`
 
-## Inventario Ctr
+## Imprimir el inventario de centros
 
 ### Para Que Sirve
 
-Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imprimir_ctr` vía `inventario_ctr`.
+Obtener el inventario impreso de los documentos de uno o varios centros, listo para firmar.
 
 ### Donde Entrar
 
@@ -612,9 +649,12 @@ Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imp
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Imprimir el inventario de centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar los centros en **inventario de centros**.
+2. Pulsar **Imprimir ctr** (o **Imprimir dl** para añadir la columna **observaciones dl**).
+3. Se muestra una hoja por centro titulada **Inventario de documentos de** (nombre del centro), con **documento** y **observaciones**.
+4. Imprimir desde el navegador. Cada hoja termina con la nota «(*) Se guarda bajo llave», el total de páginas y el espacio **Conforme (firma)**.
 
 ### Errores O Avisos Frecuentes
 
@@ -629,11 +669,11 @@ Impresión inventario de centros: selección en `doc_de_ctr`, render en `doc_imp
 - Flujo: `inventario.inventario_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/inventario_ctr.md`
 
-## Inventario Dlb
+## Imprimir el inventario de la dlb/casa
 
 ### Para Que Sirve
 
-Impresión inventario DLB/casa vía `inventario_dlb`.
+Obtener el inventario impreso de los documentos de uno o varios lugares de la dlb/casa, listo para firmar.
 
 ### Donde Entrar
 
@@ -643,9 +683,13 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Imprimir el inventario de la dlb/casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar los lugares en **inventario de dlb/casa**.
+2. Pulsar **Imprimir** (o **Imprimir dl** para añadir la columna **observaciones dl**).
+3. Se muestra una hoja por lugar titulada **Inventario de documentos de** (centro y lugar), con **documento**, **id** y **observaciones**.
+4. El botón **seleccionar** y la primera columna (sin cabecera) de la hoja sirven solo para imprimir y marcar a mano en papel.
+5. Imprimir desde el navegador. Cada hoja termina con «(*) Se guarda bajo llave», el total de páginas y el espacio **Conforme (firma)**.
 
 ### Errores O Avisos Frecuentes
 
@@ -660,12 +704,46 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.inventario_dlb.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/inventario_dlb.md`
 
-## Lista Casas Posibles Periodo
+## Elegir inventario de centros o de dlb/casa
 
 ### Para Que Sirve
 
-- Gestiona ListaCasasPosiblesPeriodo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Decidir si se va a trabajar con el inventario de **centros** o con el de la **dlb/casa** (la dlb y las casas pueden tener varios lugares, y se inventaría lo que hay en cada lugar), y pasar a la pantalla correspondiente (asignar, modificar o imprimir documentos).
+
+### Donde Entrar
+
+- Elegir inventario centros o DLB (frontend/inventario/controller/inventario_que.php)
+- **Legacy:** scdl > Inventario > inventarios > de centros o dlb
+- **Pills2:** sin entrada en el índice de menús (falta en el layout nuevo; pendiente de añadir).
+
+### Tareas Habituales
+
+#### Trabajar con el inventario de centros
+
+1. Abrir **de centros o dlb** desde el menú.
+2. Pulsar **inventario de centros**.
+3. En la pantalla que se abre, elegir el tipo de documento y los centros, y usar los enlaces para asignar, modificar o imprimir.
+
+#### Trabajar con el inventario de la dlb/casa
+
+1. Abrir **de centros o dlb** desde el menú.
+2. Pulsar **inventario de dlb/casa**.
+3. En la pantalla que se abre, elegir el tipo de documento y usar los enlaces para asignar, modificar o imprimir.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `inventario.inventario_que.elegir.flujo`
+- Fichero catalogo: `docs/catalogo/inventario/flujos/inventario_que.md`
+
+## Consultar las casas del periodo
+
+### Para Que Sirve
+
+Ver en qué casas se realizan actividades en el periodo elegido, para escoger la casa del equipaje.
 
 ### Donde Entrar
 
@@ -675,9 +753,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir la casa del equipaje
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **nuevo equipaje**, elegir el periodo.
+2. Pulsar **ver las casas donde se realizan las actividades**.
+3. Elegir la casa en el desplegable: se carga la lista de sus actividades.
 
 ### Errores O Avisos Frecuentes
 
@@ -692,12 +772,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_casas_posibles_periodo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_casas_posibles_periodo.md`
 
-## Lista Colecciones
+## Agrupar un listado por colección
 
 ### Para Que Sirve
 
-- Gestiona ColeccionesOpciones.
-- Opciones del desplegable de colecciones (lista_colecciones.php).
+Cargar las colecciones de documentos para agrupar o filtrar un listado.
 
 ### Donde Entrar
 
@@ -707,9 +786,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Agrupar un listado por colección
 
-1. Revisar manualmente los pasos de esta accion.
+1. En un listado de documentos con agrupación, abrir el desplegable de colección.
+2. Las colecciones disponibles se cargan solas.
+3. Elegir la colección para ver solo sus documentos.
 
 ### Errores O Avisos Frecuentes
 
@@ -724,12 +805,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_colecciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_colecciones.md`
 
-## Lista De Ctr
+## Elegir el centro de origen y de destino
 
 ### Para Que Sirve
 
-- Gestiona ListaDeCtr.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar la lista de centros disponibles como origen y destino en el traslado de documentos.
 
 ### Donde Entrar
 
@@ -739,9 +819,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir el centro de origen y de destino
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **traslado de doc**.
+2. Elegir el centro de origen en su desplegable.
+3. Elegir el centro de destino en el segundo desplegable.
 
 ### Errores O Avisos Frecuentes
 
@@ -756,12 +838,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_de_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_de_ctr.md`
 
-## Lista De Ctr Con Docs
+## Elegir centros para asignar un documento
 
 ### Para Que Sirve
 
-- Gestiona ListaDeCtrConDocs.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Elegir los centros a los que se asignará un documento (o de los que se va a imprimir el inventario).
 
 ### Donde Entrar
 
@@ -771,9 +852,17 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir centros para asignar un documento
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento y pulsar **Asignar a centros (sin especificar lugar)**.
+2. Marcar los centros en la lista (**marcar todos**, **desmarcar todos** y **marcar/desmarcar todos** ayudan con listas largas).
+3. Pulsar **Asignar** para pasar a indicar número y fechas.
+
+#### Elegir centros para imprimir su inventario
+
+1. Abrir **de centros o dlb** y pulsar **inventario de centros**.
+2. Marcar los centros que interesan.
+3. Pulsar **Imprimir ctr** (inventario para el centro) o **Imprimir dl** (inventario con las observaciones de la delegación).
 
 ### Errores O Avisos Frecuentes
 
@@ -788,12 +877,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_de_ctr_con_docs.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_de_ctr_con_docs.md`
 
-## Lista Docs Asignados Por Tipo
+## Consultar los centros que tienen el documento
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsAsignadosPorTipo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver qué centros tienen ya asignado un tipo de documento.
 
 ### Donde Entrar
 
@@ -803,9 +891,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los centros que tienen el documento
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento.
+2. Pulsar **lista de asignados**.
+3. Leer el listado **Centros que tienen este documento**.
 
 ### Errores O Avisos Frecuentes
 
@@ -820,12 +910,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_asignados_por_tipo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_asignados_por_tipo.md`
 
-## Lista Docs Asignar Ctr
+## Rellenar la asignación a centros
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsAsignarCtr.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Indicar, para cada centro elegido, cuántos ejemplares (o qué número de registro) recibe de un documento.
 
 ### Donde Entrar
 
@@ -835,9 +924,12 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Rellenar la asignación a centros
 
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar el nombre del documento que aparece como título.
+2. Escribir en cada centro el **número de registro** (documentos numerados) o el **número de ejemplares**.
+3. Indicar las fechas **recibido** y **asignado** (formato dd/mm/aa) si procede.
+4. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -852,12 +944,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_asignar_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_asignar_ctr.md`
 
-## Lista Docs Asignar Dlb
+## Rellenar la asignación a la dlb/casa
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsAsignarDlb.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Indicar, para cada lugar de la dlb/casa elegido, cuántos ejemplares (o qué número de registro) recibe de un documento.
 
 ### Donde Entrar
 
@@ -867,9 +958,12 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Rellenar la asignación a la dlb/casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. Revisar el nombre del documento que aparece como título.
+2. Escribir en cada **delegación** el **número de registro** (documentos numerados) o el **número de ejemplares**.
+3. Indicar las fechas **recibido** y **asignado** si procede.
+4. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -884,12 +978,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_asignar_dlb.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_asignar_dlb.md`
 
-## Lista Docs Con Observaciones
+## Consultar los documentos con observaciones
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsConObservaciones.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos que tienen alguna observación anotada.
 
 ### Donde Entrar
 
@@ -899,9 +992,10 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los documentos con observaciones
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs con observ.**.
+2. Leer el listado: **centro - lugar**, **documento**, **número**, **observaciones** y **observaciones ctr**.
 
 ### Errores O Avisos Frecuentes
 
@@ -916,12 +1010,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_con_observaciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_con_observaciones.md`
 
-## Lista Docs De Ctr
+## Buscar los documentos que se van a trasladar
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsDeCtr.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos de un centro (y lugar) para marcar cuáles se trasladan.
 
 ### Donde Entrar
 
@@ -931,9 +1024,12 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Buscar los documentos que se van a trasladar
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **traslado de doc**, elegir centro y lugar de origen.
+2. Pulsar **buscar**.
+3. Aparece **lista de documentos del centro** con **documento** y **observaciones**.
+4. Marcar los documentos a trasladar (**marcar todos** / **desmarcar todos** ayudan).
 
 ### Errores O Avisos Frecuentes
 
@@ -948,12 +1044,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_de_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_de_ctr.md`
 
-## Lista Docs De Dlb
+## Elegir lugares para asignar un documento
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsDeDlb.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Elegir los centros-lugar de la dlb/casa a los que se asignará un documento (o de los que se va a imprimir el inventario).
 
 ### Donde Entrar
 
@@ -963,9 +1058,17 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir lugares para asignar un documento
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento y pulsar **Asignar a dlb/casa (especificar lugar)**.
+2. Marcar los **centro - lugar** de la lista.
+3. Pulsar **Asignar** para pasar a indicar número y fechas.
+
+#### Elegir lugares para imprimir su inventario
+
+1. Abrir **de centros o dlb** y pulsar **inventario de dlb/casa**.
+2. Marcar los lugares que interesan.
+3. Pulsar **Imprimir** (o **Imprimir dl** para incluir las observaciones de la delegación).
 
 ### Errores O Avisos Frecuentes
 
@@ -980,12 +1083,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_de_dlb.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_de_dlb.md`
 
-## Lista Docs De Egm
+## Ver los documentos de una valija
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsDeEgm.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que lleva una valija, para quitar alguno.
 
 ### Donde Entrar
 
@@ -996,9 +1098,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los documentos de una valija
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, pulsar **quitar documento** en una valija.
+2. Aparece la lista de documentos de esa valija (sigla e identificador).
+3. Marcar los que se quitan.
 
 ### Errores O Avisos Frecuentes
 
@@ -1013,12 +1117,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_de_egm.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_de_egm.md`
 
-## Lista Docs De Lugar
+## Ver los documentos de la casa
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsDeLugar.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos que tiene la casa (el lugar) para repartirlos en valijas.
 
 ### Donde Entrar
 
@@ -1029,9 +1132,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ver los documentos de la casa
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, elegir el equipaje y abrir una valija.
+2. Se muestra la lista de documentos de la casa con **sigla**, **identificador** y **num reg**.
+3. Marcar los que van en la valija y pulsar **crear valija**.
 
 ### Errores O Avisos Frecuentes
 
@@ -1046,12 +1151,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_de_lugar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_de_lugar.md`
 
-## Lista Docs En Busqueda
+## Consultar los documentos pendientes
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsEnBusqueda.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos que están pendientes de localizar (en búsqueda).
 
 ### Donde Entrar
 
@@ -1061,9 +1165,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los documentos pendientes
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs pendientes**.
+2. Leer el listado: **centro - lugar**, **documento** y **núm. reg.**.
+3. Usar la lista para saber qué hay que localizar en cada centro.
 
 ### Errores O Avisos Frecuentes
 
@@ -1078,12 +1184,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_en_busqueda.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_en_busqueda.md`
 
-## Lista Docs Libres
+## Elegir un documento libre
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsLibres.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver los documentos todavía sin meter en ninguna valija del equipaje, para añadirlos.
 
 ### Donde Entrar
 
@@ -1093,9 +1198,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir un documento libre
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, abrir una valija y pulsar **añadir documento**.
+2. Elegir el **tipo de documento** entre los libres.
+3. Pulsar **añadir** (o **cancel**).
 
 ### Errores O Avisos Frecuentes
 
@@ -1110,12 +1217,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_libres.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_libres.md`
 
-## Lista Docs No Asignados Por Tipo
+## Consultar los centros que no tienen el documento
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsNoAsignadosPorTipo.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Ver qué centros todavía no tienen asignado un tipo de documento.
 
 ### Donde Entrar
 
@@ -1125,9 +1231,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los centros que no tienen el documento
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **asignar documento**, elegir el tipo de documento.
+2. Pulsar **lista de NO asignados**.
+3. Leer el listado **Centros que NO tienen este documento**; sirve de punto de partida para asignarlo.
 
 ### Errores O Avisos Frecuentes
 
@@ -1142,12 +1250,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_no_asignados_por_tipo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_no_asignados_por_tipo.md`
 
-## Lista Docs Perdidos
+## Consultar los documentos perdidos
 
 ### Para Que Sirve
 
-- Gestiona ListaDocsPerdidos.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Consultar los documentos dados por perdidos.
 
 ### Donde Entrar
 
@@ -1157,9 +1264,10 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Consultar los documentos perdidos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **lista docs perdidos**.
+2. Leer el listado: **centro - lugar**, **documento**, **número** y **fecha perdido**.
 
 ### Errores O Avisos Frecuentes
 
@@ -1174,12 +1282,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_docs_perdidos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_docs_perdidos.md`
 
-## Lista Equipajes Desde Fecha
+## Cambiar los equipajes que se ven
 
 ### Para Que Sirve
 
-- Gestiona ListaEquipajesDesdeFecha.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar la lista de equipajes entre los que escoger, según el filtro de fechas.
 
 ### Donde Entrar
 
@@ -1191,9 +1298,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar los equipajes que se ven
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **hacer equipajes** (o imprimir / eliminar).
+2. Elegir el filtro: **desde hoy**, **todo el curso** o **todos**.
+3. El desplegable **escoger un equipaje** se actualiza con los equipajes de ese periodo.
 
 ### Errores O Avisos Frecuentes
 
@@ -1208,12 +1317,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_equipajes_desde_fecha.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_equipajes_desde_fecha.md`
 
-## Lista Equipajes Posibles Maletas
+## Crear una valija nueva
 
 ### Para Que Sirve
 
-- Gestiona ListaEquipajesPosiblesMaletas.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Calcular el nombre de la siguiente valija (maleta) que se puede crear en un equipaje.
 
 ### Donde Entrar
 
@@ -1223,9 +1331,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Crear una valija nueva
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **hacer equipajes**, elegir el equipaje.
+2. Pulsar **nueva valija**.
+3. El sistema propone el siguiente número («valija» + número) para la nueva maleta.
 
 ### Errores O Avisos Frecuentes
 
@@ -1240,12 +1350,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_equipajes_posibles_maletas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_equipajes_posibles_maletas.md`
 
-## Lista Lugares De Ubi
+## Elegir el lugar dentro del centro
 
 ### Para Que Sirve
 
-- Gestiona ListaLugaresDeUbi.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Cargar los lugares (estancias) de un centro cuando se elige como origen o destino de un traslado.
 
 ### Donde Entrar
 
@@ -1255,9 +1364,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir el lugar dentro del centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **traslado de doc**, elegir un centro (origen o destino).
+2. Aparece el desplegable **seleccione un lugar** con los lugares de ese centro.
+3. Si falla la carga se muestra «Error al cargar lugares de origen/destino»; volver a elegir el centro.
 
 ### Errores O Avisos Frecuentes
 
@@ -1272,25 +1383,25 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_lugares_de_ubi.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_lugares_de_ubi.md`
 
-## Lista Tipo Doc
+## Elegir el tipo de documento
 
 ### Para Que Sirve
 
-- Gestiona TipoDocOpciones.
-- Opciones del desplegable de tipos de documento (lista_tipo_doc.php).
+Elegir el tipo de documento con el que se va a trabajar antes de asignarlo o de consultar a quién se ha asignado.
 
 ### Donde Entrar
 
 - Asignar documentos — selector (frontend/inventario/controller/docs_asignar_que.php)
-- Añadir doc a maleta (frontend/inventario/controller/equipajes_form_add.php)
 - **Legacy:** scdl > Inventario > documentos > asignar documento
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir el tipo de documento
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **asignar documento** desde el menú.
+2. Elegir el documento en el desplegable **seleccione un tipo de documento**.
+3. Pulsar **lista de asignados** para ver los centros que ya lo tienen, **lista de NO asignados** para ver los que no, o uno de los dos botones de asignación (**Asignar a centros (sin especificar lugar)** / **Asignar a dlb/casa (especificar lugar)**).
 
 ### Errores O Avisos Frecuentes
 
@@ -1305,12 +1416,44 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.lista_tipo_doc.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/lista_tipo_doc.md`
 
-## Texto De Egm
+## Consultar y mantener las tablas del inventario
 
 ### Para Que Sirve
 
-- Gestiona TextoDeEgm.
-- Flujo revisado contra `src/inventario/` y `frontend/inventario/`.
+Buscar, consultar y corregir los datos de base del inventario: las colecciones, los tipos de documento, qué documentos tiene cada centro, los documentos por sigla, los centros con inventario y los lugares dentro de cada centro.
+
+### Donde Entrar
+
+- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- **Legacy:** scdl > Inventario > colecciones
+- **Legacy:** scdl > Inventario > documentos > tipos de documentos / por centros / por sigla
+- **Legacy:** scdl > Inventario > centros
+- **Legacy:** scdl > Inventario > lugares
+- **Pills2:** sin entrada en el índice de menús.
+
+### Tareas Habituales
+
+#### Buscar en una tabla del inventario
+
+1. Abrir la entrada de menú que interesa (por ejemplo **colecciones**).
+2. Rellenar el formulario de búsqueda: en **colecciones** se busca en «nombre colección», en **tipos de documentos** en «detalle», en **por sigla** se elige el **tipo de documento**, en **por centros** se elige el **centro** (con la opción **realizar una búsqueda exacta** no/sí). En **centros** y **lugares** basta con pulsar el botón de buscar.
+3. Pulsar **buscar** (**Buscar** en «por centros» y «por sigla»).
+4. Se muestra el listado de la tabla; desde él se abre cada fila para consultarla o modificarla.
+
+### Errores O Avisos Frecuentes
+
+- No hay errores documentados en el catalogo para este flujo.
+
+### Referencias Internas
+
+- Flujo: `inventario.tablas_inventario.mantener.flujo`
+- Fichero catalogo: `docs/catalogo/inventario/flujos/tablas_inventario.md`
+
+## Abrir el texto para modificarlo
+
+### Para Que Sirve
+
+Cargar el texto que se añade a las maletas (cabecera, cabecera B, pie) para poder modificarlo.
 
 ### Donde Entrar
 
@@ -1320,9 +1463,11 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Abrir el texto para modificarlo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **imprimir equipajes**, pulsar el lápiz junto a la cabecera, la cabecera B) o el pie.
+2. Se abre el cuadro con el texto actual.
+3. Cambiarlo y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -1337,23 +1482,28 @@ Impresión inventario DLB/casa vía `inventario_dlb`.
 - Flujo: `inventario.texto_de_egm.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/inventario/flujos/texto_de_egm.md`
 
-## Traslado Doc
+## Trasladar documentos a otro centro
 
 ### Para Que Sirve
 
-Trasladar documentos entre centros/lugares: filtro en `traslado_doc_que`, selección en `traslado_doc_lista`, guardado en `traslado_doc_guardar`.
+Pasar documentos de un centro (y lugar) a otro.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Traslado de documentos — filtro (frontend/inventario/controller/traslado_doc_que.php)
 - **Legacy:** scdl > Inventario > inventarios > traslado de doc
 - **Pills2:** —
 
 ### Tareas Habituales
 
-#### Guardar
+#### Trasladar documentos a otro centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir **traslado de doc**.
+2. Elegir el centro de origen, luego el lugar, y pulsar **Buscar**. La lista puede ser muy larga (más de mil documentos en un almacén).
+3. Marcar en **lista de documentos del centro** los documentos que se mueven.
+4. Elegir el centro y el lugar de destino.
+5. Pulsar **Asignar**: los documentos pasan al lugar de destino y la lista de origen se actualiza.
+6. Si hay un problema aparece un aviso **respuesta**.
 
 ### Errores O Avisos Frecuentes
 

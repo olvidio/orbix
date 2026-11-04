@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "profesores"
 flujos: 6
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - profesores
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Consultar congresos
+## Consultar la asistencia a congresos
 
 ### Para Que Sirve
 
-Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
+Consultar la asistencia de los profesores a congresos, claustros, reuniones y otros eventos.
 
 ### Donde Entrar
 
@@ -27,10 +27,11 @@ Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
 
 ### Tareas Habituales
 
-#### Consultar
+#### Consultar la asistencia a congresos
 
-1. Abrir **asistencia a congresos** desde el menú `stgr2`.
-2. Revisar la tabla `tabla_congreso`.
+1. Entrar en **asitencia a congresos**.
+2. Se muestra una tabla con «apellidos, nombre», «tipo» (claustro, reunión, congreso, cv…), «lugar», «inicio», «fin» y «organiza».
+3. Arriba a la derecha de la tabla hay dos iconos (lupa y guardar) para buscar en ella y exportarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -45,11 +46,11 @@ Revisar congresos registrados por profesor (tipo, lugar, fechas, organizador).
 - Flujo: `profesores.congresos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/congresos.md`
 
-## Ver docencia global
+## Consultar la docencia
 
 ### Para Que Sirve
 
-Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
+Consultar la docencia impartida por los profesores: curso, asignatura, modo y acta.
 
 ### Donde Entrar
 
@@ -59,10 +60,11 @@ Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
 
 ### Tareas Habituales
 
-#### Consultar
+#### Consultar la docencia
 
-1. Abrir **ver docencia** desde el menú `stgr2`.
-2. Revisar la tabla `tabla_docencia`.
+1. Entrar en **ver docencia**.
+2. Se muestra una tabla con «apellidos, nombre», «inicio curso», «asignatura», «modo» (por ejemplo «sem. invierno» o «ca/cv») y «acta».
+3. Arriba a la derecha de la tabla hay dos iconos (lupa y guardar) para buscar en ella y exportarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -77,11 +79,11 @@ Revisar qué docencia consta registrada por profesor, curso, asignatura y acta.
 - Flujo: `profesores.docencia.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/docencia.md`
 
-## Ver ficha profesor STGR
+## Consultar la ficha de un profesor
 
 ### Para Que Sirve
 
-Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nombramientos, curriculum, docencia, congresos, etc.
+Consultar la ficha stgr de un profesor (nombramientos, curriculum, docencia, congresos…) y, con permiso, imprimirla o modificarla.
 
 ### Donde Entrar
 
@@ -90,18 +92,19 @@ Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nom
 
 ### Tareas Habituales
 
-#### Consultar
+#### Consultar la ficha de un profesor
 
-1. Buscar persona y abrir **ficha profesor stgr**.
-2. Revisar bloques visibles según `aPerm`.
+1. Buscar a la persona y pulsar **ficha profesor stgr**.
+2. Se muestran los bloques de la ficha que el usuario tiene permiso para ver.
 
-#### Imprimir
+#### Imprimir la ficha
 
-1. Pulsar **[imprimir]** → recarga con `print=1` (forzado en RSTGR).
+1. Pulsar **[imprimir]**: la ficha se vuelve a mostrar en formato de impresión (en las regiones del stgr siempre sale así).
 
-#### Modificar bloque
+#### Modificar un bloque de la ficha
 
-1. Con permiso de escritura, pulsar **[modificar]** en un bloque → `tablaDB_lista_ver`.
+1. Con permiso de escritura, pulsar **[modificar]** en el bloque que se quiere cambiar.
+2. Se abre la tabla de ese bloque para editarla.
 
 ### Errores O Avisos Frecuentes
 
@@ -118,11 +121,11 @@ Consultar (e imprimir o modificar con permiso) la ficha STGR de un profesor: nom
 - Flujo: `profesores.ficha_profesor_stgr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/ficha_profesor_stgr.md`
 
-## Consultar claustro
+## Ver el claustro por departamentos
 
 ### Para Que Sirve
 
-Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegación en RSTGR.
+Ver el claustro de profesores agrupado por departamento y categoría.
 
 ### Donde Entrar
 
@@ -132,11 +135,11 @@ Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegació
 
 ### Tareas Habituales
 
-#### Consultar
+#### Ver el claustro por departamentos
 
-1. Abrir **claustro** desde el menú.
-2. En RSTGR sin filtro: marcar delegaciones y pulsar **Aplicar filtro** (`filtro=1`, `dl[]`).
-3. Revisar departamentos con subsecciones director y tipos de profesor.
+1. Entrar en **claustro**.
+2. Se muestra cada departamento (por ejemplo «Música») con sus categorías: director, Ordinario, Extraordinario, Adjunto, Encargado, Ayudante y Asociado.
+3. Bajo cada categoría se listan los profesores que la tienen. Si una categoría sale sin nombres es que ahora mismo no hay nadie en ella (en la instancia de desarrollo solo se ven los títulos).
 
 ### Errores O Avisos Frecuentes
 
@@ -151,11 +154,11 @@ Ver quiénes integran el claustro vigente, opcionalmente filtrado por delegació
 - Flujo: `profesores.lista_por_departamentos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/lista_por_departamentos.md`
 
-## Tabla AJAX profesores asignatura
+## Ver los profesores de una asignatura
 
 ### Para Que Sirve
 
-Obtener la lista de profesores para la asignatura seleccionada sin recargar la pantalla principal.
+Cargar la lista de profesores de la asignatura elegida.
 
 ### Donde Entrar
 
@@ -164,11 +167,10 @@ Obtener la lista de profesores para la asignatura seleccionada sin recargar la p
 
 ### Tareas Habituales
 
-#### Consultar
+#### Ver los profesores de una asignatura
 
-1. El usuario cambia la asignatura en el desplegable.
-2. POST a `profesor_asignatura_ajax.php` con `id_asignatura`.
-3. Se inserta HTML de tabla en el contenedor de la pantalla padre.
+1. Elegir la asignatura en el desplegable.
+2. La lista de profesores se actualiza en la misma pantalla.
 
 ### Errores O Avisos Frecuentes
 
@@ -183,11 +185,11 @@ Obtener la lista de profesores para la asignatura seleccionada sin recargar la p
 - Flujo: `profesores.profesor_asignatura_ajax.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/profesores/flujos/profesor_asignatura_ajax.md`
 
-## Buscar profesor para asignatura
+## Buscar profesores para una asignatura
 
 ### Para Que Sirve
 
-Elegir asignatura y ver candidatos (departamento + ampliación) con datos de contacto y docencia previa, como apoyo antes de asignar en el curso académico.
+Saber qué profesores pueden impartir una asignatura.
 
 ### Donde Entrar
 
@@ -197,11 +199,11 @@ Elegir asignatura y ver candidatos (departamento + ampliación) con datos de con
 
 ### Tareas Habituales
 
-#### Consultar
+#### Buscar profesores para una asignatura
 
-1. Abrir **profesor para asignatura** desde el menú.
-2. Elegir asignatura en el desplegable (`fnjs_profes`).
-3. Revisar la tabla AJAX con profesores, centro, docencia y contacto.
+1. Entrar en «Profesores que pueden impartir una asignatura».
+2. Elegir la **Asignatura** en el desplegable.
+3. Debajo aparece la lista de profesores que pueden darla, o «no hay ninguna fila» si no hay ninguno registrado.
 
 ### Errores O Avisos Frecuentes
 

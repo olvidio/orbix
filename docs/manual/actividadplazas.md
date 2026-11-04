@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "actividadplazas"
 flujos: 9
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - actividadplazas
@@ -13,32 +13,32 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Gestion Plazas
+## Ver el reparto de plazas de un periodo
 
 ### Para Que Sirve
 
-Ver, para un periodo y tipo de actividad, cuántas plazas tiene cada actividad y cómo se reparten (concedidas/pedidas) entre las delegaciones del grupo, y ajustar esos valores desde la propia tabla.
+Ver, para un periodo y un tipo de actividad, cuántas plazas tiene cada actividad y cómo se reparten (concedidas y pedidas) entre las delegaciones del grupo, y ajustar esos números desde la propia tabla.
 
 ### Donde Entrar
 
 - Gestion Plazas (frontend/actividadplazas/controller/gestion_plazas.php)
-- Plazas Balance Dl (frontend/actividadplazas/controller/plazas_balance_dl.php)
 - **Legacy:** vsm > ca > Gestión de plazas (y variantes por perfil/tipo: dagd, vsg, vest…)
 - **Pills2:** ACTIVIDADES > Gestión de plazas y peticiones > Distribución plazas ca n entre r/dl (y variantes por tipo/colectivo)
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el reparto de plazas de un periodo
 
-1. Elegir el periodo (año + periodo, o rango de fechas) y pulsar **Buscar**.
-2. El sistema carga el cuadro desde `gestion_plazas_data` (actividades × delegaciones).
+1. Abrir **Gestión de plazas**.
+2. Elegir el periodo (año y periodo, o un rango de fechas) y pulsar **Buscar**.
+3. Aparece un cuadro con las actividades en filas y las delegaciones en columnas.
 
-#### Crear o modificar
+#### Cambiar las plazas de una actividad
 
 1. Localizar la actividad en la tabla.
-2. Doble clic en una celda editable (total, concedidas `-c` o pedidas `-p` de mi delegación).
-3. Escribir el nuevo valor; se guarda al instante vía `gestion_plazas_update`.
-4. Si la actividad no tiene plazas en el calendario común, se muestra el aviso para darlas de alta antes.
+2. Hacer doble clic en una celda editable: el total, las concedidas (**-c**) o las pedidas (**-p**) de la propia delegación.
+3. Escribir el nuevo valor; se guarda al momento.
+4. Si la actividad no tiene plazas en el calendario común, sale un aviso: hay que darlas de alta antes.
 
 ### Errores O Avisos Frecuentes
 
@@ -56,11 +56,11 @@ Ver, para un periodo y tipo de actividad, cuántas plazas tiene cada actividad y
 - Flujo: `actividadplazas.gestion_plazas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/gestion_plazas.md`
 
-## Peticiones
+## Guardar las peticiones de una persona
 
 ### Para Que Sirve
 
-Definir (o borrar) la lista priorizada de actividades que una persona solicita como petición de plaza para un tipo y colectivo (`n`, `a`, `agd`).
+Definir, o borrar, la lista ordenada de actividades que pide una persona como plaza, para un tipo de actividad y un colectivo (n, a o agd).
 
 ### Donde Entrar
 
@@ -70,18 +70,17 @@ Definir (o borrar) la lista priorizada de actividades que una persona solicita c
 
 ### Tareas Habituales
 
-#### Guardar
+#### Guardar las peticiones de una persona
 
-1. En la pantalla de peticiones, ordenar las actividades con los desplegables (`DesplegableArray`).
-2. Añadir filas con **más actividades** (`fnjs_mas_actividades`) si hace falta.
-3. Pulsar el botón de guardar (`fnjs_guardar`): envía `id_nom`, `sactividad` y la lista ordenada a
-4. Si tiene éxito, vuelve atrás (`fnjs_nav_atras`).
+1. En la pantalla de peticiones, ordenar las actividades con los desplegables: la primera es la preferida.
+2. Si hacen falta más filas, pulsar **más actividades**.
+3. Pulsar **guardar**. Las peticiones anteriores de esa persona se sustituyen por las nuevas, en ese orden.
+4. Al terminar, la pantalla vuelve a la anterior.
 
-#### Eliminar
+#### Borrar las peticiones de una persona
 
-1. En la misma pantalla, pulsar **Borrar** (`fnjs_borrar`).
-2. El sistema elimina todas las peticiones de esa persona+tipo vía `peticiones_eliminar`.
-3. Si tiene éxito, refresca la pantalla (`fnjs_actualizar`).
+1. En la misma pantalla, pulsar **Borrar**.
+2. Se eliminan todas las peticiones de esa persona para ese tipo de actividad y la pantalla se refresca.
 
 ### Errores O Avisos Frecuentes
 
@@ -98,11 +97,11 @@ Definir (o borrar) la lista priorizada de actividades que una persona solicita c
 - Flujo: `actividadplazas.peticiones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/peticiones.md`
 
-## Peticiones Activ
+## Abrir las peticiones de una persona
 
 ### Para Que Sirve
 
-Consultar y preparar la edición de las peticiones de plaza de una persona: ver su nombre, las actividades disponibles del tipo y las peticiones ya guardadas, listas para reordenar o ampliar.
+Ver las peticiones de plaza de una persona: su nombre, las actividades disponibles del tipo elegido y las peticiones ya guardadas, listas para reordenar o ampliar.
 
 ### Donde Entrar
 
@@ -112,12 +111,11 @@ Consultar y preparar la edición de las peticiones de plaza de una persona: ver 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir las peticiones de una persona
 
-1. Desde un listado de personas (n / a / agd), abrir las peticiones de plaza de una persona.
-2. El sistema carga `peticiones_activ_data` con `id_nom` y `sactividad`.
-3. Devuelve las actividades candidatas y las peticiones actuales; limpia peticiones antiguas ya no
-4. Pinta los desplegables (`DesplegableArray`) precargados con el orden de prioridad; el usuario
+1. Desde un listado de personas (n, a o agd), seleccionar a la persona.
+2. Aparecen las actividades que puede pedir y las peticiones que ya tenía; las que ya no están disponibles se descartan.
+3. Los desplegables salen con el orden de prioridad guardado. Se pueden cambiar y guardar, o borrar todo (ver «Guardar las peticiones de una persona»).
 
 ### Errores O Avisos Frecuentes
 
@@ -132,11 +130,12 @@ Consultar y preparar la edición de las peticiones de plaza de una persona: ver 
 - Flujo: `actividadplazas.peticiones_activ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/peticiones_activ.md`
 
-## Peticiones Incorporar
+## Incorporar las primeras peticiones
 
 ### Para Que Sirve
 
-Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden = 1) en asistencias propias con plaza, para un tipo y colectivo, sin incorporar personas que ya tienen actividad propia en el periodo.
+- Convertir de golpe las primeras peticiones de plaza de cada persona en asistencias propias con plaza, para un tipo de actividad y un colectivo.
+- No se incorpora a quien ya tiene una actividad propia en ese periodo.
 
 ### Donde Entrar
 
@@ -146,12 +145,11 @@ Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Incorporar las primeras peticiones
 
-1. Abrir **Incorporar peticiones de plazas** desde el menú (según tipo y colectivo).
-2. Leer el texto explicativo y pulsar **Continuar** (`fnjs_incorporar_peticiones`).
-3. El botón se deshabilita mientras se ejecuta; el sistema envía `sactividad` y `sasistentes` a
-4. Muestra en `#resultado` cuántas peticiones se incorporaron (`incorporadas`) y el aviso de que no
+1. Abrir **Incorporar peticiones de plazas** desde el menú (según el tipo de actividad y el colectivo).
+2. Leer el texto explicativo y pulsar **Continuar**. El botón se desactiva mientras se ejecuta.
+3. Al terminar se muestra cuántas peticiones se han incorporado, con el recordatorio de que no se incorpora a quien ya tiene actividad propia.
 
 ### Errores O Avisos Frecuentes
 
@@ -166,11 +164,11 @@ Ejecutar el proceso masivo que convierte las primeras peticiones de plaza (orden
 - Flujo: `actividadplazas.peticiones_incorporar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/peticiones_incorporar.md`
 
-## Plazas Balance
+## Comparar con otra delegación
 
 ### Para Que Sirve
 
-Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene cada actividad en mi delegación frente a otra delegación elegida en el desplegable.
+Comparar, para un tipo de actividad, las plazas concedidas y libres de cada actividad en la propia delegación frente a otra delegación elegida.
 
 ### Donde Entrar
 
@@ -181,12 +179,11 @@ Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene c
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Comparar con otra delegación
 
-1. En **Balance de plazas**, elegir la delegación a comparar en el desplegable.
-2. El sistema carga el HTML del grid en `#comparativa` vía `plazas_balance_dl.php`.
-3. Ese fragmento obtiene los datos de `plazas_balance_data` (`dlA` = mi dl, `dlB` = la elegida):
-4. Las celdas de mi dl son editables (doble clic → `gestion_plazas_update`).
+1. En **Balance de plazas**, elegir en el desplegable la delegación con la que comparar.
+2. Debajo aparece la tabla: arriba, las plazas que se conceden mutuamente las dos delegaciones, y por actividad las concedidas y las libres.
+3. Las celdas de la propia delegación se pueden cambiar con doble clic; se guarda al momento.
 
 ### Errores O Avisos Frecuentes
 
@@ -202,11 +199,11 @@ Comparar, para un tipo de actividad, cuántas plazas concedidas y libres tiene c
 - Flujo: `actividadplazas.plazas_balance.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/plazas_balance.md`
 
-## Plazas Balance Que
+## Abrir el balance de plazas
 
 ### Para Que Sirve
 
-Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la propia, y ver el grid comparativo que se carga debajo.
+Entrar en el balance de plazas entre delegaciones y elegir con qué delegación comparar la propia.
 
 ### Donde Entrar
 
@@ -216,11 +213,11 @@ Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Abrir el balance de plazas
 
-1. Abrir **Balance de plazas** desde el menú (según tipo y colectivo).
-2. El sistema carga `plazas_balance_que_data`: opciones del desplegable de delegaciones e
-3. Al elegir una delegación (`fnjs_comparativa`), solicita por AJAX `plazas_balance_dl` e inserta el
+1. Abrir **Balance de plazas** desde el menú (según el tipo de actividad y el colectivo).
+2. Elegir la delegación en el desplegable.
+3. La comparación aparece debajo, sin salir de la pantalla (ver «Comparar con otra delegación»).
 
 ### Errores O Avisos Frecuentes
 
@@ -235,11 +232,11 @@ Acceder al balance de plazas entre delegaciones, elegir con qué dl comparar la 
 - Flujo: `actividadplazas.plazas_balance_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/plazas_balance_que.md`
 
-## Plazas Ceder
+## Ceder plazas a otra delegación
 
 ### Para Que Sirve
 
-Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otra delegación y confirmar el cambio.
+Desde el resumen de plazas de una actividad, indicar cuántas plazas se ceden a otra delegación y confirmar el cambio.
 
 ### Donde Entrar
 
@@ -249,12 +246,12 @@ Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otr
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Ceder plazas a otra delegación
 
 1. Abrir el resumen de plazas de la actividad.
-2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación destino.
-3. Pulsar **Guardar** (`fnjs_guardar`): envía `id_activ`, `num_plazas` y `region_dl` a
-4. Si tiene éxito, la pantalla se recarga (`fnjs_actualizar`) mostrando el nuevo reparto.
+2. En el bloque **Ceder**, escribir el número de plazas y elegir la delegación que las recibe.
+3. Pulsar **Guardar**.
+4. La pantalla se recarga y muestra el nuevo reparto.
 
 ### Errores O Avisos Frecuentes
 
@@ -270,11 +267,11 @@ Desde el resumen de plazas de una actividad, indicar cuántas plazas ceder a otr
 - Flujo: `actividadplazas.plazas_ceder.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/plazas_ceder.md`
 
-## Posibles Propietarios
+## Elegir la delegación propietaria de la plaza
 
 ### Para Que Sirve
 
-Al editar la asistencia de una persona en una actividad (o viceversa), elegir qué delegación es propietaria de la plaza entre las opciones válidas para esa combinación persona+actividad.
+Al editar la asistencia de una persona a una actividad, elegir qué delegación es la propietaria de la plaza entre las opciones válidas para esa persona y esa actividad.
 
 ### Donde Entrar
 
@@ -283,11 +280,11 @@ Al editar la asistencia de una persona en una actividad (o viceversa), elegir qu
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la delegación propietaria de la plaza
 
-1. Abrir el formulario de asistencia (persona↔actividad) desde el módulo asistentes.
-2. Al cargar o cambiar persona/actividad, el frontend solicita `posibles_propietarios_data` con
-3. El sistema devuelve el payload estándar de desplegable (`id`, `opciones`, `selected`, `blanco`,
+1. Abrir el formulario de asistencia, bien desde una persona o bien desde una actividad.
+2. En **propiedad de** aparecen solo las delegaciones posibles para esa combinación; por defecto sale preseleccionada la propia delegación.
+3. Elegir la que corresponda y guardar el formulario.
 
 ### Errores O Avisos Frecuentes
 
@@ -303,11 +300,11 @@ Al editar la asistencia de una persona en una actividad (o viceversa), elegir qu
 - Flujo: `actividadplazas.posibles_propietarios.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadplazas/flujos/posibles_propietarios.md`
 
-## Resumen Plazas
+## Ver el resumen de plazas de una actividad
 
 ### Para Que Sirve
 
-Ver el estado completo de plazas de una actividad (por dl y totales), comprobar avisos de publicación o visibilidad, y acceder al formulario para ceder plazas a otra delegación.
+Ver cuántas plazas tiene cada delegación en una actividad y ceder plazas a otra.
 
 ### Donde Entrar
 
@@ -317,12 +314,12 @@ Ver el estado completo de plazas de una actividad (por dl y totales), comprobar 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el resumen de plazas de una actividad
 
-1. Desde una actividad, abrir la opción de plazas/resumen.
-2. El sistema carga `resumen_plazas_data` con el desglose por delegación y totales.
-3. Muestra avisos si la actividad no está publicada o si solo se ven las ocupadas por la propia dl
-4. Pinta la tabla (calendario, cedidas, conseguidas, disponibles, ocupadas, libres) y el desplegable
+1. Marcar la actividad y pulsar **plazas**.
+2. Si solo se ven las plazas de la propia dl, avisa «Sólo se ven las ocupadas por la propia dl».
+3. La tabla tiene una fila por delegación con **calendario**, **cedidas**, **conseguidas**, **total**, **ocupadas** y **libres**; debajo de cada una se indica a quién cedió o de quién consiguió plazas (por ejemplo «1 a dlb», «3 de dlmE») y una fila de **totales**.
+4. Debajo hay un bloque «ceder [número] plazas a [delegación] **Guardar**» (ver «Ceder plazas»).
 
 ### Errores O Avisos Frecuentes
 

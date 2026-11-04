@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "planning"
 flujos: 7
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - planning
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Planning por casas (filtros)
+## Elegir las casas y el periodo del planning
 
 ### Para Que Sirve
 
-Consultar el calendario de actividades por casas (actual o propuesta de calendario).
+Elegir de qué casas se quiere ver el calendario de ocupación y en qué periodo.
 
 ### Donde Entrar
 
@@ -29,7 +29,13 @@ Consultar el calendario de actividades por casas (actual o propuesta de calendar
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir las casas y el periodo del planning
+
+1. Abrir «BÚSQUEDA DE CASAS CUYO PLANNING INTERESA».
+2. Elegir el grupo de casas: **casas sólo sv**, **casas sólo sf**, **casas comunes**, **casas sv**, **casas sf**, **casas y ctr sf**, **una casa o lugar** (y elegirla en el desplegable), **todas las actividades sv** o **todas las actividades sf**.
+3. Indicar si se quieren incluir las **casas sin actividad** (no / sí).
+4. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+5. Pulsar **Planning vista tabla** (calendario en pantalla) o **vista para imprimir**.
 
 ### Errores O Avisos Frecuentes
 
@@ -44,11 +50,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_casa_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_casa_que.md`
 
-## Planning por casas (calendario)
+## Ver el calendario de casas
 
 ### Para Que Sirve
 
-Visualizar y exportar el planning de casas en el periodo elegido.
+Ver el calendario de ocupación de las casas elegidas: qué actividad hay en cada casa y cada día.
 
 ### Donde Entrar
 
@@ -58,7 +64,12 @@ Visualizar y exportar el planning de casas en el periodo elegido.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el calendario de casas
+
+1. Aparece «Calendario de casas» con los meses del periodo en columnas y una fila por casa; los domingos van marcados.
+2. Cada actividad es una barra con su tipo abreviado (por ejemplo «sg crt», «n ca»); el color indica el tipo y si está en proyecto o provisional. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+3. **Descargar html** guarda el calendario como página web.
+4. Desde la entrada de menú de **nuevo planning** del calendario de propuestas, la tabla permite crear una actividad nueva en una casa o modificar una existente.
 
 ### Errores O Avisos Frecuentes
 
@@ -73,11 +84,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_casa_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_casa_ver.md`
 
-## Planning por centro (calendario)
+## Ver el planning de las personas de un centro
 
 ### Para Que Sirve
 
-Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en un periodo.
+Ver el calendario de actividades de las personas de un centro (o de todos los centros de un colectivo).
 
 ### Donde Entrar
 
@@ -87,7 +98,14 @@ Ver el planning de un centro o de todos los centros (por colectivo n/agd/s) en u
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el planning de las personas de un centro
+
+1. Abrir «ACTIVIDADES DE LAS PERSONAS DE UN CENTRO».
+2. Escribir el **Centro** (si se deja vacío salen todos los n ordenados por centro) o marcar **todos los ctr con n**, **todos los ctr con agd** o **todos los ctr con s**.
+3. Elegir **incluir sacd**: no / sí.
+4. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+5. Pulsar **Planning vista tabla** o **vista para imprimir**.
+6. Si un centro no existe o no tiene personas, avisa «No encuentro este ctr» o «No encuentro personas para …». El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
 
 ### Errores O Avisos Frecuentes
 
@@ -104,11 +122,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_ctr_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_ctr_select.md`
 
-## Planning por persona (listado)
+## Buscar personas y ver su planning
 
 ### Para Que Sirve
 
-Encontrar personas del colectivo del menú y abrir su calendario de actividades.
+Buscar personas de la dl y ver su calendario de actividades.
 
 ### Donde Entrar
 
@@ -122,7 +140,13 @@ Encontrar personas del colectivo del menú y abrir su calendario de actividades.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Buscar personas y ver su planning
+
+1. Abrir «BÚSQUEDA DE PERSONAS DE LA DL» y rellenar, si se quiere, **Nombre**, **Primer apellido**, **Segundo apellido** o **Centro**.
+2. En **PERIODO DEL PLANNING ACTIVIDADES** elegir todo el año, un trimestre u **otro** (con fecha de inicio y de fin) y el año.
+3. Pulsar **Buscar**: sale «N personas encontradas» con tipo, nombre y apellidos y centro.
+4. Marcar a una o varias personas (o **marcar todos** / **desmarcar todos**) y pulsar **vista tabla** para el calendario, **vista para imprimir** o **ver actividades**.
+5. Pulsar el nombre de una persona abre su ficha.
 
 ### Errores O Avisos Frecuentes
 
@@ -137,11 +161,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_persona_select.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_persona_select.md`
 
-## Planning por persona (calendario)
+## Ver el calendario de una persona
 
 ### Para Que Sirve
 
-Visualizar y exportar el planning individual o múltiple en el periodo elegido.
+Ver el calendario de actividades de las personas elegidas.
 
 ### Donde Entrar
 
@@ -151,7 +175,10 @@ Visualizar y exportar el planning individual o múltiple en el periodo elegido.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el calendario de una persona
+
+1. Aparece el calendario con los meses del periodo (enero - 2027, febrero - 2027…) y una fila por persona; cada actividad es una barra con su tipo. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+2. **Descargar html** guarda el calendario como página web.
 
 ### Errores O Avisos Frecuentes
 
@@ -166,11 +193,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_persona_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_persona_ver.md`
 
-## Planning por zonas SACD (filtros)
+## Elegir la zona y el periodo
 
 ### Para Que Sirve
 
-Consultar el calendario de actividades SACD agrupadas por zona.
+Elegir la zona de sacerdotes y el trimestre o mes del planning.
 
 ### Donde Entrar
 
@@ -181,7 +208,12 @@ Consultar el calendario de actividades SACD agrupadas por zona.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir la zona y el periodo
+
+1. Abrir «trimestre o mes que interesa» y marcar un trimestre (enero-marzo, abril-junio, julio-septiembre, octubre-diciembre) o un mes concreto.
+2. Elegir el **año** y la **zona** (según tu rol, solo las tuyas o también «todo»).
+3. Marcar si se quieren ver las actividades (sí / no).
+4. Pulsar **planning vista tabla**.
 
 ### Errores O Avisos Frecuentes
 
@@ -198,11 +230,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `planning.planning_zones_que.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/planning/flujos/planning_zones_que.md`
 
-## Planning por zonas SACD (calendario)
+## Ver el planning de una zona
 
 ### Para Que Sirve
 
-Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calendario actual o propuesta).
+Ver el calendario de los sacerdotes de una zona.
 
 ### Donde Entrar
 
@@ -211,7 +243,10 @@ Visualizar y exportar el planning por zonas en el trimestre/mes elegido (calenda
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Ver el planning de una zona
+
+1. Aparece el calendario con el nombre de la zona, los meses elegidos en columnas y una fila por sacerdote. El botón **Ver leyenda** abre una ventana con los colores: actividad sv, sf, otras, propia, personal, provisional (si la plaza está pedida, en espera o denegada) y en proyecto.
+2. **Descargar html** guarda el calendario como página web.
 
 ### Errores O Avisos Frecuentes
 

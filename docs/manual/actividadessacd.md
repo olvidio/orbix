@@ -33,7 +33,7 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 #### Obtener Datos
 
 1. Abrir la pantalla de comunicación a los sacd.
-2. El sistema resuelve `perm_mod_txt` según el rol del usuario.
+2. Según el rol del usuario se decide si puede editar o solo ver.
 3. Si hay permiso, se muestra el enlace para editar textos.
 
 ### Errores O Avisos Frecuentes
@@ -68,7 +68,7 @@ El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por c
 #### Obtener Datos
 
 1. Seleccionar periodo en la barra de filtros (o entrar con un sacd preseleccionado).
-2. Pulsar **buscar** (o auto-carga si `AUTO_CARGAR`).
+2. Pulsar **buscar** (en algunos casos la lista se carga sola al abrir la pantalla).
 3. El sistema pinta el listado por sacd con actividades, textos y leyenda.
 
 ### Errores O Avisos Frecuentes
@@ -172,7 +172,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 #### Obtener Datos
 
 1. Abrir el fragmento de edición de textos desde la pantalla de comunicación.
-2. El sistema rellena el desplegable de idiomas con `a_locales`.
+2. El desplegable de idiomas se rellena con los idiomas disponibles.
 
 ### Errores O Avisos Frecuentes
 
@@ -282,7 +282,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 1. Leer el texto que describe el criterio de asignación automática.
 2. Pulsar **continuar**.
-3. El sistema procesa y muestra el resultado (`asignadas`, `sin_asignar`) sin recargar la página.
+3. El sistema procesa y muestra el resultado (cuántas actividades se han asignado y cuántas quedan sin asignar) sin recargar la página.
 
 ### Errores O Avisos Frecuentes
 
@@ -383,7 +383,7 @@ Tras asignar, reordenar o borrar un sacd, el sistema refresca la celda de sacd d
 
 #### Obtener Datos
 
-1. Tras una asignación, reordenación o borrado, el sistema actualiza la celda `<id_activ>_sacds`.
+1. Tras una asignación, reordenación o borrado, la celda de sacd de esa actividad se actualiza sola.
 2. Se repintan los sacd encargados con sus enlaces de menú contextual.
 
 ### Errores O Avisos Frecuentes
@@ -417,7 +417,7 @@ Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: e
 
 #### Obtener Datos
 
-1. Entrar desde el menú con tipo `solape`.
+1. Entrar desde la opción de solapes del menú.
 2. Elegir periodo y pulsar **buscar**.
 3. El sistema construye la tabla de sacd con sus actividades incompatibles y la leyenda de colores.
 

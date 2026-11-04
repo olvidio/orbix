@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "misas"
 flujos: 32
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - misas
@@ -13,12 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Anadir Ctr Tarea
+## Añadir o quitar un centro en la plantilla
 
 ### Para Que Sirve
 
-- Añade o elimina una fila de plantilla (centro asociado a tarea) en el editor de plantillas.
-- Rama que=anadir crea Plantilla con semana=-1; rama quitar elimina por id_item.
+Añadir o quitar, en la plantilla, un centro asociado a una tarea.
 
 ### Donde Entrar
 
@@ -28,9 +27,10 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Añadir o quitar un centro en la plantilla
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, usar el botón de añadir fila de la tarea y elegir el centro.
+2. Para quitarlo, pulsar quitar en la fila.
 
 ### Errores O Avisos Frecuentes
 
@@ -44,11 +44,11 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 - Flujo: `misas.anadir_ctr_tarea.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/anadir_ctr_tarea.md`
 
-## Buscar Plan Ctr
+## Ver el plan de misas de un centro
 
 ### Para Que Sirve
 
-Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y selección por defecto según rol del usuario.
+Elegir zona, centro y periodo para ver el plan de misas de un centro.
 
 ### Donde Entrar
 
@@ -58,9 +58,12 @@ Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el plan de misas de un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Plan centro**.
+2. Elegir la **zona**, el **centro** y el **Periodo**.
+3. Se muestra el plan: los encargos en filas y los días en columnas, con la leyenda de sacerdotes.
+4. Si el usuario no tiene permiso, aparece «No tiene permiso para ver esta página».
 
 ### Errores O Avisos Frecuentes
 
@@ -71,11 +74,11 @@ Inicializa el formulario de búsqueda del plan CTR: zonas, centros disponibles y
 - Flujo: `misas.buscar_plan_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/buscar_plan_ctr.md`
 
-## Buscar Plan Sacd
+## Ver el plan de un sacerdote
 
 ### Para Que Sirve
 
-Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado por rol y zona del usuario.
+Elegir sacerdote y periodo para ver su plan de misas.
 
 ### Donde Entrar
 
@@ -85,9 +88,11 @@ Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado p
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el plan de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Plan sacerdote**.
+2. Elegir el **Sacerdote** (la lista se limita según el rol y la zona del usuario) y el **Periodo**.
+3. Se muestra la lista día a día de las misas asignadas.
 
 ### Errores O Avisos Frecuentes
 
@@ -98,11 +103,11 @@ Devuelve el desplegable de sacerdotes para el buscador del plan SACD, filtrado p
 - Flujo: `misas.buscar_plan_sacd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/buscar_plan_sacd.md`
 
-## Cambiar Status
+## Cambiar el estado del plan
 
 ### Para Que Sirve
 
-Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas permitidas, criterios de orden y estados posibles.
+Cambiar el estado del plan de misas de una zona y periodo: propuesta, visible para sacerdotes o visible para centros.
 
 ### Donde Entrar
 
@@ -112,9 +117,12 @@ Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas pe
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Cambiar el estado del plan
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Cambiar estado**.
+2. Elegir la zona en **Plan de Misas Zona**, el **Orden** y el **Periodo**.
+3. En **Nuevo estado** elegir propuesta, visible sacd o visible ctr.
+4. Pulsar **cambiar**: se aplica a todas las misas de la zona en ese periodo. No muestra ningún mensaje de confirmación; para comprobarlo hay que volver a abrir el plan.
 
 ### Errores O Avisos Frecuentes
 
@@ -126,11 +134,11 @@ Carga los desplegables de la pantalla cambiar estado del plan de misas: zonas pe
 - Flujo: `misas.cambiar_status.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/cambiar_status.md`
 
-## Crear Nuevo Periodo
+## Preparar un nuevo plan de misas
 
 ### Para Que Sirve
 
-Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de plantilla y devuelve el payload de cuadrícula para renderizar ver_cuadricula_zona.phtml.
+Crear el plan de misas de un periodo nuevo a partir de la plantilla y mostrarlo en la cuadrícula.
 
 ### Donde Entrar
 
@@ -140,9 +148,12 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Preparar un nuevo plan de misas
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Nuevo plan** (Preparar Plan de Misas).
+2. Elegir la zona en **Plan de Misas Zona**, el **Tipo de plantilla** (semanal, semanal y domingos o mensual, con una o tres opciones: la plantilla propone 1 o 3 sacerdotes para cada misa, por orden de prioridad; se elige el primero y solo se pasa al segundo si el primero no está o celebra en un centro con más prioridad), el **Orden** y el **Periodo** (próxima semana, próximo mes natural u otro, con fechas).
+3. Pulsar **preparar**. Aviso: «Borrará todos los datos introducidos en este periodo!!».
+4. Se muestra la cuadrícula del plan, rellenada desde la plantilla, lista para modificar: al pulsar una celda se abre la ventana **Selección de sacd** (ver «Elegir sacerdote en una celda»).
 
 ### Errores O Avisos Frecuentes
 
@@ -154,48 +165,43 @@ Crea asignaciones EncargoDia para un nuevo periodo de plan de misas a partir de 
 - Flujo: `misas.crear_nuevo_periodo.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/crear_nuevo_periodo.md`
 
-## Cuadricula
+## Editar una celda del plan de misas
 
 ### Para Que Sirve
 
-Asigna, actualiza o borra un EncargoDia en una celda de la cuadrícula y recalcula metadatos de color/texto para la fila SACD y la celda misa.
+Asignar, cambiar o borrar el sacerdote de una celda del plan de misas; preparar un periodo nuevo o copiar una plantilla a otra.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
-- **Legacy:** dre > Misas > Modificar plan
-- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan
+- modificar_plan_de_misas
+- preparar_plan_de_misas
+- modificar_plantilla
+- **Legacy:** dre > Misas > Modificar plan / Preparar / Modificar plantilla
+- **Pills2:** ATENCIÓN SACD > Gestión de misas > …
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Editar una celda del plan de misas
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Entrar en **Modificar plan** y buscar la zona y el periodo.
+2. Pulsar la celda del encargo y día; elegir el sacerdote (o dejarla vacía para borrar), con horario y observaciones si procede.
+3. Para periodos nuevos usar **Nuevo plan**; para copiar plantillas, **Modificar plantilla > importar**.
+4. Leyenda de la fila de cada sacerdote (por día): **SI** = el sacerdote está en la zona ese día; **NO** = no está en la zona ese día; **--** = ese día está en otro sitio (al pasar el ratón sale «Está en …»). El fondo rojo avisa de un problema: «Tiene dos Misas a primera hora» o «No está en la zona y tiene Misa a primera hora».
 
 ### Errores O Avisos Frecuentes
 
-- `Falta el id_item`
-- `Este día tiene más de dos Misas`
-- `Este día tiene dos Misas`
-- `Este día no tiene ninguna Misa`
-- `Tiene dos Misas a primera hora`
-- `No está en la zona y tiene Misa a primera hora`
-- `Está en `
-- `<repositorio getErrorTxt()>`
+- No hay errores documentados en el catalogo para este flujo.
 
 ### Referencias Internas
 
 - Flujo: `misas.cuadricula.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/cuadricula.md`
 
-## Desplegable Encargos
+## Elegir encargo de la zona
 
 ### Para Que Sirve
 
-Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico del modal de encargos-centro.
+Ofrecer los encargos de la zona elegida en la ventana de encargo-centro.
 
 ### Donde Entrar
 
@@ -205,9 +211,10 @@ Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico de
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir encargo de la zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la ventana de encargo visible para un centro, elegir la zona.
+2. El desplegable **Encargo** se rellena con los encargos de esa zona.
 
 ### Errores O Avisos Frecuentes
 
@@ -218,11 +225,11 @@ Devuelve opciones de encargos 8100+ de una zona para el desplegable dinámico de
 - Flujo: `misas.desplegable_encargos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/desplegable_encargos.md`
 
-## Desplegable Sacd
+## Elegir sacerdote en una celda
 
 ### Para Que Sirve
 
-Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtrando por disponibilidad según flags de selección y día.
+Ofrecer, al pulsar una celda de la cuadrícula, los sacerdotes disponibles ese día.
 
 ### Donde Entrar
 
@@ -232,9 +239,11 @@ Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtra
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Elegir sacerdote en una celda
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plan**, pulsar la celda del día y encargo.
+2. En **Selección de sacd** marcar qué sacerdotes se quieren ver: **libre a 1a hora**, **zona** (por defecto), **dl** o **de paso**; después elegir el **Sacerdote** de la lista, que solo muestra los disponibles ese día.
+3. Indicar **Inicio**, **Fin** y **Observaciones** si procede y pulsar **Save**.
 
 ### Errores O Avisos Frecuentes
 
@@ -245,11 +254,11 @@ Construye el desplegable dinámico de SACD en el modal de la cuadrícula, filtra
 - Flujo: `misas.desplegable_sacd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/desplegable_sacd.md`
 
-## Eliminar Encargo Centro
+## Quitar un encargo visible para un centro
 
 ### Para Que Sirve
 
-Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
+Quitar un encargo de la vista de un centro.
 
 ### Donde Entrar
 
@@ -259,9 +268,10 @@ Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar un encargo visible para un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo-centro y pulsar **Eliminar encargo**.
+2. Confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -274,11 +284,11 @@ Elimina la relación EncargoCtr (encargo visible en un centro) por uuid.
 - Flujo: `misas.eliminar_encargo_centro.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/eliminar_encargo_centro.md`
 
-## Eliminar Encargo Zona
+## Eliminar un encargo de zona
 
 ### Para Que Sirve
 
-Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
+Eliminar un encargo de zona.
 
 ### Donde Entrar
 
@@ -288,9 +298,10 @@ Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Eliminar un encargo de zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el encargo y pulsar **Eliminar encargo**.
+2. Confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -302,11 +313,11 @@ Elimina un Encargo de zona (grupo ZONAS_MISAS) por id_enc.
 - Flujo: `misas.eliminar_encargo_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/eliminar_encargo_zona.md`
 
-## Guardar Encargo Centro
+## Guardar un encargo visible para un centro
 
 ### Para Que Sirve
 
-Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
+Hacer visible un encargo de zona en un centro, o cambiarlo.
 
 ### Donde Entrar
 
@@ -316,9 +327,10 @@ Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar un encargo visible para un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir zona, encargo y centro.
+2. Pulsar **Grabar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -330,11 +342,11 @@ Inserta o actualiza un EncargoCtr vinculando un encargo de zona con un centro.
 - Flujo: `misas.guardar_encargo_centro.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/guardar_encargo_centro.md`
 
-## Guardar Encargo Zona
+## Guardar un encargo de zona
 
 ### Para Que Sirve
 
-Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve id y nombre del centro.
+Crear o actualizar un encargo de zona.
 
 ### Donde Entrar
 
@@ -344,9 +356,10 @@ Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar un encargo de zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Rellenar el formulario del encargo (el botón **generar** propone el nombre «tipo (lugar)») y pulsar **Grabar**.
+2. Si el encargo ya no existe aparece «No se encuentra el encargo».
 
 ### Errores O Avisos Frecuentes
 
@@ -358,11 +371,11 @@ Crea o actualiza un Encargo del grupo ZONAS_MISAS (id_enc=0 → alta) y devuelve
 - Flujo: `misas.guardar_encargo_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/guardar_encargo_zona.md`
 
-## Guardar Horario
+## Guardar el horario de una tarea
 
 ### Para Que Sirve
 
-Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horario de tarea.
+Guardar la hora de inicio y fin de una tarea.
 
 ### Donde Entrar
 
@@ -372,9 +385,10 @@ Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horar
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar el horario de una tarea
 
-1. Revisar manualmente los pasos de esta accion.
+1. Escribir **Inicio** y **Fin**.
+2. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -387,11 +401,11 @@ Guarda hora inicio/fin (t_start/t_end) de un EncargoHorario en el modal de horar
 - Flujo: `misas.guardar_horario.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/guardar_horario.md`
 
-## Horario Tarea
+## Poner horario a una tarea
 
 ### Para Que Sirve
 
-Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
+Ver y fijar la hora de inicio y fin de una tarea (encargo) en la plantilla.
 
 ### Donde Entrar
 
@@ -401,9 +415,14 @@ Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Poner horario a una tarea
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, abrir el horario de la tarea.
+2. Escribir **Inicio** y **Fin** y pulsar **guardar**.
+
+#### Quitar el horario de una tarea
+
+1. Abrir el horario de la tarea y pulsar **quitar el actual**.
 
 ### Errores O Avisos Frecuentes
 
@@ -414,11 +433,11 @@ Lee las horas actuales de un EncargoHorario para poblar el modal horario_tarea.
 - Flujo: `misas.horario_tarea.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/horario_tarea.md`
 
-## Importar Plantilla
+## Importar otra plantilla
 
 ### Para Que Sirve
 
-Copia asignaciones de plantilla origen a destino para una zona, creando/actualizando EncargoDia en el rango correspondiente.
+Copiar las asignaciones de una plantilla a otra de la misma zona.
 
 ### Donde Entrar
 
@@ -428,9 +447,11 @@ Copia asignaciones de plantilla origen a destino para una zona, creando/actualiz
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Importar otra plantilla
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar plantilla**, elegir la plantilla origen en **Importar de la plantilla**.
+2. Pulsar **importar** y confirmar el aviso de que se borra lo que hay.
+3. Se muestra la plantilla con los datos copiados.
 
 ### Errores O Avisos Frecuentes
 
@@ -442,11 +463,11 @@ Copia asignaciones de plantilla origen a destino para una zona, creando/actualiz
 - Flujo: `misas.importar_plantilla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/importar_plantilla.md`
 
-## Modificar Encargos
+## Elegir la zona de los encargos
 
 ### Para Que Sirve
 
-Devuelve zonas permitidas y criterios de orden para la pantalla modificar encargos de zona.
+Elegir la zona para crear y modificar sus encargos (tareas de misa).
 
 ### Donde Entrar
 
@@ -456,9 +477,11 @@ Devuelve zonas permitidas y criterios de orden para la pantalla modificar encarg
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la zona de los encargos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar encargos**.
+2. Elegir la zona en **Encargos de la zona** y el **Orden**.
+3. Se abre la lista de encargos de esa zona.
 
 ### Errores O Avisos Frecuentes
 
@@ -473,11 +496,11 @@ Devuelve zonas permitidas y criterios de orden para la pantalla modificar encarg
 - Flujo: `misas.modificar_encargos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/modificar_encargos.md`
 
-## Modificar Encargos Centros
+## Elegir la zona de los encargos visibles por centro
 
 ### Para Que Sirve
 
-Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos de centros.
+Elegir la zona para decidir qué encargos ve cada centro.
 
 ### Donde Entrar
 
@@ -487,9 +510,11 @@ Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la zona de los encargos visibles por centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Encargos centro**.
+2. Elegir la zona en **Encargos de la zona**.
+3. Se abre la lista de encargos visibles por centro.
 
 ### Errores O Avisos Frecuentes
 
@@ -501,11 +526,11 @@ Devuelve el desplegable de zonas permitidas para la pantalla modificar encargos 
 - Flujo: `misas.modificar_encargos_centros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/modificar_encargos_centros.md`
 
-## Modificar Iniciales Sacd Zona
+## Elegir la zona de las iniciales
 
 ### Para Que Sirve
 
-Devuelve el desplegable de todas las zonas para la pantalla de edición de iniciales SACD.
+Elegir la zona cuyas iniciales de sacerdotes se quieren editar.
 
 ### Donde Entrar
 
@@ -515,9 +540,10 @@ Devuelve el desplegable de todas las zonas para la pantalla de edición de inici
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir la zona de las iniciales
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Iniciales sacd**.
+2. Elegir la zona en **Iniciales sacerdotes de la zona**.
 
 ### Errores O Avisos Frecuentes
 
@@ -528,11 +554,11 @@ Devuelve el desplegable de todas las zonas para la pantalla de edición de inici
 - Flujo: `misas.modificar_iniciales_sacd_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/modificar_iniciales_sacd_zona.md`
 
-## Modificar Plantilla
+## Modificar la plantilla de una zona
 
 ### Para Que Sirve
 
-Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_plantilla) para modificar plantilla.
+Editar la plantilla de una zona: las tareas que se repiten cada semana o mes y quién las hace.
 
 ### Donde Entrar
 
@@ -542,9 +568,16 @@ Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_p
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Modificar la plantilla de una zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar plantilla**.
+2. Elegir la zona en **Plantilla de la zona**, el **Tipo de plantilla** y el **Orden**.
+3. Editar la cuadrícula que aparece.
+
+#### Importar de otra plantilla
+
+1. En el desplegable **Importar de la plantilla** elegir el tipo de plantilla origen.
+2. Pulsar **importar**. Aviso: «Borrará todos los datos introducidos en la plantilla que ves!!».
 
 ### Errores O Avisos Frecuentes
 
@@ -556,11 +589,11 @@ Carga desplegables de zona, orden y tipos de plantilla (con preferencia ultima_p
 - Flujo: `misas.modificar_plantilla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/modificar_plantilla.md`
 
-## Nuevo Status
+## Aplicar un nuevo estado a un periodo
 
 ### Para Que Sirve
 
-Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una zona en el rango de fechas indicado.
+Aplicar el nuevo estado a todas las misas de una zona en un rango de fechas.
 
 ### Donde Entrar
 
@@ -570,9 +603,10 @@ Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Aplicar un nuevo estado a un periodo
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Cambiar estado**, elegir zona, periodo y **Nuevo estado**.
+2. Pulsar **cambiar**. Los sacerdotes o centros pasan a ver el plan según el estado elegido.
 
 ### Errores O Avisos Frecuentes
 
@@ -583,11 +617,11 @@ Actualiza masivamente el status de todos los EncargoDia de encargos 8100+ de una
 - Flujo: `misas.nuevo_status.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/nuevo_status.md`
 
-## Plan De Misas Pantalla
+## Elegir zona, orden y periodo del plan
 
 ### Para Que Sirve
 
-Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden y tipos de plantilla en preparar.
+Cargar las zonas, el orden y los tipos de plantilla que ofrecen las pantallas de preparar, modificar y ver el plan de misas.
 
 ### Donde Entrar
 
@@ -599,9 +633,11 @@ Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir zona, orden y periodo del plan
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en la pantalla del plan.
+2. En **Plan de Misas Zona** elegir la zona.
+3. Elegir el **Orden** de los sacerdotes (orden, prioridad o alfabético) y el **Periodo**.
 
 ### Errores O Avisos Frecuentes
 
@@ -613,11 +649,11 @@ Datos comunes para pantallas preparar/modificar/ver plan de misas: zonas, orden 
 - Flujo: `misas.plan_de_misas_pantalla.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/plan_de_misas_pantalla.md`
 
-## Quitar Horario
+## Quitar el horario de una tarea
 
 ### Para Que Sirve
 
-Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+Quitar el horario asignado a una tarea de la plantilla.
 
 ### Donde Entrar
 
@@ -627,9 +663,10 @@ Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Quitar el horario de una tarea
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el horario de la tarea.
+2. Pulsar **quitar el actual**.
 
 ### Errores O Avisos Frecuentes
 
@@ -642,11 +679,11 @@ Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
 - Flujo: `misas.quitar_horario.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/quitar_horario.md`
 
-## Update Iniciales
+## Guardar iniciales y color
 
 ### Para Que Sirve
 
-Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
+Guardar las iniciales y el color de un sacerdote.
 
 ### Donde Entrar
 
@@ -656,9 +693,10 @@ Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar iniciales y color
 
-1. Revisar manualmente los pasos de esta accion.
+1. Cambiar las iniciales o el color en la fila.
+2. Se guardan al salir de la celda.
 
 ### Errores O Avisos Frecuentes
 
@@ -669,24 +707,26 @@ Inserta o actualiza iniciales y color de un sacerdote en la tabla InicialesSacd.
 - Flujo: `misas.update_iniciales.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/update_iniciales.md`
 
-## Ver Cuadricula Zona
+## Ver y modificar el plan de una zona
 
 ### Para Que Sirve
 
-Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, metadatos de celda) para ver/modificar plan, plantilla o cambiar estado.
+Mostrar la cuadrícula del plan de misas de una zona (encargos en filas, días en columnas, sacerdotes en las celdas) para consultarla o modificarla.
 
 ### Donde Entrar
 
-- Modificar Cuadricula Zona (frontend/misas/controller/modificar_cuadricula_zona.php)
 - Ver Cuadricula Zona (frontend/misas/controller/ver_cuadricula_zona.php)
 - **Legacy:** dre > Misas > Modificar plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver y modificar el plan de una zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Modificar plan** (o **Ver plan zona** para solo consulta).
+2. Elegir la zona, el **Orden** y el **Periodo** (esta semana, este mes, próxima semana, próximo mes u otro) y pulsar buscar.
+3. Aparece la cuadrícula con las misas del periodo.
+4. Al elegir la zona en **Nuevo plan** o **Modificar plan** ya aparece la cuadrícula del periodo (una fila por sacerdote, una columna por día; se ven SI, NO o -- según el día). En modificar, pulsar una celda para elegir sacerdote; si no hay datos aparece «No hay datos para mostrar en la cuadrícula».
 
 ### Errores O Avisos Frecuentes
 
@@ -698,11 +738,11 @@ Construye el SlickGrid de cuadrícula de zona (columnas, filas encargo/sacd, met
 - Flujo: `misas.ver_cuadricula_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_cuadricula_zona.md`
 
-## Ver Encargos Centros
+## Hacer visible un encargo para un centro
 
 ### Para Que Sirve
 
-Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del modal (zonas, centros).
+Ver y modificar qué encargos de la zona aparecen en el plan de cada centro.
 
 ### Donde Entrar
 
@@ -712,9 +752,12 @@ Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del 
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Hacer visible un encargo para un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Encargos centro**, elegir la zona.
+2. Pulsar **nuevo**; en **Zona del encargo**, **Encargo** y **Centro** elegir los valores y pulsar **Grabar**.
+3. Para modificarlo, pulsarlo y **Grabar**; para quitarlo, **Eliminar encargo**.
+4. Si falta encargo o centro aparece «Falta encargo o centro».
 
 ### Errores O Avisos Frecuentes
 
@@ -725,11 +768,11 @@ Devuelve filas del grid EncargoCtr de una zona más desplegables estáticos del 
 - Flujo: `misas.ver_encargos_centros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_encargos_centros.md`
 
-## Ver Encargos Zona
+## los encargos de una zona
 
 ### Para Que Sirve
 
-Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal de edición.
+Ver, crear, modificar y eliminar los encargos de una zona.
 
 ### Donde Entrar
 
@@ -739,9 +782,12 @@ Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal d
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Gestionar los encargos de una zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Modificar encargos**, elegir la zona.
+2. Para crear, pulsar **nuevo** y rellenar el formulario: elegir el **Tipo de encargo** (por ejemplo Misa a 1ª hora, Misa no a 1ª hora, rtm con Misa a 1ª hora, rtm sin Misa, bendición) y el **Lugar**; el botón **generar** escribe el nombre del **Encargo** como «tipo (lugar)». Completar **Descripción lugar**, **Orden**, **Prioridad**, **Observaciones** e **Idioma** y pulsar **Grabar**.
+3. Para modificar, pulsar el encargo, cambiar y **Grabar**.
+4. Para quitar, abrirlo y pulsar **Eliminar encargo**.
 
 ### Errores O Avisos Frecuentes
 
@@ -752,11 +798,11 @@ Devuelve encargos 8100+ de una zona ordenados para SlickGrid y datos del modal d
 - Flujo: `misas.ver_encargos_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_encargos_zona.md`
 
-## Ver Iniciales Zona
+## Cambiar iniciales y color de un sacerdote
 
 ### Para Que Sirve
 
-Lista sacds de una zona con sus iniciales y color para edición inline en SlickGrid.
+Ver y cambiar las iniciales y el color de cada sacerdote de la zona, que se usan en el plan.
 
 ### Donde Entrar
 
@@ -766,9 +812,11 @@ Lista sacds de una zona con sus iniciales y color para edición inline en SlickG
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Cambiar iniciales y color de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Iniciales sacd**, elegir la zona.
+2. Editar las **Iniciales** en la fila del sacerdote.
+3. Elegir el **Color** en la paleta («Más colores», «Elegir otro color» o «Sin color»).
 
 ### Errores O Avisos Frecuentes
 
@@ -779,11 +827,11 @@ Lista sacds de una zona con sus iniciales y color para edición inline en SlickG
 - Flujo: `misas.ver_iniciales_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_iniciales_zona.md`
 
-## Ver Misas Zona
+## Consultar el plan de misas de una zona
 
 ### Para Que Sirve
 
-Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo lectura, con metadatos dia/tipo en celdas).
+Consultar las misas de una zona en un rango de fechas, sin poder modificarlas.
 
 ### Donde Entrar
 
@@ -793,9 +841,12 @@ Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo l
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar el plan de misas de una zona
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Ver plan zona**.
+2. Elegir la zona en **Plan de Misas de la zona**, el **Orden** y el **Periodo** (o fechas concretas con «otro»).
+3. Se muestra la cuadrícula de consulta; no se puede cambiar nada.
+4. Leyenda de la fila de cada sacerdote (por día): **SI** = el sacerdote está en la zona ese día; **NO** = no está en la zona ese día; **--** = ese día está en otro sitio (al pasar el ratón sale «Está en …»). El fondo rojo avisa de un problema: «Tiene dos Misas a primera hora» o «No está en la zona y tiene Misa a primera hora».
 
 ### Errores O Avisos Frecuentes
 
@@ -806,24 +857,25 @@ Construye la cuadrícula de consulta de misas por zona y rango de fechas (solo l
 - Flujo: `misas.ver_misas_zona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_misas_zona.md`
 
-## Ver Plan Ctr
+## Consultar el plan de un centro
 
 ### Para Que Sirve
 
-Genera la cuadrícula del plan de misas por centro: encargos en filas, días en columnas, con leyenda de sacds.
+Mostrar el plan de misas de un centro: encargos en filas y días en columnas, con leyenda de sacerdotes.
 
 ### Donde Entrar
 
-- Imprimir Plan Ctr (frontend/misas/controller/imprimir_plan_ctr.php)
 - Ver Plan Ctr (frontend/misas/controller/ver_plan_ctr.php)
 - **Legacy:** dre > Misas > Plan centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar el plan de un centro
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Plan centro**, elegir zona, centro y periodo.
+2. Leer la cuadrícula; las iniciales de la leyenda identifican a cada sacerdote.
+3. Se puede imprimir desde la propia pantalla.
 
 ### Errores O Avisos Frecuentes
 
@@ -834,11 +886,11 @@ Genera la cuadrícula del plan de misas por centro: encargos en filas, días en 
 - Flujo: `misas.ver_plan_ctr.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_plan_ctr.md`
 
-## Ver Plan Sacd
+## Consultar el plan de un sacerdote
 
 ### Para Que Sirve
 
-Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
+Mostrar, día a día, las misas asignadas a un sacerdote en un periodo.
 
 ### Donde Entrar
 
@@ -848,9 +900,10 @@ Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar el plan de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Plan sacerdote**, elegir sacerdote y periodo.
+2. La tabla muestra **Dia**, **Encargo** y **Observaciones** de cada misa.
 
 ### Errores O Avisos Frecuentes
 
@@ -861,11 +914,11 @@ Lista cronológica de misas asignadas a un sacerdote en un rango de fechas.
 - Flujo: `misas.ver_plan_sacd.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/ver_plan_sacd.md`
 
-## Zona Sacd Datos
+## Consultar la disponibilidad semanal de un sacerdote
 
 ### Para Que Sirve
 
-Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona para el modal zona_sacd.
+Ver los días de la semana en que un sacerdote está disponible en una zona.
 
 ### Donde Entrar
 
@@ -875,9 +928,10 @@ Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona par
 
 ### Tareas Habituales
 
-#### Obtener
+#### Consultar la disponibilidad semanal de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ventana de disponibilidad del sacerdote en la zona.
+2. Se muestran marcados los días de la semana disponibles.
 
 ### Errores O Avisos Frecuentes
 
@@ -888,11 +942,11 @@ Lee datos de disponibilidad semanal (propia, dw1-dw7) de un SACD en una zona par
 - Flujo: `misas.zona_sacd_datos.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/misas/flujos/zona_sacd_datos.md`
 
-## Zona Sacd Datos Put
+## Cambiar la disponibilidad semanal de un sacerdote
 
 ### Para Que Sirve
 
-Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
+Guardar los días de la semana en que un sacerdote está disponible en una zona.
 
 ### Donde Entrar
 
@@ -902,9 +956,10 @@ Guarda flags de disponibilidad semanal de un SACD en una zona (ZonaSacd).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Cambiar la disponibilidad semanal de un sacerdote
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar o desmarcar los días de la semana.
+2. Guardar.
 
 ### Errores O Avisos Frecuentes
 

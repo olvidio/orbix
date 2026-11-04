@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## API tablon anuncios
+## Anuncios del tablón
 
 ### Para Que Sirve
 
-Publicacion/consulta de anuncios via API (integracion externa o legacy).
+Publicación y consulta de anuncios desde integraciones externas; no tiene pantalla propia.
 
 ### Donde Entrar
 
@@ -27,7 +27,9 @@ Publicacion/consulta de anuncios via API (integracion externa o legacy).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Anuncios del tablón
+
+1. Los anuncios publicados desde otras aplicaciones aparecen en el tablón; no hay que hacer nada en Orbix.
 
 ### Errores O Avisos Frecuentes
 

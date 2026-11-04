@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## API asignaturas (soporte)
+## Datos de asignaturas
 
 ### Para Que Sirve
 
-Datos de asignaturas consumidos por notas y profesores (sin pantalla propia).
+Datos de asignaturas que usan otros módulos (notas, profesores); no tiene pantalla propia.
 
 ### Donde Entrar
 
@@ -27,7 +27,9 @@ Datos de asignaturas consumidos por notas y profesores (sin pantalla propia).
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Datos de asignaturas
+
+1. Al elegir una asignatura en notas o profesores, la lista se carga automáticamente desde este servicio.
 
 ### Errores O Avisos Frecuentes
 

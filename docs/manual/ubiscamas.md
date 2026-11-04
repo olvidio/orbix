@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Actividad Habitaciones
+## Asignar camas a los asistentes
 
 ### Para Que Sirve
 
-Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-and-drop), activar modo solo VIP y abrir vistas de distribución o nombres.
+Ver las camas de la casa de una actividad y asignar a cada asistente su cama.
 
 ### Donde Entrar
 
@@ -29,12 +29,11 @@ Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-an
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Asignar camas a los asistentes
 
-1. Abrir la pantalla principal del flujo.
-2. Rellenar los filtros visibles si los hay.
-3. Ejecutar la accion de busqueda/listado.
-4. Revisar el listado mostrado en pantalla.
+1. Abrir las habitaciones de la actividad; se ofrece **lista por habitaciones** o **lista por nombre**.
+2. Arrastrar al asistente a la cama o usar las flechas de asignar y desasignar.
+3. Marcar **solo VIP** para ver únicamente las camas VIP.
 
 ### Errores O Avisos Frecuentes
 
@@ -46,11 +45,11 @@ Listar camas de la ubi de una actividad, asignar o reasignar asistentes (drag-an
 - Flujo: `ubiscamas.actividad_habitaciones.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubiscamas/flujos/actividad_habitaciones.md`
 
-## Cama
+## camas
 
 ### Para Que Sirve
 
-Crear, editar o eliminar camas individuales asociadas a una habitación.
+Crear, editar o eliminar camas individuales de una habitación.
 
 ### Donde Entrar
 
@@ -60,25 +59,11 @@ Crear, editar o eliminar camas individuales asociadas a una habitación.
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Gestionar camas
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
-
-#### Eliminar
-
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Abrir el formulario
-
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Guardar antes la habitación y pulsar **Añadir cama**.
+2. Rellenar **Descripción** y marcar **VIP** o **Larga**; pulsar **Guardar**.
+3. Para cambiar o quitar una cama, usar **Editar** o **Eliminar** en su fila.
 
 ### Errores O Avisos Frecuentes
 
@@ -95,11 +80,11 @@ Crear, editar o eliminar camas individuales asociadas a una habitación.
 - Flujo: `ubiscamas.cama.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubiscamas/flujos/cama.md`
 
-## Habitacion
+## Ver las habitaciones de una casa
 
 ### Para Que Sirve
 
-Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creación automática de camas según número indicado.
+Dar de alta, modificar o eliminar las habitaciones de una casa, y crear sus camas.
 
 ### Donde Entrar
 
@@ -109,25 +94,22 @@ Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creaci�
 
 ### Tareas Habituales
 
-#### Crear o modificar
+#### Ver las habitaciones de una casa
 
-1. Abrir el formulario de alta o modificacion.
-2. Rellenar o corregir los campos requeridos.
-3. Guardar los cambios.
-4. Comprobar que la pantalla vuelve al listado y refleja el cambio.
+1. Buscar la casa en **direcciones > buscar** y abrir su ficha.
+2. En «Relación de dossiers» pulsar **Habitaciones (camas) de una cdc**.
+3. Aparece la **Relación de habitaciones** de la casa (o «no hay ninguna fila» si aún no hay).
 
-#### Eliminar
+#### Crear una habitación
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
+1. En la relación de habitaciones, pulsar **crear una nueva habitación**.
+2. Se abre «Nueva habitación» con los campos **Orden**, **Nombre**, **Número de camas**, **Número de camas VIP**, **Planta**, **Tipo de lavabo** (sin especificar, NO, completo, sin ducha o exterior), **Sillón**, **Adaptada**, **Observaciones** y **Despacho**.
+3. Debajo, en **Camas**, el botón **Añadir cama** permite añadir camas una a una.
+4. Pulsar **Guardar *** para guardar: el asterisco indica que se añaden automáticamente las camas según el **Número de camas** puesto arriba. **Cancelar** sale sin guardar.
 
-#### Abrir el formulario
+#### Modificar o eliminar una habitación
 
-1. Desde el listado, elegir crear un nuevo registro o modificar uno existente.
-2. Abrir el formulario asociado.
-3. Comprobar que los campos cargados corresponden al registro o contexto seleccionado.
+1. Desde la relación de habitaciones, seleccionar la habitación para modificarla o eliminarla (no probado en pantalla: la casa de prueba no tenía habitaciones).
 
 ### Errores O Avisos Frecuentes
 
@@ -142,11 +124,11 @@ Dar de alta, modificar o eliminar habitaciones de un ubi CDC, incluyendo creaci�
 - Flujo: `ubiscamas.habitacion.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubiscamas/flujos/habitacion.md`
 
-## Update Cama Asistente
+## Asignar una cama a un asistente
 
 ### Para Que Sirve
 
-Persistir la asignación cama↔asistente en la actividad actual (requiere token HashB).
+Guardar la asignación de cama a un asistente en la distribución de habitaciones.
 
 ### Donde Entrar
 
@@ -156,9 +138,10 @@ Persistir la asignación cama↔asistente en la actividad actual (requiere token
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Asignar una cama a un asistente
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista de habitaciones, usar las flechas de asignar o desasignar cama.
+2. La asignación se guarda al momento.
 
 ### Errores O Avisos Frecuentes
 
@@ -171,11 +154,11 @@ Persistir la asignación cama↔asistente en la actividad actual (requiere token
 - Flujo: `ubiscamas.update_cama_asistente.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/ubiscamas/flujos/update_cama_asistente.md`
 
-## Update Solo Vip
+## Filtrar las camas VIP
 
 ### Para Que Sirve
 
-Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
+Mostrar solo las camas VIP en la distribución de habitaciones.
 
 ### Donde Entrar
 
@@ -185,9 +168,10 @@ Alternar el filtro de solo camas VIP en la actividad (`desc_activ=camasVIP`).
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Filtrar las camas VIP
 
-1. Revisar manualmente los pasos de esta accion.
+1. Marcar la casilla «solo VIP».
+2. La lista muestra solo las camas VIP; desmarcarla para ver todas.
 
 ### Errores O Avisos Frecuentes
 

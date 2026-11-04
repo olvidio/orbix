@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "certificados"
 flujos: 18
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - certificados
@@ -13,7 +13,7 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Certificado Emitido
+## Emitir, guardar o eliminar un certificado
 
 ### Para Que Sirve
 
@@ -26,16 +26,11 @@ Imprimir, guardar o eliminar un certificado emitido desde el formulario de impre
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Emitir, guardar o eliminar un certificado
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir el formulario de impresión del certificado.
+2. Pulsar imprimir para generar el PDF y guardar para registrarlo con su número.
+3. Para quitarlo, eliminarlo y confirmar.
 
 ### Errores O Avisos Frecuentes
 
@@ -51,11 +46,11 @@ Imprimir, guardar o eliminar un certificado emitido desde el formulario de impre
 - Flujo: `certificados.certificado_emitido.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido.md`
 
-## Certificado Emitido Adjuntar
+## Adjuntar un certificado emitido
 
 ### Para Que Sirve
 
-Adjuntar PDF de certificado emitido a una persona.
+Adjuntar a una persona un PDF de un certificado ya emitido.
 
 ### Donde Entrar
 
@@ -64,9 +59,12 @@ Adjuntar PDF de certificado emitido a una persona.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Adjuntar un certificado emitido
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la persona y su dossier de certificados.
+2. Pulsar **adjuntar nuevo certificado**.
+3. Rellenar los datos y elegir el PDF.
+4. Guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -81,22 +79,23 @@ Adjuntar PDF de certificado emitido a una persona.
 - Flujo: `certificados.certificado_emitido_adjuntar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_adjuntar.md`
 
-## Certificado Emitido Enviar
+## Enviar un certificado a otra delegación
 
 ### Para Que Sirve
 
-Enviar certificado emitido a la delegación destino del alumno (copia + anuncio).
+Enviar un certificado emitido a la delegación destino del alumno.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Certificado Emitido Lista (frontend/certificados/controller/certificado_emitido_lista.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Enviar un certificado a otra delegación
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Certificados**, marcar el certificado.
+2. Pulsar enviar: se manda una copia a la delegación del alumno y se le avisa.
 
 ### Errores O Avisos Frecuentes
 
@@ -111,11 +110,11 @@ Enviar certificado emitido a la delegación destino del alumno (copia + anuncio)
 - Flujo: `certificados.certificado_emitido_enviar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_enviar.md`
 
-## Certificado Emitido Guardar Pdf
+## Guardar el certificado generado
 
 ### Para Que Sirve
 
-Persistir el PDF generado y el número de certificado en BD.
+Guardar en el sistema el PDF generado y el número del certificado.
 
 ### Donde Entrar
 
@@ -124,9 +123,10 @@ Persistir el PDF generado y el número de certificado en BD.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar el certificado generado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Tras generar el PDF, confirmar el guardado.
+2. El certificado queda registrado con su número y su PDF.
 
 ### Errores O Avisos Frecuentes
 
@@ -141,11 +141,11 @@ Persistir el PDF generado y el número de certificado en BD.
 - Flujo: `certificados.certificado_emitido_guardar_pdf.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_guardar_pdf.md`
 
-## Certificado Emitido Imprimir
+## Emitir un certificado nuevo
 
 ### Para Que Sirve
 
-Preparar datos e iniciar impresión de certificado nuevo para un alumno.
+Preparar los datos de un certificado nuevo de un alumno y empezar su impresión.
 
 ### Donde Entrar
 
@@ -154,9 +154,12 @@ Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Emitir un certificado nuevo
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha del alumno.
+2. En el dossier de certificados elegir emitir un certificado nuevo.
+3. Elegir el idioma y los datos del certificado y pulsar imprimir.
+4. Se genera el PDF con las notas y los textos legales en el idioma elegido.
 
 ### Errores O Avisos Frecuentes
 
@@ -171,11 +174,11 @@ Preparar datos e iniciar impresión de certificado nuevo para un alumno.
 - Flujo: `certificados.certificado_emitido_imprimir.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_imprimir.md`
 
-## Certificado Emitido Imprimir Mpdf
+## Obtener el PDF del certificado
 
 ### Para Que Sirve
 
-Generar el PDF del certificado con notas y textos traducidos.
+Generar el PDF del certificado con las notas y los textos traducidos al idioma elegido.
 
 ### Donde Entrar
 
@@ -184,9 +187,10 @@ Generar el PDF del certificado con notas y textos traducidos.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Obtener el PDF del certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Emitir el certificado desde la ficha del alumno.
+2. El PDF se genera automáticamente y se abre para imprimir o guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -201,11 +205,11 @@ Generar el PDF del certificado con notas y textos traducidos.
 - Flujo: `certificados.certificado_emitido_imprimir_mpdf.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_imprimir_mpdf.md`
 
-## Certificado Emitido Lista
+## Buscar y ver los certificados emitidos
 
 ### Para Que Sirve
 
-Consultar y gestionar certificados emitidos pendientes de envío en la región STGR.
+Consultar los certificados emitidos de la región y, desde la lista, modificarlos, eliminarlos, subir el PDF firmado, enviarlos o descargar el PDF.
 
 ### Donde Entrar
 
@@ -215,9 +219,28 @@ Consultar y gestionar certificados emitidos pendientes de envío en la región S
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Buscar y ver los certificados emitidos
 
-1. Revisar manualmente los pasos de esta accion.
+1. Entrar en **Certificados**. Arriba hay un recuadro **Buscar un certificado** con el botón **Buscar** y un **?** con la ayuda.
+2. Debajo aparece la lista de los certificados emitidos en el curso actual (por ejemplo «entre 1/10/2026 y 30/9/2027»). Si no hay ninguno, sale «no hay ninguna fila». Cuando se busca, el título pasa a «Certificados emitidos que coinciden con …» y la lista incluye también los ya enviados.
+3. Para buscar, escribir el número y año (por ejemplo «12/15»). Se admiten comodines: un punto (.) es cualquier carácter y .* una cantidad cualquiera; dejar un espacio tras la sigla, por ejemplo «H .*/15», devuelve todos los certificados de H del año 15.
+4. La tabla tiene las columnas **Certificado**, **Fecha**, **alumno**, **firmado digitalmente**, **adjunto**, **idioma**, **destino** y **enviado**; se ordena pulsando la cabecera.
+
+#### Modificar un certificado
+
+1. Marcar la casilla de un certificado y pulsar **modificar**.
+2. Se abre el formulario con «Certificado para: …» (la persona) y los campos **Nombre del alumno**, **idioma** (en blanco = latín), **destino**, **Número de certificado**, **Fecha del certificado**, **firmado digitalmente** y **Fecha del envío**.
+3. Cambiar lo que haga falta y pulsar **Guardar**.
+
+#### Eliminar, subir el PDF firmado o enviar un certificado
+
+1. Marcar el certificado.
+2. Pulsar **eliminar**, **subir pdf firmado** o **enviar** (no probados en pantalla: pueden cambiar datos y enviar correos).
+
+#### Descargar el PDF desde la lista
+
+1. Marcar el certificado y pulsar **descargar pdf**: se abre el PDF en otra pestaña.
+2. Si no tiene PDF aparece «No hay URL de descarga para el certificado seleccionado».
 
 ### Errores O Avisos Frecuentes
 
@@ -233,22 +256,23 @@ Consultar y gestionar certificados emitidos pendientes de envío en la región S
 - Flujo: `certificados.certificado_emitido_lista.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_lista.md`
 
-## Certificado Emitido Pdf Download
+## Descargar el PDF de un certificado emitido
 
 ### Para Que Sirve
 
-Descargar PDF adjunto de certificado emitido.
+Descargar el PDF de un certificado emitido.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Certificado Emitido Pdf Download (frontend/certificados/controller/certificado_emitido_pdf_download.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Descargar el PDF de un certificado emitido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En la lista o en el dossier, pulsar descargar.
+2. El PDF se abre en una pestaña nueva; el enlace caduca a los pocos minutos.
 
 ### Errores O Avisos Frecuentes
 
@@ -263,11 +287,11 @@ Descargar PDF adjunto de certificado emitido.
 - Flujo: `certificados.certificado_emitido_pdf_download.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_pdf_download.md`
 
-## Certificado Emitido Pdf Upload
+## Subir el PDF de un certificado
 
 ### Para Que Sirve
 
-Subir fichero PDF al API de certificados emitidos.
+Subir el fichero PDF de un certificado emitido.
 
 ### Donde Entrar
 
@@ -276,9 +300,10 @@ Subir fichero PDF al API de certificados emitidos.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Subir el PDF de un certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Elegir el fichero PDF en el formulario de adjuntar.
+2. Guardar. Si es demasiado grande el servidor lo rechaza con un aviso de tamaño.
 
 ### Errores O Avisos Frecuentes
 
@@ -293,7 +318,7 @@ Subir fichero PDF al API de certificados emitidos.
 - Flujo: `certificados.certificado_emitido_pdf_upload.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_pdf_upload.md`
 
-## Certificado Emitido Upload Firmado
+## Subir el certificado firmado
 
 ### Para Que Sirve
 
@@ -306,9 +331,11 @@ Subir el PDF firmado de un certificado ya emitido.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Subir el certificado firmado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Imprimir y firmar el certificado.
+2. Abrir el certificado en la lista y elegir el PDF firmado.
+3. Subirlo; el certificado queda con su versión firmada.
 
 ### Errores O Avisos Frecuentes
 
@@ -323,11 +350,11 @@ Subir el PDF firmado de un certificado ya emitido.
 - Flujo: `certificados.certificado_emitido_upload_firmado.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_upload_firmado.md`
 
-## Certificado Emitido Ver
+## Consultar un certificado emitido
 
 ### Para Que Sirve
 
-Consultar detalle de un certificado emitido seleccionado en el listado.
+Ver el detalle de un certificado emitido.
 
 ### Donde Entrar
 
@@ -336,9 +363,10 @@ Consultar detalle de un certificado emitido seleccionado en el listado.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar un certificado emitido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En **Certificados**, buscar y pulsar el certificado.
+2. Se muestran sus datos (alumno, fecha, número) y el PDF si lo tiene.
 
 ### Errores O Avisos Frecuentes
 
@@ -353,11 +381,11 @@ Consultar detalle de un certificado emitido seleccionado en el listado.
 - Flujo: `certificados.certificado_emitido_ver.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_emitido_ver.md`
 
-## Certificado Recibido
+## certificados recibidos
 
 ### Para Que Sirve
 
-Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
+Gestionar los certificados recibidos de una persona: adjuntar, modificar y eliminar.
 
 ### Donde Entrar
 
@@ -367,16 +395,11 @@ Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
 
 ### Tareas Habituales
 
-#### Eliminar
+#### Gestionar certificados recibidos
 
-1. Seleccionar o abrir el registro que se quiere eliminar.
-2. Pulsar la accion de eliminar.
-3. Confirmar la operacion si aparece dialogo de confirmacion.
-4. Comprobar que el registro desaparece del listado.
-
-#### Guardar
-
-1. Revisar manualmente los pasos de esta accion.
+1. Adjuntar: pulsar **adjuntar nuevo certificado**, rellenar y subir el PDF.
+2. Modificar: abrir el certificado, cambiar los datos y guardar.
+3. Eliminar: pulsarlo y confirmar «¿seguro que desea borrar el certificado?».
 
 ### Errores O Avisos Frecuentes
 
@@ -392,11 +415,11 @@ Gestionar certificados recibidos de una persona (adjuntar, modificar, eliminar).
 - Flujo: `certificados.certificado_recibido.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_recibido.md`
 
-## Certificado Recibido Adjuntar
+## Registrar un certificado recibido
 
 ### Para Que Sirve
 
-Registrar un certificado recibido nuevo con PDF.
+Registrar un certificado recibido de otra delegación, con su PDF.
 
 ### Donde Entrar
 
@@ -405,9 +428,12 @@ Registrar un certificado recibido nuevo con PDF.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Registrar un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. Abrir la ficha de la persona y su dossier de certificados.
+2. Pulsar **adjuntar nuevo certificado** y elegir el tipo recibido.
+3. Rellenar los datos y elegir el PDF.
+4. Guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -422,11 +448,11 @@ Registrar un certificado recibido nuevo con PDF.
 - Flujo: `certificados.certificado_recibido_adjuntar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_recibido_adjuntar.md`
 
-## Certificado Recibido Modificar
+## Modificar un certificado recibido
 
 ### Para Que Sirve
 
-Modificar metadatos de certificado recibido.
+Corregir los datos de un certificado recibido.
 
 ### Donde Entrar
 
@@ -435,9 +461,10 @@ Modificar metadatos de certificado recibido.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Modificar un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de certificados, pulsar el certificado recibido.
+2. Cambiar los datos y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -452,22 +479,23 @@ Modificar metadatos de certificado recibido.
 - Flujo: `certificados.certificado_recibido_modificar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_recibido_modificar.md`
 
-## Certificado Recibido Pdf Download
+## Descargar el PDF de un certificado recibido
 
 ### Para Que Sirve
 
-Descargar PDF de certificado recibido.
+Descargar el PDF de un certificado recibido.
 
 ### Donde Entrar
 
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
+- Certificado Recibido Pdf Download (frontend/certificados/controller/certificado_recibido_pdf_download.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Descargar el PDF de un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el dossier de certificados, pulsar descargar en el certificado recibido.
+2. El PDF se abre en una pestaña nueva.
 
 ### Errores O Avisos Frecuentes
 
@@ -482,11 +510,11 @@ Descargar PDF de certificado recibido.
 - Flujo: `certificados.certificado_recibido_pdf_download.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_recibido_pdf_download.md`
 
-## Certificado Recibido Pdf Upload
+## Subir el PDF de un certificado recibido
 
 ### Para Que Sirve
 
-Subir PDF de certificado recibido.
+Subir el PDF de un certificado recibido.
 
 ### Donde Entrar
 
@@ -495,9 +523,9 @@ Subir PDF de certificado recibido.
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Subir el PDF de un certificado recibido
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de adjuntar, elegir el PDF y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -512,11 +540,11 @@ Subir PDF de certificado recibido.
 - Flujo: `certificados.certificado_recibido_pdf_upload.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificado_recibido_pdf_upload.md`
 
-## Certificados Locales
+## Elegir el idioma del certificado
 
 ### Para Que Sirve
 
-Cargar desplegable de idiomas en formularios de certificados.
+Cargar la lista de idiomas disponibles en los formularios de certificados.
 
 ### Donde Entrar
 
@@ -526,9 +554,10 @@ Cargar desplegable de idiomas en formularios de certificados.
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir el idioma del certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. En el formulario de certificado, abrir el desplegable de idioma.
+2. Elegir el idioma en que se emitirá.
 
 ### Errores O Avisos Frecuentes
 
@@ -543,11 +572,11 @@ Cargar desplegable de idiomas en formularios de certificados.
 - Flujo: `certificados.certificados_locales.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/certificados/flujos/certificados_locales.md`
 
-## Textos Certificados
+## Textos legales del certificado
 
 ### Para Que Sirve
 
-Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo).
+Textos legales que se incluyen automáticamente al generar el PDF (no requiere acción del usuario).
 
 ### Donde Entrar
 
@@ -556,9 +585,10 @@ Plantilla de textos legales incluida al generar PDF (no flujo de usuario directo
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Textos legales del certificado
 
-1. Revisar manualmente los pasos de esta accion.
+1. Al emitir un certificado, el sistema incluye los textos legales en el idioma elegido.
+2. No hace falta hacer nada.
 
 ### Errores O Avisos Frecuentes
 

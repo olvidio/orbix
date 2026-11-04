@@ -30,7 +30,27 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Generar tabla (batch)
+
+1. Abrir **generar tabla avisos** (usuarios web / ADMIN LOCAL).
+2. El sistema cruza cambios nuevos con preferencias y crea avisos pendientes; muestra HTML de
+3. Revisar el listado de avisos que aparece.
+
+#### Consultar el listado
+
+1. Abrir la pantalla.
+2. Si es admin, elegir usuario y tipo de aviso.
+3. Se muestra la tabla con los avisos anotados.
+
+#### Eliminar filas
+
+1. Marcar filas en la tabla.
+2. Pulsar **borrar**.
+
+#### Eliminar hasta fecha
+
+1. Indicar la fecha límite.
+2. Pulsar **purga**: se borran los avisos anotados hasta esa fecha.
 
 ### Errores O Avisos Frecuentes
 
@@ -64,7 +84,11 @@ Quitar de la cola de avisos un `CambioUsuario` concreto seleccionado en la lista
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Eliminar
+
+1. Marcar una o más filas del listado de avisos.
+2. Confirmar borrado.
+3. El listado se refresca sin las filas eliminadas.
 
 ### Errores O Avisos Frecuentes
 
@@ -92,7 +116,11 @@ Eliminar en bloque todos los cambios anotados con fecha anterior o igual a la in
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Eliminar hasta fecha
+
+1. Indicar fecha límite (`f_fin`).
+2. Ejecutar purga.
+3. Refrescar listado.
 
 ### Errores O Avisos Frecuentes
 
@@ -108,11 +136,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_eliminar_hasta_fecha.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_eliminar_hasta_fecha.md`
 
-## Guardar objeto de aviso
+## Crear un aviso de cambios
 
 ### Para Que Sirve
 
-Persistir la parte «objeto + tipo de actividad + fase + flags de aviso» de una preferencia.
+Guardar el objeto, tipo de actividad, fase y avisos de una preferencia de aviso de cambios.
 
 ### Donde Entrar
 
@@ -121,7 +149,11 @@ Persistir la parte «objeto + tipo de actividad + fase + flags de aviso» de una
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Crear un aviso de cambios
+
+1. Entrar en **gestionar avisos en cambios actividades**.
+2. Elegir el objeto a vigilar, el tipo de actividad y la fase.
+3. Marcar los campos y condiciones y guardar todo.
 
 ### Errores O Avisos Frecuentes
 
@@ -136,11 +168,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_objeto_pref.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_objeto_pref.md`
 
-## Actualizar fases de referencia
+## Elegir la fase de un aviso
 
 ### Para Que Sirve
 
-Refrescar el desplegable de fase/estado al cambiar objeto o tipo de actividad en el formulario de aviso.
+Actualizar el desplegable de fase/estado al cambiar el objeto o el tipo de actividad.
 
 ### Donde Entrar
 
@@ -149,7 +181,10 @@ Refrescar el desplegable de fase/estado al cambiar objeto o tipo de actividad en
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir la fase de un aviso
+
+1. Cambiar el objeto o el tipo de actividad.
+2. El desplegable de fase se actualiza con las fases posibles.
 
 ### Errores O Avisos Frecuentes
 
@@ -164,11 +199,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_objeto_pref_fases.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_objeto_pref_fases.md`
 
-## Cargar propiedades vigilables
+## Elegir qué campos vigilar
 
 ### Para Que Sirve
 
-Mostrar la tabla de campos del objeto que pueden vigilarse, con el estado guardado preseleccionado.
+Mostrar los campos del objeto que se pueden vigilar, con el estado guardado.
 
 ### Donde Entrar
 
@@ -177,7 +212,10 @@ Mostrar la tabla de campos del objeto que pueden vigilarse, con el estado guarda
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Elegir qué campos vigilar
+
+1. Elegir el objeto.
+2. Aparece la tabla de campos; marcar los que se quieren vigilar.
 
 ### Errores O Avisos Frecuentes
 
@@ -192,11 +230,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_objeto_pref_propiedades.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_objeto_pref_propiedades.md`
 
-## Sincronizar propiedades
+## Guardar los avisos
 
 ### Para Que Sirve
 
-Tras guardar el objeto-pref, crear/actualizar/eliminar las `CambioUsuarioPropiedadPref` según los checkboxes y condiciones del formulario.
+Crear, actualizar o quitar los campos vigilados según las casillas y condiciones marcadas.
 
 ### Donde Entrar
 
@@ -205,7 +243,10 @@ Tras guardar el objeto-pref, crear/actualizar/eliminar las `CambioUsuarioPropied
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Guardar los avisos
+
+1. Marcar y condicionar los campos.
+2. Pulsar grabar todo: se guardan el aviso y todos sus campos vigilados.
 
 ### Errores O Avisos Frecuentes
 
@@ -220,11 +261,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_propiedad_pref_guardar_todas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_propiedad_pref_guardar_todas.md`
 
-## Editar condición de propiedad
+## Poner condición a un campo
 
 ### Para Que Sirve
 
-Abrir el modal para definir operador, valor y alcance de un cambio en una propiedad concreta.
+Abrir la ventana para definir operador, valor y alcance de un campo vigilado.
 
 ### Donde Entrar
 
@@ -233,7 +274,10 @@ Abrir el modal para definir operador, valor y alcance de un cambio en una propie
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Poner condición a un campo
+
+1. En la tabla de campos, pulsar modificar en el campo.
+2. Elegir el operador y el valor y el alcance, y guardar la condición.
 
 ### Errores O Avisos Frecuentes
 
@@ -248,11 +292,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_propiedad_pref_item.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_propiedad_pref_item.md`
 
-## Preview de condición
+## Previsualizar una condición
 
 ### Para Que Sirve
 
-Ver el texto de la condición y guardar el JSON en la fila de propiedades sin persistir aún en base de datos (la persistencia ocurre al grabar todo).
+Ver el texto de la condición y dejarla en la tabla sin guardar todavía en la base de datos.
 
 ### Donde Entrar
 
@@ -261,7 +305,10 @@ Ver el texto de la condición y guardar el JSON en la fila de propiedades sin pe
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Previsualizar una condición
+
+1. En la ventana de condición, pulsar guardar.
+2. Se muestra el texto de la condición en la fila; no se guarda definitivamente hasta grabar todo.
 
 ### Errores O Avisos Frecuentes
 
@@ -276,23 +323,28 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.cambio_usuario_propiedad_pref_preview.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/cambio_usuario_propiedad_pref_preview.md`
 
-## Configurar preferencia de aviso
+## Configurar un aviso de cambios en actividades
 
 ### Para Que Sirve
 
-Definir qué cambios debe recibir un usuario o grupo: objeto, ámbito (tipo/fase/casas) y propiedades con condiciones opcionales.
+Configurar un aviso de cambios: qué se vigila, en qué actividades y cómo se avisa.
 
 ### Donde Entrar
 
 - Configurar aviso (frontend/cambios/controller/usuario_avisos_pref.php)
-- Desplegable de fases (frontend/cambios/controller/usuario_avisos_pref_fases.php)
-- Tabla de propiedades (frontend/cambios/controller/usuario_avisos_pref_propiedades.php)
-- Modal de condición (frontend/cambios/controller/usuario_avisos_pref_condicion.php)
 - sin entrada de menú en el índice
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Configurar un aviso de cambios en actividades
+
+1. En «Avisos para …», elegir **cambios en:** (el objeto a vigilar).
+2. Elegir si es para actividades que organiza **la propia dl** u **otras dl**, y el tipo (**sf/sv**, **asistentes**, **actividad**, **tipo de actividad**).
+3. En **fase de referencia** elegir la fase (salen todas las posibles, aunque no tengas permiso; el permiso se comprueba al generar el aviso).
+4. Marcar cuándo avisar: **avisar antes de que esté marcada (off)**, **avisar si está marcada (on)** (viene marcada) y **avisar aunque la actividad haya finalizado**.
+5. En «opciones» elegir **ver cambios sólo de las casas** (opcional) y **avisar por:** lista o email.
+6. En «campos o propiedades» marcar los campos a vigilar (enlaces **[todos]**, **[ninguno]**, **[invertir]**) y, si hace falta, una **condición**.
+7. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -312,11 +364,11 @@ Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pas
 - Flujo: `cambios.usuario_avisos_pref.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/cambios/flujos/usuario_avisos_pref.md`
 
-## avisos del usuario
+## los avisos de cambios de un usuario
 
 ### Para Que Sirve
 
-Consultar y mantener las reglas de aviso configuradas para un usuario web.
+Ver y gestionar los avisos de cambios en actividades que recibe un usuario.
 
 ### Donde Entrar
 
@@ -325,7 +377,10 @@ Consultar y mantener las reglas de aviso configuradas para un usuario web.
 
 ### Tareas Habituales
 
-Consulte el flujo en el catálogo o la pantalla indicada; no se han inferido pasos detallados.
+#### Gestionar los avisos de cambios de un usuario
+
+1. En la ficha del usuario, apartado «avisos de cambios», se ve la tabla de avisos (o «no hay ninguna fila»).
+2. Pulsar **añadir aviso** para crear uno, o marcar una fila y modificarla o eliminarla.
 
 ### Errores O Avisos Frecuentes
 

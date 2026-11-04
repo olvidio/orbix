@@ -2,7 +2,7 @@
 tipo: "manual_usuario"
 modulo: "actividadestudios"
 flujos: 25
-estado_revision: "revisado_parcial"
+estado_revision: "revisado"
 ---
 
 # Manual De Usuario - actividadestudios
@@ -13,11 +13,11 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
 
-## Acta Notas
+## Ver el acta de una asignatura
 
 ### Para Que Sirve
 
-El usuario abre el acta de una asignatura impartida en una actividad: el sistema muestra el formulario del acta (cabecera vía `acta_ver`) y debajo la lista de matriculados con nota, nota máxima, preceptor y situación de acta, según permisos de la DL propietaria.
+Abrir el acta de una asignatura impartida en una actividad: se ve la cabecera del acta y, debajo, la lista de matriculados con su nota, nota máxima, preceptor y situación de acta, según los permisos de la delegación propietaria.
 
 ### Donde Entrar
 
@@ -31,12 +31,12 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el acta de una asignatura
 
-1. En el dossier de asignaturas de una actividad (3005), seleccionar una asignatura.
-2. Pulsar **actas** (`fnjs_actas`).
-3. El sistema carga `acta_notas` y consulta `acta_notas_data` con las claves de actividad
-4. Se muestra el acta con matriculados, desplegable de situaciones y permiso de edición.
+1. En el dossier de asignaturas de una actividad, seleccionar una asignatura.
+2. Pulsar **actas**.
+3. Se muestra el acta con los matriculados, el desplegable de situación del acta y, si se tiene permiso, la posibilidad de editar.
+4. Los alumnos con nota en un acta firmada quedan en solo lectura; si quedan alumnos sin nota, se puede crear una segunda convocatoria.
 
 ### Errores O Avisos Frecuentes
 
@@ -51,12 +51,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.acta_notas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/acta_notas.md`
 
-## Acta Notas Definitivas Grabar
+## Grabar las notas definitivas
 
 ### Para Que Sirve
 
-- El usuario confirma las notas del acta como definitivas: el sistema convierte las matrículas/notas borrador en registros `PersonaNota` definitivos, asignando época, nivel y acta correspondiente.
-- Sustituye la rama `que=3` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
+Confirmar las notas del acta como definitivas: las notas en borrador pasan a ser notas definitivas de cada persona, con su época, nivel y acta.
 
 ### Donde Entrar
 
@@ -68,12 +67,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Grabar las notas definitivas
 
-1. En el acta de notas de una asignatura, revisar notas y situaciones de cada alumno.
-2. Pulsar la acción de grabar definitivas (`fnjs_guardar_tessera`).
-3. El sistema serializa `#f_1303` con `que=3` y llama al endpoint.
-4. Si la respuesta es correcta, las notas quedan grabadas en tessera; si no, se muestra alerta.
+1. En el acta de notas de una asignatura, revisar la nota y la situación de cada alumno.
+2. Pulsar el botón de grabar las notas definitivas.
+3. Si todo es correcto, las notas quedan grabadas en la tessera de cada alumno; si no, sale un aviso con el motivo.
 
 ### Errores O Avisos Frecuentes
 
@@ -97,12 +95,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.acta_notas_definitivas_grabar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/acta_notas_definitivas_grabar.md`
 
-## Acta Notas Matricula
+## Guardar las notas en borrador
 
 ### Para Que Sirve
 
-- El usuario edita notas, nota máxima, preceptor o situación de acta de los alumnos matriculados y guarda el borrador en las matrículas.
-- Sustituye la rama `que=1` del legacy `apps/actividadestudios/controller/acta_notas_update.php`.
+Editar las notas, la nota máxima, el preceptor o la situación de acta de los alumnos matriculados, y guardarlo como borrador en sus matrículas.
 
 ### Donde Entrar
 
@@ -113,12 +110,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Guardar
+#### Guardar las notas en borrador
 
-1. En el acta de notas, modificar nota, nota máxima, preceptor o desplegable de acta de un alumno.
-2. Al salir del campo nota (`fnjs_nota`) o al guardar explícitamente, se invoca `fnjs_guardar_nota`.
-3. El sistema serializa `#f_1303` y llama al endpoint.
-4. Si hay error de validación, se muestra alerta con el mensaje devuelto.
+1. En el acta de notas, cambiar la nota, la nota máxima, el preceptor o la situación del acta de un alumno.
+2. Al salir de la casilla de la nota (o al guardar) se graba el cambio en su matrícula.
+3. Si algún dato no es válido, sale un aviso con el motivo.
 
 ### Errores O Avisos Frecuentes
 
@@ -135,12 +131,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.acta_notas_matricula.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/acta_notas_matricula.md`
 
-## Actividad Asignatura
+## Añadir una asignatura a la actividad
 
 ### Para Que Sirve
 
-- El usuario crea una nueva asignatura impartida en la actividad (profesor, fechas, tipo) o elimina una existente desde el dossier de asignaturas.
-- Sustituye los cases `nuevo` y `eliminar` del antiguo `update_3005.php`.
+Añadir una asignatura impartida en la actividad (con su profesor, fechas y tipo) o eliminar una que ya está, desde el dossier de asignaturas.
 
 ### Donde Entrar
 
@@ -152,17 +147,17 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Crear
+#### Añadir una asignatura a la actividad
 
-1. En el dossier 3005 de una actividad, pulsar **nuevo** para abrir el formulario de alta.
-2. Elegir asignatura, profesor, fechas y tipo; pulsar **guardar**.
-3. El sistema crea la `ActividadAsignatura` y abre el dossier 3005 de la actividad.
+1. En el dossier de asignaturas de la actividad, pulsar **nuevo**.
+2. Elegir la asignatura, el profesor, las fechas y el tipo, y pulsar **guardar**.
+3. Se vuelve al dossier de asignaturas con la nueva asignatura en la lista.
 
-#### Eliminar
+#### Eliminar una asignatura de la actividad
 
-1. En el listado de asignaturas del dossier 3005, seleccionar una fila.
+1. En la lista de asignaturas del dossier, seleccionar la fila.
 2. Pulsar **borrar** y confirmar.
-3. El sistema elimina la asignatura impartida y refresca el listado.
+3. La asignatura desaparece de la lista.
 
 ### Errores O Avisos Frecuentes
 
@@ -181,12 +176,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.actividad_asignatura.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/actividad_asignatura.md`
 
-## Actividad Asignatura Editar
+## Modificar una asignatura de la actividad
 
 ### Para Que Sirve
 
-- El usuario modifica profesor, fechas, tipo u otros datos de una asignatura ya impartida en la actividad y guarda los cambios.
-- Sustituye el case `editar` del antiguo `update_3005.php`.
+Cambiar el profesor, las fechas, el tipo u otros datos de una asignatura que ya se imparte en la actividad.
 
 ### Donde Entrar
 
@@ -197,11 +191,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Modificar una asignatura de la actividad
 
-1. En el dossier 3005, seleccionar una asignatura impartida y pulsar **modificar**.
-2. Ajustar profesor, fechas, aviso a profesor o tipo en el formulario.
-3. Pulsar **guardar**; el sistema persiste los cambios en la `ActividadAsignatura`.
+1. En el dossier de asignaturas, seleccionar la asignatura y pulsar **modificar**.
+2. Ajustar el profesor, las fechas, el aviso al profesor o el tipo.
+3. Pulsar **guardar**.
 
 ### Errores O Avisos Frecuentes
 
@@ -218,12 +212,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.actividad_asignatura_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/actividad_asignatura_editar.md`
 
-## Asistente Observ
+## Guardar las observaciones de un asistente
 
 ### Para Que Sirve
 
-- El usuario guarda el texto de observaciones generales (`observ`) de un asistente en una actividad.
-- Sustituye al case `observ` de `update_3103.php`.
+Guardar el texto de observaciones generales de un asistente en una actividad.
 
 ### Donde Entrar
 
@@ -235,11 +228,10 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar las observaciones de un asistente
 
-1. Desde el contexto de un asistente en una actividad, editar el campo `observ`.
-2. Enviar `id_activ`, `id_nom` (o `id_pau`) y `observ` al endpoint.
-3. El sistema localiza al asistente y persiste el texto.
+1. Esta acción no se puede lanzar desde las pantallas actuales.
+2. Las observaciones de un asistente se editan desde su ficha de asistencia (ver el apartado de asistentes).
 
 ### Errores O Avisos Frecuentes
 
@@ -256,12 +248,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.asistente_observ.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/asistente_observ.md`
 
-## Asistente Observ Est
+## Guardar las observaciones del plan de estudios
 
 ### Para Que Sirve
 
-- El usuario guarda las observaciones de plan de estudios (`observ_est`) de un asistente en su actividad vigente.
-- Sustituye al case `observ_est` de `update_3103.php`.
+Guardar las observaciones sobre el plan de estudios de un asistente en su actividad.
 
 ### Donde Entrar
 
@@ -272,11 +263,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Guardar las observaciones del plan de estudios
 
-1. En el dossier de matrículas de una persona (1303), editar el campo de observaciones de
-2. Pulsar grabar observaciones (`fnjs_grabar_observ`).
-3. El sistema envía el formulario serializado al endpoint y refresca el fragmento si tiene éxito.
+1. En el dossier de matrículas de una persona, escribir el texto en las observaciones del plan de estudios.
+2. Pulsar el botón para grabar las observaciones.
+3. Si se guarda bien, la lista se refresca con el texto nuevo.
 
 ### Errores O Avisos Frecuentes
 
@@ -293,12 +284,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.asistente_observ_est.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/asistente_observ_est.md`
 
-## Asistente Plan Est Ok
+## Confirmar el plan de estudios
 
 ### Para Que Sirve
 
-- El usuario marca el plan de estudios de un asistente como confirmado (`est_ok`).
-- Sustituye al case `plan` de `update_3103.php`.
+Marcar como confirmado el plan de estudios de un asistente.
 
 ### Donde Entrar
 
@@ -309,11 +299,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Confirmar el plan de estudios
 
-1. En el dossier de matrículas de una persona (1303), marcar o confirmar el plan de estudios.
-2. Pulsar la acción de confirmar plan (`fnjs_grabar_est`).
-3. El sistema actualiza el flag `est_ok` del asistente y refresca el fragmento.
+1. En el dossier de matrículas de una persona, marcar la casilla de plan de estudios confirmado.
+2. Pulsar el botón de confirmar el plan.
+3. La lista se refresca y el plan queda como confirmado.
 
 ### Errores O Avisos Frecuentes
 
@@ -330,12 +320,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.asistente_plan_est_ok.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/asistente_plan_est_ok.md`
 
-## Ca Posibles
+## Ver los posibles asistentes al ca
 
 ### Para Que Sirve
 
-- Tras elegir centro, periodo y filtros en `ca_posibles_que`, el usuario obtiene el cuadro de posibles CA por alumno: créditos cursables, asignaturas pendientes y enlaces de detalle.
-- Misma lógica que `frontend/actividadestudios/controller/ca_posibles.php`; en modo lista, `pagina_link_spec` lo firma el front.
+Obtener, para el centro y el periodo elegidos, el cuadro de posibles asistentes al ca: por cada alumno, los créditos que puede cursar, las asignaturas pendientes y enlaces al detalle.
 
 ### Donde Entrar
 
@@ -346,12 +335,12 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver los posibles asistentes al ca
 
-1. En `ca_posibles_que`, elegir centro N o AGD, periodo y opciones de filtro.
-2. Pulsar **buscar**; el formulario envía a `ca_posibles.php`.
-3. El controlador valida que haya centro seleccionado y consulta `ca_posibles_data`.
-4. Se muestra el listado o cuadro de posibles CA por alumno.
+1. Abrir el formulario de búsqueda de posibles ca.
+2. Elegir el centro (n o agd), el periodo y las opciones de filtro.
+3. Pulsar **buscar**; hace falta haber elegido un centro.
+4. Aparece el cuadro con los posibles asistentes, uno por alumno, con sus créditos y asignaturas pendientes.
 
 ### Errores O Avisos Frecuentes
 
@@ -368,12 +357,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.ca_posibles.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/ca_posibles.md`
 
-## Ca Posibles Que
+## Ver el cuadro de posibles ca
 
 ### Para Que Sirve
 
-- El usuario configura los filtros del informe de posibles CA: centro (N o AGD), periodo, grupo de estudios y opciones de inclusión (estudios, repaso, todos).
-- Al cargar la pantalla obtiene los desplegables y textos iniciales.
+Preparar el cuadro de posibles ca: qué personas podrían ir a cada ca según las asignaturas que les faltan.
 
 ### Donde Entrar
 
@@ -383,11 +371,13 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el cuadro de posibles ca
 
-1. Abrir la entrada de menú **posibles ca**.
-2. El sistema carga desplegables de centros N/AGD y texto de grupo vía `ca_posibles_que_data`.
-3. El usuario ajusta periodo, centro y flags; al buscar pasa al flujo `ca_posibles`.
+1. Entrar en «Ver cuadro de posibles ca». Nota de la pantalla: para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr.
+2. Marcar qué ca se quieren: **ca de estudios**, **ca de repaso** o **todos los ca**.
+3. Elegir los centros de los numerarios y de los agregados (o «todos los ctr»), el periodo (verano, curso, todo el año u otro) y el año.
+4. Escoger el grupo de estudios y, si hace falta, un texto de referencia y el texto de cabecera: **horizontal (excel)** o **vertical (imprimir)**.
+5. Pulsar **ver cuadro**.
 
 ### Errores O Avisos Frecuentes
 
@@ -438,11 +428,11 @@ El usuario abre el acta de una asignatura impartida en una actividad: el sistema
 - Flujo: `actividadestudios.docencia_actualizar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/docencia_actualizar.md`
 
-## E43
+## Ver el certificado E43 de un alumno
 
 ### Para Que Sirve
 
-El usuario consulta los datos del certificado E43 de un alumno en una actividad: datos personales, delegaciones origen/destino, actividad y asignaturas matriculadas con notas.
+Consultar el certificado E43 de un alumno en una actividad: datos personales, delegaciones de origen y destino, actividad, y las asignaturas matriculadas con sus notas.
 
 ### Donde Entrar
 
@@ -453,12 +443,11 @@ El usuario consulta los datos del certificado E43 de un alumno en una actividad:
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el certificado E43 de un alumno
 
-1. En el dossier de asistentes de una actividad, seleccionar un alumno.
-2. Pulsar la acción de certificado E43.
-3. El sistema carga `e43` y consulta `e43_data`.
-4. Se muestra el certificado en pantalla con botón de impresión PDF.
+1. En el dossier de asistentes de una actividad, seleccionar al alumno.
+2. Pulsar **E43**.
+3. Se muestra el certificado en pantalla, con un botón para imprimirlo en PDF.
 
 ### Errores O Avisos Frecuentes
 
@@ -473,11 +462,11 @@ El usuario consulta los datos del certificado E43 de un alumno en una actividad:
 - Flujo: `actividadestudios.e43.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/e43.md`
 
-## E43 Imprimir Mpdf
+## Imprimir el certificado E43
 
 ### Para Que Sirve
 
-El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mismos datos que la pantalla E43 y los renderiza en la plantilla imprimible (`e43_imprimir_mpdf.php` / `e43_2_mpdf.php`).
+Imprimir el certificado E43 de un alumno en PDF, con los mismos datos que se ven en pantalla.
 
 ### Donde Entrar
 
@@ -488,11 +477,10 @@ El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mis
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Imprimir el certificado E43
 
-1. En la pantalla E43, pulsar **imprimir** (abre ventana con `e43_2_mpdf.php`).
-2. El controlador consulta `e43_imprimir_mpdf_data`.
-3. Se renderiza el certificado con estilos `e43_mpdf.css` listo para imprimir/exportar.
+1. En la pantalla del certificado E43, pulsar **imprimir**.
+2. Se abre una ventana con el certificado listo para imprimir o guardar como PDF.
 
 ### Errores O Avisos Frecuentes
 
@@ -507,11 +495,11 @@ El usuario imprime el certificado E43 en formato PDF: el sistema obtiene los mis
 - Flujo: `actividadestudios.e43_imprimir_mpdf.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/e43_imprimir_mpdf.md`
 
-## Form Asignaturas De Una Actividad
+## las asignaturas de una actividad
 
 ### Para Que Sirve
 
-El usuario abre el formulario para crear o editar una asignatura impartida en una actividad CA: el sistema devuelve desplegables de asignaturas y profesores, fechas, flags de aviso y permisos según el modo (nuevo/editar).
+Ver y modificar las asignaturas que se imparten en una actividad.
 
 ### Donde Entrar
 
@@ -522,11 +510,11 @@ El usuario abre el formulario para crear o editar una asignatura impartida en un
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Gestionar las asignaturas de una actividad
 
-1. En el dossier 3005, pulsar **nuevo** o **modificar** sobre una asignatura.
-2. El sistema carga el formulario consultando `form_asignaturas_de_una_actividad_data`.
-3. Se muestran desplegables, fechas y botón guardar con hash de seguridad.
+1. Marcar la actividad y pulsar **asignaturas**.
+2. Se abre «Relación de asignaturas» con el enlace **( dossiers )**; si no hay ninguna, indica «no hay ninguna fila».
+3. Pulsar **añadir asignatura** para añadir una.
 
 ### Errores O Avisos Frecuentes
 
@@ -543,11 +531,11 @@ El usuario abre el formulario para crear o editar una asignatura impartida en un
 - Flujo: `actividadestudios.form_asignaturas_de_una_actividad.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/form_asignaturas_de_una_actividad.md`
 
-## Form Matriculas De Una Persona
+## Matricular o modificar la matrícula de una persona
 
 ### Para Que Sirve
 
-El usuario abre el formulario para matricular o editar la matrícula de una persona en una asignatura de una actividad: el sistema devuelve desplegables de nivel, asignatura, preceptor y datos de la actividad según el modo.
+Abrir el formulario para matricular a una persona en una asignatura de una actividad, o para cambiar esa matrícula: nivel, asignatura, preceptor y datos de la actividad.
 
 ### Donde Entrar
 
@@ -558,11 +546,11 @@ El usuario abre el formulario para matricular o editar la matrícula de una pers
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Matricular o modificar la matrícula de una persona
 
-1. En el dossier de matrículas (1303 o 3103), pulsar **nuevo** o **modificar**.
-2. El sistema carga el formulario con `id_nom`, `id_activ`, `id_nivel`, `id_asignatura`.
-3. Se muestran desplegables de nivel y preceptor, con enlaces AJAX a opcionales/preceptores.
+1. En el dossier de matrículas, pulsar **nuevo** o seleccionar una matrícula y pulsar **modificar**.
+2. Se abre el formulario con los desplegables de nivel, asignatura y preceptor; al cambiar uno se actualizan los demás.
+3. Rellenar los datos y guardar.
 
 ### Errores O Avisos Frecuentes
 
@@ -579,11 +567,11 @@ El usuario abre el formulario para matricular o editar la matrícula de una pers
 - Flujo: `actividadestudios.form_matriculas_de_una_persona.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/form_matriculas_de_una_persona.md`
 
-## Lista Clases Ca
+## Ver la lista de clases de una actividad
 
 ### Para Que Sirve
 
-El usuario consulta, para una actividad CA seleccionada, el listado de clases: por cada asignatura impartida muestra profesor, tipo y alumnos matriculados.
+Ver la lista de clases de una actividad: director de estudios y asistentes por asignatura.
 
 ### Donde Entrar
 
@@ -595,12 +583,11 @@ El usuario consulta, para una actividad CA seleccionada, el listado de clases: p
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver la lista de clases de una actividad
 
-1. En el listado de actividades (`actividad_select`), seleccionar una actividad CA.
-2. Pulsar la acción **lista clase**.
-3. El sistema carga `lista_clases_ca` y consulta `lista_clases_ca_data`.
-4. Se muestra el informe con director de estudios y tabla por asignatura.
+1. Marcar una actividad de tipo ca y pulsar **listas de clase**.
+2. Se muestra el título de la actividad, el **Director de estudios** (para nombrarlo, ir al dossier de cargos de la actividad) y una tabla por asignatura.
+3. Si la actividad no tiene asignaturas, solo aparece la cabecera.
 
 ### Errores O Avisos Frecuentes
 
@@ -663,12 +650,11 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 - Flujo: `actividadestudios.matricula.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/matricula.md`
 
-## Matricula Automatica
+## Matricular a todos automáticamente
 
 ### Para Que Sirve
 
-- El usuario ejecuta la matriculación automática de una o todas las personas activas: el sistema determina la actividad de estudios vigente (`ca-n`, `cv-agd`), recalcula asignaturas matriculables respetando aprobadas y topes de opcionales, y crea las matrículas.
-- Sustituye `apps/actividadestudios/controller/matricular.php`.
+Matricular automáticamente en las asignaturas del ca o la cv a todas las personas que tienen actividad de estudios asignada.
 
 ### Donde Entrar
 
@@ -679,12 +665,11 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 
 ### Tareas Habituales
 
-#### Ejecutar
+#### Matricular a todos automáticamente
 
-1. Abrir **matricular a todos** desde el menú (o desde búsqueda de persona con selección).
-2. El sistema recibe `id_pau`/`sel` (persona concreta) o procesa todas las personas activas.
-3. Para cada persona, borra matrículas previas si el plan no está confirmado y recalcula.
-4. Se muestra el mensaje resumen en `matricular.phtml`.
+1. Al pulsar la opción de menú sale primero un aviso: «Se van a matricular automáticamente todas las personas. Si el plan de estudios de una persona no está confirmado, se borrarán sus matrículas anteriores. ¿Quiere continuar?». Con **volver** no se hace nada; con **continuar** se ejecuta la matriculación para todas las personas, sin más confirmación.
+2. Para cada persona con ca o cv asignado, el sistema recalcula sus asignaturas (respetando las ya aprobadas y los topes de opcionales) y crea las matrículas; si el plan no está confirmado, borra antes las matrículas previas.
+3. La pantalla muestra un mensaje por cada persona con la que no se hizo nada, por ejemplo «no se ha hecho nada con Sánchez Andreu, Enrique: no tiene asignado ca».
 
 ### Errores O Avisos Frecuentes
 
@@ -743,11 +728,11 @@ El usuario crea una matrícula (persona + asignatura + nivel en una actividad) o
 - Flujo: `actividadestudios.matricula_editar.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/matricula_editar.md`
 
-## Matriculas
+## Listar las matrículas de un periodo
 
 ### Para Que Sirve
 
-El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de matrículas de actividades cuyo `f_ini` cae en ese intervalo, con alumno, centro, actividad, asignatura, preceptor y nota.
+Ver las matrículas de las actividades de un periodo.
 
 ### Donde Entrar
 
@@ -758,12 +743,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Tareas Habituales
 
-#### Consultar el listado
+#### Listar las matrículas de un periodo
 
-1. Abrir **Matrículas** desde el menú.
-2. Elegir año y periodo (por defecto `curso_ca`) y pulsar **buscar**.
-3. El sistema consulta `matriculas_lista_data` y muestra la tabla paginada.
-4. Opcionalmente, seleccionar filas para ver dossier CA o borrar matrículas.
+1. Entrar en **Matrículas**: «PERIODO DE SELECCIÓN DE ACTIVIDADES».
+2. Elegir todo el año, un trimestre, el curso ca u **otro** (con fechas) y el año.
+3. Pulsar **buscar** para ver la lista de matrículas.
 
 ### Errores O Avisos Frecuentes
 
@@ -779,12 +763,12 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 - Flujo: `actividadestudios.matriculas.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/matriculas.md`
 
-## Matriculas Lista Otras R
+## Consultar alumnos de otras regiones
 
 ### Para Que Sirve
 
-- El usuario busca alumnos de otras regiones por apellido para consultar sus asignaturas matriculadas y emitir certificados E43.
-- Solo visible en ámbito región STGR (`rstgr` o `r`).
+- Buscar por apellido a alumnos de otras regiones para ver sus asignaturas matriculadas y emitir certificados E43.
+- Solo está disponible para las regiones del stgr.
 
 ### Donde Entrar
 
@@ -794,12 +778,12 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Consultar alumnos de otras regiones
 
-1. Abrir **Envío información a otras r** (solo regiones STGR).
-2. Opcionalmente filtrar por apellido y pulsar **buscar**.
-3. El sistema consulta `matriculas_lista_otras_r_data` y muestra alumnos con alertas y
-4. Seleccionar un alumno para **imprimir certificado** (`fnjs_imp_certificado`).
+1. Abrir **Envío información a otras r**.
+2. Si se quiere, escribir un apellido y pulsar **buscar**.
+3. Aparecen los alumnos con sus avisos y asignaturas.
+4. Seleccionar un alumno y pulsar **imprimir certificado** para emitir su E43.
 
 ### Errores O Avisos Frecuentes
 
@@ -815,12 +799,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 - Flujo: `actividadestudios.matriculas_lista_otras_r.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/matriculas_lista_otras_r.md`
 
-## Matriculas Pendientes
+## Ver y borrar matrículas pendientes
 
 ### Para Que Sirve
 
-- El usuario consulta las matrículas que aún no tienen nota definitiva en acta: una fila por matrícula con actividad, asignatura, alumno y permiso.
-- Puede abrir el dossier de la actividad o borrar matrículas seleccionadas.
+Ver las matrículas de actividades pendientes de procesar y borrar las que no valgan.
 
 ### Donde Entrar
 
@@ -831,12 +814,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver y borrar matrículas pendientes
 
-1. Abrir **Matr. Pendientes** / **Exam. pendientes de acta** desde el menú.
-2. El sistema carga automáticamente `matriculas_pendientes_data`.
-3. Se muestra la tabla con avisos de región STGR si aplica.
-4. Opcional: ver dossier CA de una fila o borrar matrículas.
+1. Entrar en **Matr. Pendientes**: aparece una lista de matrículas con casilla para marcar.
+2. Marcar las matrículas y pulsar **ver asignaturas ca** (ver sus asignaturas) o **borrar matrícula**.
+3. Si hay datos huérfanos, salen mensajes como «No encuentro a nadie con id_nom: …» o «No encuentro ninguna actividad con id: … (alumno id_nom: …)».
 
 ### Errores O Avisos Frecuentes
 
@@ -851,11 +833,11 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de m
 - Flujo: `actividadestudios.matriculas_pendientes.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/matriculas_pendientes.md`
 
-## Plan Estudios Ca
+## Ver el plan de estudios de una actividad
 
 ### Para Que Sirve
 
-El usuario consulta el plan de estudios de una actividad CA: director de estudios, preceptores, profesores por asignatura y alumnos con sus asignaturas matriculadas y observaciones de plan (`observ_est`).
+Ver el plan de estudios de una actividad (director de estudios, profesores, preceptores y asistentes).
 
 ### Donde Entrar
 
@@ -867,11 +849,11 @@ El usuario consulta el plan de estudios de una actividad CA: director de estudio
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver el plan de estudios de una actividad
 
-1. En `actividad_select`, seleccionar una actividad CA.
-2. Pulsar la acción **plan estudios**.
-3. El sistema consulta `plan_estudios_ca_data` y muestra el informe completo.
+1. Marcar una actividad de tipo ca y pulsar **plan estudios**.
+2. Se muestra el título de la actividad con **Director de estudios** (para nombrarlo hay que ir al dossier de cargos de la actividad), **Profesores**, **Preceptores** y **Asistentes**.
+3. Debajo, cada asistente con su plan; «???» indica que no hay dato.
 
 ### Errores O Avisos Frecuentes
 
@@ -886,11 +868,11 @@ El usuario consulta el plan de estudios de una actividad CA: director de estudio
 - Flujo: `actividadestudios.plan_estudios_ca.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/plan_estudios_ca.md`
 
-## Posibles Asignaturas Ca
+## Ver las posibles asignaturas de una actividad
 
 ### Para Que Sirve
 
-El usuario consulta, para una actividad CA, qué asignaturas podrían matricular los alumnos según su historial de notas y pendientes, agrupado por asignatura y por alumno.
+Ver qué asignaturas podrían cursar los asistentes de la actividad.
 
 ### Donde Entrar
 
@@ -901,12 +883,10 @@ El usuario consulta, para una actividad CA, qué asignaturas podrían matricular
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Ver las posibles asignaturas de una actividad
 
-1. En `actividad_select`, seleccionar una actividad CA.
-2. Pulsar la acción **posibles asignaturas**.
-3. El sistema consulta `posibles_asignaturas_ca_data`.
-4. Se muestra el informe Twig con asignaturas y alumnos posibles.
+1. Marcar una actividad de tipo ca y pulsar **posibles asignaturas**.
+2. Se muestra una tabla «asignatura / posibles alumnos / nombres» y, debajo, los «alumnos a los que faltan 4 o menos asignaturas para terminar el cuadrienio».
 
 ### Errores O Avisos Frecuentes
 
@@ -921,11 +901,11 @@ El usuario consulta, para una actividad CA, qué asignaturas podrían matricular
 - Flujo: `actividadestudios.posibles_asignaturas_ca.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/actividadestudios/flujos/posibles_asignaturas_ca.md`
 
-## Profesores Desplegable
+## Elegir el profesor de una asignatura
 
 ### Para Que Sirve
 
-Al cambiar la asignatura o añadir un profesor en el formulario de asignatura impartida, el usuario obtiene la lista actualizada de profesores candidatos para esa asignatura en la actividad.
+Al cambiar la asignatura, o al añadir otro profesor en el formulario de una asignatura impartida, obtener la lista actualizada de profesores posibles para esa asignatura.
 
 ### Donde Entrar
 
@@ -936,12 +916,11 @@ Al cambiar la asignatura o añadir un profesor en el formulario de asignatura im
 
 ### Tareas Habituales
 
-#### Obtener Datos
+#### Elegir el profesor de una asignatura
 
-1. En el formulario de asignatura impartida, cambiar la asignatura del desplegable.
-2. Se dispara `fnjs_mas_profes('asignatura')` o reconstrucción del desplegable.
-3. El sistema consulta `profesores_desplegable_data` con `id_activ`, `id_asignatura` y `salida`.
-4. Se actualiza el desplegable de profesores en pantalla.
+1. En el formulario de la asignatura de la actividad, elegir o cambiar la asignatura.
+2. El desplegable de profesores se actualiza con los que pueden impartirla.
+3. Para añadir otro profesor, pulsar **más** y elegirlo en el nuevo desplegable.
 
 ### Errores O Avisos Frecuentes
 
