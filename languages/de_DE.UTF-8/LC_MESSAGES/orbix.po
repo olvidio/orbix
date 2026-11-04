@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-04 11:15+0100\n"
+"POT-Creation-Date: 2026-11-04 12:16+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -5915,8 +5915,12 @@ msgstr "Änderungsliste"
 
 #: frontend/menus/view/traducir_menu.phtml:9
 #: frontend/shared/controller/ayuda_index.php:58
+#: frontend/shared/view/ayuda_contextual.phtml:35
+#: frontend/shared/view/ayuda_contextual.phtml:36
+#: frontend/shared/view/ayuda_contextual.phtml:39
+#: frontend/shared/view/ayuda_contextual.phtml:53
 #: frontend/shared/view/ayuda_preguntar.phtml:174
-#: frontend/shared/view/manual.phtml:58 frontend/shared/view/manual.phtml:80
+#: frontend/shared/view/manual.phtml:59 frontend/shared/view/manual.phtml:81
 msgid "Ayuda"
 msgstr "Hilfe"
 
@@ -7436,6 +7440,7 @@ msgid "Observaciones"
 msgstr "Bemerkungen"
 
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:439
+#: frontend/shared/view/ayuda_contextual.phtml:54
 msgid "Cargando..."
 msgstr "Lade..."
 
@@ -9208,7 +9213,7 @@ msgid "Preguntar a la documentación"
 msgstr "In der Dokumentation nachschlagen"
 
 #: frontend/shared/controller/ayuda_preguntar.php:57
-#: frontend/shared/controller/manual.php:152
+#: frontend/shared/controller/manual.php:161
 #: frontend/shared/view/ayuda_index.phtml:30
 msgid "Entorno de pruebas"
 msgstr "Testumgebung"
@@ -9322,6 +9327,32 @@ msgstr ""
 #: frontend/shared/security/HashF.php:381
 msgid "página con seguridad desactivada"
 msgstr "Seite mit ausgeschalteter Sicherheit"
+
+#: frontend/shared/view/ayuda_contextual.phtml:40
+#: frontend/shared/view/regiones_en_orbix.phtml:46
+msgid "Cerrar"
+msgstr "Schließen"
+
+#: frontend/shared/view/ayuda_contextual.phtml:55
+msgid "No se ha podido cargar la ayuda."
+msgstr "Die Hilfe konnte nicht geladen werden."
+
+#: frontend/shared/view/ayuda_contextual.phtml:56
+msgid "Tareas habituales"
+msgstr "Häufige Aufgaben"
+
+#: frontend/shared/view/ayuda_contextual.phtml:57
+#, php-format
+msgid "Ver las %d tareas en el manual"
+msgstr "Alle %d Aufgaben im Handbuch ansehen"
+
+#: frontend/shared/view/ayuda_contextual.phtml:58
+msgid "Abrir el manual"
+msgstr "Handbuch öffnen"
+
+#: frontend/shared/view/ayuda_contextual.phtml:59
+msgid "Preguntar a la ayuda"
+msgstr "Die Hilfe fragen"
 
 #: frontend/shared/view/ayuda_index.phtml:33
 msgid ""
@@ -9657,7 +9688,7 @@ msgid "Error al consultar la documentación."
 msgstr "Fehler beim Abrufen der Dokumentation."
 
 #: frontend/shared/view/ayuda_preguntar.phtml:124
-#: frontend/shared/view/manual.phtml:54
+#: frontend/shared/view/manual.phtml:55
 msgid "Manual"
 msgstr "Handbuch"
 
@@ -9670,7 +9701,7 @@ msgid "Abrir en el manual"
 msgstr "Im Handbuch öffnen"
 
 #: frontend/shared/view/ayuda_preguntar.phtml:179
-#: frontend/shared/view/manual.phtml:85 frontend/shared/view/manual.phtml:99
+#: frontend/shared/view/manual.phtml:86 frontend/shared/view/manual.phtml:110
 msgid "Manual de usuario"
 msgstr "Benutzerhandbuch"
 
@@ -9691,26 +9722,26 @@ msgstr "Frage"
 msgid "Ej.: cómo añadir un alumno al acta"
 msgstr "Beispiel: Wie man einen Schüler zum Notenprotokoll hinzufügt"
 
-#: frontend/shared/view/manual.phtml:53
+#: frontend/shared/view/manual.phtml:54
 msgid "Módulos del manual"
 msgstr "Handbuchmodule"
 
-#: frontend/shared/view/manual.phtml:89
+#: frontend/shared/view/manual.phtml:90
 #, php-format
 msgid "No se ha encontrado el módulo «%s»."
 msgstr "Modul «%s» wurde nicht gefunden."
 
-#: frontend/shared/view/manual.phtml:92
+#: frontend/shared/view/manual.phtml:93
 msgid "Documentación en"
 msgstr "Dokumentation in"
 
-#: frontend/shared/view/manual.phtml:93
+#: frontend/shared/view/manual.phtml:94
 msgid "Puede requerir revisión manual (menús, permisos y textos visibles)."
 msgstr ""
 "Kann eine manuelle Überprüfung erfordern (Menüs, Berechtigungen und "
 "sichtbare Texte)."
 
-#: frontend/shared/view/manual.phtml:100
+#: frontend/shared/view/manual.phtml:111
 msgid "Documentación por módulo de Orbix."
 msgstr "Dokumentation pro Orbix-Modul."
 
@@ -9744,10 +9775,6 @@ msgstr "Alle Kontakte anzeigen"
 #: frontend/shared/view/regiones_en_orbix.phtml:71
 msgid "Copiar"
 msgstr "Kopieren"
-
-#: frontend/shared/view/regiones_en_orbix.phtml:46
-msgid "Cerrar"
-msgstr "Schließen"
 
 #: frontend/shared/view/regiones_en_orbix.phtml:82
 #: frontend/shared/view/regiones_en_orbix.phtml:83
@@ -18424,6 +18451,10 @@ msgstr "kirchlich"
 #: src/profesores/domain/value_objects/CongresoTipo.php:20
 msgid "reunión"
 msgstr "Besprechung"
+
+#: src/shared/application/AyudaPantallaData.php:109
+msgid "No hay ayuda específica para esta pantalla."
+msgstr "Für diesen Bildschirm gibt es keine spezifische Hilfe."
 
 #: src/shared/application/AyudaPreguntar.php:65
 msgid "Escriba una pregunta sobre Orbix (por ejemplo: «cómo crear un acta»)."

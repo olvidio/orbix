@@ -37,6 +37,7 @@ require_once("src/shared/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\AyudaContextualRender;
 use frontend\shared\security\HashF;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
@@ -442,5 +443,6 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
         </script>
     </div>
 </div>
+<?= AyudaContextualRender::render() ?>
 </body>
 </html>
