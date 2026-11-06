@@ -474,7 +474,7 @@ class Select_asistentes_a_una_actividad
                         if ($child != $this->mi_dele) {
                             if ($plaza < PlazaId::ASIGNADA) {
                                 // Pedida o en espera: se muestra, pero no cuenta hasta que se asigne.
-                                if ($plaza === PlazaId::DENEGADA) {
+                                if ((int) $plaza === PlazaId::DENEGADA) {
                                     continue;
                                 }
                                 $num--;
@@ -622,7 +622,7 @@ class Select_asistentes_a_una_actividad
                     if ($child != $this->mi_dele) {
                         if ($plaza < PlazaId::ASIGNADA) {
                             // Pedida o en espera: se muestra, pero no cuenta hasta que se asigne.
-                            if ($plaza === PlazaId::DENEGADA) {
+                            if ((int) $plaza === PlazaId::DENEGADA) {
                                 continue;
                             }
                             $this->num--;
