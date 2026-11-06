@@ -473,7 +473,11 @@ class Select_asistentes_a_una_actividad
                     } else {
                         if ($child != $this->mi_dele) {
                             if ($plaza < PlazaId::ASIGNADA) {
-                                continue;
+                                // Pedida o en espera: se muestra, pero no cuenta hasta que se asigne.
+                                if ($plaza === PlazaId::DENEGADA) {
+                                    continue;
+                                }
+                                $num--;
                             } else {
                                 $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                                 $this->bumpPlazaResumen($padre, $dl, $plaza);
@@ -617,7 +621,11 @@ class Select_asistentes_a_una_actividad
                 } else {
                     if ($child != $this->mi_dele) {
                         if ($plaza < PlazaId::ASIGNADA) {
-                            continue;
+                            // Pedida o en espera: se muestra, pero no cuenta hasta que se asigne.
+                            if ($plaza === PlazaId::DENEGADA) {
+                                continue;
+                            }
+                            $this->num--;
                         } else {
                             $this->bumpPlazaConseguida($child, $padre, $dl, $plaza);
                             $this->bumpPlazaResumen($padre, $dl, $plaza);
