@@ -107,7 +107,7 @@ if (!empty($Qid_usuario)) {
 
         $oHash = new HashF();
         $oHash->setUrl($url);
-        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
+        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'olvidar' => 1]);
         $hash_params = $oHash->getArrayCampos();
 
         echo PostRequest::getContent($url, $hash_params);

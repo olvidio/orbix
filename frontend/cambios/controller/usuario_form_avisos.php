@@ -15,16 +15,21 @@ $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-ListNavSupport::restoreSelectionFromStackPost();
+// Incrustado en usuario_form.php: no es una página de la pila ni lleva flecha «atrás» propia.
+$embebido = (int) filter_input(INPUT_POST, 'embebido') === 1;
 
-$navState = ListNavSupport::buildReturnParametrosFromPost();
-$oPosicion->nav()->enter(
-    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
-    '#main',
-    ['id_usuario' => $Qid_usuario],
-    $navState,
-);
-ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
+if (!$embebido) {
+    ListNavSupport::restoreSelectionFromStackPost();
+
+    $navState = ListNavSupport::buildReturnParametrosFromPost();
+    $oPosicion->nav()->enter(
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
+        '#main',
+        ['id_usuario' => $Qid_usuario],
+        $navState,
+    );
+    ListNavSupport::syncNavStateAt($oPosicion, 1, ListNavSupport::buildSelectionStatePatchFromPost());
+}
 
 
 $url_backend = '/src/cambios/usuario_form_avisos_data';
@@ -70,6 +75,7 @@ $h1 = $oHashAvisos->linkSinValParams();
 
 $a_camposAvisos = [
     'oPosicion' => $oPosicion,
+    'embebido' => $embebido,
     'oHashAvisos' => $oHashAvisos,
     'oTablaAvisos' => $oTablaAvisos,
     'nombre_usuario' => $view['nombre_usuario'],

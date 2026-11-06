@@ -156,7 +156,7 @@ if (!empty($Qid_usuario)) {
 
         $oHash = new HashF();
         $oHash->setUrl($url_avisos);
-        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => 'usuario']);
+        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => 'usuario', 'embebido' => 1]);
         $hash_params = $oHash->getArrayCampos();
 
         echo PostRequest::getContent($url_avisos, $hash_params);

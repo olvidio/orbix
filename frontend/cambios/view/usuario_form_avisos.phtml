@@ -32,7 +32,7 @@
         fnjs_enviar_formulario('#avisos');
     }
 </script>
-<?= $oPosicion->mostrarNavAtras(1) ?>
+<?= empty($embebido) ? $oPosicion->mostrarNavAtras(1) : '' ?>
 <br>
 <!-- <h3><?= $nombre_usuario ?></h3> -->
 <h3><?= _("avisos de cambios") ?>:</h3>
