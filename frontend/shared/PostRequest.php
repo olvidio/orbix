@@ -616,6 +616,13 @@ class PostRequest
             }
         }
 
+        // Llamada del servidor a sí mismo por loopback: el certificado TLS está emitido para el
+        // nombre público, no para 127.0.0.1, así que la verificación de nombre siempre fallaría
+        // (Guzzle lo muestra como «Connection refused»).
+        if ($hostRewritten === '127.0.0.1' || $hostRewritten === 'localhost' || $hostRewritten === '::1') {
+            $requestOptions['verify'] = false;
+        }
+
         return self::mergeGuzzleHeaders($requestOptions, ['Host' => $hostHeader]);
     }
 
