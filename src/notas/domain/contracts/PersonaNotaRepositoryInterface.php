@@ -34,6 +34,8 @@ interface PersonaNotaRepositoryInterface
     /**
      * Notas de acta de personas de paso (`id_nom` < 0) en los `e_notas_dl`
      * de la región STGR indicada (p. ej. `H-Hv` → esquemas `H-%v`).
+     * Se omiten las notas ya certificadas: las que tienen fila (mismo `id_nom` +
+     * `id_asignatura`) en `e_notas_otra_region_stgr` de la región con `json_certificados`.
      *
      * @return list<\src\notas\domain\entity\PersonaNota>
      */

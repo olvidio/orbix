@@ -138,6 +138,7 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 - [x] Usar `MapaPrefijoActaEsquemaRepository` al grabar notas con acta histórica (routing a esquema destino).  
 - [x] Buscar/validar actas: `ActaSelectData` / `BuscarActaData` / `ActaDlGuard` leen prefijos absorbidos del mapa; `AbsorberEsquema` registra la fusión en la misma tabla.  
 - [ ] Migrar `json_certificados` al módulo certificados cuando aporte valor.  
+- [x] Personas de paso (`id_nom < 0`): la lista «Personas de paso pendientes de certificado» (`matriculas_lista_otras_r`) omite las **notas** (`id_nom` + `id_asignatura`) que ya tienen fila con `json_certificados` en `e_notas_otra_region_stgr` de la región. Al emitir el certificado, `addCertificado` copia a esa tabla las notas del certificado (acta, niveles 1100-2500, sin 9998/9999) con el sello; `deleteCertificado` quita el sello y la nota vuelve a pendientes. Copia inicial de lo anterior: [`202611091000_…`](../../db/migrations/202611091000_copiar_notas_paso_dl_a_region__sv.sql) (sello «en papel»). Test: `CertificarNotasPersonaDePasoTest`.  
 - [ ] Deprecar `e_notas_otra_region_stgr` tras migración de datos (salvo certificados sin acta pareja).
 
 #### Fuente única: `comun.public.mapa_prefijo_acta_esquema` (owner `orbix`)

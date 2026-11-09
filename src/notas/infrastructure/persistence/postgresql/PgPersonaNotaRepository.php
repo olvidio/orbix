@@ -65,6 +65,8 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             throw new \RuntimeException(_("No se pudo determinar la región para las personas de paso."));
         }
         $patron = $coincidencias[1] . '-%' . $coincidencias[2];
+        // Notas ya certificadas: tienen fila en e_notas_otra_region_stgr de la región con json_certificados.
+        $tablaOtraRegion = '"' . str_replace('"', '""', $esquemaRegionStgr) . '".e_notas_otra_region_stgr';
 
         $sql = "SELECT n.*
             FROM e_notas n
@@ -75,6 +77,14 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
               AND ns.nspname LIKE :patron
               AND n.id_asignatura NOT IN (9998, 9999)
               AND COALESCE(n.tipo_acta, 1) = 1
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM {$tablaOtraRegion} o
+                  WHERE o.id_nom = n.id_nom
+                    AND o.id_asignatura = n.id_asignatura
+                    AND o.json_certificados IS NOT NULL
+                    AND o.json_certificados <> '[]'::jsonb
+              )
             ORDER BY n.id_nom, n.id_asignatura";
 
         $stmt = $this->getoDbl()->prepare($sql);

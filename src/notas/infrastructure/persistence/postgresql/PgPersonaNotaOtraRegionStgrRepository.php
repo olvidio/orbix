@@ -64,6 +64,10 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         // de filas legacy en e_notas_otra_region_stgr. No se crean/actualizan filas
         // FORMATO_CERTIFICADO en e_notas_dl (el expediente se lee vía publicv.e_notas).
         unset($oF_certificado);
+        if ($id_nom < 0) {
+            $this->certificarNotasPersonaDePaso($id_nom, $certificado);
+            return;
+        }
         $cPersonaNotaOtraRegionStgr = $this->matching(
             Criteria::create()->where(Filter::eq(PersonaNotaField::IdNom, $id_nom))
         );
@@ -76,6 +80,63 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $a_json_certificados[] = $oCert;
             $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
             $this->Guardar($oPersonaNotaOtraRegionStgr);
+        }
+    }
+
+    /**
+     * Persona de paso: las notas viven en e_notas_dl de la dl que las puso. Al emitir el
+     * certificado se copian a e_notas_otra_region_stgr de la región (si no estaban) y se
+     * anota el certificado en json_certificados. Con ello dejan de salir como pendientes
+     * (ver PgPersonaNotaRepository::getNotasPersonasDePasoDeRegion). Solo las notas que
+     * lleva el certificado: acta, niveles 1100-2500, sin marcadores de fin de ciclo.
+     */
+    private function certificarNotasPersonaDePaso(int $id_nom, string $certificado): void
+    {
+        if (preg_match('/^([A-Za-z0-9]+)-.+([vf])$/', $this->esquema_region_stgr, $m) !== 1) {
+            throw new \RuntimeException(_("No se pudo determinar la región para las personas de paso."));
+        }
+        $patron = $m[1] . '-%' . $m[2];
+        $padre = 'public' . $m[2] . '.e_notas';
+        $tabla = $this->getNomTabla();
+        $sello = (new ConverterJson([['estado' => 'guardado', 'certificado' => $certificado]], false))->toPg(false);
+        $oDbl = $this->getoDbl();
+
+        $sqlCopiar = "INSERT INTO {$tabla} (
+                id_nom, id_nivel, id_asignatura, id_situacion, acta, f_acta, detalle,
+                preceptor, id_preceptor, epoca, id_activ, nota_num, nota_max, tipo_acta, json_certificados
+            )
+            SELECT n.id_nom, n.id_nivel, n.id_asignatura, n.id_situacion, n.acta, n.f_acta, n.detalle,
+                COALESCE(n.preceptor, false), n.id_preceptor, n.epoca, n.id_activ, n.nota_num, n.nota_max,
+                1, :sello::jsonb
+            FROM {$padre} n
+            JOIN pg_class c ON c.oid = n.tableoid
+            JOIN pg_namespace ns ON ns.oid = c.relnamespace
+            WHERE n.id_nom = :id_nom
+              AND c.relname = 'e_notas_dl'
+              AND ns.nspname LIKE :patron
+              AND COALESCE(n.tipo_acta, 1) = 1
+              AND n.id_nivel BETWEEN 1100 AND 2500
+              AND n.id_asignatura NOT IN (9998, 9999)
+              AND NOT EXISTS (
+                  SELECT 1 FROM {$tabla} x
+                  WHERE x.id_nom = n.id_nom
+                    AND (x.id_asignatura = n.id_asignatura OR x.id_nivel = n.id_nivel)
+              )";
+        $sqlAnotar = "UPDATE {$tabla}
+            SET json_certificados = COALESCE(json_certificados, '[]'::jsonb) || :sello_add::jsonb
+            WHERE id_nom = :id_nom
+              AND COALESCE(tipo_acta, 1) = 1
+              AND id_nivel BETWEEN 1100 AND 2500
+              AND id_asignatura NOT IN (9998, 9999)
+              AND NOT (COALESCE(json_certificados, '[]'::jsonb) @> :sello_chk::jsonb)";
+
+        $stmt = $oDbl->prepare($sqlCopiar);
+        if ($stmt === false || $stmt->execute(['sello' => $sello, 'id_nom' => $id_nom, 'patron' => $patron]) === false) {
+            throw new \RuntimeException(_("No se pudieron copiar las notas de la persona de paso."));
+        }
+        $stmt = $oDbl->prepare($sqlAnotar);
+        if ($stmt === false || $stmt->execute(['sello_add' => $sello, 'sello_chk' => $sello, 'id_nom' => $id_nom]) === false) {
+            throw new \RuntimeException(_("No se pudo anotar el certificado en las notas de la persona de paso."));
         }
     }
 
