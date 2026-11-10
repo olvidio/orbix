@@ -1,6 +1,6 @@
 # Revisión de tests: completitud y calidad por módulo
 
-> **Estado:** fase 0 completa (2026-11-10). Fase 1: paso 1.0 hecho; siguiente 1.1.
+> **Estado:** fase 0 completa (2026-11-10). Fase 1: pasos 1.0 y 1.1 hechos; siguiente 1.2.
 > **Cómo retomar:** leer las secciones 2–4, buscar en la sección 6 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese. Cada paso termina con tests en verde y un commit propio. Presupuesto de IA: sección 7.
 
 ---
@@ -160,10 +160,11 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 **Fase 1**
 - [x] 1.0 Arreglar los 7 tests rotos de la línea base (sección 8). Detalle en la sección 9.
-- [ ] 1.1 Tests de los 5 VOs sin cubrir.
+- [x] 1.1 Tests de los VOs sin cubrir (y `PasarelaConfig`). Ver sección 10.
 - [ ] 1.2 Factory `dbextern` + integración de `PgPersonaBDURepository` y `PgIdMatchPersonaRepository`.
 - [ ] 1.3 Integración de `PgPropuestaEncargoSacdRepository` y `...HorarioRepository`.
-- [ ] 1.4 Integración de `PgPlantillaRepository` y `PgMapaPrefijoActaEsquemaRepository`.
+- [ ] 1.4 Integración de `PgPlantillaRepository`, `PgMapaPrefijoActaEsquemaRepository` y `PgPasarelaConfigRepository`.
+- [ ] 1.4b Tests unitarios de las 6 entidades sin test: `ActividadAllDatosCampos`, `DlListas`, `PersonaBDU`, `IdMatchPersona` (con 1.2), `PropuestaEncargoSacd` (con 1.3), `Plantilla` (con 1.4).
 - [ ] 1.5 `permisos`: estructura y tests.
 - [ ] 1.6 `planning`: tests de integración.
 - [ ] 1.7 Casos de uso sin test, módulo por módulo (se desglosa tras 0.2).
@@ -254,3 +255,15 @@ Peores en `application/` (sin test / total): `dbextern` 16/16, `encargossacd` 39
 **Nuevo hallazgo (no pertenece a la línea base original):** con la copia de producción, `cambios\application\AvisosGenerarTablaIntegracionTest` falla (4–6 casos según la ejecución; antes pasaba). `public.av_cambios` de `comun` trae 37 293 filas pendientes y los avisos de los cambios que crea el test no llegan a apuntarse. Se trata en el paso 2.10 (`cambios`): aislar el test de la cola de producción o acotar el procesamiento.
 
 `pasarela` se quitó de `SKIP_MODULES` en los `.sh` locales, pero esos ficheros están ignorados por `.gitignore` (`*.sh`) y no se versionan.
+
+---
+
+## 10. Paso 1.1: value objects y `pasarela` (2026-11-10)
+
+Tests nuevos (97 casos): `PlanEstudiosTest`, `EgmItemIdTest`, `PersonaTextoCharsTest`, `ValueObjectMessagesTest`, `PasarelaParametroCodeTest`, `PasarelaConfigTest`. Cubren límites (rango de años, 64 caracteres, 0/negativo), cadenas vacías o con espacios, caracteres no permitidos, `fromNullable*` y mensajes de error.
+
+**Hallazgos**
+- **Bug real en `ValueObjectMessages::safeRepr`:** usaba la constante inexistente `JSON_INVALID_SUBSTITUTE` (la correcta es `JSON_INVALID_UTF8_SUBSTITUTE`); con UTF-8 inválido devolvía «(valor no codificable)» en lugar de sustituir el byte. Corregido en commit `fix` aparte.
+- **`SfsvId.php` era código muerto:** declaraba la clase `SfsvOtrosId` (nombre distinto del fichero, sin la constante `Otros`), nada lo usaba y sus casos ya estaban en `SfsvOtrosIdTest`. Eliminado.
+- `PasarelaConfig::getJson_valor(true)` devuelve `[]` (no `null`) cuando no hay valor: contrato de `ConverterJson`, documentado en el test.
+- El chequeo granular ahora lista 6 entidades sin test (paso 1.4b) y 7 repositorios sin test de integración (los 6 conocidos más `PgPasarelaConfigRepository`).
