@@ -112,4 +112,43 @@ final class PermDlTest extends myTest
         $this->assertTrue($p->have_perm_oficina('scr'));
         $this->assertTrue($p->have_perm_oficina('scdl,sg'));
     }
+
+    /**
+     * Hallazgo (ver docs/dev/revision_tests_plan.md, sección 15): `have_perm_oficina()` es «cualquiera de»
+     * (comparte algún bit) y `admin_sv` vale -1 (todos los bits), así que es verdadero para CUALQUIER usuario
+     * con algún permiso. Para saber si alguien es administrador hay que usar `only_perm()` (igualdad exacta).
+     */
+    public function test_have_perm_oficina_admin_es_verdadero_para_cualquiera_con_algun_permiso(): void
+    {
+        $_SESSION['iPermMenus'] = MenuDlPermissionBits::map()[MenuDlPermissionBits::AGD];
+
+        $p = new PermDl();
+
+        $this->assertTrue($p->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV), 'un usuario solo de agd «es» admin_sv con have_perm_oficina');
+        $this->assertTrue($p->have_perm_oficina(MenuDlPermissionBits::ADMIN_SF));
+        $this->assertFalse($p->only_perm(MenuDlPermissionBits::ADMIN_SV), 'only_perm sí distingue');
+        $this->assertFalse($p->only_perm(MenuDlPermissionBits::ADMIN_SF));
+    }
+
+    public function test_only_perm_identifica_a_los_administradores(): void
+    {
+        $_SESSION['iPermMenus'] = -1;
+        $this->assertTrue((new PermDl())->only_perm(MenuDlPermissionBits::ADMIN_SV));
+        $this->assertFalse((new PermDl())->only_perm(MenuDlPermissionBits::ADMIN_SF));
+
+        $_SESSION['iPermMenus'] = 16776183;
+        $this->assertTrue((new PermDl())->only_perm(MenuDlPermissionBits::ADMIN_SF));
+        $this->assertFalse((new PermDl())->only_perm(MenuDlPermissionBits::ADMIN_SV));
+    }
+
+    public function test_usuario_sin_permisos_no_es_admin_de_ninguna_forma(): void
+    {
+        $_SESSION['iPermMenus'] = 0;
+
+        $p = new PermDl();
+
+        $this->assertFalse($p->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV));
+        $this->assertFalse($p->only_perm(MenuDlPermissionBits::ADMIN_SV));
+    }
 }
+

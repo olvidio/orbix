@@ -42,7 +42,9 @@ $opts = [
     'perm_vcsd' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD),
     'perm_des' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES),
     'perm_sg' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SG),
-    'perm_admin' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('admin'),
+    // Administrador = tener exactamente todos los permisos de admin (no basta compartir algún bit).
+    'perm_admin' => $oPerm instanceof XPermisos
+        && ($oPerm->only_perm(MenuDlPermissionBits::ADMIN_SV) || $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF)),
     'is_dmz' => ConfigGlobal::is_dmz(),
 ];
 

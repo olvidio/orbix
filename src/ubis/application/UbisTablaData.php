@@ -108,7 +108,7 @@ final class UbisTablaData
 
         $a_botones = [['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]];
         $oPerm = $_SESSION['oPerm'] ?? null;
-        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('scl')) {
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SCDL)) {
             $a_botones[] = ['txt' => _("eliminar"), 'click' => "fnjs_borrar(this.form)"];
         }
 
