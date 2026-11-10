@@ -23,6 +23,7 @@ use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
 use src\permisos\domain\MenuDlPermissionBits;
 
+use src\shared\domain\value_objects\TimeLocal;
 /**
  * Datos para la ficha de encargos de un SACD
  * (`sacd_ficha_ajax?que=ficha`).
@@ -276,8 +277,9 @@ final class SacdFichaData
         if ($time === null) {
             return '';
         }
-        if (is_object($time) && method_exists($time, 'value')) {
-            return (string) $time->value();
+        // TimeLocal no tiene value() ni __toString(): la hora para el texto es la de la BD (HH:MM:SS).
+        if ($time instanceof TimeLocal) {
+            return $time->toDatabaseString();
         }
 
         return is_scalar($time) ? (string) $time : '';

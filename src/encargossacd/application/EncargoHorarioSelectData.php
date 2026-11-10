@@ -10,6 +10,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 
+use src\shared\domain\value_objects\TimeLocal;
 /**
  * Datos para la lista de horarios de un encargo (`encargo_horario_select`).
  *
@@ -116,8 +117,9 @@ final class EncargoHorarioSelectData
         if ($time === null) {
             return '';
         }
-        if (is_object($time) && method_exists($time, 'value')) {
-            return (string) $time->value();
+        // TimeLocal no tiene value() ni __toString(): la hora para el texto es la de la BD (HH:MM:SS).
+        if ($time instanceof TimeLocal) {
+            return $time->toDatabaseString();
         }
 
         return is_scalar($time) ? (string) $time : '';

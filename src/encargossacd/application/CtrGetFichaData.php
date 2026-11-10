@@ -20,6 +20,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\shared\security\HashB;
 use src\permisos\domain\MenuDlPermissionBits;
 
+use src\shared\domain\value_objects\TimeLocal;
 /**
  * Lectura de la ficha de atencion sacerdotal de un centro.
  *
@@ -406,9 +407,12 @@ final class CtrGetFichaData
         if ($time === null) {
             return '';
         }
-        return is_scalar($time) || (is_object($time) && method_exists($time, '__toString'))
-            ? (string) $time
-            : (is_object($time) && method_exists($time, 'value') ? (string) $time->value() : '');
+        // TimeLocal no tiene value() ni __toString(): la hora para el texto es la de la BD (HH:MM:SS).
+        if ($time instanceof TimeLocal) {
+            return $time->toDatabaseString();
+        }
+
+        return is_scalar($time) || (is_object($time) && method_exists($time, '__toString')) ? (string) $time : '';
     }
 
     /**
