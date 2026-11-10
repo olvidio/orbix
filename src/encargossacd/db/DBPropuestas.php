@@ -81,10 +81,7 @@ class DBPropuestas extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq)";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT propuesta_encargos_sacd_id_enc_ukey
                     UNIQUE (id_enc, id_nom_new, modo, f_ini)";
-        $a_sql[] = "SELECT setval('$id_seq', COALESCE((SELECT MAX($campo_seq)+1 FROM $nom_tabla), 1), FALSE)
-                    FROM information_schema.key_column_usage
-                    WHERE constraint_name LIKE '%pkey%'
-                    ORDER BY table_name";
+        $a_sql[] = "SELECT setval('$id_seq', COALESCE((SELECT MAX($campo_seq)+1 FROM $nom_tabla), 1), FALSE)";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -146,6 +143,8 @@ class DBPropuestas extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT propuesta_encargo_sacd_horario_ukey UNIQUE ($campo_seq)";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc, id_item, id_nom)";
+        // La tabla se copia con los id_item de encargo_sacd_horario: la secuencia nueva debe seguir al máximo.
+        $a_sql[] = "SELECT setval('$id_seq', COALESCE((SELECT MAX($campo_seq)+1 FROM $nom_tabla), 1), FALSE)";
         $a_sql[] = "ALTER TABLE ONLY $nom_tabla ADD CONSTRAINT propuesta_encargo_sacd_horario_id_item_tarea_sacd_fkey
                      FOREIGN KEY (id_item_tarea_sacd) REFERENCES $nom_tabla_prop(id_item) ON DELETE CASCADE";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
