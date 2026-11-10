@@ -153,6 +153,8 @@ Orden de trabajo recomendado. Cada slice debe dejar tests verdes y no mezclar mi
 
 No hay un catálogo aparte en `xu_dl` ni en PHP: al absorber, las filas de `e_actas_dl` pasan al esquema matriz **con el prefijo antiguo** (por eso la búsqueda por texto `dlz` ya las encontraba). El mapa hace explícito y mantenible ese vínculo. Fusiones H: `dlz` → **H-dlal**; `dlv`/`dlva`/`dlst` → **H-dln**.
 
+**crIers → crH (sin `AbsorberEsquema`):** crIers desapareció en la práctica (personas trasladadas a crH en 2024-11) pero el esquema seguía recibiendo las notas de actas `Iers n/aa`. Se traslada solo lo académico y los centros, con migraciones: [`202611101000_…__comun.sql`](../../db/migrations/202611101000_iers_a_crh_ubis_actividades_y_mapa_acta__comun.sql) (copias `cu_centros_dl*`, casas con dirección/telecos/periodos, actividades con el mismo `id_activ` y `dl_org` = crH, y mapa `iers` → **H-crH**) y [`202611101010_…__sv.sql`](../../db/migrations/202611101010_iers_a_crh_notas_y_centros__sv.sql) (sf gemelo): `e_notas_dl`, `e_actas_dl`, `e_actas_tribunal_dl` y centros (mismos `id_ubi` / `id_direccion`) a `H-crHv`; `e_notas_otra_region_stgr` a `H-Hv`. La fila del mapa no lleva «fusion» en `notas` porque `fusionesEsquemaBase()` supone que origen y destino son de la misma región. Personas en `L`, traslados, dossiers, `du_tarifas` y la configuración del esquema siguen en `Iers-crIers*`; cada migración termina con un aviso «quedan en …» con lo que no ha movido.
+
 ### Slice 5 — Módulo certificados
 
 - [x] Desacoplado `addCertificado` / `deleteCertificado` en `PgPersonaNotaOtraRegionStgrRepository` del alta automática de notas `FORMATO_CERTIFICADO` en traslados internos.  
