@@ -104,16 +104,12 @@ abstract class XPermisos
     public function have_perm_oficina(string $p): bool
     {
         $pageperm = preg_split('/,/', $p) ?: [];
-        [$ok0, $pagebits] = $this->permsum($pageperm);
+        // Semántica «cualquiera de»: un nombre desconocido no suma bits (y si son todos
+        // desconocidos, la suma es 0 y se deniega), pero no invalida a los demás.
+        [, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
 
-        $has_one = (($userbits & $pagebits) != 0);
-
-        if (!($has_one && $ok0)) {
-            return false;
-        } else {
-            return true;
-        }
+        return ($userbits & $pagebits) != 0;
     }
 
     /**
@@ -150,11 +146,7 @@ abstract class XPermisos
         [$ok0, $pagebits] = $this->permsum($pageperm);
         $userbits = $this->iaccion;
 
-        if ($userbits === $pagebits) {
-            return true;
-        } else {
-            return false;
-        }
+        return $ok0 && $userbits === $pagebits;
     }
 
     /* MÉTODOS PRIVADOS --------------------------------------------------------- */
@@ -197,12 +189,13 @@ abstract class XPermisos
         return [true, $r];
     }
 
-    /*
-   * Genera el número suma de permiso. Se le pasa un array de texto con los permisos
-   *
-   *
-   */
     /**
+     * Suma de bits de una lista de nombres de permiso.
+     *
+     * El primer elemento es `false` si algún nombre no existe en el mapa: quien lo use debe
+     * denegar (un nombre mal escrito nunca debe conceder acceso). Los nombres desconocidos
+     * no suman ningún bit.
+     *
      * @param list<string> $p
      * @return array{0: bool, 1: int}
      */
@@ -210,14 +203,16 @@ abstract class XPermisos
     {
         $perms = $this->permissions;
         $r = 0;
+        $ok = true;
         foreach ($p as $val) {
             if (!isset($perms[$val])) {
+                $ok = false;
                 continue;
             }
             $r |= $perms[$val];
         }
 
-        return [true, $r];
+        return [$ok, $r];
     }
 
     ## Look for a match within an list of strints

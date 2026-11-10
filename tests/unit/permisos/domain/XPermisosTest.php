@@ -60,15 +60,20 @@ final class XPermisosTest extends myTest
     }
 
     /**
-     * Caso límite que conviene tener fijado: un nombre de permiso que no existe se ignora
-     * (suma 0) y {@see XPermisos::have_perm_activ()} lo da por concedido.
+     * Seguridad por defecto: un nombre de permiso que no existe (error tipográfico, cadena
+     * vacía…) deniega, nunca concede.
      *
      * @dataProvider permisoDesconocidoProvider
      */
-    public function test_un_permiso_desconocido_o_vacio_se_ignora_y_se_concede(string $perm): void
+    public function test_un_permiso_desconocido_o_vacio_deniega(string $perm): void
     {
-        $this->assertTrue((new PermAccion(0))->have_perm_activ($perm));
-        $this->assertTrue((new PermAccion(0))->have_perm_action($perm));
+        foreach ([0, 3, 31] as $acceso) {
+            $p = new PermAccion($acceso);
+            $this->assertFalse($p->have_perm_activ($perm), "have_perm_activ con acceso $acceso");
+            $this->assertFalse($p->have_perm_action($perm), "have_perm_action con acceso $acceso");
+            $this->assertFalse($p->only_perm($perm), "only_perm con acceso $acceso");
+            $this->assertFalse($p->have_perm_oficina($perm), "have_perm_oficina con acceso $acceso");
+        }
     }
 
     /**
@@ -79,6 +84,23 @@ final class XPermisosTest extends myTest
         yield 'nombre inexistente' => ['no_existe'];
         yield 'cadena vacía' => [''];
         yield 'error tipográfico' => ['modificr'];
+        yield 'mayúsculas (los nombres son sensibles)' => ['VER'];
+        yield 'con espacios' => [' ver'];
+    }
+
+    public function test_un_desconocido_en_una_lista_invalida_la_comprobacion_de_todos_los_bits(): void
+    {
+        $p = new PermAccion(31);
+
+        $this->assertFalse($p->have_perm_activ('ver,modificr'), 'AND: un nombre mal escrito deniega aunque el otro valga');
+        $this->assertFalse($p->have_perm_action('ver,modificr'));
+        $this->assertFalse($p->only_perm('borrar,modificr'));
+    }
+
+    public function test_have_perm_oficina_con_lista_ignora_los_desconocidos_pero_sigue_siendo_cualquiera_de(): void
+    {
+        $this->assertTrue((new PermAccion(3))->have_perm_oficina('ver,no_existe'), 'basta que uno de los conocidos coincida');
+        $this->assertFalse((new PermAccion(0))->have_perm_oficina('ver,no_existe'));
     }
 
     public function test_have_perm_action_se_comporta_como_have_perm_activ(): void
@@ -118,6 +140,7 @@ final class XPermisosTest extends myTest
         $this->assertFalse((new PermAccion(7))->only_perm('ver'));
         $this->assertFalse((new PermAccion(31))->only_perm('modificar'));
         $this->assertTrue((new PermAccion(0))->only_perm('nada'));
+        $this->assertFalse((new PermAccion(0))->only_perm('no_existe'), 'antes: 0 === 0 daba true');
     }
 
     // ---- sumas de permisos ------------------------------------------------------
@@ -126,9 +149,10 @@ final class XPermisosTest extends myTest
     {
         $p = new PermAccion(0);
 
-        $this->assertSame([true, 15], $p->permsum(['ver', 'zzz', 'crear']));
+        $this->assertSame([false, 15], $p->permsum(['ver', 'zzz', 'crear']), 'ok=false avisa de que hubo un nombre desconocido');
+        $this->assertSame([true, 15], $p->permsum(['ver', 'crear']));
         $this->assertSame([true, 0], $p->permsum([]));
-        $this->assertSame([true, 0], $p->permsum(['zzz']));
+        $this->assertSame([false, 0], $p->permsum(['zzz']));
     }
 
     public function test_permsum_bit_hace_or(): void
