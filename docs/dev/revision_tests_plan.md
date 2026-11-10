@@ -392,13 +392,12 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 | Módulo | Sin test / total | Notas |
 |---|---|---|
 | `actividadestudios` | 10 / 34 | el más grande (`CaPosiblesData` 605 líneas, `Select_matriculas_de_una_persona` 507, `ActaNotasDefinitivasGrabar` 306…) |
-| `personas` | 6 / 17 | escribe datos (`TrasladoUpdate`, `PersonasSelectData`…) |
-| `actividadplazas` | 6 / 15 | `GestionPlazasUpdate`, `PeticionesIncorporar`… |
+| `personas` | 5 / 17 | escribe datos (`TrasladoUpdate`, `PersonasSelectData`…) |
+| `actividadplazas` | 4 / 15 | `GestionPlazasData`, `GestionPlazasUpdate`, `PeticionesActivData`, `PosiblesPropietariosData` |
 | `casas` | 5 / 16 | los `*Data` grandes (`CasasResumenData` 493 líneas) |
-| `configuracion` | 5 / 6 | `Modulos*` (instalación de módulos) |
+| `configuracion` | 4 / 6 | `Modulos*` (instalación de módulos); `ModuloInstaladoTablesService` ejecuta DDL (solo con BD aislada) |
 | `actividadcargos` | 4 / 11 | `Select_cargos_*` (HTML en `src/`) |
 | `dossiers` | 3 / 12 | `DossiersVerPantallaData` (469), `DossiersListaFichasData`, `DossierFichaSelectRunner` |
-| `cambios` | 2 / 22 | `CambioUsuarioObjetoPref*` |
 | `menus` | 1 / 12 | `MenusGetPageData` |
 | `profesores` | 1 / 6 | `FichaProfesorStgr` (357) |
 | `shared` | 1 / 12 | `ReconciliadorCopia` (se prueba indirectamente vía `ResincronizarCuCentros`) |
@@ -416,7 +415,7 @@ Hechos en esta pasada (además de las secciones anteriores): `cambios` (preferen
 7. Respuestas incoherentes: hash vacío en BD lanza `InvalidArgumentException` al hidratar; «Rol no encontrado» en la app confirma que la contraseña era buena; `AppMobileLogin` escribe `$_SESSION['sfsv']` y `['private']` aunque rechace el login; el web no recorta el usuario y la app sí.
 8. **Capas:** las dos clases ejecutan SQL, abren conexiones y (la de la app) usan `$_SESSION`, `setcookie()` y `getenv()` dentro de `application`; son casi idénticas (~400 líneas duplicadas) y abren varias conexiones por login (0,2–0,4 s).
 
-**Hallazgos nuevos (sin corregir):** `CasaEcGastosGuardar` dice «borra los existentes y reinserta» pero no borra nada: cada guardado duplica los 36 apuntes del año, y lee «1.234,5» como 1,234; `CasasResumenOcupacion` arrastra la hora actual del reloj en los límites de periodo (`createFromFormat` sin `!`) y compara cadenas de formatos distintos, de modo que una actividad de febrero del periodo sv se atribuye a sf; `TarifaUbiUpdateInc` redondea las cantidades a entero (una tarifa de 12,50 se guarda como 13: se pierden los céntimos); `TarifaUbiCopiar` es un esqueleto («pendiente de reimplementar») y no copia nada; `TarifaUbiFormData` devuelve siempre la serie «general» al editar; `DocenciaActualizar` ignora el resultado de `Guardar` y el mensaje final siempre dice que se actualizó; `AnuncioDelete` lanza excepción con un id que no es UUID; `MenuGuardar` guarda un orden vacío como `[0]`; `CartasPresentacionBuscarOpcionesData` fija las delegaciones a la región `H`; `CertificadoEmitidoGuardarMessages` mezcla `||` y `&&` sin paréntesis en `isDuplicatePersonaFecha`.
+**Hallazgos (sin corregir):** `CambioUsuarioObjetoPrefGuardar` lanza `InvalidArgumentException` si falta `aviso_tipo` (no devuelve error) y rechaza un `id_tipo_activ` vacío (el relleno máximo es 5 puntos); `CambioUsuarioObjetoPrefPropiedadesData` usa el texto «ja veurem» (sin traducir y en catalán) como condición de los centros de un cdc; `PeticionesIncorporar` usa `setPlazaComprobando`, marcado `@deprecated`. Anteriores: `CasaEcGastosGuardar` dice «borra los existentes y reinserta» pero no borra nada: cada guardado duplica los 36 apuntes del año, y lee «1.234,5» como 1,234; `CasasResumenOcupacion` arrastra la hora actual del reloj en los límites de periodo (`createFromFormat` sin `!`) y compara cadenas de formatos distintos, de modo que una actividad de febrero del periodo sv se atribuye a sf; `TarifaUbiUpdateInc` redondea las cantidades a entero (una tarifa de 12,50 se guarda como 13: se pierden los céntimos); `TarifaUbiCopiar` es un esqueleto («pendiente de reimplementar») y no copia nada; `TarifaUbiFormData` devuelve siempre la serie «general» al editar; `DocenciaActualizar` ignora el resultado de `Guardar` y el mensaje final siempre dice que se actualizó; `AnuncioDelete` lanza excepción con un id que no es UUID; `MenuGuardar` guarda un orden vacío como `[0]`; `CartasPresentacionBuscarOpcionesData` fija las delegaciones a la región `H`; `CertificadoEmitidoGuardarMessages` mezcla `||` y `&&` sin paréntesis en `isDuplicatePersonaFecha`.
 
 **Otros huecos de la fase 1 anotados en sus módulos:** camino feliz de `AsistenteMoverData`; `SincroDB::syncro` completo (BD de listas y varias dl); el informe legacy `notas\application\legacy\Resumen` solo se cubre de forma indirecta; la corrección de secuencias de `DBPropuestas` no tiene test.
 
