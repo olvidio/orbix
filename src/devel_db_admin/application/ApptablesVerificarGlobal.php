@@ -106,11 +106,13 @@ final class ApptablesVerificarGlobal
 
     private function existeTabla(PDO $pdo, string $tablaCualificada): bool
     {
-        $st = $pdo->query('SELECT to_regclass(' . $pdo->quote($tablaCualificada) . ')');
+        // `to_regclass` devuelve el nombre sin esquema cuando este está en el search_path (aquí `public`),
+        // así que no se puede comparar con el nombre cualificado: basta con que no sea NULL.
+        $st = $pdo->query('SELECT to_regclass(' . $pdo->quote($tablaCualificada) . ') IS NOT NULL');
         if ($st === false) {
             return false;
         }
 
-        return (string) $st->fetchColumn() === $tablaCualificada;
+        return (bool) $st->fetchColumn();
     }
 }
