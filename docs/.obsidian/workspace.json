@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "dev/refactor_busquedas_criteria.md",
+                "file": "guias/PLAN_GUIAS_PROCESOS.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "refactor_busquedas_criteria"
+              "title": "PLAN_GUIAS_PROCESOS"
             }
           }
         ]
@@ -190,6 +190,7 @@
   },
   "active": "a6a90e9d6a043c30",
   "lastOpenFiles": [
+    "dev/refactor_busquedas_criteria.md",
     "dev/refactor_busquedas_criteria.md.tmp.2958660.9c0525f236d5",
     "dev/supervision_arquitectura.md.tmp.2958660.82193110d286",
     "dev/guia_tecnica_onboarding.md.tmp.2958660.6f87b6509b41",
@@ -200,7 +201,6 @@
     "dev/refactor_busquedas_criteria.md.tmp.2491753.a9ec7492ec87",
     "dev/refactor_busquedas_criteria.md.tmp.2489919.3cb2393e929b",
     "dev/sedXi4jIt",
-    "dev/sed0cEJaN",
     "dev/reports/criteria_inventario.md",
     "dev/supervision_arquitectura.md",
     "README.md",
