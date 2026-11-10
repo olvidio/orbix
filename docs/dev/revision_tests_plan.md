@@ -520,6 +520,21 @@ Unit con mocks (3 ficheros, ≈ 30 casos): los ocho casos de uso gemelos `Contri
 3. `ExportarActividadesData` recorre `$n < 4` sobre un array de 3 organizadores (el cuarto se descarta sin aviso); y `Ubi::NewUbi` (estático, acceso a BD) se llama dentro del bucle cuando la actividad no tiene plazas, sin test por ello.
 4. La columna «texto aviso» se exporta siempre vacía.
 
+### `actividades` (10 clases sin test al empezar; módulo cerrado: 0/44)
+
+Unit con mocks (3 ficheros, ≈ 45 casos): `ActividadPublicar`, `ActividadImportar`, `ActividadDuplicar`, `ActividadEliminar` (permisos de borrado e importadas de otra dl), `ActividadCambiarTipo`, `ActividadEditar` (permiso de crear, tipo, lugar, regeneración del proceso y plazas de la dl), `ActividadQueFiltrosBloque` y los bloques HTML (`ActividadQueDatos`, `TipoActivFormNuevo`). Integración (solo lectura): `ActividadSelectUbiData`.
+
+**Bug corregido (`ActividadEditar`):** llamaba a `ActividadPlazasRepository::getactividadesPlazas()`, que **no existe** en ningún sitio: al editar las plazas de una actividad de la propia dl con la app `actividadplazas` instalada, el guardado acababa en un error fatal («Call to undefined method»). Ahora usa `matching(Criteria)` con `ActividadPlazasField`.
+
+**Hallazgos (sin corregir):**
+1. `ActividadEditar` / `ActividadCambiarTipo`: los cuatro trozos del tipo se leen con `inputInt`, que convierte el «.» (sin elegir) en 0; el `strpos('.')` posterior nunca se cumple y «debe seleccionar un tipo de actividad» es inalcanzable: se compone un id erróneo (p. ej. `1031`). Un test lo fija en `ActividadCambiarTipo`.
+2. `ActividadEditar`: `$plazas_dl !== $plazas_old` compara `?string` (`ActividadPlazas::getPlazas`) con `?int`; con `!==` siempre es verdadero, así que si la dl ya tiene fila de plazas **nunca se actualiza** (un test lo fija).
+3. `ActividadImportar` regenera el proceso aunque `Guardar` de la importación haya fallado.
+4. `ActividadDuplicar` no copia el proceso ni las asignaciones; el duplicado queda sin tareas hasta regenerarlo, y carga la actividad dos veces con `findById`.
+5. **Capas:** `ActividadQueDatos` y `TipoActivFormNuevo` (en `src/`) instancian `frontend\actividades\helpers\ActividadTipo`, capturan su salida con `ob_*` y construyen HTML a mano (mismo patrón que `procesos` y `pasarela`).
+6. `ActividadSelectUbiData` ejecuta SQL directo con `GlobalPdo` (`oDBC`/`oDBPC`) en un caso de uso de `application`.
+
+
 
 
 
