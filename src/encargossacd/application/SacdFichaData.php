@@ -21,6 +21,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\OrderDirection;
 use src\shared\security\HashB;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Datos para la ficha de encargos de un SACD
@@ -51,7 +52,7 @@ final class SacdFichaData
         $permiso = 0;
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
         ) {
             $permiso = 1;
         }

@@ -1,5 +1,5 @@
 <ul>
-    <?php if ($_SESSION['oPerm']->have_perm_oficina('est')) { ?>
+    <?php if ($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::EST)) { ?>
         <li><span class="link"
                   onclick="fnjs_update_div('#main','<?= $go['comprobar_n'] ?>');"><?= _("comprobar los datos del fichero de notas para numerarios") ?></span>
         </li>
@@ -7,7 +7,7 @@
                   onclick="fnjs_update_div('#main','<?= $go['comprobar_a'] ?>');"><?= _("comprobar los datos del fichero de notas para agregados") ?></span>
         </li>
     <?php }
-    if (($_SESSION['oPerm']->have_perm_oficina('est')) || ($_SESSION['oPerm']->have_perm_oficina('dtor'))) { ?>
+    if (($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::EST)) || ($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::DTOR))) { ?>
         <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("numerarios")) ?>
             <ul>
                 <li><span class="link"

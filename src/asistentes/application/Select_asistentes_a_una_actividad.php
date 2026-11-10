@@ -27,6 +27,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Ubi;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Widget del dossier `3101` (codigo `asistentes_a_una_actividad`):
@@ -495,7 +496,7 @@ class Select_asistentes_a_una_actividad
 
                 $oTipoActiv = new TiposActividades($this->id_tipo_activ);
                 $sasistentes = $oTipoActiv->getAsistentesText();
-                if (($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                if (($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                     && ($sasistentes === 's' || $sasistentes === 'sg')) {
                     $eliminar = 2;
                 } else {

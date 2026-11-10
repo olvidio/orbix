@@ -7,13 +7,13 @@ use src\usuarios\domain\criteria\UsuarioGrupoField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\criteria\UsuarioField;
-use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\PermDl;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 class usuariosRegionContactos
 {
@@ -165,9 +165,9 @@ class usuariosRegionContactos
             $oPerm = new PermDl();
             $oPerm->setAccion($iperm_menu);
 
-            if ($oPerm->have_perm_oficina('est') === true
-                || $oPerm->have_perm_oficina('sm') === true
-                || $oPerm->have_perm_oficina('agd') === true) {
+            if ($oPerm->have_perm_oficina(MenuDlPermissionBits::EST) === true
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::SM) === true
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::AGD) === true) {
                 $aContactos[$nom_usuario] = [
                     'email' => $email,
                     'cargo' => MenuDlPermissionBits::listaTxt2($iperm_menu),

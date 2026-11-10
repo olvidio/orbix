@@ -26,6 +26,7 @@ use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Construye el listado de actividades que cumplen los filtros fijados por
@@ -392,11 +393,11 @@ final class ActividadSelectListado
             }
 
             $ssfsv = $oTipoActividad->getSfsvText();
-            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                 $sin++;
                 continue;
             }
-            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                 $a_valores[$i]['sel'] = '';
                 $a_valores[$i]['select'] = '';
                 $a_valores[$i][1] = $f_ini;
@@ -431,7 +432,7 @@ final class ActividadSelectListado
                     if (!ConfigGlobal::is_app_installed('procesos')
                         || $aprobado) {
                         $puedeVerSacd = !ConfigGlobal::is_app_installed('procesos')
-                            || $oPermSacd->have_perm_activ('ver') === true;
+                            || $oPermSacd->have_perm_activ(PermAccionBits::VER) === true;
                         $ActividadCargoRepository = $this->actividadCargoRepository;
                         $nombresSacd = [];
                         foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {

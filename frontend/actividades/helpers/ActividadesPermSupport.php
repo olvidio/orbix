@@ -8,6 +8,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\session\SessionConfig;
 use frontend\shared\session\SessionPerm;
 use frontend\shared\session\SessionPermActividades;
+use frontend\shared\session\PermisoOficina;
 
 final class ActividadesPermSupport
 {
@@ -23,7 +24,7 @@ final class ActividadesPermSupport
 
     public static function permDes(): bool
     {
-        return SessionPerm::havePermOficina('vcsd') || SessionPerm::havePermOficina('des');
+        return SessionPerm::havePermOficina(PermisoOficina::VCSD) || SessionPerm::havePermOficina(PermisoOficina::DES);
     }
 
     public static function havePermOficina(string $oficina): bool
@@ -42,10 +43,10 @@ final class ActividadesPermSupport
             return true;
         }
         if (OrbixRuntime::miSfsv() === 1
-            && (self::havePermOficina('des') || self::havePermOficina('vcsd'))) {
+            && (self::havePermOficina(PermisoOficina::DES) || self::havePermOficina(PermisoOficina::VCSD))) {
             return true;
         }
 
-        return OrbixRuntime::miSfsv() === 2 && self::havePermOficina('admin_sf');
+        return OrbixRuntime::miSfsv() === 2 && self::havePermOficina(PermisoOficina::ADMIN_SF);
     }
 }

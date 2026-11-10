@@ -21,6 +21,7 @@ use src\cambios\domain\entity\Cambio;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use stdClass;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Caso de uso para generar la tabla de avisos de cambios.
@@ -238,7 +239,7 @@ class AvisosGenerarTabla
                             if ($oPermActiv === null) {
                                 continue 2;
                             }
-                            if (!$oPermActiv->have_perm_activ('ocupado')) {
+                            if (!$oPermActiv->have_perm_activ(PermAccionBits::OCUPADO)) {
                                 continue;
                             }
                         }
@@ -292,7 +293,7 @@ class AvisosGenerarTabla
                                 if ($oPermActiv === null) {
                                     continue 2;
                                 }
-                                if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                if (!$oPermActiv->have_perm_activ(PermAccionBits::OCUPADO)) {
                                     continue;
                                 }
 
@@ -315,7 +316,7 @@ class AvisosGenerarTabla
                                 if ($oPermActiv === null) {
                                     continue 2;
                                 }
-                                if (!$oPermActiv->have_perm_activ('ocupado')) {
+                                if (!$oPermActiv->have_perm_activ(PermAccionBits::OCUPADO)) {
                                     continue;
                                 }
 

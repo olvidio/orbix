@@ -23,6 +23,8 @@ use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use src\shared\security\HashB;
 use frontend\shared\web\Periodo;
+use src\procesos\domain\PermAccionBits;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla activ_sacd.
@@ -97,10 +99,10 @@ final class ListaActividadesSacdData
             [$oPermActiv, $oPermCtr, $oPermSacd] = $this->resolverPermisos(
                 $id_activ, $id_tipo_activ, $dl_org, $tieneProcesos
             );
-            if ($oPermActiv->have_perm_activ('ocupado') === false) {
+            if ($oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                 continue;
             }
-            if ($oPermActiv->have_perm_activ('ver') === false) {
+            if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                 continue;
             }
 
@@ -112,7 +114,7 @@ final class ListaActividadesSacdData
                 $clase = 'wrong-soft';
             }
 
-            if ($oPermCtr->have_perm_activ('ver') === true) {
+            if ($oPermCtr->have_perm_activ(PermAccionBits::VER) === true) {
                 $ctrs = '';
                 $cCtrs = $this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
                 foreach ($cCtrs as $oUbi) {
@@ -125,7 +127,7 @@ final class ListaActividadesSacdData
             }
 
             $sacds = [];
-            if ($oPermSacd->have_perm_activ('ver') === true) {
+            if ($oPermSacd->have_perm_activ(PermAccionBits::VER) === true) {
                 $cCargosActividad = $this->actividadCargoRepository->matching(
                     Criteria::create()
                         ->where(Filter::eq(ActividadCargoField::IdActiv, $id_activ))
@@ -166,14 +168,14 @@ final class ListaActividadesSacdData
                 'f_ini' => $f_ini,
                 'f_fin' => $f_fin,
                 'clase' => $clase,
-                'perm_modificar' => $oPermSacd->have_perm_activ('modificar') === true,
-                'perm_crear' => $oPermSacd->have_perm_activ('crear') === true,
+                'perm_modificar' => $oPermSacd->have_perm_activ(PermAccionBits::MODIFICAR) === true,
+                'perm_crear' => $oPermSacd->have_perm_activ(PermAccionBits::CREAR) === true,
                 'sacds' => $sacds,
             ];
         }
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $perm_des = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des');
+        $perm_des = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES);
 
         return [
             'titulo' => ucfirst(_("listado de actividades")),

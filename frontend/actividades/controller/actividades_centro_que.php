@@ -18,6 +18,7 @@ use frontend\shared\web\DesplegableArray;
 use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\session\PermisoOficina;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -69,7 +70,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
             $filtro['tipo_ctr'] = 'seccion_no_s';
         }
     } else {
-        if (ActividadesPermSupport::havePermOficina('des') || ActividadesPermSupport::havePermOficina('vcsd')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::DES) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
             $oForm->setCentros('all');
         } else {
             if (OrbixRuntime::miSfsv() === 1) {

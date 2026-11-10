@@ -34,6 +34,7 @@ use src\personas\domain\Trasladar;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\GlobalPdo;
+use src\permisos\domain\MenuDlPermissionBits;
 
 class SincroDB
 {
@@ -87,10 +88,10 @@ class SincroDB
         $this->tipo_persona = $tipo_persona;
         $oPerm = $_SESSION['oPerm'] ?? null;
         $id_tipo = match ($tipo_persona) {
-            'n' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sm')) ? 1 : 0,
-            'a' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('agd')) ? 2 : 0,
-            's' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sg')) ? 3 : 0,
-            'sssc' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des')) ? 4 : 0,
+            'n' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SM)) ? 1 : 0,
+            'a' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::AGD)) ? 2 : 0,
+            's' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SG)) ? 3 : 0,
+            'sssc' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) ? 4 : 0,
             default => 0,
         };
         if ($id_tipo === 0 && !in_array($tipo_persona, ['n', 'a', 's', 'sssc'], true)) {

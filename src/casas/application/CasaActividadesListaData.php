@@ -22,6 +22,7 @@ use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaGlobal;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\domain\entity\PersonaSacd;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Data builder: listado de actividades por casa y periodo (pantalla
@@ -141,10 +142,10 @@ final class CasaActividadesListaData
                     $oPermSacd = $oPermActividades->getPermisoActual('sacd');
                 }
 
-                if (!$oPermActiv->have_perm_action('ocupado')) { continue; }
+                if (!$oPermActiv->have_perm_action(PermAccionBits::OCUPADO)) { continue; }
 
                 $oTipoActiv = new TiposActividades($id_tipo_activ);
-                if (!$oPermActiv->have_perm_action('ver')) {
+                if (!$oPermActiv->have_perm_action(PermAccionBits::VER)) {
                     $ssfsv = $oTipoActiv->getSfsvText();
                     $sasistentes = '';
                     $sactividad = '';
@@ -160,7 +161,7 @@ final class CasaActividadesListaData
                 $nombre_ubi = $this->casaDlRepository->findById($id_ubi)?->getNombreUbiVo()?->value() ?? '';
 
                 $txt_ctr = '';
-                if ($oPermCtr->have_perm_action('ver')) {
+                if ($oPermCtr->have_perm_action(PermAccionBits::VER)) {
                     foreach ($this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
                         $id_ctr = $oCentroEncargado->getId_ubi();
                         $nombre_ctr = $this->centroNombreResolver->nombre($id_ctr);
@@ -176,7 +177,7 @@ final class CasaActividadesListaData
                     }
                     if (!ConfigGlobal::is_app_installed('procesos') || $aprobado) {
                         $puedeVerSacd = !ConfigGlobal::is_app_installed('procesos')
-                            || $oPermSacd->have_perm_activ('ver') === true;
+                            || $oPermSacd->have_perm_activ(PermAccionBits::VER) === true;
                         $nombresSacd = [];
                         foreach ($this->actividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                             $nom_sacd = self::personaPrefApellidosNombre($oPersona);

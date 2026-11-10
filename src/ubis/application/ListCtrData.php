@@ -22,6 +22,7 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 class ListCtrData
 {
@@ -118,7 +119,7 @@ class ListCtrData
                     $filtros[] = ['tipo_casa', Operator::Matches, 'cdc|cdr'];
                     switch ($miSfsv) {
                         case 1:
-                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
                             } else {
                                 $filtros[] = ['sv', Operator::Eq, true];
                             }
@@ -133,7 +134,7 @@ class ListCtrData
                     $filtros[] = ['tipo_casa', Operator::NotMatches, 'cdc|cdr|cgi'];
                     switch ($miSfsv) {
                         case 1:
-                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
                             } else {
                                 $filtros[] = ['sv', Operator::Eq, true];
                             }
@@ -335,7 +336,7 @@ class ListCtrData
 
         $a_botones = [['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]];
         $oPerm = $_SESSION['oPerm'] ?? null;
-        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('admin_sv')) {
+        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV)) {
             $a_botones[] = ['txt' => _("trasladar"), 'click' => "fnjs_ver_dl()"];
         }
 

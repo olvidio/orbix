@@ -6,6 +6,7 @@ use src\actividades\domain\entity\TiposActividades;
 use src\personas\domain\entity\Persona;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Classe per gestionar permisos de dossiers
@@ -66,47 +67,47 @@ class PermDossier
             $id_tabla = $oPersona->getId_tabla();
             switch ($id_tabla) {
                 case "n":
-                    if (!self::havePermOficina('sm')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::SM)) {
                         return 2;
                     }
                     break;
                 case "x":
-                    if (!self::havePermOficina('nax')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::NAX)) {
                         return 2;
                     }
                     break;
                 case "a":
-                    if (!self::havePermOficina('agd')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::AGD)) {
                         return 2;
                     }
                     break;
                 case "s":
-                    if (!self::havePermOficina('sg')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::SG)) {
                         return 2;
                     }
                     break;
                 case "sssc":
-                    if (!self::havePermOficina('des')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::DES)) {
                         return 2;
                     }
                     break;
                 case "pn":
-                    if (!self::havePermOficina('sm')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::SM)) {
                         return 2;
                     }
                     break;
                 case "px":
-                    if (!self::havePermOficina('nax')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::NAX)) {
                         return 2;
                     }
                     break;
                 case "pa":
-                    if (!self::havePermOficina('agd')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::AGD)) {
                         return 2;
                     }
                     break;
                 case "psssc":
-                    if (!self::havePermOficina('des')) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::DES)) {
                         return 2;
                     }
                     break;
@@ -197,7 +198,7 @@ class PermDossier
         switch ($id_tabla) {
             case "n" : //------------------------- numerarios -------------------
             case "pn":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 1),
@@ -221,7 +222,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -245,13 +246,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if (self::havePermOficina('sr')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -275,13 +276,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "a" : //------------------------- agregados -------------------
             case "pa":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -305,7 +306,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -329,13 +330,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if (self::havePermOficina('sr')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -359,13 +360,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "x" : //------------------------- nax -------------------
             case "px":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_n = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -388,7 +389,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_n);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_agd = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -411,7 +412,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_agd);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_x = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 1),
@@ -434,13 +435,13 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_x);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if (self::havePermOficina('sr')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm_est = array(
                         $sv . "11" => array('nom' => "crt n", 'perm' => 0),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -463,27 +464,27 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "s": //------------------------- supernumerarios -------------------
-                if (self::havePermOficina('agd') || self::havePermOficina('sm') || self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD) || self::havePermOficina(MenuDlPermissionBits::SM) || self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sg);
                 }
-                if (self::havePermOficina('sr')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "psssc":
             case "sssc": //------------------------- sss+ -------------------
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
             default;
@@ -529,7 +530,7 @@ class PermDossier
 
         switch ($asistentes) {
             case "sss+" :
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -540,7 +541,7 @@ class PermDossier
                 }
                 break;
             case "n" :
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -553,7 +554,7 @@ class PermDossier
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
                 // cv de cl + sem inv
-                if (self::havePermOficina('agd')
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)
                     and (substr((string) $id_tipo_activ, 0, 4) == "1123"
                         || $id_tipo_activ == "114025"
                         || $id_tipo_activ == "114026")
@@ -569,7 +570,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -581,7 +582,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('vcsd') || self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -593,7 +594,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -607,7 +608,7 @@ class PermDossier
                 }
                 break;
             case "agd":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -619,7 +620,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -631,7 +632,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -643,7 +644,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -656,7 +657,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('est')) {
+                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -670,7 +671,7 @@ class PermDossier
                 }
                 break;
             case "s":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -682,7 +683,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -694,7 +695,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -706,7 +707,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -718,7 +719,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -732,7 +733,7 @@ class PermDossier
                 }
                 break;
             case "nax":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -744,7 +745,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -756,7 +757,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -768,7 +769,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -780,7 +781,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -794,7 +795,7 @@ class PermDossier
                 }
                 break;
             case "sg":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -806,7 +807,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -818,7 +819,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -830,7 +831,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -842,7 +843,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -858,7 +859,7 @@ class PermDossier
                 }
                 break;
             case "sr":
-                if (self::havePermOficina('sm')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SM)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -870,7 +871,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('agd')) {
+                if (self::havePermOficina(MenuDlPermissionBits::AGD)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -882,7 +883,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('nax')) {
+                if (self::havePermOficina(MenuDlPermissionBits::NAX)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -894,7 +895,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('sg')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SG)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 0),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -906,7 +907,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('sr')) {
+                if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -918,7 +919,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina('des')) {
+                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),

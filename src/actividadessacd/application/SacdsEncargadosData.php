@@ -13,6 +13,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\procesos\domain\PermAccion;
 use src\shared\security\HashB;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Devuelve los sacd encargados actuales de una actividad.
@@ -44,8 +45,8 @@ final class SacdsEncargadosData
         $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
 
         $oPermSacd = $this->resolverPermisoSacd($id_activ, $id_tipo_activ, $dl_org);
-        $permite_ver = $oPermSacd->have_perm_activ('ver') === true;
-        $permite_modificar = $oPermSacd->have_perm_activ('modificar') === true;
+        $permite_ver = $oPermSacd->have_perm_activ(PermAccionBits::VER) === true;
+        $permite_modificar = $oPermSacd->have_perm_activ(PermAccionBits::MODIFICAR) === true;
 
         $sacds = [];
         if ($permite_ver) {

@@ -8,6 +8,7 @@ use src\actividadtarifas\domain\value_objects\TarifaModoId;
 use src\shared\domain\criteria\Criteria;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder para la pantalla "catalogo de tipos de tarifa".
@@ -52,7 +53,7 @@ final class TipoTarifaListaData
             $a_valores[$t][3] = (string) $letra;
             $a_valores[$t][4] = $a_modos_tarifa[$modo] ?? '';
             $a_valores[$t][5] = (string) $observ;
-            if ($miSfsv === $sfsv && $this->havePermOficina('adl')) {
+            if ($miSfsv === $sfsv && $this->havePermOficina(MenuDlPermissionBits::ADL)) {
                 $a_valores[$t][6] = [
                     'script' => "fnjs_modificar($id_tarifa)",
                     'valor' => _("modificar"),
@@ -71,14 +72,14 @@ final class TipoTarifaListaData
             '',
         ];
 
-        $puede_anadir = $this->havePermOficina('adl')
-            || $this->havePermOficina('pr')
-            || $this->havePermOficina('calendario');
+        $puede_anadir = $this->havePermOficina(MenuDlPermissionBits::ADL)
+            || $this->havePermOficina(MenuDlPermissionBits::PR)
+            || $this->havePermOficina(MenuDlPermissionBits::CALENDARIO);
 
         return [
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
-            'puede_editar' => $this->havePermOficina('adl'),
+            'puede_editar' => $this->havePermOficina(MenuDlPermissionBits::ADL),
             'puede_anadir' => $puede_anadir,
         ];
     }

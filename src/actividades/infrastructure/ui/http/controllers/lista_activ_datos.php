@@ -13,6 +13,8 @@ use src\actividades\application\ListaActivTabla;
 use src\permisos\domain\XPermisos;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\MenuDlPermissionBits;
+
 $input = [
     'que' => (string)\src\shared\domain\helpers\FilterPostGet::post('que'),
     'status' => \src\shared\domain\helpers\FilterPostGet::post('status'),
@@ -37,9 +39,9 @@ $input = [
 $oPerm = $_SESSION['oPerm'] ?? null;
 $opts = [
     'mi_sfsv' => ConfigGlobal::mi_sfsv(),
-    'perm_vcsd' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('vcsd'),
-    'perm_des' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des'),
-    'perm_sg' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('sg'),
+    'perm_vcsd' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD),
+    'perm_des' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES),
+    'perm_sg' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SG),
     'perm_admin' => $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('admin'),
     'is_dmz' => ConfigGlobal::is_dmz(),
 ];

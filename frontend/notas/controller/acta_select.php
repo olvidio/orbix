@@ -25,6 +25,7 @@ use frontend\shared\web\Lista;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionConfig;
 use frontend\shared\session\SessionPerm;
+use frontend\shared\session\PermisoOficina;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -68,7 +69,7 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {
-    if (SessionPerm::havePermOficina('est')) {
+    if (SessionPerm::havePermOficina(PermisoOficina::EST)) {
         $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
         $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
         $botones = 1; // para 'añadir acta'
@@ -107,7 +108,7 @@ foreach ($cActasData as $oActa) {
     $pagina = HashF::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
     $a_valores[$i]['ctx_eliminar'] = PayloadCoercion::string($oActa['ctx_eliminar'] ?? '');
-    if (SessionPerm::havePermOficina('est')) {
+    if (SessionPerm::havePermOficina(PermisoOficina::EST)) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
     } else {
         $a_valores[$i][1] = $acta;

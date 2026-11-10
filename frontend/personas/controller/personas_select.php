@@ -14,6 +14,7 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\session\PermisoOficina;
 
 /**
  * Tabla de personas que cumplen la condicion introducida en `personas_que`.
@@ -114,7 +115,7 @@ $aviso = $select['aviso'];
 $a_botones = [];
 $script = [];
 
-if (PersonasPayload::havePermOficina('sm')) {
+if (PersonasPayload::havePermOficina(PermisoOficina::SM)) {
     $a_botones[] = ['txt' => _("cambio de ctr"), 'click' => 'fnjs_modificar_ctr("#seleccionados")'];
 }
 $script['fnjs_modificar_ctr'] = 1;
@@ -132,7 +133,7 @@ if (AppInstalled::is('notas')) {
         $a_botones[] = ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'];
         $script['fnjs_tessera'] = 1;
     }
-    if (PersonasPayload::havePermOficina('est')) {
+    if (PersonasPayload::havePermOficina(PermisoOficina::EST)) {
         $a_botones[] = ['txt' => _("modificar stgr"), 'click' => 'fnjs_modificar("#seleccionados")'];
         $script['fnjs_modificar'] = 1;
         $a_botones[] = ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'];
@@ -143,7 +144,7 @@ if (AppInstalled::is('notas')) {
 }
 if (
     AppInstalled::is('actividadestudios')
-    && (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('est'))
+    && (PersonasPayload::havePermOficina(PermisoOficina::SM) || PersonasPayload::havePermOficina(PermisoOficina::EST))
     && ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex')
 ) {
     $a_botones[] = ['txt' => _("posibles ca"), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
@@ -156,7 +157,7 @@ if (AppInstalled::is('actividadplazas')) {
         $script['fnjs_posibles_activ'] = 1;
     }
 }
-if (PersonasPayload::havePermOficina('est')) {
+if (PersonasPayload::havePermOficina(PermisoOficina::EST)) {
     if (AppInstalled::is('actividadestudios')) {
         $a_botones[] = ['txt' => _("plan estudios"), 'click' => 'fnjs_matriculas("#seleccionados")'];
         $script['fnjs_matriculas'] = 1;
@@ -193,12 +194,12 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     ];
 }
 
-if (PersonasPayload::havePermOficina('est') || PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('agd')) {
+if (PersonasPayload::havePermOficina(PermisoOficina::EST) || PersonasPayload::havePermOficina(PermisoOficina::SM) || PersonasPayload::havePermOficina(PermisoOficina::AGD)) {
     $a_botones[] = ['txt' => _("publicar"), 'click' => 'fnjs_publicar("#seleccionados")'];
     $script['fnjs_publicar'] = 1;
 }
 
-if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina('des')) {
+if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina(PermisoOficina::DES)) {
     $a_botones[] = ['txt' => _("atención actividades"), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }

@@ -24,6 +24,7 @@ use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Legacy: anota los avisos de cambio para cada usuario.
@@ -400,7 +401,7 @@ class Avisos
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermSacd = $oPermActividades->getPermisoOn('cargos');
-        return $oPermSacd->have_perm_activ('ver');
+        return $oPermSacd->have_perm_activ(PermAccionBits::VER);
     }
 
     private function permCargoSacd(int $id_activ): bool
@@ -409,7 +410,7 @@ class Avisos
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermSacd = $oPermActividades->getPermisoOn('sacd');
-        return $oPermSacd->have_perm_activ('ver');
+        return $oPermSacd->have_perm_activ(PermAccionBits::VER);
     }
 
     private function permAsiste(int $id_activ): bool
@@ -418,7 +419,7 @@ class Avisos
         $oPermActividades->setActividad($id_activ);
         $oPermActividades->setFasesCompletadas($this->fasesAsIntList());
         $oPermAsisSacd = $oPermActividades->getPermisoOn('asistentesSacd');
-        return $oPermAsisSacd->have_perm_activ('ver');
+        return $oPermAsisSacd->have_perm_activ(PermAccionBits::VER);
     }
 
     private function makePermisosActividades(): PermisosActividades

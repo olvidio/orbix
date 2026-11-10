@@ -18,6 +18,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Asistentes a actividades por centro (`lista_activ_ctr.php`).
@@ -47,7 +48,7 @@ final class ListaActivCtrData
             /** @var XPermisos $oPerm */
             $oPerm = $_SESSION['oPerm'];
             if ($Qssfsv === 'sf'
-                && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))) {
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
                 $ssfsv = 'sf';
             } else {
                 $ssfsv = 'sv';

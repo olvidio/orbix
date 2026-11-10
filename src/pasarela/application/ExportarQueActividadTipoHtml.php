@@ -5,6 +5,7 @@ namespace src\pasarela\application;
 use frontend\actividades\helpers\ActividadTipo;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * HTML del selector de tipo de actividad para la pantalla «exportar qué».
@@ -26,9 +27,9 @@ final class ExportarQueActividadTipoHtml
         $oPerm = $_SESSION['oPerm'] ?? null;
         $permiso_des = false;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('vcsd')
-                || $oPerm->have_perm_oficina('des')
-                || $oPerm->have_perm_oficina('calendario'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $permiso_des = true;
             $ssfsv = '';
@@ -55,10 +56,10 @@ final class ExportarQueActividadTipoHtml
         $perm_jefe = false;
         if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && ConfigGlobal::mi_sfsv() === 1)
             || ($oPerm instanceof XPermisos
-                && $oPerm->have_perm_oficina('admin_sf')
+                && $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SF)
                 && ConfigGlobal::mi_sfsv() === 2)
         ) {
             $perm_jefe = true;

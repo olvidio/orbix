@@ -10,6 +10,7 @@ use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder: listado de relaciones `TipoTarifa` ↔ tipo de actividad.
@@ -57,7 +58,7 @@ final class RelacionTarifaListaData
 
             $a_valores[$i][1] = $nom_tipo;
             $a_valores[$i][2] = $nombre_tarifa;
-            if ($miSfsv === $isfsv && $this->havePermOficina('adl')) {
+            if ($miSfsv === $isfsv && $this->havePermOficina(MenuDlPermissionBits::ADL)) {
                 $a_valores[$i][3] = [
                     'script' => "fnjs_modificar($id_item)",
                     'valor' => _("modificar"),
@@ -73,9 +74,9 @@ final class RelacionTarifaListaData
             '',
         ];
 
-        $puede_anadir = $this->havePermOficina('adl')
-            || $this->havePermOficina('pr')
-            || $this->havePermOficina('calendario');
+        $puede_anadir = $this->havePermOficina(MenuDlPermissionBits::ADL)
+            || $this->havePermOficina(MenuDlPermissionBits::PR)
+            || $this->havePermOficina(MenuDlPermissionBits::CALENDARIO);
 
         return [
             'a_cabeceras' => $a_cabeceras,

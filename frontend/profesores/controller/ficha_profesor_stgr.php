@@ -9,6 +9,7 @@ use frontend\profesores\helpers\ProfesoresUrlSigning;
 use frontend\profesores\helpers\ProfesoresPayload;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\session\PermisoOficina;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -34,7 +35,7 @@ $Qdepende = (string)filter_input(INPUT_POST, 'depende');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qprint = (int)filter_input(INPUT_POST, 'print');
 
-if (ProfesoresPermSupport::havePermOficina('est')) {
+if (ProfesoresPermSupport::havePermOficina(PermisoOficina::EST)) {
     $Qpermiso = '3';
 }
 

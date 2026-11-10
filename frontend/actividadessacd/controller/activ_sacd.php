@@ -25,6 +25,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\session\PermisoOficina;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -54,7 +55,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$perm_des = ActividadesPermSupport::havePermOficina('des');
+$perm_des = ActividadesPermSupport::havePermOficina(PermisoOficina::DES);
 
 // Por cada endpoint AJAX, construir la URL firmada (`url + linkSinVal()`):
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.

@@ -20,6 +20,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Matriz de permisos por tipo de actividad + contexto de la actividad actual en sesión.
@@ -497,7 +498,7 @@ class PermisosActividades
             }
         }
 
-        if ($oPerm !== false && $oPerm->have_perm_activ('crear')) {
+        if ($oPerm !== false && $oPerm->have_perm_activ(PermAccionBits::CREAR)) {
             return [
                 'of_responsable_txt' => $of_responsable_txt,
                 'status' => $status,
@@ -641,7 +642,7 @@ class PermisosActividades
      */
     public function motivoSinPermisoSacd(?int $id_cargo, bool $propio): ?string
     {
-        if ($this->getPermisoActual('datos')->have_perm_activ('ver') === false) {
+        if ($this->getPermisoActual('datos')->have_perm_activ(PermAccionBits::VER) === false) {
             return _("sin permiso de ver los datos en la fase actual");
         }
 
@@ -692,7 +693,7 @@ class PermisosActividades
             return 'sin_permiso_ver';
         }
         $perm = $oPerm->getPerm($iAfecta, $id_fase_ref, 'on');
-        if ($perm === 0 || !(new PermAccion($perm))->have_perm_activ('ver')) {
+        if ($perm === 0 || !(new PermAccion($perm))->have_perm_activ(PermAccionBits::VER)) {
             return 'sin_permiso_ver';
         }
 

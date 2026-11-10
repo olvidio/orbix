@@ -28,6 +28,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\RunsCriteriaQueries;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Clase que adapta la tabla a_actividad_proceso_sv a la interfaz del repositorio
@@ -506,7 +507,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
                 $oPerm = $_SESSION['oPerm'] ?? null;
-                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $oPerm instanceof \src\permisos\domain\XPermisos && $oPerm->have_perm_oficina('des')) {
+                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $oPerm instanceof \src\permisos\domain\XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
                     $oActividad->setStatusVo((int) $statusNew);
                     $this->actividadAllRepository->Guardar($oActividad, false); // registrarCambios=false, para que no anote el cambio.
                 }

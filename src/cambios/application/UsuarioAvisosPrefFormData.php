@@ -17,6 +17,7 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder: todas las opciones y preseleccion necesarias para pintar la
@@ -220,11 +221,11 @@ final class UsuarioAvisosPrefFormData
         if (
             ($oConfig instanceof ConfigSnapshot && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && $mi_sfsv === 1)
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_CDC))
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_SACD))
-            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('calendario'))
+            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $perm_jefe = true;
         }

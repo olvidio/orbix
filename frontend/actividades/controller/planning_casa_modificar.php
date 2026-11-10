@@ -29,6 +29,7 @@ use frontend\shared\security\HashF;
 use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionPermActividades;
+use frontend\shared\session\PermisoAccion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -84,14 +85,14 @@ if ($oPermActiv === null) {
     die();
 }
 
-if ($oPermActiv->onlyPerm('ocupado')) {
+if ($oPermActiv->onlyPerm(PermisoAccion::OCUPADO)) {
     die();
 }
 
 $mod = '';
-if ($oPermActiv->havePermActiv('ver') === true) {
+if ($oPermActiv->havePermActiv(PermisoAccion::VER) === true) {
     $mod = 'ver';
-    if ($oPermActiv->havePermActiv('modificar') === true) {
+    if ($oPermActiv->havePermActiv(PermisoAccion::MODIFICAR) === true) {
         $mod = 'editar';
     }
 }

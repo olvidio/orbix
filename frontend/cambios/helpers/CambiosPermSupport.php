@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace frontend\cambios\helpers;
 
 use frontend\shared\session\SessionPerm;
+use frontend\shared\session\PermisoOficina;
 
 final class CambiosPermSupport
 {
@@ -15,6 +16,6 @@ final class CambiosPermSupport
 
     public static function isAdmin(): bool
     {
-        return SessionPerm::onlyPerm('admin_sf') || SessionPerm::onlyPerm('admin_sv');
+        return SessionPerm::onlyPerm(PermisoOficina::ADMIN_SF) || SessionPerm::onlyPerm(PermisoOficina::ADMIN_SV);
     }
 }

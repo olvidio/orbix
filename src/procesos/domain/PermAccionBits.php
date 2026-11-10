@@ -8,17 +8,28 @@ namespace src\procesos\domain;
 final class PermAccionBits
 {
     /**
+     * Nombres de las acciones. Usarlos en lugar de literales en `have_perm_activ()`,
+     * `have_perm_action()` y `only_perm()`: un literal mal escrito no falla al compilar.
+     */
+    public const NADA = 'nada';
+    public const OCUPADO = 'ocupado';
+    public const VER = 'ver';
+    public const MODIFICAR = 'modificar';
+    public const CREAR = 'crear';
+    public const BORRAR = 'borrar';
+
+    /**
      * @return array<string, int>
      */
     public static function map(): array
     {
         return [
-            'nada' => 0,
-            'ocupado' => 1,
-            'ver' => 3,
-            'modificar' => 7,
-            'crear' => 15,
-            'borrar' => 31,
+            self::NADA => 0,
+            self::OCUPADO => 1,
+            self::VER => 3,
+            self::MODIFICAR => 7,
+            self::CREAR => 15,
+            self::BORRAR => 31,
         ];
     }
 

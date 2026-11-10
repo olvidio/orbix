@@ -23,6 +23,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaSacdField;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Devuelve las actividades agrupadas por zona sacd en un periodo dado.
@@ -322,7 +323,7 @@ class ActividadesPorZonasService
                 if ($oPermSesion instanceof PermisosActividades) {
                     $oPermSesion->setActividad($id_activ, (string)$id_tipo_activ, $dl_org);
                     $oPermActiv = $oPermSesion->getPermisoActual('datos');
-                    if ($oPermActiv->have_perm_activ('ver') === false) {
+                    if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                         $nom_curt = $ssfsv;
                         $nom_llarg = "$ssfsv ($ini-$fi)";
                     } else {
@@ -332,7 +333,7 @@ class ActividadesPorZonasService
                 } else {
                     $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                     $oPermActiv = $oPermActividades->getPermisoActual('datos');
-                    if ($oPermActiv->have_perm_activ('ver') === false) {
+                    if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                         $nom_curt = $ssfsv;
                         $nom_llarg = "$ssfsv ($ini-$fi)";
                     } else {

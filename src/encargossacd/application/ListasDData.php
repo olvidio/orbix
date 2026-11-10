@@ -23,6 +23,7 @@ use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaField;
 use src\zonassacd\domain\criteria\ZonaGrupoField;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Genera el listado "d" de atencion SACD (cr 9/20, 10).
@@ -81,7 +82,7 @@ final class ListasDData
         if ($sf === 1
             && is_object($oPerm)
             && method_exists($oPerm, 'have_perm_oficina')
-            && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))
         ) {
             $permiso_sf = 'si';
         }

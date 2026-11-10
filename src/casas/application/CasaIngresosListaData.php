@@ -18,6 +18,7 @@ use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\PermisosActividades;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Data builder: listado económico de actividades por casa (pantalla
@@ -148,8 +149,8 @@ final class CasaIngresosListaData
                     }
                     $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
                     $oPermEco = $oPermSesion->getPermisoActual('economic');
-                    if (!$oPermEco->have_perm_action('ver')) { continue; }
-                    $permiso_modificar = $oPermEco->have_perm_action('modificar');
+                    if (!$oPermEco->have_perm_action(PermAccionBits::VER)) { continue; }
+                    $permiso_modificar = $oPermEco->have_perm_action(PermAccionBits::MODIFICAR);
 
                     $modo = 0;
                     $cantidad = 0.0;

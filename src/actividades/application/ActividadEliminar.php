@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\permisos\domain\PermisosActividades;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Elimina actividades indicadas por selección masiva o por id único (planning).
@@ -59,7 +60,7 @@ final class ActividadEliminar
             $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org);
             $oPermActiv = $oPermSesion->getPermisoActual('datos');
             if (
-                $oPermActiv->have_perm_activ('borrar') === true
+                $oPermActiv->have_perm_activ(PermAccionBits::BORRAR) === true
                 || $this->esImportadaDeOtraDl($oActividad)
             ) {
                 return $this->borrarActividad->ejecutar($id_activ);

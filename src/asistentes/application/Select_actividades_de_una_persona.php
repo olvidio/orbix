@@ -19,6 +19,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Widget del dossier `1301` (codigo `actividades_de_una_persona`):
@@ -193,7 +194,7 @@ class Select_actividades_de_una_persona
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
-            if ($mi_sfsv != $isfsv && !$oPerm->have_perm_oficina('des')) {
+            if ($mi_sfsv != $isfsv && !$oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
                 $ssfsv = $oTipoActividad->getSfsvText();
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";

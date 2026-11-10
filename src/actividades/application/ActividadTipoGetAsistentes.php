@@ -5,6 +5,7 @@ namespace src\actividades\application;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\shared\domain\helpers\OpcionesDesplegable;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del
@@ -29,7 +30,7 @@ class ActividadTipoGetAsistentes
         $blanco = false;
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('calendario'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $blanco = true;
         }

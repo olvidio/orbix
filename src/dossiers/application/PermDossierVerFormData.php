@@ -6,6 +6,7 @@ use src\dossiers\domain\PermisoDossierBits;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\permisos\domain\XPermisos;
 use src\shared\security\HashB;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Formulario "permisos de acceso" para un tipo de dossier.
@@ -47,7 +48,7 @@ class PermDossierVerFormData
         $oPerm = $_SESSION['oPerm'] ?? null;
         if (
             $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('admin_sv') || $oPerm->have_perm_oficina('admin_sf'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV) || $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SF))
         ) {
             $botones = '1,2';
             $perm_admin = true;

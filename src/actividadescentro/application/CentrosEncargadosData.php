@@ -7,6 +7,7 @@ use src\permisos\domain\PermisosActividadesTrue;
 use src\procesos\domain\PermAccion;
 use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Devuelve el listado de centros encargados actuales de una actividad junto
@@ -48,8 +49,8 @@ final class CentrosEncargadosData
         $dl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
 
         $oPermCtr = $this->resolverPermisoCtr($id_activ, $id_tipo_activ, $dl_org);
-        $permite_ver = $oPermCtr->have_perm_activ('ver') === true;
-        $permite_modificar = $oPermCtr->have_perm_activ('modificar') === true;
+        $permite_ver = $oPermCtr->have_perm_activ(PermAccionBits::VER) === true;
+        $permite_modificar = $oPermCtr->have_perm_activ(PermAccionBits::MODIFICAR) === true;
 
         $centros = [];
         if ($permite_ver) {

@@ -12,6 +12,7 @@ use frontend\shared\web\Posicion;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\session\PermisoOficina;
 
 /**
  * Ficha de una persona: edicion (o alta si `$Qnuevo === 1`).
@@ -146,10 +147,10 @@ $ok_txt = 0;
 $presentacion = 'persona_form.phtml';
 switch ($Qobj_pau) {
     case 'PersonaAgd':
-        if (PersonasPayload::havePermOficina('agd')) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::AGD)) {
             $ok = 1;
         }
-        $presentacion = (PersonasPayload::havePermOficina('agd') || PersonasPayload::havePermOficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina(PermisoOficina::AGD) || PersonasPayload::havePermOficina(PermisoOficina::DTOR))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -157,10 +158,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaN':
-        if (PersonasPayload::havePermOficina('sm')) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::SM)) {
             $ok = 1;
         }
-        $presentacion = (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina(PermisoOficina::SM) || PersonasPayload::havePermOficina(PermisoOficina::DTOR))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -168,10 +169,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaNax':
-        if (PersonasPayload::havePermOficina('sm')) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::SM)) {
             $ok = 1;
         }
-        $presentacion = (PersonasPayload::havePermOficina('sm') || PersonasPayload::havePermOficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina(PermisoOficina::SM) || PersonasPayload::havePermOficina(PermisoOficina::DTOR))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -179,10 +180,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaS':
-        if (PersonasPayload::havePermOficina('sg')) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::SG)) {
             $ok = 1;
         }
-        $presentacion = (PersonasPayload::havePermOficina('sg') || PersonasPayload::havePermOficina('dtor'))
+        $presentacion = (PersonasPayload::havePermOficina(PermisoOficina::SG) || PersonasPayload::havePermOficina(PermisoOficina::DTOR))
             ? 'persona_form.phtml'
             : 'p_public_personas.phtml';
         if ($presentacion === 'persona_form.phtml') {
@@ -190,12 +191,12 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaSSSC':
-        if (PersonasPayload::havePermOficina('des') || PersonasPayload::havePermOficina('vcsd')) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::DES) || PersonasPayload::havePermOficina(PermisoOficina::VCSD)) {
             $ok = 1;
         }
-        $autorizado = PersonasPayload::havePermOficina('des')
-            || PersonasPayload::havePermOficina('vcsd')
-            || PersonasPayload::havePermOficina('dtor');
+        $autorizado = PersonasPayload::havePermOficina(PermisoOficina::DES)
+            || PersonasPayload::havePermOficina(PermisoOficina::VCSD)
+            || PersonasPayload::havePermOficina(PermisoOficina::DTOR);
         $presentacion = $autorizado ? 'persona_sss_form.phtml' : 'p_public_personas.phtml';
         if ($autorizado) {
             $ok_txt = 1;
@@ -204,10 +205,10 @@ switch ($Qobj_pau) {
     case 'PersonaEx':
         $presentacion = 'persona_de_paso.phtml';
         if (
-            PersonasPayload::havePermOficina('agd')
-            || PersonasPayload::havePermOficina('sm')
-            || PersonasPayload::havePermOficina('des')
-            || PersonasPayload::havePermOficina('est')
+            PersonasPayload::havePermOficina(PermisoOficina::AGD)
+            || PersonasPayload::havePermOficina(PermisoOficina::SM)
+            || PersonasPayload::havePermOficina(PermisoOficina::DES)
+            || PersonasPayload::havePermOficina(PermisoOficina::EST)
         ) {
             $ok = 1;
         }

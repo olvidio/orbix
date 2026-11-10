@@ -4,6 +4,7 @@ namespace src\zonassacd\application;
 
 use src\permisos\domain\XPermisos;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 final class ZonaCtrPage
 {
@@ -22,7 +23,7 @@ final class ZonaCtrPage
         return [
             'a_opciones' => $this->zonaRepository->getArrayZonas(),
             'perm_des' => $oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd')),
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)),
         ];
     }
 }

@@ -17,6 +17,7 @@ use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\criteria\DelegacionField;
 use src\usuarios\domain\value_objects\IdLocale;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Guarda la edición de una actividad existente.
@@ -69,7 +70,7 @@ final class ActividadEditar
         $oPermSesion->setActividad($Qid_activ, $Qid_tipo_activ !== 0 ? (string) $Qid_tipo_activ : null, $Qdl_org !== '' ? $Qdl_org : null);
         $oPermActiv = $oPermSesion->getPermisoActual('datos');
 
-        if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === true) {
+        if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::CREAR) === true) {
             $Qisfsv_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv_val');
             $Qiasistentes_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iasistentes_val');
             $Qiactividad_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iactividad_val');

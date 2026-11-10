@@ -17,6 +17,7 @@ use src\procesos\domain\entity\ActividadFase;
 use src\procesos\domain\entity\ActividadProcesoTarea;
 use src\permisos\domain\XPermisos;
 use src\procesos\domain\value_objects\FaseId;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Servicio de aplicación para gestionar los procesos de actividades
@@ -141,7 +142,7 @@ class ProcesoActividadService
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string) $dl_org);
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
-                    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des')) {
+                    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
                         $oActividad->setStatusVo($statusProceso);
                         $this->actividadAllRepository->Guardar($oActividad);
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.

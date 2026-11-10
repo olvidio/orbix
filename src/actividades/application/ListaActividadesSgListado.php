@@ -18,6 +18,8 @@ use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\procesos\domain\PermAccionBits;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Monta el listado de actividades sf/sg (crt, cv) aplicando los filtros
@@ -196,7 +198,7 @@ final class ListaActividadesSgListado
             $isfsv = $oTipoActividad->getSfsvId();
             $ssfsv = $oTipoActividad->getSfsvText();
             $oPerm = $_SESSION['oPerm'] ?? null;
-            if ($mi_sfsv !== $isfsv && !($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des'))) {
+            if ($mi_sfsv !== $isfsv && !($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
                 $sactividadOtra = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividadOtra";
             }
@@ -204,11 +206,11 @@ final class ListaActividadesSgListado
             $sasistentes = $oTipoActividad->getAsistentesText();
             $sactividad = $oTipoActividad->getActividadText();
 
-            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                 $sin++;
                 continue;
             }
-            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                 $a_valores[$i]['sel'] = '';
                 $a_valores[$i][1] = sprintf(_("ocupado %s (%s-%s)"), $ssfsv, $f_ini, $f_fin);
                 $a_valores[$i][2] = '';
@@ -237,7 +239,7 @@ final class ListaActividadesSgListado
 
             $sacds = "";
             if (ConfigGlobal::is_app_installed('actividadessacd')) {
-                if ($oPermSacd->have_perm_action('ver') === true) {
+                if ($oPermSacd->have_perm_action(PermAccionBits::VER) === true) {
                     $ActividadCargoRepository = $this->actividadCargoRepository;
                     foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                         $nom = method_exists($oPersona, 'getPrefApellidosNombre') ? $oPersona->getPrefApellidosNombre() : '';

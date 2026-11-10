@@ -17,6 +17,7 @@ use src\planning\domain\value_objects\PlanningStyle;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Recoge las actividades de cada persona dentro de un periodo dado.
@@ -126,10 +127,10 @@ class ActividadesDePersonaService
                         $oPermActiv = $oPermActividades->getPermisoActual('datos');
                     }
 
-                    if ($oPermActiv->have_perm_activ('ocupado') === false) {
+                    if ($oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                         continue;
                     }
-                    if ($oPermActiv->have_perm_activ('ver') === false) {
+                    if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                         $nom_curt = $ssfsv;
                         $nom_llarg = "$ssfsv ($ini-$fi)";
                     } else {

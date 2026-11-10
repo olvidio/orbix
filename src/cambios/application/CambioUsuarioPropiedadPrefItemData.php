@@ -8,6 +8,7 @@ use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder: datos de la condicion configurada para una propiedad
@@ -95,7 +96,7 @@ final class CambioUsuarioPropiedadPrefItemData
             } else {
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 if ($oPerm instanceof XPermisos
-                    && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                    && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 ) {
                     $donde = "WHERE active='t'";
                 } else {

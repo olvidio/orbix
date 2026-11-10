@@ -18,6 +18,7 @@ use src\encargossacd\domain\services\EncargoDominioService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\shared\security\HashB;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Lectura de la ficha de atencion sacerdotal de un centro.
@@ -454,6 +455,6 @@ final class CtrGetFichaData
             return false;
         }
 
-        return $oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd');
+        return $oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD);
     }
 }

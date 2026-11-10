@@ -14,6 +14,8 @@ use src\shared\security\HashB;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaSacdField;
+use src\permisos\domain\MenuDlPermissionBits;
+
 final class ZonaSacdLista
 {
     public function __construct(
@@ -113,7 +115,7 @@ final class ZonaSacdLista
     {
         $oPerm = $_SESSION['oPerm'] ?? null;
         $tienePermDes = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'));
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
 
         // El botón "modificar" abre el modal de días de la semana (fnjs_modificar
         // en zona_sacd.phtml). Sin perm_des no hay checkboxes, así que se omite.

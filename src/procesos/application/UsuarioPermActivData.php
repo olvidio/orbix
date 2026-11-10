@@ -13,9 +13,10 @@ use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\criteria\PermUsuarioActividadField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\procesos\domain\PermAccionBits;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\procesos\domain\PermAccionBits;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Caso de uso: datos para la pantalla usuario_perm_activ.
@@ -65,9 +66,9 @@ class UsuarioPermActivData
         }
         if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && $miSfsv === 1)
-            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina('calendario'))
+            || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $perm_jefe = true;
         }

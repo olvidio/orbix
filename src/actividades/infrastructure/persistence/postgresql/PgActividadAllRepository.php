@@ -21,6 +21,7 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\actividades\domain\entity\TiposActividades;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Clase que adapta la tabla a_actividades_all a la interfaz del repositorio
@@ -128,11 +129,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $oPermSesion->setActividad($id_activ, (string) $id_tipo_activ, $dl_org);
             $oPermActiv = $oPermSesion->getPermisoActual('datos');
 
-            if ($oPermActiv->have_perm_activ('ocupado') === false) {
+            if ($oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                 $a++;
                 continue;
             } // no tiene permisos ni para ver.
-            if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
+            if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) { // sólo puede ver que està ocupado
                 $nom_curt = $ssfsv;
                 $nom_llarg = "$ssfsv ($ini-$fi)";
             } else {
@@ -140,7 +141,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
                 $nom_llarg = $nom_activ;
             }
 
-            if ($oPermActiv->have_perm_activ('modificar')) { // puede modificar
+            if ($oPermActiv->have_perm_activ(PermAccionBits::MODIFICAR)) { // puede modificar
                 // en realidad creo que simplemente tiene que haber algo. Activa la función de javascript: cambiar_activ.
                 $pagina = 'programas/actividad_ver.php';
             } else {

@@ -14,6 +14,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Periodo;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla
@@ -96,15 +97,15 @@ final class ListaActividadesCtrData
 
             [$oPermActiv, $oPermCtr] = $this->resolverPermisos($id_activ, $id_tipo_activ, $dl_org);
 
-            if ($oPermActiv->have_perm_activ('ocupado') === false) {
+            if ($oPermActiv->have_perm_activ(PermAccionBits::OCUPADO) === false) {
                 continue;
             }
-            if ($oPermActiv->have_perm_activ('ver') === false) {
+            if ($oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                 continue;
             }
 
             $centros = [];
-            if ($oPermCtr->have_perm_activ('ver') === true) {
+            if ($oPermCtr->have_perm_activ(PermAccionBits::VER) === true) {
                 $cCtrs = $this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
                 foreach ($cCtrs as $oCentro) {
                     $centros[] = [
@@ -129,8 +130,8 @@ final class ListaActividadesCtrData
                 'f_ini' => $f_ini,
                 'f_fin' => $f_fin,
                 'tipo_centros' => $tipoCentros ?? '',
-                'perm_modificar_ctr' => $oPermCtr->have_perm_activ('modificar') === true,
-                'perm_crear_ctr' => $oPermCtr->have_perm_activ('crear') === true,
+                'perm_modificar_ctr' => $oPermCtr->have_perm_activ(PermAccionBits::MODIFICAR) === true,
+                'perm_crear_ctr' => $oPermCtr->have_perm_activ(PermAccionBits::CREAR) === true,
                 'centros' => $centros,
             ];
             $fIniVo = $oActividad->getF_ini();

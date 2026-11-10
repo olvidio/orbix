@@ -8,6 +8,7 @@ use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Filtro de casas y modo del selector CasasQue para `planning_casa_que`
@@ -44,7 +45,7 @@ final class PlanningCasaQueFormData
 
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))) {
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))) {
             return ['filtro' => $filtro, 'modo_casas' => 'all'];
         }
         if ($miSfsv === 1) {

@@ -3,6 +3,7 @@
 namespace src\procesos\application;
 
 use src\permisos\domain\XPermisos;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Payload para fases_activ_cambio: HTML del selector tipo actividad.
@@ -26,9 +27,9 @@ final class FasesActivCambioTipoActividadHtmlData
         $ssfsv = '';
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('vcsd')
-                || $oPerm->have_perm_oficina('des')
-                || $oPerm->have_perm_oficina('calendario'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $permiso_des = true;
             $ssfsv = '';

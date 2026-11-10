@@ -7,6 +7,7 @@ use src\permisos\domain\XPermisos;
 use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder: listado de `GrupoCasa` (relaciones casa padre ↔ casa hija).
@@ -68,7 +69,7 @@ final class GrupoCasaListaData
         ];
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $puede_anadir = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('adl');
+        $puede_anadir = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::ADL);
 
         return [
             'a_cabeceras' => $a_cabeceras,

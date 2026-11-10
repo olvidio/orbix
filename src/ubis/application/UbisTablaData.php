@@ -17,6 +17,8 @@ use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\entity\Direccion;
+use src\permisos\domain\MenuDlPermissionBits;
+
 final class UbisTablaData
 {
     public function __construct(
@@ -299,7 +301,7 @@ final class UbisTablaData
     ): array {
         $oPerm = $_SESSION['oPerm'] ?? null;
         $permisoSf = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'));
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES));
 
         switch ($Qtipo) {
             case 'ctr':

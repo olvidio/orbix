@@ -20,6 +20,7 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
+use src\permisos\domain\MenuDlPermissionBits;
 
 class EncargoAplicacionService
 {
@@ -146,7 +147,7 @@ class EncargoAplicacionService
             '5' => 'cgi/oc',
             '8' => 'zonas',
         ];
-        if ($this->havePermOficina('des') || $this->havePermOficina('vcsd')) {
+        if ($this->havePermOficina(MenuDlPermissionBits::DES) || $this->havePermOficina(MenuDlPermissionBits::VCSD)) {
             return $this->stringKeyedSeccion($seccion);
         }
 

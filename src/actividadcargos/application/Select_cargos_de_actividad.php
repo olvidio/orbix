@@ -21,6 +21,7 @@ use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Widget del dossier `3102` (codigo `cargos_de_actividad`): relacion de personas
@@ -132,7 +133,7 @@ class Select_cargos_de_actividad
         $elim_asis_default = 1;
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
         ) {
             $oTipoActiv = new TiposActividades($id_tipo_activ);
             $sasistentes = $oTipoActiv->getAsistentesText();

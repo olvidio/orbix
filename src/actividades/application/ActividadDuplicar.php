@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\permisos\domain\XPermisos;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Duplica la primera actividad seleccionada dentro de la propia delegación.
@@ -37,7 +38,7 @@ final class ActividadDuplicar
         $dl = $oActividadAll->getDl_org();
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $tienePermOficina = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina('des');
+        $tienePermOficina = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES);
 
         if ($dl !== ConfigGlobal::mi_delef()
             && !($tienePermOficina && $dl === ConfigGlobal::mi_dele() . 'f')

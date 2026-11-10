@@ -2,10 +2,10 @@
 
 namespace src\ubis\application\services;
 
-use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\PermDl;
 use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Reglas de permisos comunes para operar sobre un ubi (centro/casa) según su objeto.
@@ -77,7 +77,7 @@ final class UbiPermisos
             $oPerm->setAccion((int) $iPermMenus);
         }
         if ($oPerm instanceof XPermisos) {
-            return (bool) $oPerm->have_perm_oficina('scdl');
+            return (bool) $oPerm->have_perm_oficina(MenuDlPermissionBits::SCDL);
         }
 
         $iPerm = $_SESSION['iPermMenus'] ?? 0;

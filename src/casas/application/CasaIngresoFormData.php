@@ -8,6 +8,7 @@ use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\PermisosActividades;
 use src\shared\security\HashB;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Data builder: datos para el formulario de ingreso de una actividad
@@ -48,7 +49,7 @@ final class CasaIngresoFormData
         if ($oPermSesion instanceof PermisosActividades) {
             $oPermSesion->setActividad($id_activ, $id_tipo_activ, $dl_org);
             $oPermTar = $oPermSesion->getPermisoActual('id_tarifa');
-            $puede_modificar_tarifa = $oPermTar->have_perm_action('modificar');
+            $puede_modificar_tarifa = $oPermTar->have_perm_action(PermAccionBits::MODIFICAR);
         }
 
         $oTipoActiv = new TiposActividades($id_tipo_activ);

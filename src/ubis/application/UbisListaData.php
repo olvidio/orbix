@@ -11,6 +11,7 @@ use src\permisos\domain\XPermisos;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
 
 class UbisListaData
 {
@@ -43,7 +44,7 @@ class UbisListaData
             case 1:
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 $puedeVerSf = $oPerm instanceof XPermisos
-                    && ($oPerm->have_perm_oficina('vcsd') || $oPerm->have_perm_oficina('des'));
+                    && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES));
                 if (!$puedeVerSf) {
                     $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Sv, true));
                 }

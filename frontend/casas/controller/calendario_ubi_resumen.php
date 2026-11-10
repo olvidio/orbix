@@ -27,6 +27,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\session\PermisoOficina;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
@@ -43,7 +44,7 @@ $oPosicion->nav()->enter(
 );
 
 $filtro = ['active' => '1'];
-if (!ActividadesPermSupport::havePermOficina('des') && !ActividadesPermSupport::havePermOficina('vcsd')) {
+if (!ActividadesPermSupport::havePermOficina(PermisoOficina::DES) && !ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
     $miSfsv = OrbixRuntime::miSfsv();
     if ($miSfsv === 1) {
         $filtro['sv'] = '1';

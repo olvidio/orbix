@@ -14,6 +14,7 @@ use src\shared\domain\criteria\Filter;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\criteria\TarifaUbiField;
+use src\permisos\domain\MenuDlPermissionBits;
 
 /**
  * Data builder: listado de `TarifaUbi` por `id_ubi` + `year`.
@@ -91,7 +92,7 @@ final class TarifaUbiListaData
             $letra_serie = $letra . ' (' . ($aTipoSerie[$id_serie] ?? '') . ')';
 
             $a_valores[$i][1] = $a_seccion[$seccion] ?? '';
-            if ($miSfsv === $seccion && $this->havePermOficina('adl')) {
+            if ($miSfsv === $seccion && $this->havePermOficina(MenuDlPermissionBits::ADL)) {
                 $token_form = HashB::sign('tarifa_ubi_form', [
                     'id_item' => $id_item,
                     'id_ubi' => $id_ubi,
@@ -138,9 +139,9 @@ final class TarifaUbiListaData
         ];
 
         $puede_anadir = $id_ubi !== 0 && (
-            $this->havePermOficina('adl')
-            || $this->havePermOficina('pr')
-            || $this->havePermOficina('calendario')
+            $this->havePermOficina(MenuDlPermissionBits::ADL)
+            || $this->havePermOficina(MenuDlPermissionBits::PR)
+            || $this->havePermOficina(MenuDlPermissionBits::CALENDARIO)
         );
 
         $token_copiar = ($puede_anadir && $year !== 0)

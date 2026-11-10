@@ -11,6 +11,7 @@ use frontend\shared\helpers\ActividadTipoTwigHashCompose;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
 use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\session\PermisoOficina;
 
 /**
  * Widget UI del selector de tipo de actividad (sfsv / asistentes / actividad /
@@ -104,22 +105,22 @@ class ActividadTipo
         }
 
         $array2 = [];
-        if (ActividadesPermSupport::havePermOficina('est')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::EST)) {
             $array2 = array_merge($array2, [1 => 'n', 3 => 'agd']);
         }
-        if (ActividadesPermSupport::havePermOficina('sm')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::SM)) {
             $array2 = array_merge($array2, [1 => 'n']);
         }
-        if (ActividadesPermSupport::havePermOficina('nax')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::NAX)) {
             $array2 = array_merge($array2, [1 => 'nax']);
         }
-        if (ActividadesPermSupport::havePermOficina('agd')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::AGD)) {
             $array2 = array_merge($array2, [3 => 'agd']);
         }
-        if (ActividadesPermSupport::havePermOficina('sg')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::SG)) {
             $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
-        if (ActividadesPermSupport::havePermOficina('des')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::DES)) {
             if ($this->status === ActividadStatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
@@ -127,10 +128,10 @@ class ActividadTipo
             }
             $array2 = array_merge($array2, $array_des);
         }
-        if (ActividadesPermSupport::havePermOficina('sr')) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::SR)) {
             $array2 = array_merge($array2, [7 => 'sr']);
         }
-        if (ActividadesPermSupport::havePermOficina('calendario')) { // desde la sf
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::CALENDARIO)) { // desde la sf
             $array2 = array_merge($array2, $oTipoActiv->getAsistentesPosibles());
         }
 

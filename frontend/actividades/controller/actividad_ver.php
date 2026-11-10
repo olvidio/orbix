@@ -37,6 +37,7 @@ use frontend\actividades\helpers\PrefillPermActividadesFases;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\session\SessionPerm;
 use frontend\shared\session\SessionPermActividades;
+use frontend\shared\session\PermisoAccion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -156,7 +157,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         die();
     }
 
-    if ($oPermActiv->onlyPerm('ocupado')) {
+    if ($oPermActiv->onlyPerm(PermisoAccion::OCUPADO)) {
         die();
     }
 
@@ -168,7 +169,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $isfsv = $renderEntidad['isfsv'];
 
     if (AppInstalled::is('procesos')) {
-        $Bdl = $oPermActiv->havePermActiv('ver') ? 't' : 'f';
+        $Bdl = $oPermActiv->havePermActiv(PermisoAccion::VER) ? 't' : 'f';
     }
 
     // Los fragmentos HTML de los desplegables y nombre_ubi ya vienen en

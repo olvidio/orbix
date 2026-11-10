@@ -23,6 +23,7 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\procesos\domain\PermAccionBits;
 
 /**
  * Caso de uso para la pantalla `calendario_listas`.
@@ -274,11 +275,11 @@ final class CalendarioListasDatos
                     $oPermCtr = $oPermActividades->getPermisoActual('ctr');
                 }
 
-                if (!$oPermActiv->have_perm_action('ocupado')) {
+                if (!$oPermActiv->have_perm_action(PermAccionBits::OCUPADO)) {
                     continue;
                 }
 
-                if (!$oPermActiv->have_perm_action('ver')) {
+                if (!$oPermActiv->have_perm_action(PermAccionBits::VER)) {
                     $a_ubi_activ[$key][$a]['sfsv'] = $ssfsv;
                     $a_ubi_activ[$key][$a]['tipo_activ'] = _("ocupado");
                     if ($tipo === 'oficina') {
@@ -308,7 +309,7 @@ final class CalendarioListasDatos
                 }
 
                 $a_ubi_activ[$key][$a]['ctr_encargados'] = '';
-                if ($ver_ctr === 'si' && $oPermCtr->have_perm_action('ver')) {
+                if ($ver_ctr === 'si' && $oPermCtr->have_perm_action(PermAccionBits::VER)) {
                     $cCtrsEncargados = $CentroEncargadoRepository->matching(
                         Criteria::create()
                             ->where(Filter::eq(CentroEncargadoField::IdActiv, $id_activ))

@@ -16,6 +16,7 @@ use src\ubis\domain\entity\CentroEllas;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\shared\security\HashB;
+use src\permisos\domain\MenuDlPermissionBits;
 
 final class ZonaCtrLista
 {
@@ -56,7 +57,7 @@ final class ZonaCtrLista
 
         $oPerm = $_SESSION['oPerm'] ?? null;
         $tienePermDes = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina('des') || $oPerm->have_perm_oficina('vcsd'));
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
 
         $a_valores = [];
         $i = 0;

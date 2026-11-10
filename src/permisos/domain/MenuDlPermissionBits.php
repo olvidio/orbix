@@ -10,6 +10,38 @@ namespace src\permisos\domain;
 final class MenuDlPermissionBits
 {
     /**
+     * Nombres de las oficinas/permisos de menú. Usarlos en lugar de literales en
+     * `have_perm_oficina()` y `only_perm()`: un literal mal escrito no falla al compilar
+     * (y un nombre desconocido deniega siempre, así que el fallo pasaría desapercibido).
+     */
+    public const ADL = 'adl';
+    public const PR = 'pr';
+    public const AGD = 'agd';
+    public const AOP = 'aop';
+    public const DES = 'des';
+    public const EST = 'est';
+    public const SCDL = 'scdl';
+    public const SCR = 'scr';
+    public const SG = 'sg';
+    public const SM = 'sm';
+    public const SOI = 'soi';
+    public const SR = 'sr';
+    public const VCSD = 'vcsd';
+    public const VCSR = 'vcsr';
+    public const DTOR = 'dtor';
+    public const OCS = 'ocs';
+    public const SDDL = 'sddl';
+    public const NAX = 'nax';
+    public const CALENDARIO = 'calendario';
+    public const CTR = 'ctr';
+    public const JEFE_ZONA = 'jefeZona';
+    public const SACD = 'sacd';
+    public const PERSONA = 'persona';
+    public const CASA = 'casa';
+    public const ADMIN_SF = 'admin_sf';
+    public const ADMIN_SV = 'admin_sv';
+
+    /**
      * Mismo orden y valores que históricamente en PermDl::omplir().
      *
      * @return array<string, int>
@@ -17,32 +49,32 @@ final class MenuDlPermissionBits
     public static function map(): array
     {
         return [
-            'adl' => 1,
-            'pr' => 1,
-            'agd' => 1 << 1,
-            'aop' => 1 << 2,
-            'des' => 1 << 3,
-            'est' => 1 << 4,
-            'scdl' => 1 << 5,
-            'scr' => 1 << 5,
-            'sg' => 1 << 6,
-            'sm' => 1 << 7,
-            'soi' => 1 << 8,
-            'sr' => 1 << 9,
-            'vcsd' => 1 << 10,
-            'vcsr' => 1 << 10,
-            'dtor' => 1 << 11,
-            'ocs' => 1 << 12,
-            'sddl' => 1 << 13,
-            'nax' => 1 << 14,
-            'calendario' => 1 << 15,
-            'ctr' => 1 << 16,
-            'jefeZona' => 1 << 17,
-            'sacd' => 1 << 18,
-            'persona' => 1 << 19,
-            'casa' => 1 << 20,
-            'admin_sf' => 16776183,
-            'admin_sv' => -1,
+            self::ADL => 1,
+            self::PR => 1,
+            self::AGD => 1 << 1,
+            self::AOP => 1 << 2,
+            self::DES => 1 << 3,
+            self::EST => 1 << 4,
+            self::SCDL => 1 << 5,
+            self::SCR => 1 << 5,
+            self::SG => 1 << 6,
+            self::SM => 1 << 7,
+            self::SOI => 1 << 8,
+            self::SR => 1 << 9,
+            self::VCSD => 1 << 10,
+            self::VCSR => 1 << 10,
+            self::DTOR => 1 << 11,
+            self::OCS => 1 << 12,
+            self::SDDL => 1 << 13,
+            self::NAX => 1 << 14,
+            self::CALENDARIO => 1 << 15,
+            self::CTR => 1 << 16,
+            self::JEFE_ZONA => 1 << 17,
+            self::SACD => 1 << 18,
+            self::PERSONA => 1 << 19,
+            self::CASA => 1 << 20,
+            self::ADMIN_SF => 16776183,
+            self::ADMIN_SV => -1,
         ];
     }
 
