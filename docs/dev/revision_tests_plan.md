@@ -465,3 +465,17 @@ Unit con mocks, 6 ficheros (≈ 85 casos): casos de uso pequeños (`AnadirCtrTar
 5. `BuscarPlanCtrData` con zona elegida deja seleccionado el **último** centro de la lista, sin criterio.
 6. Sigue pendiente (2.7) lo ya anotado: la tabla `misa_plantillas_dl` no existe y usan la plantilla `anadir_ctr_tarea`, `quitar_horario`, `importar/modificar_plantilla`.
 
+### `devel_db_admin` (18 clases sin test al empezar; 3 pendientes a propósito: 3/28)
+
+Las herramientas de este módulo ejecutan DDL, crean roles o reescriben ficheros desde su primera línea, así que **solo se probó lo que no toca esquemas reales**. Unit (≈ 40 casos): resultados, `ApptablesAppsData`, `DbLugarDropdown`, `DbPropiedadesFormData` (operación desconocida), `RenombrarEsquemaVerificacionContexto` (normalización completa), validaciones previas de `ApptablesUpdate`, `CopiarEsquema` y `CrearEsquema`, `CrearEsquemaPrecondicionException`, generador de contraseñas de `CrearUsuarios`, y `MigracionesQuitarRegistro`/`MigracionesEjecutar` (rutas que no ejecutan SQL) con ficheros temporales y repositorio simulado. Integración (solo lectura): todas las operaciones de `DbPropiedadesFormData` y `ApptablesVerificarGlobal`.
+
+**Sin test a propósito:** `AbsorberEsquema`, `EliminarEsquemaDl` y `MoverTabla` (este último además reescribe `.php` del repo en entornos `.local`). Probarlos exige una BD de pruebas aislada con esquemas desechables; queda para 2.x si se monta.
+
+**Bug corregido (`ApptablesVerificarGlobal::existeTabla`):** comparaba `to_regclass('public.x')` con `'public.x'`, pero con `search_path = public` PostgreSQL devuelve `x` sin esquema, así que tras `crear_global` la verificación decía siempre «faltan tablas» aunque existieran. Ahora comprueba `IS NOT NULL`.
+
+**Hallazgos (sin corregir):**
+1. `CrearUsuarios::generarPassword` genera las contraseñas de los roles de PostgreSQL con `rand()` y `str_shuffle` (no criptográficos); debería usar `random_int`.
+2. `ApptablesUpdate` ejecuta `createAll`/`dropAll` por reflexión en cualquier clase `<app>\db\DB*` cuyo nombre venga del mapa de sesión; confía en que `$_SESSION['config']['a_apps']` solo contiene apps legítimas.
+3. `ApptablesUpdate::basesAfectadas` informa de las bases tocadas con listas fijas por app: una app nueva sin entrada se muestra como `comun` aunque su DB viva en otra.
+
+
