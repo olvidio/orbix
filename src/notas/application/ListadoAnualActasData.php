@@ -93,7 +93,8 @@ final class ListadoAnualActasData
         }
 
         if (!empty($aActas)) {
-            array_multisort($aNivel, SORT_NUMERIC, $aFecha, SORT_NUMERIC, $aActas);
+            // Las fechas son ISO (Y-m-d): como número valdrían solo el año y empatarían; como texto se ordenan bien.
+            array_multisort($aNivel, SORT_NUMERIC, $aFecha, SORT_STRING, $aActas);
         }
 
         return $aActas;
