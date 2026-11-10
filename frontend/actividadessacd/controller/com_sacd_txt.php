@@ -14,7 +14,7 @@ use frontend\actividadessacd\helpers\ActividadessacdPayload;
  *
  * Migrada desde `apps/actividadessacd/controller/com_sacd_txt.php` +
  * `apps/actividadessacd/controller/com_sacd_txt_ajax.php` (dispatcher
- * legacy con ramas `get_texto` y `update`) siguiendo `refactor.md`.
+ * legacy con ramas `get_texto` y `update`) siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

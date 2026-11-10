@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `list
 
 ## Objetivo Funcional
 
-Gestiona ListasComTxt, ListasComTxtGet. Datos para la pantalla de textos de comunicacion (frontend/encargossacd/controller/listas_com_txt.php). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (com_sacd / es). Lectura del texto de comunicacion para un par (clave, idioma). Extraido de EncargoTextoListasComAjax (rama que=get_texto) para eliminar el dispatcher multiproposito (criterio refactor.md). Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de EncargoTextoListasComAjax (rama que=update) para eliminar el dispatcher multiproposito (criterio refactor.md).
+Gestiona ListasComTxt, ListasComTxtGet. Datos para la pantalla de textos de comunicacion (frontend/encargossacd/controller/listas_com_txt.php). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (com_sacd / es). Lectura del texto de comunicacion para un par (clave, idioma). Extraido de EncargoTextoListasComAjax (rama que=get_texto) para eliminar el dispatcher multiproposito (criterio AGENTS.md). Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de EncargoTextoListasComAjax (rama que=update) para eliminar el dispatcher multiproposito (criterio AGENTS.md).
 
 ## Acciones Detectadas
 
@@ -47,8 +47,8 @@ Gestiona ListasComTxt, ListasComTxtGet. Datos para la pantalla de textos de comu
 ## Pistas Desde Endpoints
 
 - Datos para la pantalla de textos de comunicacion (`frontend/encargossacd/controller/listas_com_txt.php`). Devuelve las opciones de idiomas configurados y el texto inicial correspondiente a la clave/idioma por defecto (`com_sacd` / `es`).
-- Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
-- Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+- Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
+- Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
 
 ## Errores Conocidos
 

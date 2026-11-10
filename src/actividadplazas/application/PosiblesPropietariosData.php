@@ -17,7 +17,7 @@ use src\shared\domain\helpers\OpcionesDesplegable;
  * asistencia.
  *
  * Formato de retorno (contrato estandar de desplegable en
- * `refactor.md`): `{id, opciones, selected, blanco, val_blanco}`.
+ * `AGENTS.md`): `{id, opciones, selected, blanco, val_blanco}`.
  * El frontend monta el `<select>` con `fnjs_construir_desplegable`.
  *
  * Sucesor de la rama `lst_propietarios` del dispatcher legacy

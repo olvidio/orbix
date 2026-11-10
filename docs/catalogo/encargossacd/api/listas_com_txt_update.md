@@ -19,7 +19,7 @@ estado_revision: "revisado"
 ---
 # Listas Com Txt Update
 
-Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -50,7 +50,7 @@ Guarda texto de comunicación (`clave`, `idioma`, `comunicacion`).
 ## Efectos colaterales
 
 - Si el texto llega vacio, se elimina la fila.
-- Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+- Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
 
 ## Permisos
 

@@ -17,7 +17,7 @@ use frontend\shared\FrontBootstrap;
  * ({@see \src\encargossacd\application\ListasComTxtData}).
  *
  * Las acciones AJAX se dirigen a dos proxies/endpoints separados (sin
- * dispatcher `que`, segun `refactor.md`):
+ * dispatcher `que`, segun `AGENTS.md`):
  * - lectura: `listas_com_txt_get.php`  -> `/src/encargossacd/listas_com_txt_get`
  * - escritura: `listas_com_txt_update.php` -> `/src/encargossacd/listas_com_txt_update`
  */

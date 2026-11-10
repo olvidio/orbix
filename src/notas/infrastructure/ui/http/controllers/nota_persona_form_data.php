@@ -10,7 +10,7 @@ use src\shared\domain\helpers\FilterPostGet;
  * (alta/edicion de `PersonaNota`).
  *
  * Consumido por `frontend/notas/controller/form_notas_de_una_persona.php` via
- * `PostRequest::getDataFromUrl()` (ver refactor.md "Patron de llamada
+ * `PostRequest::getDataFromUrl()` (ver AGENTS.md "Patron de llamada
  * backend desde frontend").
  *
  * Entrada (POST):

@@ -20,7 +20,7 @@ estado_revision: "revisado"
 
 Preceptores posibles para una nota.
 
-Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de AGENTS.md.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

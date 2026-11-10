@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `casa
 
 ## Objetivo Funcional
 
-Gestiona CasasOpciones. Devuelve el payload (solo datos) para poblar el <select> de casas en frontend\shared\web\CasasQue. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde CasasQue al repositorio CasaDlRepositoryInterface (separación frontend ↔ backend, ver refactor.md).
+Gestiona CasasOpciones. Devuelve el payload (solo datos) para poblar el <select> de casas en frontend\shared\web\CasasQue. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde CasasQue al repositorio CasaDlRepositoryInterface (separación frontend ↔ backend, ver AGENTS.md).
 
 ## Acciones Detectadas
 
@@ -39,7 +39,7 @@ Gestiona CasasOpciones. Devuelve el payload (solo datos) para poblar el <select>
 
 ## Pistas Desde Endpoints
 
-- Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde `CasasQue` al repositorio `CasaDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+- Devuelve el payload (solo datos) para poblar el <select> de casas en `frontend\shared\web\CasasQue`. La vista/componente frontend es quien construye el HTML del desplegable; aquí solo se exponen las opciones. Sustituye el acceso directo desde `CasasQue` al repositorio `CasaDlRepositoryInterface` (separación frontend ↔ backend, ver `AGENTS.md`).
 
 ## Errores Conocidos
 

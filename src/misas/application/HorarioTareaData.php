@@ -14,7 +14,7 @@ use src\shared\security\HashB;
  *
  * Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por
  * `id_item_h`. Se saca de la vista frontend para cumplir la regla de
- * `refactor.md`: los controladores `frontend/` no pueden instanciar
+ * `AGENTS.md`: los controladores `frontend/` no pueden instanciar
  * repositorios de `src\` ni resolver dependencias del contenedor.
  */
 class HorarioTareaData

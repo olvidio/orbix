@@ -17,7 +17,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * y renderiza el HTML.
  *
  * Migrada desde `apps/casas/controller/calendario_ubi_resumen.php` +
- * `calendario_ubi_resumen_ajax.php` siguiendo `refactor.md`.
+ * `calendario_ubi_resumen_ajax.php` siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

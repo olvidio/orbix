@@ -10,7 +10,7 @@
  * `sin_asignar`) se pinta en el propio div sin recargar la pagina.
  *
  * Migrada desde `apps/actividadessacd/controller/asignar_sacd_auto.php`
- * + `apps/actividadessacd/model/AsignarSacd.php` siguiendo `refactor.md`.
+ * + `apps/actividadessacd/model/AsignarSacd.php` siguiendo `AGENTS.md`.
  * Sin `use src\...`.
  */
 

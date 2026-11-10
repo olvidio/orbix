@@ -64,7 +64,7 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 
 ## Repos resueltos por `$GLOBALS['container']->get(...)` y typos de método
 
-- Cuando un `application/` obtiene un repositorio con `$GLOBALS['container']->get(FooRepositoryInterface::class)`, la variable queda **tipada como `object`** por el contenedor. PHP **no detecta typos** en el nombre del método hasta que la rama concreta se ejecuta. Ejemplo real: `SacdAusenciasJefeZonaData` llamaba `$ZonaSacdRepository->getSacdsZona(...)` cuando el método del contrato se llama `getIdSacdsDeZona(...)`. El fallo solo aparecía cuando el usuario **era jefe de una zona con sacds**, rama que no se recorría nunca en los tests existentes.
+- En `src/` de negocio ya no se usa `$GLOBALS['container']` (los repositorios llegan por constructor), pero el riesgo se mantiene allí donde un repositorio se resuelve en runtime (`DependencyResolver::get(...)`, código legacy) o se llama sin tipo estático: si un `application/` obtiene un repositorio con `$GLOBALS['container']->get(FooRepositoryInterface::class)`, la variable queda **tipada como `object`** por el contenedor. PHP **no detecta typos** en el nombre del método hasta que la rama concreta se ejecuta. Ejemplo real: `SacdAusenciasJefeZonaData` llamaba `$ZonaSacdRepository->getSacdsZona(...)` cuando el método del contrato se llama `getIdSacdsDeZona(...)`. El fallo solo aparecía cuando el usuario **era jefe de una zona con sacds**, rama que no se recorría nunca en los tests existentes.
 - Regla: para cada servicio de `application/`, añade **al menos un test feliz por cada método de repo** que invoque. No basta con la rama de error temprano / parámetro inválido / lista vacía.
 - Patrón recomendado en el test:
   - Mockear el repo con **`createMock(FooRepositoryInterface::class)`** y usar **`expects($this->once())->method('nombreDelMetodo')`**. Como `createMock` refleja el contrato, si el servicio llama a un nombre inexistente el test estalla con *"Call to undefined method MockObject_FooRepositoryInterface_...::nombreMal()"*, idéntico a lo que pasaría en producción con la implementación concreta.
@@ -97,13 +97,9 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
   - Montar **`$_SESSION['session_auth']`** mínimo con las claves que realmente lee el código bajo prueba (p. ej. `id_usuario`, `esquema`, `sfsv`, `idioma`). No copiar el setup completo de `myTest`.
   - Para `DateTimeLocal::getFormat()` basta con **`$_SESSION['session_auth']['idioma'] = 'ca'`** (o similar): evita tener que construir `$_SESSION['oConfig']`.
   - Usar un **contenedor anónimo** con `get(string $id)` que lance `RuntimeException` si se pide una clase no mapeada: así cualquier dependencia olvidada se ve al instante.
-- Esto mantiene el test **rápido** (sin PDO, sin views, sin refresco de matviews) y **determinista**, que es el objetivo de la fase "unitarios donde compense" de `refactor.md`.
+- Esto mantiene el test **rápido** (sin PDO, sin views, sin refresco de matviews) y **determinista**, que es el objetivo de los unitarios donde compensa.
 
 ## Ejecutar PHPUnit
 
-- Desde la raíz del proyecto: **`libs/vendor/bin/phpunit`**, con ruta al fichero o directorio de tests según `phpunit.xml`.
+- PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.
 - **Playwright (E2E)** en **`e2e/`**: servidor Orbix por URL configurable; sin credenciales solo smoke del formulario de login; con `E2E_USER`/`E2E_PASSWORD` se recorren enlaces de `/index.php` vía GET. Detalle en **`e2e/README.md`**. Comando: `npm run test:e2e` (antes `npm run test:e2e:install-browsers` una vez).
-
----
-
-*Última actualización: criterios alineados con tests de integración en `tests/integration/actividades/application/`, unitarios de `tests/unit/actividadessacd/application/` y bootstrap en `tests/myTest.php`; añadida guía sobre `findById`/repos que devuelven `null` donde el código asumía entidad.*

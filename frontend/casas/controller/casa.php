@@ -16,7 +16,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * - `datosEcGastos`       → `frontend/casas/controller/casa_ec_gastos_lista.php`
  *
  * Migrada desde `apps/casas/controller/casa_que.php` +
- * `casa_ajax.php` siguiendo `refactor.md`.
+ * `casa_ajax.php` siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

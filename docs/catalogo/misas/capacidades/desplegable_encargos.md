@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `desp
 
 ## Objetivo Funcional
 
-Gestiona DesplegableEncargos. Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de refactor.md: - id : id del <select> que montara fnjs_construir_desplegable. - opciones : map id_enc => desc_enc de los encargos con id_tipo_enc >= 8100 de la zona. - selected : id_enc preseleccionado ('' si no aplica). - blanco : true si se quiere opcion en blanco. - val_blanco: valor de la opcion en blanco. - action : handler onchange opcional (vacio por defecto).
+Gestiona DesplegableEncargos. Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de AGENTS.md: - id : id del <select> que montara fnjs_construir_desplegable. - opciones : map id_enc => desc_enc de los encargos con id_tipo_enc >= 8100 de la zona. - selected : id_enc preseleccionado ('' si no aplica). - blanco : true si se quiere opcion en blanco. - val_blanco: valor de la opcion en blanco. - action : handler onchange opcional (vacio por defecto).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona DesplegableEncargos. Payload JSON para el desplegable dinamico de encar
 
 ## Pistas Desde Endpoints
 
-- Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de `refactor.md`: - `id` : id del `<select>` que montara `fnjs_construir_desplegable`. - `opciones` : map id_enc => desc_enc de los encargos con `id_tipo_enc >= 8100` de la zona. - `selected` : id_enc preseleccionado (`''` si no aplica). - `blanco` : true si se quiere opcion en blanco. - `val_blanco`: valor de la opcion en blanco. - `action` : handler `onchange` opcional (vacio por defecto).
+- Payload JSON para el desplegable dinamico de encargos de una zona. Sigue el contrato de desplegables de `AGENTS.md`: - `id` : id del `<select>` que montara `fnjs_construir_desplegable`. - `opciones` : map id_enc => desc_enc de los encargos con `id_tipo_enc >= 8100` de la zona. - `selected` : id_enc preseleccionado (`''` si no aplica). - `blanco` : true si se quiere opcion en blanco. - `val_blanco`: valor de la opcion en blanco. - `action` : handler `onchange` opcional (vacio por defecto).
 
 ## Errores Conocidos
 

@@ -4,7 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * Endpoint backend: HTML del bloque tipo de actividad (desplegables) para actividad_que.
- * Consumo desde frontend/actividades/controller/actividad_que.php via PostRequest (refactor.md).
+ * Consumo desde frontend/actividades/controller/actividad_que.php via PostRequest (AGENTS.md).
  */
 
 use src\actividades\application\ActividadQueDatos;

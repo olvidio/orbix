@@ -12,7 +12,7 @@
  * `tipo_tarifa_eliminar`) se invocan directamente desde JS.
  *
  * Migrada desde `apps/actividadtarifas/controller/tarifa.php` +
- * `tarifa_ajax.php` (dispatcher legacy) siguiendo `refactor.md`.
+ * `tarifa_ajax.php` (dispatcher legacy) siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

@@ -245,7 +245,7 @@ Los usos de `HashF` en `frontend/` se clasifican en tres patrones durante la mig
 ## 8. Qué NO cambia
 
 - **Sigue habiendo sesión PHP con `PHPSESSID`.** El esquema de auth del usuario (login, 2FA) no se toca.
-- **`refactor.md` sigue siendo la referencia** para el reparto de capas, naming (`*Data`, `*Service`, etc.), `ContestarJson::enviar`, y el resto de convenciones. Este documento solo fija *el modelo de seguridad de requests*.
+- **`AGENTS.md` sigue siendo la referencia** para el reparto de capas, naming (`*Data`, `*Service`, etc.), `ContestarJson::enviar`, y el resto de convenciones. Este documento solo fija *el modelo de seguridad de requests*.
 - **Los parámetros `h`, `hh`, `hno`, `hchk`, `hnov`, `horig`, `hpos`, `hhorig`** siguen existiendo mientras `HashF` conserve el protocolo actual. Son internos de `HashF`.
 - **No hay cambio criptográfico** en esta primera fase: ambos hash usan `md5(str + session_id() + sal)`. Lo único que cambia es la organización y el modelo de confianza.
 

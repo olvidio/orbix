@@ -13,7 +13,7 @@ use src\encargossacd\domain\entity\EncargoTexto;
  * Si el texto llega vacio, se elimina la fila.
  *
  * Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar
- * el dispatcher multiproposito (criterio `refactor.md`).
+ * el dispatcher multiproposito (criterio `AGENTS.md`).
  */
 final class ListasComTxtUpdate
 {

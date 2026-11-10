@@ -10,7 +10,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * devuelve HTML) al cambiar el valor del select.
  *
  * Migrada desde `apps/actividadplazas/controller/plazas_balance_que.php`
- * siguiendo `refactor.md`. Datos desde `/src/actividadplazas/plazas_balance_que_data`
+ * siguiendo `AGENTS.md`. Datos desde `/src/actividadplazas/plazas_balance_que_data`
  * (PostRequest). Sin `use src\...`.
  */
 

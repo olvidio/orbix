@@ -9,7 +9,7 @@ use frontend\shared\PostRequest;
  *
  * No accede a repositorios de `src/`: las opciones del desplegable se
  * obtienen contra el endpoint `/src/ubis/casas_opciones_data` vía
- * {@see PostRequest} (ver `refactor.md` — separación frontend ↔ backend).
+ * {@see PostRequest} (ver `AGENTS.md` — separación frontend ↔ backend).
  */
 class CasasQue
 {

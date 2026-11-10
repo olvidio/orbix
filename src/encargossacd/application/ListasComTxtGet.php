@@ -12,7 +12,7 @@ use src\shared\security\HashB;
  * Lectura del texto de comunicacion para un par (clave, idioma).
  *
  * Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar
- * el dispatcher multiproposito (criterio `refactor.md`).
+ * el dispatcher multiproposito (criterio `AGENTS.md`).
  */
 final class ListasComTxtGet
 {

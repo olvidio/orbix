@@ -14,7 +14,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * inline llama a `/src/casas/ingreso_plazas_previstas_update`.
  *
  * Migrada desde `apps/casas/controller/prevision_asistentes.php` +
- * `prevision_asistentes_ajax.php` siguiendo `refactor.md`.
+ * `prevision_asistentes_ajax.php` siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

@@ -7,7 +7,7 @@ use src\shared\web\ContestarJson;
 
 /**
  * Devuelve el desplegable de posibles preceptores (profesores STGR) con
- * el contrato estandar de refactor.md.
+ * el contrato estandar de AGENTS.md.
  */
 $aOpciones = (DependencyResolver::get(PosiblesPreceptoresData::class))->execute();
 

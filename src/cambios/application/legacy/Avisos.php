@@ -31,7 +31,7 @@ use src\procesos\domain\PermAccionBits;
  *
  * Consumida **solo** por `src\cambios\application\AvisosGenerarTabla`. El
  * resto del modulo (frontend, otros use cases) no debe importar esta
- * clase — vease `refactor.md`, seccion "Bloques heredados encapsulados en
+ * clase — vease `AGENTS.md`, seccion "Bloques heredados encapsulados en
  * `src/<modulo>/application/legacy/`".
  *
  * Se conservan intactos:

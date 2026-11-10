@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `posi
 
 ## Objetivo Funcional
 
-Gestiona PosiblesPreceptores. Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+Gestiona PosiblesPreceptores. Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de AGENTS.md.
 
 ## Acciones Detectadas
 
@@ -39,7 +39,7 @@ Gestiona PosiblesPreceptores. Devuelve el desplegable de posibles preceptores (p
 
 ## Pistas Desde Endpoints
 
-- Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de refactor.md.
+- Devuelve el desplegable de posibles preceptores (profesores STGR) con el contrato estandar de AGENTS.md.
 
 ## Errores Conocidos
 

@@ -27,7 +27,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * `apps/actividadessacd/view/com_sacd_activ_periodo.html.twig` +
  * `apps/actividadessacd/view/com_sacd_activ_print.phtml` +
  * `apps/actividadessacd/view/com_un_sacd_activ_print.phtml`,
- * siguiendo `refactor.md`.
+ * siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

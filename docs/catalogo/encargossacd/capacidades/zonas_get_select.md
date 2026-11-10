@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `zona
 
 ## Objetivo Funcional
 
-Gestiona EncargoZonasSelect. Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en refactor.md, sin instanciar frontend\shared\web\Desplegable (responsabilidad exclusiva del frontend).
+Gestiona EncargoZonasSelect. Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en AGENTS.md, sin instanciar frontend\shared\web\Desplegable (responsabilidad exclusiva del frontend).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona EncargoZonasSelect. Payload JSON para el desplegable de zonas (grupo «
 
 ## Pistas Desde Endpoints
 
-- Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
+- Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `AGENTS.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
 
 ## Errores Conocidos
 

@@ -17,7 +17,7 @@ use frontend\shared\helpers\ListNavSupport;
  * Pantalla de cabecera de una persona (datos basicos + acceso a dossiers y ficha).
  *
  * Migrado desde `apps/personas/controller/home_persona.php` (slice 3 del
- * modulo `personas`). Refactor conforme a `refactor.md`: la resolucion de
+ * modulo `personas`). Refactor conforme a `AGENTS.md`: la resolucion de
  * repositorios, el acceso a centros, telecos, traduccion del nivel_stgr y la
  * normalizacion de `Qobj_pau` se han movido a
  * `src/personas/application/HomePersonaData.php` tras el endpoint

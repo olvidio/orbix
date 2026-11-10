@@ -3,7 +3,7 @@
 ## Objetivo
 Mantener una estructura consistente basada en DDD para todo nuevo código en `src/`, reduciendo acoplamientos con legacy y evitando mezclar capas.
 
-**Índice de refactorización (estado por módulo, fases, checklists):** [`docs/dev/REFACTOR_INDICE.md`](docs/dev/REFACTOR_INDICE.md). **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`docs/dev/backlog.md`](docs/dev/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `docs/dev/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
+**Mejoras y migraciones aplazadas (no son reglas vigentes):** [`docs/dev/backlog.md`](docs/dev/backlog.md). **Histórico:** la migración `apps/` → `frontend/` + `src/` está terminada; el estado por módulo quedó en [`docs/dev/REFACTOR_INDICE.md`](docs/dev/REFACTOR_INDICE.md) y los `docs/dev/*_migracion_baseline.md`, y las reglas que solo servían durante la migración en [`docs/dev/agents_reglas_retiradas_historico.md`](docs/dev/agents_reglas_retiradas_historico.md).
 
 ## Comunicación: referencias sobrenaturales
 
@@ -27,11 +27,12 @@ src/<modulo>/
   application/
   domain/
     contracts/
+    criteria/
     entity/
     value_objects/
   infrastructure/
-    controllers/
-    repositories/
+    persistence/postgresql/
+    ui/http/controllers/
   config/
     dependencies.php
     routes.php
@@ -47,8 +48,7 @@ Reglas:
 ### Domain
 - Debe ser independiente de framework/UI/infra.
 - Prohibido en código nuevo:
-  - `use core\...` (salvo utilidades puramente de dominio justificadas).
-  - `use web\...`, `use frontend\...`.
+  - `use frontend\...`.
   - `$GLOBALS`, `$_SESSION`, `$_POST`, `$_GET`.
   - Construcción de HTML, rutas URL o renderizado de vistas.
 - `contracts/` define puertos de dominio, no detalles técnicos:
@@ -68,7 +68,7 @@ Reglas:
   - Invocan un caso de uso.
   - Transforman respuesta a JSON/HTML.
   - Sin lógica de negocio compleja.
-- Cualquier uso de `core\...`, `web\...`, PDO o globals debe quedar aquí.
+- Cualquier uso de PDO o globals debe quedar aquí.
 
 ### Persistencia PG: fechas y JSON/jsonb
 Columnas de BD tipadas como `date` / `time` / `timestamp` / `timestamptz` / `json` / `jsonb` deben tratarse de forma **uniforme** en repos `Pg*` (código nuevo o tocado).
@@ -102,14 +102,14 @@ Clase: `src\shared\infrastructure\persistence\ConverterDate` (delega en `PgTimes
 Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo bloque**. La entidad recibe tipos PHP (`DateTimeLocal` / `TimeLocal` / array / `null`), no el string crudo de PG.
 
 ### Búsquedas con `Criteria` (en lugar de `$aWhere` / `$aOperators`)
-Plan y estado de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md). Migración completada (fases 1–5): ya no existen en `src/` los `getXxx(array $aWhere, array $aOperators)`, ni `LegacyWhereAdapter`, ni `Condicion`. Módulo de referencia: `asistentes` (`AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`).
+Ya no se usan los `getXxx(array $aWhere, array $aOperators)`, ni `LegacyWhereAdapter`, ni `Condicion`; el único resto es `getConjunt()` (`ClaseRepository`, `AsistenteRepositoryInterface`). Módulo de referencia: `asistentes` (`AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`). Historial de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md).
 
 - **Código nuevo o tocado:** buscar siempre con `matching(Criteria)`; **no** reintroducir métodos `getXxx(array $aWhere, array $aOperators)` ni arrays de operadores (`'~'`, `'BETWEEN'`, `_ordre`, …). El generador `devel_codegen/factory.php` ya no los emite.
 - **Domain:** cada entidad consultable tiene un enum `src/<modulo>/domain/criteria/<Entidad>Field.php` (`implements CriteriaField`, valor = nombre del campo de la entidad). Las piezas genéricas (`Criteria`, `Filter`, `FilterGroup`, `Order`, `Operator`) viven en `src/shared/domain/criteria/` y no tienen SQL.
 - **Application:** construir el criterio con `Criteria::create()->where(Filter::eq(F::IdActiv, $id))->andWhere(...)->orderBy(F::IdNom)->limit(n)`. Valores PHP nativos o VO; nunca strings con formato (`"a,b"`, `"{1,2}"`). OR entre campos con `FilterGroup::anyOf(...)` / `allOf(...)`.
 - **Infrastructure:** el repositorio `Pg*` implementa `matching()` (con el trait `RunsCriteriaQueries` y el mapa campo → columna si difieren) y solo acepta su propio enum. Si hay que unir varios repositorios, usar un método tipo `matchingConjunto()` en lugar de `getConjunt()`.
 - **Sin equivalente genérico** (`TXT`, `~INV`): método específico del repositorio, no ampliar `Criteria` con SQL.
-- **Tests:** un `matching()` nuevo lleva test de integración; al migrar, el test de caracterización del `getXxx` antiguo debe seguir en verde sin cambios.
+- **Tests:** un `matching()` nuevo lleva test de integración.
 
 ### Config
 - `dependencies.php`: mapear interfaces de dominio a implementaciones de `infrastructure`.
@@ -350,7 +350,7 @@ class PgMiEntidadRepositoryTest extends myTest {
 - [ ] `tests/unit/<modulo>/domain/entity/` — un `*Test.php` por entidad
 - [ ] `tests/unit/<modulo>/domain/value_objects/` — un `*Test.php` por value object
 - [ ] `tests/factories/<modulo>/` — una `*Factory.php` por entidad con repositorio
-- [ ] `tests/integration/<modulo>/infrastructure/repositories/` — un `Pg*RepositoryTest.php` por repositorio
+- [ ] `tests/integration/<modulo>/infrastructure/persistence/postgresql/` — un `Pg*RepositoryTest.php` por repositorio
 
 ## Criterio de excepción
 Si una regla no puede cumplirse por dependencia legacy:
@@ -367,7 +367,7 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
 - `frontend/<modulo>/controller/` - Controladores que preparan datos para las vistas
   - Reciben parámetros del request
   - En código migrado o nuevo, cargan datos vía `PostRequest::getDataFromUrl('/src/<modulo>/...', ...)` contra endpoints en `src/`; no instanciar casos de uso ni repositorios de `src/` desde el controlador frontend
-  - Preparan arrays para las vistas (incl. componentes `web\Lista`, desplegables, etc.)
+  - Preparan arrays para las vistas (incl. componentes `frontend\shared\web\Lista`, desplegables, etc.)
   - Renderizan plantillas `.phtml`
 - `frontend/<modulo>/view/` - Vistas (archivos `.phtml`)
   - Solo HTML, CSS y JavaScript
@@ -384,22 +384,16 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
 
 ### Enlaces firmados hacia la UI (`HashF::link`) — directiva
 
-El hash de presentación (**`frontend\shared\security\HashF`**) es responsabilidad **solo de la capa que sirve HTML al navegador** (`frontend/`, y mientras exista, `apps/` legacy). El backend de dominio/aplicación **no** debe saber cómo se construye esa firma.
+El hash de presentación (**`frontend\shared\security\HashF`**) es responsabilidad **solo de la capa que sirve HTML al navegador** (`frontend/`). El backend de dominio/aplicación **no** debe saber cómo se construye esa firma.
 
 **Reglas:**
 
-1. **`src/domain/`** y **`src/application/`**: prohibido `use frontend\shared\security\HashF`, `HashF::link`, `HashF::cmdConParametros`, etc. para URLs hacia `frontend/...` o `apps/...`.
-2. **Patrón `link_spec`**: los listados / DTOs que hoy ponen `'ira' => HashF::link(...)` deben evolucionar a datos neutros, por ejemplo:
+1. **`src/domain/`** y **`src/application/`**: prohibido `use frontend\shared\security\HashF`, `HashF::link`, `HashF::cmdConParametros`, etc. para URLs hacia `frontend/...`.
+2. **Patrón `link_spec`**: los listados / DTOs devuelven datos neutros en lugar de `'ira' => HashF::link(...)`, por ejemplo:
    - `'link_spec' => ['path' => 'frontend/modulo/controller/foo.php', 'query' => ['id' => 123]]`
    El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `HashF::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
-3. **`src/.../infrastructure/ui/http/controllers/`**: preferible devolver JSON con `link_spec` y firmar en `frontend/`; si un controlador `src` aún emite HTML legacy, documentar excepción y plan de migración.
-4. **Documentación de arquitectura**: `docs/dev/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashF` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashF` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashF::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
-
-**Inventario — `HashF::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
-
-No quedan excepciones conocidas: menus, encargossacd y notas devuelven datos o `link_spec` sin
-firmar, y el frontend compone las URLs `HashF`. Actualizar este inventario si se detecta otra
-excepción.
+3. **`src/.../infrastructure/ui/http/controllers/`**: devolver JSON con `link_spec` y firmar en `frontend/`. No queda ningún uso de `HashF` en `src/`; no reintroducirlo.
+4. **Documentación y referencias**: `docs/dev/hash_arquitectura.md` (§7.4). Helper genérico: `frontend/shared/security/HashFSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`). Ejemplos: `GruposLista` + `grupo_lista.php`; `ListaActivTabla` + `lista_activ_datos.php` con firma en `frontend/actividades/controller/lista_activ.php`; `HabitacionesCamaLista` + `frontend/ubiscamas/controller/lista_habitaciones.php`; `DossiersListaFichasData` + `frontend/dossiers/controller/lista_dossiers.php`.
 
 ### Ejemplo práctico: módulo ubiscamas
 
@@ -407,42 +401,51 @@ excepción.
 frontend/ubiscamas/
   controller/
     habitacion_form.php    ← Prepara datos para el formulario
-    cama_form.php         ← Prepara datos para el formulario
+    cama_form.php          ← Prepara datos para el formulario
     lista_habitaciones.php ← PostRequest a `actividad_habitaciones_lista`; convierte `*_link_spec` con `HashFSignedLink`
   helpers/
     SelectHabitacionesCdcUrlSigning.php
     SelectHabitacionesCdcRender.php ← Bloque dossier habitaciones (`HashF` + `select_habitaciones_cdc.phtml`)
-    UbiscamasFormHashCompose.php ← `HashF` para `habitacion_form` / `cama_form` (datos desde `HabitacionFormData` / `CamaFormData`)
+    UbiscamasFormHashCompose.php    ← `HashF` para `habitacion_form` / `cama_form` (datos desde `HabitacionFormData` / `CamaFormData`)
   view/
-    habitacion_form.phtml ← Vista HTML del formulario
-    cama_form.phtml      ← Vista HTML del formulario
-    select_habitaciones_cdc.phtml ← Vista de listado
+    habitacion_form.phtml
+    cama_form.phtml
+    select_habitaciones_cdc.phtml
 
 src/ubiscamas/
+  application/
+    HabitacionFormData.php
+    CamaFormData.php
+    HabitacionesCamaLista.php
+    UpdateCamaAsistente.php
   domain/
     contracts/
       HabitacionRepositoryInterface.php
       CamaRepositoryInterface.php
+    criteria/
+      HabitacionField.php
+      CamaField.php
     entity/
       Habitacion.php
       Cama.php
     value_objects/
       HabitacionId.php
       CamaId.php
-      BañoTipo.php
-    SelectHabitacionesCdc.php ← `getSegmentData()` (sin `HashF`; render en frontend)
+      TipoLavabo.php
+    Select_habitaciones_cdc.php ← `getSegmentData()` (sin `HashF`; render en frontend)
   infrastructure/
-    ui/http/controllers/
-      actividad_habitaciones_lista.php ← `link_spec` + `HashB` (`ctx` para update cama / solo VIP); sin `HashF`
-    controllers/
-      habitacion_update.php ← Lógica de guardado
-      cama_update.php      ← Lógica de guardado
-      cama_delete.php      ← Lógica de eliminación
-    repositories/
+    persistence/postgresql/
       PgHabitacionRepository.php
       PgCamaRepository.php
+    ui/http/controllers/
+      actividad_habitaciones_lista.php ← `link_spec` + `HashB` (`ctx` para update cama / solo VIP); sin `HashF`
+      habitacion_form_data.php ← Datos del formulario
+      habitacion_update.php    ← Guardado
+      cama_update.php          ← Guardado
+      cama_delete.php          ← Eliminación
   config/
     dependencies.php
+    routes.php
 ```
 
 ### Reglas de rutas en vistas
@@ -581,27 +584,18 @@ Para una experiencia de usuario fluida, combinamos el estado del backend con el 
 
 ### Permisos de actividad en sesión (`PermisosActividades`) — caché vs. backend
 
-La clase **`src\permisos\domain\PermisosActividades`** nació para **tener en sesión una matriz de permisos** (reglas por `id_tipo_activ_txt`, DL propia / otras delegaciones) cargada desde `aux_usuarios_perm`, de modo que las vistas puedan **consultar permisos sin nueva ida a BD** para cada pintado.
+La clase **`src\permisos\domain\PermisosActividades`** guarda en sesión la **matriz de permisos** (reglas por `id_tipo_activ_txt`, DL propia / otras delegaciones) cargada desde `aux_usuarios_perm`, para que las vistas consulten permisos sin ir a BD en cada pintado.
 
-**Separación objetivo (evolución recomendada):**
-
-1. **Read model en sesión (solo datos ya cargados)**  
-   Lo que pertenece a la sesión es la **matriz cacheada** (`aPermDl`, `aPermOtras` y la lógica que recorre tipos / fases ref **solo con esos arrays**). Idealmente sería un tipo dedicado (p. ej. *matriz* o *snapshot*) serializable, sin métodos que asuman `$GLOBALS['container']` ni `$GLOBALS['oDBE']` en requests frontend que solo pasan por `FrontBootstrap::boot()` (sin `global_object.inc`).
-
-2. **Resolución con I/O en el backend (`src/` + petición HTTP)**  
-   Cualquier cosa que implique **consultar la actividad por `id_activ`**, **estado de fase en proceso** (`faseCompletada`, etc.) o **árbol de procesos / tipos** (`getPermisoCrear` y similares) es **caso de uso de aplicación / infra**: debe ejecutarse en un script bajo `global_object` (o endpoint JSON) y, desde controladores **`frontend/`**, llegar como **`PostRequest::getDataFromUrl`** o datos ya incluidos en un DTO grande (p. ej. ampliar `actividad_ver_datos`), no llamando al contenedor desde un objeto de sesión.
-
-3. **Transición práctica**  
-   Mientras la clase siga siendo monolítica, los controladores frontend deben **pasar contexto ya conocido** (`id_tipo_activ`, `dl_org`) cuando el backend ya lo devolvió por JSON, y migrar gradualmente las ramas que hoy usan repositorios dentro de la clase hacia servicios o `*_datos.php` dedicados.
-
-   **Fases de proceso (permisos on/off):** usar **`/src/actividades/actividad_fases_completadas_datos`** (`id_activ` → `fases_completadas`) antes de `getPermisoActual` / `getPermisoOn` en flujos solo-frontend (p. ej. `PrefillPermActividadesFases::desdeBackend`). Consulta unitaria equivalente a `faseCompletada`: **`/src/actividades/actividad_fase_completada_datos`** (`id_activ`, `id_fase` → `completada`).
+- **Estado actual:** sigue siendo una sola clase con dos responsabilidades: leer la matriz cacheada (`aPermDl`, `aPermOtras`) y consultar BD (actividad por `id_activ`, fases completadas, `getPermisoCrear`). Al deserializarse de la sesión reinyecta sus repositorios con `DependencyResolver`. Separarlas (snapshot serializable en sesión + casos de uso en `src/`) está en [`docs/dev/backlog.md`](docs/dev/backlog.md).
+- **Frontend:** acceder solo a través de `frontend/shared/session/SessionPermActividades.php`, y pasar el contexto ya conocido (`id_tipo_activ`, `dl_org`) cuando el backend ya lo devolvió por JSON. Lo que implique consultar BD llega por `PostRequest::getDataFromUrl`, no llamando al contenedor desde el objeto de sesión.
+- **Fases de proceso (permisos on/off):** usar **`/src/actividades/actividad_fases_completadas_datos`** (`id_activ` → `fases_completadas`) antes de `getPermisoActual` / `getPermisoOn` en flujos solo-frontend (p. ej. `PrefillPermActividadesFases::desdeBackend`). Consulta unitaria equivalente a `faseCompletada`: **`/src/actividades/actividad_fase_completada_datos`** (`id_activ`, `id_fase` → `completada`).
 
 ### Seguridad (`HashF`)
 Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
 - Modificar `HashF::validatePost()` para ignorar prefijos específicos (como `scroll_id_`).
 - Quién **firma** URLs hacia `frontend/` no debe ser `src/application` ni `src/domain`: ver la directiva **Enlaces firmados hacia la UI** en esta misma sección.
 
-### Pitfalls: salida parcial, JSON y tema CSS (legado)
+### Pitfalls: salida parcial, JSON y tema CSS
 
 Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash POST); útiles al tocar controladores-vista o includes de color:
 
@@ -614,21 +608,18 @@ Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash 
 3. **Includes de tema después de `echo`**  
    Tras cualquier salida (`mostrar_left_slide`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `FrontBootstrap::boot()` si eso imprime HTML o cierra sesión antes de servir CSS.
 
-4. **`src/` sin `core\` implícito**  
-   Clases en `src/domain` (o servicios usados solo vía JSON) no deben extender o importar **`core\...`** que no esté garantizado por el autoload de esa petición; si hace falta un helper, usar uno en `src/shared/domain/helpers/` o un adaptador en `infrastructure`.
-
 
 ## Comunicación Frontend-Backend (AJAX y JSON)
 
 Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores de lógica del backend:
 
 ### Backend (Controladores)
-- **Clase estándar**: `src\shared\web\ContestarJson` (en documentación antigua puede aparecer como `web\ContestarJson`) para respuestas JSON.
+- **Clase estándar**: `src\shared\web\ContestarJson` para respuestas JSON.
 - **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente; opcionalmente **`ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`** cuando un error (p. ej. subida demasiado grande) debe devolver un código HTTP distinto de 200 (típicamente **413**). Ver también la sección **Subidas multipart** más abajo. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil. Los endpoints que vayan a consumirse desde **PHP** con `PostRequest::getDataFromUrl` deben seguir además **### Endpoints JSON para `PostRequest::getDataFromUrl` / `PostRequest::getData`** (misma sección de este documento).
 - Evitar el patrón intermedio `$jsondata = ContestarJson::respuestaPhp(...);` + `ContestarJson::send($jsondata)`; unificar con **`enviar`** (no `send`).
 - Los casos de uso en `application` deben devolver datos listos para serializar (arrays/strings) o texto de error, no la respuesta JSON ya montada. Si hay código previo que aún devuelve `respuestaPhp`, puede convivir temporalmente, pero no como patrón para código nuevo.
 - **Mutaciones** (eliminar, editar, duplicar, publicar, importar, cambiar tipo, alta, update, etc.): siempre JSON con `{success, mensaje}` aunque no haya payload; nunca cuerpo vacío sin contrato. El JS debe mostrar `mensaje` si `success === false` y refrescar la UI si `success === true`.
-- **Prohibido en `src/.../infrastructure/ui/http/controllers`**: `echo` de HTML, `die("msg")`, `print`, respuestas texto arbitrarias. Excepción ya acordada: formularios legacy que lean `.done(rta_txt)` sin JSON (p. ej. rutas tipo `centros_update`); documentar el motivo en el propio fichero.
+- **Prohibido en `src/.../infrastructure/ui/http/controllers`**: `echo` de HTML, `die("msg")`, `print`, respuestas texto arbitrarias.
 - **Ubicación**: controladores HTTP bajo `src/<modulo>/infrastructure/ui/http/controllers/` (y análogos).
 - No usar `echo json_encode()` ni `exit($msg)` manual para el caso JSON estándar; delegar en `ContestarJson::enviar`.
 - **Docs IA**: al añadir o registrar una nueva ruta en `src/<modulo>/config/routes.php`, actualizar también `docs/ai/<modulo>/api_resumen.md` (añadir el endpoint con sus parámetros de entrada y tipo de respuesta, e incrementar `endpoints:` en el frontmatter). Si cambia la firma de entrada de un endpoint existente, actualizar igualmente esa entrada.
@@ -673,7 +664,7 @@ Centralizar límites y errores de subida PHP en **`src\shared\infrastructure\ui\
 
 **Cliente jQuery:** en la subida con `$.ajax({ processData: false, contentType: false, ... })`, en **`.fail(function (xhr) { ... })`** intentar `JSON.parse(xhr.responseText)` o `xhr.responseJSON` para leer `mensaje`; si no hay JSON (413 de nginx), mostrar texto genérico de fichero demasiado grande.
 
-**Referencia rápida de archivos:** `MultipartUploadGuard.php`; controladores certificados `certificado_emitido_pdf_upload.php` / `certificado_recibido_pdf_upload.php`; acta `acta_pdf_subir.php` + shim `apps/notas/controller/acta_pdf_upload.php`.
+**Referencia rápida de archivos:** `MultipartUploadGuard.php`; controladores certificados `certificado_emitido_pdf_upload.php` / `certificado_recibido_pdf_upload.php`; acta `acta_pdf_subir.php`.
 
 ### Descargas GET firmadas: `SignedDownloadToken`
 
@@ -716,14 +707,14 @@ Los controladores bajo `src/.../infrastructure/ui/http/controllers/` que respond
 6. **No usar** `ContestarJson::enviarDataAnidado` para endpoints consumidos por `PostRequest` (el envelope anidado no sigue el mismo contrato de doble decodificación).
 7. **Situaciones previstas no son errores:** una regla de negocio que impide mostrar o hacer algo (p. ej. «los datos de asistencia los modifica el propietario de la plaza») se devuelve como **respuesta válida** con `aviso_txt` (texto plano, el frontend lo escapa) y sin los datos del formulario; la vista lo pinta en lugar del formulario y el `Render::enrich()` debe devolver el payload tal cual si hay `aviso_txt`. `ContestarJson::enviar($error, …)` / `['error' => …]` se reserva para fallos reales, que sí enseñan el bloque técnico (endpoint, página, procedencia) de `PostRequest`. Referencias: `FormAsistentesAUnaActividadData`, `FormActividadesDeUnaPersonaData`, `AsistenteMoverData`.
 
-### Preparar endpoints para un futuro camino interno
+### Despacho en proceso de `PostRequest` (sin subpetición HTTP)
 
-El contrato vigente sigue siendo HTTP: `frontend/` llama a `/src/...` con `PostRequest`, y el endpoint responde con `ContestarJson`. Para dejar abierta una optimización futura sin HTTP cuando frontend y API estén en la misma instalación, los endpoints nuevos o migrados deben cumplir:
+El contrato entre `frontend/` y `/src/...` sigue siendo el envelope de `ContestarJson`, pero `PostRequest` ya no abre siempre una petición HTTP: si la ruta `/src/<modulo>/<accion>` corresponde a un fichero `src/<modulo>/infrastructure/ui/http/controllers/<accion>.php`, hace `require` de ese controlador en el mismo proceso (`PostRequest::dispatchInProcess`), con `$_POST` / `$_GET` sustituidos por los parámetros y la salida capturada en un buffer. Si no lo encuentra, va por HTTP. Los controladores de `src/` deben funcionar en los dos caminos:
 
-1. **Controlador HTTP fino:** no meter lógica de negocio en `src/.../infrastructure/ui/http/controllers/*.php`. El controlador lee `$_POST`/request, construye input, llama a `application` y responde.
-2. **Caso de uso invocable directamente:** la lógica debe vivir en una clase de `application/` que devuelva arrays/DTOs serializables y no dependa de `header()`, `echo`, `exit`, `ContestarJson`, `$_POST` ni de una subpetición HTTP.
-3. **Sin incluir controladores como atajo:** si algún día `PostRequest` tiene un dispatcher interno, debe mapear rutas preparadas a casos de uso; las rutas no registradas harán fallback a HTTP.
-4. **`ContestarJson` no decide el dispatch:** su responsabilidad es envolver la respuesta JSON del camino HTTP, no ejecutar casos de uso ni elegir entre HTTP/camino interno.
+1. **Leer la entrada con `src\shared\domain\helpers\FilterPostGet::post()` / `::get()`** (o `$_POST`), no con `filter_input(INPUT_POST, ...)`, que lee la copia del request exterior y no ve los parámetros de la llamada interna.
+2. **Responder solo con `ContestarJson::enviar`**, que detecta el despacho en proceso (`InProcessSrcDispatch::isActive()`) y escribe el JSON en el buffer. Sin `header()`, `exit`, `die` ni `echo` propios: cortarían o ensuciarían la respuesta del controlador frontend que llama.
+3. **Controlador fino:** lee el request, construye el input, llama a `application` y responde. La lógica vive en una clase de `application/` que devuelve arrays/DTOs serializables y no depende de `$_POST`, `header()` ni `ContestarJson`.
+4. **Llamadas anidadas:** un controlador de `src/` no debería encadenar más `PostRequest`; hay un límite de 8 niveles.
 
 ### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)
 
@@ -733,7 +724,7 @@ Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el re
 
 - **Casos de uso / orquestación** (efectos secundarios, SQL, ficheros): clases en `src/devel_db_admin/application/` (p. ej. `CrearEsquema`, `CopiarEsquema`, `RenombrarEsquema`, `EliminarEsquemaDl`, `MoverTabla`, `AbsorberEsquema`, `CrearUsuarios`). Cuando necesiten el contenedor DI, reciben `object $container` en constructor (herramienta interna; excepción pragmática a “no `$GLOBALS` en application” solo en este módulo de administración).
 - **Rutas:** `src/devel_db_admin/config/routes.php` registra cada acción (`/src/devel_db_admin/copiar_esquema`, `crear_esquema`, `renombrar_esquema`, `eliminar_esquema`, `crear_usuarios`, `absorber_esquema`, `mover_tabla`, etc.).
-- **Controladores HTTP:** `src/devel_db_admin/infrastructure/ui/http/controllers/*.php` leen `$_POST` / `filter_input`, invocan la clase de `application/` y responden con **`ContestarJson::enviar`** (`data` string `"ok"` o un objeto/array con campos como `lines`, credenciales, `a_esquemas`+`lines` para mover, etc.). El bootstrap (sesión, DI, hash) lo aporta `public/index.php` → `global_object.inc`. Errores de negocio que deben cortar el flujo: `ContestarJson::enviar($mensaje, 'none')` para que `PostRequest` trate `success === false` y haga `exit` con el mensaje.
+- **Controladores HTTP:** `src/devel_db_admin/infrastructure/ui/http/controllers/*.php` leen la entrada (`FilterPostGet::post()` / `$_POST`), invocan la clase de `application/` y responden con **`ContestarJson::enviar`** (`data` string `"ok"` o un objeto/array con campos como `lines`, credenciales, `a_esquemas`+`lines` para mover, etc.). El bootstrap (sesión, DI, hash) lo aporta `public/index.php` → `global_object.inc`. Errores de negocio que deben cortar el flujo: `ContestarJson::enviar($mensaje, 'none')` para que `PostRequest` trate `success === false` y haga `exit` con el mensaje.
 - **Controladores frontend:** `frontend/devel_db_admin/controller/*.php` solo leen el request del navegador, llaman a `PostRequest::getDataFromUrl('/src/devel_db_admin/<endpoint>', $campos)` y muestran HTML/mensajes con los datos devueltos (o el texto fijo que ya existía). **Prohibido** `use src\devel_db_admin\application\...` en esos controladores para ejecutar la operación (sí puede existir `use` residual solo si otra regla del repo lo exige; el flujo canónico es el endpoint).
 
 **Datos de formulario / desplegables (solo lectura):**
@@ -745,14 +736,9 @@ Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el re
 
 ---
 
-## Migración `apps/` → `frontend/` + `src/` (convivencia y slices)
+## Arquitectura `frontend/` + `src/`: capas, endpoints y contratos
 
-Guía para seguir moviendo pantallas desde `apps/` hacia `frontend/` + `src/` sin mezclar capas ni romper URLs antiguas; convención de proyecto única en este documento.
-
-### Orden de trabajo
-1. **Baseline breve** antes de tocar código: pantalla, parámetros GET/POST, salida HTML o JSON, casos `rstgr` / permisos si aplican. Anotarlo en `docs/dev/` (p. ej. `docs/dev/<modulo>_migracion_baseline.md`).
-2. **Separar capas primero**; refactors finos (SRP, tests unitarios) después de que la pantalla viva en `frontend` + `src`.
-3. **Un vertical slice por PR o commit lógico** (una pantalla o un flujo filtro+AJAX), sin mezclar varios módulos.
+Reglas vigentes para cualquier pantalla. Toda la aplicación vive ya en `frontend/` (UI) y `src/` (API); `apps/` no existe.
 
 ### Responsabilidades por capa (resumen)
 
@@ -761,24 +747,16 @@ Guía para seguir moviendo pantallas desde `apps/` hacia `frontend/` + `src/` si
 | Backend API | `src/<modulo>/infrastructure/ui/http/controllers/*.php` | Orquestación HTTP mínima: leer input, llamar a `application`, responder con `ContestarJson::enviar($error, $data)`. Sin `echo` de HTML ni `Lista` aquí. |
 | Caso de uso | `src/<modulo>/application/*.php` | Montar arrays de datos usando repositorios/servicios del contenedor. Devolver datos listos para serializar; el controlador HTTP llama a `ContestarJson::enviar`. |
 | Rutas HTTP | `src/<modulo>/config/routes.php` | Registrar `/src/<modulo>/<nombre>` con GET y POST si hace falta (compatibilidad). |
-| Frontend controlador | `frontend/<modulo>/controller/*.php` | `FrontBootstrap::boot()`, `PostRequest::getDataFromUrl('/src/...', $campos)`, construir `web\Lista` u otros componentes UI, pasar variables a la vista. |
+| Frontend controlador | `frontend/<modulo>/controller/*.php` | `FrontBootstrap::boot()`, `PostRequest::getDataFromUrl('/src/...', $campos)`, construir `frontend\shared\web\Lista` u otros componentes UI, pasar variables a la vista. |
 | Frontend vista | `frontend/<modulo>/view/*.phtml` | Presentación: HTML, scripts, `mostrar_tabla()`, sin consultas a BD ni contenedor. |
-| Compatibilidad legacy | `apps/<modulo>/controller/*.php` | Opcional: `require` al controlador `frontend` equivalente. Comentar que la URL `apps/...` está **deprecada** para enlaces nuevos. |
 
 ### Endpoints: un endpoint por acción
 - Evitar endpoints multiuso con parámetro dispatcher (`que`, `Qmod`, `salida`, `modo`, …).
 - Preferir **un endpoint por acción**: p. ej. `/src/<modulo>/<recurso>_lista`, `_update`, `_eliminar`. Lo mismo para `switch ($Qmod)` internos: cada rama → endpoint + caso de uso (p. ej. `actividad_publicar`, `actividad_importar`, …).
 - En `application`, separar clases por acción (`...Lista`, `...Update`, `...Eliminar`) para reducir `switch` y facilitar tests.
 - En `frontend`, llamar al endpoint concreto sin enviar campos de acciones no usadas.
-- Endpoints legacy con dispatcher: mantener solo como wrapper temporal, marcado deprecado; eliminar cuando `rg` no muestre referencias.
+- Si aparece un dispatcher heredado: cada rama pasa a un endpoint `/src/<modulo>/<accion>` con su caso de uso, se actualizan **todos** los consumidores JS en el mismo cambio y se borra el dispatcher. Si una rama devolvía HTML inline (`<form>`, `<select>`, tabla), esa parte va a `frontend/<modulo>/controller/<accion>_form.php` + vista `.phtml`.
 - **Excepción tolerable** (transición): dispatcher que agrupe salidas de lectura muy relacionadas si todas las ramas comparten el contrato JSON y casos de uso independientes en `application`; documentar que es transición.
-
-#### Playbook: eliminar dispatcher `*_ajax` / `*_update`
-1. Mapear cada rama del `switch` a un endpoint `/src/<modulo>/<accion>` y un caso de uso en `src/<modulo>/application/`.
-2. Actualizar **todos** los consumidores JS en el mismo cambio (`$.ajax` → URL acorde al `mod`/`que`).
-3. Ajustar `.done` a JSON estándar (`ContestarJson`) con `dataType: 'json'`.
-4. Borrar el dispatcher cuando `rg "<nombre_dispatcher>"` esté limpio.
-5. Si una rama devolvía **HTML inline** (`<form>`, `<select>`, tabla, etc.), esa parte va a `frontend/<modulo>/controller/<accion>_form.php` + vista `.phtml`; los `/src/...` no devuelven HTML de aplicación.
 
 ### Convención de naming en `src/<modulo>/application/`
 
@@ -793,31 +771,23 @@ Guía para seguir moviendo pantallas desde `apps/` hacia `frontend/` + `src/` si
 Reglas: no mezclar `*Service` en la raíz de `application/` (mover a `services/` o renombrar a caso de uso); un use case en raíz no debe heredar de `services/`; evitar que un use case de raíz `use` otro use case de raíz en runtime (señal de que uno debería ser helper en `services/`); componer vía controlador HTTP o `*Data`.
 
 ### Patrones de referencia en `ubis` (resumen)
-- Servicios `*Dropdown` en `src/.../application/services/`: **solo** `array` value => etiqueta; no instanciar `web\Desplegable` en `src`. El `<select>` se monta en `frontend/ubis/view/*.phtml` con `web\Desplegable::desdeOpciones`, etc.
+- Servicios `*Dropdown` en `src/.../application/services/`: **solo** `array` value => etiqueta; no instanciar `frontend\shared\web\Desplegable` en `src`. El `<select>` se monta en `frontend/ubis/view/*.phtml` con `frontend\shared\web\Desplegable::desdeOpciones`, etc.
 - Lecturas agrupadas en clases `*Data` + controlador HTTP mínimo con `ContestarJson::enviar`; frontend con `PostRequest::getDataFromUrl('/src/ubis/<endpoint>', ...)`.
 - Mutaciones: JSON estándar desde `src/`; proxies frontend pueden adaptar errores para AJAX antiguo.
-- Respuesta **texto plano** solo donde el consumidor legacy lo exige: p. ej. `centros_update` con `Content-Type: text/plain` y cuerpo desde caso de uso; formularios con `HashF` deben usar **URL absoluta** `rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update'` para que el hash coincida.
 - Direcciones: reutilizar `DireccionesResolver` donde aplique.
 
-### URLs canónicas y menús
-- Enlaces y menús **nuevos**: rutas bajo `frontend/.../controller/....php`.
-- Actualizar plantillas de documentación donde existan (`docs/legacy/obix/menus.csv`, `proves/aux_metamenus.csv`, seeds SQL de referencia). Bases en producción con paths en BD: planificar `UPDATE` acorde; el repo documenta el destino deseado.
-
-### Migración de vistas y render canónico
-- Al migrar un controlador a `frontend/<modulo>/controller`, migrar también la vista a `frontend/<modulo>/view` (`.phtml`); no dejar la vista canónica solo en `apps/<modulo>/view`.
+### Render de vistas
+- La vista de un controlador `frontend/<modulo>/controller` está en `frontend/<modulo>/view` (`.phtml`).
 - Patrón de render (p. ej. `encargossacd`, `misas`): en el controlador frontend:
   - `use frontend\shared\model\ViewNewPhtml;`
   - `$oView = new ViewNewPhtml('frontend\\<modulo>\\controller');`
   - `$oView->renderizar('nombre_plantilla.phtml', $a_campos);`
 - `ViewNewPhtml` resuelve rutas físicas sustituyendo `controller` por `view` bajo `DOCUMENT_ROOT` + `ConfigGlobal::$web_path`.
-- **Twig**: casos excepcionales; si se usa, el loader debe apuntar a un directorio bajo `apps/` donde exista configuración Twig acordada.
-- Cuando el frontend renderiza bien, eliminar copia legacy en `apps/<modulo>/view` y actualizar referencias (`grep`, exportaciones, menús). Revisar rutas hardcodeadas `apps/...` en JS/HTML.
+- **Twig**: `frontend\shared\model\ViewNewTwig`, con las plantillas en el mismo árbol `frontend/`.
+- Enlaces y menús: rutas bajo `frontend/.../controller/....php` (UI) y `/src/...` (API).
 
-### Convención para legacy en `apps/`
-- En `apps/<modulo>/controller`, preferir wrappers mínimos que deleguen en `frontend/...`.
-- Lógica antigua solo consulta/rollback: prefijo `z...` y aclarar que no son rutas canónicas.
-- Rutas nuevas: `frontend/...` (UI) y `/src/...` (API).
-- **No tocar** clases `Info*.php` en `apps/<modulo>/model/` (`Info3010`, …): metadatos de dossier (`extends core\DatosInfo`). El sistema las resuelve por número; aunque `rg` no muestre callers estáticos, **no** moverlas ni eliminarlas en refactors de pantalla.
+### Clases `Info*.php` (metadatos de dossier)
+**No tocar** las clases `Info*.php` de `src/<modulo>/domain/` (`Info3010`, …; `extends DatosInfoRepo`). El sistema las resuelve por número; aunque `rg` no muestre callers estáticos, **no** moverlas ni eliminarlas en refactors de pantalla.
 
 ### Bloques heredados: `src/<modulo>/application/legacy/`
 Para modelos legacy muy grandes (>~1000 LOC, SQL ad-hoc, tablas temporales) sin valor inmediato de reescritura, **aislar** en `application/legacy/` detrás de wrappers tipados en la raíz de `application/` (ej. `notas`: `Resumen` → wrappers `InformeStgrNumerarios`, etc.).
@@ -831,11 +801,10 @@ Para modelos legacy muy grandes (>~1000 LOC, SQL ad-hoc, tablas temporales) sin 
 
 ### Separación estricta frontend ↔ `src`
 - Vistas y controladores frontend **no** instancian `src\...\application\...` ni `use src\...` para lógica de aplicación. Toda obtención de datos vía **`PostRequest`** a `/src/<modulo>/<accion>`. Ejemplo detallado del módulo de administración de BD: **### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)**.
-- Comprobación práctica al migrar: `grep -n "use src\\\\" frontend/<modulo>/` debe dar **cero** resultados salvo contratos de dominio muy estables explícitamente permitidos.
-- Incumplimientos detectados en el pasado (corregir así): p. ej. importar `src/` desde controladores frontend en rutas tipo `actividad_tipo_get` → sustituir por endpoint JSON + `PostRequest`.
+- Comprobación práctica: `grep -n "use src\\\\" frontend/<modulo>/` debe dar **cero** resultados salvo contratos de dominio muy estables explícitamente permitidos.
 
 ### Desplegables devueltos por endpoints AJAX
-Por defecto los controladores `src/...` **no** devuelven HTML de `<select>`; `application` **no** instancia `web\Desplegable`. **Excepción acotada:** `devel_db_admin` expone `db_lugar` con fragmento HTML para jQuery `dataType: 'html'` (ver **### Patrón de referencia: `devel_db_admin`**).
+Por defecto los controladores `src/...` **no** devuelven HTML de `<select>`; `application` **no** instancia `frontend\shared\web\Desplegable`. **Excepción acotada:** `devel_db_admin` expone `db_lugar` con fragmento HTML para jQuery `dataType: 'html'` (ver **### Patrón de referencia: `devel_db_admin`**).
 
 **Contrato** (dentro de `data` del JSON, tras parsear si viene serializado): objeto con campos opcionales con defaults:
 
@@ -860,7 +829,7 @@ Por defecto los controladores `src/...` **no** devuelven HTML de `<select>`; `ap
 **Regla obligatoria en código nuevo y en migraciones:**
 - **Backend (`application` / controladores HTTP):** devolver `opciones` como **lista ordenada** de pares `[value, label]` usando `src\shared\domain\helpers\OpcionesDesplegable::enOrden($mapa)` o `OpcionesDesplegable::desdeFilas($rows)`.
 - **Frontend (JS):** usar el helper compartido (ver abajo), que itera arrays en orden y sigue aceptando mapas legacy por compatibilidad transitoria.
-- **Frontend (PHP, render inicial con `web\Desplegable`):** `notas_desplegable_opciones()` (y wrappers como `encargossacd_desplegable_opciones`) convierten arrays de pares a mapa asociativo preservando el orden de inserción.
+- **Frontend (PHP, render inicial con `frontend\shared\web\Desplegable`):** `notas_desplegable_opciones()` (y wrappers como `encargossacd_desplegable_opciones`) convierten arrays de pares a mapa asociativo preservando el orden de inserción.
 
 **Casos especiales:**
 - Desplegable SF + SV (misas): `opciones_sf` y `opciones_sv` también como arrays de pares; construir con `fnjs_construir_desplegable_centros_payload`.
@@ -901,7 +870,7 @@ Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload direc
 - Propiedades de casos de uso alimentados por POST: tipos tolerantes (`int|string`, `?string`, …) e inicialización neutra, **o** cast explícito en el controlador HTTP y tipos estrictos en `application`. Elegir una estrategia por caso (evitar `TypeError` en propiedades `int` rellenadas con string).
 
 ### Checklist al cambiar el contrato de un endpoint en `src/`
-1. `rg "<endpoint o salida>"` en `frontend/`, `apps/`, plantillas, `*.js`.
+1. `rg "<endpoint o salida>"` en `frontend/`, plantillas, `*.js`.
 2. Listar cada `$.ajax` / `.done` y el ancla DOM.
 3. Backend + **todos** los consumidores en el mismo cambio.
 4. `dataType: 'json'` y manejo de `success === false` con `mensaje`.
@@ -924,15 +893,8 @@ Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload direc
 4. `dataType: 'json'` y parseo de `ContestarJson`.
 5. Eliminar endpoint huérfano cuando no queden referencias.
 
-### Validación antes de dar por cerrado un slice migrado
-- `php -l` en ficheros tocados.
-- Comparar salida relevante con el baseline (ids, columnas, cardinalidad).
-- Probar con datos y caso vacío si aplica; si depende de ámbito (`rstgr`, etc.), probar ramas o documentar riesgo.
-
-### Qué evitar al migrar pantallas
+### Qué evitar
 - No mover lógica de negocio a `.phtml`.
-- No hacer que `src` renderice HTML de aplicación: prohibido en `application` y controladores HTTP instanciar `web\Desplegable`, `web\Lista`, `echo`/`print` de marcado, o devolver HTML desde use cases para tablas/listados.
+- No hacer que `src` renderice HTML de aplicación: prohibido en `application` y controladores HTTP instanciar `frontend\shared\web\Desplegable`, `frontend\shared\web\Lista`, `echo`/`print` de marcado, o devolver HTML desde use cases para tablas/listados.
 - No instanciar clases de `src/` desde `frontend/controller` ni `frontend/view` salvo excepción documentada: usar `PostRequest`.
 - No cambiar un endpoint sin actualizar **a la vez** todos los consumidores JS/PHP.
-- No eliminar wrappers `apps/` hasta que no queden referencias (y BD si aplica).
-

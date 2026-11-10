@@ -10,7 +10,7 @@ use frontend\shared\helpers\AjaxJsonSupport;
  * `gestion_plazas`).
  *
  * Migrada desde `apps/actividadplazas/controller/plazas_balance_dl.php`
- * siguiendo `refactor.md`.
+ * siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

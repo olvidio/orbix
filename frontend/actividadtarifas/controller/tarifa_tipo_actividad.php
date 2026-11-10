@@ -10,7 +10,7 @@
  *
  * Migrada desde
  * `apps/actividadtarifas/controller/tarifa_tipo_actividad.php` +
- * `tarifa_tipo_actividad_ajax.php` siguiendo `refactor.md`.
+ * `tarifa_tipo_actividad_ajax.php` siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

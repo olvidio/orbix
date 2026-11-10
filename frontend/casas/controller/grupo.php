@@ -7,7 +7,7 @@
  * directamente a `/src/casas/grupo_update` y `/src/casas/grupo_eliminar`.
  *
  * Migrada desde `apps/casas/controller/grupo_lista.php` +
- * `grupo_form.php` + `grupo_ajax.php` siguiendo `refactor.md`.
+ * `grupo_form.php` + `grupo_ajax.php` siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

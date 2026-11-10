@@ -194,7 +194,7 @@ paths:
       operationId: "post_encargossacd_ctr_get_select_data"
       summary: "Ctr Get Select Data"
       description: |
-        Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `refactor.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `refactor.md`).
+        Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `AGENTS.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `AGENTS.md`).
         
         Operacion: `form_data`.
         
@@ -911,7 +911,7 @@ paths:
       operationId: "post_encargossacd_listas_com_txt_get"
       summary: "Listas Com Txt Get"
       description: |
-        Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+        Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
         
         Operacion: `form_data`.
         
@@ -947,7 +947,7 @@ paths:
       operationId: "post_encargossacd_listas_com_txt_update"
       summary: "Listas Com Txt Update"
       description: |
-        Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+        Mutacion del texto de comunicacion para un par (clave, idioma). Si el texto llega vacio, se elimina la fila. Extraido de `EncargoTextoListasComAjax` (rama `que=update`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
         
         Operacion: `mutacion`.
         
@@ -1469,7 +1469,7 @@ paths:
       operationId: "post_encargossacd_zonas_get_select_data"
       summary: "Zonas Get Select Data"
       description: |
-        Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
+        Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `AGENTS.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
         
         Operacion: `form_data`.
         

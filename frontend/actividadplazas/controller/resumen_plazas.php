@@ -14,7 +14,7 @@ use frontend\shared\helpers\ListNavSupport;
  *
  * Migrada desde `apps/actividadplazas/controller/resumen_plazas.php` +
  * `apps/actividadplazas/controller/resumen_plazas_update.php` siguiendo
- * `refactor.md`.
+ * `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

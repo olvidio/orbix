@@ -11,7 +11,7 @@ use frontend\shared\domain\value_objects\DateTimeLocal;
  * Antes vivia en `apps/planning/domain/Planning.php` con namespace
  * `planning\domain`. Se ha movido a `frontend/planning/support/` como
  * parte de la migracion del modulo planning — el render HTML es
- * presentacion, no dominio (ver `refactor.md`).
+ * presentacion, no dominio (ver `AGENTS.md`).
  *
  * El shim legacy `planning\domain\Planning` se mantiene temporalmente
  * como subclase de esta clase hasta que no queden consumidores del

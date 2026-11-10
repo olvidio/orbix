@@ -2,7 +2,7 @@
 
 // Rutas HTTP JSON del módulo `encargossacd`. Registrar aquí los endpoints bajo
 // `/src/encargossacd/...` cuando se extraigan casos de uso desde controladores
-// legacy (patrón `refactor.md`). Las registra `public/index.php` vía glob sobre
+// legacy (patrón `AGENTS.md`). Las registra `public/index.php` vía glob sobre
 // `src/*/config/routes.php`.
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';

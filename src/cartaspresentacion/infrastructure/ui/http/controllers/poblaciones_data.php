@@ -6,7 +6,7 @@
  * filtro elegido (`get_H`, `get_r`, `get_dl`).
  *
  * El payload sigue el contrato estandar de desplegables dinamicos
- * (ver `refactor.md`), de modo que el frontend lo transforma con el
+ * (ver `AGENTS.md`), de modo que el frontend lo transforma con el
  * helper JS `fnjs_construir_desplegable`.
  */
 

@@ -15,6 +15,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 |---------|-----|
 | [`guia_tecnica_onboarding.md`](guia_tecnica_onboarding.md) | Mapa técnico para nuevos programadores (stack, DDD, BD, tests) |
 | [`AGENTS.md`](../AGENTS.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
+| [`agents_reglas_retiradas_historico.md`](agents_reglas_retiradas_historico.md) | Reglas de `AGENTS.md` retiradas al terminar la migración (solo consulta) |
 | [`docs/dev/backlog.md`](backlog.md) | Mejoras diferidas (ServerConf→`.env`, PostRequest interno sin HTTP) |
 | [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
 | [`docs/dev/hash_arquitectura.md`](hash_arquitectura.md) | HashF/HashB, patrón `link_spec` |
@@ -22,7 +23,6 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 | [`docs/dev/*_migracion_baseline.md`](.) | Plan e historial por módulo (slices, inventario, deuda post-refactor) |
 | [`docs/dev/frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md) | Controladores frontend con `use src\...` (regenerable; ver abajo) |
 | [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) | Resumen baseline PHPStan por prioridad A/B/C |
-| [`refactor.md`](../refactor.md) | **Obsoleto** — redirige a `AGENTS.md`; eliminar cuando no queden referencias |
 
 ---
 

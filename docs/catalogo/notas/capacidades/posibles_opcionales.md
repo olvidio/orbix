@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `posi
 
 ## Objetivo Funcional
 
-Gestiona PosiblesOpcionales. Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver refactor.md §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+Gestiona PosiblesOpcionales. Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver AGENTS.md §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
 
 ## Acciones Detectadas
 
@@ -39,7 +39,7 @@ Gestiona PosiblesOpcionales. Devuelve las asignaturas opcionales que puede cursa
 
 ## Pistas Desde Endpoints
 
-- Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `refactor.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+- Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `AGENTS.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
 
 ## Errores Conocidos
 

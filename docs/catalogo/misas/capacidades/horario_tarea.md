@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `hora
 
 ## Objetivo Funcional
 
-Gestiona HorarioTarea. Datos del horario de una tarea (modal horario_tarea.phtml). Simple lectura de t_start/t_end del EncargoHorario indicado por id_item_h. Se saca de la vista frontend para cumplir la regla de refactor.md: los controladores frontend/ no pueden instanciar repositorios de src\ ni tocar $GLOBALS['container'].
+Gestiona HorarioTarea. Datos del horario de una tarea (modal horario_tarea.phtml). Simple lectura de t_start/t_end del EncargoHorario indicado por id_item_h. Se saca de la vista frontend para cumplir la regla de AGENTS.md: los controladores frontend/ no pueden instanciar repositorios de src\ ni tocar $GLOBALS['container'].
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona HorarioTarea. Datos del horario de una tarea (modal horario_tarea.phtml
 
 ## Pistas Desde Endpoints
 
-- Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `refactor.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni tocar `$GLOBALS['container']`.
+- Datos del horario de una tarea (modal `horario_tarea.phtml`). Simple lectura de `t_start`/`t_end` del `EncargoHorario` indicado por `id_item_h`. Se saca de la vista frontend para cumplir la regla de `AGENTS.md`: los controladores `frontend/` no pueden instanciar repositorios de `src\` ni tocar `$GLOBALS['container']`.
 
 ## Errores Conocidos
 

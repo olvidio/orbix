@@ -15,7 +15,7 @@ use frontend\shared\helpers\ListNavSupport;
  *
  * Migrada desde `apps/actividadplazas/controller/peticiones_activ.php` +
  * `apps/actividadplazas/controller/peticiones_activ_ajax.php` siguiendo
- * `refactor.md`.
+ * `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

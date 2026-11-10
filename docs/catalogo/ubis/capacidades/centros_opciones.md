@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `cent
 
 ## Objetivo Funcional
 
-Gestiona CentrosOpciones. Devuelve el payload (solo datos) para poblar el <select> de centros en frontend\shared\web\CentrosQue. Sustituye el acceso directo desde CentrosQue al repositorio CentroDlRepositoryInterface (separación frontend ↔ backend, ver refactor.md).
+Gestiona CentrosOpciones. Devuelve el payload (solo datos) para poblar el <select> de centros en frontend\shared\web\CentrosQue. Sustituye el acceso directo desde CentrosQue al repositorio CentroDlRepositoryInterface (separación frontend ↔ backend, ver AGENTS.md).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona CentrosOpciones. Devuelve el payload (solo datos) para poblar el <selec
 
 ## Pistas Desde Endpoints
 
-- Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`. Sustituye el acceso directo desde `CentrosQue` al repositorio `CentroDlRepositoryInterface` (separación frontend ↔ backend, ver `refactor.md`).
+- Devuelve el payload (solo datos) para poblar el <select> de centros en `frontend\shared\web\CentrosQue`. Sustituye el acceso directo desde `CentrosQue` al repositorio `CentroDlRepositoryInterface` (separación frontend ↔ backend, ver `AGENTS.md`).
 
 ## Errores Conocidos
 

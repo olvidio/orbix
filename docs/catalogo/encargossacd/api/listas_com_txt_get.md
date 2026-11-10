@@ -19,7 +19,7 @@ estado_revision: "revisado"
 ---
 # Listas Com Txt Get
 
-Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+Lectura del texto de comunicacion para un par (clave, idioma). Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -48,7 +48,7 @@ Lee texto de comunicación por `clave` + `idioma`.
 
 ## Efectos colaterales
 
-- Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `refactor.md`).
+- Extraido de `EncargoTextoListasComAjax` (rama `que=get_texto`) para eliminar el dispatcher multiproposito (criterio `AGENTS.md`).
 
 ## Permisos
 

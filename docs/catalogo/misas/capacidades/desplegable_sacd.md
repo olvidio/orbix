@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `desp
 
 ## Objetivo Funcional
 
-Gestiona DesplegableSacd. Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de refactor.md (id, selected, filas ordenadas). rows conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
+Gestiona DesplegableSacd. Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de AGENTS.md (id, selected, filas ordenadas). rows conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ Gestiona DesplegableSacd. Opciones del desplegable dinámico de SACD en el modal
 
 ## Pistas Desde Endpoints
 
-- Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de `refactor.md` (id, selected, filas ordenadas). `rows` conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
+- Opciones del desplegable dinámico de SACD en el modal de la cuadrícula de zona. El payload sigue el espíritu del contrato de `AGENTS.md` (id, selected, filas ordenadas). `rows` conserva el orden del HTML legacy: opción actual, opción en blanco si aplica, resto ordenado por clave.
 
 ## Errores Conocidos
 

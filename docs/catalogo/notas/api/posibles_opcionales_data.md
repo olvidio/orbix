@@ -20,7 +20,7 @@ estado_revision: "revisado"
 
 Opcionales de sobra disponibles para una persona.
 
-Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `refactor.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
+Devuelve las asignaturas opcionales que puede cursar la persona con el contrato estandar de desplegable (ver `AGENTS.md` §"Desplegables devueltos por endpoints AJAX: payload + constructor en frontend").
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

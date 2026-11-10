@@ -16,7 +16,7 @@ use src\ubis\domain\criteria\DelegacionField;
 final class DbLugarDropdown
 {
     /**
-     * Payload JSON estándar de desplegable (contrato refactor.md).
+     * Payload JSON estándar de desplegable (contrato AGENTS.md).
      *
      * @return array{id: string, opciones: list<array{0: string, 1: string}>, selected: string, blanco: bool}
      */

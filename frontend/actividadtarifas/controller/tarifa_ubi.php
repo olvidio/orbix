@@ -10,7 +10,7 @@
  * `/src/actividadtarifas/tarifa_ubi_*`.
  *
  * Migrada desde `apps/actividadtarifas/controller/tarifa_ubi.php` +
- * `tarifa_ajax.php` (dispatcher legacy) siguiendo `refactor.md`.
+ * `tarifa_ajax.php` (dispatcher legacy) siguiendo `AGENTS.md`.
  */
 
 use frontend\casas\helpers\CasasPayload;

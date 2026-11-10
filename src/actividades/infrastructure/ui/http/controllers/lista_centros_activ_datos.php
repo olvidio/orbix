@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 /**
  * Endpoint backend para `lista_centros_activ`.
  * Recibe los filtros via POST y delega en ListaCentrosActivDatos.
- * Responde con JSON mediante ContestarJson::enviar (patron refactor.md).
+ * Responde con JSON mediante ContestarJson::enviar (patron AGENTS.md).
  */
 
 use src\actividades\application\ListaCentrosActivDatos;

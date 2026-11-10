@@ -15,7 +15,7 @@ use frontend\shared\helpers\PayloadCoercion;
  *
  * Migrada desde `apps/actividadplazas/controller/gestion_plazas.php` +
  * `apps/actividadplazas/controller/gestion_plazas_ajax.php` siguiendo
- * `refactor.md`. Sin `use src\...`.
+ * `AGENTS.md`. Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;

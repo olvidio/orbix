@@ -6,7 +6,7 @@
  * errores.
  *
  * Migrada desde `apps/actividadplazas/controller/incorporar_peticion.php`
- * (que mezclaba UI + mutacion) siguiendo `refactor.md`.
+ * (que mezclaba UI + mutacion) siguiendo `AGENTS.md`.
  */
 
 use frontend\shared\config\AppUrlConfig;

@@ -8,7 +8,7 @@ use frontend\shared\FrontBootstrap;
  * Popup estatico con la leyenda de colores/estilos del planning.
  *
  * Antes vivia en `apps/planning/controller/leyenda.php` y usaba Twig;
- * ahora se renderiza como PHTML canonico segun `refactor.md`.
+ * ahora se renderiza como PHTML canonico segun `AGENTS.md`.
  */
 
 // INICIO Cabecera global de URL de controlador *********************************

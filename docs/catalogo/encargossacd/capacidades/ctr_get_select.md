@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `ctr_
 
 ## Objetivo Funcional
 
-Gestiona EncargoCtrSelect. Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en refactor.md (id, name, opciones, selected, blanco, val_blanco, action) para que el frontend monte el <select> con fnjs_construir_desplegable (o el modelo frontend/encargossacd/model/DesplCentros). Importante: esta clase vive en capa application y por tanto **no** puede instanciar frontend\shared\web\Desplegable (ver refactor.md).
+Gestiona EncargoCtrSelect. Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en AGENTS.md (id, name, opciones, selected, blanco, val_blanco, action) para que el frontend monte el <select> con fnjs_construir_desplegable (o el modelo frontend/encargossacd/model/DesplCentros). Importante: esta clase vive en capa application y por tanto **no** puede instanciar frontend\shared\web\Desplegable (ver AGENTS.md).
 
 ## Acciones Detectadas
 
@@ -40,7 +40,7 @@ Gestiona EncargoCtrSelect. Payload JSON para el desplegable de centros segun fil
 
 ## Pistas Desde Endpoints
 
-- Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `refactor.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `refactor.md`).
+- Payload JSON para el desplegable de centros segun filtro (y zona opcional). Devuelve el contrato estandar definido en `AGENTS.md` (`id`, `name`, `opciones`, `selected`, `blanco`, `val_blanco`, `action`) para que el frontend monte el `<select>` con `fnjs_construir_desplegable` (o el modelo `frontend/encargossacd/model/DesplCentros`). Importante: esta clase vive en capa `application` y por tanto **no** puede instanciar `frontend\shared\web\Desplegable` (ver `AGENTS.md`).
 
 ## Errores Conocidos
 

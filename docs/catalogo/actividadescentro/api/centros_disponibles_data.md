@@ -29,7 +29,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Objetivo funcional
 
 Sucesor de las ramas `nuevo_*` del dispatcher legacy `activ_ctr_ajax.php` (agrupadas en un único caso
-de uso con parámetro `tipo`, por la excepción de `refactor.md` para dispatchers de lectura). Según el
+de uso con parámetro `tipo`, por la excepción de `AGENTS.md` para dispatchers de lectura). Según el
 `tipo` elige repositorio (`CentroDl` o `CentroEllas` para variantes `sf*`) y aplica un filtro sobre
 `tipo_ctr` / `tipo_labor`. Para `tipo=sg` enriquece cada centro con el número de actividades en el
 periodo `[inicio, fin]` y la diferencia de días con la actividad más próxima del centro respecto a

@@ -21,7 +21,7 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
  * proxima/anterior actividad del centro respecto a `f_ini_act`.
  *
  * Sucesor de las ramas `nuevo_*` del dispatcher legacy `activ_ctr_ajax.php`.
- * Por la excepcion tolerable de `refactor.md` (dispatcher de lectura con
+ * Por la excepcion tolerable de `AGENTS.md` (dispatcher de lectura con
  * ramas que comparten contrato JSON) se agrupan en un unico use case con
  * parametro `tipo`.
  */

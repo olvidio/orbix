@@ -33,7 +33,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
  *
  *   - Ya no renderiza vistas (`ViewNewPhtml`): `datosParaVistaTesera()`
  *     devuelve un array neutro y la PHTML monta el HTML (separacion
- *     datos / UI, `refactor.md`).
+ *     datos / UI, `AGENTS.md`).
  *   - Magic numbers encapsulados como constantes nombradas
  *     (`ID_NIVEL_ASIG_DESDE/HASTA`, `PLAN_NUEVO`, `PLAN_VIEJO`).
  *     El rango de opcionales concretas vive en {@see HuecoOpcionalDePlan}.

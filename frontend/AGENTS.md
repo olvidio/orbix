@@ -99,4 +99,4 @@ $('#contenedor-tabla').on('rowSelected', 'table', function(e, rowData) {
 ## Persistencia de Estado (UI State)
 - El estado de la UI (scroll, selección) se guarda automáticamente en `sessionStorage` antes de navegar.
 - Se usa la URL de la página (`refe`) como clave para evitar colisiones.
-- La restauración ocurre automáticamente al volver atrás si la tabla usa la clase `web\Lista`.
+- La restauración ocurre automáticamente al volver atrás si la tabla usa la clase `frontend\shared\web\Lista`.

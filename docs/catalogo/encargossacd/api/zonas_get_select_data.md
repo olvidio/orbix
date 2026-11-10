@@ -19,7 +19,7 @@ estado_revision: "revisado"
 ---
 # Zonas Get Select Data
 
-Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `refactor.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
+Payload JSON para el desplegable de zonas (grupo «zonas misas»). Devuelve el contrato estandar definido en `AGENTS.md`, sin instanciar `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 

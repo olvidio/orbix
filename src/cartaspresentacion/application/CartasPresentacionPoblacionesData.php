@@ -18,7 +18,7 @@ use src\shared\domain\helpers\OpcionesDesplegable;
  * `apps/cartaspresentacion/controller/cartas_presentacion_ajax.php`.
  *
  * El payload devuelto sigue el contrato estandar
- * (ver `refactor.md > Desplegables devueltos por endpoints AJAX`), de
+ * (ver `AGENTS.md > Desplegables devueltos por endpoints AJAX`), de
  * modo que el frontend lo transforma con `fnjs_construir_desplegable`.
  */
 final class CartasPresentacionPoblacionesData

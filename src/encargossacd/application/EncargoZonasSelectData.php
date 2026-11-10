@@ -7,7 +7,7 @@ use src\shared\domain\helpers\OpcionesDesplegable;
 
 /**
  * Payload JSON para el desplegable de zonas (grupo «zonas misas»).
- * Devuelve el contrato estandar definido en `refactor.md`, sin instanciar
+ * Devuelve el contrato estandar definido en `AGENTS.md`, sin instanciar
  * `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
  */
 final class EncargoZonasSelectData

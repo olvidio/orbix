@@ -17,7 +17,7 @@ use frontend\shared\helpers\FuncTablasSupport;
  *
  * Migrada desde `apps/actividadessacd/controller/activ_sacd.php` +
  * `apps/actividadessacd/controller/activ_sacd_ajax.php` (dispatcher
- * legacy) siguiendo el patron de `refactor.md`. Sin `use src\...`.
+ * legacy) siguiendo el patron de `AGENTS.md`. Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;
