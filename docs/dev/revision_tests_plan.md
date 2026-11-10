@@ -534,6 +534,17 @@ Unit con mocks (3 ficheros, ≈ 45 casos): `ActividadPublicar`, `ActividadImport
 5. **Capas:** `ActividadQueDatos` y `TipoActivFormNuevo` (en `src/`) instancian `frontend\actividades\helpers\ActividadTipo`, capturan su salida con `ob_*` y construyen HTML a mano (mismo patrón que `procesos` y `pasarela`).
 6. `ActividadSelectUbiData` ejecuta SQL directo con `GlobalPdo` (`oDBC`/`oDBPC`) en un caso de uso de `application`.
 
+### `asistentes` (10 clases sin test al empezar; en curso: 7/21 pendientes)
+
+Hecho (unit, 1 fichero, 26 casos): `ListaUltimQueCtrData`, `QueCtrListaData` (acción y campos ocultos por lista, grupo marcado, periodo por defecto) y las ramas previas de `AsistenteMoverData` (persona/actividad inválida, asistente inexistente, datos de otra dl, selección vs `id_pau`).
+
+**Pendiente:** `ActivPendientesSelectData` (299), `FormActividadesDeUnaPersonaData` (214), `ListaActivCtrData` (216), `ListaEstCtrData` (217), `ListaUltimaActivData` (285), `Select_actividades_de_una_persona` (351), `TablaPeticionesData` (245) y el camino feliz de `AsistenteMoverData` (necesita `ConfigSnapshot` con curso y `TiposActividades`). Varias construyen `frontend\shared\web\Lista` y HTML dentro de `src/` (p. ej. `ListaUltimaActivData` devuelve `tabla_html`/`stats_html`), así que además de tests piden separar datos y presentación.
+
+**Hallazgos (sin corregir):**
+1. `QueCtrListaData`, lista `profesion`: la acción apunta a `programas/sm-agd/lista_profesion.php`, y la carpeta `programas/` **no existe** en el repositorio: ese formulario lleva a una ruta rota.
+2. `AsistenteMoverData` abre un bloque `if ($oActividad !== null) {` sin indentar y recorre un `switch ($sactividad)` que solo conoce `ca`, `cv` y `crt`: para cualquier otro tipo de actividad el rango del curso queda vacío (`''`/`''`) y el criterio `between` se construye con cadenas vacías.
+
+
 
 
 
