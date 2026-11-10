@@ -167,7 +167,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 1.4b Tests unitarios de las 6 entidades sin test (hechas: `ActividadAllDatosCampos`, `Plantilla`, y las de 1.2/1.3): `ActividadAllDatosCampos`, ~~`DlListas`, `PersonaBDU`, `IdMatchPersona`~~ (hechas en 1.2), ~~`PropuestaEncargoSacd`~~ (hecha en 1.3), `Plantilla` (con 1.4).
 - [x] 1.5 `permisos`: estructura y tests (cobertura 28 % → 97 %). Ver sección 14.
 - [x] 1.6 `planning`: tests de los casos de uso sin cubrir + integración (cobertura 45 % → 62 %). Ver sección 16.
-- [ ] 1.7 Casos de uso sin test, módulo por módulo (se desglosa tras 0.2).
+- [ ] 1.7 Casos de uso sin test, módulo por módulo (desglose y avance en la sección 17).
 
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
@@ -376,3 +376,21 @@ Qué se verifica: tabla de personas según marcadores (`n` por defecto, `a`, `s`
 - Los tres servicios grandes siguen por debajo del 65 %: ramas de periodos, de actividades sin proceso y de permisos por actividad (paso 2.11).
 - Los controladores HTTP (7) y `routes.php` no tienen test; se cubrirán con E2E (fase 3).
 - **Test intermitente fuera de este módulo:** `Tests\unit\notas\notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` falló una vez en la suite completa y pasó en las 3 ejecuciones aisladas y en la siguiente suite completa. Revisarlo en el paso 2.3 (`notas`): probablemente depende del orden o de estado compartido.
+
+---
+
+## 17. Paso 1.7: casos de uso sin test, módulo por módulo (en curso)
+
+Método: pequeñas clases con lógica propia → unit con mocks (si la dependencia es una interfaz o una clase no `final`); clases `final` o que encadenan servicios `final` y los grandes `*Data` de consulta → integración con el contenedor real (la clase de fallo más habitual es un fatal con respuesta 200, que solo se ve ejecutando). Cada lote termina en commit propio. Seguimiento con `php tools/qa/check_test_application.php [--modulo=X] [--list]`.
+
+### `encargossacd` (39 clases sin test al empezar)
+
+Hecho en el primer lote: `OpcionesSeccionData`, `EncargoLstTipoEncData`, `EncargoZonasSelectData`, `SacdSelectData`, `PropuestasCentrosPorFiltro`, `PropuestasAjaxGetLista`, `PropuestasListaEncData`, `PropuestasAjaxDispatch` (unit 7 casos + integración 30).
+
+Pendiente (por tamaño): `CtrGetFichaData` (460 líneas), `CtrFichaUpdate` (458), `PropuestasEncargosUbiHtml` (363), `SacdFichaData`, `ListasComSacdData`, `PropuestasListaSacdData`, `ListasCData`, `ListasDData`, `ListasExigenciaCtrData`, `EncargoSacdHorarioVerData`, `ListasAData`, `ListasBData`, `EncargoVerData`, `SacdAusenciasUpdate`, `PropuestasAprobarService`, `ListasComCtrData`, `SacdAusenciasGetData`, `ListasClData`, `EncargoHorarioVerData`, `EncargoSacdHorarioUpdate`, `EncargoHorarioSelectData`, `EncargoHorarioUpdate`, `PropuestasHorarioTexto`, `EncargoVerNuevo`, `EncargoComprobacionesCtr`, `CtrFichaData`, `ListasComTxtData`, `EncargoVerEditar`, `EncargoFunciones`, `PropuestasAprobar`, `PropuestasCrearTabla` (las dos últimas escriben/crean tablas: hacerlas con BD de pruebas aislada).
+
+### Hallazgo de seguridad (corregido): inyección SQL en `SacdSelectData`
+
+`/src/encargossacd/sacd_select_data` metía `filtro_sacd` (POST/GET) en un fragmento SQL escapado con `addslashes()`, que **no protege en PostgreSQL con `standard_conforming_strings=on`** (la barra invertida no escapa la comilla). Con `' OR 1=1 --` la consulta devolvía las **5752** personas en lugar de los **166** sacd activos, y habría permitido `UNION` con otras tablas (p. ej. `aux_usuarios`). Ahora solo se aceptan códigos de tabla (`[a-z0-9_]{1,10}`; el desplegable del frontend envía `n`, `a`, `sssc`, `cp_sss`) y cualquier otro valor devuelve la lista vacía. Commit `cb52d5ead`, con test (17 casos, incluido un `UNION`).
+
+**Auditoría del mismo patrón** (métodos que reciben un fragmento SQL en texto: `getArraySacd`, `getArrayCentros`, `getArrayCasas`, `getArrayPoblaciones`, `getArrayRolesCondicion`…): se revisaron todos los llamadores con argumento variable. Los demás construyen la condición con constantes, enteros convertidos (`implode` de ids) o valores de la sesión; no se encontró otra inyección por petición. Riesgo residual sin corregir: `CambioUsuarioPropiedadPrefItemData` interpola `csv_id_pau` del propio usuario (dato guardado por un administrador) y `ActividadLugar` interpola la delegación de la sesión. **Recomendación:** sustituir estos `getArrayXxx(string $condicion)` por `matching(Criteria)` (como el resto de la migración) para que no pueda reaparecer.
