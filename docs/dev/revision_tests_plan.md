@@ -383,6 +383,42 @@ Qué se verifica: tabla de personas según marcadores (`n` por defecto, `a`, `s`
 
 Método: pequeñas clases con lógica propia → unit con mocks (si la dependencia es una interfaz o una clase no `final`); clases `final` o que encadenan servicios `final` y los grandes `*Data` de consulta → integración con el contenedor real (la clase de fallo más habitual es un fatal con respuesta 200, que solo se ve ejecutando). Cada lote termina en commit propio. Seguimiento con `php tools/qa/check_test_application.php [--modulo=X] [--list]`.
 
+### Resumen del paso 1.7 (estado y pendiente)
+
+**Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning` y `permisos` (1.5/1.6). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
+
+**Pendiente (clases de `application` sin test al 2026-11-10, tras `asistentes`):**
+
+| Módulo | Sin test / total | Notas |
+|---|---|---|
+| `actividadestudios` | 14 / 34 | el más grande |
+| `casas` | 8 / 16 | |
+| `personas` | 6 / 17 | escribe datos |
+| `cambios` | 6 / 22 | avisos de cambios (ver test intermitente) |
+| `dossiers` | 6 / 12 | |
+| `actividadplazas` | 6 / 15 | |
+| `shared` | 6 / 12 | |
+| `actividadtarifas` | 5 / 15 | |
+| `configuracion` | 5 / 6 | |
+| `actividadcargos` | 4 / 11 | |
+| `usuarios` | 3 / 8 | decide permisos |
+| `menus`, `certificados`, `profesores`, `cartaspresentacion` | 2 / cada uno | |
+| `tablonanuncios` | 1 / 1 | |
+
+**Otros huecos de la fase 1 anotados en sus módulos:** camino feliz de `AsistenteMoverData`; `SincroDB::syncro` completo (BD de listas y varias dl); el informe legacy `notas\application\legacy\Resumen` solo se cubre de forma indirecta; la corrección de secuencias de `DBPropuestas` no tiene test.
+
+**Tests intermitentes (a estabilizar en la fase 2):** `Tests\unit\notas\notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` (datos aleatorios del `NotasFactory`, debería vivir en `tests/integration`) y `cambios\application\AvisosGenerarTablaIntegracionTest` (falla justo tras ejecuciones pesadas).
+
+**Hallazgos sin corregir, por tema** (el detalle y el test que los fija están en la sección de cada módulo):
+- **Capas (HTML/UI/SQL dentro de `src/`):** `UsuarioPermActivData` y `FasesActivCambioActividadTipoHtml` (procesos), `ExportarQueActividadTipoHtml` (pasarela), `ActividadQueDatos`, `TipoActivFormNuevo` y `ActividadSelectUbiData` (actividades), `ListaUltimaActivData` y otras `Lista*` de asistentes; service locators en `UbiContactsTrait` y `FormActividadesDeUnaPersonaData`.
+- **`exit()`/`die` dentro del flujo (matan el request y los tests):** `UbiFactory::newUbi`, `ListaUltimaActivData`, `PermisosActividades::isCompletada`, `ConfigSnapshot::any_final_curs`.
+- **Pantallas o rutas rotas:** «cl sss+» (`ListasClData`, tabla `d_cargos` inexistente), lista `profesion` de asistentes (`programas/` no existe), opciones `ctr_*_ex` de `ListCtrData` (devuelven lista vacía), grupo `sssc` de `ListaEstCtrData`.
+- **Lógica incorrecta con comportamiento fijado en tests:** `esta_semana` en lunes (misas), unión con `+` en `BuscarPlanCtrData`, comprobación `'.'` de tipo imposible (`ActividadEditar`/`ActividadCambiarTipo`), comparación `string !== int` en las plazas de la dl, patrón de tipo vacío en `ActivPendientesSelectData`, `ActividadImportar` regenera el proceso tras fallo de guardado, `ActividadDuplicar` sin proceso, `SincroPersonas` cuenta vínculos sin `id_orbix`.
+- **Seguridad:** contraseñas de roles con `rand()` (`CrearUsuarios`), reflexión sobre clases de la sesión (`ApptablesUpdate`), SQL interpolado en `SincroIndexData`.
+- **Permisos/encargos:** los de las secciones 14 y 17 de `encargossacd` (p. ej. `finEncargo` sin cerrar horarios, filtro `/[74]/` demasiado laxo).
+
+**Acciones fuera del repositorio:** (1) producción: reparar secuencias de las tablas staging de `encargossacd` (SQL en la sección 12) y probar una sincronización de `dbextern` en desarrollo antes de desplegar los arreglos de `f_inc` y de profesión/incorporación; (2) submódulo `docs/guias`: quitar `anadir_ctr_tarea` de `plan_de_misas.md`; (3) scripts `.sh` locales: quitar `pasarela` de `SKIP_MODULES`.
+
 ### `encargossacd` (39 clases sin test al empezar)
 
 Hecho en el primer lote: `OpcionesSeccionData`, `EncargoLstTipoEncData`, `EncargoZonasSelectData`, `SacdSelectData`, `PropuestasCentrosPorFiltro`, `PropuestasAjaxGetLista`, `PropuestasListaEncData`, `PropuestasAjaxDispatch` (unit 7 casos + integración 30).
