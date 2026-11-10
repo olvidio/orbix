@@ -8,7 +8,6 @@ use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\PersonaPublicacion;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -35,18 +34,115 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     public function listas(): array
     {
         $miSigla = ConfigGlobal::mi_delef();
-        $dlSinEsquema = $this->delegacionesSinEsquemaOrbix();
+        $delegaciones = $this->delegacionRepository->matching(
+            Criteria::create()->orderBy(DelegacionField::Dl),
+        );
+        $estados = [];
+        foreach ($delegaciones as $delegacion) {
+            $estados[] = [
+                (string) ($delegacion->getDlVo()->value() ?? ''),
+                (bool) $delegacion->isActive(),
+            ];
+        }
+        $sinEsquema = $this->delegacionesSinEsquemaOrbix($delegaciones);
+        $dlSinEsquema = self::siglasActaSinEsquema($sinEsquema, ConfigGlobal::mi_sfsv() === 2);
         $siglasActa = array_values(array_unique(array_merge([$miSigla], array_keys($dlSinEsquema))));
+
+        $opcionesCertificado = array_diff_key(
+            $this->siglasEsquemaOrbixExceptoPropia(),
+            self::siglasCertificadoInactivas($estados),
+        ) + self::siglasCertificadoSinEsquema($sinEsquema);
+        ksort($opcionesCertificado, SORT_NATURAL | SORT_FLAG_CASE);
 
         return [
             'mi_sigla' => $miSigla,
             'dl_sin_esquema' => $dlSinEsquema,
             'opciones_certificado_dl' => self::conSiglaRegionDelEsquema(
-                $this->siglasEsquemaOrbixExceptoPropia(),
+                $opcionesCertificado,
                 ConfigGlobal::mi_region(),
             ),
             'siglas_acta_permitidas' => $siglasActa,
         ];
+    }
+
+    /**
+     * Una sigla «dl…» es una delegación; el resto (crB, cg, …) son regiones u
+     * organismos que no levantan actas en Orbix: sus notas llegan como certificado.
+     */
+    public static function esSiglaDeDelegacion(string $sigla): bool
+    {
+        return strncasecmp(trim($sigla), 'dl', 2) === 0;
+    }
+
+    /**
+     * Delegaciones sin esquema Orbix que se ofrecen como sigla de acta (p. ej. dlu).
+     *
+     * @param list<string> $siglasSinEsquema siglas de `xu_dl` activas y sin esquema
+     * @return array<string, string> sigla => sigla (con sufijo «f» en sf)
+     */
+    public static function siglasActaSinEsquema(array $siglasSinEsquema, bool $esSf): array
+    {
+        $out = [];
+        foreach ($siglasSinEsquema as $dl) {
+            if (!self::esSiglaDeDelegacion($dl)) {
+                continue;
+            }
+            $sigla = $dl . ($esSf ? 'f' : '');
+            $out[$sigla] = $sigla;
+        }
+        ksort($out, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $out;
+    }
+
+    /**
+     * Regiones sin esquema Orbix (crB, crAfom, cg, …): se ofrecen como certificado,
+     * sin el prefijo «cr».
+     *
+     * @param list<string> $siglasSinEsquema siglas de `xu_dl` activas y sin esquema
+     * @return array<string, string> sigla => sigla
+     */
+    public static function siglasCertificadoSinEsquema(array $siglasSinEsquema): array
+    {
+        $out = [];
+        foreach ($siglasSinEsquema as $dl) {
+            if (self::esSiglaDeDelegacion($dl)) {
+                continue;
+            }
+            $sigla = self::siglaCertificadoSinPrefijoCr($dl);
+            if ($sigla !== '') {
+                $out[$sigla] = $sigla;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Siglas de certificado cuya delegación está inactiva en `xu_dl` (p. ej. Iers,
+     * absorbida en crH): no se ofrecen aunque su esquema siga existiendo. Una sigla
+     * que no está en la tabla, o que tiene alguna fila activa, no se considera inactiva.
+     *
+     * @param list<array{0: string, 1: bool}> $estados pares [dl, activa]
+     * @return array<string, string> sigla => sigla
+     */
+    public static function siglasCertificadoInactivas(array $estados): array
+    {
+        $activas = [];
+        $inactivas = [];
+        foreach ($estados as [$dl, $activa]) {
+            $sigla = self::siglaCertificadoSinPrefijoCr($dl);
+            if ($sigla === '') {
+                continue;
+            }
+            if ($activa) {
+                $activas[$sigla] = $sigla;
+            } else {
+                $inactivas[$sigla] = $sigla;
+            }
+        }
+
+        return array_diff_key($inactivas, $activas);
     }
 
     /**
@@ -241,24 +337,24 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
     }
 
     /**
-     * DL activas (tabla delegaciones) sin esquema Orbix.
+     * Siglas activas de la tabla delegaciones sin esquema Orbix (ni la propia ni «Otra»).
      *
-     * @return array<string, string> sigla => etiqueta
+     * @param iterable<\src\ubis\domain\entity\Delegacion> $delegaciones
+     * @return list<string>
      */
-    private function delegacionesSinEsquemaOrbix(): array
+    private function delegacionesSinEsquemaOrbix(iterable $delegaciones): array
     {
         $miDele = ConfigGlobal::mi_dele();
         $sfsv = ConfigGlobal::mi_sfsv();
         $suffix = $sfsv === 2 ? 'f' : 'v';
         $database = $sfsv === 2 ? 'sf' : 'sv';
-        $oConfigDB = new ConfigDB($database);
-
-        $delegaciones = $this->delegacionRepository->matching(
-            Criteria::create()->where(Filter::eq(DelegacionField::Active, true))->orderBy(DelegacionField::Dl),
-        );
+        $oConfigDB = null;
 
         $out = [];
         foreach ($delegaciones as $delegacion) {
+            if (!$delegacion->isActive()) {
+                continue;
+            }
             $dlCode = (string) ($delegacion->getDlVo()->value() ?? '');
             $region = (string) ($delegacion->getRegionVo()->value() ?? '');
             if ($dlCode === '' || $region === '' || $dlCode === $miDele) {
@@ -267,14 +363,12 @@ final class ActaPersonaFormListas implements SiglaActaPermitida
             if (strcasecmp($dlCode, 'Otra') === 0) {
                 continue;
             }
+            $oConfigDB ??= new ConfigDB($database);
             if ($this->delegacionTieneEsquemaOrbix($region, $dlCode, $oConfigDB, $suffix)) {
                 continue;
             }
-            $sigla = $dlCode . ($sfsv === 2 ? 'f' : '');
-            $out[$sigla] = $sigla;
+            $out[] = $dlCode;
         }
-
-        ksort($out, SORT_NATURAL | SORT_FLAG_CASE);
 
         return $out;
     }

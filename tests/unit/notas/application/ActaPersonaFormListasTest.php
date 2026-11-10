@@ -77,4 +77,43 @@ final class ActaPersonaFormListasTest extends TestCase
         $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlmOv'));
         $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('', 'H'));
     }
+
+    public function test_sin_esquema_solo_las_delegaciones_van_a_acta(): void
+    {
+        $sinEsquema = ['cg', 'crAfom', 'crB', 'crCam', 'crCoe', 'dlu'];
+        $this->assertSame(['dlu' => 'dlu'], ActaPersonaFormListas::siglasActaSinEsquema($sinEsquema, false));
+        $this->assertSame(['dluf' => 'dluf'], ActaPersonaFormListas::siglasActaSinEsquema($sinEsquema, true));
+    }
+
+    public function test_sin_esquema_regiones_y_cg_van_a_certificado_sin_prefijo_cr(): void
+    {
+        $sinEsquema = ['cg', 'crAfom', 'crB', 'crCam', 'crCoe', 'dlu'];
+        $this->assertSame(
+            ['cg' => 'cg', 'Afom' => 'Afom', 'B' => 'B', 'Cam' => 'Cam', 'Coe' => 'Coe'],
+            ActaPersonaFormListas::siglasCertificadoSinEsquema($sinEsquema)
+        );
+    }
+
+    public function test_siglas_certificado_inactivas_segun_delegacion(): void
+    {
+        $estados = [['crIers', false], ['crH', true], ['dlb', true], ['crE', false]];
+        $this->assertSame(
+            ['Iers' => 'Iers', 'E' => 'E'],
+            ActaPersonaFormListas::siglasCertificadoInactivas($estados)
+        );
+    }
+
+    public function test_sigla_con_alguna_fila_activa_no_es_inactiva(): void
+    {
+        $estados = [['crH', true], ['H', false], ['', false]];
+        $this->assertSame([], ActaPersonaFormListas::siglasCertificadoInactivas($estados));
+    }
+
+    public function test_es_sigla_de_delegacion(): void
+    {
+        $this->assertTrue(ActaPersonaFormListas::esSiglaDeDelegacion('dlu'));
+        $this->assertTrue(ActaPersonaFormListas::esSiglaDeDelegacion('dlmO'));
+        $this->assertFalse(ActaPersonaFormListas::esSiglaDeDelegacion('crB'));
+        $this->assertFalse(ActaPersonaFormListas::esSiglaDeDelegacion('cg'));
+    }
 }
