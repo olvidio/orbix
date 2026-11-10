@@ -49,6 +49,9 @@ class UbisTablaDataTest extends myTest
     {
         $out = $GLOBALS['container']->get(UbisTablaData::class)->execute(['tipo' => 'ctr', 'loc' => 'dl']);
 
-        $this->assertArrayHasKey('error', $out);
+        // Situación prevista, no un fallo: aviso al usuario y sin datos de tabla.
+        $this->assertArrayHasKey('aviso_txt', $out);
+        $this->assertArrayNotHasKey('error', $out);
+        $this->assertArrayNotHasKey('a_valores', $out);
     }
 }

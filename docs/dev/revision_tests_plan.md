@@ -1,6 +1,6 @@
 # Revisión de tests: completitud y calidad por módulo
 
-> **Estado:** fase 0 completa (2026-11-10). Siguiente: fase 1, paso 1.0.
+> **Estado:** fase 0 completa (2026-11-10). Fase 1: paso 1.0 hecho; siguiente 1.1.
 > **Cómo retomar:** leer las secciones 2–4, buscar en la sección 6 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese. Cada paso termina con tests en verde y un commit propio. Presupuesto de IA: sección 7.
 
 ---
@@ -159,7 +159,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 0.3 Umbrales y decisiones (sección 8).
 
 **Fase 1**
-- [ ] 1.0 Arreglar los 7 tests rotos de la línea base (sección 8) y aplicar las decisiones sobre `pasarela` y `devel_codegen` en `check_test_coverage.sh`.
+- [x] 1.0 Arreglar los 7 tests rotos de la línea base (sección 8). Detalle en la sección 9.
 - [ ] 1.1 Tests de los 5 VOs sin cubrir.
 - [ ] 1.2 Factory `dbextern` + integración de `PgPersonaBDURepository` y `PgIdMatchPersonaRepository`.
 - [ ] 1.3 Integración de `PgPropuestaEncargoSacdRepository` y `...HorarioRepository`.
@@ -237,3 +237,20 @@ Peores en `application/` (sin test / total): `dbextern` 16/16, `encargossacd` 39
 | `devel_codegen` | **Excluir** (solo `config/`, 3 líneas); documentar en el script | Sin lógica propia en `src/`; el generador vive fuera |
 | Infection (mutation testing) | **Aplazar**; valorar tras 2.1 (`permisos`) como prueba piloto | No instalado; coste alto, y antes hay huecos básicos |
 | Cobertura en CI | Usar `build/phpunit-no-stop.xml` + `tools/qa/cobertura_por_modulo.php`; clover en `build/artifacts/` (ignorado por git) | Ya existe la config; evita `stopOnFailure` |
+
+---
+
+## 9. Paso 1.0: cómo se cerró la línea base (2026-11-10)
+
+| Test roto | Causa | Arreglo |
+|-----------|-------|---------|
+| `UbisTablaDataTest::test_sin_criterio_pide_algun_criterio` | Test desfasado: el caso de uso devuelve `aviso_txt` (situación prevista), no `error` | Test corregido |
+| `PgAsignaturasMatchingTest` (plan de estudios) | Filtraba por plan `2`, que ya no existe en los datos (`1997`/`2026`): resultado vacío y cero aserciones | Usa plan 1997, exige no vacío; caso nuevo con plan inexistente → `[]` |
+| `PgCamaDlRepositoryTest`, `PgHabitacionDlRepositoryTest` (4 errores) | Las tablas `du_habitaciones_dl` / `du_camas_dl` no existen en `H-dlb` de la BD `comun` (la copia de producción no las trae) | `setUp` de ambos llama a `DBEsquema('H-dlbv')->createAll()` (idempotente): los tests ya no dependen de la copia de BD |
+| `PgPersonaNaxRepositoryTest` | A `sf` le faltaba la migración `publicado_para` (BD de desarrollo atrasada) | Resuelto al refrescar `sf` desde producción; sin cambio de código |
+
+**Aprendizaje:** una copia de producción sobrescribe cualquier cambio manual de esquema en la BD de desarrollo. Los tests de integración que necesiten tablas que producción no tiene deben crearlas ellos mismos.
+
+**Nuevo hallazgo (no pertenece a la línea base original):** con la copia de producción, `cambios\application\AvisosGenerarTablaIntegracionTest` falla (4–6 casos según la ejecución; antes pasaba). `public.av_cambios` de `comun` trae 37 293 filas pendientes y los avisos de los cambios que crea el test no llegan a apuntarse. Se trata en el paso 2.10 (`cambios`): aislar el test de la cola de producción o acotar el procesamiento.
+
+`pasarela` se quitó de `SKIP_MODULES` en los `.sh` locales, pero esos ficheros están ignorados por `.gitignore` (`*.sh`) y no se versionan.

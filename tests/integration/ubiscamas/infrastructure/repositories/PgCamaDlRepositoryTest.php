@@ -2,6 +2,7 @@
 
 namespace Tests\integration\ubiscamas\infrastructure\persistence\postgresql;
 
+use src\ubiscamas\db\DBEsquema;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Cama;
@@ -19,6 +20,8 @@ class PgCamaDlRepositoryTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        // Las tablas _dl de ubiscamas no existen en todas las copias de la BD comun: crearlas si faltan (idempotente).
+        (new DBEsquema('H-dlbv'))->createAll();
         $this->repository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
         $this->habitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
         $this->camaFactory = new CamaFactory();

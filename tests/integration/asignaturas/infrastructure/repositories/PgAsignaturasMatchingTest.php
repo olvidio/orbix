@@ -40,19 +40,31 @@ class PgAsignaturasMatchingTest extends myTest
         }
     }
 
-    public function test_asignatura_matching_plan_estudios_array_equivale_a_legacy(): void
+    public function test_asignatura_matching_plan_estudios_array_contiene_el_plan(): void
     {
         $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $plan = 1997;
 
         $nuevo = $repo->matching(
             Criteria::create()
-                ->where(Filter::arrayContains(AsignaturaField::PlanEstudios, 2))
+                ->where(Filter::arrayContains(AsignaturaField::PlanEstudios, $plan))
                 ->orderBy(AsignaturaField::IdNivel)
         );
 
+        // Un resultado vacío haría pasar el test sin comprobar nada.
+        $this->assertNotEmpty($nuevo);
         foreach ($nuevo as $a) {
-            $this->assertContains(2, array_map('intval', (array) $a->getPlan_estudios()));
+            $this->assertContains($plan, array_map('intval', (array) $a->getPlan_estudios()));
         }
+    }
+
+    public function test_asignatura_matching_plan_estudios_inexistente_devuelve_vacio(): void
+    {
+        $repo = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+
+        $this->assertSame([], $repo->matching(
+            Criteria::create()->where(Filter::arrayContains(AsignaturaField::PlanEstudios, 1))
+        ));
     }
 
     public function test_asignaturas_as_json_sigue_el_criterio(): void
