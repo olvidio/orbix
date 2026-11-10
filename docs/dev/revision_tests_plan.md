@@ -478,4 +478,18 @@ Las herramientas de este módulo ejecutan DDL, crean roles o reescriben ficheros
 2. `ApptablesUpdate` ejecuta `createAll`/`dropAll` por reflexión en cualquier clase `<app>\db\DB*` cuyo nombre venga del mapa de sesión; confía en que `$_SESSION['config']['a_apps']` solo contiene apps legítimas.
 3. `ApptablesUpdate::basesAfectadas` informa de las bases tocadas con listas fijas por app: una app nueva sin entrada se muestra como `comun` aunque su DB viva en otra.
 
+### `dbextern` (16 clases sin test al empezar; módulo cerrado: 0/16)
+
+Unit con mocks, 3 ficheros (≈ 45 casos): casos de uso (`UnirPersonaUseCase`, `DesunirPersonaUseCase`, `RefrescarBduUseCase`, `BajaPersonaUseCase`, `TrasladarPersonaUseCase` —`trasladar` y `trasladarA`—, `CrearPersonaDesdeListasUseCase`, `CrearTodosDesdeListasUseCase`, `SincroPersonas`) y pantallas (`SincroIndexData` con sus siete contadores y permisos por tipo, `VerListasData`, `VerOrbixData`, `VerOrbixOtraDlData`, `VerTrasladosData`, `VerDesaparecidosDe*Data`). Para simular `SincroDB` se quitó el `final` de `SincroDBFactory` (el resto de colaboradores ya eran mockeables; `PersonaRepositoryResolver` se construye con ocho repositorios simulados). Los controladores de `dbextern` quedan para E2E.
+
+**Bug corregido (`f_inc`, pendiente desde el paso 1.2):** `SincroDB::syncro` pasaba `PersonaBDU::getF_inc()` (fecha **ISO**) por `DateTimeLocal::createFromLocal` (formato local), que devolvía `false` → `setF_inc(null)`. La fecha de incorporación **nunca se sincronizaba** y cada sincronización la dejaba a `null`. Nuevo `SincroDB::fechaIncorporacion()` (ISO → `DateTimeLocal`, `null` si vacía o inválida, con `checkdate`) + 20 casos. Sigue sin test de `syncro()` completo (necesita BD de listas y varias dl).
+
+> **Atención al desplegar:** a partir de ahora la sincronización **sí escribe** `f_inc` en las personas de Orbix. Antes escribía `null` siempre. Si la BDU no tiene fecha de incorporación para alguien, se le borra la de Orbix (comportamiento que ya había, ahora solo cuando la BDU realmente no la trae). Probar una sincronización en desarrollo antes de producción, igual que con el arreglo del paso 1.2.
+
+**Hallazgos (sin corregir):**
+1. `SincroPersonas` cuenta como «unida» (`count`) también a quien tiene vínculo sin `id_orbix`, y esa persona no se sincroniza: el número mostrado no coincide con las fichas procesadas.
+2. `SincroIndexData` arma el SQL de `tmp_bdu` interpolando `$region`, `$dl_listas` e `$id_tipo`; hoy salen de configuración y de un `match` cerrado, pero conviene parametrizar (`getPersonaBDUQuery` recibe SQL en texto).
+3. `CrearPersonaDesdeListasUseCase` calcula el `tipo` de la ficha por el primer dígito del id de listas pero guarda `id_tabla` con el `$tipo_persona` que llegue del request: pueden discrepar.
+
+
 
