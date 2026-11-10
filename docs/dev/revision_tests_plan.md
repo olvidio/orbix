@@ -387,23 +387,26 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 
 **Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning` y `permisos` (1.5/1.6). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
 
-**Pendiente (clases de `application` sin test al 2026-11-10, tras `asistentes`):**
+**Pendiente (clases de `application` sin test, actualizado tras `actividadtarifas` y las clases pequeñas de varios módulos; 59 + las 3 de `devel_db_admin` a propósito):**
 
 | Módulo | Sin test / total | Notas |
 |---|---|---|
-| `actividadestudios` | 14 / 34 | el más grande |
+| `actividadestudios` | 10 / 34 | el más grande (`CaPosiblesData` 605 líneas, `Select_matriculas_de_una_persona` 507, `ActaNotasDefinitivasGrabar` 306…) |
 | `casas` | 8 / 16 | |
 | `personas` | 6 / 17 | escribe datos |
 | `cambios` | 6 / 22 | avisos de cambios (ver test intermitente) |
 | `dossiers` | 6 / 12 | |
 | `actividadplazas` | 6 / 15 | |
 | `shared` | 6 / 12 | |
-| `actividadtarifas` | 5 / 15 | |
-| `configuracion` | 5 / 6 | |
-| `actividadcargos` | 4 / 11 | |
-| `usuarios` | 3 / 8 | decide permisos |
-| `menus`, `certificados`, `profesores`, `cartaspresentacion` | 2 / cada uno | |
-| `tablonanuncios` | 1 / 1 | |
+| `configuracion` | 5 / 6 | `Modulos*` (instalación de módulos) |
+| `actividadcargos` | 4 / 11 | `Select_cargos_*` (HTML en `src/`) |
+| `usuarios` | 2 / 8 | `AppMobileLogin` (508) y `LoginProcesar` (464): **seguridad**, prioritarios |
+| `menus` | 1 / 12 | `MenusGetPageData` |
+| `profesores` | 1 / 6 | `FichaProfesorStgr` (357) |
+
+Hechos en esta pasada (además de las secciones anteriores): `actividadtarifas` completo (formularios de tarifas, `TarifaUbiUpdateInc`, `TarifaUbiCopiar`), `tablonanuncios`, `certificados`, `cartaspresentacion`, y `AsistentePlanEstOk`, `ActividadAsignaturaEditar`, `MatriculaEditar`, `DocenciaActualizar`, `MenuGuardar`, `ProfesorAsignaturaQueData`, `usuarioEliminar`.
+
+**Hallazgos nuevos (sin corregir):** `TarifaUbiUpdateInc` redondea las cantidades a entero (una tarifa de 12,50 se guarda como 13: se pierden los céntimos); `TarifaUbiCopiar` es un esqueleto («pendiente de reimplementar») y no copia nada; `TarifaUbiFormData` devuelve siempre la serie «general» al editar; `DocenciaActualizar` ignora el resultado de `Guardar` y el mensaje final siempre dice que se actualizó; `AnuncioDelete` lanza excepción con un id que no es UUID; `MenuGuardar` guarda un orden vacío como `[0]`; `CartasPresentacionBuscarOpcionesData` fija las delegaciones a la región `H`; `CertificadoEmitidoGuardarMessages` mezcla `||` y `&&` sin paréntesis en `isDuplicatePersonaFecha`.
 
 **Otros huecos de la fase 1 anotados en sus módulos:** camino feliz de `AsistenteMoverData`; `SincroDB::syncro` completo (BD de listas y varias dl); el informe legacy `notas\application\legacy\Resumen` solo se cubre de forma indirecta; la corrección de secuencias de `DBPropuestas` no tiene test.
 
