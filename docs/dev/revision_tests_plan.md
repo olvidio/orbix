@@ -501,6 +501,16 @@ Unit (≈ 85 casos, 5 ficheros + `tests/unit/ubis/support/UbiResolverFactory` pa
 3. `CalendarioPeriodosGet2Data` usa `comprobarSolapes`, que además de solapes avisa de los días libres entre periodos («dias libres cerca de …»): para una casa con un único periodo suelto el aviso aparece siempre y su nombre (`overlap_error`) lo presenta como error.
 4. `UbiFactory::newUbi` hace `exit()` si el `tipo_ubi` del centro no es `ctrdl`/`ctrsf`/`ctrex` (sin test: mataría el proceso de pruebas); debería lanzar una excepción.
 
+### `procesos` (11 clases sin test al empezar; módulo cerrado: 0/25)
+
+Unit con mocks (2 ficheros, ≈ 34 casos): `ActividadProcesoGet`/`Update`, `FasesActivCambioUpdate` (marcar/desmarcar en bloque con permiso de la oficina responsable), `FasesActivCambioGet`, `ActividadQueFasesCuadro`, `UsuarioPermActivFases`, `ProcesosVerData`, `TipoActivProcesoLista`, `UsuarioPermActivData` (jefe por permisos/sfsv/configuración) y los dos envoltorios del selector de tipo de actividad.
+
+**Hallazgos (sin corregir):**
+1. **Capas:** `UsuarioPermActivData` y `FasesActivCambioActividadTipoHtml` (en `src/procesos/application/`) importan `frontend\actividades\helpers\ActividadTipo` y devuelven HTML: incumple la regla «nada de UI/HTML en `src/`». Los endpoints deberían devolver los datos (tipo, asistentes, actividad) y el selector pintarse en `frontend/`.
+2. `FasesActivCambioUpdate` y `ActividadProcesoGet` construyen `Filter::eq` con `getId_fase()`/`getId_tarea()`, que son nulables en `ActividadProcesoTarea`: una tarea de proceso sin fase o sin tarea lanza `InvalidArgumentException` («El valor no puede ser null») en lugar de saltarse la fila (`ActividadProcesoGet` sí las salta antes; `FasesActivCambioUpdate` no).
+3. `FasesActivCambioUpdate` devuelve el texto de error de la **primera** fase sin definición y deja sin procesar el resto de actividades seleccionadas (los errores de guardado sí se acumulan): criterio distinto para fallos equivalentes.
+
+
 
 
 
