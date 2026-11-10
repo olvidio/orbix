@@ -12,48 +12,6 @@ servers:
 security:
   - OrbixSession: []
 paths:
-  "/src/misas/anadir_ctr_tarea":
-    post:
-      operationId: "post_misas_anadir_ctr_tarea"
-      summary: "Anadir ctr tarea"
-      description: |
-        Añade o elimina una fila de plantilla (centro asociado a tarea) en el editor de plantillas. Rama que=anadir crea Plantilla con semana=-1; rama quitar elimina por id_item.
-        
-        Operacion: `mutacion`.
-        
-        Fuente catalogo: `docs/catalogo/misas/api/anadir_ctr_tarea.md`
-      tags:
-        - "misas"
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - "que"
-              properties:
-                que:
-                  type: "string"
-                id_ubi:
-                  type: "integer"
-                id_tarea:
-                  type: "integer"
-                id_item:
-                  type: "integer"
-      responses:
-        "200":
-          description: "Respuesta generada por Orbix."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/misas_AnadirCtrTareaDataResponse"
-        "400":
-          description: "Peticion no valida o error de validacion."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/misas_AnadirCtrTareaDataResponse"
   "/src/misas/buscar_plan_ctr_data":
     post:
       operationId: "post_misas_buscar_plan_ctr_data"

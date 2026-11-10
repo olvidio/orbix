@@ -2,7 +2,7 @@
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\domain\helpers\FilterPostGet;
 
-use src\misas\application\QuitarHorarioPlantilla;
+use src\misas\application\QuitarHorarioTarea;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
@@ -17,8 +17,8 @@ try {
     return;
 }
 
-/** @var QuitarHorarioPlantilla $useCase */
-$useCase = DependencyResolver::get(QuitarHorarioPlantilla::class);
+/** @var QuitarHorarioTarea $useCase */
+$useCase = DependencyResolver::get(QuitarHorarioTarea::class);
 $result = $useCase->execute([
     'id_item' => \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item'),
 ]);

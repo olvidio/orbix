@@ -34,7 +34,6 @@ class PlanDeMisasPantallaData
      *   tipos_plantilla?: array<string, string>,
      *   plantilla_selected?: string,
      *   ctx_importar?: string,
-     *   ctx_anadir?: string,
      *   ctx_crear?: string
      * }
      */
@@ -85,7 +84,6 @@ class PlanDeMisasPantallaData
 
         if ($pantalla === 'modificar_plantilla') {
             $out['ctx_importar'] = HashB::sign('importar_plantilla_data');
-            $out['ctx_anadir'] = HashB::sign('anadir_ctr_tarea');
         }
         if ($pantalla === 'preparar') {
             $out['ctx_crear'] = HashB::sign('crear_nuevo_periodo_data');

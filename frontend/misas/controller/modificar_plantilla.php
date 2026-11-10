@@ -56,9 +56,6 @@ $h_zona_tipo = $oHashZonaTipo->linkSinValParams();
 $oHash = new HashF();
 $oHash->setUrl('frontend/misas/controller/modificar_plantilla.php');
 $oHash->setCamposForm('id_zona!tipo_plantilla!orden!importar_de_plantilla');
-$oHash->setArrayCamposHidden([
-    'ctx_anadir' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_anadir'] ?? ''),
-]);
 
 $a_campos = [
     'oDesplZonas' => $oDesplZonas,

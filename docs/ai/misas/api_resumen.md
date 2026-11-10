@@ -2,20 +2,13 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "misas"
-endpoints: 33
+endpoints: 32
 estado_revision: "generado"
 ---
 
 # Resumen API Para Ayuda IA - misas
 
 Este documento solo sirve como soporte tecnico para la IA local. Para responder a usuarios, priorizar los documentos de `flujos/` y `pantallas/`.
-
-## `/src/misas/anadir_ctr_tarea`
-
-- Id: `misas.anadir_ctr_tarea`
-- Controller: `src/misas/infrastructure/ui/http/controllers/anadir_ctr_tarea.php`
-- Entrada: `post.que:string`, `post.id_ubi:integer`, `post.id_tarea:integer`, `post.id_item:integer`
-- Respuesta: `standard_envelope_string_data`
 
 ## `/src/misas/buscar_plan_ctr_data`
 

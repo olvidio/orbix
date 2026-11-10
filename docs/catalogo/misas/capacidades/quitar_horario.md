@@ -3,11 +3,11 @@ id: "misas.quitar_horario.gestionar"
 tipo: "capacidad"
 modulo: "misas"
 nombre: "Gestionar Quitar Horario"
-entidades: ["QuitarHorarioPlantilla"]
+entidades: ["QuitarHorarioTarea"]
 acciones: ["ejecutar"]
 endpoints: ["/src/misas/quitar_horario"]
 pantallas: ["frontend/misas/controller/horario_tarea.php"]
-casos_uso: ["src\\misas\\application\\QuitarHorarioPlantilla"]
+casos_uso: ["src\\misas\\application\\QuitarHorarioTarea"]
 tags: ["horario", "misas", "quitar", "quitar_horario"]
 estado_revision: "generado"
 ---
@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `quit
 
 ## Objetivo Funcional
 
-Gestiona QuitarHorarioPlantilla. Descripcion funcional pendiente de revisar.
+Gestiona QuitarHorarioTarea. Descripcion funcional pendiente de revisar.
 
 ## Acciones Detectadas
 
@@ -34,7 +34,7 @@ Gestiona QuitarHorarioPlantilla. Descripcion funcional pendiente de revisar.
 
 ## Casos De Uso Detectados
 
-- `src\misas\application\QuitarHorarioPlantilla`
+- `src\misas\application\QuitarHorarioTarea`
 
 ## Pistas Desde Endpoints
 

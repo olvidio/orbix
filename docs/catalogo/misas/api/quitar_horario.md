@@ -9,11 +9,11 @@ controller: "src/misas/infrastructure/ui/http/controllers/quitar_horario.php"
 entrada: ["post.id_item:integer"]
 entrada_obligatoria: ["id_item"]
 respuesta: "standard_envelope_string_data"
-respuesta_data_schema: "misas_QuitarHorarioPlantillaData"
+respuesta_data_schema: "misas_QuitarHorarioTareaData"
 respuesta_data: ["error:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/misas/controller/horario_tarea.php"]
-casos_uso: ["src\\misas\\application\\QuitarHorarioPlantilla"]
+casos_uso: ["src\\misas\\application\\QuitarHorarioTarea"]
 tags: ["misas", "quitar", "horario"]
 estado_revision: "revisado"
 errores: ["Error: falta el id_item", "No se encuentra la plantilla %d", "<repositorio getErrorTxt()>"]
@@ -21,7 +21,7 @@ errores: ["Error: falta el id_item", "No se encuentra la plantilla %d", "<reposi
 
 # Quitar horario
 
-Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+Anula t_start/t_end de un horario de tarea (`EncargoHorario`): quita la hora de inicio y de fin.
 
 Linaje: Slice 9 — migrado desde apps/misas/controller/quitar_horario.php (zquitar_horario es alias).
 
@@ -29,7 +29,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Anula t_start/t_end de una fila Plantilla (quita horario asignado a la tarea).
+Anula t_start/t_end de un horario de tarea (`EncargoHorario`): quita la hora de inicio y de fin.
 
 ## Endpoint
 
@@ -61,7 +61,7 @@ Sin control de permisos propio en casos de uso; autorización vía `IdNomJefeRes
 
 ## Casos De Uso
 
-- `src\misas\application\QuitarHorarioPlantilla`
+- `src\misas\application\QuitarHorarioTarea`
 
 ## Frontend Relacionado
 

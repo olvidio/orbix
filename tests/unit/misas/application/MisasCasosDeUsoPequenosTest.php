@@ -7,18 +7,15 @@ namespace Tests\unit\misas\application;
 use PHPUnit\Framework\MockObject\MockObject;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;
-use src\misas\application\AnadirCtrTarea;
 use src\misas\application\GuardarHorarioTarea;
 use src\misas\application\ModificarEncargosCentrosData;
 use src\misas\application\ModificarEncargosData;
 use src\misas\application\ModificarInicialesSacdZonaData;
-use src\misas\application\QuitarHorarioPlantilla;
+use src\misas\application\QuitarHorarioTarea;
 use src\misas\application\support\EncargoDiaTimeHelper;
 use src\misas\application\support\IdNomJefeResolver;
 use src\misas\application\support\MisasBuildInput;
 use src\misas\application\support\PeriodoDateRange;
-use src\misas\domain\contracts\PlantillaRepositoryInterface;
-use src\misas\domain\entity\Plantilla;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -26,17 +23,15 @@ use src\usuarios\domain\entity\Usuario;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use Tests\myTest;
 
-/** Casos de uso pequeños de misas: plantillas, horarios de tarea, desplegables de zonas y utilidades. */
+/** Casos de uso pequeños de misas: horarios de tarea, desplegables de zonas y utilidades. */
 final class MisasCasosDeUsoPequenosTest extends myTest
 {
-    private PlantillaRepositoryInterface&MockObject $plantillas;
     private mixed $sesionAnterior;
     private mixed $configAnterior;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->plantillas = $this->createMock(PlantillaRepositoryInterface::class);
         $this->sesionAnterior = $_SESSION['session_auth'] ?? null;
         $this->configAnterior = $_SESSION['oConfig'] ?? null;
     }
@@ -53,86 +48,31 @@ final class MisasCasosDeUsoPequenosTest extends myTest
         parent::tearDown();
     }
 
-    // ---- AnadirCtrTarea ----------------------------------------------------------------------
+    // ---- QuitarHorarioTarea ----------------------------------------------------------------------
 
-    public function test_anadir_crea_una_plantilla_sin_semana_con_el_id_nuevo(): void
+    public function test_quitar_horario_anula_inicio_y_fin_del_horario_de_la_tarea(): void
     {
-        $this->plantillas->method('getNewId')->willReturn(77);
-        $guardada = null;
-        $this->plantillas->expects($this->once())->method('Guardar')->willReturnCallback(function (Plantilla $p) use (&$guardada): bool {
-            $guardada = $p;
+        $horario = new EncargoHorario();
+        $horario->setH_ini(\src\shared\domain\value_objects\TimeLocal::fromString('08:00'));
+        $horario->setH_fin(\src\shared\domain\value_objects\TimeLocal::fromString('09:00'));
+        $repo = $this->createMock(EncargoHorarioRepositoryInterface::class);
+        $repo->method('findById')->with(4)->willReturn($horario);
+        $repo->expects($this->once())->method('Guardar')->with($horario)->willReturn(true);
 
-            return true;
-        });
-
-        $r = (new AnadirCtrTarea($this->plantillas))->execute(['que' => 'anadir', 'id_ubi' => '1003', 'id_tarea' => '5']);
+        $r = (new QuitarHorarioTarea($repo))->execute(['id_item' => '4']);
 
         $this->assertSame(['error' => ''], $r);
-        $this->assertSame([77, 5, 1003, -1], [$guardada->getId_item(), $guardada->getTarea(), $guardada->getId_ctr(), $guardada->getSemana()]);
+        $this->assertNull($horario->getH_ini());
+        $this->assertNull($horario->getH_fin());
     }
 
-    public function test_anadir_devuelve_el_error_del_repositorio(): void
+    public function test_quitar_horario_sin_id_o_sin_horario_o_con_fallo_de_guardado(): void
     {
-        $this->plantillas->method('getNewId')->willReturn(1);
-        $this->plantillas->method('Guardar')->willReturn(false);
-        $this->plantillas->method('getErrorTxt')->willReturn('fallo sql');
-
-        $this->assertSame(['error' => 'fallo sql'], (new AnadirCtrTarea($this->plantillas))->execute(['que' => 'anadir']));
-    }
-
-    public function test_quitar_valida_el_id_y_la_existencia_antes_de_eliminar(): void
-    {
-        $this->plantillas->expects($this->never())->method('Eliminar');
-        $uc = new AnadirCtrTarea($this->plantillas);
-
-        $this->assertNotSame('', $uc->execute(['que' => 'quitar'])['error']);
-        $this->plantillas->method('findById')->willReturn(null);
-        $this->assertStringContainsString('9', $uc->execute(['que' => 'quitar', 'id_item' => 9])['error']);
-    }
-
-    public function test_quitar_elimina_la_plantilla_y_propaga_el_fallo(): void
-    {
-        $p = new Plantilla();
-        $this->plantillas->method('findById')->with(9)->willReturn($p);
-        $this->plantillas->method('Eliminar')->willReturnOnConsecutiveCalls(true, false);
-        $this->plantillas->method('getErrorTxt')->willReturn('no se pudo');
-        $uc = new AnadirCtrTarea($this->plantillas);
-
-        $this->assertSame(['error' => ''], $uc->execute(['que' => 'quitar', 'id_item' => '9']));
-        $this->assertSame(['error' => 'no se pudo'], $uc->execute(['que' => 'quitar', 'id_item' => '9']));
-    }
-
-    public function test_una_opcion_desconocida_devuelve_error_sin_tocar_nada(): void
-    {
-        $this->plantillas->expects($this->never())->method('Guardar');
-        $this->plantillas->expects($this->never())->method('Eliminar');
-
-        $this->assertNotSame('', (new AnadirCtrTarea($this->plantillas))->execute(['que' => 'otra'])['error']);
-        $this->assertNotSame('', (new AnadirCtrTarea($this->plantillas))->execute([])['error']);
-    }
-
-    // ---- QuitarHorarioPlantilla ----------------------------------------------------------------------
-
-    public function test_quitar_horario_anula_inicio_y_fin(): void
-    {
-        $p = new Plantilla();
-        $p->setT_start(DateTimeLocal::createFromLocal('01/01/2026'));
-        $this->plantillas->method('findById')->with(4)->willReturn($p);
-        $this->plantillas->expects($this->once())->method('Guardar')->willReturn(true);
-
-        $r = (new QuitarHorarioPlantilla($this->plantillas))->execute(['id_item' => '4']);
-
-        $this->assertSame(['error' => ''], $r);
-        $this->assertNull($p->getT_start());
-        $this->assertNull($p->getT_end());
-    }
-
-    public function test_quitar_horario_sin_id_o_sin_plantilla_o_con_fallo_de_guardado(): void
-    {
-        $uc = new QuitarHorarioPlantilla($this->plantillas);
-        $this->plantillas->expects($this->exactly(1))->method('Guardar')->willReturn(false);
-        $this->plantillas->method('getErrorTxt')->willReturn('boom');
-        $this->plantillas->method('findById')->willReturnMap([[4, new Plantilla()], [5, null]]);
+        $repo = $this->createMock(EncargoHorarioRepositoryInterface::class);
+        $repo->expects($this->once())->method('Guardar')->willReturn(false);
+        $repo->method('getErrorTxt')->willReturn('boom');
+        $repo->method('findById')->willReturnMap([[4, new EncargoHorario()], [5, null]]);
+        $uc = new QuitarHorarioTarea($repo);
 
         $this->assertNotSame('', $uc->execute([])['error']);
         $this->assertStringContainsString('5', $uc->execute(['id_item' => 5])['error']);

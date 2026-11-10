@@ -16,7 +16,7 @@ estado_revision: "revisado"
 
 # Modificar plantilla
 
-Editor de plantilla semanal (-1): centros/tareas/horarios por zona. Grid plantilla + `anadir_ctr_tarea`, `quitar_horario`, `importar_plantilla`.
+Editor de plantilla semanal (-1): centros/tareas/horarios por zona. Grid plantilla + `quitar_horario`, `importar_plantilla`.
 
 ## Tipo
 

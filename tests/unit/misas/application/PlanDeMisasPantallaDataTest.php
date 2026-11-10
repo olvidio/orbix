@@ -32,12 +32,12 @@ final class PlanDeMisasPantallaDataTest extends TestCase
         return new PlanDeMisasPantallaData($zonaRepo, $prefRepo, $resolver);
     }
 
-    public function test_modificar_plantilla_emite_ctx_importar_y_anadir(): void
+    public function test_modificar_plantilla_emite_ctx_importar_y_ya_no_el_de_anadir(): void
     {
         $data = $this->createUseCase()->getData('modificar_plantilla');
 
         $this->assertSame([], HashB::open($data['ctx_importar'], 'importar_plantilla_data'));
-        $this->assertSame([], HashB::open($data['ctx_anadir'], 'anadir_ctr_tarea'));
+        $this->assertArrayNotHasKey('ctx_anadir', $data, 'la tabla de plantillas por centro es obsoleta');
     }
 
     public function test_preparar_emite_ctx_crear(): void

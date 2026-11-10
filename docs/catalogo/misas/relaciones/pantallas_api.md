@@ -355,14 +355,6 @@ Endpoints aportados por capacidades:
 
 ## Por Endpoint API
 
-### `/src/misas/anadir_ctr_tarea`
-
-Pantallas directas:
-- Ninguna detectada.
-
-Pantallas via capacidad:
-- Ninguna adicional.
-
 ### `/src/misas/buscar_plan_ctr_data`
 
 Pantallas directas:
@@ -618,7 +610,6 @@ Pantallas via capacidad:
 ## Alertas De Revision
 
 Endpoints sin pantalla directa detectada:
-- `/src/misas/anadir_ctr_tarea`
 - `/src/misas/cuadricula_update`
 - `/src/misas/desplegable_sacd`
 - `/src/misas/zona_sacd_datos_get`

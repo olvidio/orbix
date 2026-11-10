@@ -1,7 +1,7 @@
 ---
 tipo: "manual_usuario"
 modulo: "misas"
-flujos: 32
+flujos: 31
 estado_revision: "revisado"
 ---
 
@@ -12,37 +12,6 @@ Manual generado desde `docs/catalogo` con rutas de menú del catálogo. Úsalo c
 ## Como Usar Este Manual
 
 Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del catálogo (`## Ruta de menú`).
-
-## Añadir o quitar un centro en la plantilla
-
-### Para Que Sirve
-
-Añadir o quitar, en la plantilla, un centro asociado a una tarea.
-
-### Donde Entrar
-
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
-- **Legacy:** dre > Misas > Modificar plantilla
-- **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
-
-### Tareas Habituales
-
-#### Añadir o quitar un centro en la plantilla
-
-1. En **Modificar plantilla**, usar el botón de añadir fila de la tarea y elegir el centro.
-2. Para quitarlo, pulsar quitar en la fila.
-
-### Errores O Avisos Frecuentes
-
-- `Error: falta el id_item`
-- `No se encuentra la plantilla %d`
-- `opción no definida en switch en %s, linea %s`
-- `<repositorio getErrorTxt()>`
-
-### Referencias Internas
-
-- Flujo: `misas.anadir_ctr_tarea.gestionar.flujo`
-- Fichero catalogo: `docs/catalogo/misas/flujos/anadir_ctr_tarea.md`
 
 ## Ver el plan de misas de un centro
 

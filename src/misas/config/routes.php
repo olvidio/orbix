@@ -99,10 +99,6 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/quitar_horario.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/misas/anadir_ctr_tarea', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/anadir_ctr_tarea.php';
-    });
-
     $r->addRoute(['GET', 'POST'], '/src/misas/horario_tarea_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/horario_tarea_data.php';
     });

@@ -1,6 +1,5 @@
 <?php
 
-use src\misas\application\AnadirCtrTarea;
 use src\misas\application\BuscarPlanCtrData;
 use src\misas\application\BuscarPlanSacdData;
 use src\misas\application\CambiarStatusPantallaData;
@@ -22,7 +21,7 @@ use src\misas\application\ModificarEncargosData;
 use src\misas\application\ModificarInicialesSacdZonaData;
 use src\misas\application\NuevoStatusPeriodo;
 use src\misas\application\PlanDeMisasPantallaData;
-use src\misas\application\QuitarHorarioPlantilla;
+use src\misas\application\QuitarHorarioTarea;
 use src\misas\application\UpdateIniciales;
 use src\misas\application\VerEncargosCentrosData;
 use src\misas\application\VerEncargosZonaData;
@@ -37,23 +36,19 @@ use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
-use src\misas\domain\contracts\PlantillaRepositoryInterface;
 use src\misas\infrastructure\persistence\postgresql\PgEncargoCtrRepository;
 use src\misas\infrastructure\persistence\postgresql\PgEncargoDiaRepository;
 use src\misas\infrastructure\persistence\postgresql\PgInicialesSacdRepository;
-use src\misas\infrastructure\persistence\postgresql\PgPlantillaRepository;
 use function DI\autowire;
 
 return [
     EncargoCtrRepositoryInterface::class => autowire(PgEncargoCtrRepository::class),
     EncargoDiaRepositoryInterface::class => autowire(PgEncargoDiaRepository::class),
     InicialesSacdRepositoryInterface::class => autowire(PgInicialesSacdRepository::class),
-    PlantillaRepositoryInterface::class => autowire(PgPlantillaRepository::class),
 
     IdNomJefeResolver::class => autowire(IdNomJefeResolver::class),
     InicialesSacdService::class => autowire(InicialesSacdService::class),
 
-    AnadirCtrTarea::class => autowire(AnadirCtrTarea::class),
     BuscarPlanCtrData::class => autowire(BuscarPlanCtrData::class),
     BuscarPlanSacdData::class => autowire(BuscarPlanSacdData::class),
     CambiarStatusPantallaData::class => autowire(CambiarStatusPantallaData::class),
@@ -75,7 +70,7 @@ return [
     ModificarInicialesSacdZonaData::class => autowire(ModificarInicialesSacdZonaData::class),
     NuevoStatusPeriodo::class => autowire(NuevoStatusPeriodo::class),
     PlanDeMisasPantallaData::class => autowire(PlanDeMisasPantallaData::class),
-    QuitarHorarioPlantilla::class => autowire(QuitarHorarioPlantilla::class),
+    QuitarHorarioTarea::class => autowire(QuitarHorarioTarea::class),
     UpdateIniciales::class => autowire(UpdateIniciales::class),
     VerEncargosCentrosData::class => autowire(VerEncargosCentrosData::class),
     VerEncargosZonaData::class => autowire(VerEncargosZonaData::class),

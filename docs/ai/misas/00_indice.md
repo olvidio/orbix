@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "indice"
 modulo: "misas"
-flujos: 32
+flujos: 31
 pantallas: 23
 endpoints: 33
 estado_revision: "generado"
@@ -21,7 +21,6 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 
 ## Flujos Disponibles
 
-- Añadir o quitar un centro en la plantilla -> `flujos/anadir_ctr_tarea.md`
 - Ver el plan de misas de un centro -> `flujos/buscar_plan_ctr.md`
 - Ver el plan de un sacerdote -> `flujos/buscar_plan_sacd.md`
 - Cambiar el estado del plan -> `flujos/cambiar_status.md`
