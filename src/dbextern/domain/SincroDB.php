@@ -388,6 +388,25 @@ class SincroDB
     }
 
     /**
+     * Fecha de incorporación de la BDU (`PersonaBDU::getF_inc()`) como `DateTimeLocal`.
+     *
+     * `getF_inc()` devuelve la fecha en formato ISO (`Y-n-j`), no en formato local: pasarla por
+     * `DateTimeLocal::createFromLocal` fallaba siempre y `f_inc` nunca se sincronizaba.
+     * Vacía o inválida (p. ej. 31 de febrero) → `null`.
+     */
+    public static function fechaIncorporacion(string $f_inc_iso): ?DateTimeLocal
+    {
+        if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', trim($f_inc_iso), $m) !== 1) {
+            return null;
+        }
+        if (!checkdate((int) $m[2], (int) $m[3], (int) $m[1])) {
+            return null;
+        }
+
+        return new DateTimeLocal(sprintf('%04d-%02d-%02d', (int) $m[1], (int) $m[2], (int) $m[3]));
+    }
+
+    /**
      * @return string|array{error: string, abort?: bool}
      */
     public function syncro(PersonaBDU $oPersonaListas, int $id_orbix): string|array
@@ -467,8 +486,7 @@ class SincroDB
             $this->aplicarCe($oPersona, $ce_num, $ce_lugar, $ce_ini, $ce_fin);
         }
         $oPersona->setInc($inc);
-        $f_inc_vo = DateTimeLocal::createFromLocal($f_inc);
-        $oPersona->setF_inc($f_inc_vo instanceof DateTimeLocal ? $f_inc_vo : null);
+        $oPersona->setF_inc(self::fechaIncorporacion($f_inc));
         $oPersona->setProfesion($profesion);
         $oPersona->setEap($encargos);
 

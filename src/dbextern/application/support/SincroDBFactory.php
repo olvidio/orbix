@@ -6,7 +6,7 @@ use RuntimeException;
 use src\dbextern\domain\SincroDB;
 use src\shared\infrastructure\DependencyResolver;
 
-final class SincroDBFactory
+class SincroDBFactory
 {
     public function create(): SincroDB
     {
