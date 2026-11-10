@@ -219,10 +219,8 @@ class PersonaBDU
             $this->df_inc = "$any-$mes-$dia";
         }
         else {
-            $this->ice_num = '';
-            $this->sce_lugar = '';
-            $this->ice_ini = '';
-            $this->ice_fin = '';
+            $this->sinc = '';
+            $this->df_inc = '';
         }
     }
 
@@ -515,6 +513,24 @@ class PersonaBDU
     }
 
 
+    /** Alias con el nombre de columna de tmp_bdu (Hydratable). */
+    public function setProf_carg(?string $sProfesion_cargo = null): void
+    {
+        $this->setProfesion_cargo($sProfesion_cargo);
+    }
+
+    /** Alias con el nombre de columna de tmp_bdu (Hydratable). */
+    public function setTitu_estu(?string $sTitulo_Estudios = null): void
+    {
+        $this->setTitulo_Estudios($sTitulo_Estudios);
+    }
+
+    /** Alias con el nombre de columna de tmp_bdu (Hydratable). */
+    public function setIncorp(?string $sIncorporacion = null): void
+    {
+        $this->setIncorporacion($sIncorporacion);
+    }
+
     public function setProfesion_cargo(?string $sProfesion_cargo = null): void
     {
         $this->sProfesion_cargo = $sProfesion_cargo ?? '';
@@ -647,15 +663,8 @@ class PersonaBDU
         if ($this->ice_ini === null) {
             $this->dividirCe();
         }
-        if ($this->ice_ini !== null && $this->ice_ini !== '') {
-            $val = is_numeric($this->ice_ini) ? (int)$this->ice_ini : 0;
-            if ($val > 30) {
-                $this->ice_ini = $val + 1900;
-            } else {
-                $this->ice_ini = $val + 2000;
-            }
-        }
-        return $this->ice_ini ?? '';
+
+        return self::anyoDeDosCifras($this->ice_ini, 30);
     }
 
     public function getCe_fin(): int|string
@@ -663,15 +672,22 @@ class PersonaBDU
         if ($this->ice_fin === null) {
             $this->dividirCe();
         }
-        if ($this->ice_fin !== null && $this->ice_fin !== '') {
-            $val = is_numeric($this->ice_fin) ? (int)$this->ice_fin : 0;
-            if ($val > 60) {
-                $this->ice_fin = $val + 1900;
-            } else {
-                $this->ice_fin = $val + 2000;
-            }
+
+        return self::anyoDeDosCifras($this->ice_fin, 60);
+    }
+
+    /**
+     * Año de dos cifras → cuatro: mayor que $corte → 19xx, resto → 20xx.
+     * No modifica el valor guardado (las lecturas repetidas dan el mismo resultado).
+     */
+    private static function anyoDeDosCifras(string|int|null $valor, int $corte): int|string
+    {
+        if ($valor === null || $valor === '') {
+            return '';
         }
-        return $this->ice_fin ?? '';
+        $val = is_numeric($valor) ? (int) $valor : 0;
+
+        return $val > $corte ? $val + 1900 : $val + 2000;
     }
 
     public function getInc(): string
