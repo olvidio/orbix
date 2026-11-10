@@ -436,6 +436,13 @@ Lote 2 (consultas pequeñas, unit 15 casos): `PosiblesPreceptoresData`, `Activid
 2. `ActaTribunalSync::rebuild` incrementa el contador de orden también para los examinadores vacíos, así que el orden guardado puede tener huecos (1, 3).
 3. `Acta::setId_asignatura(null)` no es posible aunque el parámetro sea `?int` (el value object rechaza el 0): la entidad no puede representar un acta sin asignatura al construirla desde código.
 
-Pendiente (22 clases): `Resumen` (legacy, 1314 líneas) y sus envoltorios `InformeStgrNumerarios`/`Agregados`/`Profesores`, `ResumenTempTablesService`, `ResumenFactory`, `AsignaturasPendientes` (413), `NotaPersonaFormData` (381), `TablaAlumnosAsignaturas` (344), `ActaVerFormData` (296), `AsigFaltanSelectTablaData`, `ActaImprimirPresentacionData`, `ActaVerAddPersona`, `Select_notas_de_una_persona`, `AsigFaltanPersonasSelectTablaData`, `NotasDeUnaPersonaData`, `AsignaturasPendientesResumenData`, `AsignaturasPendientesData`, `TesseraCopiar`, `TesseraCopiarSelectData`, `TesseraImprimirData`, `CentroEstudiosLookup`. Antes de los informes legacy conviene moverlos a integración con la BD real (SQL con tablas temporales).
+Lote 3 (formas de actas, unit 65 casos): `ActaVerFormData` (27), `ActaImprimirPresentacionData` (27) y `ActaVerAddPersona` (11, hasta justo antes de escribir: validaciones, acta firmada o sin asignatura, hueco de opcional agotado y nivel por asignatura).
+
+**Hallazgos del lote 3 (sin corregir):**
+1. `ActaImprimirPresentacionData` inserta los nombres de los examinadores **sin escapar** en `tribunal_html` (un test lo fija). Revisar si el origen es de confianza o escapar.
+2. `ActaVerAddPersona` con una asignatura obligatoria que no está en el plan del alumno deja escapar una `RuntimeException` de `NivelCatalogoAsignaturaEnPlan::resolve` en vez de devolver `['success' => false, …]`.
+3. `ActaVerFormData` llama siempre a `findById` una vez para los indicadores de pdf/impresión, aunque los datos vengan del formulario.
+
+Pendiente (19 clases): `Resumen` (legacy, 1314 líneas) y sus envoltorios `InformeStgrNumerarios`/`Agregados`/`Profesores`, `ResumenTempTablesService`, `ResumenFactory`, `AsignaturasPendientes` (413), `NotaPersonaFormData` (381), `TablaAlumnosAsignaturas` (344), `AsigFaltanSelectTablaData`, `Select_notas_de_una_persona`, `AsigFaltanPersonasSelectTablaData`, `NotasDeUnaPersonaData`, `AsignaturasPendientesResumenData`, `AsignaturasPendientesData`, `TesseraCopiar`, `TesseraCopiarSelectData`, `TesseraImprimirData`, `CentroEstudiosLookup`. Antes de los informes legacy conviene moverlos a integración con la BD real (SQL con tablas temporales).
 
 **Test intermitente de `notas` (ver arriba):** `notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` sigue siendo de BD con datos aleatorios en `tests/unit`; no se ha tocado.
