@@ -23,11 +23,7 @@ final class ValueObjectMessages
 
     public static function safeRepr(string $value): string
     {
-        $flags = JSON_UNESCAPED_UNICODE;
-        if (defined('JSON_INVALID_SUBSTITUTE')) {
-            $flags |= JSON_INVALID_SUBSTITUTE;
-        }
-        $json = json_encode($value, $flags);
+        $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
         if (!is_string($json)) {
             return '(valor no codificable)';
         }
