@@ -534,11 +534,11 @@ Unit con mocks (3 ficheros, ≈ 45 casos): `ActividadPublicar`, `ActividadImport
 5. **Capas:** `ActividadQueDatos` y `TipoActivFormNuevo` (en `src/`) instancian `frontend\actividades\helpers\ActividadTipo`, capturan su salida con `ob_*` y construyen HTML a mano (mismo patrón que `procesos` y `pasarela`).
 6. `ActividadSelectUbiData` ejecuta SQL directo con `GlobalPdo` (`oDBC`/`oDBPC`) en un caso de uso de `application`.
 
-### `asistentes` (10 clases sin test al empezar; en curso: 6/21 pendientes)
+### `asistentes` (10 clases sin test al empezar; en curso: 5/21 pendientes)
 
-Hecho (unit, 2 ficheros, 42 casos; `ListaUltimaActivData`: criterios de personas y actividades por lista, centro/orden, avisos y filas con y sin asistencias): `ListaUltimQueCtrData`, `QueCtrListaData` (acción y campos ocultos por lista, grupo marcado, periodo por defecto) y las ramas previas de `AsistenteMoverData` (persona/actividad inválida, asistente inexistente, datos de otra dl, selección vs `id_pau`).
+Hecho (unit, 3 ficheros, 58 casos; `ListaActivCtrData`: centros por grupo (a, n, nm, nj, sssc, un centro), repositorio sssc, actividades con plaza no asignada marcada, sv/sf y permisos; `ListaUltimaActivData`: criterios de personas y actividades por lista, centro/orden, avisos y filas con y sin asistencias): `ListaUltimQueCtrData`, `QueCtrListaData` (acción y campos ocultos por lista, grupo marcado, periodo por defecto) y las ramas previas de `AsistenteMoverData` (persona/actividad inválida, asistente inexistente, datos de otra dl, selección vs `id_pau`).
 
-**Pendiente (6):** `ActivPendientesSelectData` (299), `FormActividadesDeUnaPersonaData` (214), `ListaActivCtrData` (216), `ListaEstCtrData` (217), `Select_actividades_de_una_persona` (351), `TablaPeticionesData` (245) y el camino feliz de `AsistenteMoverData` (necesita `ConfigSnapshot` con curso y `TiposActividades`). Varias construyen `frontend\shared\web\Lista` y HTML dentro de `src/` (p. ej. `ListaUltimaActivData` devuelve `tabla_html`/`stats_html`), así que además de tests piden separar datos y presentación.
+**Pendiente (5):** `ActivPendientesSelectData` (299), `FormActividadesDeUnaPersonaData` (214), `ListaEstCtrData` (217), `Select_actividades_de_una_persona` (351), `TablaPeticionesData` (245) y el camino feliz de `AsistenteMoverData` (necesita `ConfigSnapshot` con curso y `TiposActividades`). Varias construyen `frontend\shared\web\Lista` y HTML dentro de `src/` (p. ej. `ListaUltimaActivData` devuelve `tabla_html`/`stats_html`), así que además de tests piden separar datos y presentación.
 
 **Hallazgos (sin corregir):**
 1. `QueCtrListaData`, lista `profesion`: la acción apunta a `programas/sm-agd/lista_profesion.php`, y la carpeta `programas/` **no existe** en el repositorio: ese formulario lleva a una ruta rota.
