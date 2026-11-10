@@ -59,7 +59,7 @@ final class ExportarQueActividadTipoHtml
                 && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && ConfigGlobal::mi_sfsv() === 1)
             || ($oPerm instanceof XPermisos
-                && $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SF)
+                && $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF)
                 && ConfigGlobal::mi_sfsv() === 2)
         ) {
             $perm_jefe = true;

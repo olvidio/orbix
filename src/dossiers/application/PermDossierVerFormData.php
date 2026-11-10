@@ -46,9 +46,11 @@ class PermDossierVerFormData
         $botones = 0;
         $perm_admin = false;
         $oPerm = $_SESSION['oPerm'] ?? null;
+        // Administrador = tener exactamente el permiso de admin (only_perm). have_perm_oficina()
+        // comparte-algún-bit: con admin_sv (-1) daría verdadero a cualquier usuario con permisos.
         if (
             $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV) || $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SF))
+            && ($oPerm->only_perm(MenuDlPermissionBits::ADMIN_SV) || $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF))
         ) {
             $botones = '1,2';
             $perm_admin = true;

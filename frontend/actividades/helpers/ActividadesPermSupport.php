@@ -47,6 +47,7 @@ final class ActividadesPermSupport
             return true;
         }
 
-        return OrbixRuntime::miSfsv() === 2 && self::havePermOficina(PermisoOficina::ADMIN_SF);
+        // Administrador sf: igualdad exacta (havePermOficina daría verdadero a cualquier usuario sf con permisos).
+        return OrbixRuntime::miSfsv() === 2 && SessionPerm::onlyPerm(PermisoOficina::ADMIN_SF);
     }
 }

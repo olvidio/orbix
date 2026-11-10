@@ -172,6 +172,40 @@ final class PermDossierVerFormDataTest extends TestCase
         $this->assertSame(0, $data['botones']);
     }
 
+    /**
+     * Solo el administrador (igualdad exacta con admin_sv / admin_sf) ve los botones de administración.
+     * Con have_perm_oficina() cualquier usuario con algún permiso pasaba por admin.
+     *
+     * @dataProvider accesosProvider
+     */
+    public function test_perm_admin_solo_para_administradores(int $acceso, bool $esAdmin): void
+    {
+        $perm = new \src\permisos\domain\PermDl();
+        $perm->setAccion($acceso);
+        $_SESSION['oPerm'] = $perm;
+        $tipo = $this->tipoDossierMinimo();
+
+        $data = (new PermDossierVerFormData($this->repoConTipo($tipo)))->build($tipo->getId_tipo_dossier(), 'td_test');
+
+        $this->assertSame($esAdmin, $data['perm_admin']);
+        $this->assertSame($esAdmin ? '1,2' : 0, $data['botones']);
+    }
+
+    /**
+     * @return iterable<string, array{int, bool}>
+     */
+    public static function accesosProvider(): iterable
+    {
+        $bits = \src\permisos\domain\MenuDlPermissionBits::map();
+        yield 'administrador sv (-1)' => [$bits['admin_sv'], true];
+        yield 'administrador sf' => [$bits['admin_sf'], true];
+        yield 'usuario de agd' => [$bits['agd'], false];
+        yield 'usuario de des' => [$bits['des'], false];
+        yield 'varias oficinas sin ser admin' => [$bits['agd'] | $bits['sg'] | $bits['ctr'], false];
+        yield 'casi admin_sf (le falta un bit)' => [$bits['admin_sf'] & ~$bits['agd'], false];
+        yield 'sin permisos' => [0, false];
+    }
+
     private function tipoDossierMinimo(): TipoDossier
     {
         $o = new TipoDossier();

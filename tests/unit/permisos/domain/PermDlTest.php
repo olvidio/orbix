@@ -114,9 +114,9 @@ final class PermDlTest extends myTest
     }
 
     /**
-     * Hallazgo (ver docs/dev/revision_tests_plan.md, sección 15): `have_perm_oficina()` es «cualquiera de»
+     * Semántica a tener presente (docs/dev/revision_tests_plan.md, sección 15): `have_perm_oficina()` es «cualquiera de»
      * (comparte algún bit) y `admin_sv` vale -1 (todos los bits), así que es verdadero para CUALQUIER usuario
-     * con algún permiso. Para saber si alguien es administrador hay que usar `only_perm()` (igualdad exacta).
+     * con algún permiso. Para saber si alguien es administrador hay que usar `only_perm()` (igualdad exacta): así se hace en todos los sitios desde que se corrigió.
      */
     public function test_have_perm_oficina_admin_es_verdadero_para_cualquiera_con_algun_permiso(): void
     {

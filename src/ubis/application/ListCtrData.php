@@ -336,7 +336,8 @@ class ListCtrData
 
         $a_botones = [['txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"]];
         $oPerm = $_SESSION['oPerm'] ?? null;
-        if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::ADMIN_SV)) {
+        // Solo el administrador sv (igualdad exacta: have_perm_oficina daría verdadero a cualquiera con permisos).
+        if ($oPerm instanceof XPermisos && $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SV)) {
             $a_botones[] = ['txt' => _("trasladar"), 'click' => "fnjs_ver_dl()"];
         }
 
