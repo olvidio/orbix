@@ -6,6 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\criteria\ActividadPlazasField;
 use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\permisos\domain\PermisosActividades;
@@ -161,12 +162,12 @@ final class ActividadEditar
                 if (count($cDelegaciones) > 0) {
                     $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
                 }
-                $aWhere = [
-                    'id_activ' => $Qid_activ,
-                    'id_dl' => $id_dl,
-                    'dl_tabla' => $mi_dele,
-                ];
-                $cActividadPlazas = $this->actividadPlazasRepository->getactividadesPlazas($aWhere);
+                $cActividadPlazas = $this->actividadPlazasRepository->matching(
+                    Criteria::create()
+                        ->where(Filter::eq(ActividadPlazasField::IdActiv, $Qid_activ))
+                        ->andWhere(Filter::eq(ActividadPlazasField::IdDl, $id_dl))
+                        ->andWhere(Filter::eq(ActividadPlazasField::DlTabla, $mi_dele))
+                );
                 $salta = 0;
                 if (count($cActividadPlazas) === 1) {
                     $oActividadPlazasDl = $cActividadPlazas[0];
