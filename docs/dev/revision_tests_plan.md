@@ -491,5 +491,16 @@ Unit con mocks, 3 ficheros (≈ 45 casos): casos de uso (`UnirPersonaUseCase`, `
 2. `SincroIndexData` arma el SQL de `tmp_bdu` interpolando `$region`, `$dl_listas` e `$id_tipo`; hoy salen de configuración y de un `match` cerrado, pero conviene parametrizar (`getPersonaBDUQuery` recibe SQL en texto).
 3. `CrearPersonaDesdeListasUseCase` calcula el `tipo` de la ficha por el primer dígito del id de listas pero guarda `id_tabla` con el `$tipo_persona` que llegue del request: pueden discrepar.
 
+### `ubis` (15 clases sin test al empezar; módulo cerrado: 0/59)
+
+Unit (≈ 85 casos, 5 ficheros + `tests/unit/ubis/support/UbiResolverFactory` para construir el `UbiRepositoryResolver` final con repos simulados): `CalendarioPeriodosGet2Data`, `Casas/CentrosOpcionesData` (condición SQL de los filtros), `DelegacionQuery`, `UbisListaData`, `UbisEditarOpcionesData` (códigos validados contra inyección), `ListCtrData` (criterios por tipo de lista, dl propia/ajena, permisos y botones), `TelecoEditarData`, y las copias de centros (`SincronizarCuCentros`, `ResincronizarCuCentros` Dl/Dlf con una SQLite en memoria como origen). Integración (solo lectura, 3 casos + 1): `UbiFactory`, `HomeUbisData` y `UbiContactsTrait` sobre un centro real.
+
+**Hallazgos (sin corregir):**
+1. `ListCtrData` (lista de «otras», `loc=ex`): el desplegable ofrece `ctr_n_ex`, `ctr_agd_ex` y `ctr_s_ex`, pero el `switch` solo tiene `ctr_n`, `ctr_agd` y `ctr_s`: elegir cualquiera de ellas devuelve una lista **vacía**. Tres tests lo fijan; la corrección es renombrar los casos (o las opciones) y actualizar el JS que envía el valor.
+2. `ListCtrData` lee `$a_reg[1]` sin comprobar que `loc` lleve guion: un `loc` vacío o malformado lanza un aviso de índice indefinido.
+3. `CalendarioPeriodosGet2Data` usa `comprobarSolapes`, que además de solapes avisa de los días libres entre periodos («dias libres cerca de …»): para una casa con un único periodo suelto el aviso aparece siempre y su nombre (`overlap_error`) lo presenta como error.
+4. `UbiFactory::newUbi` hace `exit()` si el `tipo_ubi` del centro no es `ctrdl`/`ctrsf`/`ctrex` (sin test: mataría el proceso de pruebas); debería lanzar una excepción.
+
+
 
 
