@@ -6,6 +6,7 @@ use src\dbextern\domain\entity\PersonaBDU;
 
 /**
  * Factory de PersonaBDU para tests. `identif` es la clave de la tabla tmp_bdu.
+ * Ids de test 990000001..990999999: los reales empiezan por el tipo de persona (1-4).
  */
 class PersonaBDUFactory
 {
