@@ -402,9 +402,19 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 | `menus` | 1 / 12 | `MenusGetPageData` |
 | `profesores` | 1 / 6 | `FichaProfesorStgr` (357) |
 | `shared` | 1 / 12 | `ReconciliadorCopia` (se prueba indirectamente vía `ResincronizarCuCentros`) |
-| `usuarios` | en curso | `AppMobileLogin` y `LoginProcesar` (seguridad), delegado en un subagente |
+| `usuarios` | 0 / 8 | `AppMobileLogin` y `LoginProcesar` cubiertos (152 tests, la mayoría de integración con un usuario de prueba que se borra siempre) |
 
 Hechos en esta pasada (además de las secciones anteriores): `cambios` (preferencias de avisos), `casas` (gastos, ingresos, ocupación), `dossiers` (permisos y resolutor), `shared` (hidratación de permisos, cola de mails); `actividadtarifas` completo (formularios de tarifas, `TarifaUbiUpdateInc`, `TarifaUbiCopiar`), `tablonanuncios`, `certificados`, `cartaspresentacion`, y `AsistentePlanEstOk`, `ActividadAsignaturaEditar`, `MatriculaEditar`, `DocenciaActualizar`, `MenuGuardar`, `ProfesorAsignaturaQueData`, `usuarioEliminar`.
+
+**Hallazgos de seguridad en el login (sin corregir; ver `tests/unit|integration/usuarios/application/*Login*`):**
+1. **Sin límite de intentos fallidos**, ni bloqueo ni registro, en ninguno de los dos logins (tras seis fallos la contraseña correcta entra a la primera). Tampoco existe el concepto de usuario bloqueado/inactivo ni caducidad por fecha.
+2. **Contraseña en claro en la sesión** (`session_auth['password']` y `session_config['password']`); `MiUsuario` lleva además el hash y `secret_2fa`.
+3. **Esquema desconocido lanza `RuntimeException` sin capturar** con la ruta de los ficheros de credenciales en el mensaje; el esquema de la BD común lanza `PDOException` con el SQL. Lo que ve el cliente depende de `display_errors`.
+4. **El esquema de la petición prevalece sobre el del entorno** (`ESQUEMA`): con la instalación fijada a una dl, el cliente puede autenticarse contra otra.
+5. **Un código TOTP válido se puede reutilizar** dentro de su ventana (~90 s); no se guarda el último aceptado.
+6. Cookies con `secure => false`; hash whirlpool de una sola pasada comparado con `!==` (no `hash_equals`); `DBPropiedades::getIdSchema` interpola el esquema en SQL.
+7. Respuestas incoherentes: hash vacío en BD lanza `InvalidArgumentException` al hidratar; «Rol no encontrado» en la app confirma que la contraseña era buena; `AppMobileLogin` escribe `$_SESSION['sfsv']` y `['private']` aunque rechace el login; el web no recorta el usuario y la app sí.
+8. **Capas:** las dos clases ejecutan SQL, abren conexiones y (la de la app) usan `$_SESSION`, `setcookie()` y `getenv()` dentro de `application`; son casi idénticas (~400 líneas duplicadas) y abren varias conexiones por login (0,2–0,4 s).
 
 **Hallazgos nuevos (sin corregir):** `CasaEcGastosGuardar` dice «borra los existentes y reinserta» pero no borra nada: cada guardado duplica los 36 apuntes del año, y lee «1.234,5» como 1,234; `CasasResumenOcupacion` arrastra la hora actual del reloj en los límites de periodo (`createFromFormat` sin `!`) y compara cadenas de formatos distintos, de modo que una actividad de febrero del periodo sv se atribuye a sf; `TarifaUbiUpdateInc` redondea las cantidades a entero (una tarifa de 12,50 se guarda como 13: se pierden los céntimos); `TarifaUbiCopiar` es un esqueleto («pendiente de reimplementar») y no copia nada; `TarifaUbiFormData` devuelve siempre la serie «general» al editar; `DocenciaActualizar` ignora el resultado de `Guardar` y el mensaje final siempre dice que se actualizó; `AnuncioDelete` lanza excepción con un id que no es UUID; `MenuGuardar` guarda un orden vacío como `[0]`; `CartasPresentacionBuscarOpcionesData` fija las delegaciones a la región `H`; `CertificadoEmitidoGuardarMessages` mezcla `||` y `&&` sin paréntesis en `isDuplicatePersonaFecha`.
 
