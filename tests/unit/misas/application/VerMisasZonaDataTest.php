@@ -12,6 +12,7 @@ use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
+/** Ejecuta `misas_ver_misas_zona_build` (ver_misas_zona_data_build.php) a través de `VerMisasZonaData`. */
 final class VerMisasZonaDataTest extends TestCase
 {
     private array $previousSession;

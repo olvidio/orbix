@@ -452,3 +452,16 @@ Lote 4 (resto de `notas`, 0 clases sin test): unit `TesseraCopiar`, `TesseraCopi
 4. `InformeStgr*::cursoActual()` usa «mes > 3» fijo mientras `Tesera::cursoActual()` lee el curso de la configuración (`diaIniStgr`…): dos criterios para el mismo concepto.
 
 **Test intermitente de `notas` (ver arriba):** `notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` sigue siendo de BD con datos aleatorios en `tests/unit`; no se ha tocado.
+
+### `misas` (22 clases sin test al empezar; módulo cerrado: 0/43)
+
+Unit con mocks, 6 ficheros (≈ 85 casos): casos de uso pequeños (`AnadirCtrTarea`, `QuitarHorarioPlantilla`, `GuardarHorarioTarea`, `Modificar*Data`, `IdNomJefeResolver`, `MisasBuildInput`, `EncargoDiaTimeHelper`, `PeriodoDateRange`), desplegables (`DesplegableCentrosZonaData`, `DesplegableEncargosData`, `DesplegableSacdData` con sus cuatro bits de selección), `VerPlanSacdData`, `NuevoStatusPeriodo`, `VerPlanCtrData`, `BuscarPlanCtrData` e `ImportarPlantillaData`/`CrearNuevoPeriodoData`/`CuadriculaZonaGridData` (las tres envuelven funciones procedurales de 350–985 líneas: se prueban sus contratos —columnas por tipo de plantilla, preferencia «última plantilla», borrado y copia de días, rama de error— y **no** el algoritmo de asignación de sacd, que queda para 2.7).
+
+**Hallazgos (sin corregir):**
+1. `esta_semana` (en `PeriodoDateRange`, `cuadricula_zona_grid_data_build.php`): en **lunes** retrocede 6 días (`$dia_week-- ; if === 0 → 6`) y muestra desde el martes anterior en lugar de desde hoy.
+2. `BuscarPlanCtrData`: `$cEncargosSacd1 + $cEncargosSacd2` une dos listas indexadas con `+` y descarta el segundo elemento de la segunda (misma clave 0); debería ser `array_merge`. Un test lo fija.
+3. `ImportarPlantillaData` borra **todos** los `EncargoDia` del destino, también los ya comunicados al centro; `CrearNuevoPeriodoData` sí conserva los de estado «comunicado al centro» (`preserveWhenPreparingPlan`). Criterio distinto para la misma operación de «preparar».
+4. `DesplegableSacdData` hace `$cZonaSacd[0]` sin comprobar que exista (error si un sacd listado por `getIdSacdsDeZona` no tuviera fila en `zona_sacd`).
+5. `BuscarPlanCtrData` con zona elegida deja seleccionado el **último** centro de la lista, sin criterio.
+6. Sigue pendiente (2.7) lo ya anotado: la tabla `misa_plantillas_dl` no existe y usan la plantilla `anadir_ctr_tarea`, `quitar_horario`, `importar/modificar_plantilla`.
+
