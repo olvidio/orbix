@@ -389,7 +389,17 @@ Hecho en el primer lote: `OpcionesSeccionData`, `EncargoLstTipoEncData`, `Encarg
 
 Segundo lote (horarios y encargos): `EncargoHorarioUpdate`, `EncargoSacdHorarioUpdate`, `EncargoHorarioSelectData`, `EncargoVerNuevo`, `EncargoVerEditar`, `EncargoComprobacionesCtr` (unit, 80 casos). Cubren cada modo de actualización (alta, edición, eliminación, modo desconocido), campos obligatorios, la regla «sin más/menos → el día es la referencia», conversión de ceros y vacíos a `null`, errores del repositorio, firma `HashB` de los tokens de eliminar y el orden de las filas.
 
-Pendiente (por tamaño): `PropuestasEncargosUbiHtml` (363), `PropuestasListaSacdData`, `EncargoSacdHorarioVerData`, `EncargoVerData`, `SacdAusenciasUpdate`, `PropuestasAprobarService`, `SacdAusenciasGetData`, `EncargoHorarioVerData`, `EncargoSacdHorarioUpdate`, `EncargoHorarioSelectData`, `EncargoHorarioUpdate`, `PropuestasHorarioTexto`, `EncargoVerNuevo`, `EncargoComprobacionesCtr`, `EncargoVerEditar`, `EncargoFunciones`, `PropuestasAprobar`, `PropuestasCrearTabla` (las dos últimas escriben/crean tablas: hacerlas con BD de pruebas aislada).
+**Estado: CERRADO (2026-11-10).** `check_test_application.php --modulo=encargossacd` → 0/51 clases de `application/` sin test. Quedan sin test los controladores HTTP (32/41), cobertura natural de la fase E2E.
+
+Quinto y último lote (vistas, ausencias y propuestas): `EncargoHorarioVerData`, `EncargoVerData`, `EncargoSacdHorarioVerData`, `SacdAusenciasGetData`, `SacdAusenciasUpdate`, `PropuestasHorarioTexto`, `PropuestasAprobarService`, `PropuestasAprobar`, `PropuestasCrearTabla` (unit, 105 casos) y `PropuestasListaSacdData` / `PropuestasEncargosUbiHtml` (integración con las tablas de propuestas reales, 5 casos) más un test de que el contenedor construye el servicio de aprobación.
+
+**Cambio de producción para poder probar (sin cambio de comportamiento):** `PropuestasAprobarService::execute()` terminaba con `(new DBPropuestas())->eliminarAll()` y `PropuestasCrearTabla` ejecutaba `createAll()`: ambos hacen DDL sobre las tablas reales y no se podían probar sin borrarlas/crearlas. Ahora aceptan un `\Closure` opcional (por defecto hacen lo mismo que antes); el contenedor sigue construyéndolos (`PropuestasAprobarServiceContenedorTest`). Los tests inyectan una limpieza falsa.
+
+**Hallazgos del lote 5 (sin corregir):**
+1. **`PropuestasAprobarService::finEncargo` no cierra los horarios reales del sacd saliente.** Al cambiar o quitar un titular pone `f_fin` al encargo y a los horarios de la *propuesta*, pero los `EncargoSacdHorario` reales del sacd que sale (los que usan las fichas y los listados con `f_fin IS NULL`) quedan abiertos. `CtrFichaUpdate`, en cambio, sí llama a `finalizar_horario_sacd`. Caracterizado en `test_al_cerrar_el_encargo_se_cierran_los_horarios_de_la_propuesta_pero_no_los_reales`.
+2. **`SacdAusenciasGetData` filtra las filas con `preg_match('/[74]/')`**, que acepta un 4 o un 7 en *cualquier* posición del tipo (p. ej. 2040 o 1007 se muestran como «ausencia»), mientras que la lista de tipos de ausencia usa el prefijo `(7|4)...`. Debería ser `^[74]`.
+3. **`EncargoVerData::calcularFiltroDesdeCentro` no mapea los tipos `a`, `n` ni `s`** (devuelve 0), a diferencia de `CtrFichaData`, que los manda al grupo sv.
+4. `SacdAusenciasUpdate` crea un encargo del sacd sin validar nada si faltan fechas o `id_enc` (todo a 0/`null`), y deja `f_ini` nulo en una entidad que lo declara obligatorio.
 
 ### Hallazgo (corregido): las horas no llegaban al texto del horario
 

@@ -126,4 +126,65 @@ class PropuestasIntegracionTest extends myTest
 
         $this->assertArrayHasKey('success', $out);
     }
+
+    // ---- lista de sacd y HTML por centro (staging) ----------------------------------------------------------
+
+    /**
+     * @dataProvider seleccionesDeSacdProvider
+     */
+    public function test_lista_de_propuestas_por_sacd(string $sel): void
+    {
+        $this->exigirStaging();
+
+        $r = $GLOBALS['container']->get(\src\encargossacd\application\PropuestasListaSacdData::class)->execute($sel);
+
+        $this->assertSame(['array_modo', 'lugar_fecha'], array_keys($r));
+        $this->assertIsArray($r['array_modo']);
+        $this->assertNotFalse(json_encode($r, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function seleccionesDeSacdProvider(): iterable
+    {
+        yield 'numerarios y agregados' => ['nagd'];
+        yield 'sssc' => ['sssc'];
+        yield 'vacía' => [''];
+    }
+
+    public function test_una_seleccion_desconocida_no_lista_sacd(): void
+    {
+        $this->exigirStaging();
+
+        $r = $GLOBALS['container']->get(\src\encargossacd\application\PropuestasListaSacdData::class)->execute('otra');
+
+        $this->assertSame([], $r['array_modo']);
+    }
+
+    public function test_html_editable_y_simple_de_un_centro_con_propuestas(): void
+    {
+        $this->exigirStaging();
+        $html = $GLOBALS['container']->get(\src\encargossacd\application\services\PropuestasEncargosUbiHtml::class);
+        $centros = $GLOBALS['container']->get(PropuestasCentrosPorFiltro::class)->execute(0, todosEnDefault: true);
+        $vistos = 0;
+        foreach (array_slice($centros, 0, 25) as $c) {
+            $editable = $html->editable($c->getId_ubi());
+            $simple = $html->simple($c->getId_ubi());
+            $this->assertIsString($editable);
+            $this->assertIsString($simple);
+            $vistos++;
+        }
+        $this->assertGreaterThan(0, $vistos);
+    }
+
+    public function test_html_de_un_centro_inexistente_no_falla(): void
+    {
+        $this->exigirStaging();
+        $html = $GLOBALS['container']->get(\src\encargossacd\application\services\PropuestasEncargosUbiHtml::class);
+
+        $this->assertSame('', trim(strip_tags($html->simple(2147000000))));
+        $this->assertIsString($html->editable(2147000000));
+    }
 }
+
