@@ -387,7 +387,15 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 
 Hecho en el primer lote: `OpcionesSeccionData`, `EncargoLstTipoEncData`, `EncargoZonasSelectData`, `SacdSelectData`, `PropuestasCentrosPorFiltro`, `PropuestasAjaxGetLista`, `PropuestasListaEncData`, `PropuestasAjaxDispatch` (unit 7 casos + integración 30).
 
+Segundo lote (horarios y encargos): `EncargoHorarioUpdate`, `EncargoSacdHorarioUpdate`, `EncargoHorarioSelectData`, `EncargoVerNuevo`, `EncargoVerEditar`, `EncargoComprobacionesCtr` (unit, 80 casos). Cubren cada modo de actualización (alta, edición, eliminación, modo desconocido), campos obligatorios, la regla «sin más/menos → el día es la referencia», conversión de ceros y vacíos a `null`, errores del repositorio, firma `HashB` de los tokens de eliminar y el orden de las filas.
+
 Pendiente (por tamaño): `CtrGetFichaData` (460 líneas), `CtrFichaUpdate` (458), `PropuestasEncargosUbiHtml` (363), `SacdFichaData`, `ListasComSacdData`, `PropuestasListaSacdData`, `ListasCData`, `ListasDData`, `ListasExigenciaCtrData`, `EncargoSacdHorarioVerData`, `ListasAData`, `ListasBData`, `EncargoVerData`, `SacdAusenciasUpdate`, `PropuestasAprobarService`, `ListasComCtrData`, `SacdAusenciasGetData`, `ListasClData`, `EncargoHorarioVerData`, `EncargoSacdHorarioUpdate`, `EncargoHorarioSelectData`, `EncargoHorarioUpdate`, `PropuestasHorarioTexto`, `EncargoVerNuevo`, `EncargoComprobacionesCtr`, `CtrFichaData`, `ListasComTxtData`, `EncargoVerEditar`, `EncargoFunciones`, `PropuestasAprobar`, `PropuestasCrearTabla` (las dos últimas escriben/crean tablas: hacerlas con BD de pruebas aislada).
+
+### Hallazgo (corregido): las horas no llegaban al texto del horario
+
+`EncargoHorarioSelectData`, `CtrGetFichaData` y `SacdFichaData` convertían la hora con `method_exists($time, 'value')` / `'__toString'`, pero `TimeLocal` no tiene ninguno de los dos: las horas salían **vacías** (`texto_horario(..., '', '')` → «…, de  a »). Las otras dos pantallas del módulo (`EncargoHorarioVerData`, `EncargoSacdHorarioVerData`) ya usaban `TimeLocal::toDatabaseString()`. Las tres clases usan ahora esa misma conversión (`HH:MM:SS`). **Efecto visible:** el texto de horarios de la lista de horarios y de las fichas de centro y de sacd vuelve a incluir las horas. Cubierto por `EncargoHorarioSelectDataTest::test_las_horas_llegan_al_texto_del_horario`; `CtrGetFichaData` y `SacdFichaData` se prueban en el siguiente lote.
+
+**Observaciones del lote (sin tocar):** `EncargoVerNuevo`/`EncargoVerEditar` dejan escapar una `InvalidArgumentException` (idioma con formato incorrecto, grupo de centros fuera de rango) en lugar de devolver `['error' => …]`; la rama «grupo no válido» de `EncargoVerNuevo` es inalcanzable; `EncargoHorarioUpdate` guarda «sin más/menos» como cadena vacía y `EncargoSacdHorarioUpdate` como `null` (inconsistente); y `EncargoHorarioUpdate` en modo `eliminar` lee `$post['sel_nom']` sin comprobar que exista (aviso «undefined array key»).
 
 ### Hallazgo de seguridad (corregido): inyección SQL en `SacdSelectData`
 
