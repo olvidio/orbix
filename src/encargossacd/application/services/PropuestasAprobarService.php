@@ -26,6 +26,8 @@ final class PropuestasAprobarService
         private PropuestaEncargoSacdHorarioRepositoryInterface $propuestaHorarioRepository,
         private EncargoSacdRepositoryInterface $encargoSacdRepository,
         private EncargoSacdHorarioRepositoryInterface $encargoSacdHorarioRepository,
+        /** Limpieza de las tablas de propuestas al terminar (por defecto, DBPropuestas::eliminarAll()). Inyectable para poder probar execute() sin borrar tablas. */
+        private ?\Closure $limpiarTablas = null,
     ) {
     }
 
@@ -58,7 +60,9 @@ final class PropuestasAprobarService
             }
         }
 
-        (new DBPropuestas())->eliminarAll();
+        ($this->limpiarTablas ?? static function (): void {
+            (new DBPropuestas())->eliminarAll();
+        })();
 
         return _("Hecho!");
     }
