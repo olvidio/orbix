@@ -387,7 +387,7 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 
 **Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning`, `permisos` (1.5/1.6), `personas` y `actividadplazas`. `configuracion` queda con solo `ModuloInstaladoTablesService` (ejecuta DDL: igual que `devel_db_admin`, solo con BD aislada). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
 
-**Pendiente (clases de `application` sin test, actualizado tras `personas`, `actividadplazas` y `configuracion`; 31 + las 3 de `devel_db_admin` y `ModuloInstaladoTablesService` a propósito):**
+**Pendiente (clases de `application` sin test, actualizado tras `personas`, `actividadplazas` y `configuracion`; 25 + las 3 de `devel_db_admin` y `ModuloInstaladoTablesService` a propósito):**
 
 | Módulo | Sin test / total | Notas |
 |---|---|---|
