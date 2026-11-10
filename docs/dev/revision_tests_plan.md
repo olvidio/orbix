@@ -423,7 +423,7 @@ Cuarto lote (listados): `ListasAData`, `ListasBData`, `ListasCData`, `ListasDDat
 
 **Auditoría del mismo patrón** (métodos que reciben un fragmento SQL en texto: `getArraySacd`, `getArrayCentros`, `getArrayCasas`, `getArrayPoblaciones`, `getArrayRolesCondicion`…): se revisaron todos los llamadores con argumento variable. Los demás construyen la condición con constantes, enteros convertidos (`implode` de ids) o valores de la sesión; no se encontró otra inyección por petición. Riesgo residual sin corregir: `CambioUsuarioPropiedadPrefItemData` interpola `csv_id_pau` del propio usuario (dato guardado por un administrador) y `ActividadLugar` interpola la delegación de la sesión. **Recomendación:** sustituir estos `getArrayXxx(string $condicion)` por `matching(Criteria)` (como el resto de la migración) para que no pueda reaparecer.
 
-### `notas` (31 clases sin test al empezar; en curso)
+### `notas` (31 clases sin test al empezar; módulo cerrado: 0/63)
 
 Lote 1 (actas y escritura de notas, unit 36+9 casos): `ActaTribunalSync`, `ActaNueva`, `ActaModificar`, `ActaEliminar` y `PersonaNotaNueva`/`PersonaNotaEditar` (hasta justo antes de escribir, que hace `EditarPersonaNota`, ya probado). Cubren la propiedad del acta (`ActaDlGuard`: acta de otra dl, prefijo absorbido), acta firmada, campos guardados, formato `NN/AA`, selección decodificada, reconstrucción y cascada del tribunal, errores de guardado acumulados, errores del parser convertidos en `['error' => …]` y la reubicación del hueco de opcional.
 
@@ -443,6 +443,12 @@ Lote 3 (formas de actas, unit 65 casos): `ActaVerFormData` (27), `ActaImprimirPr
 2. `ActaVerAddPersona` con una asignatura obligatoria que no está en el plan del alumno deja escapar una `RuntimeException` de `NivelCatalogoAsignaturaEnPlan::resolve` en vez de devolver `['success' => false, …]`.
 3. `ActaVerFormData` llama siempre a `findById` una vez para los indicadores de pdf/impresión, aunque los datos vengan del formulario.
 
-Pendiente (19 clases): `Resumen` (legacy, 1314 líneas) y sus envoltorios `InformeStgrNumerarios`/`Agregados`/`Profesores`, `ResumenTempTablesService`, `ResumenFactory`, `AsignaturasPendientes` (413), `NotaPersonaFormData` (381), `TablaAlumnosAsignaturas` (344), `AsigFaltanSelectTablaData`, `Select_notas_de_una_persona`, `AsigFaltanPersonasSelectTablaData`, `NotasDeUnaPersonaData`, `AsignaturasPendientesResumenData`, `AsignaturasPendientesData`, `TesseraCopiar`, `TesseraCopiarSelectData`, `TesseraImprimirData`, `CentroEstudiosLookup`. Antes de los informes legacy conviene moverlos a integración con la BD real (SQL con tablas temporales).
+Lote 4 (resto de `notas`, 0 clases sin test): unit `TesseraCopiar`, `TesseraCopiarSelectData`, `TesseraImprimirData` (solo la guarda de persona 0: el resto usa `Persona::findPersonaEnGlobal`, estático), `TablaAlumnosAsignaturas` + `AsignaturasPendientesData`, `NotasDeUnaPersonaData` + `AsignaturasPendientesResumenData`, `NotaPersonaFormData` y `Select_notas_de_una_persona`. Integración (BD real, solo lectura salvo tablas `tst_resumen_*` que se borran siempre): `AsignaturasPendientes` (SQL con `EXCEPT` y tabla temporal), `AsigFaltanSelectTablaData`, `AsigFaltanPersonasSelectTablaData`, `InformeStgrNumerarios/Agregados/Profesores` (que cubren `Resumen` legacy y `ResumenFactory`), `CentroEstudiosLookup` y `ResumenTempTablesService`. Con datos de producción las aserciones son relaciones (p. ej. punto 4 = 1+2+3, año I + años II-IV = cuadrienio, quien tiene la nota no figura entre los que les falta), no cifras.
+
+**Hallazgos del lote 4 (sin corregir):**
+1. `Select_notas_de_una_persona`/`NotasDeUnaPersonaData`: `$acta == NotaSituacion::CURSADA` compara el acta con `2` de forma laxa (un acta «2» o «02» se muestra vacía).
+2. `NotaPersonaFormData::opcionalesGenericasHelpers` ofrece el hueco `2435` («opcional de sobra») aunque el plan no tenga ningún hueco de opcional: con catálogo vacío y persona dada devuelve `id==2435`.
+3. `Resumen` sigue siendo un bloque legacy de 1314 líneas cubierto solo de forma indirecta por los informes; no hay tests por método.
+4. `InformeStgr*::cursoActual()` usa «mes > 3» fijo mientras `Tesera::cursoActual()` lee el curso de la configuración (`diaIniStgr`…): dos criterios para el mismo concepto.
 
 **Test intermitente de `notas` (ver arriba):** `notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` sigue siendo de BD con datos aleatorios en `tests/unit`; no se ha tocado.
