@@ -21,7 +21,7 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Listado de personas de la pantalla de selección: criterio según filtros, permisos y filas. */
 final class PersonasSelectDataTest extends myTest

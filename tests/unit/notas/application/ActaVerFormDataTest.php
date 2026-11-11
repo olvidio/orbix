@@ -27,7 +27,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\security\HashB;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class ActaVerFormDataTest extends myTest
 {

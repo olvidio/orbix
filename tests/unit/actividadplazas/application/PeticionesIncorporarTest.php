@@ -19,7 +19,7 @@ use src\asistentes\domain\entity\Asistente;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Incorporar la primera petición de plaza de cada persona como asistencia con plaza asignada. */
 final class PeticionesIncorporarTest extends myTest

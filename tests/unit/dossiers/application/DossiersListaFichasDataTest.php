@@ -16,7 +16,7 @@ use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Relación de dossiers de una persona, actividad o ubi (modo lista de dossiers_ver). */
 final class DossiersListaFichasDataTest extends myTest

@@ -21,7 +21,7 @@ use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class EncargoVerDataTest extends TestCase
 {

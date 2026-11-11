@@ -24,7 +24,7 @@ use Tests\unit\ubis\support\UbiResolverFactory;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Direccion;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Listado de centros y casas por localización y tipo de lista (home de ubis). */
 final class ListCtrDataTest extends myTest

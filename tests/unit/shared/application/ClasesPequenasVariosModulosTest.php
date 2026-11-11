@@ -323,7 +323,7 @@ final class ClasesPequenasVariosModulosTest extends myTest
         $delRepo = $this->createMock(DelegacionRepositoryInterface::class);
         $criterios = [];
         $delRepo->method('matching')->willReturnCallback(function (\src\shared\domain\criteria\Criteria $c) use (&$criterios): array {
-            $criterios[] = \Tests\unit\planning\support\DescribeCriteria::filtros($c);
+            $criterios[] = \Tests\support\DescribeCriteria::filtros($c);
 
             return [];
         });

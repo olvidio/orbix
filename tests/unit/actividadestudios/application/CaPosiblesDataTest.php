@@ -26,7 +26,7 @@ use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\value_objects\DelegacionCode;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /**
  * Cuadro de ca posibles: qué personas y qué ca se cruzan, y qué créditos podría cursar cada persona en cada ca

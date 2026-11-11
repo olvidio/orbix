@@ -28,7 +28,7 @@ use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Ediciones de estudios en actividades: plan de estudios del asistente, asignatura, matrícula y docencia. */
 final class EdicionesActividadEstudiosTest extends myTest

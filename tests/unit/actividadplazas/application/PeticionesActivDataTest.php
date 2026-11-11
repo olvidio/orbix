@@ -19,7 +19,7 @@ use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Pantalla de peticiones de actividades: candidatas por tipo/curso y depuración de peticiones obsoletas. */
 final class PeticionesActivDataTest extends myTest

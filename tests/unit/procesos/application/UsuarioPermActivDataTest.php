@@ -19,7 +19,7 @@ use src\shared\domain\criteria\Criteria;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Permisos de actividad por usuario/grupo (pantalla `usuario_perm_activ`) y selector de tipo de actividad de «cambio de fase». */
 final class UsuarioPermActivDataTest extends myTest

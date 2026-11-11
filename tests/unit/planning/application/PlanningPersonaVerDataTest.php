@@ -21,7 +21,7 @@ use src\planning\application\PlanningPersonaRepositoryPicker;
 use src\planning\application\PlanningPersonaVerData;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class PlanningPersonaVerDataTest extends TestCase
 {

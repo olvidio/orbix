@@ -22,7 +22,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Matriz alumnos × asignaturas de «asignaturas pendientes» y su pantalla de datos. */
 final class TablaAlumnosAsignaturasTest extends myTest

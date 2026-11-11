@@ -16,7 +16,7 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\encargossacd\domain\entity\PropuestaEncargoSacd;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class PropuestasAprobarServiceTest extends TestCase
 {

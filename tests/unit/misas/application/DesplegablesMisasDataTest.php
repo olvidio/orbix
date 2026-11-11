@@ -18,7 +18,7 @@ use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\zonassacd\application\services\CentrosDeZona;
 use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Desplegables AJAX de misas: centros de una zona (sf + sv) y encargos de una zona. */
 final class DesplegablesMisasDataTest extends TestCase

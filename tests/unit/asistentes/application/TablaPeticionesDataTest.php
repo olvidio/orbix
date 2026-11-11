@@ -20,7 +20,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Peticiones de plaza de los asistentes de una actividad: filas, partes con enlace de mover, vigencia y plazas. */
 final class TablaPeticionesDataTest extends myTest

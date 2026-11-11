@@ -24,7 +24,7 @@ use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /**
  * Alta de una nota desde el acta, hasta justo antes de escribir (EditarPersonaNota, ya probado):

@@ -16,7 +16,7 @@ use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\security\HashB;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class SacdAusenciasGetDataTest extends TestCase
 {

@@ -21,7 +21,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Plan de misas de un sacd en un rango y cambio masivo de estado de los encargos de una zona. */
 final class VerPlanSacdYNuevoStatusTest extends myTest

@@ -47,7 +47,7 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /**
  * Ficha de un profesor del stgr: cabecera, bloques de nombramientos, currículum,

@@ -23,8 +23,8 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /** Lista de clases de un ca: director de estudios, profesor de cada asignatura y alumnos matriculados. */
 final class ListaClasesCaDataTest extends myTest

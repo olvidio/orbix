@@ -23,7 +23,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\TarifaUbi;
 use src\ubis\domain\value_objects\UbiNombreText;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Listado económico de actividades por casa: precio, ingresos previstos y reales, acumulados y totales sv/sf. */
 final class CasaIngresosListaDataTest extends myTest

@@ -13,7 +13,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Datos de la pantalla de menús: listado de un grupo o formulario de un menú. */
 final class MenusGetPageDataTest extends myTest

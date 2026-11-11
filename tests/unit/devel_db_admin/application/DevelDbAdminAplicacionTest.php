@@ -31,7 +31,7 @@ use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /**
  * Herramientas de administración de BD (devel_db_admin). Solo se prueba lo que no toca esquemas reales:

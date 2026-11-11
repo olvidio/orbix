@@ -9,7 +9,7 @@ use src\encargossacd\application\EncargoLstTipoEncData;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoTipo;
 use src\shared\domain\criteria\Criteria;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class EncargoLstTipoEncDataTest extends TestCase
 {

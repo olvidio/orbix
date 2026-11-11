@@ -15,7 +15,7 @@ use src\shared\security\HashB;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Cuadro de gestión de plazas: actividades del periodo y plazas concedidas/pedidas por dl del grupo. */
 final class GestionPlazasDataTest extends myTest

@@ -23,7 +23,7 @@ use src\shared\domain\criteria\Criteria;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\utils_database\domain\entity\DbSchema;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Traslado de tessera entre personas: elección del destino, copia de notas e impresión. */
 final class TesseraCopiarTest extends myTest

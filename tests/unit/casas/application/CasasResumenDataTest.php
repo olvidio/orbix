@@ -21,7 +21,7 @@ use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroEllas;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Resumen económico de casas: ocupación, asistencias, ingresos, gastos y superávit por sección; por periodo o por años. */
 final class CasasResumenDataTest extends TestCase

@@ -17,8 +17,8 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /**
  * Asignaturas posibles para un ca: cuántos asistentes en estudios podrían cursar cada asignatura y a quiénes les

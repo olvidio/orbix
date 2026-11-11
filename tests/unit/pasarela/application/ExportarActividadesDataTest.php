@@ -23,7 +23,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\TarifaUbi;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Listado de exportación de actividades: filtro, fila por actividad, activación, tarifas y contribuciones. */
 final class ExportarActividadesDataTest extends myTest

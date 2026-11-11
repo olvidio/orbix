@@ -211,7 +211,7 @@ final class SacdAusenciasUpdateTest extends TestCase
         $this->encargosSacd->method('findById')->willReturn($this->sacd(900));
         $this->encargosSacd->method('Guardar')->willReturn(true);
         $this->horarios->expects($this->once())->method('matching')->with($this->callback(function (\src\shared\domain\criteria\Criteria $c): bool {
-            $this->assertSame(['id_enc eq 5', 'id_nom eq 10011', 'id_item_tarea_sacd eq 900'], \Tests\unit\planning\support\DescribeCriteria::filtros($c));
+            $this->assertSame(['id_enc eq 5', 'id_nom eq 10011', 'id_item_tarea_sacd eq 900'], \Tests\support\DescribeCriteria::filtros($c));
 
             return true;
         }))->willReturn([]);

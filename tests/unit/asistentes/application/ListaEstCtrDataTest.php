@@ -24,7 +24,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Estudios en actividades por centro: centros por grupo, personas y qué se muestra de cada actividad. */
 final class ListaEstCtrDataTest extends myTest

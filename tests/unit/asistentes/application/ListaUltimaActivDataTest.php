@@ -20,7 +20,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** «Quién no ha asistido todavía»: filtros de personas y actividades por tipo de lista, y filas del listado. */
 final class ListaUltimaActivDataTest extends myTest

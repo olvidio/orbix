@@ -30,7 +30,7 @@ use src\shared\security\HashB;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\utils_database\domain\entity\DbSchema;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Widget 1303: plan de estudios de una persona (sus ca propios del curso y las asignaturas matriculadas en cada uno). */
 final class SelectMatriculasDeUnaPersonaTest extends myTest

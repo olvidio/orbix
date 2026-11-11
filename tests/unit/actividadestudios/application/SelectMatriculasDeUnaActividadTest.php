@@ -23,8 +23,8 @@ use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\security\HashB;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /** Widget 3103: matrículas de una actividad agrupadas por asignatura, según la actividad sea o no de mi dl. */
 final class SelectMatriculasDeUnaActividadTest extends myTest

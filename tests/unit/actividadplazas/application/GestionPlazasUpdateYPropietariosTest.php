@@ -22,7 +22,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\value_objects\DelegacionId;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Edición de celdas de la tabla de gestión de plazas y desplegable de propietarios. */
 final class GestionPlazasUpdateYPropietariosTest extends myTest

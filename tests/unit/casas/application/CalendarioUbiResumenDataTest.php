@@ -23,7 +23,7 @@ use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\TarifaUbi;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Estudio económico de una casa: tarifas actuales y previstas, días por sección, gastos y previsión de ingresos. */
 final class CalendarioUbiResumenDataTest extends myTest

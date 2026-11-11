@@ -12,7 +12,7 @@ use src\dossiers\domain\entity\TipoDossier;
 use src\profesores\domain\InfoProfesorStgr;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Permisos de dossier, lista de tipos para la pantalla de permisos y resolución de la clase de datos de un tipo. */
 final class DossiersPermisosYResolutorTest extends myTest

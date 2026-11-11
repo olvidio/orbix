@@ -22,7 +22,7 @@ use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Asistentes a actividades por centro: qué centros se listan según el grupo y qué actividades salen por persona. */
 final class ListaActivCtrDataTest extends myTest

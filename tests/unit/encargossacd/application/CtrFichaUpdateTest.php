@@ -22,7 +22,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class CtrFichaUpdateTest extends TestCase
 {

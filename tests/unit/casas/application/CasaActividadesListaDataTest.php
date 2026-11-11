@@ -29,7 +29,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\value_objects\UbiNombreText;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Listado de actividades por casa y periodo: qué se enseña según los permisos de la sesión y las apps instaladas. */
 final class CasaActividadesListaDataTest extends myTest

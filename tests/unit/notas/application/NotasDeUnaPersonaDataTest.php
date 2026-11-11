@@ -26,7 +26,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Notas de una persona (dossier 1011) y resumen de asignaturas pendientes por tramo. */
 final class NotasDeUnaPersonaDataTest extends myTest

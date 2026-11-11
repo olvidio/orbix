@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\unit\planning\support;
+namespace Tests\support;
 
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;

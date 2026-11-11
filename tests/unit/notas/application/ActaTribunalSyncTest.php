@@ -10,7 +10,7 @@ use src\notas\application\support\ActaTribunalSync;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\entity\ActaTribunal;
 use src\shared\domain\criteria\Criteria;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class ActaTribunalSyncTest extends TestCase
 {

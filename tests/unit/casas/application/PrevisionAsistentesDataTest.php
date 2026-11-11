@@ -16,7 +16,7 @@ use src\shared\security\HashB;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Previsión de asistentes: qué actividades ve cada oficina y qué plazas se muestran. */
 final class PrevisionAsistentesDataTest extends myTest

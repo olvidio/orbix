@@ -27,7 +27,7 @@ use src\shared\domain\value_objects\TimeLocal;
 use src\shared\security\HashB;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class CtrGetFichaDataTest extends TestCase
 {

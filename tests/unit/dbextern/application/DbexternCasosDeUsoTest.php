@@ -39,7 +39,7 @@ use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\value_objects\RegionCode;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Casos de uso de la sincronización con la BDU (listas): alta, baja, unión, traslado y sincronización masiva. */
 final class DbexternCasosDeUsoTest extends myTest

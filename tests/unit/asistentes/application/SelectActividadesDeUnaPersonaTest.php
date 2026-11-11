@@ -18,7 +18,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Widget del dossier 1301: actividades a las que asiste una persona. */
 final class SelectActividadesDeUnaPersonaTest extends myTest

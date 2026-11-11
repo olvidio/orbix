@@ -23,8 +23,8 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /** Certificado E43: cabecera de la persona y de la actividad y las asignaturas matriculadas con su nota y acta. */
 final class E43CertificadoDataTest extends myTest

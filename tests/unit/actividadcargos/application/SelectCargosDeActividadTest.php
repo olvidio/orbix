@@ -19,7 +19,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use frontend\shared\config\OrbixRuntime;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Widget del dossier 3102: personas con cargo en una actividad (devuelve el HTML ya pintado). */
 final class SelectCargosDeActividadTest extends myTest

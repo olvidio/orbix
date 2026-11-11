@@ -21,7 +21,7 @@ use src\shared\domain\criteria\Criteria;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Quién no ha ido todavía a una actividad del curso: n, agd o sacd, de mi dl y de otras. */
 final class ActivPendientesSelectDataTest extends myTest

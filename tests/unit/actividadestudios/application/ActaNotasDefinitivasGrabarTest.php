@@ -37,8 +37,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /**
  * Paso de las notas de un acta de ca al expediente (`PersonaNota`): qué matrículas se graban, con qué situación,

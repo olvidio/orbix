@@ -23,7 +23,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class NotasConsultasPequenasTest extends myTest
 {

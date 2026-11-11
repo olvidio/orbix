@@ -31,7 +31,7 @@ use src\procesos\domain\entity\ProcesoTipo;
 use src\procesos\domain\entity\TareaProceso;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Casos de uso de procesos: tareas de una actividad, cambio de fase en bloque, desplegables y pantalla de edición. */
 final class ProcesosCasosDeUsoTest extends myTest

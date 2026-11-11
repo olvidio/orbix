@@ -36,7 +36,7 @@ use src\zonassacd\domain\contracts\ZonaCtrRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\entity\Zona;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Plan de misas por centro (cuadrícula de encargos × días) y su buscador. */
 final class PlanPorCentroDataTest extends myTest

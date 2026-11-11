@@ -23,7 +23,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Datos del formulario de alta / edición de una nota de persona. */
 final class NotaPersonaFormDataTest extends myTest

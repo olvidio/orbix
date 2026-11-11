@@ -25,8 +25,8 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\SustituyeServiciosDelContenedor;
+use Tests\support\DescribeCriteria;
 
 /** Plan de estudios de un ca: director de estudios, profesores y preceptores, y las asignaturas de cada alumno. */
 final class PlanEstudiosCaDataTest extends myTest

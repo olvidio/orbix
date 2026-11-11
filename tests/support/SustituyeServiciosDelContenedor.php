@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\unit\actividadestudios\application\support;
+namespace Tests\support;
 
 /**
  * Para casos de uso que resuelven servicios con localizadores estáticos (`Persona::findPersonaEnGlobal()`,

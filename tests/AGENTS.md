@@ -102,12 +102,12 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 ## Localizadores estáticos y clases `final`
 
 - Hay casos de uso que resuelven dependencias con un localizador estático en lugar de recibirlas por constructor: `Persona::findPersonaEnGlobal()` (→ `PersonaFinderService`), `Ubi::NewUbi()` (→ `UbiFactory` → `CentroRepositoryInterface` / `CasaRepositoryInterface`), `DossierTipoPublicUrls`, `DependencyResolver::get(...)`. Un mock del constructor no los alcanza.
-- Patrón: en un test que extiende `myTest`, sustituir el servicio en el contenedor con `$GLOBALS['container']->set(X::class, $doble)` y **reponer el original en `tearDown()`**. El trait `Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor` lo hace (`sustituirServicio()` / `reponerServicios()`). Si no se repone, los tests siguientes del mismo proceso reciben el doble.
+- Patrón: en un test que extiende `myTest`, sustituir el servicio en el contenedor con `$GLOBALS['container']->set(X::class, $doble)` y **reponer el original en `tearDown()`**. El trait `Tests\support\SustituyeServiciosDelContenedor` lo hace (`sustituirServicio()` / `reponerServicios()`). Si no se repone, los tests siguientes del mismo proceso reciben el doble.
 - Las clases `final` (`UbiFactory`, `CentroNombreResolver`, `ProfesoresDesplegableData`, `EditarPersonaNota` y las clases de soporte de notas, `UbiRepositoryResolver`…) no se pueden simular: construir **la real** con sus repositorios simulados. Así se ejerce además su lógica. Para `UbiRepositoryResolver` hay una fábrica: `Tests\unit\ubis\support\UbiResolverFactory`.
 
 ## Aserciones sobre `Criteria`
 
-- Para comprobar qué consulta hace un caso de uso, capturar el `Criteria` en el `willReturnCallback` del mock y describirlo con `Tests\unit\planning\support\DescribeCriteria::filtros($c)` / `::orden($c)` (devuelven `["campo operador valor", …]` y `["campo asc", …]`).
+- Para comprobar qué consulta hace un caso de uso, capturar el `Criteria` en el `willReturnCallback` del mock y describirlo con `Tests\support\DescribeCriteria::filtros($c)` / `::orden($c)` (devuelven `["campo operador valor", …]` y `["campo asc", …]`).
 - Afirmar la lista **completa** con `assertSame` (filtros y orden), no solo `assertContains` de un filtro: así se detectan filtros que sobran, que faltan o que cambian de operador.
 
 ## Lo que un repositorio simulado no detecta

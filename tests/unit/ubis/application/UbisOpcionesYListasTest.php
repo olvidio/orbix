@@ -40,7 +40,7 @@ use src\ubis\domain\entity\Direccion;
 use src\ubis\domain\value_objects\DelegacionId;
 use src\ubis\domain\value_objects\DelegacionCode;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Opciones de desplegables, listado de ubis y calendario de periodos de una casa. */
 final class UbisOpcionesYListasTest extends myTest

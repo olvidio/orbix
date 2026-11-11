@@ -36,7 +36,7 @@ use src\personas\domain\entity\PersonaN;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use Tests\myTest;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Pantallas de la sincronización con la BDU: índice con contadores y listados de cada grupo. */
 final class DbexternPantallasDataTest extends myTest

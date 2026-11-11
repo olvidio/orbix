@@ -17,7 +17,7 @@ use src\personas\domain\entity\PersonaSacd;
 use src\shared\domain\criteria\Criteria;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaSacd;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 /** Desplegable de SACD del modal de la cuadrícula: libres del día (1), de la zona (2), de la dl n/a (4) y todos (8). */
 final class DesplegableSacdDataTest extends TestCase

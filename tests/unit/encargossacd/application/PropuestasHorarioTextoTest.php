@@ -11,7 +11,7 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\PropuestaEncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\shared\domain\criteria\Criteria;
-use Tests\unit\planning\support\DescribeCriteria;
+use Tests\support\DescribeCriteria;
 
 final class PropuestasHorarioTextoTest extends TestCase
 {
