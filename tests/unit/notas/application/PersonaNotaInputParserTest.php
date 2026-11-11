@@ -220,4 +220,38 @@ final class PersonaNotaInputParserTest extends TestCase
 
         $this->assertSame(2312, $pn->getId_nivel());
     }
+
+    public function test_nuevo_rechaza_acta_con_sigla_de_otra_region(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->parser()->parse([
+            'mod' => 'nuevo',
+            'id_pau' => 103615,
+            'id_asignatura' => 2312,
+            'id_nivel' => 2312,
+            'tipo_acta' => 1,
+            'acta_sigla' => 'crB',
+            'acta_num' => '3/20',
+            'id_situacion' => 10,
+            'epoca' => 0,
+        ]);
+    }
+
+    public function test_editar_acepta_acta_existente_con_sigla_de_otra_region(): void
+    {
+        $pn = $this->parser()->parse([
+            'mod' => 'editar',
+            'id_pau' => 103615,
+            'id_asignatura' => 2312,
+            'id_nivel' => 2312,
+            'tipo_acta' => 1,
+            'acta_sigla' => 'crB',
+            'acta_num' => '3/20',
+            'id_situacion' => 10,
+            'epoca' => 0,
+        ]);
+
+        $this->assertSame('crB 3/20', $pn->getActa());
+    }
 }

@@ -210,7 +210,6 @@ final class NotasPayload
             'acta_cert_dl_sel' => PayloadCoercion::string($payload['acta_cert_dl_sel'] ?? ''),
             'acta_cert_num' => PayloadCoercion::string($payload['acta_cert_num'] ?? ''),
             'mi_sigla' => PayloadCoercion::string($payload['mi_sigla'] ?? ''),
-            'dl_sin_esquema' => NotasFormSupport::desplegableOpciones($payload['dl_sin_esquema'] ?? []),
             'opciones_certificado_dl' => NotasFormSupport::desplegableOpciones($payload['opciones_certificado_dl'] ?? []),
             'tipo_acta' => NotasFormSupport::formScalar($payload['tipo_acta'] ?? ''),
             'f_acta' => PayloadCoercion::string($payload['f_acta'] ?? ''),

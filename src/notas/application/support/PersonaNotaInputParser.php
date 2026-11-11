@@ -154,7 +154,11 @@ final class PersonaNotaInputParser
             $acta = $sigla . ' ' . $actaNum;
         }
 
-        if ($acta !== '' && !$this->actaPersonaFormListas->siglaPermitidaEnActa(
+        // Temporal: al editar una nota ya existente se acepta la sigla que tenga
+        // (actas antiguas de otra región, p. ej. «crB 3/20»); solo se valida en el alta.
+        $esEdicion = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod') === 'editar';
+
+        if (!$esEdicion && $acta !== '' && !$this->actaPersonaFormListas->siglaPermitidaEnActa(
             ActaPrefijosDeEsquema::prefijoDeActa($acta)
         )) {
             throw new \RuntimeException(

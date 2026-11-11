@@ -188,7 +188,6 @@ if ($certSel !== '' && !array_key_exists($certSel, $opcionesCertDl)) {
 $oDesplCertDl = Desplegable::desdeOpciones($opcionesCertDl, 'acta_cert_dl', false);
 $oDesplCertDl->setOpcion_sel($certSel);
 
-$dlSinEsquema = is_array($datos['dl_sin_esquema'] ?? null) ? $datos['dl_sin_esquema'] : [];
 $actaSiglaSel = PayloadCoercion::string($datos['acta_sigla_sel'] ?? $datos['mi_sigla'] ?? '');
 $miSigla = PayloadCoercion::string($datos['mi_sigla'] ?? '');
 
@@ -231,7 +230,6 @@ $a_campos = [
     'acta_num' => $datos['acta_num'],
     'acta_cert_num' => $datos['acta_cert_num'],
     'mi_sigla' => $miSigla,
-    'dl_sin_esquema' => $dlSinEsquema,
     'oDesplCertDl' => $oDesplCertDl,
     'f_acta' => $datos['f_acta'],
     'f_acta_iso' => $datos['f_acta_iso'],

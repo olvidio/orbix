@@ -32,81 +32,13 @@ final class ActaPersonaFormListasTest extends TestCase
         $this->assertSame('', ActaPersonaFormListas::siglaCertificadoSinPrefijoCr('  '));
     }
 
-    public function test_con_sigla_region_del_esquema_la_pone_delante(): void
-    {
-        $opciones = ['Arg' => 'Arg', 'Ita' => 'Ita'];
-        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema($opciones, 'H');
-        $this->assertSame(['H' => 'H', 'Arg' => 'Arg', 'Ita' => 'Ita'], $out);
-    }
-
-    public function test_con_sigla_region_del_esquema_quita_prefijo_cr(): void
-    {
-        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema(['Arg' => 'Arg'], 'crGalbel');
-        $this->assertSame(['Galbel' => 'Galbel', 'Arg' => 'Arg'], $out);
-    }
-
-    public function test_con_sigla_region_del_esquema_si_ya_esta_la_mueve_al_frente(): void
-    {
-        $out = ActaPersonaFormListas::conSiglaRegionDelEsquema(['Arg' => 'Arg', 'H' => 'H'], 'H');
-        $this->assertSame(['H' => 'H', 'Arg' => 'Arg'], $out);
-    }
-
-    public function test_con_sigla_region_vacia_no_cambia_opciones(): void
-    {
-        $opciones = ['Arg' => 'Arg'];
-        $this->assertSame($opciones, ActaPersonaFormListas::conSiglaRegionDelEsquema($opciones, '  '));
-    }
-
-    public function test_esquema_region_stgr_acepta_h_m_y_cr(): void
-    {
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'H'));
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'Hv'));
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'M'));
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Galbel', 'crGalbel'));
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Galbel', 'crGalbelv'));
-        $this->assertTrue(ActaPersonaFormListas::esEsquemaRegionStgr('Cong', 'crCongf'));
-    }
-
-    public function test_esquema_region_stgr_rechaza_dl_de_h_y_m(): void
-    {
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlb'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlbv'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('H', 'dlp'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlm'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlmO'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('M', 'dlmOv'));
-        $this->assertFalse(ActaPersonaFormListas::esEsquemaRegionStgr('', 'H'));
-    }
-
-    public function test_sin_esquema_solo_las_delegaciones_van_a_acta(): void
-    {
-        $sinEsquema = ['cg', 'crAfom', 'crB', 'crCam', 'crCoe', 'dlu'];
-        $this->assertSame(['dlu' => 'dlu'], ActaPersonaFormListas::siglasActaSinEsquema($sinEsquema, false));
-        $this->assertSame(['dluf' => 'dluf'], ActaPersonaFormListas::siglasActaSinEsquema($sinEsquema, true));
-    }
-
     public function test_sin_esquema_regiones_y_cg_van_a_certificado_sin_prefijo_cr(): void
     {
-        $sinEsquema = ['cg', 'crAfom', 'crB', 'crCam', 'crCoe', 'dlu'];
+        $sinEsquema = ['crCoe', 'cg', 'crAfom', 'crB', 'crCam', 'dlu'];
         $this->assertSame(
-            ['cg' => 'cg', 'Afom' => 'Afom', 'B' => 'B', 'Cam' => 'Cam', 'Coe' => 'Coe'],
+            ['Afom' => 'Afom', 'B' => 'B', 'Cam' => 'Cam', 'cg' => 'cg', 'Coe' => 'Coe'],
             ActaPersonaFormListas::siglasCertificadoSinEsquema($sinEsquema)
         );
-    }
-
-    public function test_siglas_certificado_inactivas_segun_delegacion(): void
-    {
-        $estados = [['crIers', false], ['crH', true], ['dlb', true], ['crE', false]];
-        $this->assertSame(
-            ['Iers' => 'Iers', 'E' => 'E'],
-            ActaPersonaFormListas::siglasCertificadoInactivas($estados)
-        );
-    }
-
-    public function test_sigla_con_alguna_fila_activa_no_es_inactiva(): void
-    {
-        $estados = [['crH', true], ['H', false], ['', false]];
-        $this->assertSame([], ActaPersonaFormListas::siglasCertificadoInactivas($estados));
     }
 
     public function test_es_sigla_de_delegacion(): void
@@ -115,5 +47,30 @@ final class ActaPersonaFormListasTest extends TestCase
         $this->assertTrue(ActaPersonaFormListas::esSiglaDeDelegacion('dlmO'));
         $this->assertFalse(ActaPersonaFormListas::esSiglaDeDelegacion('crB'));
         $this->assertFalse(ActaPersonaFormListas::esSiglaDeDelegacion('cg'));
+    }
+
+    public function test_tiene_esquema_delegacion(): void
+    {
+        $esquemas = ['H-H', 'H-dlb', 'Galbel-crGalbel'];
+        $this->assertTrue(ActaPersonaFormListas::tieneEsquemaOrbix('H', 'dlb', $esquemas));
+        $this->assertFalse(ActaPersonaFormListas::tieneEsquemaOrbix('H', 'dlal', $esquemas));
+        $this->assertFalse(ActaPersonaFormListas::tieneEsquemaOrbix('Pla', 'dlu', $esquemas));
+    }
+
+    public function test_tiene_esquema_region_como_region_region_o_region_cr(): void
+    {
+        $esquemas = ['H-H', 'H-dlb', 'Galbel-crGalbel'];
+        $this->assertTrue(ActaPersonaFormListas::tieneEsquemaOrbix('H', 'crH', $esquemas));
+        $this->assertTrue(ActaPersonaFormListas::tieneEsquemaOrbix('Galbel', 'crGalbel', $esquemas));
+        $this->assertFalse(ActaPersonaFormListas::tieneEsquemaOrbix('M', 'crM', $esquemas));
+        $this->assertFalse(ActaPersonaFormListas::tieneEsquemaOrbix('zzz', 'cg', $esquemas));
+    }
+
+    public function test_certificado_incluye_las_siglas_fijas_en_orden(): void
+    {
+        $this->assertSame(
+            ['B' => 'B', 'cg' => 'cg', 'crs+' => 'crs+', 'Usca' => 'Usca'],
+            ActaPersonaFormListas::conSiglasFijas(['B' => 'B', 'cg' => 'cg', 'Usca' => 'Usca'])
+        );
     }
 }
