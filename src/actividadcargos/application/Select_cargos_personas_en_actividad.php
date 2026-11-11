@@ -158,7 +158,7 @@ class Select_cargos_personas_en_actividad
         if ($oPerm instanceof XPermisos
             && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
         ) {
-            $this->txt_eliminar .= "\\n" . _("esto también borrará a esta persona de la lista de asistentes");
+            $this->txt_eliminar .= "\n" . _("esto también borrará a esta persona de la lista de asistentes");
             $elim_asis_default = 2;
         } else {
             $elim_asis_default = 1;

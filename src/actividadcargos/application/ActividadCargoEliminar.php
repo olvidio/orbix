@@ -44,11 +44,16 @@ final class ActividadCargoEliminar
 
         $a_sel = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($input, 'sel');
         if ($id_item <= 0 && $a_sel !== []) {
-            // formato "id_nom#id_item#elim_asis#id_schema"
-            $tok = $a_sel[0];
-            strtok($tok, '#');
-            $id_item = (int) strtok('#');
-            $elim_asis = (int) strtok('#');
+            $partes = explode('#', $a_sel[0]);
+            if (count($partes) >= 3) {
+                // lista del dossier 3102 (cargos de una actividad): "id_nom#id_item#elim_asis#id_schema"
+                $id_item = (int) $partes[1];
+                $elim_asis = (int) $partes[2];
+            } else {
+                // lista del dossier 1302 (cargos de una persona): "id_item#elim_asis"
+                $id_item = (int) $partes[0];
+                $elim_asis = (int) ($partes[1] ?? 0);
+            }
         }
 
         if ($id_item <= 0) {

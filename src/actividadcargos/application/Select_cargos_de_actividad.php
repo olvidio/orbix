@@ -138,7 +138,7 @@ class Select_cargos_de_actividad
             $oTipoActiv = new TiposActividades($id_tipo_activ);
             $sasistentes = $oTipoActiv->getAsistentesText();
             if ($sasistentes === 's' || $sasistentes === 'sg') {
-                $this->txt_eliminar .= "\\n" . _("esto también borrará a esta persona de la lista de asistentes");
+                $this->txt_eliminar .= "\n" . _("esto también borrará a esta persona de la lista de asistentes");
                 $elim_asis_default = 2;
             }
         }
