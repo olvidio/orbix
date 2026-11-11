@@ -259,7 +259,7 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 ### Resumen de cobertura esperada
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
 - **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
-- Guía amplia para generar pruebas (patrones repos, sesión, `findById`/`null`, etc.): [`tests/AGENTS.md`](tests/AGENTS.md).
+- **Antes de escribir o modificar un test, leer [`tests/AGENTS.md`](tests/AGENTS.md)** (patrones de mocks y repositorios, sesión, `findById`/`null`, localizadores estáticos, `Criteria`, hallazgos, cómo ejecutar la suite).
 - **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
 - Usar el script `tools/qa/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
 - Usar `tools/qa/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash tools/qa/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
