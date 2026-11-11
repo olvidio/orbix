@@ -116,12 +116,15 @@ final class AsistenteGuardar
         $asistenteAppService = $this->asistenteApplicationService;
         $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
         if ($oAsistente === null) {
+            if ($mod === 'editar') {
+                return _("los datos de asistencia los modifica la dl del asistente");
+            }
             $oAsistente = new Asistente();
             $oAsistente->setId_activ($id_activ);
             $oAsistente->setId_nom($id_nom);
-        }
-
-        if ($mod === 'editar' && $oAsistente->perm_modificar() === false) {
+        } elseif ($oAsistente->perm_modificar() === false) {
+            // Con cualquier `mod`: si la asistencia ya existe y la registró otra dl, no se sobrescribe
+            // (antes solo se comprobaba al editar, y «nuevo»/«mover» se quedaban con ella).
             return _("los datos de asistencia los modifica la dl del asistente");
         }
 

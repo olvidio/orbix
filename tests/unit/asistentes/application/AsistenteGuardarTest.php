@@ -230,6 +230,7 @@ final class AsistenteGuardarTest extends TestCase
     public function test_mover_no_elimina_si_falla_guardar(): void
     {
         $o = $this->createMock(Asistente::class);
+        $o->method('perm_modificar')->willReturn(true);
         $o->method('setEncargo')->willReturnSelf();
         $o->method('setObserv')->willReturnSelf();
         $o->method('setObservEstVo')->willReturnSelf();
@@ -274,6 +275,7 @@ final class AsistenteGuardarTest extends TestCase
     public function test_mover_elimina_solo_despues_de_guardar(): void
     {
         $o = $this->createMock(Asistente::class);
+        $o->method('perm_modificar')->willReturn(true);
         $o->method('setEncargo')->willReturnSelf();
         $o->method('setObserv')->willReturnSelf();
         $o->method('setObservEstVo')->willReturnSelf();
@@ -567,22 +569,50 @@ final class AsistenteGuardarTest extends TestCase
     }
 
     /**
-     * Hallazgo: `perm_modificar()` solo se comprueba con `mod=editar`. Con `nuevo` (o `mover`) sobre un asistente
-     * que ya existe y es de otra dl, se sobrescriben sus datos y pasa a tener mi dl como responsable.
+     * Regresión: `perm_modificar()` solo se comprobaba con `mod=editar`. Con `nuevo` o `mover` sobre un asistente
+     * que ya existía y era de otra dl, se sobrescribían sus datos y pasaba a tener mi dl como responsable.
      */
-    public function test_nuevo_sobre_un_asistente_de_otra_dl_lo_sobrescribe_y_se_queda_con_el(): void
+    #[DataProvider('modosProvider')]
+    public function test_una_asistencia_existente_de_otra_dl_no_se_sobrescribe_con_ningun_modo(string $mod): void
+    {
+        $ajeno = $this->asistenteDe('dlp');
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->willReturn($ajeno);
+        $app->expects($this->never())->method('guardar');
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->expects($this->never())->method('eliminar');
+        $eliminar = new AsistenteEliminar($elimApp, $this->createMock(MatriculaRepositoryInterface::class), $this->createMock(DossierRepositoryInterface::class));
+
+        $msg = $this->createSut($app, null, $this->dossierRepo(), $eliminar)->execute([
+            'mod' => $mod, 'id_activ' => 10, 'id_nom' => 20, 'id_activ_old' => 5, 'encargo' => 'otro',
+        ]);
+
+        $this->assertNotSame('', $msg);
+        $this->assertSame('encargo anterior', $ajeno->getEncargo());
+        $this->assertSame('dlp', $ajeno->getDl_responsable());
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function modosProvider(): iterable
+    {
+        yield 'nuevo' => ['nuevo'];
+        yield 'editar' => ['editar'];
+        yield 'mover' => ['mover'];
+    }
+
+    public function test_nuevo_sobre_una_asistencia_existente_de_mi_dl_la_actualiza(): void
     {
         $guardado = null;
-        $ajeno = $this->asistenteDe('dlp');
-        $this->assertFalse($ajeno->perm_modificar());
+        $mia = $this->asistenteDe('dl');
 
-        $this->assertSame('', $this->createSut($this->appQueGuarda($guardado, $ajeno), null, $this->dossierRepo())->execute([
+        $this->assertSame('', $this->createSut($this->appQueGuarda($guardado, $mia), null, $this->dossierRepo())->execute([
             'mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 20, 'encargo' => 'otro',
         ]));
 
-        $this->assertSame($ajeno, $guardado);
+        $this->assertSame($mia, $guardado);
         $this->assertSame('otro', $guardado->getEncargo());
-        $this->assertSame('dl', $guardado->getDl_responsable());
     }
 
     public function test_mover_marca_la_asistencia_como_propia(): void
