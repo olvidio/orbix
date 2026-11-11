@@ -11,6 +11,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\actividadcargos\domain\criteria\CargoField;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -164,10 +165,10 @@ final class PlanEstudiosCaData
             );
             if (count($cMatriculas) === 0) {
                 switch ($stgr) {
-                    case 'r':
+                    case NivelStgrId::R:
                         $est = _("repaso");
                         break;
-                    case 'n':
+                    case NivelStgrId::N:
                         $est = _("plan de formación");
                         break;
                     default:
