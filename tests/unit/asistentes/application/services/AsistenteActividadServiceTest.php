@@ -410,17 +410,18 @@ final class AsistenteActividadServiceTest extends myTest
     }
 
     /**
-     * Hallazgo: la clase `ActividadEx` ya no existe (todas las actividades son `ActividadAll`), así que las ramas
-     * que comparan `getClassName() === 'ActividadEx'` no se cumplen nunca. Antes, una actividad de otra dl con
-     * `id_tabla = 'ex'` era `ActividadEx`: una persona de mi dl se guardaba en `d_asistentes_dl` (ahora va a
-     * `d_asistentes_out`) y una persona de otra dl se admitía en la tabla pub (ahora se rechaza).
+     * Hallazgo (código muerto): las ramas que comparan `getClassName() === 'ActividadEx'` no se cumplen nunca,
+     * porque todas las actividades son `ActividadAll`. Se añadieron en el refactor del 24-12-2025 y nunca han
+     * funcionado. El modelo antiguo (`AsistentePub::getClaseAsistente`) no tenía ese caso: en una actividad que no
+     * es de mi dl, una persona de mi dl iba siempre a `d_asistentes_out`, que es lo que pasa hoy (en desarrollo,
+     * 844 asistencias en actividades «ex» están en out y 11 en dl).
      */
     public function test_las_actividades_de_fuera_ya_no_se_distinguen_por_su_clase(): void
     {
         $this->personaDl(10011, 'A');
         $this->actividad(3001, 'dlz', 'ex');
 
-        $this->assertSame(AsistenteOutRepositoryInterface::class, $this->sut()->getRepoAsistente(10011, 3001), 'antes: d_asistentes_dl');
+        $this->assertSame(AsistenteOutRepositoryInterface::class, $this->sut()->getRepoAsistente(10011, 3001));
 
         $this->personas[10012] = self::conDl(new PersonaPub(), 'dlp');
         $this->expectException(\RuntimeException::class);
