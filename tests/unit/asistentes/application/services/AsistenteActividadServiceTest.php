@@ -410,13 +410,12 @@ final class AsistenteActividadServiceTest extends myTest
     }
 
     /**
-     * Hallazgo (código muerto): las ramas que comparan `getClassName() === 'ActividadEx'` no se cumplen nunca,
-     * porque todas las actividades son `ActividadAll`. Se añadieron en el refactor del 24-12-2025 y nunca han
-     * funcionado. El modelo antiguo (`AsistentePub::getClaseAsistente`) no tenía ese caso: en una actividad que no
-     * es de mi dl, una persona de mi dl iba siempre a `d_asistentes_out`, que es lo que pasa hoy (en desarrollo,
-     * 844 asistencias en actividades «ex» están en out y 11 en dl).
+     * Las actividades de fuera de Orbix («ex») no tienen tratamiento propio: como en el modelo antiguo
+     * (`AsistentePub::getClaseAsistente`), una persona de mi dl en una actividad que no es de mi dl va a
+     * `d_asistentes_out`, y una persona de otra dl no se puede apuntar. (Había unas ramas que comparaban la clase
+     * con `ActividadEx`, que ya no existe; nunca se cumplían y se han quitado.)
      */
-    public function test_las_actividades_de_fuera_ya_no_se_distinguen_por_su_clase(): void
+    public function test_las_actividades_de_fuera_van_como_cualquier_actividad_de_otra_dl(): void
     {
         $this->personaDl(10011, 'A');
         $this->actividad(3001, 'dlz', 'ex');

@@ -351,45 +351,29 @@ class AsistenteActividadService
         }
         // si es de la sf quito la 'f'
         $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
-        $claseActividad = $oActividad->getClassName();
+        $mi_dele = ConfigGlobal::mi_dele();
 
-        $repo = null;
-        if ($dl_persona === ConfigGlobal::mi_dele()) { // Persona de mi dl
-            if ($dl_org === ConfigGlobal::mi_dele()) {
-                switch ($clasePersona) {
-                    case 'PersonaDl':
-                        $repo = AsistenteDlRepositoryInterface::class;
-                        break;
-                    case 'PersonaEx':
-                        $repo = AsistenteExRepositoryInterface::class;
-                        break;
-                    default:
-                        $repo = AsistentePubRepositoryInterface::class;
-                        break;
-                }
-            } elseif ($claseActividad === 'ActividadEx') {
-                $repo = AsistenteDlRepositoryInterface::class;
-            } else {
-                $repo = AsistenteOutRepositoryInterface::class;
-            }
-        } else { // persona de otra dl
-            if ($clasePersona === 'PersonaEx') {
-                if ($dl_org === ConfigGlobal::mi_dele()) {
-                    $repo = AsistenteDlRepositoryInterface::class;
-                } else {
-                    $repo = AsistenteExRepositoryInterface::class;
-                }
-            } else {
-                $repo = AsistentePubRepositoryInterface::class;
+        if ($dl_persona === $mi_dele) { // Persona de mi dl
+            if ($dl_org !== $mi_dele) {
+                // Actividad de otra dl (publicada o «ex», de fuera de Orbix).
+                return AsistenteOutRepositoryInterface::class;
             }
 
-            // comprobar que es una actividad de mi dl, si no no tiene permiso
-            if ($dl_org !== ConfigGlobal::mi_dele() && $claseActividad !== 'ActividadEx') {
-                throw new \RuntimeException(_("No puede modificar los datos de asistencia de una persona de otra dl"));
-            }
-
+            return match ($clasePersona) {
+                'PersonaDl' => AsistenteDlRepositoryInterface::class,
+                'PersonaEx' => AsistenteExRepositoryInterface::class,
+                default => AsistentePubRepositoryInterface::class,
+            };
         }
-        return $repo;
+
+        // Persona de otra dl: solo en actividades de mi dl.
+        if ($dl_org !== $mi_dele) {
+            throw new \RuntimeException(_("No puede modificar los datos de asistencia de una persona de otra dl"));
+        }
+
+        return $clasePersona === 'PersonaEx'
+            ? AsistenteDlRepositoryInterface::class
+            : AsistentePubRepositoryInterface::class;
     }
 
     /**
