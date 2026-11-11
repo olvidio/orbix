@@ -278,7 +278,8 @@ function fnjs_convert(node){
 			// td con texto propio mezclado con <br>/<span> (ej: "actividad <span class=alert>[en espera]</span><br>otra"):
 			// los hijos solos pierden el texto huerfano, así que se pasa el html del td tal cual.
 			var tdMixto = $(node).contents().filter(function(){ return this.nodeType === 3 && $.trim(this.nodeValue) !== ''; }).length > 0
-				&& $(node).children('table,div,p,h1,h2,h3,ul,input,select,textarea').length === 0;
+				&& $(node).children('table,div,p,h1,h2,h3,ul,input,select,textarea').length === 0
+				&& $(node).children().length > 0; // solo texto: sigue por la rama de fecha/número
 			if (tdMixto) {
 				colSpan=$(node).attr("colspan");
 				if (colSpan== undefined) { Span="";} else {Span=" colspan='"+colSpan+"'"}
@@ -293,9 +294,15 @@ function fnjs_convert(node){
 				//rta="<"+tag+" "+clas+">"+$(node).html()+"</"+tag+">"; 
 				colSpan=$(node).attr("colspan");
 				if (colSpan== undefined) { Span="";} else {Span=" colspan='"+colSpan+"'"}
-				fecha_iso=convertToIso($(node).html()); //compruebo si tiene forma de fecha.
+				// Si la celda ya trae fecha_iso (Lista.php, fnjs_slickToTable) se respeta, con su clase (fecha / fecha_hora).
+				fecha_iso=$(node).attr("fecha_iso");
+				clase_fecha=$(node).hasClass("fecha_hora") ? "fecha_hora" : "fecha";
+				if (!fecha_iso || fecha_iso === "false") {
+					fecha_iso=convertToIso($.trim($(node).text())); //compruebo si tiene forma de fecha.
+					if (fecha_iso && fecha_iso.indexOf("T") !== -1) clase_fecha="fecha_hora";
+				}
 				if (fecha_iso) {
-					rta="<td class='fecha' fecha_iso='"+fecha_iso+"'>"+$(node).html()+"</td>";
+					rta="<td"+Span+" class='"+clase_fecha+"' fecha_iso='"+fecha_iso+"'>"+$(node).html()+"</td>";
 				} else {
 					num_iso=$(node).html();
 					if ($.isNumeric(num_iso)) { // si es número y tiene separador decimal lo cambio a coma.

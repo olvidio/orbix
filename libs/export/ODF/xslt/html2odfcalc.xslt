@@ -214,12 +214,12 @@ You should have received a copy of the GNU General Public License along with thi
 		</xsl:when>
 		<xsl:when test="@tipo='notext'">
 		</xsl:when>
-		<xsl:when test="@class='fecha_hora'">
+		<xsl:when test="@class='fecha_hora' and string-length(@fecha_iso) &gt;= 10">
 			<table:table-cell table:style-name="cefechaHora" office:value-type="date" office:date-value="{@fecha_iso}" >
 				<xsl:call-template name="text_applyer"/>
 			</table:table-cell>
 		</xsl:when>
-		<xsl:when test="@class='fecha'">
+		<xsl:when test="@class='fecha' and string-length(@fecha_iso) &gt;= 10">
 			<table:table-cell table:style-name="cefecha" office:value-type="date" office:date-value="{@fecha_iso}" >
 				<xsl:call-template name="text_applyer"/>
 			</table:table-cell>
