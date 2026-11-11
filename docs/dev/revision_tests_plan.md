@@ -1,6 +1,6 @@
 # Revisión de tests: completitud y calidad por módulo
 
-> **Estado:** fase 0 completa (2026-11-10). Fase 1: pasos 1.0 a 1.6 hechos; siguiente 1.7.
+> **Estado:** fase 0 completa (2026-11-10). Fase 1: pasos 1.0 a 1.6 hechos; 1.7 en curso (quedan `casas` y `actividadestudios`, ver sección 17).
 > **Cómo retomar:** leer las secciones 2–4, buscar en la sección 6 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese. Cada paso termina con tests en verde y un commit propio. Presupuesto de IA: sección 7.
 
 ---
@@ -385,21 +385,16 @@ Método: pequeñas clases con lógica propia → unit con mocks (si la dependenc
 
 ### Resumen del paso 1.7 (estado y pendiente)
 
-**Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning`, `permisos` (1.5/1.6), `personas` y `actividadplazas`. `configuracion` queda con solo `ModuloInstaladoTablesService` (ejecuta DDL: igual que `devel_db_admin`, solo con BD aislada). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
+**Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning`, `permisos` (1.5/1.6), `personas`, `actividadplazas` y, el 2026-11-11, `actividadcargos`, `shared`, `menus`, `profesores` y `dossiers`. `configuracion` queda con solo `ModuloInstaladoTablesService` (ejecuta DDL: igual que `devel_db_admin`, solo con BD aislada). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
 
-**Pendiente (clases de `application` sin test, actualizado tras `personas`, `actividadplazas` y `configuracion`; 25 + las 3 de `devel_db_admin` y `ModuloInstaladoTablesService` a propósito):**
+**Pendiente (clases de `application` sin test, actualizado el 2026-11-11 tras los módulos pequeños; 15 + las 3 de `devel_db_admin` y `ModuloInstaladoTablesService` a propósito = 19/628):**
 
 | Módulo | Sin test / total | Notas |
 |---|---|---|
 | `actividadestudios` | 10 / 34 | el más grande (`CaPosiblesData` 605 líneas, `Select_matriculas_de_una_persona` 507, `ActaNotasDefinitivasGrabar` 306…) |
 | `casas` | 5 / 16 | los `*Data` grandes (`CasasResumenData` 493 líneas) |
 | `configuracion` | 1 / 6 | solo `ModuloInstaladoTablesService`, que ejecuta DDL (BD aislada) |
-| `actividadcargos` | 4 / 11 | `Select_cargos_*` (HTML en `src/`) |
-| `dossiers` | 3 / 12 | `DossiersVerPantallaData` (469), `DossiersListaFichasData`, `DossierFichaSelectRunner` |
-| `menus` | 1 / 12 | `MenusGetPageData` |
-| `profesores` | 1 / 6 | `FichaProfesorStgr` (357) |
-| `shared` | 1 / 12 | `ReconciliadorCopia` (se prueba indirectamente vía `ResincronizarCuCentros`) |
-| `usuarios` | 0 / 8 | `AppMobileLogin` y `LoginProcesar` cubiertos (152 tests, la mayoría de integración con un usuario de prueba que se borra siempre) |
+| `devel_db_admin` | 3 / 28 | a propósito (DDL, roles, ficheros) |
 
 Hechos en esta pasada (además de las secciones anteriores): `cambios` (preferencias de avisos), `casas` (gastos, ingresos, ocupación), `dossiers` (permisos y resolutor), `shared` (hidratación de permisos, cola de mails); `actividadtarifas` completo (formularios de tarifas, `TarifaUbiUpdateInc`, `TarifaUbiCopiar`), `tablonanuncios`, `certificados`, `cartaspresentacion`, y `AsistentePlanEstOk`, `ActividadAsignaturaEditar`, `MatriculaEditar`, `DocenciaActualizar`, `MenuGuardar`, `ProfesorAsignaturaQueData`, `usuarioEliminar`.
 
@@ -603,11 +598,48 @@ Unit con mocks (8 ficheros, ≈ 120 casos): `ListaUltimQueCtrData`, `QueCtrLista
 6. `Select_actividades_de_una_persona::getSegmentData` llama dos veces a `getValores()` y, si la primera no devuelve filas, repite la consulta de asistencias (se hace dos veces por pantalla vacía).
 7. `FormActividadesDeUnaPersonaData` recibe el `ContainerInterface` de PSR para resolver el repositorio de asistentes por nombre: service locator dentro de `application`.
 
+### `actividadcargos` (4 clases sin test al empezar; módulo cerrado: 0/11)
 
+Unit (4 ficheros, 66 casos): `ActividadCargoEliminar` (formatos de selección, cierre de los dossiers 1302/1301, borrado de la asistencia solo en actividades de s/sg y solo si es de mi dl), `ResincronizarCdCargosActiv` (lo propio de la copia, con SQLite como origen) y los widgets `Select_cargos_de_actividad` (3102) y `Select_cargos_personas_en_actividad` (1302). Los widgets devuelven HTML: el test fija `DOCUMENT_ROOT` para que `ViewNewPhtml` encuentre la vista y comprueba los datos de la rejilla, el texto del `confirm`, los campos ocultos y los enlaces de alta.
 
+**Bugs corregidos** (commit `fix(actividadcargos)` con su test):
+1. «Quitar cargo» desde el dossier de una persona (lista 1302) manda `sel = "id_item#elim_asis"`, pero `ActividadCargoEliminar` lo leía con el formato de la 3102 (`id_nom#id_item#elim_asis#id_schema`): tomaba `elim_asis` (1 o 2) como `id_item`. Resultado: se borraba el cargo 1 o 2 (si existía) o se respondía «no encuentro el cargo». **Conviene revisar en producción si faltan los cargos con `id_item` 1 y 2.**
+2. El aviso «esto también borrará a esta persona de la lista de asistentes» se concatenaba con `"\\n"` (barra y n literales) y la vista lo pasa por `json_encode`: el usuario veía `\n` en el diálogo.
 
+**Hallazgos (sin corregir):**
+1. `ActividadCargoEliminar::cerrarDossier` exige `id_pau > 0`: a una persona de paso (id negativo) no se le cierra el dossier 1302 ni el 1301.
+2. El cargo se elimina antes de intentar borrar la asistencia y no hay transacción: si falla la asistencia se devuelve error con el cargo ya borrado.
+3. `Select_cargos_personas_en_actividad` llama a `exit()` si no encuentra a la persona (con la ruta del fichero en el mensaje); sin test por eso.
+4. **Capas:** los dos widgets instancian `frontend\shared\web\Lista`, `ViewNewPhtml`, `BotonesCurso` y el helper de `HashF` dentro de `src/` y devuelven HTML (`getHtml`), a diferencia de los widgets ya migrados a `getSegmentData`.
+5. En la lista 3102, si la actividad no existe, el `confirm` de «quitar cargo» sale vacío.
+6. En la lista 1302 `des`/`vcsd` avisan siempre de que se borra la asistencia, aunque la actividad no sea de s/sg (el caso de uso luego no la borra).
 
+### `shared` (1 clase sin test al empezar; módulo cerrado: 0/12)
 
+`ReconciliadorCopiaTest` (19 casos): un reconciliador de prueba sin conexiones reales (PDO simulados, origen fijado por esquema). Cubre qué esquemas se recorren (solo dl de comun con id 3000–3999, sin `resto`, `H-H`/`M-M` ni los `…v`/`…f`), las tres omisiones, el cálculo de altas/cambios/bajas, que valores equivalentes de distinto tipo no cuentan como cambio, el tope de 20 líneas de detalle, las filas de otro `id_schema`, informe frente a aplicar, el orden bajas/altas, una transacción por esquema y el rollback ante fallo de escritura. Sin hallazgos.
 
+### `menus` (1 clase sin test al empezar; módulo cerrado: 0/12)
 
+`MenusGetPageDataTest` (13 casos): listado por grupo, permiso de menús de la sesión, formulario de edición con las cápsulas `HashB` de cada acción y formulario de alta.
 
+**Hallazgos (sin corregir):** el alta no hereda el grupo que se estaba listando (`id_grupmenu` nulo); un `id_menu` no numérico se convierte en 0 y se busca el menú 0; el caso de uso construye el HTML de la casilla `ok` (`txt_ok`).
+
+### `profesores` (1 clase sin test al empezar; módulo cerrado: 0/6)
+
+`FichaProfesorStgrTest` (20 casos) con los quince repositorios simulados. La persona se busca con `Persona::findPersonaEnGlobal()` (estático): el test sustituye `PersonaFinderService` en el contenedor y lo repone en `tearDown`.
+
+**Hallazgos (sin corregir):**
+1. Un nombramiento vigente cuyo departamento ya no existe deja un separador colgando en la línea de departamentos (`"Dep 3; Dep 5; "`).
+2. Un tipo de dossier que no existe en `d_tipos_dossiers` deja el bloque sin clave en `aPerm` (la vista tiene que tolerar la clave ausente).
+3. Una ampliación o docencia de una asignatura inexistente lanza `RuntimeException` y tumba la ficha entera.
+4. **Capas:** localizador estático de personas (`Persona::findPersonaEnGlobal`) y `new PermDossier()` dentro del caso de uso.
+
+### `dossiers` (3 clases sin test al empezar; módulo cerrado: 0/12)
+
+Unit (3 ficheros, 68 casos): `DossierFichaSelectRunner` (con widgets de prueba resueltos por el contenedor), `DossiersListaFichasData` (qué tipos se listan según app instalada, `ubiscamas` y disponibilidad de widget o clase de datos; carpeta abierta/cerrada; permisos; enlaces) y `DossiersVerPantallaData` (cabecera de persona/actividad/ubi, de quién es el dossier según `sel`/`refresh`/`mod`, accesos directos `queSel`, fichas con widget y con tabla de datos, varios dossiers con `y`, aviso de región stgr). Para el widget se crea una clase `Select_demo` en un directorio temporal, porque el resolutor los busca en disco.
+
+**Hallazgos (sin corregir):**
+1. `DossierFichaSelectRunner`: si el widget no declara `segment_tipo` (o no devuelve un array), el tipo por defecto es `select_habitaciones_cdc`, sea cual sea el widget.
+2. `DossiersVerPantallaData`: el enlace «ver dossiers» se monta antes de deducir el tipo de persona y conserva el `obj_pau` genérico (`''`/`Persona`); el de «home» sí lleva el deducido.
+3. El error «No encuentro a nadie con id_nom» incluye la ruta del fichero PHP del servidor.
+4. Un `obj_pau` de persona o de ubi desconocido lanza `InvalidArgumentException` sin capturar (no devuelve `error`).
