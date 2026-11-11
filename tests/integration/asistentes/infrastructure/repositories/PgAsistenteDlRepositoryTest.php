@@ -133,14 +133,88 @@ class PgAsistenteDlRepositoryTest extends myTest
         $this->assertNull($oAsistenteEliminado);
     }
 
-    /* en la tabla actual, dl_responsable tiene valores vacío y da error
-    public function test_get_asistentes_sin_filtros()
+
+    private function asistenteConDatos(\src\asistentes\domain\value_objects\AsistentePk $pk, bool $marcas, string $sufijo, ?int $plaza): Asistente
     {
-        $result = $this->repository->getAsistentes();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
+        $o = $this->factory->createSimple($pk);
+        $o->setPropio($marcas);
+        $o->setEst_ok($marcas);
+        $o->setCfi($marcas);
+        $o->setFalta($marcas);
+        $o->setCfi_con($marcas ? 5 : null);
+        $o->setEncargo('encargo ' . $sufijo);
+        $o->setObserv('observ ' . $sufijo);
+        $o->setObservEstVo('observ est ' . $sufijo);
+        $o->setDl_responsable('dl' . $sufijo);
+        $o->setIdTablaVo('dl');
+        $o->setPlaza($plaza);
+        $o->setPropietarioVo($plaza === null ? null : 'dl' . $sufijo . '>dl');
+
+        return $o;
     }
-    */
+
+    /** @return array<string, mixed> */
+    private static function campos(Asistente $o): array
+    {
+        return [
+            'propio' => $o->isPropio(),
+            'est_ok' => $o->isEst_ok(),
+            'cfi' => $o->isCfi(),
+            'falta' => $o->isFalta(),
+            'cfi_con' => $o->getCfi_con(),
+            'encargo' => $o->getEncargo(),
+            'observ' => $o->getObserv(),
+            'observ_est' => $o->getObserv_est(),
+            'dl_responsable' => $o->getDl_responsable(),
+            'id_tabla' => $o->getId_tabla(),
+            'plaza' => $o->getPlazaVo()?->value(),
+            'propietario' => $o->getPropietarioVo()?->value(),
+        ];
+    }
+
+    /**
+     * Ida y vuelta de todos los campos, al crear y al actualizar con valores distintos (incluidos los nulos):
+     * el test de «actualizar» guardaba dos veces los mismos datos y no comprobaba nada de lo actualizado.
+     */
+    public function test_ida_y_vuelta_de_todos_los_campos_al_crear_y_al_actualizar(): void
+    {
+        $pk = new \src\asistentes\domain\value_objects\AsistentePk(10018801, 10019801);
+        try {
+            $alta = $this->asistenteConDatos($pk, true, 'b', 4);
+            $this->assertTrue($this->repository->Guardar($alta));
+            $leido = $this->repository->findByPk($pk);
+            $this->assertNotNull($leido);
+            $this->assertSame(self::campos($alta), self::campos($leido));
+
+            $cambio = $this->asistenteConDatos($pk, false, 'p', null);
+            $this->assertTrue($this->repository->Guardar($cambio));
+            $releido = $this->repository->findByPk($pk);
+            $this->assertSame(self::campos($cambio), self::campos($releido));
+            $this->assertSame([false, null, null, 'dlp'], [$releido->isPropio(), $releido->getCfi_con(), $releido->getPlazaVo(), $releido->getDl_responsable()]);
+        } finally {
+            $o = $this->repository->findByPk($pk);
+            if ($o !== null) {
+                $this->repository->Eliminar($o);
+            }
+        }
+        $this->assertNull($this->repository->findByPk($pk));
+    }
+
+    /**
+     * Hidrata filas reales de la tabla: un valor de BD que un VO no acepte (p. ej. un `dl_responsable` vacío, que
+     * antes hacía fallar este test) se ve aquí y no solo en producción.
+     */
+    public function test_las_filas_reales_de_la_tabla_se_hidratan_sin_errores(): void
+    {
+        $result = $this->repository->matching(
+            \src\shared\domain\criteria\Criteria::create()
+                ->orderBy(\src\asistentes\domain\criteria\AsistenteField::IdActiv, \src\shared\domain\criteria\OrderDirection::Desc)
+                ->limit(500)
+        );
+
+        $this->assertIsList($result);
+        $this->assertContainsOnlyInstancesOf(Asistente::class, $result);
+        $this->assertLessThanOrEqual(500, count($result));
+    }
 
 }

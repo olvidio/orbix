@@ -21,8 +21,9 @@ class AsistenteObservTest extends myTest
 
     public function test_fromNullableString_returns_instance_for_valid_value()
     {
-        $asistenteObserv = AsistenteObserv::fromNullableString('test value');
+        $asistenteObserv = AsistenteObserv::fromNullableString('  test value ');
         $this->assertInstanceOf(AsistenteObserv::class, $asistenteObserv);
+        $this->assertSame('test value', $asistenteObserv->value(), 'se recortan los espacios');
     }
 
     public function test_fromNullableString_returns_null_for_null_value()
@@ -31,4 +32,14 @@ class AsistenteObservTest extends myTest
         $this->assertNull($asistenteObserv);
     }
 
+    public function test_fromNullableString_returns_null_for_empty_or_blank_value(): void
+    {
+        $this->assertNull(AsistenteObserv::fromNullableString(''));
+        $this->assertNull(AsistenteObserv::fromNullableString('   '));
+    }
+
+    public function test_constructor_trims_the_value(): void
+    {
+        $this->assertSame('x', (new AsistenteObserv('  x  '))->value());
+    }
 }

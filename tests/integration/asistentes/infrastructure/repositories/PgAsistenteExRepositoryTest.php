@@ -134,14 +134,22 @@ class PgAsistenteExRepositoryTest extends myTest
         $this->assertNull($oAsistenteEliminado);
     }
 
-    /* en la tabla actual, dl_responsable tiene valores vacío y da error
-    public function test_get_asistentes_sin_filtros()
+
+    /**
+     * Hidrata filas reales de la tabla: un valor de BD que un VO no acepte (p. ej. un `dl_responsable` vacío, que
+     * antes hacía fallar este test) se ve aquí y no solo en producción.
+     */
+    public function test_las_filas_reales_de_la_tabla_se_hidratan_sin_errores(): void
     {
-        $result = $this->repository->getAsistentes();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
+        $result = $this->repository->matching(
+            \src\shared\domain\criteria\Criteria::create()
+                ->orderBy(\src\asistentes\domain\criteria\AsistenteField::IdActiv, \src\shared\domain\criteria\OrderDirection::Desc)
+                ->limit(500)
+        );
+
+        $this->assertIsList($result);
+        $this->assertContainsOnlyInstancesOf(Asistente::class, $result);
+        $this->assertLessThanOrEqual(500, count($result));
     }
-    */
 
 }
