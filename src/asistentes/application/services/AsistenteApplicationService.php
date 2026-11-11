@@ -83,10 +83,12 @@ class AsistenteApplicationService
         // tabla destino segun la dl de la persona y la de la actividad.
         // Caso A: listados resuelven nombres vía global.personas; no hace falta
         // marcar publicación al guardar asistencia cross-DL.
-        $this->repository = $this->resolverRepositorioDeAsistente($asistente)
+        // Variable local: $this->repository es la vista general con la que leen findById() y matching();
+        // el servicio es compartido y no debe quedar apuntando a una tabla hija tras guardar.
+        $repository = $this->resolverRepositorioDeAsistente($asistente)
             ?? $this->resolverRepositorioDestino($asistente);
-        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente) {
-            $success = $this->repository->Guardar($asistente);
+        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente, $repository) {
+            $success = $repository->Guardar($asistente);
 
             if ($success) {
                 $uow->registerEntity($asistente);
@@ -133,9 +135,8 @@ class AsistenteApplicationService
         if ($repository === null) {
             return false;
         }
-        $this->repository = $repository;
-        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente) {
-            $success = $this->repository->Eliminar($asistente);
+        return (bool) $this->unitOfWork->execute(function ($uow) use ($asistente, $repository) {
+            $success = $repository->Eliminar($asistente);
 
             if ($success) {
                 $uow->registerEntity($asistente);
