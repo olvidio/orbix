@@ -288,18 +288,8 @@ final class CaPosiblesDataTest extends myTest
         yield 'n: «todos» manda sobre las otras casillas' => [['id_ctr_n' => 1003, 'ca_todos' => 't', 'ca_repaso' => 't'], '^112'];
         yield 'agd: todos' => [['id_ctr_agd' => 1004], '^133'];
         yield 'agd: de estudios' => [['id_ctr_agd' => 1004, 'ca_estudios' => 't'], '^1332'];
+        yield 'agd: de repaso' => [['id_ctr_agd' => 1004, 'ca_repaso' => 't'], '^1334'];
         yield 'agd con na explícito' => [['id_ctr_agd' => 1004, 'na' => 'agd'], '^133'];
-    }
-
-    /**
-     * Hallazgo: el patrón de «ca de repaso» de agregados lleva un `1` de más (`^1` + sección + `334`): con la
-     * sección sv busca `^11334`, que no es un tipo de agregados. El de numerarios es `^` + sección + `124`.
-     */
-    public function test_el_patron_de_repaso_de_agregados_lleva_un_digito_de_mas(): void
-    {
-        $this->uc()->execute(['id_ctr_agd' => 1004, 'ca_repaso' => 't', 'grupo_estudios' => 'todos'] + self::PERIODO);
-
-        $this->assertSame('id_tipo_activ matches ^11334', $this->filtros['publicadas'][0]);
     }
 
     public function test_con_grupo_de_estudios_solo_cuentan_los_ca_de_las_dl_del_grupo(): void

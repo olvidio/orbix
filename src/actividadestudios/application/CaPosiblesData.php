@@ -140,7 +140,7 @@ final class CaPosiblesData
                         $idTipoActiv = '^' . $miSfsv . '332';
                     }
                     if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($QcaRepaso)) {
-                        $idTipoActiv = '^1' . $miSfsv . '334';
+                        $idTipoActiv = '^' . $miSfsv . '334';
                     }
                 }
                 $patronTipoActiv = $idTipoActiv;
