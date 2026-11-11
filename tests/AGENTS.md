@@ -99,7 +99,53 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
   - Usar un **contenedor anónimo** con `get(string $id)` que lance `RuntimeException` si se pide una clase no mapeada: así cualquier dependencia olvidada se ve al instante.
 - Esto mantiene el test **rápido** (sin PDO, sin views, sin refresco de matviews) y **determinista**, que es el objetivo de los unitarios donde compensa.
 
+## Localizadores estáticos y clases `final`
+
+- Hay casos de uso que resuelven dependencias con un localizador estático en lugar de recibirlas por constructor: `Persona::findPersonaEnGlobal()` (→ `PersonaFinderService`), `Ubi::NewUbi()` (→ `UbiFactory` → `CentroRepositoryInterface` / `CasaRepositoryInterface`), `DossierTipoPublicUrls`, `DependencyResolver::get(...)`. Un mock del constructor no los alcanza.
+- Patrón: en un test que extiende `myTest`, sustituir el servicio en el contenedor con `$GLOBALS['container']->set(X::class, $doble)` y **reponer el original en `tearDown()`**. El trait `Tests\unit\actividadestudios\application\support\SustituyeServiciosDelContenedor` lo hace (`sustituirServicio()` / `reponerServicios()`). Si no se repone, los tests siguientes del mismo proceso reciben el doble.
+- Las clases `final` (`UbiFactory`, `CentroNombreResolver`, `ProfesoresDesplegableData`, `EditarPersonaNota` y las clases de soporte de notas, `UbiRepositoryResolver`…) no se pueden simular: construir **la real** con sus repositorios simulados. Así se ejerce además su lógica. Para `UbiRepositoryResolver` hay una fábrica: `Tests\unit\ubis\support\UbiResolverFactory`.
+
+## Aserciones sobre `Criteria`
+
+- Para comprobar qué consulta hace un caso de uso, capturar el `Criteria` en el `willReturnCallback` del mock y describirlo con `Tests\unit\planning\support\DescribeCriteria::filtros($c)` / `::orden($c)` (devuelven `["campo operador valor", …]` y `["campo asc", …]`).
+- Afirmar la lista **completa** con `assertSame` (filtros y orden), no solo `assertContains` de un filtro: así se detectan filtros que sobran, que faltan o que cambian de operador.
+
+## Lo que un repositorio simulado no detecta
+
+- Un mock acepta cualquier valor en un `Filter`. Dos bugs reales de la fase 1 pasaban todos los tests con mocks y fallaban en producción:
+  - `Filter::in(PersonaField::NivelStgr, NivelStgrId::getArrayNivelStgrOn())` pasaba las **etiquetas** («Bienio»…) y no los ids: error SQL `invalid input syntax for type integer`. Los `getArrayXxx()` de los VO devuelven `id => etiqueta`; para filtrar, `array_keys(...)`.
+  - Un `switch` comparaba `getNivel_stgr()` (entero) con las letras `'r'` / `'n'` del modelo antiguo: nunca coincidía.
+- Reglas:
+  - En los datos del test usar **los valores y tipos de producción** (constantes del VO, `NivelStgrId::R`, no `'r'` ni `4` suelto), para que una comparación con literales antiguos falle en el test.
+  - Si un `matching()` recibe valores calculados (de un VO, de un mapa, de la sesión), añadir **un caso contra el repositorio real** del contenedor que solo compruebe que la consulta se ejecuta (ejemplo: `CaPosiblesDataTest::test_la_consulta_de_numerarios_funciona_contra_el_repositorio_real`).
+
+## Resultados que se combinan de varias fuentes
+
+- Si el caso de uso junta listas de dos repositorios (publicadas + de la dl, dl + otras regiones…), el test debe devolver **filas en las dos** y comprobar que salen todas. Unir listas con `+` conserva solo las claves de la izquierda y pierde las filas de la derecha con el mismo índice (bug real en `CaPosiblesData`); en código, `array_merge`.
+
+## Tokens `HashB` en la respuesta
+
+- Los casos de uso devuelven cápsulas firmadas (`ctx_editar`, `ctx_eliminar`, `ctx_update`…). No basta con comprobar que la clave existe: abrirla con `HashB::open($token, 'accion')` y afirmar el payload exacto (ids y acción). Un token firmado para otra acción o con otro id pasa desapercibido si solo se mira que no esté vacío.
+
+## `ConfigSnapshot` en la sesión
+
+- El constructor tiene 15 argumentos posicionales y es fácil equivocarse de posición (el 1.º es `gesCalendario`, el 7.º `ambito`, el 8.º y 9.º `notaCorte` / `notaMax`, el 11.º `idiomaDefault`, el 14.º y 15.º los cursos stgr y crt). Un valor en la posición equivocada no da error: el test prueba otra configuración. Preferir **argumentos con nombre** (`new ConfigSnapshot(gesCalendario: 'central', ...)`) o copiar una construcción que ya funcione, y guardar/restaurar `$_SESSION['oConfig']`.
+
+## Caracterizar comportamiento incorrecto (hallazgos)
+
+- Cuando un test destapa un comportamiento erróneo que no se corrige en ese momento, **fijarlo tal como es** con un nombre que lo describa (`test_..._se_compara_con_el_texto_entrecomillado`) y un docblock que empiece por `Hallazgo:` y explique qué debería pasar. Así el bug queda localizable con `rg "Hallazgo:" tests/` y, al corregirlo, el test falla y obliga a revisarlo.
+- La corrección va en un commit `fix(<modulo>)` aparte que cambia ese test (y lo mueve de «hallazgos» a «bugs corregidos» en el plan).
+- Para fijar un error fatal (`$lista[0]` sobre lista vacía, método sobre `null`): `$this->expectException(\Error::class);` y llamar con `@` para silenciar el warning previo.
+- Comprobar que el test del arreglo **falla sin el arreglo** (p. ej. `git stash -- <fichero>` y volver a ejecutar) antes de dar el fix por cubierto.
+
+## Tests en `tests/unit` que llegan a la BD
+
+- Algunos casos de uso tocan la BD aunque sus repositorios estén simulados (p. ej. `AsignaturasPendientes` crea tablas temporales y consulta `e_notas` con el PDO global). Si el test extiende `myTest` y llega a esa SQL, usar **ids que no pueden existir** (negativos tipo `-999000001`) y no escribir nada. Si tiene que escribir, es un test de integración: va a `tests/integration`, con datos fijos y limpieza en `finally`.
+- Contraejemplo: `Tests\unit\notas\notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` escribe notas con datos aleatorios del factory sobre la BD real y falla de forma intermitente («Ya existe esta nota»).
+
 ## Ejecutar PHPUnit
 
 - PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.
+- **Suite completa:** necesita más memoria que los 128 MB por defecto del contenedor (se corta hacia la mitad con `Allowed memory size … exhausted`). Añadir `-d memory_limit=1G`. Tarda unos 2–3 minutos (≈ 9000 tests).
+- **`phpunit.xml` tiene `stopOnFailure="true"`**: se para en el primer fallo y PHPUnit 11 no tiene opción para desactivarlo. Para ver todos los fallos de una vez, copiar la configuración con `stopOnFailure="false"` a un fichero temporal dentro del repo (el contenedor solo ve el repo), pasarlo con `-c` y **borrarlo después**.
 - **Playwright (E2E)** en **`e2e/`**: servidor Orbix por URL configurable; sin credenciales solo smoke del formulario de login; con `E2E_USER`/`E2E_PASSWORD` se recorren enlaces de `/index.php` vía GET. Detalle en **`e2e/README.md`**. Comando: `npm run test:e2e` (antes `npm run test:e2e:install-browsers` una vez).
