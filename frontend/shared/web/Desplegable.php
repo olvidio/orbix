@@ -189,12 +189,17 @@ class Desplegable
                 $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . $value . '" ' . $chk . '>' . $label;
             }
         } elseif (is_array($this->oOpciones)) {
+            // PHP convierte en int las claves numéricas del array; lo marcado suele llegar
+            // de $_POST como string. Se compara por su forma de texto.
+            $aCheckedTxt = array_map(self::scalarString(...), $aChecked);
+            $aOpcionNoTxt = array_map(self::scalarString(...), $aOpcionNo);
             foreach ($this->oOpciones as $key => $val) {
-                $chk = in_array($key, $aChecked, true) ? 'checked' : '';
-                if (in_array($key, $aOpcionNo, true)) {
+                $keyTxt = self::scalarString($key);
+                $chk = in_array($keyTxt, $aCheckedTxt, true) ? 'checked' : '';
+                if (in_array($keyTxt, $aOpcionNoTxt, true)) {
                     continue;
                 }
-                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . self::scalarString($key) . '" ' . $chk . '>' . self::scalarString($val);
+                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . $keyTxt . '" ' . $chk . '>' . self::scalarString($val);
             }
         } else {
             $msg_err = _("tiene que ser un array") . ': ' . __FILE__ . ': line ' . __LINE__;
