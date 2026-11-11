@@ -39,17 +39,20 @@ class PgAsistentePubRepository extends PgAsistenteRepository implements Asistent
     public function getListaAsistentesDistintos(array $aId_activ = []): array|false
     {
         $oDbl = $this->getoDbl_Select();
+        $params = [];
         $where = '';
         if (!empty($aId_activ)) {
-            $where = 'WHERE id_activ=';
-            $where .= implode(' OR id_activ=', $aId_activ);
+            $placeholders = [];
+            foreach (array_values($aId_activ) as $i => $idActiv) {
+                $placeholders[] = ":id_activ_$i";
+                $params["id_activ_$i"] = (int) $idActiv;
+            }
+            $where = 'WHERE id_activ IN (' . implode(', ', $placeholders) . ')';
         }
-        $sQuery = "SELECT DISTINCT id_nom from publicv.d_asistentes_de_paso $where";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorAsistentePub.lista.id_nom';
-            /** @var \src\shared\infrastructure\logging\GestorErrores $oGestorErrores */
-            $oGestorErrores = $_SESSION['oGestorErrores'];
-            $oGestorErrores->addErrorAppLastError($oDbl, $sClauError, (string) __LINE__, __FILE__);
+        $sQuery = "SELECT DISTINCT id_nom FROM publicv.d_asistentes_de_paso $where";
+        $oDblSt = $this->prepareAndExecute($oDbl, $sQuery, $params, 'GestorAsistentePub.lista.id_nom', __FILE__, __LINE__);
+        if ($oDblSt === false) {
+            return false;
         }
         $aId_nom = [];
         foreach ($oDblSt as $aDades) {
