@@ -165,6 +165,8 @@ final class CaPosiblesData
                 throw new \InvalidArgumentException(_("Parámetro na no válido"));
         }
 
+        // Número de personas seleccionadas: con una sola se devuelve la lista de sus ca posibles.
+        $alum = count($aSel);
         if (!empty($aSel)) {
             $idsNom = [];
             foreach ($aSel as $selBox) {
@@ -186,7 +188,7 @@ final class CaPosiblesData
             switch ($idTablaPersona) {
                 case 'n':
                     $criterioPersona = $criterioPersona
-                        ->where(Filter::in(PersonaField::NivelStgr, NivelStgrId::getArrayNivelStgrOn()));
+                        ->where(Filter::in(PersonaField::NivelStgr, array_keys(NivelStgrId::getArrayNivelStgrOn())));
                     $personaRepository = $this->personaNRepository;
                     break;
                 case 'a':
@@ -243,7 +245,7 @@ final class CaPosiblesData
         $cActividades2 = $this->actividadDlRepository->matching(
             $criterioActividad->andWhere(Filter::eq(ActividadAllField::Publicado, false))
         );
-        $cActividades = $cActividades1 + $cActividades2;
+        $cActividades = array_merge($cActividades1, $cActividades2);
 
         $msgTxt = '';
         $aDatosCa = [];
