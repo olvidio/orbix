@@ -1,6 +1,6 @@
 # Revisión de tests: completitud y calidad por módulo
 
-> **Estado:** fase 0 completa (2026-11-10). Fase 1: pasos 1.0 a 1.6 hechos; 1.7 en curso (quedan `casas` y `actividadestudios`, ver sección 17).
+> **Estado:** fase 0 completa (2026-11-10). Fase 1 completa (2026-11-11): pasos 1.0 a 1.7 hechos (quedan a propósito 4 clases que ejecutan DDL, ver sección 17).
 > **Cómo retomar:** leer las secciones 2–4, buscar en la sección 6 el primer paso sin marcar (`- [ ]`) y ejecutar solo ese. Cada paso termina con tests en verde y un commit propio. Presupuesto de IA: sección 7.
 
 ---
@@ -167,7 +167,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 1.4b Tests unitarios de las 6 entidades sin test (hechas: `ActividadAllDatosCampos`, `Plantilla`, y las de 1.2/1.3): `ActividadAllDatosCampos`, ~~`DlListas`, `PersonaBDU`, `IdMatchPersona`~~ (hechas en 1.2), ~~`PropuestaEncargoSacd`~~ (hecha en 1.3), `Plantilla` (con 1.4).
 - [x] 1.5 `permisos`: estructura y tests (cobertura 28 % → 97 %). Ver sección 14.
 - [x] 1.6 `planning`: tests de los casos de uso sin cubrir + integración (cobertura 45 % → 62 %). Ver sección 16.
-- [ ] 1.7 Casos de uso sin test, módulo por módulo (desglose y avance en la sección 17).
+- [x] 1.7 Casos de uso sin test, módulo por módulo (desglose en la sección 17). Quedan a propósito `AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla` y `ModuloInstaladoTablesService` (DDL: necesitan una BD aislada).
 
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
@@ -379,20 +379,18 @@ Qué se verifica: tabla de personas según marcadores (`n` por defecto, `a`, `s`
 
 ---
 
-## 17. Paso 1.7: casos de uso sin test, módulo por módulo (en curso)
+## 17. Paso 1.7: casos de uso sin test, módulo por módulo (cerrado el 2026-11-11)
 
 Método: pequeñas clases con lógica propia → unit con mocks (si la dependencia es una interfaz o una clase no `final`); clases `final` o que encadenan servicios `final` y los grandes `*Data` de consulta → integración con el contenedor real (la clase de fallo más habitual es un fatal con respuesta 200, que solo se ve ejecutando). Cada lote termina en commit propio. Seguimiento con `php tools/qa/check_test_application.php [--modulo=X] [--list]`.
 
 ### Resumen del paso 1.7 (estado y pendiente)
 
-**Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning`, `permisos` (1.5/1.6), `personas`, `actividadplazas` y, el 2026-11-11, `actividadcargos`, `shared`, `menus`, `profesores` y `dossiers`. `configuracion` queda con solo `ModuloInstaladoTablesService` (ejecuta DDL: igual que `devel_db_admin`, solo con BD aislada). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
+**Cerrados (0 clases de `application` sin test):** `encargossacd`, `notas`, `misas`, `dbextern`, `ubis`, `procesos`, `pasarela`, `actividades`, `asistentes`, `planning`, `permisos` (1.5/1.6), `personas`, `actividadplazas` y, el 2026-11-11, `actividadcargos`, `shared`, `menus`, `profesores`, `dossiers`, `casas` y `actividadestudios`. `configuracion` queda con solo `ModuloInstaladoTablesService` (ejecuta DDL: igual que `devel_db_admin`, solo con BD aislada). `devel_db_admin` queda en 3/28 **a propósito** (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`: ejecutan DDL, crean roles o reescriben ficheros; requieren una BD de pruebas aislada).
 
-**Pendiente (clases de `application` sin test, actualizado el 2026-11-11 tras los módulos pequeños; 15 + las 3 de `devel_db_admin` y `ModuloInstaladoTablesService` a propósito = 19/628):**
+**Pendiente (clases de `application` sin test, 2026-11-11): 4/628, todas a propósito.**
 
 | Módulo | Sin test / total | Notas |
 |---|---|---|
-| `actividadestudios` | 10 / 34 | el más grande (`CaPosiblesData` 605 líneas, `Select_matriculas_de_una_persona` 507, `ActaNotasDefinitivasGrabar` 306…) |
-| `casas` | 5 / 16 | los `*Data` grandes (`CasasResumenData` 493 líneas) |
 | `configuracion` | 1 / 6 | solo `ModuloInstaladoTablesService`, que ejecuta DDL (BD aislada) |
 | `devel_db_admin` | 3 / 28 | a propósito (DDL, roles, ficheros) |
 
@@ -643,3 +641,36 @@ Unit (3 ficheros, 68 casos): `DossierFichaSelectRunner` (con widgets de prueba r
 2. `DossiersVerPantallaData`: el enlace «ver dossiers» se monta antes de deducir el tipo de persona y conserva el `obj_pau` genérico (`''`/`Persona`); el de «home» sí lleva el deducido.
 3. El error «No encuentro a nadie con id_nom» incluye la ruta del fichero PHP del servidor.
 4. Un `obj_pau` de persona o de ubi desconocido lanza `InvalidArgumentException` sin capturar (no devuelve `error`).
+
+### `casas` (5 clases sin test al empezar; módulo cerrado: 0/16)
+
+Unit con mocks (5 ficheros, 96 casos): `PrevisionAsistentesData` (qué tipos ve cada oficina, gestión central del calendario, plazas de la casa y token `HashB`), `CasaActividadesListaData` (permisos de ocupado/ver, apps `procesos` y `actividadessacd`, sacd aprobados en sf), `CasaIngresosListaData` (precio por tarifa o propio, parte proporcional, acumulados y totales sv/sf, avisos de datos que faltan), `CalendarioUbiResumenData` (tarifas actuales y previstas, incremento, previsión de ingresos y todos los agregados) y `CasasResumenData` (selección de casas, fila por secciones, reparto del gasto, superávit madre/hija, totales y modo anual).
+
+**Hallazgos (sin corregir):**
+1. `CasaIngresosListaData` y `CasasResumenData` piden la «duración en el periodo» con las fechas de la propia actividad (`getDuracionEnPeriodo($f_ini, $f_fin)`), no con el periodo consultado: el factor es siempre 1 y la parte proporcional (y el asterisco de la nota) nunca se aplica.
+2. `CasaIngresosListaData` busca la tarifa de la casa con el año del formulario tal cual: con un periodo por fechas (sin año) busca el año «» y no la encuentra. Sin objeto de permisos en la sesión no lista ninguna actividad (el listado de actividades lo trata como «se ve todo»).
+3. `CasaActividadesListaData`: el permiso «ver sacd» no oculta nada (la condición es «puede ver **o** hay nombres»); las filas ocultas por permisos dejan huecos en la numeración.
+4. `CalendarioUbiResumenData`: la respuesta `sin_gastos_anterior` se monta con `empty() + [...]` y la unión conserva los valores vacíos de la izquierda (se pierden nombre, plazas, tarifas y días; el frontend no los usa). Todas las actividades se valoran con la última tarifa del listado (ya comentado en el código).
+5. `CasasResumenData`: el gasto propio de una casa hija no entra en el superávit conjunto (se suman sus ingresos a la madre, pero solo se resta el gasto de la madre); si la madre no tiene periodos, su superávit no cambia pero el de la hija se vacía igualmente.
+6. `PrevisionAsistentesData`: una casa sin plazas definidas deja `null` en la celda (la casa inexistente deja 0).
+7. **Capas:** `CasaActividadesListaData`, `CasaIngresosListaData` y `CasasResumenData` instancian `frontend\shared\web\Periodo` dentro de `src/`.
+
+### `actividadestudios` (10 clases sin test al empezar; módulo cerrado: 0/34)
+
+Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `PosiblesAsignaturasCaData` (con la tabla temporal real de `AsignaturasPendientes` llena desde el repositorio simulado), `FormAsignaturasDeUnaActividadData`, `MatriculasListaData`, `PlanEstudiosCaData`, los widgets `Select_matriculas_de_una_actividad` (3103) y `Select_matriculas_de_una_persona` (1303), `ActaNotasDefinitivasGrabar` (con `EditarPersonaNota` y las clases de soporte de notas reales sobre repositorios simulados) y `CaPosiblesData`. Para los localizadores estáticos (`Persona::findPersonaEnGlobal`, `Ubi::NewUbi`) el trait `tests/unit/actividadestudios/application/support/SustituyeServiciosDelContenedor` sustituye el servicio del contenedor y lo repone.
+
+**Bugs corregidos** (commits `fix(actividadestudios)` con su test):
+1. `PlanEstudiosCaData`: el nivel stgr (entero) se comparaba con las letras `'r'`/`'n'` del modelo antiguo; los alumnos de repaso o sin estudios sin matrículas salían con «???».
+2. `CaPosiblesData`, **cuadro de numerarios roto**: el filtro de nivel pasaba las etiquetas («Bienio»…) en lugar de los ids y la consulta acababa en error SQL (`invalid input syntax for type integer`). Regresión de la migración a `Criteria` (30-10-2026).
+3. `CaPosiblesData`, **lista de una persona inalcanzable**: la variable `$alum` (personas seleccionadas) se perdió en la misma migración; «posibles ca» desde una persona devolvía siempre la tabla y emitía avisos de variable sin definir.
+4. `CaPosiblesData`: los ca publicados y los de la dl sin publicar se unían con `+` siendo listas; los de la dl con el mismo índice se perdían. Ahora `array_merge`.
+
+**Hallazgos (sin corregir):**
+1. `ActaNotasDefinitivasGrabar`: los errores de acta cortan con `return` en mitad del bucle y sin transacción: las notas de los alumnos anteriores ya están grabadas aunque la respuesta sea de error («No se ha guardado nada»). Una matrícula sin situación toma la fecha de `$cActas[0]` sin comprobar que exista: sin acta de la asignatura en el ca, error fatal. Una matrícula con situación «numérica» y acta pero sin nota se graba sin número, también en un acta firmada. El aviso «ha cursado una opcional que no tocaba» es prácticamente inalcanzable (hay 65 niveles «de sobra»).
+2. `CaPosiblesData`: el patrón de «ca de repaso» de agregados lleva un dígito de más (`^1` + sección + `334`); con una sola dl en el grupo de estudios se compara con el texto entrecomillado (ya comentado en el código); `stgr` de cada fila de la tabla es el de la última persona del cuadro; las personas se indexan por nombre.
+3. `Select_matriculas_de_una_persona`: el patrón `^1(122)|(222)|(332)|(123)` solo ancla la primera alternativa.
+4. `ListaClasesCaData` y `PlanEstudiosCaData`: sin el cargo «d.est.» en la tabla de cargos, error fatal (`$cCargos[0]`). En el plan de estudios, una asignatura cuyo profesor no se encuentra desaparece (la lista de clases la muestra con el profesor en blanco). `ListaClasesCaData` devuelve HTML (`<span class=no_print>`) e indexa los alumnos por nombre.
+5. Una asignatura que ya no existe en el catálogo lanza excepción y tumba la pantalla entera en `ListaClasesCaData`, `PlanEstudiosCaData`, `MatriculasListaData` y los dos widgets.
+6. `PosiblesAsignaturasCaData`: cualquier nota de la asignatura la descarta aunque no esté superada; la lista de «fin de cuadrienio» no mira el nivel del alumno (uno de bienio sale también).
+7. `FormAsignaturasDeUnaActividadData`: sin actividad, el alta consulta antes los profesores de la «actividad 0» y lanza una excepción que habla del nombre de la asignatura.
+8. Varios mensajes de error incluyen la ruta del fichero PHP del servidor (`E43CertificadoData`, `MatriculasListaData`, `ListaClasesCaData`, widgets). `Select_matriculas_de_una_actividad` repite todas las consultas en cada `getValores()` cuando no hay matrículas.
