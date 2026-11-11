@@ -243,6 +243,8 @@ final class TablaAlumnosAsignaturasTest extends myTest
         $r = $this->tabla()->paraRegionStgr([9, 5], [9 => 'dlz', 8 => 'dly']);
 
         $this->assertStringContainsString('dl in [dlz]', implode('|', DescribeCriteria::filtros($this->criteriosPersonas[0])));
+        // nivel_stgr es numérico: se filtra por lista de niveles, no por regex de texto.
+        $this->assertStringStartsWith('nivel_stgr in', DescribeCriteria::filtros($this->criteriosPersonas[0])[1]);
         $this->assertSame('dlb', $r['filas'][1][3]);
         $this->assertSame('dl', explode(' ', DescribeCriteria::orden($this->criteriosPersonas[0])[0])[0]);
     }

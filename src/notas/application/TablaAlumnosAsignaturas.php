@@ -84,10 +84,11 @@ final class TablaAlumnosAsignaturas
             return ['cabeceras' => $this->cabeceras([]), 'filas' => []];
         }
 
-        // La regex 'b|c1|c2' sobre nivel_stgr (numérico) se conserva tal cual estaba.
+        // nivel_stgr es numérico: mismos niveles que paraDelegacion() (la antigua regex
+        // 'b|c1|c2' venía del campo de texto `stgr` y ya no casaba con nada).
         $criterioPersonas = Criteria::create()
             ->where(Filter::eq(PersonaField::Situacion, 'A'))
-            ->andWhere(Filter::matches(PersonaField::NivelStgr, 'b|c1|c2'))
+            ->andWhere(Filter::in(PersonaField::NivelStgr, [NivelStgrId::B, NivelStgrId::C1, NivelStgrId::C2, NivelStgrId::BC]))
             ->andWhere(Filter::in(PersonaField::Dl, $dls))
             ->orderBy(PersonaField::Dl)
             ->addOrderBy(PersonaField::NivelStgr)
