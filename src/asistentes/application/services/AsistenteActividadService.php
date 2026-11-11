@@ -134,7 +134,7 @@ class AsistenteActividadService
             }
 
             $key = array_search($id_activ, $a_id_activ_f_ini);
-            if ($key !== false) {
+            if ($key !== false && !isset($cActividadesOk[$key])) {
                 $cActividadesOk[$key] = $oAsistente;
             }
             $id_actividad_old = $id_activ;
@@ -262,13 +262,13 @@ class AsistenteActividadService
             return [];
         }
         $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
-        // Si es de la sf quito la 'f'
+        // Si es de la sf quito la 'f' (y se compara con mi dl sin la 'f').
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org() ?? '');
 
         $criteria = Criteria::create()->where(Filter::eq(AsistenteField::IdActiv, $iid_activ));
 
         $msg_err = '';
-        if ($dl === ConfigGlobal::mi_delef()) {
+        if ($dl === ConfigGlobal::mi_dele()) {
             // Todos los asistentes. Los de paso (id_nom negativo) viven en d_asistentes_ex.
             $repos = [
                 AsistenteDlRepositoryInterface::class,
