@@ -194,6 +194,13 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 ---
 
+## 6b. Dudas pendientes para el usuario
+
+Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (desde el 2026-11-12). Mientras no se respondan, el comportamiento no se cambia (o se aplica lo indicado entre paréntesis).
+
+1. **(2.5) Traslado a una dl no activa:** `Trasladar::trasladar()` con el código 3 de `comprobar()` avisa «Solamente se anotará el traslado» pero no llama a `apuntar()`. ¿Anotar el traslado o cambiar el mensaje? (Sin tocar.)
+2. **(2.5) Resincronizar sacd desde la web:** `/src/personas/sacd_resincronizar` con `aplicar=1` escribe en todos los esquemas sin token ni rol. (Aplazado en `backlog.md` por analogía con el de cargos; confirmar.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.

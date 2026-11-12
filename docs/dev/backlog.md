@@ -41,3 +41,9 @@ Formato sugerido por ítem:
 - **Qué:** `/src/actividadcargos/cargos_activ_resincronizar` (GET o POST) incluye el script CLI `src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php`. Con `aplicar=1` reescribe `cd_cargos_activ_dl` en los esquemas de todas las dl, y lo puede lanzar cualquier usuario autenticado: no pide token `HashB` ni rol (solo exige estar en el interior sv y no ser DMZ). Además devuelve HTML desde `src/`. Opciones: exigir rol de administrador y token, o quitar la ruta web y dejarlo solo como CLI.
 - **Por qué no ahora:** decisión del 12-11-2026 de dejarlo como está de momento.
 - **Notas:** detectado en el paso 2.4 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 20, «Pendiente de decisión»).
+
+### Proteger el endpoint web de resincronización de sacd
+
+- **Qué:** `/src/personas/sacd_resincronizar` (GET o POST) incluye el script CLI `src/personas/infrastructure/cli/sacd_resincronizar.php` (reconciliación de `cp_sacd` en comun). Con `aplicar=1` escribe en todos los esquemas sin token `HashB` ni comprobación de rol. Mismo caso y mismas opciones que el de cargos.
+- **Por qué no ahora:** se aplica por analogía la decisión del 12-11-2026 sobre el de cargos; pendiente de confirmar (plan, «Dudas pendientes para el usuario»).
+- **Notas:** detectado en el paso 2.5 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 21).
