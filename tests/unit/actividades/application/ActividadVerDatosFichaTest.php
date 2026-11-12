@@ -104,10 +104,8 @@ final class ActividadVerDatosFichaTest extends myTest
         $this->assertSame('dlb', $out['select_dl_org']['selected']);
         $this->assertSame([4 => 'B', 5 => 'C'], $out['select_tarifa']['opciones']);
         $this->assertSame(['5', false], [$out['select_tarifa']['selected'], $out['select_tarifa']['blanco']]);
-        // Hallazgo: para 112021 (ca de cuadrienio) la ficha propone N, mientras que
-        // NivelStgrId::generarNivelStgr() —el que usa el alta con el nivel vacío— da 2.
-        $this->assertSame((string) NivelStgrId::N, $out['select_nivel_stgr']['selected']);
-        $this->assertSame(2, NivelStgrId::generarNivelStgr(112021));
+        // Ca de cuadrienio: 2, la misma regla que el alta (antes la ficha proponía N).
+        $this->assertSame((string) NivelStgrId::C1, $out['select_nivel_stgr']['selected']);
         $this->assertSame(['ca_ES', '11'], [$out['select_idioma']['selected'], $out['select_repeticion']['selected']]);
         $this->assertSame('Montaña', $out['nombre_ubi']);
         $this->assertSame(['sv', 'n', 'ca'], [$out['ssfsv'], $out['sasistentes'], $out['sactividad']]);

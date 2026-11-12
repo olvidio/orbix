@@ -11,6 +11,7 @@ use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\entity\Importada;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
@@ -161,6 +162,14 @@ final class ActividadNuevaTest extends myTest
         $this->assertSame(5, $g->getNivel_stgr());
         $this->assertTrue($g->isPublicado());
         $this->assertSame('ca_ES', $g->getIdiomaVo()?->value());
+    }
+
+    public function test_nivel_vacio_de_un_tipo_fuera_de_la_tabla_es_sin_estudios(): void
+    {
+        // Antes: generarNivelStgr() daba 0, que no es un nivel válido, y el alta fallaba.
+        $this->guardarEnDl($g);
+        $this->uc()->actividadNueva($this->datos(['id_tipo_activ' => '141000']));
+        $this->assertSame(NivelStgrId::N, $g->getNivel_stgr());
     }
 
     public function test_lugar_sin_determinar_conserva_el_lugar_especial(): void

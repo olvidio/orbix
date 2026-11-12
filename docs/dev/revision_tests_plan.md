@@ -839,7 +839,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 20. `ListaCentrosActivDatos`: los nombres de los otros centros encargados iban sin escapar al HTML (el value object no admite `<`/`>`, pero sí comillas).
 
 **Pendiente de decisión (tercera parte):**
-3. **Nivel stgr por defecto:** para un ca de cuadrienio (112021) la ficha (`ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad`) propone N, mientras que `NivelStgrId::generarNivelStgr()` —el que usa el alta cuando el nivel llega vacío— da 2 (cuadrienio). Como la ficha siempre manda un nivel, un ca de cuadrienio nuevo se guarda con N salvo que el usuario lo cambie. Hay que decidir cuál de las dos reglas vale y unificarlas.
+3. ~~**Nivel stgr por defecto**~~ **(resuelto el 12-11-2026: «2»; regla única `NivelStgrId::porDefectoParaTipo()`, que usan la ficha, el endpoint del nivel por defecto y el alta con el nivel vacío; el alta ya no intenta guardar 0 para los tipos fuera de la tabla).** Para un ca de cuadrienio (112021) la ficha (`ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad`) propone N, mientras que `NivelStgrId::generarNivelStgr()` —el que usa el alta cuando el nivel llega vacío— da 2 (cuadrienio). Como la ficha siempre manda un nivel, un ca de cuadrienio nuevo se guarda con N salvo que el usuario lo cambie. Hay que decidir cuál de las dos reglas vale y unificarlas.
 
 **Hallazgos (tercera parte, sin corregir):**
 1. `ListaActividadesSgListado`: con `procesos` y sin permisos en la sesión, las actividades se saltan sin contarlas (la búsqueda general las muestra todas); el texto «ocupado» va en la columna de inicio.

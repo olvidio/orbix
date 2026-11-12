@@ -116,6 +116,33 @@ final class NivelStgrId
         return $nivel_stgr;
     }
 
+    /**
+     * Nivel stgr por defecto de un tipo de actividad (ficha y alta usan esta
+     * única regla): primero la tabla de {@see generarNivelStgr()}; si el tipo no
+     * está, por el texto de la actividad de 2 cifras (estudios y semestre → C1,
+     * repaso → R); si no, N (sin estudios).
+     */
+    public static function porDefectoParaTipo(int|string $id_tipo_activ): int
+    {
+        $txt = (string) $id_tipo_activ;
+        if ($txt === '') {
+            return self::N;
+        }
+        $deTabla = self::generarNivelStgr($txt);
+        if ($deTabla !== 0) {
+            return $deTabla;
+        }
+        $actividad2 = (new \src\actividades\domain\entity\TiposActividades($txt, true))->getActividad2DigitosText();
+        if (str_contains($actividad2, 'est') || str_contains($actividad2, 'semestre')) {
+            return self::C1;
+        }
+        if (str_contains($actividad2, 'repaso')) {
+            return self::R;
+        }
+
+        return self::N;
+    }
+
 public static function fromNullableInt(?int $value): ?self
 {
     // 0 no es un nivel válido (p. ej. desplegable en blanco → inputInt → 0).

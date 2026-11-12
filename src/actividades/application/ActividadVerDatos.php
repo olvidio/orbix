@@ -43,27 +43,12 @@ final class ActividadVerDatos
     }
 
     /**
-     * Nivel STGR por defecto en formulario según `id_tipo_activ` (p. ej. cursos de repaso → R).
-     * Usa parsing extendido de {@see TiposActividades} para reconocer `ca-repaso`, `cv-repaso`, etc.
+     * Nivel STGR por defecto en formulario según `id_tipo_activ`: la regla única
+     * {@see NivelStgrId::porDefectoParaTipo()} (la misma que usa el alta).
      */
     public static function nivelStgrPorDefectoParaIdTipoActividad(string $idTipoActiv): int
     {
-        if ($idTipoActiv === '') {
-            return NivelStgrId::N;
-        }
-        $oTipo = new TiposActividades($idTipoActiv, true);
-        $actividad2 = $oTipo->getActividad2DigitosText();
-        if (str_contains($actividad2, 'est')) {
-            return NivelStgrId::C1;
-        }
-        if (str_contains($actividad2, 'repaso')) {
-            return NivelStgrId::R;
-        }
-        if (str_contains($actividad2, 'semestre')) {
-            return NivelStgrId::C1;
-        }
-
-        return NivelStgrId::N;
+        return NivelStgrId::porDefectoParaTipo($idTipoActiv);
     }
 
     /**

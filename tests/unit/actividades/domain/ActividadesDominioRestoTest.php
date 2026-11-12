@@ -46,6 +46,26 @@ final class ActividadesDominioRestoTest extends TestCase
         $this->assertSame($nivel, NivelStgrId::generarNivelStgr((string) $tipo));
     }
 
+    public static function providerPorDefecto(): \Generator
+    {
+        yield 'ca de cuadrienio (tabla)' => ['112021', NivelStgrId::C1];
+        yield 'ca de bienio (tabla)' => [112000, NivelStgrId::B];
+        yield 'repaso (tabla)' => ['112023', NivelStgrId::R];
+        yield 'ceagd (tabla)' => ['133016', NivelStgrId::CE];
+        yield 'ca de estudios fuera de la tabla' => ['122200', NivelStgrId::C1];
+        yield 'cv de repaso fuera de la tabla' => ['113400', NivelStgrId::R];
+        yield 'semestre de invierno fuera de la tabla' => ['132300', NivelStgrId::C1];
+        yield 'crt' => ['141000', NivelStgrId::N];
+        yield 'vacío' => ['', NivelStgrId::N];
+    }
+
+    #[DataProvider('providerPorDefecto')]
+    public function test_nivel_stgr_por_defecto_regla_unica(int|string $tipo, int $nivel): void
+    {
+        $this->assertSame($nivel, NivelStgrId::porDefectoParaTipo($tipo));
+        $this->assertSame($nivel, \src\actividades\application\ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad((string) $tipo));
+    }
+
     public function test_nivel_stgr_lista_corta_e_invalidos(): void
     {
         $this->assertSame([NivelStgrId::B, NivelStgrId::C1, NivelStgrId::C2], array_keys(NivelStgrId::getArrayNivelStgrOn()));

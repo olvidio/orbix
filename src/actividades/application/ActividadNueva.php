@@ -149,7 +149,9 @@ class ActividadNueva
         $oActividad->setStatus($Qstatus);
         $oActividad->setObserv($Qobserv);
         if ($Qnivel_stgr === 0) {
-            $Qnivel_stgr = NivelStgrId::generarNivelStgr($Qid_tipo_activ);
+            // Misma regla que la ficha (antes la tabla sola: 0 para los tipos que no
+            // están, que no es un nivel válido).
+            $Qnivel_stgr = NivelStgrId::porDefectoParaTipo($Qid_tipo_activ);
         }
         $oActividad->setNivel_stgr($Qnivel_stgr);
         $oActividad->setId_repeticion($Qid_repeticion);
