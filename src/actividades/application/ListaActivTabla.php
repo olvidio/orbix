@@ -80,11 +80,16 @@ class ListaActivTabla
 
         $criteria = Criteria::create();
         if (is_array($Qstatus)) {
-            $cond_status = '';
+            // Antes se concatenaban en una regex sin corchetes («12»), que no coincide con ningún estado.
+            $statuses = [];
             foreach ($Qstatus as $status) {
-                $cond_status .= is_scalar($status) ? (string) $status : '';
+                if (is_numeric($status)) {
+                    $statuses[] = (int) $status;
+                }
             }
-            $criteria = $criteria->andWhere(Filter::matches(ActividadAllField::Status, $cond_status));
+            if ($statuses !== []) {
+                $criteria = $criteria->andWhere(Filter::in(ActividadAllField::Status, $statuses));
+            }
         } elseif (!empty($Qstatus)) {
             $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, $Qstatus));
         }
@@ -159,7 +164,7 @@ class ListaActivTabla
         $ActividadRepository = $this->actividadRepository;
         $cActividades = $ActividadRepository->matching($criteria->orderBy(ActividadAllField::FIni));
 
-        if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
+        if ($Qque === 'list_activ_inv_sg' || $Qque === 'list_activ_sr') {
             // El titulo lo suele enviar el formulario que_lista_activ_sg / que_lista_activ_sr.
             $titulo = ucfirst(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'titulo'));
         } else {
@@ -268,12 +273,7 @@ class ListaActivTabla
             $a_valores[$i][2] = $f_ini;
             $a_valores[$i][4] = $f_fin;
             if ($ver_hora === 1) {
-                if (strlen($h_ini ?? '')) {
-                    $h_ini = substr($h_ini, 0, strlen($h_ini) - 3);
-                }
-                if (strlen($h_fin ?? '')) {
-                    $h_fin = substr($h_fin, 0, strlen($h_fin) - 3);
-                }
+                // Ya vienen como H:i (antes se recortaban 3 caracteres pensando en H:i:s y quedaba solo la hora).
                 $a_valores[$i][3] = $h_ini;
                 $a_valores[$i][5] = $h_fin;
             }

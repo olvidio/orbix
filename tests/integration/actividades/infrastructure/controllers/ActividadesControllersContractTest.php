@@ -359,6 +359,15 @@ final class ActividadesControllersContractTest extends myTest
         $this->assertSame(['ok' => 1], self::data($json));
     }
 
+    public function test_lista_activ_pasa_uno_o_varios_estados(): void
+    {
+        $caso = $this->doble(ListaActivTabla::class, ['execute' => []]);
+        $this->ejecutar('lista_activ_datos.php', ['status' => ['1', '2']]);
+        $this->ejecutar('lista_activ_datos.php', ['status' => '2']);
+        // Antes, con varias casillas, filter_var sin FILTER_REQUIRE_ARRAY daba false: listado sin filtrar por estado.
+        $this->assertSame([['1', '2'], '2'], array_map(fn ($l) => $l[1][0]['status'], $caso->llamadas));
+    }
+
     public function test_ver_datos_calcula_el_nivel_stgr_por_defecto_si_no_viene(): void
     {
         $caso = $this->doble(ActividadVerDatos::class, ['ejecutar' => []]);

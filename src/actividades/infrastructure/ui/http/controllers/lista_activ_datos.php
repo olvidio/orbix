@@ -17,7 +17,11 @@ use src\permisos\domain\MenuDlPermissionBits;
 
 $input = [
     'que' => (string)\src\shared\domain\helpers\FilterPostGet::post('que'),
-    'status' => \src\shared\domain\helpers\FilterPostGet::post('status'),
+    // Varias casillas llegan como status[]: sin FILTER_REQUIRE_ARRAY filter_var
+    // devuelve false y el listado salía sin filtrar por estado.
+    'status' => is_array($_POST['status'] ?? null)
+        ? \src\shared\domain\helpers\FilterPostGet::post('status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY)
+        : \src\shared\domain\helpers\FilterPostGet::post('status'),
     'id_tipo_activ' => (string)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ'),
     'filtro_lugar' => (string)\src\shared\domain\helpers\FilterPostGet::post('filtro_lugar'),
     'id_ubi' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
