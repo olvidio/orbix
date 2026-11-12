@@ -103,21 +103,17 @@ final class PersonasSelectData
                     continue;
                 }
                 if (empty($Qexacto)) {
-                    $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented($campo, '^' . $valor));
+                    $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented($campo, '^' . preg_quote($valor)));
                 } else {
                     $criterioPersona = $criterioPersona->andWhere(Filter::eq($campo, $valor));
                 }
             }
             if (!empty($Qcentro)) {
-                if (!empty($Qexacto)) {
-                    $criterioCtr = Criteria::create()
-                        ->where(Filter::eq(CentroDlField::NombreUbi, addslashes(strtr($Qcentro, "+", "."))));
-                } else {
-                    $nom_ubi = addslashes($Qcentro);
-                    $nom_ubi = str_replace("+", "\+", $nom_ubi);
-                    $criterioCtr = Criteria::create()
-                        ->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, '^' . $nom_ubi));
-                }
+                // Valores enlazados como parámetro: sin addslashes; en la regex, el
+                // texto se escapa entero (nombres reales con «'», «+» o paréntesis).
+                $criterioCtr = Criteria::create()->where(empty($Qexacto)
+                    ? Filter::matchesUnaccented(CentroDlField::NombreUbi, '^' . preg_quote($Qcentro))
+                    : Filter::eq(CentroDlField::NombreUbi, $Qcentro));
             }
             if (empty($Qcmb)) {
                 $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::Situacion, 'A'));

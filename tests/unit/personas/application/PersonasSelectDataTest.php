@@ -126,6 +126,35 @@ final class PersonasSelectDataTest extends myTest
         $this->assertSame(['situacion eq A', 'id_ctr in [1003]'], $this->filtrosDeLaBusqueda());
     }
 
+    /** @param list<string> $vistos */
+    private function centrosVistos(array &$vistos): void
+    {
+        $c = $this->createMock(CentroDl::class);
+        $c->method('getId_ubi')->willReturn(1003);
+        $this->centrosDl->method('matching')->willReturnCallback(function (Criteria $cr) use (&$vistos, $c): array {
+            $vistos[] = \Tests\support\DescribeCriteria::filtros($cr)[0];
+            return [$c];
+        });
+    }
+
+    public function test_los_textos_se_escapan_en_la_regex(): void
+    {
+        $vistos = [];
+        $this->centrosVistos($vistos);
+        $this->entrada = ['tabla' => 'p_numerarios', 'apellido1' => 'Gil (x).', 'centro' => 'Terrassa (sss+)'];
+        $this->assertSame('apellido1 matches_unaccented ^Gil \\(x\\)\\.', $this->filtrosDeLaBusqueda()[0]);
+        $this->assertSame(['nombre_ubi matches_unaccented ^Terrassa \\(sss\\+\\)'], $vistos);
+    }
+
+    public function test_el_centro_exacto_se_compara_tal_cual(): void
+    {
+        $vistos = [];
+        $this->centrosVistos($vistos);
+        $this->entrada = ['tabla' => 'p_numerarios', 'centro' => "D'Aran", 'exacto' => '1'];
+        $this->filtrosDeLaBusqueda();
+        $this->assertSame(["nombre_ubi eq D'Aran"], $vistos);
+    }
+
     public function test_un_centro_sin_coincidencias_avisa(): void
     {
         $this->centrosDl->method('matching')->willReturn([]);
