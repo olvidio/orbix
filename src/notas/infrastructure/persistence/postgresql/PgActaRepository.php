@@ -47,15 +47,20 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
      */
     public function getUltimaActa(string|int $any, string $sRegion = '?'): int
     {
-        $sRegion = ($sRegion === '?') ? "\\" . $sRegion : $sRegion;
+        // La región puede venir del texto del acta que escribe el usuario (`Acta::inventarActa`): va como parámetro
+        // y escapada, para que cuente como texto literal dentro de la expresión regular.
+        $anyRe = preg_quote((string) $any);
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT  (regexp_matches(acta, '^\w{1,8}\s+(\d+)/$any'))::numeric[] as num
-			FROM $nom_tabla WHERE acta ~* '^$sRegion\s+.*/$any'
+        $sQuery = "SELECT  (regexp_matches(acta, :patron_num))::numeric[] as num
+			FROM $nom_tabla WHERE acta ~* :patron
 			ORDER BY num DESC
 			LIMIT 1";
-        //echo "ss: $sQuery<br>";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+        $oDblSt = $oDbl->prepare($sQuery);
+        if ($oDblSt === false || $oDblSt->execute([
+            'patron_num' => '^\w{1,8}\s+(\d+)/' . $anyRe,
+            'patron' => '^' . preg_quote($sRegion) . '\s+.*/' . $anyRe,
+        ]) === false) {
             $sClauError = 'GestorActa.UltimaActa';
                     $gestor = $_SESSION['oGestorErrores'] ?? null;
         if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
@@ -72,75 +77,6 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             $num = 0;
         }
         return $num;
-    }
-
-    /**
-     * retorna l'última linea del llibre.
-     *
-     * @param int $iLibro libro en el que buscar la últmia linea.
-     * @return integer
-     */
-    function getUltimaLinea(int $iLibro = 1): int
-    {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $ult_pag = $this->getUltimaPagina($iLibro);
-        $sQuery = "SELECT max(linea) FROM $nom_tabla WHERE libro='$iLibro' AND pagina='$ult_pag' GROUP BY COALESCE(linea,0) ";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorActa.UltimoLibro';
-                    $gestor = $_SESSION['oGestorErrores'] ?? null;
-        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
-            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-        }
-            return 0;
-        }
-        $val = $oDblSt->fetchColumn();
-        return is_numeric($val) ? (int) $val : 0;
-    }
-
-    /**
-     * retorna l'última pàgina del llibre.
-     *
-     * @param int $iLibro libro en el que buscar la últmia pàgina.
-     * @return integer
-     */
-    function getUltimaPagina(int $iLibro = 1): int
-    {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT max(pagina) FROM $nom_tabla WHERE libro=$iLibro GROUP BY libro";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorActa.UltimoLibro';
-                    $gestor = $_SESSION['oGestorErrores'] ?? null;
-        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
-            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-        }
-            return 0;
-        }
-        $val = $oDblSt->fetchColumn();
-        return is_numeric($val) ? (int) $val : 0;
-    }
-
-    /**
-     * retorna l'últim llibre d'actes.
-     *
-     * @return integer
-     */
-    function getUltimoLibro(): int
-    {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT max(libro) FROM $nom_tabla";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorActa.UltimoLibro';
-                    $gestor = $_SESSION['oGestorErrores'] ?? null;
-        if (is_object($gestor) && method_exists($gestor, 'addErrorAppLastError')) {
-            $gestor->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-        }
-            return 0;
-        }
-        $val = $oDblSt->fetchColumn();
-        return is_numeric($val) ? (int) $val : 0;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
