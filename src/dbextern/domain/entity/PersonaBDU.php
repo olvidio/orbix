@@ -608,6 +608,11 @@ class PersonaBDU
             $this->dfecha_c_fic = null;
             return;
         }
+        // En la BDU (tmp_bdu) va en ISO (Y-m-d): createFromLocal la rechazaba siempre.
+        if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})/', trim($dfecha_c_fic), $m) === 1 && checkdate((int) $m[2], (int) $m[3], (int) $m[1])) {
+            $this->dfecha_c_fic = new DateTimeLocal(sprintf('%04d-%02d-%02d', (int) $m[1], (int) $m[2], (int) $m[3]));
+            return;
+        }
         $vo = DateTimeLocal::createFromLocal($dfecha_c_fic);
         $this->dfecha_c_fic = $vo instanceof DateTimeLocal ? $vo : null;
     }

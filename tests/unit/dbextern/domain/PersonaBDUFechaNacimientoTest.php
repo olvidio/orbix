@@ -53,4 +53,13 @@ final class PersonaBDUFechaNacimientoTest extends TestCase
         $p->setFecha_Naci(null);
         $this->assertNull($p->getFechaNacimientoVo());
     }
+
+    public function test_fecha_de_cambio_de_ficha_en_iso_como_viene_de_la_bdu(): void
+    {
+        $p = new PersonaBDU();
+        $p->setFecha_c_fic('2023-07-01');
+        $this->assertSame('2023-07-01', $p->getFecha_c_fic()?->format('Y-m-d'));
+        $p->setFecha_c_fic('2023-02-30');
+        $this->assertNull($p->getFecha_c_fic());
+    }
 }
