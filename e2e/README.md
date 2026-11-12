@@ -126,6 +126,75 @@ El E2E no arregla Postgres: si el HTML devuelve fatal por **agotamiento de conex
 
 Si tras login el índice incluye ese texto, la app no está en estado completo para recorrer menús con el spec actual. Puedes corregir la configuración BDU en el stack o, **sólo si aceptas no probar menús en ese entorno**, definir `E2E_SKIP_MENU_LINKS_IF_BDU_UNAVAILABLE=1` en `e2e/.env` para que ese test se marque como **omitido** en lugar de fallido (ver lista de variables arriba).
 
+## Flujos de escritura (`specs/authenticated/*-alta-baja.spec.ts` y otros)
+
+Specs que **escriben datos en la instancia de desarrollo** a través de la interfaz, cada uno con sus propios datos (marcados con `marcaE2e()`, letras que empiezan por «Zze») y limpiados con SQL al final aunque el test falle a medias. Necesitan acceso a `docker exec orbix-db-1 psql` desde la máquina que ejecuta Playwright.
+
+Ejecutar solo estos (rápido, ~40 s):
+
+```bash
+npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ --grep-invert "enlaces"
+```
+
+| Módulo | Spec | Qué recorre |
+|---|---|---|
+| personas | `personas-alta-baja.spec.ts` | numerario: buscar → añadir → guardar → modificar; persona de paso: alta → eliminar |
+| actividades | `actividades-alta-baja.spec.ts` | ficha nueva (tipo con desplegables encadenados) → crear → modificar → borrar desde el listado |
+| asistentes | `asistentes-alta-baja.spec.ts` | dossier 3101 → «+ n» → guardar → borrar asistencia (repone las marcas de dossier de la persona) |
+| notas | `notas-alta-baja.spec.ts` | dossier 1011 → añadir nota con acta → borrar |
+| usuarios | `usuarios-alta-baja.spec.ts` | nuevo usuario con contraseña → modificar → borrar desde la lista filtrada |
+| certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
+| permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
+| todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
+
+Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad`, `crearNumerario`.
+
+Reglas para escribir más:
+
+- **Selectores por `onclick`/`name`/`id`, no por texto**: el usuario de pruebas puede tener la interfaz en catalán.
+- Tras guardar, muchas fichas vuelven atrás (`jsNavAtras` → `nav_atras.php` + recarga de `#main`): esperar a que esa navegación termine antes de abrir otra pantalla, o la recarga la pisa.
+- Listados en **SlickGrid**: las casillas `input.sel` se marcan con `click({ force: true })` (no `check()`), y la rejilla solo pinta las filas visibles: filtrar la lista para que salga solo la fila del test.
+- Los desplegables encadenados se recargan por AJAX: esperar la respuesta antes de elegir en el siguiente.
+- Si el flujo toca datos de una persona real (p. ej. marcas de dossier), guardar una foto antes y reponerla al final.
+- Ejecutar Playwright modifica `test-results/` (versionado): restaurarlo con `git checkout -- test-results/ && git clean -fdq test-results/`.
+
+### Inventario de pantallas por módulo (fase 3.1, 2026-11-12)
+
+Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escriben» = los que llaman a endpoints de alta, modificación o borrado). Orden de prioridad para nuevos specs: flujos que escriben > listados > fichas de solo lectura.
+
+| Módulo | controladores frontend | pantallas | flujos | flujos que escriben | spec de escritura |
+|---|---:|---:|---:|---:|---|
+| inventario | 34 | 34 | 44 | 14 | — |
+| usuarios | 24 | 24 | 33 | 13 | sí |
+| misas | 23 | 23 | 31 | 11 | — |
+| ubis | 35 | 35 | 36 | 9 | — |
+| actividades | 18 | 16 | 28 | 9 | sí |
+| encargossacd | 35 | 35 | 32 | 8 | — |
+| certificados | 14 | 14 | 18 | 7 | subida |
+| cambios | 6 | 6 | 11 | 7 | — |
+| procesos | 12 | 12 | 17 | 6 | — |
+| notas | 27 | 26 | 31 | 5 | sí |
+| devel_db_admin | 20 | 19 | 15 | 5 | — (DDL) |
+| menus | 7 | 7 | 15 | 5 | — |
+| actividadessacd | 4 | 4 | 13 | 5 | — |
+| actividadestudios | 16 | 16 | 25 | 4 | — |
+| dbextern | 7 | 7 | 16 | 4 | — (BD de Listas) |
+| casas | 14 | 14 | 10 | 4 | — |
+| personas | 7 | 7 | 8 | 4 | sí |
+| ubiscamas | 5 | 5 | 5 | 4 | — |
+| asistentes | 12 | 12 | 14 | 3 | sí |
+| configuracion | 4 | 4 | 4 | 3 | — |
+| actividadtarifas | 9 | 9 | 3 | 3 | — |
+| actividadplazas | 6 | 6 | 9 | 2 | — |
+| actividadescentro | 1 | 1 | 7 | 2 | — |
+| cartaspresentacion | 5 | 5 | 6 | 2 | — |
+| zonassacd | 8 | 6 | 5 | 2 | — |
+| dossiers | 3 | 4 | 5 | 1 | — |
+| actividadcargos | 2 | 4 | 4 | 1 | — |
+| pasarela | 12 | 12 | 15 | 0 | — |
+| planning | 11 | 11 | 7 | 0 | — |
+| profesores | 6 | 6 | 6 | 0 | — |
+
 ## UI interactiva (depuración)
 
 ```bash
