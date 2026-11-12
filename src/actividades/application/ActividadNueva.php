@@ -62,8 +62,11 @@ class ActividadNueva
         $Qplazas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($datosActividad, 'plazas');
         $Qidioma = \src\shared\domain\helpers\FuncTablasSupport::inputString($datosActividad, 'idioma');
 
+        $dl_org_no_f = (string) preg_replace('/(\.*)f$/', '\1', $Qdl_org);
         if ($Qdl_org !== ConfigGlobal::mi_delef()) {
             $Qpublicado = true;
+        }
+        if ($dl_org_no_f !== ConfigGlobal::mi_dele()) {
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
             if (!is_array($a_posibles_esquemas)) {
@@ -72,7 +75,9 @@ class ActividadNueva
             $is_dl_in_orbix = FALSE;
             foreach ($a_posibles_esquemas as $esquema) {
                 $row = explode('-', $esquema);
-                if (($row[1] ?? '') === $Qdl_org) {
+                // Los esquemas de comun no llevan sufijo: la actividad de sf de
+                // una dl que usa Orbix ('dlpf') también está prohibida.
+                if (($row[1] ?? '') === $dl_org_no_f) {
                     $is_dl_in_orbix = TRUE;
                     break;
                 }
@@ -82,7 +87,6 @@ class ActividadNueva
             }
         }
 
-        $dl_org_no_f = (string) preg_replace('/(\.*)f$/', '\1', $Qdl_org);
         $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
         if (ConfigGlobal::is_app_installed('procesos')) {
             $oPermActividades = $_SESSION['oPermActividades'] ?? null;
