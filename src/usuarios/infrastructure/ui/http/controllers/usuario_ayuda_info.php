@@ -18,7 +18,8 @@ $data = [];
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
 if (empty($esquema)) {
-    exit (_("Esquema no válido"));
+    ContestarJson::enviar(_("Esquema no válido"), 'none');
+    return;
 }
 $oDB_Select = null;
 if (substr($esquema, -1) === 'v') {
@@ -37,7 +38,8 @@ if (substr($esquema, -1) === 'f') {
     $oDB_Select = $oConexion->getPDO();
 }
 if (!($oDB_Select instanceof \PDO)) {
-    exit (_("Esquema no válido"));
+    ContestarJson::enviar(_("Esquema no válido"), 'none');
+    return;
 }
 $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
 $oDBSt = $oDB_Select->prepare($query);
@@ -60,7 +62,8 @@ if ($oDBSt->execute($aWhere) === false) {
 $idioma = '';
 $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
 if (!is_array($row)) {
-    exit (_("Debe ingresar un nombre de usuario válido"));
+    ContestarJson::enviar(_("Debe ingresar un nombre de usuario válido"), 'none');
+    return;
 }
 $email = is_string($row['email'] ?? null) ? $row['email'] : '';
 

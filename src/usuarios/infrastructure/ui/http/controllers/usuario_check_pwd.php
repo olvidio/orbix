@@ -25,6 +25,13 @@ if (!empty($Qusuario)) { // si es nuevo no tiene id
 if (!empty($Qpassword) && $usuario !== null) {
     $oCrypt = new PasswordHasher();
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
-    ContestarJson::send($jsondata);
-    exit();
+    // Sin exit: en el despacho en proceso cortaría al controlador que llama.
+    ContestarJson::enviar($jsondata['success'] ? '' : $jsondata['mensaje'], $jsondata['success'] ? 'ok' : 'none');
+    return;
 }
+// Siempre una respuesta JSON (antes el cuerpo quedaba vacío).
+if (!empty($Qpassword)) {
+    ContestarJson::enviar(_("Usuario no encontrado"), 'none');
+    return;
+}
+ContestarJson::enviar('', 'ok');

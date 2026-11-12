@@ -39,14 +39,14 @@ if ($Qenable_2fa) {
     if (empty($Qverification_code)) {
         $error_txt = _("Se requiere un código de verificación para activar 2FA");
         ContestarJson::enviar($error_txt, []);
-        exit();
+        return;
     }
     
     // Verificar el código 2FA
     if (!Verify2fa::verify_2fa_code($Qverification_code, $Qsecret_2fa)) {
         $error_txt = _("Código de verificación inválido");
         ContestarJson::enviar($error_txt, []);
-        exit();
+        return;
     }
     
     // Actualizar la configuración 2FA

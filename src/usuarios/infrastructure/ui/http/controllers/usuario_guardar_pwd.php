@@ -37,8 +37,8 @@ if (!empty($Qpassword)) {
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
 
     if ($jsondata['success'] === false) {
-        ContestarJson::send($jsondata);
-        exit();
+        ContestarJson::enviar($jsondata['mensaje'], 'none');
+        return;
     } else {
         $my_passwd = $oCrypt->encode($Qpassword);
         $oUsuario->setPasswordVo(new Password($my_passwd));
