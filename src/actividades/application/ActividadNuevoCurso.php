@@ -58,6 +58,8 @@ class ActividadNuevoCurso
 
     private string $listaHtml = '';
 
+    private int $numCreadas = 0;
+
     /**
      * @return array<int, int>
      */
@@ -89,40 +91,36 @@ class ActividadNuevoCurso
                 ->orderBy(ActividadAllField::FIni)
                 ->addOrderBy(ActividadAllField::HIni, OrderDirection::Asc, NullsPosition::Last)
         );
-        $num_act = count($cActividades);
-        for ($i = 0; $i < ($num_act - 1); $i++) {
-            $id_ubi1 = $cActividades[$i]->getId_ubi();
-            if (empty($id_ubi1) || $id_ubi1 == 1)
+        // Por cada casa, la actividad que acaba más tarde de las ya vistas: así se
+        // detecta el solape aunque haya actividades de otras casas en medio o una
+        // actividad larga que abarque a varias de las siguientes.
+        /** @var array<int, array{0: ActividadAll, 1: DateTimeLocal}> $ultimaPorUbi */
+        $ultimaPorUbi = [];
+        foreach ($cActividades as $oActividad) {
+            $id_ubi = $oActividad->getId_ubi();
+            if (empty($id_ubi) || $id_ubi == 1) {
                 continue; //lugares sin determinar
-            $id_ubi2 = $cActividades[$i + 1]->getId_ubi();
-            if ($id_ubi1 != $id_ubi2) {
-                // cambio de ubi
-                continue; //salto al siguiente.
             }
-            $fFin = $cActividades[$i]->getF_fin();
-            $fIniNext = $cActividades[$i + 1]->getF_ini();
-            if (!($fFin instanceof DateTimeLocal) || !($fIniNext instanceof DateTimeLocal)) {
-                continue;
-            }
-            $oF_fin = clone $fFin;
-            $h_fin = $this->horaComoTexto($cActividades[$i]->getH_fin(), '10:00:00');
-            [$h, $m, $s] = array_pad(explode(':', $h_fin), 3, '0');
-            $oF_fin->setTime((int)$h, (int)$m, (int)$s);
-
-            $oF_ini = clone $fIniNext;
-            $h_ini = $this->horaComoTexto($cActividades[$i + 1]->getH_ini(), '20:00:00');
+            $oF_ini = clone $oActividad->getF_ini();
+            $h_ini = $this->horaComoTexto($oActividad->getH_ini(), '20:00:00');
             [$h, $m, $s] = array_pad(explode(':', $h_ini), 3, '0');
             $oF_ini->setTime((int)$h, (int)$m, (int)$s);
 
-            $dif = $oF_fin->diff($oF_ini);
-            //echo $dif->format('%R%a %H');
-            if ($dif->format('%R') === '-') {
-                //echo $dif->format('%R%a %H');
+            $oF_fin = clone $oActividad->getF_fin();
+            $h_fin = $this->horaComoTexto($oActividad->getH_fin(), '10:00:00');
+            [$h, $m, $s] = array_pad(explode(':', $h_fin), 3, '0');
+            $oF_fin->setTime((int)$h, (int)$m, (int)$s);
+
+            $anterior = $ultimaPorUbi[$id_ubi] ?? null;
+            if ($anterior !== null && $oF_ini < $anterior[1]) {
                 $txt .= _("hay un solape entre") . ':  ';
-                $txt .= $cActividades[$i]->getNom_activ();
+                $txt .= $anterior[0]->getNom_activ();
                 $txt .= '  ' . _("y") . '  ';
-                $txt .= $cActividades[$i + 1]->getNom_activ();
+                $txt .= $oActividad->getNom_activ();
                 $txt .= "<br>";
+            }
+            if ($anterior === null || $oF_fin > $anterior[1]) {
+                $ultimaPorUbi[$id_ubi] = [$oActividad, $oF_fin];
             }
         }
         return $txt;
@@ -215,9 +213,12 @@ class ActividadNuevoCurso
                 $oDomingo_pascua_new = new DateTimeLocal();
                 $oDomingo_pascua->setTimestamp(easter_date($this->iyear_ref));
                 $oDomingo_pascua_new->setTimestamp(easter_date($this->iyear));
-                $dif_pascua = $oDomingo_pascua->diff($oDomingo_pascua_new);
-                $oFini->add($dif_pascua);
-                $oFfin->add($dif_pascua);
+                // Desplazar el mismo número de días que el domingo de Pascua. Sumar
+                // el intervalo del diff (meses + días) da otro día de la semana
+                // cuando el mes de la actividad no tiene los mismos días.
+                $dias_pascua = (int)$oDomingo_pascua->diff($oDomingo_pascua_new)->format('%r%a');
+                $oFini->modify(sprintf('%+d days', $dias_pascua));
+                $oFfin->modify(sprintf('%+d days', $dias_pascua));
                 break;
             default:
                 return $txt;
@@ -274,7 +275,8 @@ class ActividadNuevoCurso
             exit;
         }
 
-        // cojo el valor del último insert 
+        $this->numCreadas++;
+        // cojo el valor del último insert
         $id_actividad_new = $oActividad->getId_activ();
 
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
@@ -316,6 +318,14 @@ class ActividadNuevoCurso
         $avisos = $this->avisosProceso;
         $this->avisosProceso = [];
         return $avisos;
+    }
+
+    /**
+     * Actividades guardadas con crear_actividad() (las que no se repiten no cuentan).
+     */
+    public function getNumCreadas(): int
+    {
+        return $this->numCreadas;
     }
 
     public function consumirListaHtml(): string

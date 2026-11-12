@@ -73,14 +73,10 @@ final class ActividadNuevoCursoEjecutar
         }
 
         $txt_crear = '';
-        $i = 0;
         foreach ($cActividades as $oActividadOrg) {
-            $rta = $oNuevoCurso->crear_actividad($oActividadOrg);
-            if (empty($rta)) {
-                $i++;
-            }
-            $txt_crear .= $rta;
+            $txt_crear .= $oNuevoCurso->crear_actividad($oActividadOrg);
         }
+        $i = $oNuevoCurso->getNumCreadas();
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($ver_lista)) {
             $html .= $oNuevoCurso->consumirListaHtml();
         }
