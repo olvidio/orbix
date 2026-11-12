@@ -183,11 +183,11 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [~] 2.10 resto (sección 27): repaso por riesgo; corregidos 3 casos de HTML sin escapar (cartas de presentación, propuestas de encargos, correo a los sacd). Cobertura apenas cambia (`cartaspresentacion` 34 → 40 %); queda una pasada de cobertura módulo a módulo
 
 **Fase 3**
-- [ ] 3.1 Inventario de pantallas y matriz en `e2e/README.md`.
+- [x] 3.1 Inventario de pantallas y matriz en `e2e/README.md` (sección 28).
 - [~] 3.2 Specs «carga sin error» para todos los módulos con pantalla (lote). El spec existente `menu-links` recorre los enlaces del menú (2026-11-12, 52 min): solo falla `dbextern/sincro_index.php`, que se cuelga sin BD de Listas (caso previsto en `test:e2e:docker-skip-bdu-menu`). Además, en 2.10 se recorrieron en proceso los 310 controladores de lectura de `src/` (sección 27). Falta cubrir las pantallas que no salen como enlace directo del menú (formularios por POST).
-- [ ] 3.3 Flujos de escritura: personas, actividades, asistentes.
-- [ ] 3.4 Flujos de escritura: notas/certificados, usuarios, subidas.
-- [ ] 3.5 Spec de rol restringido.
+- [x] 3.3 Flujos de escritura: personas, actividades, asistentes (sección 28).
+- [x] 3.4 Flujos de escritura: notas/certificados, usuarios, subidas (sección 28).
+- [x] 3.5 Spec de rol restringido (sección 28).
 
 **Fase 4**
 - [ ] 4.1 CI/guardas, actualizar `AGENTS.md`/`tests/AGENTS.md`, enlazar en `REFACTOR_INDICE.md`.
@@ -1018,3 +1018,19 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
    - `OdbcDlListasRepository` (dbextern) corta con `exit` si no hay BD de Listas (ya anotado).
 
 **Pendiente:** la pasada de cobertura de estos módulos (sobre todo `inventario` 21 %, `utils_database` 36 %, `zonassacd` 41 %, `menus` 47 %).
+
+## 28. Fase 3: E2E con Playwright (2026-11-12)
+
+**3.1 Inventario:** tabla por módulo (controladores frontend, pantallas y flujos del catálogo, flujos que escriben) en `e2e/README.md`, con la matriz módulo → spec. Prioridad para nuevos specs: inventario, misas, ubis, encargossacd, cambios y procesos (los que más flujos de escritura tienen y aún no tienen spec).
+
+**3.2 Carga sin error:** ver la entrada del paso (el spec `menu-links` recorre los enlaces del menú; solo falla la sincronización con la BDU sin BD de Listas) y el recorrido en proceso de los controladores de lectura de la sección 27.
+
+**3.3 y 3.4 Flujos de escritura** (8 tests, ~35 s, con datos propios marcados «Zze…» y limpiados con SQL al final): alta y modificación de un numerario; alta y borrado de una persona de paso; alta, modificación y borrado de una actividad (tipo con desplegables encadenados, borrado desde el listado SlickGrid); apuntar a un numerario en una actividad y quitarlo; añadir una nota y borrarla; alta, modificación y borrado de un usuario; subida del PDF de un certificado recibido. Ayudas comunes en `e2e/orbix-app.ts` y reglas para escribir más en `e2e/README.md`.
+
+**3.5 Permisos:** un usuario «Oficial_dl» sin grupos, creado por la interfaz, inicia sesión en un contexto limpio: el menú no ofrece la administración de usuarios y, si abre la lista igualmente, el backend la niega (rol > 3).
+
+**Hallazgos:**
+1. La subida del certificado recibido acepta cualquier fichero como «PDF» (duda 11 de la sección 6b).
+2. A un numerario no se le puede borrar desde su ficha (solo se ofrece «eliminar» a las personas de paso): es el comportamiento previsto (se da de baja con la situación), pero los tests tienen que limpiar con SQL.
+3. **Restos de los tests PHPUnit en la BD de desarrollo:** hay unas 280 filas de `d_dossiers_abiertos` creadas hoy cuyas personas ya no existen (ids aleatorios de las factories de integración); los tests que crean personas no limpian las marcas de dossier que se generan al usarlas. Los specs E2E sí las limpian.
+4. La ficha de alta de persona desde el listado lleva `id_tabla=` vacío en el enlace; el alta lo deduce bien del tipo (se comprueba en el spec).
