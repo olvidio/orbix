@@ -601,21 +601,12 @@ class ActividadAll
         $oInicio = $this->f_ini_con_hora();
         $oFin = $this->f_fin_con_hora();
 
-        if ($oInicio < $oIniPeriodo) {
-            $interval = $oIniPeriodo->diff($oFin);
-            $horas = $interval->format('%a') * 24
-                + $interval->format('%h')
-                + $interval->format('%i') / 60
-                + $interval->format('%s') / 3600;
-            $num_dias = round($horas / 24, 2);
-        }
-        if ($oFin > $oFinPeriodo) {
-            $interval = $oInicio->diff($oFinPeriodo);
-            $horas = $interval->format('%a') * 24
-                + $interval->format('%h')
-                + $interval->format('%i') / 60
-                + $interval->format('%s') / 3600;
-            $num_dias = round($horas / 24, 2);
+        // Recortar por los dos extremos a la vez: una actividad que empieza antes
+        // y acaba después cuenta solo los días del periodo.
+        if ($oInicio < $oIniPeriodo || $oFin > $oFinPeriodo) {
+            $oDesde = $oInicio < $oIniPeriodo ? $oIniPeriodo : $oInicio;
+            $oHasta = $oFin > $oFinPeriodo ? $oFinPeriodo : $oFin;
+            $num_dias = $oDesde->duracion($oHasta);
         }
         return (float)$num_dias;
     }
