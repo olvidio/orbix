@@ -54,10 +54,7 @@ class ProfesorStgrService
     public function getArrayProfesoresConDl(): array
     {
         $gesProfesores = $this->profesorStgrRepository->matching(Criteria::create()->where(Filter::isNull(ProfesorStgrField::FCese)));
-        $aProfesores = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
+        $aFilas = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             $oPersonaDl = $this->personaDlRepository->findById($id_nom);
@@ -68,25 +65,19 @@ class ProfesorStgrService
             if ($situacion !== 'A') {
                 continue;
             }
-            $dl = $oPersonaDl->getDlVo()?->value() ?? '';
-            $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $aProfesores[] = ['id_nom' => $id_nom, 'ap_nom' => $ap_nom, 'dl' => $dl];
-            $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
-            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value() ?? '';
-            $aNom[] = $oPersonaDl->getNomVo()?->value() ?? '';
+            $aFilas[] = [
+                'id_nom' => $id_nom,
+                'ap_nom' => $oPersonaDl->getPrefApellidosNombre(),
+                'dl' => $oPersonaDl->getDlVo()?->value() ?? '',
+                'ap1' => $oPersonaDl->getApellido1Vo()->value(),
+                'ap2' => $oPersonaDl->getApellido2Vo()?->value() ?? '',
+                'nom' => $oPersonaDl->getNomVo()?->value() ?? '',
+            ];
         }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;
-        call_user_func_array('array_multisort', $multisort_args);
+        // Mismo orden que los otros listados de profesores (sin acentos): con
+        // array_multisort(SORT_STRING) «Álvarez» quedaba detrás de «Zapata».
+        \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aFilas);
+        $aProfesores = array_map(static fn (array $f): array => ['id_nom' => $f['id_nom'], 'ap_nom' => $f['ap_nom'], 'dl' => $f['dl']], $aFilas);
 
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
