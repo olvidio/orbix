@@ -179,7 +179,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.7 `encargossacd` + `misas` (sección 23): `encargossacd` 65 % → 69 % (application 86 → 93 %), `misas` 57 % → 58 %; 2 bugs corregidos y dos tests-guardia globales de controladores (cápsula `HashB` y `exit`)
 - [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
 - [x] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (sección 25): `dbextern` 59 % → 67 %, `pasarela` 61 % → 65 %; `devel_db_admin` sin cambios (DDL, necesita BD aislada); fecha de nacimiento de la BDU corregida (el `f_inc` de la sección 11 ya estaba arreglado y probado)
-- [ ] 2.11 `planning`: ampliar los tres servicios (`ActividadesDePersonaService` 35 %, `ActividadesPorCasasService` 58 %, `ActividadesPorZonasService` 64 %).
+- [x] 2.11 `planning` (sección 26): 62 % → 71 % (application 70 → 82 %): `ActividadesDePersonaService` 35 → ~90 %, `ActividadesPorCasasService` 58 → ~85 %; `ActividadesPorZonasService` sigue en 64 % (ya tenía 10 casos).
 - [ ] 2.10 resto (asignaturas, profesores, cambios, configuracion, menus, inventario, cartaspresentacion, tablonanuncios, zonassacd, shared, utils_database)
 
 **Fase 3**
@@ -972,3 +972,14 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 2. `SincroDB::syncro()` no contempla los nax (primer dígito del identificador de Listas: 1 n, 2 agd, 3 s, 4 sss+).
 3. `OdbcDlListasRepository` hace `exit` en el constructor si no conecta (ya anotado en 2.5).
 4. Conviene buscar otros `createFromLocal` sobre textos que no escribe el usuario (formato fijo): es el mismo tipo de fallo.
+
+## 26. Fase 2, paso 2.11: `planning` (cerrado el 2026-11-12, sin atención del usuario)
+
+**Cobertura:** `planning` 62 % → 71 % (application 70 % → 82 %).
+- `ActividadesDePersonaService`: actividades dentro del periodo, empezadas antes (se pintan desde el inicio con la hora 1:16), fuera de fechas, y con `procesos`: sin permiso de «ocupado» no salen y sin «ver» solo se ve la sección.
+- `ActividadesPorCasasService`: la rama por lugar de las actividades (por determinar, otros lugares, filtros de sección, fechas y status).
+- No se ha encontrado ningún bug. Las ausencias del planning de zonas sí usan el solape correcto (al contrario que la creación de periodos de misas, corregida en 2.7).
+
+**Hallazgos (sin corregir):**
+1. `ActividadesPorCasasService` agrupa por nombre de casa: dos casas con el mismo nombre (p. ej. una casa y un centro de ellas en la opción 6) se pisan. El parámetro `$sin_activ` no se usa. Con la selección 9 sin ninguna casa marcada se muestran todas.
+2. Para las actividades sin lugar se pinta `u#2#por determinar` pero se consultan las de `id_ubi` 0.
