@@ -58,7 +58,8 @@ foreach ($cDocumentos as $oDocumento) {
     $a_nom[$i] = $a_valores[$i][1];
 }
 if (!empty($a_valores)) {
-    array_multisort($a_nom, SORT_ASC, $a_valores);
+    $claves = \src\shared\domain\helpers\FuncTablasSupport::clavesOrdenSinAcentos($a_nom);
+    array_multisort($claves, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $a_valores);
 }
 
 $data = [

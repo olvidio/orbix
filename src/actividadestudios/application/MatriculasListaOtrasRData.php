@@ -150,7 +150,8 @@ final class MatriculasListaOtrasRData
         }
 
         if (!empty($aValores) && !empty($aNombre)) {
-            array_multisort($aNombre, SORT_STRING, $aValores);
+            $claves = \src\shared\domain\helpers\FuncTablasSupport::clavesOrdenSinAcentos($aNombre);
+            array_multisort($claves, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $aValores);
         }
 
         return [

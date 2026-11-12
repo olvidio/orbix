@@ -40,7 +40,8 @@ foreach ($cUbisInventario as $oUbiInventario) {
     //para poder ordenar
     $a_nom[$i] = $a_valores[$i][1];
 }
-array_multisort($a_nom, SORT_ASC, $a_valores);
+$claves = \src\shared\domain\helpers\FuncTablasSupport::clavesOrdenSinAcentos($a_nom);
+array_multisort($claves, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $a_valores);
 
 $data = [
     'a_valores' => $a_valores,

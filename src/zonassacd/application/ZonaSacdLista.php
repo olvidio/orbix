@@ -100,7 +100,8 @@ final class ZonaSacdLista
                 $i++;
             }
             if ($a_valores !== []) {
-                array_multisort($aAp1, SORT_ASC, SORT_STRING, $a_valores);
+                $claves = FuncTablasSupport::clavesOrdenSinAcentos($aAp1);
+                array_multisort($claves, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $a_valores);
             }
         }
 

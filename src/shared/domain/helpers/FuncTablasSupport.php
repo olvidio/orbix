@@ -122,17 +122,33 @@ final class FuncTablasSupport
 
     public static function strsinacentocmp(string $str1, string $str2): int
     {
+        return strnatcasecmp(self::sinAcentosParaOrdenar($str1), self::sinAcentosParaOrdenar($str2));
+    }
+
+    /** Texto sin acentos (ñ → «nz», detrás de la n) para ordenar como strsinacentocmp(). */
+    public static function sinAcentosParaOrdenar(string $str): string
+    {
         $acentos = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ñ',
             'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'ñ'
         );
         $sin = array('a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'nz',
             'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'nz'
         );
-    
-        $str1 = str_replace($acentos, $sin, $str1);
-        $str2 = str_replace($acentos, $sin, $str2);
-    
-        return strnatcasecmp($str1, $str2);
+
+        return str_replace($acentos, $sin, $str);
+    }
+
+    /**
+     * Claves para array_multisort() con el mismo orden que strsinacentocmp()
+     * (usar con SORT_NATURAL | SORT_FLAG_CASE). SORT_STRING compara bytes y
+     * deja «Álvarez» detrás de «Zapata».
+     *
+     * @param array<int|string, mixed> $claves
+     * @return array<int|string, string>
+     */
+    public static function clavesOrdenSinAcentos(array $claves): array
+    {
+        return array_map(static fn (mixed $v): string => self::sinAcentosParaOrdenar(is_scalar($v) ? (string) $v : ''), $claves);
     }
 
     /**
