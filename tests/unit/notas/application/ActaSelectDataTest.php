@@ -20,10 +20,13 @@ final class ActaSelectDataTest extends TestCase
 {
     /** @var mixed */
     private $oConfigBackup = null;
+    /** @var array<string, mixed> */
+    private array $authBackup = [];
 
     protected function setUp(): void
     {
         $this->oConfigBackup = $_SESSION['oConfig'] ?? null;
+        $this->authBackup = $_SESSION['session_auth'] ?? [];
         $_SESSION['session_auth'] = array_merge($_SESSION['session_auth'] ?? [], [
             'esquema' => 'H-dlbv',
             'sfsv' => 1,
@@ -33,6 +36,7 @@ final class ActaSelectDataTest extends TestCase
 
     protected function tearDown(): void
     {
+        $_SESSION['session_auth'] = $this->authBackup;
         if ($this->oConfigBackup !== null) {
             $_SESSION['oConfig'] = $this->oConfigBackup;
         } else {
