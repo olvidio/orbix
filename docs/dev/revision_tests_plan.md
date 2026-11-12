@@ -742,3 +742,13 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 5. `textos_certificados.php` es un fichero de textos incluido por la impresión, pero tiene ruta propia: llamado directamente no responde nada (y usa `$region_latin` sin definir).
 6. Las subidas de PDF responden con `header()`/`echo`/`exit()` en lugar de `ContestarJson` (se llaman desde el navegador, no por `PostRequest`).
 7. `certificado_emitido_lista_datos` trata un `success === false` del listado que `CertificadoEmitidoSelect` nunca devuelve (rama muerta).
+
+**Inyecciones SQL corregidas en este paso** (cada una con su test, que no ejecuta nada peligroso antes del arreglo):
+1. `notas`, «comprobar notas» → borrar cursada: `id_asignatura` del request interpolado en un `DELETE` sobre `e_notas_dl` («0 OR 1=1» borraba todas las cursadas de la dl).
+2. `notas`, autocompletado de examinadores (`examinadores_search`): el texto del usuario iba dentro de una expresión regular en el SQL; además el JSON se rompía con comillas.
+3. `personas`, `getArrayPersonas()` de personas de paso: el tipo (`'p' . $_POST['na']`) se interpolaba entre comillas (formularios de alta de asistentes y cargos).
+4. `inventario`, equipajes desde una fecha: `f_ini_iso` del POST interpolado.
+
+**Pendiente:** el barrido que encontró 2–4 solo buscaba valores entre comillas y variables `$Q…` en SQL; no es exhaustivo. Conviene una revisión de seguridad dedicada de `src/` (SQL construido con datos del request), por ejemplo con `/security-review` o una pasada manual por módulo.
+
+**«Comprobar notas»** (`comprobar_notas_page_body.inc.php`, 474 líneas en la carpeta de controladores): pantalla legacy con SQL y HTML que, con el parámetro `actualizar`, modifica datos (nivel de estudios, borra cursadas, crea actas de fin de ciclo). Según `AGENTS.md` debería ir a `application/legacy/` detrás de casos de uso; el test (`ComprobarNotasControllerTest`) usa un PDO que solo apunta el SQL.
