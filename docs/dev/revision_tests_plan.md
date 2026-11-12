@@ -889,7 +889,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 1. `PersonaEliminar` solo deja borrar personas de mi dl (`mi_delef() === getDl()`): una persona de paso (de otra dl) no se puede borrar nunca. El legacy hacía lo mismo.
 2. `Trasladar`: `cambiarFichaPersona()` hace `exit` si la situación es «A»; `getEsquemas()` hace `exit` si una persona sale repetida en un esquema; `copiarAsistencias()` borra la asistencia del origen cuando la actividad no existe en el destino, sin copiarla. `TrasladoUpdate` no mira el array que devuelve `trasladar()` (usa `getError()`).
 3. `PersonaUpdate` vacía los campos que no llegan en el POST (el formulario los manda todos, así que hoy no se nota).
-4. `ProfesoresAsignaturaLista` concatena teléfonos fijos y móviles sin separador («93 1600 1»).
+4. ~~`ProfesoresAsignaturaLista` concatena teléfonos fijos y móviles sin separador («93 1600 1»).~~ Corregido el 2026-11-12.
 5. `OdbcDlListasRepository` hace `exit` en el constructor si no conecta con la BD de Listas: cualquier servicio que lo reciba (`SincroDB`) corta la petición al construirse.
 6. `PgPersonaPubRepository::createEntityParaListado()`: la rama que captura «dl sin región stgr» parece inalcanzable, porque `withIdSchema()` ya captura cualquier excepción y pone `id_schema = 0`.
 7. La copia de sf de la BD de desarrollo no tiene personas: los formatos de sf no se han podido comprobar con datos reales.
