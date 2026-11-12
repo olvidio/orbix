@@ -219,6 +219,96 @@ final class ActividadesDePersonaServiceTest extends TestCase
         ], $out);
     }
 
+    // ---- con actividades ------------------------------------------------------------------
+
+    /** @param array<string, mixed> $cfg */
+    private function conActividad(\src\actividades\domain\entity\ActividadAll|null $act, array $apps = ['actividadcargos' => 42]): ActividadesDePersonaService
+    {
+        $_SESSION['config'] = ['a_apps' => $apps, 'app_installed' => array_values($apps)];
+        $c = new \src\actividadcargos\domain\entity\CargoOAsistente(3001);
+        $c->setId_nom(999);
+        $c->setPropio(true);
+        $cargos = $this->createStub(CargoOAsistenteInterface::class);
+        $cargos->method('getCargoOAsistente')->willReturn([$c]);
+        $repo = $this->createStub(ActividadRepositoryInterface::class);
+        $repo->method('matching')->willReturn($act === null ? [] : [$act]);
+        return $this->createService($repo, null, $cargos);
+    }
+
+    private static function actividad(string $ini, string $fin): \src\actividades\domain\entity\ActividadAll
+    {
+        $a = new \src\actividades\domain\entity\ActividadAll();
+        $a->setId_activ(3001);
+        $a->setId_tipo_activ(112021);
+        $a->setNom_activ('ca de prueba');
+        $a->setF_ini(new DateTimeLocal($ini));
+        $a->setF_fin(new DateTimeLocal($fin));
+        $a->setH_ini(\src\shared\domain\value_objects\TimeLocal::fromString('10:30:00'));
+        $a->setStatus(2);
+        $a->setDl_org('dlb');
+        return $a;
+    }
+
+    private function persona(): PersonaGlobal
+    {
+        $p = $this->createStub(PersonaGlobal::class);
+        $p->method('getId_nom')->willReturn(999);
+        $p->method('getPrefApellidosNombre')->willReturn('Con Cargos');
+        return $p;
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function actividadesDe(ActividadesDePersonaService $s): array
+    {
+        $out = $s->actividadesPorPersona([$this->persona()], '2030-03-31', '2030-01-01', new DateTimeLocal('2030-01-01'), '1/1/2030', false);
+        return $out[0]['p#999#Con Cargos'];
+    }
+
+    public function test_una_actividad_dentro_del_periodo(): void
+    {
+        $a = $this->actividadesDe($this->conActividad(self::actividad('2030-02-10', '2030-02-15')));
+        $this->assertCount(1, $a);
+        $this->assertSame([3001, 112021, '10:30', 'ca de prueba', true], [$a[0]['id_activ'], $a[0]['id_tipo_activ'], $a[0]['h_ini'], $a[0]['nom_llarg'], $a[0]['propio']]);
+        $this->assertSame((new DateTimeLocal('2030-02-10'))->getFromLocal(), $a[0]['f_ini']);
+        $this->assertNotSame('', $a[0]['nom_curt']);
+    }
+
+    public function test_una_actividad_que_empieza_antes_del_periodo_se_pinta_desde_el_inicio(): void
+    {
+        $a = $this->actividadesDe($this->conActividad(self::actividad('2029-12-28', '2030-01-03')));
+        $this->assertSame(['1/1/2030', '1:16'], [$a[0]['f_ini'], $a[0]['h_ini']]);
+    }
+
+    public function test_sin_actividad_en_el_periodo_no_sale(): void
+    {
+        $this->assertSame([], $this->actividadesDe($this->conActividad(null)));
+    }
+
+    private function permisos(bool $ocupado, bool $ver): void
+    {
+        $perm = $this->createStub(\src\procesos\domain\PermAccion::class);
+        $perm->method('have_perm_activ')->willReturnCallback(fn (string $a): bool => $a === \src\procesos\domain\PermAccionBits::OCUPADO ? $ocupado : $ver);
+        $sesion = $this->createStub(\src\permisos\domain\PermisosActividades::class);
+        $sesion->method('getPermisoActual')->willReturn($perm);
+        $_SESSION['oPermActividades'] = $sesion;
+    }
+
+    public function test_con_procesos_sin_permiso_de_ocupado_no_sale_y_sin_ver_solo_la_seccion(): void
+    {
+        $apps = ['actividadcargos' => 42, 'procesos' => 43];
+        $this->permisos(false, false);
+        $this->assertSame([], $this->actividadesDe($this->conActividad(self::actividad('2030-02-10', '2030-02-15'), $apps)));
+
+        $this->permisos(true, false);
+        $a = $this->actividadesDe($this->conActividad(self::actividad('2030-02-10', '2030-02-15'), $apps));
+        $this->assertStringNotContainsString('ca de prueba', $a[0]['nom_llarg'], 'no ve el nombre');
+        $this->assertStringContainsString($a[0]['nom_curt'], $a[0]['nom_llarg']);
+
+        $this->permisos(true, true);
+        $a = $this->actividadesDe($this->conActividad(self::actividad('2030-02-10', '2030-02-15'), $apps));
+        $this->assertSame('ca de prueba', $a[0]['nom_llarg']);
+    }
+
     private function fecha(string $iso): DateTimeLocal
     {
         return DateTimeLocal::createFromFormat('Y/m/d', $iso);
