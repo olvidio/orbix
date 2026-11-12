@@ -173,7 +173,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
-- [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite)
+- [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite) — **parcial** (sección 20): hechas mutaciones, dominio, plazas y comunicación a sacd; quedan listados de `actividades`, controladores, `actividadescentro` y `actividadtarifas`
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
 - [ ] 2.7 `encargossacd` + `misas`
@@ -777,3 +777,36 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 6. `persona_nota_nueva`/`persona_nota_editar`, `acta_pdf_eliminar`, `acta_pdf_subir`, `tessera_copiar` y `acta_ver_add_persona` no llevan token `HashB` propio (dependen de la firma del formulario); las demás mutaciones de actas sí.
 7. `ActaSelectDataTest` y `ActaVerAddPersonaFormDataTest` dejaban la sesión cambiada (`session_auth`, `oConfig`): corregido.
 
+
+## 20. Fase 2, paso 2.4: `actividades` + satélites (en curso, 2026-11-12)
+
+**Línea base:** 951 tests en verde (749 unit + 202 integración de los seis módulos). Cobertura de líneas (unit ∪ integración, solo sus tests): `actividades` 59 % (domain 65 %), `actividadcargos` 68 %, `actividadescentro` 62 %, `actividadessacd` 52 %, `actividadplazas` 66 %, `actividadtarifas` 69 %.
+
+**Primera parte (hecha):** `actividades` 71 % (domain 93 %), `actividadcargos` 73 %, `actividadessacd` 64 %, `actividadplazas` 83 %.
+- Mutaciones: `ActividadNuevoCurso` + `ActividadNuevoCursoEjecutar` (26 casos), `ActividadNueva` (19), alta y edición de cargos (`ActividadCargoMutacionesTest`, 21), `PlazasDlEdicion` (9).
+- Repositorio: `PgActividadAllConsultasTest` (integración, 12): coincidencia, ubis, desplegables por tipo y de estudios, actividades de una casa.
+- Dominio: duraciones y setters de `ActividadAll`, `NivelStgrId::generarNivelStgr`, textos de `TiposActividades`, metadatos de `NivelStgr`/`Repeticion`/`TipoDeActividad`.
+- Lecturas: comunicación de actividades a los sacd con correos encolados (`ComunicarActividadesSacdMailsTest`, 11), balance de plazas entre dos dl (5), resumen de plazas con un escenario completo (13).
+
+**Bugs corregidos** (commits `fix(actividades)` con su test):
+1. **Nuevo curso, Semana Santa:** las actividades que se repiten por el domingo de Pascua se desplazaban con el intervalo del `diff` (meses + días); si cambiaba el mes caían en otro día de la semana (martes santo 31/3/2026 → viernes 26/3/2027). Ahora se desplazan los mismos días que la Pascua.
+2. Nuevo curso: «N actividades copiadas» contaba también las que no se repiten (tipo 0) o tienen una repetición desconocida.
+3. Nuevo curso: la comprobación de solapes solo comparaba actividades consecutivas de la lista global (no veía el solape con otra casa en medio, ni una actividad larga que abarcara varias). Ahora compara por casa con la que acaba más tarde.
+4. **Alta de actividad:** se podía crear una actividad de sf (`dlpf`) de una dl que ya usa Orbix: la comparación con los esquemas de comun no quitaba la «f».
+5. **Inyección SQL** en `PgActividadAllRepository::getArrayActividadesDeTipo()`: el tipo se interpolaba y en `FormActividadesDeUnaPersonaData` (asistentes) sale de `id_tipo` del request. Ahora va como parámetro.
+6. `getCoincidencia()` modificaba las fechas de la actividad que recibía (restaba el día de tolerancia sobre los objetos de la entidad): en la selección de actividades se usan luego como clave de orden.
+7. `ActividadAll::getDuracionEnPeriodo()`: una actividad que desborda el periodo por los dos lados contaba desde su inicio real (1–10 en un periodo 3–5 daba 4,12 días en vez de 3). Hoy no cambia nada visible (casas le pasa las fechas de la propia actividad, hallazgo de la fase 1).
+
+**Pendiente de decisión** (fijado en tests con «Hallazgo:»):
+1. `ActividadCargoNuevo` con «asiste»: si la persona ya asiste con una asistencia de otra dl (tabla out/ex/pub), la marca como propia y de mi dl sin comprobar permisos. En el paso 2.2 se decidió exigir permiso en `AsistenteGuardar` para lo mismo.
+2. `ActividadCargoEditar`: desmarcar «asiste» borra la asistencia aunque sea de otra dl, sin permisos; y después «abre» los dossiers 1301/3101 en lugar de cerrarlos.
+
+**Hallazgos (sin corregir):**
+1. `ActividadNuevoCurso`: si no se guarda la actividad hace `echo` + `exit` en `application/`; el copiado de centros encargados también hace `echo`. La rama «fechas de actividad no válidas» es inalcanzable (la entidad no admite fechas nulas).
+2. `ActividadNueva`: crear desde sv una actividad de sf de la propia dl (`dlbf`) la publica siempre (`publicado = true` porque `dl_org` ≠ `mi_delef()` de la sesión).
+3. `PlazasBalanceData`: con un tipo que no es ca, cv ni crt el periodo queda vacío y la consulta filtra `f_ini BETWEEN '' AND ''`.
+4. `ResumenPlazasService`: con plazas desconocidas (`'?'`) la comparación de texto `'?' > 0` es cierta y la plaza se da por libre; `getPlazasCedidas()` reinicia la suma en cada fila; `getId_activ()` hace `exit('error')`.
+5. `ComunicarActividadesSacdService`: el texto «te carrec» (catalán) no pasa por gettext; los datos van al HTML del correo sin escapar; el resultado de `ColaMailRepository::Guardar` no se mira; el atributo `lang` lleva el locale (`ca_ES.UTF-8`).
+6. `TiposActividades::setPosiblesAll(false)` no tiene efecto (el mapa invertido ya está calculado); «coperadores»/«coperadoras» en `getNomPasarela()` (falta una «o»).
+
+**Queda (segunda parte):** listados de `actividades` (`ActividadSelectListado` 40 %, `ListaActividadesSgListado` 40 %, `CalendarioListasDatos` 60 %, `ActividadVerDatos` 58 %, `ListaSrCsvListado` 64 %), contrato de los controladores de los seis módulos, `actividadescentro` (62 %), `actividadtarifas` (69 %) y el dominio de `actividadcargos` (`Cargo` 33 %, `PgCargoOAsistente` 36 %).
