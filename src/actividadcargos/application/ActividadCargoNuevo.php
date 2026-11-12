@@ -98,6 +98,9 @@ final class ActividadCargoNuevo
             $oAsistente->setId_nom($id_nom);
             $oAsistente->setEst_ok(false);
             $oAsistente->setCfi(false);
+        } elseif ($this->esDeOtraDl($oAsistente)) {
+            // Ya asiste con una asistencia de otra dl: no se toca.
+            return '';
         }
         $oAsistente->setPropio(true);
         $oAsistente->setFalta(false);
@@ -108,6 +111,15 @@ final class ActividadCargoNuevo
         }
 
         return '';
+    }
+
+    /**
+     * Asistencia gestionada por otra dl: no se modifica ni se borra desde los cargos.
+     */
+    private function esDeOtraDl(Asistente $oAsistente): bool
+    {
+        $dl = $oAsistente->getDl_responsable();
+        return $dl !== null && $dl !== '' && $dl !== ConfigGlobal::mi_delef();
     }
 
     private function abrirDossier(string $tabla, int $id_pau, int $id_tipo_dossier): void

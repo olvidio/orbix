@@ -797,9 +797,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 6. `getCoincidencia()` modificaba las fechas de la actividad que recibía (restaba el día de tolerancia sobre los objetos de la entidad): en la selección de actividades se usan luego como clave de orden.
 7. `ActividadAll::getDuracionEnPeriodo()`: una actividad que desborda el periodo por los dos lados contaba desde su inicio real (1–10 en un periodo 3–5 daba 4,12 días en vez de 3). Hoy no cambia nada visible (casas le pasa las fechas de la propia actividad, hallazgo de la fase 1).
 
-**Pendiente de decisión** (fijado en tests con «Hallazgo:»):
-1. `ActividadCargoNuevo` con «asiste»: si la persona ya asiste con una asistencia de otra dl (tabla out/ex/pub), la marca como propia y de mi dl sin comprobar permisos. En el paso 2.2 se decidió exigir permiso en `AsistenteGuardar` para lo mismo.
-2. `ActividadCargoEditar`: desmarcar «asiste» borra la asistencia aunque sea de otra dl, sin permisos; y después «abre» los dossiers 1301/3101 en lugar de cerrarlos.
+8. **Cargos y asistencias de otra dl** (decisión del 12-11-2026: «si la asistencia es de otra dl, no tocarla»): `ActividadCargoNuevo` con «asiste» marcaba como propia y de mi dl una asistencia existente de otra dl, y `ActividadCargoEditar` la borraba al desmarcar «asiste». Ahora, si la asistencia es de otra dl (`dl_responsable` distinto de `mi_delef()`), no se modifica ni se borra. Sigue anotado que tras borrar una asistencia propia se «abren» los dossiers 1301/3101 en lugar de cerrarlos.
 
 **Hallazgos (sin corregir):**
 1. `ActividadNuevoCurso`: si no se guarda la actividad hace `echo` + `exit` en `application/`; el copiado de centros encargados también hace `echo`. La rama «fechas de actividad no válidas» es inalcanzable (la entidad no admite fechas nulas).

@@ -106,7 +106,7 @@ final class ActividadCargoEditar
             return '';
         }
 
-        if ($asis_presente && $asis === '') {
+        if ($asis_presente && $asis === '' && !$this->esDeOtraDl($oAsistente)) {
             if ($this->asistenteApplicationService->eliminar($oAsistente) === false) {
                 return _("hay un error, no se ha eliminado el asistente");
             }
@@ -115,6 +115,15 @@ final class ActividadCargoEditar
         }
 
         return '';
+    }
+
+    /**
+     * Asistencia gestionada por otra dl: no se modifica ni se borra desde los cargos.
+     */
+    private function esDeOtraDl(Asistente $oAsistente): bool
+    {
+        $dl = $oAsistente->getDl_responsable();
+        return $dl !== null && $dl !== '' && $dl !== ConfigGlobal::mi_delef();
     }
 
     private function abrirDossier(string $tabla, int $id_pau, int $id_tipo_dossier): void

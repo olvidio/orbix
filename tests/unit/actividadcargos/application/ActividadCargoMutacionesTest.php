@@ -184,12 +184,7 @@ final class ActividadCargoMutacionesTest extends myTest
         $this->assertNotContains('p-100123-1301', $this->abiertos);
     }
 
-    /**
-     * Hallazgo: si la persona ya asiste (aunque la asistencia sea de otra dl, en la
-     * tabla out/ex/pub), el alta del cargo con «asiste» la marca como propia y de mi
-     * dl, sin comprobar permisos (en AsistenteGuardar se exige el permiso, paso 2.2).
-     */
-    public function test_nuevo_con_asiste_se_apropia_de_una_asistencia_de_otra_dl(): void
+    public function test_nuevo_con_asiste_no_toca_una_asistencia_de_otra_dl(): void
     {
         $this->cargos->method('Guardar')->willReturn(true);
         $this->persona(new PersonaDl());
@@ -197,9 +192,20 @@ final class ActividadCargoMutacionesTest extends myTest
         $this->asisDl->method('findById')->willReturn(null);
         $this->asisOut->expects($this->once())->method('findById')->with(10, 100123)->willReturn($existente);
         $this->asisEx->expects($this->never())->method('findById');
+        $this->asistentes->expects($this->never())->method('guardar');
+        $this->assertSame('', $this->nuevo()->execute(self::ENTRADA + ['asis' => 'on']));
+        $this->assertSame([false, true, 'dlp'], [$existente->isPropio(), $existente->isFalta(), $existente->getDl_responsable()]);
+    }
+
+    public function test_nuevo_con_asiste_actualiza_una_asistencia_de_mi_dl(): void
+    {
+        $this->cargos->method('Guardar')->willReturn(true);
+        $this->persona(new PersonaDl());
+        $existente = $this->asistente(dl: 'dlb');
+        $this->asisDl->method('findById')->willReturn($existente);
         $this->asistentes->expects($this->once())->method('guardar')->with($this->identicalTo($existente))->willReturn(true);
         $this->nuevo()->execute(self::ENTRADA + ['asis' => 'on']);
-        $this->assertSame([true, false, 'dlb'], [$existente->isPropio(), $existente->isFalta(), $existente->getDl_responsable()]);
+        $this->assertSame([true, false], [$existente->isPropio(), $existente->isFalta()]);
     }
 
     // --- Editar ---
@@ -293,17 +299,25 @@ final class ActividadCargoMutacionesTest extends myTest
         $this->assertSame('', $this->editar()->execute(self::ENTRADA));
     }
 
-    /**
-     * Hallazgo: desmarcar «asiste» borra la asistencia aunque sea de otra dl (tabla
-     * out/ex/pub), sin comprobar permisos; y tras borrarla «abre» los dossiers
-     * 1301/3101 en lugar de cerrarlos como hace ActividadCargoEliminar.
-     */
-    public function test_editar_desmarcar_asiste_borra_la_asistencia_aunque_sea_de_otra_dl(): void
+    public function test_editar_desmarcar_asiste_no_borra_una_asistencia_de_otra_dl(): void
     {
         $this->cargos->method('Guardar')->willReturn(true);
-        $otra = $this->asistente(dl: 'dlp');
-        $this->asisPub->method('findById')->willReturn($otra);
-        $this->asistentes->expects($this->once())->method('eliminar')->with($this->identicalTo($otra))->willReturn(true);
+        $this->asisPub->method('findById')->willReturn($this->asistente(dl: 'dlp'));
+        $this->asistentes->expects($this->never())->method('eliminar');
+        $this->assertSame('', $this->editar()->execute(self::ENTRADA + ['asis_presente' => '1']));
+        $this->assertSame([], $this->abiertos);
+    }
+
+    /**
+     * Hallazgo: tras borrar la asistencia «abre» los dossiers 1301/3101 en lugar
+     * de cerrarlos como hace ActividadCargoEliminar.
+     */
+    public function test_editar_desmarcar_asiste_borra_la_asistencia_de_mi_dl(): void
+    {
+        $this->cargos->method('Guardar')->willReturn(true);
+        $mia = $this->asistente(dl: 'dlb');
+        $this->asisDl->method('findById')->willReturn($mia);
+        $this->asistentes->expects($this->once())->method('eliminar')->with($this->identicalTo($mia))->willReturn(true);
         $this->assertSame('', $this->editar()->execute(self::ENTRADA + ['asis_presente' => '1']));
         $this->assertSame(['p-100123-1301', 'a-10-3101'], $this->abiertos);
     }
@@ -311,7 +325,7 @@ final class ActividadCargoMutacionesTest extends myTest
     public function test_editar_desmarcar_asiste_si_no_se_borra(): void
     {
         $this->cargos->method('Guardar')->willReturn(true);
-        $this->asisEx->method('findById')->willReturn($this->asistente());
+        $this->asisDl->method('findById')->willReturn($this->asistente(dl: 'dlb'));
         $this->asistentes->method('eliminar')->willReturn(false);
         $this->assertSame('hay un error, no se ha eliminado el asistente', $this->editar()->execute(self::ENTRADA + ['asis_presente' => '1']));
     }
