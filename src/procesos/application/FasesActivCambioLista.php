@@ -143,6 +143,7 @@ class FasesActivCambioLista
                     } else {
                         if ($aFases_previas !== []) {
                             $ok_fases_previas = true;
+                            $faltan = '';
                             foreach ($aFases_previas as $aaFase_previa) {
                                 $id_fase_previa_raw = $aaFase_previa['id_fase'] ?? '';
                                 if ($id_fase_previa_raw === '' || !is_numeric($id_fase_previa_raw)) {
@@ -151,16 +152,16 @@ class FasesActivCambioLista
                                 $id_fase_previa = (int) $id_fase_previa_raw;
                                 $mensaje_requisitoRaw = $aaFase_previa['mensaje'] ?? '';
                                 $mensaje_requisito = is_string($mensaje_requisitoRaw) ? $mensaje_requisitoRaw : '';
-                                if ($id_fase_previa > 0 && in_array($id_fase_previa, $aFases_completadas, true)) {
-                                    $mensaje = _("ok, tiene la(s) fase(s) previa(s)");
-                                } else {
+                                if ($id_fase_previa <= 0 || !in_array($id_fase_previa, $aFases_completadas, true)) {
                                     $ok_fases_previas = false;
                                     $fase_tarea_previa = $id_fase_previa . '#0';
-                                    $mensaje .= $mensaje_requisito === ''
+                                    $faltan .= $mensaje_requisito === ''
                                         ? $this->procesoActividadService->getMensaje($fase_tarea_previa, 'marcar')
                                         : $mensaje_requisito;
                                 }
                             }
+                            // Solo los requisitos que faltan; «ok» únicamente si se cumplen todos.
+                            $mensaje = $ok_fases_previas ? _("ok, tiene la(s) fase(s) previa(s)") : $faltan;
                         } else {
                             $ok_fases_previas = true;
                             $mensaje = 'ok';
