@@ -137,8 +137,8 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 | encargossacd | — | — | — | — | — | 2 repos sin test |
 | misas | — | — | — | — | — | `PgPlantillaRepository` sin test |
 | personas | ok | ok | ok | ok | — | 2.5: 73 %; falta `Trasladar` (61 %) y el CLI de resincronización de sacd |
-| usuarios | — | — | — | — | — | |
-| procesos | — | — | — | — | — | |
+| usuarios | ok | ok | parcial | parcial | — | 2.6: 52 %; dudas de seguridad 3 y 4 (6b) |
+| procesos | ok | ok | parcial | parcial | — | 2.6: 53 % (el resto es sobre todo `db/`, DDL) |
 | dossiers | — | — | — | — | — | |
 | ubis | — | — | — | — | — | |
 | ubiscamas | — | — | — | — | — | |
@@ -175,7 +175,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
 - [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 2 inyecciones SQL y unos 20 bugs corregidos, más los tokens HashB de cargos y centros encargados
 - [x] 2.5 `personas` (sección 21): cobertura 55 % → 73 % (application 89 %); 8 bugs corregidos (traslados, búsqueda por centro, esquemas temporales) y un test-guardia global de `DatosCampo`
-- [ ] 2.6 `usuarios` + `procesos`
+- [x] 2.6 `usuarios` + `procesos` (sección 22): cobertura `usuarios` 39 % → 52 %, `procesos` 41 % → 53 % (application 58 → 89 %); recuperación de 2FA endurecida y 6 bugs corregidos
 - [ ] 2.7 `encargossacd` + `misas`
 - [ ] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas`
 - [ ] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (incluye el hallazgo `f_inc` de la sección 11: test de `SincroDB` y arreglo)
@@ -887,3 +887,30 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 5. `OdbcDlListasRepository` hace `exit` en el constructor si no conecta con la BD de Listas: cualquier servicio que lo reciba (`SincroDB`) corta la petición al construirse.
 6. `PgPersonaPubRepository::createEntityParaListado()`: la rama que captura «dl sin región stgr» parece inalcanzable, porque `withIdSchema()` ya captura cualquier excepción y pone `id_schema = 0`.
 7. La copia de sf de la BD de desarrollo no tiene personas: los formatos de sf no se han podido comprobar con datos reales.
+
+## 22. Fase 2, paso 2.6: `usuarios` + `procesos` (cerrado el 2026-11-12, sin atención del usuario)
+
+**Línea base:** 819 tests en verde. Cobertura: `usuarios` 39 % (infrastructure 21 %: controladores con mucha lógica), `procesos` 41 % (application 58 %; `ProcesoActividadService` 0 %, `FasesActivCambioLista` 14 %).
+
+**Cierre:** 854 tests. `usuarios` 52 % (application 83 %, infrastructure 43 %), `procesos` 53 % (application 89 %; lo que falta es sobre todo `db/`, unas 700 líneas de DDL, y partes de `PgActividadProcesoTareaRepository`).
+- Tests nuevos: `ProcesoActividadServiceTest` (14 casos: previas que se marcan solas, oficina responsable, referencias circulares, dependientes, status con dre y otra dl, fase aprobada en sf, reutilizar el servicio en lote), generar/borrar el proceso de una actividad (integración, sin grabar la actividad), listado del cambio de fase en lote, controladores de lectura de `usuarios` en proceso, respuestas de los controladores que hacían `exit`, test-guardia de la recuperación de acceso.
+
+**Bugs corregidos:**
+1. **Recuperación de 2FA (seguridad):** `recuperar_2fa_mail` (anónimo) montaba el enlace del correo con `url_base` del POST: pidiendo la recuperación de otro usuario con una base propia, la víctima recibía un correo legítimo cuyo enlace (token incluido, y ese enlace abre sesión) iba a otro servidor. Ahora la base sale de la configuración (`ConfigGlobal::publicAppBaseUrl()`: `ORBIX_PUBLIC_APP_BASE_URL` o `getWeb()`).
+2. Las páginas `recuperar_2fa`, `recuperar_password` y `ayuda_2fa_reset` llamaban al backend en `url_base . 'src/...'` con `url_base` del GET (el servidor hacía una petición a cualquier URL con el usuario y el esquema) y lo pintaban sin escapar en el enlace «volver». Ahora usan la base configurada y el enlace se escapa (también en `ayuda_acceso`).
+3. `recovery.php` desactivaba el 2FA en `"H-dlbv".aux_usuarios` fijo: para un usuario de otra dl se lo quitaba a quien tuviera el mismo `id_usuario` en dlb, y el token del usuario real seguía valiendo. Ahora usa el esquema de la conexión, como el `SELECT`.
+4. `usuario_check_pwd`, `usuario_guardar_pwd` y `usuario_2fa_update` hacían `exit` tras responder y `usuario_ayuda_info` respondía `exit("mensaje")` en texto: en el despacho en proceso el `exit` cortaba la página del frontend (la ayuda de 2FA salía como un texto suelto). `usuario_check_pwd` sin contraseña devolvía el cuerpo vacío.
+5. **Procesos:** `generarProceso()` y `borrarProceso()` dejaban el repositorio (compartido en la petición) apuntando a `a_actividad_proceso_sf`: tras generar el proceso de una actividad (alta, edición, cambio de tipo, nuevo curso, importar), las lecturas de fases siguientes en la misma petición iban a la tabla de sf.
+6. Desmarcar una fase con varias dependientes marcadas repetía el aviso de la primera (regresión de la migración: `$msg .= empty($msg) ? … : $msg`).
+7. Cambio de fase en lote: el aviso de requisitos mezclaba «ok, tiene la(s) fase(s) previa(s)» con las que faltaban, y si la que faltaba iba primero la fila decía «ok» sin seleccionarse.
+
+**Dudas:** 3, 4 y 5 de la sección 6b (recuperar contraseña sin token, enlace de 2FA que abre sesión, status al marcar una fase).
+
+**Hallazgos (sin corregir):**
+1. `GrupoJefeZona` (`usuarios/domain`) no lo usa nadie y tiene fallos: busca los miembros del grupo con `id_usuario = id_grupo`, cuenta como jefe de zona un grupo con permiso 0 y el `in_array` estricto compara claves enteras con textos (quitaría el grupo a todos los sacd). Conviene borrarlo.
+2. `borrar_pwd` (solo pruebas/docker) lee los usuarios de cada esquema pero guarda con la conexión por defecto: escribe la contraseña en el usuario con el mismo id del esquema propio; y deja la conexión de lectura del repositorio compartido en el último esquema.
+3. `preferencias_guardar` (SlickGrid) lanza `JsonException` sin capturar si `sPrefs` no es JSON; toda la lógica de preferencias vive en el controlador. `usuario_form.php` (≈180 líneas) también.
+4. `check_first_login_2fa` es un endpoint de navegación en `src/` (redirige con `header` + `exit`).
+5. `actividad_proceso_generar` (regenera el proceso con `force`, borrando las fases marcadas) se protege solo con la firma `HashF` del `id_activ`; pendiente de pasar a `HashB` como el resto de mutaciones de `procesos`.
+6. `FasesActivCambioLista` genera el proceso de las actividades que no lo tienen al listarlas (efecto de `getFasesCompletadas()` en una lectura).
+7. `ProcesoActividadService::desmarcar()` usa `$cActividadProcesoTarea[0]` sin comprobar que exista.
