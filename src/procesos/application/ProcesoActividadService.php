@@ -384,7 +384,7 @@ class ProcesoActividadService
                             continue;
                         }
                     }
-                    $msg .= empty($msg) ? $this->getMensaje($fase_tarea_anterior, 'desmarcar') : $msg;
+                    $msg .= $this->getMensaje($fase_tarea_anterior, 'desmarcar');
                     $bMarcada = false;
                 }
             }
