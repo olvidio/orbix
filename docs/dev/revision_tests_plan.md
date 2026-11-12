@@ -1002,5 +1002,7 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
 1. `CartaPresentacionUpdate`: al crear una carta comprueba que el centro sea de la dl (o un cr), pero al modificar una existente no. `sanear()` recorre todas las cartas de la dl en cada guardado (una consulta de direcciones por carta) y borra las que ya no tienen esa dirección.
 2. `ZonasAComun` (script de migración de `zonassacd` de sv-e a comun, 320 líneas) no tiene tests: como el DDL de `devel_db_admin`, necesita una BD aislada.
 3. Varios listados de `encargossacd` (`Listas*Data`) y `CartasPresentacionListaData` siguen montando HTML en `application/` (contra la regla de capas), aunque con los datos ya escapados o restringidos.
+4. `inventario/documentos_guardar` (cambio en lote de documentos): toda la lógica en el controlador; la cápsula `ctx_guardar` no fija qué documentos (los ids llegan en `documentos` del POST); y una fecha mal escrita no da error, sino que borra la fecha que había (`createFromLocal` falla → `null`).
+5. `menus`: el menú «burger» no filtra por permisos (duda 7 de la sección 6b).
 
 **Pendiente:** la pasada de cobertura de estos módulos (sobre todo `inventario` 21 %, `utils_database` 36 %, `zonassacd` 41 %, `menus` 47 %).
