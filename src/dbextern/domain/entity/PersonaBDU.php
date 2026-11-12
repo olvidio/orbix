@@ -443,6 +443,22 @@ class PersonaBDU
         return $this->dFecha_Naci;
     }
 
+    /**
+     * Fecha de nacimiento como objeto. Se guarda siempre como `j/m/Y` (ver
+     * setFecha_Naci), así que no se puede leer con DateTimeLocal::createFromLocal,
+     * que usa el formato del idioma del usuario (en inglés `n/j/Y`: cambiaba día
+     * y mes, o desbordaba el mes a otro año). Vacía o inválida → null.
+     */
+    public function getFechaNacimientoVo(): ?DateTimeLocal
+    {
+        if (preg_match('#^(\d{1,2})/(\d{1,2})/(\d{4})$#', trim($this->dFecha_Naci), $m) !== 1
+            || !checkdate((int) $m[2], (int) $m[1], (int) $m[3])) {
+            return null;
+        }
+
+        return new DateTimeLocal(sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]));
+    }
+
     function setFecha_Naci(mixed $dFecha_Naci): void
     {
         if ($dFecha_Naci === null || $dFecha_Naci === '') {
@@ -450,7 +466,8 @@ class PersonaBDU
             return;
         }
         if ($dFecha_Naci instanceof DateTimeLocal) {
-            $this->dFecha_Naci = $dFecha_Naci->getFromLocal();
+            // Mismo formato fijo que para el texto (no el del idioma del usuario).
+            $this->dFecha_Naci = $dFecha_Naci->format('j/m/Y');
             return;
         }
         if (!is_string($dFecha_Naci)) {

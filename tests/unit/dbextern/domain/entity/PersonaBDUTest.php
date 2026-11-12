@@ -107,7 +107,7 @@ final class PersonaBDUTest extends myTest
     {
         $f = new DateTimeLocal('1990-05-17');
         $this->persona->setFecha_Naci($f);
-        $this->assertSame($f->getFromLocal(), $this->persona->getFecha_Naci());
+        $this->assertSame('17/05/1990', $this->persona->getFecha_Naci(), 'formato fijo j/m/Y, no el del idioma');
     }
 
     public function test_fecha_c_fic_vacia_o_no_string_es_null(): void

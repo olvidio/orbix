@@ -70,6 +70,7 @@ final class DbexternCasosDeUsoTest extends myTest
         $p->method('getNx2')->willReturn('');
         $p->method('getApellido2_sinprep')->willReturn('Paz');
         $p->method('getFecha_Naci')->willReturn('15/3/1980');
+        $p->method('getFechaNacimientoVo')->willReturn(new \src\shared\domain\value_objects\DateTimeLocal('1980-03-15'));
         $p->method('getLugar_Naci')->willReturn('Madrid');
         $p->method('getDl')->willReturn('dlb');
 

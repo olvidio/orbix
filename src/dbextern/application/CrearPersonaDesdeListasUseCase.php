@@ -97,8 +97,7 @@ class CrearPersonaDesdeListasUseCase
         $oPersona->setApellido1($apellido1_sinprep);
         $oPersona->setNx2($nx2);
         $oPersona->setApellido2($apellido2_sinprep);
-        $f_nacimiento_vo = DateTimeLocal::createFromLocal((string)$f_nacimiento);
-        $oPersona->setF_nacimiento($f_nacimiento_vo instanceof DateTimeLocal ? $f_nacimiento_vo : null);
+        $oPersona->setF_nacimiento($oPersonaListas->getFechaNacimientoVo());
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
         $oPersona->setDl($dl_orbix);
 

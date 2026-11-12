@@ -225,8 +225,6 @@ class SincroDB
         $id_nom_listas = $oPersonaListas->getIdentif();
         $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
         $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
-        $f_nacimiento = $oPersonaListas->getFecha_Naci();
-        $f_nacimiento_txt = $f_nacimiento;
         $nombre = $oPersonaListas->getNombre();
 
         $criteria = Criteria::create()
@@ -235,8 +233,8 @@ class SincroDB
         if ($apellido2_sinprep !== '') {
             $criteria = $criteria->andWhere(Filter::eq(PersonaField::Apellido2, $apellido2_sinprep));
         }
-        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_txt);
-        if (!$f_nacimiento_vo instanceof DateTimeLocal) {
+        $f_nacimiento_vo = $oPersonaListas->getFechaNacimientoVo();
+        if ($f_nacimiento_vo === null) {
             // sin fecha de nacimiento no hay coincidencia exacta posible
             return false;
         }
@@ -423,7 +421,6 @@ class SincroDB
         $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
         $nx2 = $oPersonaListas->getNx2();
         $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
-        $f_nacimiento_raw = $oPersonaListas->getFecha_Naci();
         $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
         $dl_listas = $oPersonaListas->getDl();
@@ -479,9 +476,7 @@ class SincroDB
         $oPersona->setApellido1($apellido1_sinprep);
         $oPersona->setNx2($nx2);
         $oPersona->setApellido2($apellido2_sinprep);
-        $f_nacimiento_local = $f_nacimiento_raw;
-        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_local);
-        $oPersona->setF_nacimiento($f_nacimiento_vo instanceof DateTimeLocal ? $f_nacimiento_vo : null);
+        $oPersona->setF_nacimiento($oPersonaListas->getFechaNacimientoVo());
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
         if ($id_tipo_persona !== '4') {
             $this->aplicarCe($oPersona, $ce_num, $ce_lugar, $ce_ini, $ce_fin);
