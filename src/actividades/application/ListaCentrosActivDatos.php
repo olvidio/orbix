@@ -104,7 +104,7 @@ final class ListaCentrosActivDatos
                     $ctr = $oUbi->getNombre_ubi();
                     if ($id_ctr !== $id_ubi) {
                         $clase = ($i === 1) ? "class='responsable'" : "";
-                        $txt_ctr .= "<span $clase> $ctr;</span>";
+                        $txt_ctr .= "<span $clase> " . htmlspecialchars((string) $ctr, ENT_QUOTES, 'UTF-8') . ";</span>";
                     }
                     $a_actividades[$c][$a]["mas_ctr"] = $txt_ctr;
                 }
