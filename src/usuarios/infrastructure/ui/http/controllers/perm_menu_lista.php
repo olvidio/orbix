@@ -10,7 +10,7 @@ use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
-$Qid_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $PermMenuRepository = DependencyResolver::get(PermMenuRepositoryInterface::class);
 $oGrupoGrupoPermMenu = $PermMenuRepository->matching(Criteria::create()->where(Filter::eq(PermMenuField::IdUsuario, $Qid_usuario)));
