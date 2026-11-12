@@ -449,6 +449,169 @@ final class CertificadosControllersContractTest extends myTest
         }
     }
 
+    // ------------------------------------------------------------------ endpoints de datos de formularios
+
+    /**
+     * @return iterable<string, array{string, class-string, string}>
+     */
+    public static function formulariosProvider(): iterable
+    {
+        yield 'adjuntar emitido' => ['certificado_emitido_adjuntar_data.php', \src\certificados\application\CertificadoEmitidoAdjuntarFormData::class, 'id_nom'];
+        yield 'adjuntar recibido' => ['certificado_recibido_adjuntar_data.php', \src\certificados\application\CertificadoRecibidoAdjuntarFormData::class, 'id_nom'];
+        yield 'modificar recibido' => ['certificado_recibido_modificar_data.php', \src\certificados\application\CertificadoRecibidoModificarFormData::class, 'id_item'];
+        yield 'subir firmado' => ['certificado_emitido_upload_firmado_data.php', \src\certificados\application\CertificadoEmitidoUploadFirmadoFormData::class, 'id_item'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('formulariosProvider')]
+    public function test_los_endpoints_de_formulario_pasan_el_id_y_devuelven_los_datos_o_el_error(string $controlador, string $caso, string $campo): void
+    {
+        $doble = $this->doble(['nom' => 'Joan Pla']);
+        $this->sustituirServicio($caso, $doble);
+        $json = $this->ejecutar($controlador, [$campo => '7']);
+        $this->assertSame(['nom' => 'Joan Pla'], json_decode($json['data'], true));
+        $this->assertSame([['execute', 7]], $doble->llamadas);
+
+        $falla = new class {
+            public function execute(int $id): never
+            {
+                throw new \RuntimeException('error de verdad');
+            }
+        };
+        $this->sustituirServicio($caso, $falla);
+        $this->assertSame('error de verdad', $this->ejecutar($controlador, [$campo => '7'])['mensaje']);
+    }
+
+    public function test_al_adjuntar_un_aviso_de_configuracion_no_es_un_error(): void
+    {
+        $avisa = new class {
+            public function execute(int $id): never
+            {
+                throw new \RuntimeException('persona no encontrada');
+            }
+        };
+        $this->sustituirServicio(\src\certificados\application\CertificadoEmitidoAdjuntarFormData::class, $avisa);
+
+        $json = $this->ejecutar('certificado_emitido_adjuntar_data.php', ['id_nom' => '7']);
+
+        $this->assertTrue($json['success']);
+        $d = json_decode($json['data'], true);
+        $this->assertSame(['persona no encontrada', ''], [$d['aviso'], $d['nom']]);
+        $this->assertSame((new DateTimeLocal())->getFromLocal(), $d['f_enviado']);
+    }
+
+    // ------------------------------------------------------------------ datos del pdf del certificado (mpdf)
+
+    private function emitidoParaImprimir(string $idioma = ''): void
+    {
+        $c = new CertificadoEmitido();
+        $c->setId_item(7);
+        $c->setId_nom(10011);
+        $c->setCertificado('H 12/26');
+        $c->setIdiomaVo($idioma);
+        $c->setF_certificado(new DateTimeLocal('2026-07-24'));
+        $c->setFirmado(true);
+        $this->emitidos->method('findById')->willReturnMap([[7, $c], [8, null]]);
+        $p = $this->createMock(PersonaDl::class);
+        $p->method('getApellidosNombre')->willReturn('Pla, Joan');
+        $p->method('getLugar_nacimiento')->willReturn('Reus');
+        $p->method('getF_nacimiento')->willReturn(new DateTimeLocal('1990-05-20'));
+        $this->personas[10011] = $p;
+    }
+
+    public function test_pdf_certificado_que_no_existe_o_sin_configuracion(): void
+    {
+        $anterior = $_SESSION['oConfig'] ?? null;
+        try {
+            $this->emitidoParaImprimir();
+            $this->assertStringContainsString('8', $this->ejecutar('certificado_emitido_imprimir_mpdf_datos.php', ['id_item' => '8'])['mensaje']);
+
+            $this->config(null);
+            $this->assertStringContainsString('latín', $this->ejecutar('certificado_emitido_imprimir_mpdf_datos.php', ['id_item' => '7'])['mensaje']);
+        } finally {
+            $_SESSION['oConfig'] = $anterior;
+        }
+    }
+
+    public function test_pdf_en_un_idioma_sin_textos_traducidos_avisa(): void
+    {
+        $anterior = $_SESSION['oConfig'] ?? null;
+        try {
+            $this->config();
+            $this->emitidoParaImprimir('de_DE.UTF-8');
+
+            $json = $this->ejecutar('certificado_emitido_imprimir_mpdf_datos.php', ['id_item' => '7']);
+
+            $this->assertFalse($json['success']);
+            $this->assertStringContainsString('de_DE.UTF-8', $json['mensaje']);
+        } finally {
+            $_SESSION['oConfig'] = $anterior;
+        }
+    }
+
+    public function test_pdf_en_latin_con_las_asignaturas_aprobadas_de_la_region(): void
+    {
+        $anterior = $_SESSION['oConfig'] ?? null;
+        try {
+            $this->config();
+            $this->emitidoParaImprimir();
+            $asignaturas = $this->createMock(\src\asignaturas\domain\contracts\AsignaturaRepositoryInterface::class);
+            $asignaturas->method('getAsignaturasAsJson')->willReturn('[{"id":1101}]');
+            $asignaturas->method('findById')->willReturnCallback(function (int $id): ?\src\asignaturas\domain\entity\Asignatura {
+                $a = $this->createMock(\src\asignaturas\domain\entity\Asignatura::class);
+                $a->method('isActive')->willReturn($id !== 1102);
+                $a->method('getIdNivelVo')->willReturn(new \src\asignaturas\domain\value_objects\NivelId($id));
+                $a->method('getCreditos')->willReturn(4.5);
+                $a->method('getNombre_asignatura')->willReturn('Asig ' . $id);
+
+                return $a;
+            });
+            $this->sustituirServicio(\src\asignaturas\domain\contracts\AsignaturaRepositoryInterface::class, $asignaturas);
+            $delegaciones = $this->createMock(\src\ubis\domain\contracts\DelegacionRepositoryInterface::class);
+            $delegaciones->method('mi_region_stgr')->willReturn(['region_stgr' => 'H']);
+            $delegaciones->method('getArrayIdSchemaRegionStgr')->willReturn([1001, 1002]);
+            $this->sustituirServicio(\src\ubis\domain\contracts\DelegacionRepositoryInterface::class, $delegaciones);
+            $nota = function (int $idAsignatura, string $txt): \src\notas\domain\entity\PersonaNota {
+                $n = $this->createMock(\src\notas\domain\entity\PersonaNota::class);
+                $n->method('getIdAsignaturaVo')->willReturn(new \src\asignaturas\domain\value_objects\AsignaturaId($idAsignatura));
+                $n->method('getIdNivelVo')->willReturn(new \src\asignaturas\domain\value_objects\NivelId($idAsignatura > 3000 ? 2431 : $idAsignatura));
+                $n->method('getNota_txt')->willReturn($txt);
+
+                return $n;
+            };
+            $filtrosNotas = [];
+            $notas = $this->createMock(\src\notas\domain\contracts\PersonaNotaRepositoryInterface::class);
+            $notas->method('matching')->willReturnCallback(function (\src\shared\domain\criteria\Criteria $c) use (&$filtrosNotas, $nota): array {
+                $f = \Tests\support\DescribeCriteria::filtros($c);
+                if (count($f) === 2) {
+                    return []; // PlanEstudiosDePersona: sin marca de fin de cuadrienio -> plan 2026
+                }
+                $filtrosNotas = $f;
+
+                return [$nota(1101, '8/10'), $nota(1102, '7/10'), $nota(9998, 'fin')];
+            });
+            $this->sustituirServicio(\src\notas\domain\contracts\PersonaNotaRepositoryInterface::class, $notas);
+            $otra = $this->createMock(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class);
+            $otra->method('matching')->willReturn([$nota(3105, 'Magna cum laude')]);
+            $this->sustituirDefinicion(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class, $otra);
+
+            $json = $this->ejecutar('certificado_emitido_imprimir_mpdf_datos.php', ['id_item' => '7']);
+
+            $this->assertTrue($json['success'], $json['mensaje'] ?? '');
+            $d = json_decode($json['data'], true);
+            $this->assertSame(['Pla, Joan', 'H 12/26', '24/7/2026', 'checked', 2026, '[{"id":1101}]'], [$d['nom'], $d['certificado'], $d['f_certificado'], $d['chk_firmado'], $d['plan_estudios'], $d['cAsignaturas']]);
+            $this->assertStringStartsWith('Matriti, ', $d['lugar_fecha']);
+            $this->assertStringContainsString('HISPANIAE', $d['titulo_2']);
+            $this->assertSame('', $d['txt_superavit'], 'solo para los de repaso');
+            $this->assertSame(['id_schema in [1001,1002]', 'id_nom eq 10011', 'id_nivel between [1100,2500]', 'tipo_acta eq 1'], $filtrosNotas);
+            // 1101 aprobada; 1102 inactiva y 9998 (marcador de fin de ciclo) fuera; la opcional 3105 en su hueco 2431.
+            $this->assertSame([1101, 2431], array_keys($d['aAprobadas']));
+            $this->assertSame(['id_nivel_asig' => 1101, 'id_nivel' => 1101, 'id_asignatura' => 1101, 'nombre_asignatura' => 'Asig 1101', 'creditos' => '9', 'nota_txt' => '8/10'], $d['aAprobadas'][1101]);
+            $this->assertSame('Magna cum laude', $d['aAprobadas'][2431]['nota_txt']);
+        } finally {
+            $_SESSION['oConfig'] = $anterior;
+        }
+    }
+
     public function test_cada_ruta_apunta_a_un_fichero_de_controladores_y_al_reves(): void
     {
         $rutas = file_get_contents(self::DIR . '../../../../config/routes.php') ?: '';
