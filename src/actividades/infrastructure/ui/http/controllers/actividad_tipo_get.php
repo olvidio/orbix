@@ -38,37 +38,37 @@ switch ($Qsalida) {
         /** @var ActividadTipoGetAsistentes $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetAsistentes::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'actividad':
         /** @var ActividadTipoGetActividad $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetActividad::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'nom_tipo':
         /** @var ActividadTipoGetNomTipo $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetNomTipo::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'lugar':
         /** @var ActividadTipoGetLugar $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetLugar::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'dl_org':
         /** @var ActividadTipoGetDlOrg $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetDlOrg::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'filtro_lugar':
         /** @var ActividadTipoGetFiltroLugar $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetFiltroLugar::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
     case 'tarifa':
         /** @var ActividadTipoGetTarifas $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetTarifas::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
-        exit;
+        return;
 }
 
 // Salidas que devuelven HTML/valor escalar (bajo `content`).
@@ -90,7 +90,7 @@ switch ($Qsalida) {
         break;
     default:
         ContestarJson::enviar(sprintf(_("opción no definida: salida=%s"), $Qsalida));
-        exit;
+        return;
 }
 
 ContestarJson::enviar('', ['content' => (string)$content]);

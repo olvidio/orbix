@@ -31,6 +31,7 @@ $result = $useCase->execute(['sel' => $a_sel]);
 
 if ($result['error_txt'] === '' && $result['avisos'] !== []) {
     ContestarJson::enviar('', ['avisos' => $result['avisos']]);
+    return;
 }
 
 ContestarJson::enviar($result['error_txt']);

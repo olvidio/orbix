@@ -29,7 +29,7 @@ $Qisfsv = (int)\src\shared\domain\helpers\FilterPostGet::post('isfsv');
 
 if ($Qtipo !== 'freq' && $Qtipo !== 'region') {
     ContestarJson::enviar(sprintf(_("opción no definida: tipo=%s"), $Qtipo));
-    exit;
+    return;
 }
 
 /** @var ActividadSelectUbiData $useCase */

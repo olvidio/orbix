@@ -34,7 +34,7 @@ $result = $useCase->execute($input);
 
 if (isset($result['tipo_error'])) {
     ContestarJson::enviar($result['error_txt']);
-    exit;
+    return;
 }
 
 ContestarJson::enviar($result['error_txt']);

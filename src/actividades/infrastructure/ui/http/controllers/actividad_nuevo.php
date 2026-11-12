@@ -33,7 +33,7 @@ $Qinom_tipo_val = (string)\src\shared\domain\helpers\FilterPostGet::post('inom_t
 // Puede ser '000' > sin especificar
 if (empty($Qinom_tipo_val)) {
     ContestarJson::enviar(_("debe seleccionar un tipo de actividad"));
-    exit;
+    return;
 }
 
 $datosActividad = [
@@ -44,7 +44,8 @@ $datosActividad = [
     'id_repeticion' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_repeticion'),
     'plazas' => (integer)\src\shared\domain\helpers\FilterPostGet::post('plazas'),
     'tarifa' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_tarifa'),
-    'precio' => \src\shared\domain\helpers\FilterPostGet::post('precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
+    // Sin FILTER_SANITIZE_NUMBER_FLOAT: borraba la coma decimal («350,50» → 35050). Dinero::fromInput valida.
+    'precio' => (string)\src\shared\domain\helpers\FilterPostGet::post('precio'),
     'dl_org' => (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org'),
     'nom_activ' => (string)\src\shared\domain\helpers\FilterPostGet::post('nom_activ'),
     'lugar_esp' => (string)\src\shared\domain\helpers\FilterPostGet::post('lugar_esp'),
