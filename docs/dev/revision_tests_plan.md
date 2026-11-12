@@ -206,6 +206,7 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 5. **(2.6) Status al marcar una fase:** `ProcesoActividadService` toma como status de la actividad el de la fase que se marca (igual que el legacy). Marcar una fase de status «proyecto» en una actividad «actual» intenta devolverla a proyecto (y sin permiso de des da error). ¿Debería ser el status del conjunto de fases marcadas, como al desmarcar? (Sin tocar.)
 6. **(2.8) Permisos de dossiers, supernumerarios y oficina est:** en `PermDossier::perm_activ_pers('s')` la oficina `est` recibe la tabla de `sr` (puede apuntar supernumerarios a crt y cv de sr). En el legacy usaba `$ref_perm_est`, que no estaba definida en ningún sitio: `est` no tenía ningún permiso. Además el legacy se quedaba con la última oficina y ahora se suman. ¿Qué debe poder `est` con los supernumerarios? (Sin tocar.)
 7. **(2.10, seguridad) Menú «burger»:** `MenusBurgerLayoutDataUseCase` muestra todas las entradas de los grupos de menú del usuario sin mirar los bits de permiso de cada entrada (`menu_perm`); el layout clásico (`MenusLegacyLayoutItemsUseCase`) sí las oculta con `PermisoMenu::visible()`. Así ha sido desde que se creó el burger. ¿Filtrar igual que el clásico? (Sin tocar.)
+8. **(2.1) Piloto de Infection:** Infection no está instalado. Hace falta añadirlo como dependencia de desarrollo (`composer require --dev infection/infection`, cambia `composer.json` y `composer.lock`). ¿Se instala? (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 
