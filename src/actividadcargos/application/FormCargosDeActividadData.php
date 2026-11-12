@@ -83,7 +83,10 @@ final class FormCargosDeActividadData
                     ->where(Filter::eq(ActividadCargoField::IdItem, $Qid_item))
                     ->andWhere(Filter::eq(ActividadCargoField::IdSchema, $Qid_schema))
             );
-            $oActividadCargo = $cActividadCargo[0];
+            $oActividadCargo = $cActividadCargo[0] ?? null;
+            if ($oActividadCargo === null) {
+                return ['error' => _("no encuentro el cargo")];
+            }
             $Qid_pau = $oActividadCargo->getId_activ();
             $Qid_cargo = $oActividadCargo->getId_cargo();
             $Qid_nom = (int) ($oActividadCargo->getId_nom() ?? 0);
