@@ -855,6 +855,7 @@ class Trasladar
         // Los Out pasan a Dl si la dl destino es la que organiza.
         $AsistenteOutOrgRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBorgE);
         $AsistenteDlDstRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBdstE);
+        $AsistenteOutDstRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBdstE);
         $collection = $AsistenteOutOrgRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $this->iid_nom)));
         $ActividadAllRepository = $this->actividadAllRepository;
         foreach ($collection as $oAsistenteOut) {
@@ -872,7 +873,8 @@ class Trasladar
                     $err = 1;
                 }
             } else {
-                if ($AsistenteDlDstRepository->Guardar($oAsistenteOut, false) === false) {
+                // Sigue siendo «out» en el destino (antes también iba a la tabla dl).
+                if ($AsistenteOutDstRepository->Guardar($oAsistenteOut, false) === false) {
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                     $err = 1;
                 }
@@ -885,7 +887,6 @@ class Trasladar
         // Los Dl pasan a Out
         $AsistenteDlOrgRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBorgE);
         $collection = $AsistenteDlOrgRepository->matching(Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $this->iid_nom)));
-        $AsistenteOutDstRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBdstE);
         foreach ($collection as $oAsistenteDl) {
             $err = 0;
             // cambio para que la dl responsable sea la actual:
@@ -1041,7 +1042,8 @@ class Trasladar
         $cCertificados = $certificadoRecibidoRepository->matching(Criteria::create()->where(Filter::eq(CertificadoRecibidoField::IdNom, $this->iid_nom)));
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
-                $error .= '<br>' . $this->serror = $error;
+                // Antes «'<br>' . $this->serror = $error» asignaba primero y perdía el mensaje.
+                $error .= '<br>' . $this->serror;
             }
         }
 
@@ -1065,7 +1067,9 @@ class Trasladar
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
         $CertificadoRecibido->setId_item(is_numeric($newId_item) ? (int)$newId_item : 0);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
-            $error .= $certificadoRecibidoRepository->getErrorTxt();
+            // No se borra el original si no se ha podido copiar (antes se perdía).
+            $this->serror = $certificadoRecibidoRepository->getErrorTxt();
+            return false;
         }
 
         // eliminar el original
