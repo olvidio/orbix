@@ -139,10 +139,10 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 | personas | ok | ok | ok | ok | — | 2.5: 73 %; falta `Trasladar` (61 %) y el CLI de resincronización de sacd |
 | usuarios | ok | ok | parcial | parcial | — | 2.6: 52 %; dudas de seguridad 3 y 4 (6b) |
 | procesos | ok | ok | parcial | parcial | — | 2.6: 53 % (el resto es sobre todo `db/`, DDL) |
-| dossiers | — | — | — | — | — | |
-| ubis | — | — | — | — | — | |
-| ubiscamas | — | — | — | — | — | |
-| casas | — | — | — | — | — | |
+| dossiers | ok | ok | ok | parcial | — | 2.8: 62 %; `PermDossier` caracterizado |
+| ubis | ok | parcial | parcial | parcial | — | 2.8: 62 % |
+| ubiscamas | ok | ok | parcial | parcial | — | 2.8: 65 % |
+| casas | ok | ok | parcial | parcial | — | 2.8: 74 % |
 | actividadcargos / actividadescentro / actividadessacd / actividadplazas / actividadtarifas | — | — | — | — | — | agrupables en un paso |
 | asignaturas / profesores | — | — | — | — | — | `PlanEstudios` sin test |
 | cambios / configuracion / menus / inventario | — | — | — | — | — | `EgmItemId` sin test |
@@ -177,7 +177,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.5 `personas` (sección 21): cobertura 55 % → 73 % (application 89 %); 8 bugs corregidos (traslados, búsqueda por centro, esquemas temporales) y un test-guardia global de `DatosCampo`
 - [x] 2.6 `usuarios` + `procesos` (sección 22): cobertura `usuarios` 39 % → 52 %, `procesos` 41 % → 53 % (application 58 → 89 %); recuperación de 2FA endurecida y 6 bugs corregidos
 - [x] 2.7 `encargossacd` + `misas` (sección 23): `encargossacd` 65 % → 69 % (application 86 → 93 %), `misas` 57 % → 58 %; 2 bugs corregidos y dos tests-guardia globales de controladores (cápsula `HashB` y `exit`)
-- [ ] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas`
+- [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
 - [ ] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (incluye el hallazgo `f_inc` de la sección 11: test de `SincroDB` y arreglo)
 - [ ] 2.11 `planning`: ampliar los tres servicios (`ActividadesDePersonaService` 35 %, `ActividadesPorCasasService` 58 %, `ActividadesPorZonasService` 64 %).
 - [ ] 2.10 resto (asignaturas, profesores, cambios, configuracion, menus, inventario, cartaspresentacion, tablonanuncios, zonassacd, shared, utils_database)
@@ -936,3 +936,22 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 2. `PropuestasAjaxMutations` lee `$_POST` desde `application/` y `lista_sacd` devuelve `opciones` como mapa, no como pares ordenados (regla de desplegables de `AGENTS.md`). `dedicacion_update` crea horarios con dedicación 0 para los módulos vacíos.
 3. `misas` (`crear_nuevo_periodo_data_build`, `cuadricula_zona_grid_data_build`, `CuadriculaUpdate`): las marcas de inicio y fin de una ausencia se guardan con la fecha `d/m/Y` como clave en una tabla indexada por `Y-m-d` (claves sobrantes; el bucle posterior marca bien los días).
 4. `modulos_update` (`configuracion`) responde texto plano; su proxy frontend lo adapta. `menus_generar_txt` es una herramienta de desarrollo dentro de `src/` que escribe un `.phtml` y responde texto.
+
+## 24. Fase 2, paso 2.8: `dossiers` + `ubis` + `ubiscamas` + `casas` (cerrado el 2026-11-12, sin atención del usuario)
+
+**Línea base:** 1690 tests en verde. Cobertura: `dossiers` 50 % (application 44 %; `PermDossier` 1 %), `ubis` 61 % (`PgTrasladoUbiRepository` 0 %), `ubiscamas` 60 % (infrastructure 33 %: `habitacion_update` con toda la lógica en el controlador), `casas` 74 %.
+
+**Cierre:** 1714 tests. `dossiers` 62 % (application 61 %), `ubis` 62 %, `ubiscamas` 65 %, `casas` 74 % (lo que falta en `casas` son controladores pequeños de mutación, ya cubiertos por el test-guardia de cápsulas).
+- Tests nuevos: caracterización de los permisos de dossiers (`PermDossierTest`: bits de menú, oficina según el tipo de persona, tablas de tipos de actividad y de persona, suma de oficinas, sin personas de paso fuera de la dl propia), traslado de ubis a otra dl, `HabitacionGuardar`.
+
+**Bugs corregidos:**
+1. **Inyección SQL al trasladar centros y casas a otra dl** (`TrasladarUbis` → `PgTrasladoUbiRepository::trasladoCtr/trasladoCdc`): `dl_dst` del POST iba entre comillas dobles como nombre de esquema en `INSERT`/`DELETE`. Ahora el caso de uso exige un esquema (`H-dlp`) y el repositorio valida los dos esquemas antes de conectar (como ya hacía `trasladoCdcDesdeResto`). Además el caso de uso avisa si un traslado falla (antes respondía siempre éxito).
+2. **Camas VIP de más** al guardar una habitación: al completar las camas que faltan, las VIP se contaban desde cero (sin las que ya había ni las descritas en el formulario). La lógica de `habitacion_update` pasa al caso de uso `HabitacionGuardar`, que además mira el resultado de guardar.
+
+**Dudas:** 6 de la sección 6b (permisos de `est` sobre supernumerarios en `PermDossier`).
+
+**Hallazgos (sin corregir):**
+1. `PermDossier`: en `ref_perm_sr` la clave 32 se llama «cv agd» (es «sem inv»; sin efecto, permiso 0). `daniBoleanOr` devuelve `perm` booleano y las tablas enteros (los consumidores solo miran si es verdadero). Lee `$_SESSION` desde `application/`.
+2. `PgTrasladoUbiRepository::trasladoCdc/trasladoCtr` no usan transacción: si falla una tabla a medias, el ubi queda repartido entre los dos esquemas.
+3. `HabitacionId` admite cualquier texto (no valida UUID).
+4. `DBTrasvase` y `DBView` (`shared`) interpolan nombres de esquema en SQL; vienen de la configuración de la instalación (herramientas de administración).
