@@ -12,6 +12,9 @@
  *   php tools/qa/check_test_application.php --json     # salida JSON
  *   php tools/qa/check_test_application.php --modulo=notas --list
  *   php tools/qa/check_test_application.php --strict   # exit 1 si hay huecos
+ *   php tools/qa/check_test_application.php --baseline # exit 1 solo si hay huecos NUEVOS
+ *                                                       # (no están en test_application_baseline.json)
+ *   php tools/qa/check_test_application.php --update-baseline  # reescribe la línea base (tras cubrir huecos)
  *
  * Heurística: una clase «tiene test» si su nombre aparece como palabra en
  * algún fichero bajo `tests/`. Es una cota inferior de cobertura, no una
@@ -21,7 +24,8 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-$opts = getopt('', ['list', 'json', 'strict', 'modulo::']);
+$opts = getopt('', ['list', 'json', 'strict', 'modulo::', 'baseline', 'update-baseline']);
+$baselineFile = __DIR__ . '/test_application_baseline.json';
 $soloModulo = isset($opts['modulo']) && is_string($opts['modulo']) ? $opts['modulo'] : null;
 
 /** @return list<string> */
@@ -110,4 +114,35 @@ if (isset($opts['strict'])) {
             }
         }
     }
+}
+
+if (isset($opts['update-baseline']) || isset($opts['baseline'])) {
+    $sinTest = [];
+    foreach ($resultado as $info) {
+        foreach ($info as $g) {
+            foreach ($g['sin_test'] ?? [] as $f) {
+                $sinTest[] = $f;
+            }
+        }
+    }
+    sort($sinTest);
+    if (isset($opts['update-baseline'])) {
+        file_put_contents($baselineFile, json_encode($sinTest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+        echo 'Línea base actualizada: ' . count($sinTest) . " ficheros sin test.\n";
+        exit(0);
+    }
+    $baseline = is_file($baselineFile) ? (array) json_decode((string) file_get_contents($baselineFile), true) : [];
+    $nuevos = array_values(array_diff($sinTest, $baseline));
+    $cubiertos = array_values(array_diff($baseline, $sinTest));
+    if ($cubiertos !== []) {
+        echo "\nYa tienen test (se pueden quitar de la línea base con --update-baseline): " . count($cubiertos) . "\n";
+    }
+    if ($nuevos !== []) {
+        echo "\nHUECOS NUEVOS (clases de application/ o controladores sin ningún test):\n";
+        foreach ($nuevos as $f) {
+            echo "    - $f\n";
+        }
+        exit(1);
+    }
+    echo "\nOK: ningún hueco nuevo respecto a la línea base.\n";
 }

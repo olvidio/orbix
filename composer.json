@@ -57,6 +57,12 @@
     "test:report:buckets": "bash tools/qa/check_test_coverage.sh",
     "test:report:granular": "bash tools/qa/check_test_granular.sh",
     "qa:criteria-legacy": "php tools/qa/check_criteria_legacy.php --strict",
+    "qa:test-application": "php tools/qa/check_test_application.php --baseline",
+    "qa:huecos": [
+      "STRICT=1 bash tools/qa/check_test_granular.sh",
+      "@composer qa:test-application",
+      "@composer qa:criteria-legacy"
+    ],
     "test:report": [
       "@composer test:report:buckets",
       "@composer test:report:granular"
