@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace src\notas\application;
 
 use src\notas\domain\DestinoNotaExterno;
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\ubis\domain\RegionStgrAviso;
 
 /**
@@ -15,6 +15,7 @@ final class TesseraImprimirData
 {
     public function __construct(
         private readonly Tesera $tesera,
+        private readonly PersonaFinderService $personaFinderService,
     ) {
     }
     /**
@@ -27,7 +28,8 @@ final class TesseraImprimirData
         }
 
         $problemasRegionStgr = [];
-        $oPersona = Persona::findPersonaEnGlobal($id_nom, $problemasRegionStgr);
+        // Igual que `TesseraVerData`: también personas no activas (tessera histórica).
+        $oPersona = $this->personaFinderService->findPersonaEnGlobalIncluyendoNoActivos($id_nom, $problemasRegionStgr);
         if ($oPersona === null) {
             return ['aviso' => sprintf(_("No encuentro persona con id_nom: %s"), (string)$id_nom)];
         }

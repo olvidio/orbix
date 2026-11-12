@@ -236,7 +236,7 @@ final class TesseraCopiarTest extends myTest
             new PlanEstudiosDePersona($this->notas)
         );
 
-        $r = (new TesseraImprimirData($tesera))->execute(0);
+        $r = (new TesseraImprimirData($tesera, $this->createStub(\src\personas\application\services\PersonaFinderService::class)))->execute(0);
 
         $this->assertSame(['aviso'], array_keys($r));
         $this->assertNotSame('', $r['aviso']);
