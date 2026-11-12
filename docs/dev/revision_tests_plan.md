@@ -171,7 +171,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
-- [ ] 2.2 `asistentes` — en curso (sección 18): hechos mutaciones, dominio, repositorios, servicios, `AsistenteMoverData` y `ListaAsistentesData`; quedan `Select_asistentes_a_una_actividad`, `ListaPlazasConjuntoActividades`, `ListaAsisConjuntoActivData`, `FormAsistentesAUnaActividadData` y los controladores
+- [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 11 bugs corregidos; quedan dos decisiones (enlaces de alta sin la app de cargos, permiso del widget 3101)
 - [ ] 2.3 `notas` + `certificados`
 - [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite)
 - [ ] 2.5 `personas`
@@ -676,15 +676,16 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 7. `FormAsignaturasDeUnaActividadData`: sin actividad, el alta consulta antes los profesores de la «actividad 0» y lanza una excepción que habla del nombre de la asignatura.
 8. Varios mensajes de error incluyen la ruta del fichero PHP del servidor (`E43CertificadoData`, `MatriculasListaData`, `ListaClasesCaData`, widgets). `Select_matriculas_de_una_actividad` repite todas las consultas en cada `getValores()` cuando no hay matrículas.
 
-## 18. Fase 2, paso 2.2: `asistentes` (en curso desde el 2026-11-11)
+## 18. Fase 2, paso 2.2: `asistentes` (cerrado el 2026-11-12)
 
-**Línea base:** 229 tests en verde; cobertura de líneas del módulo (solo con sus tests) 60 %. **Ahora:** 364 tests, 75 %.
+**Línea base:** 229 tests en verde; cobertura de líneas del módulo (solo con sus tests) 60 %. **Al cerrar:** 456 tests, 92 % (sin cubrir: `InfoAsistenteDl`, las closures de `routes.php` y ramas de la leyenda de plazas del widget 3101). Suite completa: 9208 tests en verde.
 
 **Hecho (un commit por lote):**
 - **Mutaciones:** `AsistenteGuardar` (valores grabados con una entidad real y entrada de `$_POST` como texto, selecciones p/a, dossier 1301, errores, mover), `AsistenteEliminar`, `AsistentePlazaAsignar` (cada rama del lote) y `PlazaPropietarioAsignacion` (test nuevo). Un test de eliminar simulaba un método que el caso de uso no llama (`Matricula::DBEliminar`) y pasaba por casualidad: rehecho.
 - **Dominio y repositorios:** reglas de la entidad (`AsistenteReglasTest`), VO con recorte, vacío y borde de 255; ida y vuelta de todos los campos en el repo dl; los tests `getAsistentes()` de dl/ex estaban comentados (método inexistente) y se sustituyen por uno que hidrata filas reales.
 - **Servicios:** `AsistenteActividadService` (30 casos, hasta ahora siempre simulado) y `AsistenteApplicationService`.
-- **Lecturas:** camino feliz de `AsistenteMoverData` (hueco de la fase 1) y construcción de `ListaAsistentesData`.
+- **Lecturas:** camino feliz de `AsistenteMoverData` (hueco de la fase 1), `ListaAsistentesData`, el widget `Select_asistentes_a_una_actividad` (3101), `ListaPlazasConjuntoActividades`, los filtros de `ListaAsisConjuntoActivData` y `FormAsistentesAUnaActividadData`.
+- **Controladores:** contrato de los 15 (en proceso, con el caso de uso sustituido): envelope en éxito, error y aviso previsto, y rutas ↔ controladores.
 - `@dataProvider` → `#[DataProvider]` en los ficheros tocados (PHPUnit 12 deja de leer las anotaciones; quedan ≈ 90 ficheros con docblock en la suite).
 
 **Bugs corregidos** (commits `fix(asistentes)` con su test):
@@ -692,10 +693,20 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 2. `ordenarAsistenciasPorFecha` decía quedarse con la primera tabla, pero con la misma actividad en dos tablas no consecutivas se quedaba con la última.
 3. **`AsistenteApplicationService::guardar()`/`eliminar()` dejaban el servicio leyendo de una tabla hija:** guardaban el repositorio hijo en `$this->repository`, el mismo con el que `findById()`/`matching()` leen de la vista general; el servicio es compartido, así que tras el primer guardado de una petición `matching()` consultaba solo esa tabla.
 4. `PgAsistentePubRepository::getListaAsistentesDistintos` concatenaba los ids en el SQL y recorría `false` con `foreach` si la consulta fallaba: sentencia preparada y `false` como dice el contrato.
+5. **Permisos al guardar:** `AsistenteGuardar` no sobrescribe ya una asistencia existente de otra dl con «nuevo» o «mover» (antes solo se comprobaba al editar).
+6. **«Añadir de paso» desde el dossier 3101 mostraba el desplegable de personas vacío:** `PermDossier` da el tipo como `PersonaEx&na=n`; la «&» se codificaba en la URL y el formulario no reconocía el `obj_pau`. El widget manda ahora `obj_pau` y `na` por separado y el formulario acepta también el formato antiguo. Al editar, el tipo de persona se deducía con un `switch` que esperaba «nax» (es «x») y no conocía «px»/«psssc»: usa el mapa de `PersonaRepositoryResolver`.
+7. `ListaPlazasConjuntoActividades`: **las pedidas pisaban a un asignado** (clave `num + plazas + pedidas`, sin plazas en la actividad coincidía con la de un asignado posterior: una persona desaparecía); **preguntaba por la app «actividadcentros», que no existe** (es «actividadescentro»): en las cv de s nunca salían los centros encargados; **las plazas de la actividad solo se miraban si tenía casa**.
+8. Resumen de plazas del dossier 3101: faltaba el « + » entre las plazas propias y las cedidas.
+9. `ActividadEx`: ramas muertas quitadas de `getRepoAsistente` (sin cambio de comportamiento).
 
 **Decisiones tomadas:**
 1. **Permisos al guardar (corregido):** `AsistenteGuardar` solo comprobaba `perm_modificar()` con `mod=editar`; con `nuevo` o `mover` sobre una asistencia existente de otra dl se sobrescribía y pasaba a mi dl. Ahora, si la asistencia ya existe, se exige el permiso con cualquier modo.
 2. **`ActividadEx` (código muerto quitado, sin cambio de comportamiento):** `AsistenteActividadService::getRepoAsistente` compara `getClassName() === 'ActividadEx'`, que nunca se cumple. Esas ramas se añadieron en el refactor del 24-12-2025 (`dbcd8cea8`) y nunca han funcionado; el modelo antiguo (`AsistentePub::getClaseAsistente`) no distinguía las actividades «ex»: una persona de mi dl en una actividad que no es de mi dl iba siempre a `d_asistentes_out`, como hoy (en desarrollo: 844 asistencias de actividades «ex» en out, 11 en dl, 77 en ex). Una primera lectura de este plan decía que antes iban a `d_asistentes_dl`: era errónea. Las ramas muertas se han quitado de `getRepoAsistente`.
+
+**Pendiente de decisión:**
+1. **Widget 3101 sin la app `actividadcargos`: no hay enlaces para añadir asistentes.** Los permisos para añadir por tipo de persona (`a_ref_perm`) solo se calculan dentro de `getCargos()`, que solo se ejecuta con esa app.
+2. **Widget 3101: el permiso de la última persona con cargo decide si se pueden seleccionar los asistentes** (`getCargos()` sobrescribe `$this->permiso` en el bucle).
+3. Persona de otra dl en una actividad que no es de mi dl: el modelo antiguo la mandaba a `d_asistentes_out`; el actual la rechaza (se deja así salvo que se diga lo contrario).
 
 **Hallazgos (sin corregir):**
 1. `AsistenteGuardar`: un encargo de más de 255 caracteres lanza `InvalidArgumentException`, que `execute()` no captura (solo captura `RuntimeException`). Al mover, el destino se guarda antes de borrar el origen y sin transacción: si el origen no se puede borrar, se devuelve error con la persona ya en las dos actividades.
@@ -705,3 +716,6 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 5. La entidad deja puesta la plaza nueva aunque el comprobador la rechace.
 6. `ListaAsistentesData`: las filas de cargos se indexan por el nombre del cargo (dos «asist.» quedan en una); una persona con un cargo que ya no existe, o a quien no se encuentra, desaparece de las dos listas; `exit()` si hay dos filas del mismo asistente; asistentes indexados por nombre (igual en `AsistenteActividadService::getAsistentesDeActividad`).
 7. `AsistenteMoverData`: para un tipo que no es ca, cv ni crt filtra entre fechas vacías (anotado en la fase 1).
+8. `ListaAsisConjuntoActivData`: con «solo sacd» el bloque de otras dl muestra a todos (se pone `setSacd(false)` al clonar). Construye HTML en `application` (`content_html`), igual que `ListaPlazasConjuntoActividades`, que devuelve un `frontend\shared\web\Lista` desde `src/`.
+9. `Periodo` devuelve las fechas de «desde hoy» con «/» (`Y/m/d`) y el resto con «-»; PostgreSQL acepta las dos.
+10. ≈ 90 ficheros de tests usan `@dataProvider` en docblock, que PHPUnit 12 no leerá (156 avisos en la suite); los tocados en este paso usan ya `#[DataProvider]`. Conviene convertir el resto en un paso mecánico.
