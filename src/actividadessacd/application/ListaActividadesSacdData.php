@@ -158,7 +158,10 @@ final class ListaActividadesSacdData
                 }
             }
 
-            if ($tipo === 'falta_sacd' && (\src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd_aprobado) || count($sacds) === 0)) {
+            // «Falta sacd» (ver la nota de la pantalla): las que no tienen sacd, estén
+            // aprobadas o no, y las que lo tienen sin la fase «ok sacd». Solo se quitan
+            // las que tienen sacd y la fase completada.
+            if ($tipo === 'falta_sacd' && count($sacds) > 0 && \src\shared\domain\helpers\FuncTablasSupport::isTrue($sacd_aprobado)) {
                 continue;
             }
 
