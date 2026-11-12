@@ -210,8 +210,9 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
         $cAusencias = $EncargoSacdHorarioRepository->matching(
             Criteria::create()
                 ->where(Filter::eq(EncargoSacdHorarioField::IdNom, $id_nom))
-                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sInicio_iso))
-                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sFin_iso))
+                // Ausencias que se solapan con el periodo (antes solo las que lo cubrían entero).
+                ->andWhere(Filter::lte(EncargoSacdHorarioField::FIni, $sFin_iso))
+                ->andWhere(Filter::gte(EncargoSacdHorarioField::FFin, $sInicio_iso))
         );
         foreach ($cAusencias as $oTareaHorarioSacd) {
             $id_enc = $oTareaHorarioSacd->getId_enc();

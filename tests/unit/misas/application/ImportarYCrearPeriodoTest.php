@@ -301,4 +301,31 @@ final class ImportarYCrearPeriodoTest extends myTest
         yield 'próxima semana' => ['proxima_semana'];
         yield 'próximo mes' => ['proximo_mes'];
     }
+
+    public function test_las_ausencias_que_solo_se_solapan_en_parte_con_el_periodo_tambien_cuentan(): void
+    {
+        $this->encargos->method('matching')->willReturn([]);
+        $zona = $this->createMock(ZonaSacdRepositoryInterface::class);
+        $zs = new \src\zonassacd\domain\entity\ZonaSacd();
+        $zs->setId_nom(10);
+        $zona->method('matching')->willReturn([$zs]);
+        $cargos = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $cargos->method('getAsistenteCargoDeActividad')->willReturn([]);
+        $ausencias = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
+        $filtros = [];
+        $ausencias->method('matching')->willReturnCallback(function ($c) use (&$filtros): array {
+            $filtros = \Tests\support\DescribeCriteria::filtros($c);
+            return [];
+        });
+        $c = new CrearNuevoPeriodoData($zona, $this->createMock(ActividadRepositoryInterface::class), $this->createMock(InicialesSacdService::class),
+            $cargos, $this->encargos, $ausencias, $this->tipos, $this->encargosDia, $this->horarios);
+
+        $c->build(['id_zona' => 4, 'tipo_plantilla' => 's1', 'periodo' => 'otro', 'empiezamin' => '02/03/2026', 'empiezamax' => '04/03/2026', 'seleccion' => 3]);
+
+        $this->assertContains('id_nom eq 10', $filtros);
+        $fIni = array_values(array_filter($filtros, static fn (string $f): bool => str_starts_with($f, 'f_ini ')));
+        $fFin = array_values(array_filter($filtros, static fn (string $f): bool => str_starts_with($f, 'f_fin ')));
+        $this->assertSame(['f_ini lte 2026-03-04'], $fIni, 'empieza antes de que acabe el periodo');
+        $this->assertSame(['f_fin gte 2026-03-02'], $fFin, 'y acaba después de que empiece');
+    }
 }
