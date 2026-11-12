@@ -434,6 +434,72 @@ final class EncargoAplicacionServiceTest extends TestCase
     /**
      * @param array<class-string, object> $overrides
      */
+    // ============================================================
+    // horarios del centro (encargo) y del sacd
+    // ============================================================
+
+    /** @param list<\src\encargossacd\domain\entity\EncargoHorario> $abiertos @return list<\src\encargossacd\domain\entity\EncargoHorario> guardados */
+    private function horariosCtr(array $abiertos, callable $accion): array
+    {
+        $guardados = [];
+        $repo = $this->createMock(EncargoHorarioRepositoryInterface::class);
+        $repo->method('matching')->willReturn($abiertos);
+        $repo->method('getNewId')->willReturn(900);
+        $repo->method('Guardar')->willReturnCallback(function ($h) use (&$guardados): bool {
+            $guardados[] = $h;
+            return true;
+        });
+        $accion($this->makeService([EncargoHorarioRepositoryInterface::class => $repo]));
+        return $guardados;
+    }
+
+    private static function horarioCtr(int $diaInc, string $fIni): \src\encargossacd\domain\entity\EncargoHorario
+    {
+        $h = new \src\encargossacd\domain\entity\EncargoHorario();
+        $h->setId_item_h(10);
+        $h->setId_enc(5);
+        $h->setDiaRefVo('m');
+        $h->setDia_inc($diaInc);
+        $h->setN_sacd(1);
+        $h->setF_ini(new \src\shared\domain\value_objects\DateTimeLocal($fIni));
+        return $h;
+    }
+
+    public function test_horario_ctr_nuevo_si_no_habia(): void
+    {
+        $g = $this->horariosCtr([], fn (EncargoAplicacionService $s) => $s->modificar_horario_ctr(5, 'm', '2', 0));
+        $this->assertCount(1, $g);
+        $this->assertSame([900, 2, 1, null], [$g[0]->getId_item_h(), $g[0]->getDia_inc(), $g[0]->getN_sacd(), $g[0]->getF_fin()]);
+        $this->assertSame([], $this->horariosCtr([], fn (EncargoAplicacionService $s) => $s->modificar_horario_ctr(5, 'm', '', 1)), 'sin dedicación no crea nada');
+    }
+
+    public function test_horario_ctr_cambiar_la_dedicacion_cierra_el_anterior_y_abre_uno_nuevo(): void
+    {
+        $viejo = self::horarioCtr(1, '2020-01-01');
+        $g = $this->horariosCtr([$viejo], fn (EncargoAplicacionService $s) => $s->modificar_horario_ctr(5, 'm', '3', 2));
+        $this->assertCount(2, $g);
+        $this->assertSame($viejo, $g[0]);
+        $this->assertSame(1, $viejo->getDia_inc(), 'el anterior conserva su dedicación');
+        $this->assertSame(date('Y-m-d'), $viejo->getF_fin()?->format('Y-m-d'), 'y queda cerrado');
+        $this->assertSame([3, 2, null], [$g[1]->getDia_inc(), $g[1]->getN_sacd(), $g[1]->getF_fin()], 'un solo horario abierto, con la dedicación nueva');
+    }
+
+    public function test_horario_ctr_empezado_hoy_se_modifica_sin_duplicar(): void
+    {
+        $hoy = self::horarioCtr(1, date('Y-m-d'));
+        $g = $this->horariosCtr([$hoy], fn (EncargoAplicacionService $s) => $s->modificar_horario_ctr(5, 'm', '3', 1));
+        $this->assertSame([$hoy], $g);
+        $this->assertSame([3, null], [$hoy->getDia_inc(), $hoy->getF_fin()]);
+    }
+
+    public function test_horario_ctr_misma_dedicacion_solo_cambia_el_numero_de_sacd(): void
+    {
+        $viejo = self::horarioCtr(2, '2020-01-01');
+        $g = $this->horariosCtr([$viejo], fn (EncargoAplicacionService $s) => $s->modificar_horario_ctr(5, 'm', '2', 3));
+        $this->assertSame([$viejo], $g);
+        $this->assertSame([2, 3, null], [$viejo->getDia_inc(), $viejo->getN_sacd(), $viejo->getF_fin()]);
+    }
+
     private function makeService(array $overrides = []): EncargoAplicacionService
     {
         $services = array_merge([

@@ -291,13 +291,23 @@ class EncargoAplicacionService
         } else {
             $oEncargoHoraio = $cEncargoHorarios[0];
             $dia_inc = $oEncargoHoraio->getDia_inc();
-            $oEncargoHoraio->setDia_inc(is_numeric($dedicacion) ? (int) $dedicacion : null);
-            $oEncargoHoraio->setN_sacd($n_sacd);
+            $cambia = $dedicacion !== '' && $dedicacion !== null && $dia_inc != $dedicacion;
+            // Como en modificar_horario_sacd(): si la dedicación cambia y el horario
+            // no empezó hoy, se cierra (conservando su dedicación) y se abre uno
+            // nuevo. Antes se cambiaba el abierto y además se insertaba otro igual:
+            // quedaban dos horarios abiertos del mismo módulo.
+            if ($cambia && $oEncargoHoraio->getF_ini() != $this->getF_ini()) {
+                $oEncargoHoraio->setF_fin($this->getF_fin());
+            } else {
+                $oEncargoHoraio->setDia_inc(is_numeric($dedicacion) ? (int) $dedicacion : null);
+                $oEncargoHoraio->setN_sacd($n_sacd);
+                $cambia = false;
+            }
             if ($this->encargoHorarioRepository->Guardar($oEncargoHoraio) === false) {
                 echo _("hay un error, no se ha guardado");
             }
 
-            if ($dedicacion !== '' && $dedicacion !== null && $dia_inc != $dedicacion) {
+            if ($cambia) {
                 $this->insert_horario_ctr($id_enc, $modulo, $dedicacion, $n_sacd);
             }
         }
