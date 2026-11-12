@@ -97,8 +97,14 @@ trait PersonaGlobalListsTrait
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        $params = [];
         if ($nom_tabla === 'p_de_paso_ex') {
-            $Qry_tabla = empty($id_tabla) ? '' : "AND id_tabla = '$id_tabla'";
+            // Parámetro: el tipo llega de `'p' . $_POST['na']` y antes se interpolaba entre comillas (inyección SQL).
+            $Qry_tabla = '';
+            if ($id_tabla !== '') {
+                $Qry_tabla = 'AND id_tabla = :id_tabla';
+                $params['id_tabla'] = $id_tabla;
+            }
             $sQuery = "SELECT id_nom, " . $this->sApeNom . " || ' (' || p.dl || ')' as ape_nom
                        FROM $nom_tabla p 
                        WHERE p.situacion='A' $Qry_tabla
@@ -109,7 +115,14 @@ trait PersonaGlobalListsTrait
                        WHERE p.situacion='A'
                        ORDER by apellido1,apellido2,nom";
         }
-        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($params === []) {
+            $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        } else {
+            $stmt = $oDbl->prepare($sQuery);
+            if ($stmt !== false && $stmt->execute($params) === false) {
+                $stmt = false;
+            }
+        }
         if ($stmt === false) {
             return [];
         }
