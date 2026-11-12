@@ -125,9 +125,9 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 |--------|:-----------:|:--------------:|:---------------------:|:-------------:|:---:|-------|
 | permisos | — | — | — | — | — | unit=1, integ=0 |
 | planning | — | — | — | — | — | integ=0 |
-| dbextern | — | — | — | — | — | falta factory; 2 repos sin test |
-| devel_db_admin | — | — | — | — | — | |
-| pasarela | — | — | — | — | — | excluida; revisar |
+| dbextern | ok | ok | parcial | parcial | — | 2.9: 67 %; falta `OdbcDlListasRepository` (necesita la BD de Listas) |
+| devel_db_admin | ok | parcial | — | — | — | 2.9: 19 %; DDL sobre esquemas, pendiente de BD aislada |
+| pasarela | ok | ok | parcial | parcial | — | 2.9: 65 % |
 | devel_codegen | — | — | — | — | — | decidir alcance |
 | asistentes | — | — | — | — | — | |
 | certificados | — | — | — | — | — | |
@@ -178,7 +178,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.6 `usuarios` + `procesos` (sección 22): cobertura `usuarios` 39 % → 52 %, `procesos` 41 % → 53 % (application 58 → 89 %); recuperación de 2FA endurecida y 6 bugs corregidos
 - [x] 2.7 `encargossacd` + `misas` (sección 23): `encargossacd` 65 % → 69 % (application 86 → 93 %), `misas` 57 % → 58 %; 2 bugs corregidos y dos tests-guardia globales de controladores (cápsula `HashB` y `exit`)
 - [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
-- [ ] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (incluye el hallazgo `f_inc` de la sección 11: test de `SincroDB` y arreglo)
+- [x] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (sección 25): `dbextern` 59 % → 67 %, `pasarela` 61 % → 65 %; `devel_db_admin` sin cambios (DDL, necesita BD aislada); fecha de nacimiento de la BDU corregida (el `f_inc` de la sección 11 ya estaba arreglado y probado)
 - [ ] 2.11 `planning`: ampliar los tres servicios (`ActividadesDePersonaService` 35 %, `ActividadesPorCasasService` 58 %, `ActividadesPorZonasService` 64 %).
 - [ ] 2.10 resto (asignaturas, profesores, cambios, configuracion, menus, inventario, cartaspresentacion, tablonanuncios, zonassacd, shared, utils_database)
 
@@ -955,3 +955,20 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 2. `PgTrasladoUbiRepository::trasladoCdc/trasladoCtr` no usan transacción: si falla una tabla a medias, el ubi queda repartido entre los dos esquemas.
 3. `HabitacionId` admite cualquier texto (no valida UUID).
 4. `DBTrasvase` y `DBView` (`shared`) interpolan nombres de esquema en SQL; vienen de la configuración de la instalación (herramientas de administración).
+
+## 25. Fase 2, paso 2.9: `dbextern` + `devel_db_admin` + `pasarela` (cerrado el 2026-11-12, sin atención del usuario)
+
+**Línea base:** 304 tests en verde. Cobertura: `dbextern` 59 % (`SincroDB` 21 %), `devel_db_admin` 19 % (casi todo DDL sobre esquemas: renombrar, absorber, migraciones), `pasarela` 61 % (domain 59 %).
+
+**Cierre:** 318 tests. `dbextern` 67 % (domain 72 %; lo que falta es `OdbcDlListasRepository`, que necesita la BD de Listas, y `CopiarBDU`), `pasarela` 65 % (domain 88 %), `devel_db_admin` sin cambios: sus operaciones crean, renombran o absorben esquemas y necesitan una BD aislada (como ya se decidió en 1.7).
+- El hallazgo de la sección 11 (`f_inc` de la BDU nunca se sincronizaba) ya estaba corregido (`SincroDB::fechaIncorporacion`) y con test.
+- Tests nuevos: `SincroDB::syncro()` para cada tipo de persona (datos, dl de una región, centro desconocido, sss+ sin centro de estudios, telecos «de listas» sin duplicar, errores y corte), fecha de nacimiento de la BDU con cualquier idioma, contribuciones de la pasarela.
+
+**Bugs corregidos:**
+1. **Fecha de nacimiento de la BDU:** `PersonaBDU` la guarda como `j/m/Y`, pero la sincronización, la vinculación automática y el alta desde Listas la leían con `DateTimeLocal::createFromLocal`, que usa el formato del idioma del usuario: con la interfaz en inglés (`n/j/Y`) se cambiaban día y mes (3/04/1980 → 4 de marzo) o el mes se desbordaba a otro año (25/04/1980 → 4/1/1982), y se grababa en la ficha. Nuevo `PersonaBDU::getFechaNacimientoVo()`.
+
+**Hallazgos (sin corregir):**
+1. `SincroDB::dlListas2Orbix()`/`dlOrbix2Listas()` hacen `echo` desde el dominio cuando no encuentran la dl; `guardarTeleco()` también (rompen la respuesta JSON de la sincronización).
+2. `SincroDB::syncro()` no contempla los nax (primer dígito del identificador de Listas: 1 n, 2 agd, 3 s, 4 sss+).
+3. `OdbcDlListasRepository` hace `exit` en el constructor si no conecta (ya anotado en 2.5).
+4. Conviene buscar otros `createFromLocal` sobre textos que no escribe el usuario (formato fijo): es el mismo tipo de fallo.
