@@ -45,10 +45,11 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
-			WHERE (f_ini BETWEEN '$f_ini_iso' AND '$f_fin_iso')
-		   		OR (f_fin BETWEEN '$f_ini_iso' AND '$f_fin_iso')
+			WHERE (f_ini BETWEEN :ini AND :fin)
+		   		OR (f_fin BETWEEN :ini2 AND :fin2)
 			ORDER BY nom_equipaje";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $params = ['ini' => $f_ini_iso, 'fin' => $f_fin_iso, 'ini2' => $f_ini_iso, 'fin2' => $f_fin_iso];
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -67,12 +68,17 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        // Parámetros: la fecha llega tal cual del POST (lista_equipajes_desde_fecha) y antes se interpolaba.
         $where = '';
-        if (!empty($f_ini_iso)) $where = "WHERE f_ini > '$f_ini_iso'";
+        $params = [];
+        if (!empty($f_ini_iso)) {
+            $where = 'WHERE f_ini > :f_ini';
+            $params['f_ini'] = $f_ini_iso;
+        }
         $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
 			$where
 			ORDER BY f_ini,nom_equipaje";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }

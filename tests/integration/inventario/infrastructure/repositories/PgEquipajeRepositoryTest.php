@@ -83,4 +83,48 @@ class PgEquipajeRepositoryTest extends myTest
         $oEliminado = $this->repository->findById($id);
         $this->assertNull($oEliminado);
     }
+
+    private function equipajeEntre(string $ini, string $fin): \src\inventario\domain\entity\Equipaje
+    {
+        $o = $this->factory->createSimple();
+        $o->setF_ini(new \src\shared\domain\value_objects\DateTimeLocal($ini));
+        $o->setF_fin(new \src\shared\domain\value_objects\DateTimeLocal($fin));
+        $this->repository->Guardar($o);
+
+        return $o;
+    }
+
+    public function test_equipajes_desde_una_fecha_y_coincidentes_con_un_periodo(): void
+    {
+        $antiguo = $this->equipajeEntre('2091-01-10', '2091-01-20');
+        $nuevo = $this->equipajeEntre('2091-03-10', '2091-03-20');
+        try {
+            $desde = $this->repository->getArrayEquipajes('2091-02-01');
+            $this->assertArrayHasKey($nuevo->getId_equipaje(), $desde);
+            $this->assertArrayNotHasKey($antiguo->getId_equipaje(), $desde);
+
+            $coinciden = $this->repository->getEquipajesCoincidentes('2091-01-15', '2091-02-15');
+            $this->assertContains($antiguo->getId_equipaje(), $coinciden);
+            $this->assertNotContains($nuevo->getId_equipaje(), $coinciden);
+        } finally {
+            $this->repository->Eliminar($antiguo);
+            $this->repository->Eliminar($nuevo);
+        }
+    }
+
+    /**
+     * Regresión: la fecha llega tal cual del POST (`lista_equipajes_desde_fecha`) y se interpolaba en el SQL.
+     */
+    public function test_la_fecha_no_se_interpola_en_el_sql(): void
+    {
+        $o = $this->equipajeEntre('2091-01-10', '2091-01-20');
+        try {
+            $this->assertArrayNotHasKey($o->getId_equipaje(), $this->repository->getArrayEquipajes("2999-01-01' OR '1'='1"));
+        } catch (\RuntimeException $e) {
+            // Como parámetro, la cadena es una fecha inválida: PostgreSQL la rechaza sin ejecutar nada inyectado.
+            $this->assertStringContainsString('invalid input syntax for type date', $e->getMessage());
+        } finally {
+            $this->repository->Eliminar($o);
+        }
+    }
 }
