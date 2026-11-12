@@ -55,7 +55,9 @@ final class CalendarioListasDatos
         'agd' => 'agd',
         's' => 'sg',
         'sg' => 'sg',
-        'sss+' => 'des',
+        // La clave es el texto de asistentes de TiposActividades («sssc»); «sss+»
+        // es solo la etiqueta y con ella el grupo nunca se filtraba.
+        'sssc' => 'des',
         'sr' => 'sr',
     ];
 
@@ -153,7 +155,13 @@ final class CalendarioListasDatos
             case 'oficina':
                 $oTiposActividades = new TiposActividades();
                 $oTiposActividades->setSfSvId($miSfsv);
-                if ($mi_of === 'all') {
+                if ($mi_of === 'sg') {
+                    // Un solo grupo para s y sg (como en el listado original).
+                    $aGrupos = ['[45]' => 's y sg'];
+                } elseif ($mi_of === 'des') {
+                    // Un solo grupo: la consulta de des ya junta sssc y los crt de s/sg.
+                    $aGrupos = ['6' => 'des'];
+                } elseif ($mi_of === 'all') {
                     $aGrupos = $oTiposActividades->getAsistentesPosibles();
                 } else {
                     $oPermisoOficinas = new PermisoDossier();
