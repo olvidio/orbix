@@ -817,7 +817,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 8. **Cargos y asistencias de otra dl** (decisión del 12-11-2026: «si la asistencia es de otra dl, no tocarla»): `ActividadCargoNuevo` con «asiste» marcaba como propia y de mi dl una asistencia existente de otra dl, y `ActividadCargoEditar` la borraba al desmarcar «asiste». Ahora, si la asistencia es de otra dl (`dl_responsable` distinto de `mi_delef()`), no se modifica ni se borra. Sigue anotado que tras borrar una asistencia propia se «abren» los dossiers 1301/3101 en lugar de cerrarlos.
 
 **Hallazgos (sin corregir):**
-1. `ActividadNuevoCurso`: si no se guarda la actividad hace `echo` + `exit` en `application/`; el copiado de centros encargados también hace `echo`. La rama «fechas de actividad no válidas» es inalcanzable (la entidad no admite fechas nulas).
+1. ~~`ActividadNuevoCurso`: si no se guarda la actividad hace `echo` + `exit` en `application/`; el copiado de centros encargados también hace `echo`.~~ Corregido el 2026-11-12 (el error se devuelve con los demás avisos). La rama «fechas de actividad no válidas» es inalcanzable (la entidad no admite fechas nulas).
 2. `ActividadNueva`: crear desde sv una actividad de sf de la propia dl (`dlbf`) la publica siempre (`publicado = true` porque `dl_org` ≠ `mi_delef()` de la sesión).
 3. `PlazasBalanceData`: con un tipo que no es ca, cv ni crt el periodo queda vacío y la consulta filtra `f_ini BETWEEN '' AND ''`.
 4. `ResumenPlazasService`: con plazas desconocidas (`'?'`) la comparación de texto `'?' > 0` es cierta y la plaza se da por libre; `getPlazasCedidas()` reinicia la suma en cada fila; `getId_activ()` hace `exit('error')`.
