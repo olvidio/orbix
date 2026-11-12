@@ -10,14 +10,14 @@ try {
 } catch (HashBInvalidException $e) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
-    exit;
+    return; // sin exit: en el despacho en proceso cortaría al controlador que llama
 }
 
 $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_activ');
 if ($Qid_activ <= 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
-    exit;
+    return; // sin exit: en el despacho en proceso cortaría al controlador que llama
 }
 
 $Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opened, 'id_nom');
@@ -26,7 +26,7 @@ $Qid_cama = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'i
 if ($Qid_nom === 0) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'mensaje' => _("Operación no autorizada")]);
-    exit;
+    return; // sin exit: en el despacho en proceso cortaría al controlador que llama
 }
 
 /** @var UpdateCamaAsistente $useCase */
