@@ -211,6 +211,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 10. **(2.10) Listado «cl» de encargos:** `ListasClData` lee los cargos de la tabla `d_cargos`, que no existe en ninguna BD (ni en el legacy): el listado falla siempre. ¿De dónde deben salir esos cargos, o se quita el listado? (Sin tocar.)
 
+11. **(3.4) Subidas de «PDF» sin comprobar el tipo:** la subida del certificado recibido (`certificado_recibido_pdf_upload`) guarda cualquier fichero como documento del certificado (un `.txt` se acepta), y luego se descarga como PDF. ¿Exigir que sea un PDF (cabecera `%PDF`)? Puede haber quien suba escaneos en imagen. (Sin tocar.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.
