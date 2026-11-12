@@ -135,21 +135,24 @@ class ListaPlazasConjuntoActividades
             // Plazas
             $this->resumenPlazasService->setId_activ($id_activ);
             $a_plazas = $this->resumenPlazasService->getResumen();
-            $plazas_max = '';
+            // Las plazas de la actividad mandan; si no tiene, las de la casa (también sin casa: antes solo se
+            // miraban con id_ubi y una actividad sin casa salía sin plazas).
+            $plazas_max = !empty($plazas) ? $plazas : '';
             $plazas_min = '';
-            $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
                 $oCasaDl = $this->casaRepository->findById($id_ubi_casa);
                 // findById puede ser null si el id_ubi quedó huérfano tras borrados o datos inconsistentes.
-                $plazas_max = !empty($plazas) ? $plazas : ($oCasaDl?->getPlazas() ?? '');
-                $plazas_min = $oCasaDl?->getPlazas_min()?? '';
-                $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
-                $plazas_casa .= !empty($plazas_min) ? ' - ' . $plazas_min : '';
+                if (empty($plazas_max)) {
+                    $plazas_max = $oCasaDl?->getPlazas() ?? '';
+                }
+                $plazas_min = $oCasaDl?->getPlazas_min() ?? '';
             }
+            $plazas_casa = !empty($plazas_max) ? (string) $plazas_max : '';
+            $plazas_casa .= !empty($plazas_min) ? ' - ' . $plazas_min : '';
 
             $id_pau = $id_activ;
             $txt_ctr = '';
-            if (ConfigGlobal::is_app_installed('actividadcentros')) {
+            if (ConfigGlobal::is_app_installed('actividadescentro')) {
                 if ((($sasistentes === "s") || ($sasistentes === "sss+")) and ($sactividad === "cv")) {
                     // para las cv de s y de sss+ consulto los ctr que organizan
                     $cCtrsEncargados = $this->centroEncargadoRepository->matching(
@@ -229,6 +232,7 @@ class ListaPlazasConjuntoActividades
                 }
 
                 $cAsistentes = $this->asistenteActividadService->getAsistentesDeActividad($id_pau);
+                $aPedidas = []; // pedidas o en espera de mi dl: van al final de la lista
                 foreach ($cAsistentes as $oAsistente) {
                     $id_nom = $oAsistente->getId_nom();
                     if (in_array($id_nom, $aIdCargos)) continue; // si ya está como cargo, no lo pongo.
@@ -260,9 +264,7 @@ class ListaPlazasConjuntoActividades
                                 continue;
                             }
                             $plazas_pedidas++;
-                            $key = $num + $plazas + $plazas_pedidas; // al final de la lista
-                            $a_activ[$id_activ][$key]['cargo'] = '';
-                            $a_activ[$id_activ][$key]['ap_nom'] = "<span class=\"alert\">$ap_nom ($ctr_dl)</span>";
+                            $aPedidas[] = ['cargo' => '', 'ap_nom' => "<span class=\"alert\">$ap_nom ($ctr_dl)</span>"];
                         } else { // asignados y confirmados
                             $num++;
                             $a_activ[$id_activ][$num]['cargo'] = $num;
@@ -273,6 +275,13 @@ class ListaPlazasConjuntoActividades
                         $a_activ[$id_activ][$num]['cargo'] = $num;
                         $a_activ[$id_activ][$num]['ap_nom'] = "$ap_nom ($ctr_dl)";
                     }
+                }
+                // Al final, detrás de los huecos de las plazas: antes se calculaba la clave con
+                // num + plazas + pedidas y, sin plazas en la actividad (o con más asignados que plazas),
+                // coincidía con la de un asignado posterior y una de las dos personas desaparecía.
+                $key = max($num, (int) $plazas);
+                foreach ($aPedidas as $fila) {
+                    $a_activ[$id_activ][++$key] = $fila;
                 }
             }
             if (!empty($plazas_max) && $num > $plazas_max) {
