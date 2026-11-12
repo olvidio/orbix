@@ -127,7 +127,8 @@ final class PropuestasEncargosUbiHtml
      */
     private function renderEditable(Encargo $oEncargo, array $slots): string
     {
-        $desc_encargo = $oEncargo->getDesc_enc();
+        // Texto libre (EncargoDescText no limita caracteres): escapado.
+        $desc_encargo = htmlspecialchars((string) $oEncargo->getDesc_enc(), ENT_QUOTES, 'UTF-8');
         $id_enc = $oEncargo->getId_enc();
 
         $html = '<table><tr><td>';
@@ -260,7 +261,8 @@ final class PropuestasEncargosUbiHtml
      */
     private function renderSimple(Encargo $oEncargo, array $slots): string
     {
-        $desc_encargo = $oEncargo->getDesc_enc();
+        // Texto libre (EncargoDescText no limita caracteres): escapado.
+        $desc_encargo = htmlspecialchars((string) $oEncargo->getDesc_enc(), ENT_QUOTES, 'UTF-8');
         $id_enc = $oEncargo->getId_enc();
 
         $html = '<table>';
