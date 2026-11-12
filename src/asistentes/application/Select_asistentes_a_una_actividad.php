@@ -719,6 +719,7 @@ class Select_asistentes_a_una_actividad
                         $ocupadas_calendario = is_numeric($a_ocupadas[$padre] ?? null) ? (int) $a_ocupadas[$padre] : 0;
                         if ($ocupadas_calendario > 0) {
                             $resumen_plazas .= "$ocupadas_calendario($padre)";
+                            $continuacion = true;
                         }
                         $ocupadas += $ocupadas_calendario;
 
