@@ -47,3 +47,40 @@ Formato sugerido por ítem:
 - **Qué:** `/src/personas/sacd_resincronizar` (GET o POST) incluye el script CLI `src/personas/infrastructure/cli/sacd_resincronizar.php` (reconciliación de `cp_sacd` en comun). Con `aplicar=1` escribe en todos los esquemas sin token `HashB` ni comprobación de rol. Mismo caso y mismas opciones que el de cargos.
 - **Por qué no ahora:** se aplica por analogía la decisión del 12-11-2026 sobre el de cargos; pendiente de confirmar (plan, «Dudas pendientes para el usuario»).
 - **Notas:** detectado en el paso 2.5 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 21).
+
+### Tests del DDL de esquemas con una BD aislada
+
+- **Qué:** las operaciones que crean, renombran, absorben o eliminan esquemas y tablas no tienen tests: `devel_db_admin` (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`, `RenombrarEsquema`, `MigracionesEjecutar`, `DBAlterSchema`…; 22 % de cobertura), `configuracion/ModuloInstaladoTablesService`, `utils_database/DBAbstract` y el script de migración `zonassacd/ZonasAComun`.
+- **Por qué no ahora:** ejecutarlas contra la BD de desarrollo compartida es destructivo; hace falta una BD (o un contenedor) desechable que se cree y se tire en cada ejecución.
+- **Notas:** pasos 1.7, 2.9 y 2.10 de [`revision_tests_plan.md`](revision_tests_plan.md).
+
+### Piloto de Infection (tests de mutación) en `permisos`
+
+- **Qué:** medir con Infection si los tests de `permisos` (97 % de líneas) detectan cambios en el código, como piloto antes de extenderlo.
+- **Por qué no ahora:** Infection no está instalado; añadirlo cambia `composer.json`/`composer.lock` (duda 8 del plan).
+- **Notas:** paso 2.1 de [`revision_tests_plan.md`](revision_tests_plan.md).
+
+### Cobertura pendiente de los módulos con menos tests
+
+- **Qué:** `inventario` (31 %, casi todo lógica en controladores), `zonassacd` (47 %), `utils_database` (48 %), `cartaspresentacion` (43 %), `misas` (60 %: faltan los constructores procedurales `cuadricula_zona_grid_data_build`, `ver_misas_zona_data_build`) y `shared` (38 %).
+- **Por qué no ahora:** la fase 2 priorizó lo que escribe datos o decide permisos; aquí lo que queda es sobre todo lectura y lógica en controladores que conviene pasar antes a `application/`.
+- **Notas:** cifras en [`reports/cobertura_por_modulo.md`](reports/cobertura_por_modulo.md); paso 2.10 del plan.
+
+### Controladores de `src/` que lanzan excepciones si falta un parámetro
+
+- **Qué:** unos 15 controladores de lectura responden con una excepción (no con un JSON de error) cuando falta un parámetro obligatorio (`perm_dossier_ver_data`, `direcciones_*`, `teleco_*`, `persona_nota_editar`, `lista_casas_posibles_periodo`, `sacd_ausencias_jefe_zona_data`, `ver_plan_sacd_data`…), y otros sacan avisos de PHP.
+- **Por qué no ahora:** el frontend siempre manda esos parámetros; no hay fallo visible para el usuario.
+- **Notas:** lista completa en la sección 27 del plan (recorrido de los controladores de lectura).
+
+### E2E: más flujos y pantallas por formulario
+
+- **Qué:** specs de flujos de escritura para los módulos con más flujos sin cubrir (inventario, misas, ubis, encargossacd, cambios, procesos) y una pasada «carga sin error» de las pantallas que no salen como enlace directo del menú (se abren por POST desde un formulario).
+- **Por qué no ahora:** la fase 3 cubrió los flujos críticos que pedía el plan (personas, actividades, asistentes, notas, usuarios, subidas y un rol restringido).
+- **Notas:** inventario y reglas en [`e2e/README.md`](../../e2e/README.md).
+
+### Limpieza de las marcas de dossier en los tests PHPUnit
+
+- **Qué:** los tests de integración que crean personas (ids aleatorios de las factories) dejan filas en `d_dossiers_abiertos` cuando las borran (unas 280 de un solo día de ejecuciones); los specs E2E ya limpian las suyas.
+- **Por qué no ahora:** no afecta a los resultados; hay que localizar qué tests generan esas marcas y añadir la limpieza.
+- **Notas:** hallazgo 3 de la sección 28 del plan.
+

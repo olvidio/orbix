@@ -20,6 +20,8 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 | [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
 | [`docs/dev/hash_arquitectura.md`](hash_arquitectura.md) | HashF/HashB, patrón `link_spec` |
 | [`tests/AGENTS.md`](../tests/AGENTS.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
+| [`docs/dev/revision_tests_plan.md`](revision_tests_plan.md) | Revisión de tests (nov. 2026): fases, cobertura por módulo, bugs corregidos, hallazgos y **dudas pendientes** (sección 6b) |
+| [`docs/dev/reports/cobertura_por_modulo.md`](reports/cobertura_por_modulo.md) | Cobertura de líneas por módulo y capa (regenerable con `tools/qa/cobertura_por_modulo.php`) |
 | [`docs/dev/*_migracion_baseline.md`](.) | Plan e historial por módulo (slices, inventario, deuda post-refactor) |
 | [`docs/dev/frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md) | Controladores frontend con `use src\...` (regenerable; ver abajo) |
 | [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) | Resumen baseline PHPStan por prioridad A/B/C |

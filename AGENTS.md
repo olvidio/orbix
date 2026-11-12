@@ -266,6 +266,9 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 - Equivalente Composer: `composer test:report` (ambos informes seguidos), `composer test:report:buckets`, `composer test:report:granular`.
 - Cobertura de **líneas** sobre `src/`: definida en [`phpunit.xml`](phpunit.xml) (`source`/`coverage`); ejecutar por ejemplo `composer test:coverage` o `composer test:coverage:unit` (los scripts configuran `XDEBUG_MODE=coverage` cuando se usa **Xdebug**; con solo **PCOV** no suele hacer falta ese entorno).
 - Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy).
+- **Antes de subir:** `composer qa:huecos` (entidades/VO/repos sin test en modo estricto, clases de `application/` y controladores sin test respecto a la línea base `tools/qa/test_application_baseline.json`, y usos nuevos de `$aWhere`). Si cubres un hueco de la línea base, regenérala con `php tools/qa/check_test_application.php --update-baseline`.
+- **Tests-guardia globales** que recorren todo `src/` (cápsula `HashB` obligatoria, sin `exit` en controladores, métodos de `DatosCampo`…): están listados en [`tests/AGENTS.md`](tests/AGENTS.md). Si un caso nuevo es una excepción legítima, se añade a su lista con el motivo; no se relaja el test.
+- **E2E de flujos de escritura** (`e2e/specs/authenticated/*`): alta/modificación/borrado por la interfaz con datos propios limpiados al final. Matriz módulo → spec, ayudas (`e2e/orbix-app.ts`) y reglas para escribir más en [`e2e/README.md`](e2e/README.md).
 
 ### Tests unitarios (`tests/unit/<modulo>/`)
 - Cubren `domain/entity/` y `domain/value_objects/`.

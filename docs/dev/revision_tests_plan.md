@@ -190,7 +190,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 3.5 Spec de rol restringido (sección 28).
 
 **Fase 4**
-- [ ] 4.1 CI/guardas, actualizar `AGENTS.md`/`tests/AGENTS.md`, enlazar en `REFACTOR_INDICE.md`.
+- [x] 4.1 CI/guardas, actualizar `AGENTS.md`/`tests/AGENTS.md`, enlazar en `REFACTOR_INDICE.md` (sección 29).
 
 ---
 
@@ -1034,3 +1034,11 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
 2. A un numerario no se le puede borrar desde su ficha (solo se ofrece «eliminar» a las personas de paso): es el comportamiento previsto (se da de baja con la situación), pero los tests tienen que limpiar con SQL.
 3. **Restos de los tests PHPUnit en la BD de desarrollo:** hay unas 280 filas de `d_dossiers_abiertos` creadas hoy cuyas personas ya no existen (ids aleatorios de las factories de integración); los tests que crean personas no limpian las marcas de dossier que se generan al usarlas. Los specs E2E sí las limpian.
 4. La ficha de alta de persona desde el listado lleva `id_tabla=` vacío en el enlace; el alta lo deduce bien del tipo (se comprueba en el spec).
+
+## 29. Fase 4: cierre y mantenimiento (2026-11-12)
+
+- **Guardas:** no hay CI en el repo. Comando único para antes de subir: `composer qa:huecos` = `STRICT=1 check_test_granular.sh` (entidades, VO y repos Pg sin test: 0) + `check_test_application.php --baseline` (falla solo con clases de `application/` o controladores sin ningún test que no estén en `tools/qa/test_application_baseline.json`; 311 hoy) + `check_criteria_legacy --strict` (línea base regenerada: de 410 a 24 ficheros). Si hubiera CI, basta con llamar a ese script.
+- **Tests-guardia globales** (corren con la suite PHPUnit): cápsula `HashB` obligatoria, sin `exit` en controladores, métodos de `DatosCampo`, recuperación de acceso sin `url_base` de la petición, nombres de permiso.
+- **Documentación:** `AGENTS.md` (sección de tests: `qa:huecos`, guardias, E2E), `tests/AGENTS.md` (guardias, escapar HTML en `src/`, fechas con formato fijo), `e2e/README.md` (flujos, ayudas, reglas, inventario) y enlace a este plan desde `docs/dev/REFACTOR_INDICE.md`.
+- **Aplazado a `docs/dev/backlog.md`:** tests del DDL con BD aislada, piloto de Infection, cobertura pendiente de los módulos con menos tests, controladores que lanzan excepciones si falta un parámetro, más flujos E2E y limpieza de marcas de dossier en los tests PHPUnit (además de los dos endpoints de resincronización ya anotados).
+- **Queda abierto:** las dudas de la sección 6b, que son decisiones del usuario.
