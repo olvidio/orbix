@@ -69,7 +69,11 @@ $oCertificadoRecibido->setIdiomaVo($Qidioma);
 $oCertificadoRecibido->setDestino($Qdestino);
 $oCertificadoRecibido->setCertificado($Qcertificado);
 $oCertificadoRecibido->setFirmado(\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qfirmado));
-$oCertificadoRecibido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
+// Solo en el alta: al modificar se conserva la región que lo emitió (la copia `Trasladar` del certificado
+// emitido); antes se sobrescribía con mi dl.
+if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qnuevo)) {
+    $oCertificadoRecibido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
+}
 $oCertificadoRecibido->setF_certificado($oF_certificado instanceof DateTimeLocal ? $oF_certificado : null);
 if ($oF_recibido instanceof DateTimeLocal) {
     $oCertificadoRecibido->setF_recibido($oF_recibido);
