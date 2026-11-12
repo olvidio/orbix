@@ -173,7 +173,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
-- [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite) — **parcial** (sección 20): hechas mutaciones, dominio, plazas y comunicación a sacd; quedan listados de `actividades`, controladores, `actividadescentro` y `actividadtarifas`
+- [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite) — **parcial** (sección 20): hechos mutaciones, dominio, plazas, comunicación a sacd, controladores y búsqueda de actividades; quedan los listados de la sección 20 «Queda»
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
 - [ ] 2.7 `encargossacd` + `misas`
@@ -807,4 +807,22 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 5. `ComunicarActividadesSacdService`: el texto «te carrec» (catalán) no pasa por gettext; los datos van al HTML del correo sin escapar; el resultado de `ColaMailRepository::Guardar` no se mira; el atributo `lang` lleva el locale (`ca_ES.UTF-8`).
 6. `TiposActividades::setPosiblesAll(false)` no tiene efecto (el mapa invertido ya está calculado); «coperadores»/«coperadoras» en `getNomPasarela()` (falta una «o»).
 
-**Queda (segunda parte):** listados de `actividades` (`ActividadSelectListado` 40 %, `ListaActividadesSgListado` 40 %, `CalendarioListasDatos` 60 %, `ActividadVerDatos` 58 %, `ListaSrCsvListado` 64 %), contrato de los controladores de los seis módulos, `actividadescentro` (62 %), `actividadtarifas` (69 %) y el dominio de `actividadcargos` (`Cargo` 33 %, `PgCargoOAsistente` 36 %).
+**Segunda parte (hecha):** `actividades` 84 %, `actividadcargos` 81 %, `actividadescentro` 68 % (el 11 % del módulo es `db/`, DDL), `actividadessacd` 72 %, `actividadplazas` 91 %, `actividadtarifas` 87 %.
+- Controladores: `ActividadesControllersContractTest` (43 casos, los 33 de `actividades`) y `ActividadSatelitesControllersContractTest` (91, los de los cinco satélites, más rutas ↔ controladores de los seis módulos): token propio o por fila (`sel[]`), datos que salen del token frente al POST, envelope.
+- `ActividadSelectListado` (búsqueda de actividades, 14 casos), `PgCargoOAsistente` (integración, 6), entidades de tarifas y `Cargo`.
+
+**Bugs corregidos (segunda parte):**
+9. **Alta de actividad, precio:** `actividad_nuevo` filtraba el precio con `FILTER_SANITIZE_NUMBER_FLOAT` + `ALLOW_FRACTION`, que borra la coma decimal: «350,50» se grababa como 35050 €. La edición no lo hacía. **Conviene revisar en producción actividades con precios ×100.**
+10. `actividad_importar`: con avisos respondía dos objetos JSON seguidos (faltaba `return`); el navegador recibía una respuesta no-JSON.
+11. `exit` tras `ContestarJson::enviar` en cinco controladores de `actividades` (cortaría al controlador frontend en el despacho en proceso): ahora `return`.
+12. `PgCargoOAsistente::getCargoOAsistente()`: el `id_cargo` solo se guardaba si la actividad salía dos veces (asistencia + cargo); `getId_cargo()` sobre la propiedad sin inicializar era un error fatal (latente: el planning no lo lee). `getSolapes()` creaba tablas temporales sin borrarlas: una segunda llamada en la misma conexión fallaba y arrastraba filas de la primera.
+
+**Pendiente de decisión (segunda parte):**
+1. Las mutaciones de `actividadcargos` (`cargo_nuevo`, `cargo_editar`, `cargo_eliminar`) y de `actividadescentro` (`centro_encargado_asignar`, `_eliminar`, `_reordenar`) no llevan token `HashB`: aceptan cualquier POST autenticado. Las de `actividadessacd`, `actividadplazas` y `actividadtarifas` sí. Añadirlo exige cambiar las vistas que las llaman.
+2. `/src/actividadcargos/cargos_activ_resincronizar` (GET o POST) ejecuta el script CLI de resincronización de `cd_cargos_activ_dl`: con `aplicar=1` escribe en los esquemas de todas las dl, sin token ni comprobación de rol (solo exige estar en el interior sv). Además devuelve HTML desde `src/`.
+
+**Hallazgos (segunda parte, sin corregir):**
+1. `ActividadSelectListado`: las filas «ocupado» tienen menos celdas que las visibles (falta la de idioma; con rol ctr, la última); `Lista` simplemente pinta menos celdas. Usa `frontend\shared\web\Periodo` desde `src/` (como `casas`).
+2. `PgCargoOAsistente::getSolapes()`: acabar y empezar el mismo día cuenta como solape (rangos cerrados `[]`).
+
+**Queda:** `ListaActividadesSgListado` (40 %), `CalendarioListasDatos` (60 %), `ActividadVerDatos` (58 %), `ListaSrCsvListado` (64 %), `ListaActivTabla` (69 %), `ListaCentrosActivDatos` (47 %); en `actividadessacd`, `ListaActividadesSacdData` (33 %), `SacdsDisponiblesData` (36 %) y `SolapesSacdData` (58 %); `FormCargosDeActividadData` (64 %), `ResumenPlazasData` (37 %) y los repositorios `PgActividadCargoDlRepository` (67 %) y `PgCentroEncargadoRepository` (67 %).
