@@ -54,6 +54,7 @@ class ProfesorStgrService
     public function getArrayProfesoresConDl(): array
     {
         $gesProfesores = $this->profesorStgrRepository->matching(Criteria::create()->where(Filter::isNull(ProfesorStgrField::FCese)));
+        /** @var list<array{id_nom: int, ap_nom: string, dl: string, ap1: string, ap2: string, nom: string}> $aFilas */
         $aFilas = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
@@ -77,6 +78,7 @@ class ProfesorStgrService
         // Mismo orden que los otros listados de profesores (sin acentos): con
         // array_multisort(SORT_STRING) «Álvarez» quedaba detrás de «Zapata».
         \src\shared\domain\helpers\FuncTablasSupport::usortProfesoresPorApellidos($aFilas);
+        /** @var list<array{id_nom: int, ap_nom: string, dl: string, ap1: string, ap2: string, nom: string}> $aFilas */
         $aProfesores = array_map(static fn (array $f): array => ['id_nom' => $f['id_nom'], 'ap_nom' => $f['ap_nom'], 'dl' => $f['dl']], $aFilas);
 
         $aOpciones = [];

@@ -43,7 +43,7 @@ final class HabitacionGuardar
     public function execute(array $in): string
     {
         try {
-            $idHabitacion = $this->habitacion($in['id_habitacion'], $in['id_ubi'], $oHabitacion);
+            [$idHabitacion, $oHabitacion] = $this->habitacion($in['id_habitacion'], $in['id_ubi']);
             $oHabitacion->setOrdenVo(new HabitacionOrden($in['orden']));
             $oHabitacion->setNombreVo(HabitacionNombre::fromNullableString($in['nombre']));
             $oHabitacion->setNumeroCamasVo(NumeroCamas::fromNullableInt($in['numero_camas']));
@@ -90,11 +90,12 @@ final class HabitacionGuardar
         return '';
     }
 
-    private function habitacion(string $id, int $idUbi, ?Habitacion &$oHabitacion): HabitacionId
+    /** @return array{0: HabitacionId, 1: Habitacion} */
+    private function habitacion(string $id, int $idUbi): array
     {
+        $oHabitacion = null;
         if ($id === '') {
             $idHabitacion = new HabitacionId(Uuid::uuid4()->toString());
-            $oHabitacion = null;
         } else {
             $idHabitacion = HabitacionId::fromNullableString($id) ?? throw new \Exception(_("Habitación no válida"));
             $oHabitacion = $this->habitacionRepository->findById($idHabitacion->value());
@@ -104,7 +105,7 @@ final class HabitacionGuardar
             $oHabitacion->setIdHabitacionVo($idHabitacion);
             $oHabitacion->setIdUbiVo($idUbi);
         }
-        return $idHabitacion;
+        return [$idHabitacion, $oHabitacion];
     }
 
     private function nuevaCama(HabitacionId $idHabitacion, string $descripcion, bool $larga, bool $vip): void
