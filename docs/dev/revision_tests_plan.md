@@ -173,7 +173,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
-- [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 3 inyecciones SQL y 22 bugs corregidos
+- [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 2 inyecciones SQL y unos 20 bugs corregidos, más los tokens HashB de cargos y centros encargados
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
 - [ ] 2.7 `encargossacd` + `misas`
