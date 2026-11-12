@@ -950,7 +950,7 @@ class Select_asistentes_a_una_actividad
             'id_sel_value' => (string) ($this->Qid_sel ?? ''),
             'hash_main' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!scroll_id!mod!que!refresh!id_sel',
+                'campos_no' => 'sel!scroll_id!mod!que!refresh!id_sel!ctx_eliminar_cargo',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

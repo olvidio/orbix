@@ -190,7 +190,7 @@ class Select_cargos_de_actividad
         $url_cargo_eliminar = $web . '/src/actividadcargos/cargo_eliminar';
 
         $hash_select_config = [
-            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_cargo',
             'campos_hidden' => [
                 'pau' => $this->pau,
                 'id_pau' => $this->id_pau,
