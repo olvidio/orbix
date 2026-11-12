@@ -201,6 +201,10 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 1. **(2.5) Traslado a una dl no activa:** `Trasladar::trasladar()` con el código 3 de `comprobar()` avisa «Solamente se anotará el traslado» pero no llama a `apuntar()`. ¿Anotar el traslado o cambiar el mensaje? (Sin tocar.)
 2. **(2.5) Resincronizar sacd desde la web:** `/src/personas/sacd_resincronizar` con `aplicar=1` escribe en todos los esquemas sin token ni rol. (Aplazado en `backlog.md` por analogía con el de cargos; confirmar.)
 
+3. **(2.6, seguridad) Recuperar contraseña:** `/src/usuarios/recuperar_password_mail` es anónimo y, con solo el nombre de usuario, **cambia la contraseña en el acto** (la nueva va por correo): cualquiera puede dejar sin acceso a otro usuario. Además devuelve su **email completo** a quien lo pide (y el frontend lo pinta), y el GET de `recuperar_password.php` ya dispara el cambio (un enlace o un rastreador basta). Propuesta: enlace con token y caducidad como el de 2FA, sin cambiar nada hasta usarlo, y mostrar el correo enmascarado. (Sin tocar.)
+4. **(2.6, seguridad) Enlace de recuperación de 2FA:** `recovery.php` no solo quita el 2FA: **abre una sesión** como el usuario sin pedir la contraseña. Ya no se puede desviar el enlace a otro servidor (corregido), pero quien lea ese correo entra sin contraseña. ¿Pedir la contraseña antes de configurar el 2FA nuevo? (Sin tocar.)
+5. **(2.6) Status al marcar una fase:** `ProcesoActividadService` toma como status de la actividad el de la fase que se marca (igual que el legacy). Marcar una fase de status «proyecto» en una actividad «actual» intenta devolverla a proyecto (y sin permiso de des da error). ¿Debería ser el status del conjunto de fases marcadas, como al desmarcar? (Sin tocar.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.
