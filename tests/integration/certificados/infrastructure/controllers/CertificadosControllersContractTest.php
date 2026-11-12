@@ -362,6 +362,93 @@ final class CertificadosControllersContractTest extends myTest
         $this->assertSame('sin tabla', $this->ejecutar('certificados_locales_data.php', [])['mensaje']);
     }
 
+    // ------------------------------------------------------------------ guardar el pdf generado, datos para imprimir
+
+    public function test_guardar_pdf_guarda_el_documento_y_apunta_el_certificado_en_las_notas_de_la_region(): void
+    {
+        $c = new CertificadoEmitido();
+        $c->setId_item(7);
+        $c->setF_certificado(new DateTimeLocal('2026-07-24'));
+        $this->emitidos->method('findById')->willReturnMap([[7, $c], [8, null]]);
+        $this->emitidos->expects($this->once())->method('Guardar')->with($c)->willReturn(true);
+        $notas = $this->createMock(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class);
+        $notas->expects($this->once())->method('addCertificado')->with(10011, 'H 12/26', $this->callback(static fn ($f): bool => $f?->getIso() === '2026-07-24'));
+        $this->sustituirDefinicion(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class, $notas);
+
+        $json = $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '7', 'id_nom' => '10011', 'certificado' => base64_encode('H 12/26'), 'pdf' => base64_encode('%PDF-1.4')]);
+
+        $this->assertTrue($json['success']);
+        $this->assertSame(['mensaje' => 'ok', 'item' => 7], json_decode($json['data'], true));
+        $this->assertSame([10011, '%PDF-1.4'], [$c->getId_nom(), $c->getDocumento()]);
+
+        $this->assertStringContainsString('8', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '8'])['mensaje']);
+    }
+
+    public function test_guardar_pdf_si_falla_el_guardado_no_apunta_el_certificado(): void
+    {
+        $c = new CertificadoEmitido();
+        $c->setId_item(7);
+        $this->emitidos->method('findById')->willReturn($c);
+        $this->emitidos->method('Guardar')->willReturn(false);
+        $this->emitidos->method('getErrorTxt')->willReturn('fallo de conexión');
+        $notas = $this->createMock(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class);
+        $notas->expects($this->never())->method('addCertificado');
+        $this->sustituirDefinicion(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class, $notas);
+
+        $this->assertSame('fallo de conexión', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '7', 'id_nom' => '10011', 'pdf' => 'no es base64 !!'])['mensaje']);
+        $this->assertNull($c->getDocumento(), 'un pdf que no es base64 deja el documento vacío');
+    }
+
+    private function config(?string $regionLatin = 'HISPANIAE'): void
+    {
+        $curso = ['ini_dia' => 1, 'ini_mes' => 10, 'fin_dia' => 30, 'fin_mes' => 9];
+        $_SESSION['oConfig'] = new \src\configuracion\domain\value_objects\ConfigSnapshot(
+            gesCalendario: null, ceLugar: null, regionLatin: $regionLatin, vstgr: 'Vic. Stgr', lugarFirma: 'Matriti',
+            dirStgr: 'D. Stgr', ambito: 'rstgr', notaCorte: null, notaMax: null, caducaCursada: null,
+            idiomaDefault: 'es_ES.UTF-8', iniContadorCertificados: '100', jefeCalendario: null, aCursoStgr: $curso, aCursoCrt: $curso,
+        );
+    }
+
+    public function test_imprimir_avisa_de_los_parametros_de_configuracion_que_faltan(): void
+    {
+        $anterior = $_SESSION['oConfig'] ?? null;
+        try {
+            $this->config(null);
+
+            $json = $this->ejecutar('certificado_emitido_imprimir_datos.php', ['id_nom' => '10011']);
+
+            $this->assertFalse($json['success']);
+            $this->assertStringContainsString('latín', $json['mensaje']);
+        } finally {
+            $_SESSION['oConfig'] = $anterior;
+        }
+    }
+
+    public function test_imprimir_devuelve_los_datos_de_la_persona_y_de_la_region_y_el_token_del_alta(): void
+    {
+        $anterior = $_SESSION['oConfig'] ?? null;
+        try {
+            $this->config();
+            $p = $this->createMock(PersonaDl::class);
+            $p->method('getNombreApellidos')->willReturn('Joan Pla');
+            $p->method('getLugar_nacimiento')->willReturn('Reus');
+            $p->method('getF_nacimiento')->willReturn(new DateTimeLocal('1990-05-20'));
+            $this->personas[10011] = $p;
+
+            $d = json_decode($this->ejecutar('certificado_emitido_imprimir_datos.php', ['id_nom' => '10011'])['data'], true);
+
+            $this->assertSame(['Joan Pla', 'Reus', 'HISPANIAE', 'Vic. Stgr', 'D. Stgr', 'Matriti', '100', date('y')], [
+                $d['nombreApellidos'], $d['lugar_nacimiento'], $d['region_latin'], $d['vstgr'], $d['dir_stgr'], $d['lugar_firma'], $d['contador'], $d['any_2digit'],
+            ]);
+            $this->assertNotSame('', $d['f_nacimiento']);
+            $this->assertSame(['nuevo' => 1, 'id_item' => 0, 'id_nom' => 10011], HashB::open($d['ctx_guardar'], 'certificado_emitido_guardar'));
+
+            $this->assertStringContainsString('10019', $this->ejecutar('certificado_emitido_imprimir_datos.php', ['id_nom' => '10019'])['mensaje']);
+        } finally {
+            $_SESSION['oConfig'] = $anterior;
+        }
+    }
+
     public function test_cada_ruta_apunta_a_un_fichero_de_controladores_y_al_reves(): void
     {
         $rutas = file_get_contents(self::DIR . '../../../../config/routes.php') ?: '';
