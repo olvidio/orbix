@@ -399,16 +399,17 @@ final class ComunicarActividadesSacdService
                     continue;
                 }
                 $actPropio = \src\shared\domain\helpers\FuncTablasSupport::isTrue($act['propio'] ?? false);
-                $actFIni = $this->mixedToString($act['f_ini'] ?? '');
-                $actFFin = $this->mixedToString($act['f_fin'] ?? '');
-                $actNombreUbi = $this->mixedToString($act['nombre_ubi'] ?? '');
-                $actSfsv = $this->mixedToString($act['sfsv'] ?? '');
-                $actActividad = $this->mixedToString($act['actividad'] ?? '');
-                $actAsistentes = $this->mixedToString($act['asistentes'] ?? '');
-                $actEncargado = $this->mixedToString($act['encargado'] ?? '');
-                $actObserv = $this->mixedToString($act['observ'] ?? '');
-                $actNomTipo = $this->mixedToString($act['nom_tipo'] ?? '');
-                $actCargo = $this->mixedToString($act['cargo'] ?? '');
+                // Datos de la actividad (observación, lugar…: texto libre) escapados para el HTML del correo.
+                $actFIni = $this->h($act['f_ini'] ?? '');
+                $actFFin = $this->h($act['f_fin'] ?? '');
+                $actNombreUbi = $this->h($act['nombre_ubi'] ?? '');
+                $actSfsv = $this->h($act['sfsv'] ?? '');
+                $actActividad = $this->h($act['actividad'] ?? '');
+                $actAsistentes = $this->h($act['asistentes'] ?? '');
+                $actEncargado = $this->h($act['encargado'] ?? '');
+                $actObserv = $this->h($act['observ'] ?? '');
+                $actNomTipo = $this->h($act['nom_tipo'] ?? '');
+                $actCargo = $this->h($act['cargo'] ?? '');
 
                 $marca = $actPropio ? '*' : '';
                 $cargo_observ = $actCargo !== '' ? ($actCargo . '. ' . $actObserv) : $actObserv;
@@ -554,6 +555,11 @@ final class ComunicarActividadesSacdService
             }
             $ord_activ[$f_ord] = $array_act;
         }
+    }
+
+    private function h(mixed $valor): string
+    {
+        return htmlspecialchars($this->mixedToString($valor), ENT_QUOTES, 'UTF-8');
     }
 
     private function mixedToString(mixed $value): string

@@ -340,6 +340,24 @@ final class ComunicarActividadesSacdMailsTest extends myTest
         $this->assertStringContainsString('Ctr A', $alCtr->getMessage());
     }
 
+    public function test_los_datos_de_la_actividad_van_escapados_en_el_correo(): void
+    {
+        $this->jefe();
+        $this->usuarios->expects($this->any())->method('matching');
+        $this->personas->method('findById')->willReturn(new PersonaDl());
+        $this->teleco->method('getEmailPrincipalOPrimero')->willReturn('sacd@dl.org');
+        $com = $this->comunicacion();
+        $com[4411]['actividades'][0]['observ'] = '<a href="http://x">pincha</a>';
+        $com[4411]['actividades'][0]['nombre_ubi'] = 'Casa <b>A</b>';
+
+        $this->service()->enviarMails($com);
+
+        $mensaje = $this->encolados[0]->getMessage();
+        $this->assertStringNotContainsString('<a href', $mensaje);
+        $this->assertStringContainsString('&lt;a href=&quot;http://x&quot;&gt;pincha&lt;/a&gt;', $mensaje);
+        $this->assertStringContainsString('Casa &lt;b&gt;A&lt;/b&gt;', $mensaje);
+    }
+
     public function test_al_centro_no_se_le_muestran_los_detalles_de_las_actividades_de_sf(): void
     {
         $this->jefe();
