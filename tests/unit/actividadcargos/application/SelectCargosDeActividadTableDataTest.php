@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use src\actividadcargos\application\SelectCargosDeActividadTableData;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
+use src\shared\security\HashB;
 
 final class SelectCargosDeActividadTableDataTest extends TestCase
 {
@@ -30,6 +31,8 @@ final class SelectCargosDeActividadTableDataTest extends TestCase
         );
 
         $this->assertSame('', $out['msg_err']);
+        $this->assertSame(['id_item' => 10, 'elim_asis' => 2], HashB::open($out['a_valores'][1]['ctx_eliminar_cargo'], 'cargo_eliminar'));
+        unset($out['a_valores'][1]['ctx_eliminar_cargo']);
         $this->assertSame([
             1 => [
                 'sel' => '200#10#2#1',

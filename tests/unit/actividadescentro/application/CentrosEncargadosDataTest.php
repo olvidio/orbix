@@ -7,6 +7,7 @@ namespace Tests\unit\actividadescentro\application;
 use PHPUnit\Framework\TestCase;
 use src\actividadescentro\application\CentrosEncargadosData;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\shared\security\HashB;
 
 final class CentrosEncargadosDataTest extends TestCase
 {
@@ -74,6 +75,9 @@ final class CentrosEncargadosDataTest extends TestCase
         $this->assertSame(3, $out['id_activ']);
         $this->assertTrue($out['permite_ver']);
         $this->assertTrue($out['permite_modificar']);
-        $this->assertSame([['id_ubi' => 9, 'nombre_ubi' => 'Centro N']], $out['centros']);
+        $c = $out['centros'][0];
+        $this->assertSame(['id_activ' => 3, 'id_ubi' => 9], HashB::open($c['ctx_reordenar'], 'centro_encargado_reordenar'));
+        $this->assertSame(['id_activ' => 3, 'id_ubi' => 9], HashB::open($c['ctx_eliminar'], 'centro_encargado_eliminar'));
+        $this->assertSame([['id_ubi' => 9, 'nombre_ubi' => 'Centro N']], [array_diff_key($c, ['ctx_reordenar' => 1, 'ctx_eliminar' => 1])]);
     }
 }

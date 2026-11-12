@@ -10,6 +10,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\shared\security\HashB;
 
 final class SelectCargosPersonasEnActividadTableDataTest extends TestCase
 {
@@ -31,6 +32,8 @@ final class SelectCargosPersonasEnActividadTableDataTest extends TestCase
             null,
         );
 
+        $this->assertSame(['id_item' => 30, 'elim_asis' => 2], HashB::open($out[1]['ctx_eliminar_cargo'], 'cargo_eliminar'));
+        unset($out[1]['ctx_eliminar_cargo']);
         $this->assertSame([
             1 => [
                 'sel' => '30#2',

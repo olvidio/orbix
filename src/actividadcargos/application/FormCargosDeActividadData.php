@@ -84,6 +84,7 @@ final class FormCargosDeActividadData
                     ->andWhere(Filter::eq(ActividadCargoField::IdSchema, $Qid_schema))
             );
             $oActividadCargo = $cActividadCargo[0];
+            $Qid_pau = $oActividadCargo->getId_activ();
             $Qid_cargo = $oActividadCargo->getId_cargo();
             $Qid_nom = (int) ($oActividadCargo->getId_nom() ?? 0);
             $puede_agd = $oActividadCargo->isPuede_agd();
@@ -137,6 +138,11 @@ final class FormCargosDeActividadData
             'obj_pau' => $Qobj_pau,
             'permiso' => $Qpermiso,
         ];
+        $a_camposHidden['ctx_guardar'] = CargoMutationCtx::guardar(
+            is_int($Qid_item) ? $Qid_item : 0,
+            $Qid_pau,
+            $id_nom_real !== '' ? (int) $id_nom_real : 0,
+        );
         if ($id_nom_real !== '') {
             $a_camposHidden['id_nom'] = $id_nom_real;
         } else {

@@ -9,6 +9,7 @@ use src\actividadescentro\application\CentrosDisponiblesData;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\shared\security\HashB;
 
 final class CentrosDisponiblesDataTest extends TestCase
 {
@@ -106,7 +107,7 @@ final class CentrosDisponiblesDataTest extends TestCase
 
         $this->assertSame('sfsr', $out['tipo']);
         $this->assertArrayNotHasKey('error', $out);
-        $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $out['centros']);
+        $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $this->sinCapsula($out['centros'], 5));
     }
 
     public function test_sr_mapea_centros_desde_dl(): void
@@ -134,7 +135,7 @@ final class CentrosDisponiblesDataTest extends TestCase
         $out = $useCase->execute(['tipo' => 'sr', 'id_activ' => 5]);
 
         $this->assertArrayNotHasKey('error', $out);
-        $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $out['centros']);
+        $this->assertSame([['id_ubi' => 2, 'nombre_ubi' => 'DL2']], $this->sinCapsula($out['centros'], 5));
     }
 
     public function test_sg_incluye_conteos_y_dif_cuando_hay_datos(): void
@@ -178,6 +179,21 @@ final class CentrosDisponiblesDataTest extends TestCase
                 'num_actividades_periodo' => 3,
                 'dif_dias' => '5',
             ],
-        ], $out['centros']);
+        ], $this->sinCapsula($out['centros'], 1));
+    }
+
+    /**
+     * Comprueba la cápsula de asignar de cada centro y la quita para comparar el resto.
+     *
+     * @param list<array<string, mixed>> $centros
+     * @return list<array<string, mixed>>
+     */
+    private function sinCapsula(array $centros, int $idActiv): array
+    {
+        foreach ($centros as $i => $c) {
+            $this->assertSame(['id_activ' => $idActiv, 'id_ubi' => $c['id_ubi']], HashB::open($c['ctx_asignar'], 'centro_encargado_asignar'));
+            unset($centros[$i]['ctx_asignar']);
+        }
+        return $centros;
     }
 }

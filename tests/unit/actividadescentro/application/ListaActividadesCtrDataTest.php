@@ -10,6 +10,7 @@ use src\actividadescentro\application\ListaActividadesCtrData;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\shared\security\HashB;
 
 final class ListaActividadesCtrDataTest extends TestCase
 {
@@ -141,6 +142,9 @@ final class ListaActividadesCtrDataTest extends TestCase
         $this->assertSame('sg', $row['tipo_centros']);
         $this->assertTrue($row['perm_modificar_ctr']);
         $this->assertTrue($row['perm_crear_ctr']);
-        $this->assertSame([['id_ubi' => 99, 'nombre_ubi' => 'Enc']], $row['centros']);
+        $c = $row['centros'][0];
+        $this->assertSame(['id_activ' => 10, 'id_ubi' => 99], HashB::open($c['ctx_eliminar'], 'centro_encargado_eliminar'));
+        $this->assertSame(['id_activ' => 10, 'id_ubi' => 99], HashB::open($c['ctx_reordenar'], 'centro_encargado_reordenar'));
+        $this->assertSame([['id_ubi' => 99, 'nombre_ubi' => 'Enc']], [array_diff_key($c, ['ctx_reordenar' => 1, 'ctx_eliminar' => 1])]);
     }
 }

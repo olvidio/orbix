@@ -128,6 +128,21 @@ final class ActividadSatelitesControllersContractTest extends myTest
             ['id_item' => 7, 'id_ubi' => 200, 'year' => 2027, 'id_tarifa' => 4, 'id_serie' => 1, 'cantidad' => '30,5', 'observ' => 'o']];
         yield 'tipo tarifa eliminar' => ['actividadtarifas', 'tipo_tarifa_eliminar.php', 'TipoTarifaEliminar', 'ctx_eliminar', 'tipo_tarifa_eliminar',
             ['id_tarifa' => 4], ['id_tarifa' => '99'], ['id_tarifa' => 4]];
+        yield 'cargo nuevo desde la actividad' => ['actividadcargos', 'cargo_nuevo.php', 'ActividadCargoNuevo', 'ctx_guardar', 'cargo_nuevo',
+            ['id_activ' => 10, 'id_nom' => 0], ['id_activ' => '99', 'id_nom' => '20', 'id_cargo' => '3', 'id_item' => '7'], ['id_activ' => 10, 'id_nom' => '20', 'id_cargo' => '3']];
+        yield 'cargo nuevo desde la persona' => ['actividadcargos', 'cargo_nuevo.php', 'ActividadCargoNuevo', 'ctx_guardar', 'cargo_nuevo',
+            ['id_activ' => 0, 'id_nom' => 20], ['id_activ' => '10', 'id_nom' => '99'], ['id_activ' => '10', 'id_nom' => 20]];
+        yield 'cargo editar' => ['actividadcargos', 'cargo_editar.php', 'ActividadCargoEditar', 'ctx_guardar', 'cargo_editar',
+            ['id_item' => 7, 'id_activ' => 10, 'id_nom' => 20], ['id_item' => '99', 'id_activ' => '99', 'id_nom' => '99', 'id_cargo' => '3'],
+            ['id_item' => 7, 'id_activ' => 10, 'id_nom' => 20, 'id_cargo' => '3', 'asis_presente' => '']];
+        yield 'cargo eliminar' => ['actividadcargos', 'cargo_eliminar.php', 'ActividadCargoEliminar', 'ctx_eliminar_cargo', 'cargo_eliminar',
+            ['id_item' => 5, 'elim_asis' => 2], ['id_item' => '99', 'sel' => ['99#1']], ['id_item' => 5, 'elim_asis' => 2]];
+        yield 'centro asignar' => ['actividadescentro', 'centro_encargado_asignar.php', 'CentroEncargadoAsignar', 'ctx', 'centro_encargado_asignar',
+            ['id_activ' => 10, 'id_ubi' => 20], ['id_activ' => '99', 'id_ubi' => '99'], ['id_activ' => 10, 'id_ubi' => 20]];
+        yield 'centro eliminar' => ['actividadescentro', 'centro_encargado_eliminar.php', 'CentroEncargadoEliminar', 'ctx', 'centro_encargado_eliminar',
+            ['id_activ' => 10, 'id_ubi' => 20], ['id_ubi' => '99'], ['id_activ' => 10, 'id_ubi' => 20]];
+        yield 'centro reordenar' => ['actividadescentro', 'centro_encargado_reordenar.php', 'CentroEncargadoReordenar', 'ctx', 'centro_encargado_reordenar',
+            ['id_activ' => 10, 'id_ubi' => 20], ['id_ubi' => '99', 'num_orden' => 'mas'], ['id_activ' => 10, 'id_ubi' => 20, 'num_orden' => 'mas']];
         yield 'tipo tarifa nuevo' => ['actividadtarifas', 'tipo_tarifa_update.php', 'TipoTarifaUpdate', 'ctx_update', 'tipo_tarifa_update',
             [], ['letra' => 'A', 'modo' => '1', 'observ' => ''], ['id_tarifa' => 'nuevo', 'letra' => 'A', 'modo' => '1', 'observ' => '']];
     }
@@ -225,41 +240,24 @@ final class ActividadSatelitesControllersContractTest extends myTest
         $this->assertCount(2, $caso->llamadas);
     }
 
-    /**
-     * Mutaciones sin token (pendiente de decisión, ver el plan): pasan el POST
-     * tal cual al caso de uso.
-     *
-     * @return iterable<string, array{string, string, string}>
-     */
-    public static function mutacionesSinTokenProvider(): iterable
-    {
-        yield 'cargo nuevo' => ['actividadcargos', 'cargo_nuevo.php', 'ActividadCargoNuevo'];
-        yield 'cargo editar' => ['actividadcargos', 'cargo_editar.php', 'ActividadCargoEditar'];
-        yield 'cargo eliminar' => ['actividadcargos', 'cargo_eliminar.php', 'ActividadCargoEliminar'];
-        yield 'centro asignar' => ['actividadescentro', 'centro_encargado_asignar.php', 'CentroEncargadoAsignar'];
-        yield 'centro eliminar' => ['actividadescentro', 'centro_encargado_eliminar.php', 'CentroEncargadoEliminar'];
-        yield 'centro reordenar' => ['actividadescentro', 'centro_encargado_reordenar.php', 'CentroEncargadoReordenar'];
-    }
-
-    #[DataProvider('mutacionesSinTokenProvider')]
-    public function test_mutacion_sin_token_pasa_el_post_y_el_error(string $modulo, string $ctrl, string $clase): void
-    {
-        $caso = $this->doble(self::uc($modulo, $clase), '');
-        $json = $this->ejecutar($modulo, $ctrl, ['id_activ' => '10', 'id_nom' => '20']);
-        $this->assertTrue($json['success']);
-        $this->assertSame('10', $caso->llamadas[0][1][0]['id_activ']);
-
-        $this->doble(self::uc($modulo, $clase), 'error');
-        $this->assertSame('error', $this->ejecutar($modulo, $ctrl, [])['mensaje']);
-    }
-
     public function test_cargo_editar_marca_la_casilla_asiste_como_presente(): void
     {
         $caso = $this->doble(self::uc('actividadcargos', 'ActividadCargoEditar'), '');
-        $this->ejecutar('actividadcargos', 'cargo_editar.php', ['asis' => 'on']);
-        $this->ejecutar('actividadcargos', 'cargo_editar.php', ['asis_presente' => '1']);
-        $this->ejecutar('actividadcargos', 'cargo_editar.php', []);
+        $ctx = ['ctx_guardar' => HashB::sign('cargo_editar', ['id_item' => 7, 'id_activ' => 10, 'id_nom' => 20])];
+        $this->ejecutar('actividadcargos', 'cargo_editar.php', $ctx + ['asis' => 'on']);
+        $this->ejecutar('actividadcargos', 'cargo_editar.php', $ctx + ['asis_presente' => '1']);
+        $this->ejecutar('actividadcargos', 'cargo_editar.php', $ctx);
         $this->assertSame(['1', '1', ''], array_map(fn ($l) => $l[1][0]['asis_presente'], $caso->llamadas));
+    }
+
+    public function test_cargo_y_centro_con_capsula_sin_ids_no_estan_autorizados(): void
+    {
+        $cargo = $this->doble(self::uc('actividadcargos', 'ActividadCargoEliminar'), '');
+        $centro = $this->doble(self::uc('actividadescentro', 'CentroEncargadoAsignar'), '');
+        $this->assertSame('Operación no autorizada', $this->ejecutar('actividadcargos', 'cargo_eliminar.php', ['ctx_eliminar_cargo' => HashB::sign('cargo_eliminar', [])])['mensaje']);
+        $this->assertSame('Operación no autorizada', $this->ejecutar('actividadescentro', 'centro_encargado_asignar.php', ['ctx' => HashB::sign('centro_encargado_asignar', ['id_activ' => 10])])['mensaje']);
+        $this->assertSame([], $cargo->llamadas);
+        $this->assertSame([], $centro->llamadas);
     }
 
     /**

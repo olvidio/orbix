@@ -106,12 +106,14 @@ final class ListaActividadesCtrData
 
             $centros = [];
             if ($oPermCtr->have_perm_activ(PermAccionBits::VER) === true) {
+                $puedeModificar = $oPermCtr->have_perm_activ(PermAccionBits::MODIFICAR) === true;
                 $cCtrs = $this->centroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
                 foreach ($cCtrs as $oCentro) {
+                    $id_ubi_ctr = (int) $oCentro->getId_ubi();
                     $centros[] = [
-                        'id_ubi' => (int) $oCentro->getId_ubi(),
+                        'id_ubi' => $id_ubi_ctr,
                         'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
-                    ];
+                    ] + ($puedeModificar ? CentroEncargadoMutationCtx::deEncargado((int) $id_activ, $id_ubi_ctr) : []);
                 }
             }
 

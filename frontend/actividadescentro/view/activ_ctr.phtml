@@ -125,6 +125,10 @@ $i18n = [
     var URL_ASIGNAR = <?= json_encode($url_asignar) ?>;
     var URL_REORDENAR = <?= json_encode($url_reordenar) ?>;
     var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
+    // Cápsulas HashB por centro («id_activ_id_ubi»): las firma el backend al
+    // devolver los centros encargados y los disponibles; las mutaciones las exigen.
+    var CTX_CTR = {};
+    var CTX_ASIGNAR = {};
     var TIPO = <?= json_encode($tipo) ?>;
     var I18N = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
@@ -227,6 +231,7 @@ $i18n = [
         for (var j = 0; j < centros.length; j++) {
             var c = centros[j];
             var nombre = fnjs_esc(c.nombre_ubi || '');
+            CTX_CTR[id_activ + '_' + c.id_ubi] = { reordenar: c.ctx_reordenar || '', eliminar: c.ctx_eliminar || '' };
             if (puedeMod) {
                 var id_txt = id_activ + '_' + c.id_ubi;
                 var onclick = 'fnjs_cambiar_ctr(event,' + id_activ + ',' + c.id_ubi + ')';
@@ -296,6 +301,7 @@ $i18n = [
         html += '</tr>';
         for (var i = 0; i < centros.length; i++) {
             var c = centros[i];
+            CTX_ASIGNAR[data.id_activ + '_' + c.id_ubi] = c.ctx_asignar || '';
             var onclick = 'fnjs_asignar_ctr(' + data.id_activ + ',' + c.id_ubi + ')';
             html += '<tr><td class="link" id="' + c.id_ubi + '" onclick="' + fnjs_esc(onclick) + '"> '
                 + fnjs_esc(c.nombre_ubi) + '</td>';
@@ -314,7 +320,7 @@ $i18n = [
         $.ajax({
             url: URL_ASIGNAR,
             type: 'post',
-            data: { id_activ: id_activ, id_ubi: id_ubi },
+            data: { ctx: CTX_ASIGNAR[id_activ + '_' + id_ubi] || '' },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
@@ -354,7 +360,7 @@ $i18n = [
         $.ajax({
             url: URL_REORDENAR,
             type: 'post',
-            data: { id_activ: id_activ, id_ubi: id_ubi, num_orden: direccion },
+            data: { ctx: (CTX_CTR[id_activ + '_' + id_ubi] || {}).reordenar || '', num_orden: direccion },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
@@ -371,7 +377,7 @@ $i18n = [
         $.ajax({
             url: URL_ELIMINAR,
             type: 'post',
-            data: { id_activ: id_activ, id_ubi: id_ubi },
+            data: { ctx: (CTX_CTR[id_activ + '_' + id_ubi] || {}).eliminar || '' },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {

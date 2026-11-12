@@ -15,6 +15,7 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * Payload JSON de {@see FormCargosDeActividadData::build} (formulario cargos en actividad, dossier 3102).
@@ -54,6 +55,9 @@ final class FormCargosDeActividadDataTest extends TestCase
             ['opciones' => [5 => 'Cargo A'], 'opcion_sel' => ''],
             $data['cargos_select']
         );
+        // Alta desde la actividad 7: se fija la actividad; la persona la elige el usuario.
+        $this->assertSame(['id_activ' => 7, 'id_nom' => 0], HashB::open($data['hash_form_config']['campos_hidden']['ctx_guardar'], 'cargo_nuevo'));
+        unset($data['hash_form_config']['campos_hidden']['ctx_guardar']);
         $this->assertSame(
             [
                 'campos_form' => 'id_cargo!observ!asis_presente!id_nom',

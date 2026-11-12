@@ -56,15 +56,15 @@ final class ActivCtrShellData
             ],
             'url_asignar' => [
                 'path' => 'src/actividadescentro/centro_encargado_asignar',
-                'campos_form' => 'id_activ!id_ubi',
+                'campos_form' => 'ctx',
             ],
             'url_reordenar' => [
                 'path' => 'src/actividadescentro/centro_encargado_reordenar',
-                'campos_form' => 'id_activ!id_ubi!num_orden',
+                'campos_form' => 'ctx!num_orden',
             ],
             'url_eliminar' => [
                 'path' => 'src/actividadescentro/centro_encargado_eliminar',
-                'campos_form' => 'id_activ!id_ubi',
+                'campos_form' => 'ctx',
             ],
         ];
     }

@@ -21,21 +21,21 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividadescentro.centro_encargado_asignar`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/centro_encargado_asignar.php`
-- Entrada: `post.id_activ:integer`, `post.id_ubi:integer`
+- Entrada: `post.ctx:string` (HashB `centro_encargado_asignar`: `id_activ`, `id_ubi`; viene en cada centro de `centros_disponibles_data`)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadescentro/centro_encargado_eliminar`
 
 - Id: `actividadescentro.centro_encargado_eliminar`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/centro_encargado_eliminar.php`
-- Entrada: `post.id_activ:integer`, `post.id_ubi:integer`
+- Entrada: `post.ctx:string` (HashB `centro_encargado_eliminar`: `id_activ`, `id_ubi`; `ctx_eliminar` de cada centro encargado)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadescentro/centro_encargado_reordenar`
 
 - Id: `actividadescentro.centro_encargado_reordenar`
 - Controller: `src/actividadescentro/infrastructure/ui/http/controllers/centro_encargado_reordenar.php`
-- Entrada: `post.id_activ:integer`, `post.id_ubi:integer`, `post.num_orden:string`
+- Entrada: `post.ctx:string` (HashB `centro_encargado_reordenar`: `id_activ`, `id_ubi`; `ctx_reordenar` de cada centro encargado), `post.num_orden:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividadescentro/centros_disponibles_data`

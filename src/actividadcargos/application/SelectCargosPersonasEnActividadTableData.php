@@ -56,6 +56,9 @@ final class SelectCargosPersonasEnActividadTableData
             $permiso = (!empty($act) && !empty($act['perm'])) ? 3 : 1;
 
             $a_valores[$c]['sel'] = $permiso === 3 ? "$id_item#$elim_asis_default" : '';
+            if ($permiso === 3) {
+                $a_valores[$c]['ctx_eliminar_cargo'] = CargoMutationCtx::eliminar((int) $id_item, $elim_asis_default);
+            }
             $a_valores[$c][1] = $cargo;
             $a_valores[$c][2] = $nom_activ;
             $a_valores[$c][3] = $chk_puede_agd;

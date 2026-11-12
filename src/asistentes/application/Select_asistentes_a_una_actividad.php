@@ -491,6 +491,9 @@ class Select_asistentes_a_una_actividad
                 }
 
                 $a_valores[$c]['sel'] = $permisoFila == 3 ? "$id_nom_int#$id_item_cargo#$eliminar#$id_schema" : "";
+                if ($permisoFila == 3) {
+                    $a_valores[$c]['ctx_eliminar_cargo'] = \src\actividadcargos\application\CargoMutationCtx::eliminar((int) $id_item_cargo, $eliminar);
+                }
                 $a_valores[$c][4] = $chk_propio;
                 $a_valores[$c][5] = $chk_est_ok;
                 $a_valores[$c][6] = $chk_falta;

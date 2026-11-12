@@ -73,6 +73,7 @@ final class SelectCargosDeActividadTableData
 
             if ($permiso === 3) {
                 $a_valores[$c]['sel'] = "$id_nom#$id_item#$elim_asis_default#$id_schema";
+                $a_valores[$c]['ctx_eliminar_cargo'] = CargoMutationCtx::eliminar((int) $id_item, $elim_asis_default);
             } else {
                 $a_valores[$c]['sel'] = '';
             }

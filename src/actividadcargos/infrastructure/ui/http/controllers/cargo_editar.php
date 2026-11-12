@@ -1,6 +1,7 @@
 <?php
 
 use src\actividadcargos\application\ActividadCargoEditar;
+use src\actividadcargos\application\CargoMutationCtx;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
@@ -10,7 +11,11 @@ use src\shared\web\ContestarJson;
  * El frontend debe enviar `asis_presente=1` cuando el form incluye el input
  * `asis` (mantiene la semantica `isset($_POST['asis'])` del legacy).
  */
-$input = $_POST;
+$input = CargoMutationCtx::aplicarGuardar($_POST, CargoMutationCtx::EDITAR);
+if ($input === null) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 $input['asis_presente'] = isset($_POST['asis_presente']) && $_POST['asis_presente'] !== ''
     ? '1'
     : (isset($_POST['asis']) ? '1' : '');

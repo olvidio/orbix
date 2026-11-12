@@ -121,6 +121,11 @@ final class FormCargosPersonasEnActividadData
             'id_item' => $Qid_item,
             'id_nom' => $Qid_pau,
             'mod' => $Qmod,
+            'ctx_guardar' => CargoMutationCtx::guardar(
+                is_int($Qid_item) ? $Qid_item : 0,
+                $id_activ_real !== '' ? (int) $id_activ_real : 0,
+                $Qid_pau,
+            ),
         ];
         if ($id_activ_real !== '') {
             $a_camposHidden['id_activ'] = $id_activ_real;

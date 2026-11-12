@@ -123,6 +123,7 @@ final class CentrosDisponiblesData
                     'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
                     'num_actividades_periodo' => $num_activ,
                     'dif_dias' => $dif,
+                    'ctx_asignar' => CentroEncargadoMutationCtx::firmar(CentroEncargadoMutationCtx::ASIGNAR, $id_activ, $id_ubi),
                 ];
             }
         } else {
@@ -130,6 +131,7 @@ final class CentrosDisponiblesData
                 $centros[] = [
                     'id_ubi' => (int) $oCentro->getId_ubi(),
                     'nombre_ubi' => (string) $oCentro->getNombre_ubi(),
+                    'ctx_asignar' => CentroEncargadoMutationCtx::firmar(CentroEncargadoMutationCtx::ASIGNAR, $id_activ, (int) $oCentro->getId_ubi()),
                 ];
             }
         }

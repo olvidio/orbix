@@ -12,6 +12,7 @@ use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * Payload JSON de {@see FormCargosPersonasEnActividadData::build} (dossier 1302, vista por persona).
@@ -137,6 +138,9 @@ final class FormCargosPersonasEnActividadDataTest extends TestCase
         ]);
 
         $this->assertSame(100, $data['id_activ_real']);
+        // Edición del cargo 55: actividad y persona fijas.
+        $this->assertSame(['id_item' => 55, 'id_activ' => 100, 'id_nom' => 999], HashB::open($data['hash_form_config']['campos_hidden']['ctx_guardar'], 'cargo_editar'));
+        unset($data['hash_form_config']['campos_hidden']['ctx_guardar']);
         $this->assertSame('Nombre act', $data['nom_activ']);
         $this->assertSame([], $data['aActividades']);
         $this->assertSame('obs', $data['observ']);
