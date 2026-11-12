@@ -80,4 +80,13 @@ class DescTelecoTest extends myTest
         $this->assertEquals(15, $descTeleco->getId_tipo_teleco());
         $this->assertEquals('Test', $descTeleco->getDescTelecoVo()->value());
     }
+
+    public function test_desc_teleco_como_texto_para_la_tabla_generica()
+    {
+        $this->DescTeleco->setDesc_teleco('Casa');
+        $this->assertSame('Casa', $this->DescTeleco->getDesc_teleco());
+        $this->assertSame('Casa', $this->DescTeleco->getDescTelecoVo()->value());
+        $this->DescTeleco->setDesc_teleco(null);
+        $this->assertNull($this->DescTeleco->getDesc_teleco());
+    }
 }

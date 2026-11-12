@@ -68,6 +68,16 @@ class DescTeleco
     }
 
 
+    public function getDesc_teleco(): ?string
+    {
+        return $this->desc_teleco?->value();
+    }
+
+    public function setDesc_teleco(?string $texto = null): void
+    {
+        $this->setDescTelecoVo($texto);
+    }
+
     public function getId_item(): int
     {
         return $this->id_item;
@@ -378,7 +388,7 @@ class DescTeleco
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_teleco');
-        $oDatosCampo->setMetodoGet('getIdTipoTelecoVo');
+        $oDatosCampo->setMetodoGet('getId_tipo_teleco');
         $oDatosCampo->setMetodoSet('setId_tipo_teleco');
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('opciones');
@@ -397,7 +407,7 @@ class DescTeleco
     private function getDatosDesc_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('id_desc_teleco');
+        $oDatosCampo->setNom_camp('desc_teleco');
         $oDatosCampo->setMetodoGet('getDesc_teleco');
         $oDatosCampo->setMetodoSet('setDesc_teleco');
         $oDatosCampo->setEtiqueta(_("descripción"));
