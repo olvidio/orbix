@@ -134,8 +134,8 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 | notas | — | — | — | — | — | |
 | actividades | — | — | — | — | — | |
 | actividadestudios | — | — | — | — | — | |
-| encargossacd | — | — | — | — | — | 2 repos sin test |
-| misas | — | — | — | — | — | `PgPlantillaRepository` sin test |
+| encargossacd | ok | ok | parcial | parcial | — | 2.7: 69 %; el resto es sobre todo `db/` (DDL) |
+| misas | ok | parcial | parcial | parcial | — | 2.7: 58 %; faltan los `*_data_build` procedurales de lectura |
 | personas | ok | ok | ok | ok | — | 2.5: 73 %; falta `Trasladar` (61 %) y el CLI de resincronización de sacd |
 | usuarios | ok | ok | parcial | parcial | — | 2.6: 52 %; dudas de seguridad 3 y 4 (6b) |
 | procesos | ok | ok | parcial | parcial | — | 2.6: 53 % (el resto es sobre todo `db/`, DDL) |
@@ -176,7 +176,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 2 inyecciones SQL y unos 20 bugs corregidos, más los tokens HashB de cargos y centros encargados
 - [x] 2.5 `personas` (sección 21): cobertura 55 % → 73 % (application 89 %); 8 bugs corregidos (traslados, búsqueda por centro, esquemas temporales) y un test-guardia global de `DatosCampo`
 - [x] 2.6 `usuarios` + `procesos` (sección 22): cobertura `usuarios` 39 % → 52 %, `procesos` 41 % → 53 % (application 58 → 89 %); recuperación de 2FA endurecida y 6 bugs corregidos
-- [ ] 2.7 `encargossacd` + `misas`
+- [x] 2.7 `encargossacd` + `misas` (sección 23): `encargossacd` 65 % → 69 % (application 86 → 93 %), `misas` 57 % → 58 %; 2 bugs corregidos y dos tests-guardia globales de controladores (cápsula `HashB` y `exit`)
 - [ ] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas`
 - [ ] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (incluye el hallazgo `f_inc` de la sección 11: test de `SincroDB` y arreglo)
 - [ ] 2.11 `planning`: ampliar los tres servicios (`ActividadesDePersonaService` 35 %, `ActividadesPorCasasService` 58 %, `ActividadesPorZonasService` 64 %).
@@ -914,3 +914,24 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 5. `actividad_proceso_generar` (regenera el proceso con `force`, borrando las fases marcadas) se protege solo con la firma `HashF` del `id_activ`; pendiente de pasar a `HashB` como el resto de mutaciones de `procesos`.
 6. `FasesActivCambioLista` genera el proceso de las actividades que no lo tienen al listarlas (efecto de `getFasesCompletadas()` en una lectura).
 7. `ProcesoActividadService::desmarcar()` usa `$cActividadProcesoTarea[0]` sin comprobar que exista.
+
+## 23. Fase 2, paso 2.7: `encargossacd` + `misas` (cerrado el 2026-11-12, sin atención del usuario)
+
+**Línea base:** 1024 tests en verde. Cobertura: `encargossacd` 65 % (application 86 %; `PropuestasAjaxMutations` 11 %, `EncargoAplicacionService` 46 %), `misas` 57 % (application 67 %).
+
+**Cierre:** 1043 tests. `encargossacd` 69 % (application 93 %; lo que falta es sobre todo `db/`, unas 1100 líneas de DDL), `misas` 58 % (lo que falta son los constructores procedurales de lectura `cuadricula_zona_grid_data_build` y `ver_misas_zona_data_build`, y `db/`).
+- Tests nuevos: mutaciones de la pantalla de propuestas (dedicación, cambio de sacd, colaborador nuevo, quitar titular/colaborador), horarios del centro y del sacd y altas/cierres/bajas de sacd en un encargo (`EncargoAplicacionService`), ausencias al crear un periodo de misas.
+- **Tests-guardia globales de controladores** (valen para todos los módulos):
+  - `ControladoresConTokenSinTokenTest` (integración, 193 controladores): todo controlador de `src/` que abre una cápsula `HashB`, sin cápsula, responde JSON «Operación no autorizada» sin cortar la petición. Los de cápsula por fila u opcional solo tienen que responder JSON (lista con motivo).
+  - `ControladoresSinExitTest` (unitario, por tokens de PHP): ningún controlador de `src/` usa `exit`/`die`, salvo las descargas de binarios y tres casos anotados.
+
+**Bugs corregidos:**
+1. **Horario de un centro** (`EncargoAplicacionService::modificar_horario_ctr`): al cambiar la dedicación se modificaba el horario abierto y además se insertaba otro con la misma dedicación (heredado del legacy, con un «//???? setF_fin» pendiente): quedaban dos horarios abiertos del mismo módulo y el texto salía duplicado. Ahora hace como el del sacd: si empezó hoy se modifica; si no, se cierra con su dedicación y se abre uno nuevo.
+2. **Crear un periodo de misas:** la consulta de ausencias del sacd pedía `f_ini <= inicio` y `f_fin >= fin` (solo las que cubrían todo el periodo): un sacd ausente unos días salía disponible. Ahora, como la cuadrícula de la zona, las que se solapan.
+3. `exit` tras responder en `update_cama_asistente` y `update_solo_vip` (`ubiscamas`; respondían con `header` + `echo` + `exit`), `acta_notas_definitivas_grabar`, `certificado_emitido/recibido_pdf_upload` y `menus_exportar`. Los destaparon los tests-guardia.
+
+**Hallazgos (sin corregir):**
+1. `EncargoAplicacionService` hace `echo` de los errores de guardado desde `application/` (rompería una respuesta JSON); `grabar_alumnos()` está vacío («no existía en el servicio original»).
+2. `PropuestasAjaxMutations` lee `$_POST` desde `application/` y `lista_sacd` devuelve `opciones` como mapa, no como pares ordenados (regla de desplegables de `AGENTS.md`). `dedicacion_update` crea horarios con dedicación 0 para los módulos vacíos.
+3. `misas` (`crear_nuevo_periodo_data_build`, `cuadricula_zona_grid_data_build`, `CuadriculaUpdate`): las marcas de inicio y fin de una ausencia se guardan con la fecha `d/m/Y` como clave en una tabla indexada por `Y-m-d` (claves sobrantes; el bucle posterior marca bien los días).
+4. `modulos_update` (`configuracion`) responde texto plano; su proxy frontend lo adapta. `menus_generar_txt` es una herramienta de desarrollo dentro de `src/` que escribe un `.phtml` y responde texto.
