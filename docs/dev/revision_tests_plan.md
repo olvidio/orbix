@@ -172,7 +172,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
-- [ ] 2.3 `notas` + `certificados` — en curso (sección 19)
+- [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
 - [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite)
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
@@ -720,7 +720,7 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 9. `Periodo` devuelve las fechas de «desde hoy» con «/» (`Y/m/d`) y el resto con «-»; PostgreSQL acepta las dos.
 10. ≈ 90 ficheros de tests usan `@dataProvider` en docblock, que PHPUnit 12 no leerá (156 avisos en la suite); los tocados en este paso usan ya `#[DataProvider]`. Conviene convertir el resto en un paso mecánico.
 
-## 19. Fase 2, paso 2.3: `notas` + `certificados` (en curso desde el 2026-11-12)
+## 19. Fase 2, paso 2.3: `notas` + `certificados` (cerrado el 2026-11-12)
 
 **Línea base:** 631 tests (unit + integración de los dos módulos). Cobertura de líneas: `notas` 69 %, `certificados` 24 %. En `certificados`, el «cerrado» de la fase 1 solo miraba `application/`: hay lógica sin test en `domain/` (`CertificadoEmitidoEnviar`, `CertificadoEmitidoSelect`, `Select_certificados_de_una_persona`) y en controladores grandes (`certificado_emitido_guardar`, `certificado_emitido_imprimir_mpdf_datos`…). `db/` son utilidades de esquema (DDL): fuera, como en `devel_db_admin`.
 
@@ -748,7 +748,32 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 2. `notas`, autocompletado de examinadores (`examinadores_search`): el texto del usuario iba dentro de una expresión regular en el SQL; además el JSON se rompía con comillas.
 3. `personas`, `getArrayPersonas()` de personas de paso: el tipo (`'p' . $_POST['na']`) se interpolaba entre comillas (formularios de alta de asistentes y cargos).
 4. `inventario`, equipajes desde una fecha: `f_ini_iso` del POST interpolado.
+5. `notas`, `PgActaRepository::getUltimaActa()`: `Acta::inventarActa()` le pasa el texto del acta escrito por el usuario (alta de acta, editar nota) cuando no tiene el formato «sigla n/aa», y se interpolaba en el SQL. Ahora va como parámetro y escapado como texto literal de la expresión regular.
+
+Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`dl[]` → `IN ('…')` en `ResumenTempTablesService` y `legacy/Resumen`) solo deja pasar las dl que devuelve el repositorio de la región (`mapearDelegaciones`).
 
 **Pendiente:** el barrido que encontró 2–4 solo buscaba valores entre comillas y variables `$Q…` en SQL; no es exhaustivo. Conviene una revisión de seguridad dedicada de `src/` (SQL construido con datos del request), por ejemplo con `/security-review` o una pasada manual por módulo.
 
 **«Comprobar notas»** (`comprobar_notas_page_body.inc.php`, 474 líneas en la carpeta de controladores): pantalla legacy con SQL y HTML que, con el parámetro `actualizar`, modifica datos (nivel de estudios, borra cursadas, crea actas de fin de ciclo). Según `AGENTS.md` debería ir a `application/legacy/` detrás de casos de uso; el test (`ComprobarNotasControllerTest`) usa un PDO que solo apunta el SQL.
+
+**Segunda parte (`notas`, de 74 % a 85 %):**
+- `NotasControllersContractTest` (65 casos): los 36 controladores finos, con dobles en el contenedor (los casos de uso son `final`): token de las mutaciones (`acta_*`, `persona_nota_eliminar`), qué parte del request llega al caso de uso (lo del token manda sobre el POST), envelope de error/excepción, desplegables con pares ordenados, permiso de rol del residuo.
+- Integración: `PgResiduoOtraRegionConsulta` (antes 0 %), `getUltimaActa`, siglas del formulario de nota con los esquemas reales.
+- Unit: tabla de la tessera, `isAprobada()`/`getNota_txt()` (no tenían test), búsqueda de actas por número/texto/curso, prefijos de acta, subida del pdf, marcas de fin de ciclo, personas publicadas que se pueden añadir a un acta.
+- Fuera, a propósito: `comprobar_notas_page_body.inc.php` y `legacy/Resumen` (legacy, ver abajo), `acta_pdf_download.php` (`exit()`), `routes.php`.
+
+**Bugs corregidos (segunda parte):**
+1. Imprimir la tessera de una persona no activa respondía «No encuentro persona»: `7633cc6a9` arregló «ver» pero no «imprimir».
+2. `PersonaNota`/`PersonaNotaOtraRegionStgr`: las propiedades nulables no tenían `= null`; una nota creada en código sin nota numérica fallaba al leer `getNota_num()`.
+3. Filas de la tessera: `bAprobada` salía `'1'`/`''` en vez de `'t'`/`'f'` (la vista lo toleraba con `is_true`).
+4. Código muerto quitado: `ConstantNotaRepository` (copia sin uso de `PgNotaRepository`), `getUltimaLinea/Pagina/Libro` de `PgActaRepository`.
+
+**Hallazgos (sin corregir):**
+1. `getUltimaActa()` con la región por defecto «?» nunca encuentra nada (el número se extrae con `^\w{1,8}\s+…` y «?» no es `\w`): un acta inventada sin sigla siempre propone `dl? 1/aa?`.
+2. `ActaPdfSubir`: sin fichero (o `UPLOAD_ERR_NO_FILE`) responde éxito sin guardar nada; tampoco comprueba que sea un PDF.
+3. `getNota_txt()` califica con umbrales fijos (Probatus desde 0,6) mientras que `isAprobada()` usa la nota de corte de la configuración: con otra nota de corte, el texto y la decisión no coinciden.
+4. `ConfigSnapshot::requireValue()`/`requireCursoField()` hacen `exit()` con HTML si falta un parámetro (en un endpoint JSON rompe la respuesta; en tests mata PHPUnit) y usan `empty()`, así que un parámetro con valor `"0"` cuenta como no configurado. Para el paso 2.10 (`configuracion`).
+5. `asignaturas_search` y `examinadores_search` responden con `header()` + `echo` en lugar de `ContestarJson` (autocompletado del navegador; en proceso funciona porque la cabecera no se envía).
+6. `persona_nota_nueva`/`persona_nota_editar`, `acta_pdf_eliminar`, `acta_pdf_subir`, `tessera_copiar` y `acta_ver_add_persona` no llevan token `HashB` propio (dependen de la firma del formulario); las demás mutaciones de actas sí.
+7. `ActaSelectDataTest` y `ActaVerAddPersonaFormDataTest` dejaban la sesión cambiada (`session_auth`, `oConfig`): corregido.
+
