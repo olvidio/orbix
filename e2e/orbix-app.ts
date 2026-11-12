@@ -155,3 +155,20 @@ export function limpiar(...pasos: Array<() => void>): void {
     throw primero;
   }
 }
+
+/**
+ * Crea por la interfaz un numerario de la dl con el apellido `apellido` (marca del test) y devuelve
+ * su id_nom (leído de la BD `sv`, esquema `esquemaV`, p. ej. «H-dlbv»).
+ */
+export async function crearNumerario(page: Page, apellido: string, esquemaV: string): Promise<string> {
+  await abrirPantalla(page, `frontend/personas/controller/personas_editar.php?nuevo=1&obj_pau=PersonaN&id_tabla=n&apellido1=${apellido}`, 'form#frm2');
+  const ficha = page.locator('#main form#frm2');
+  await ficha.locator('[name="nom"]').fill('Prueba');
+  await ficha.locator('[name="apellido1"]').fill(apellido);
+  const alta = await esperarSrc(page, 'persona_update', () => ficha.locator('th[onclick*="fnjs_guardar"]').click());
+  expect(alta.success, alta.mensaje).toBe(true);
+  const id = sqlDev('sv', `SELECT id_nom FROM "${esquemaV}".p_numerarios WHERE apellido1 = '${apellido}'`);
+  expect(id, 'el numerario está en la BD').toMatch(/^\d+$/);
+  await page.waitForLoadState('networkidle');
+  return id;
+}

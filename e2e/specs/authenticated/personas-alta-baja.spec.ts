@@ -21,8 +21,16 @@ const marca = marcaE2e();
 const numerario = (campos: string) => sqlDev('sv', `SELECT ${campos} FROM "${ESQUEMA}".p_numerarios WHERE apellido1 = '${marca}'`);
 const dePaso = (campos: string) => sqlDev('sv', `SELECT ${campos} FROM restov.p_de_paso_ex WHERE apellido1 = '${marca}'`);
 
+// Ids de las personas creadas, para borrar también sus marcas de dossier (d_dossiers_abiertos).
+const idsCreados: string[] = [];
+
 test.afterAll(() => {
   limpiar(
+    () => {
+      if (idsCreados.length > 0) {
+        sqlDev('sv', `DELETE FROM "${ESQUEMA}".d_dossiers_abiertos WHERE tabla = 'p' AND id_pau IN (${idsCreados.join(',')})`);
+      }
+    },
     () => sqlDev('sv', `DELETE FROM "${ESQUEMA}".p_numerarios WHERE apellido1 = '${marca}'`),
     () => sqlDev('sv', `DELETE FROM restov.p_de_paso_ex WHERE apellido1 = '${marca}'`),
   );
@@ -51,6 +59,7 @@ test('numerario: alta desde la búsqueda y modificación de la ficha', async ({ 
 
   const idNom = numerario('id_nom');
   expect(idNom, 'la persona está en la BD').toMatch(/^\d+$/);
+  idsCreados.push(idNom);
   expect(numerario(`nom || '|' || lugar_nacimiento || '|' || situacion || '|' || id_tabla`)).toBe('Prueba|Barcelona|A|n');
 
   await abrirPantalla(page, `frontend/personas/controller/personas_editar.php?obj_pau=PersonaN&sel[]=${idNom}%23n`, 'form#frm2');
@@ -78,6 +87,7 @@ test('persona de paso: alta y borrado desde su ficha', async ({ page }) => {
   expect(alta.success, alta.mensaje).toBe(true);
   const idNom = dePaso('id_nom');
   expect(idNom, 'la persona de paso está en la BD').toMatch(/^-?\d+$/);
+  idsCreados.push(idNom);
   expect(dePaso(`nom || '|' || dl`)).toBe(`Paso|${DL}`);
 
   await abrirPantalla(page, `frontend/personas/controller/personas_editar.php?obj_pau=PersonaEx&sel[]=${idNom}%23pn`, 'form#frm2');
