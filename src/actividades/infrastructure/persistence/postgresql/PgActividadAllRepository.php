@@ -187,6 +187,9 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         if (!($oFini0 instanceof DateTimeLocal) || !($oFfin0 instanceof DateTimeLocal)) {
             return false;
         }
+        // Clonar: los getters devuelven el objeto de la entidad y sub() lo modificaría.
+        $oFini0 = clone $oFini0;
+        $oFfin0 = clone $oFfin0;
         $oFini1 = clone $oFini0;
         $oFfin1 = clone $oFfin0;
         $oFini0->sub(new DateInterval($interval));
@@ -248,9 +251,9 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $nom_tabla = $this->getNomTablaSelect();
         $sQuery = "SELECT id_activ, nom_activ
 		   FROM $nom_tabla
-	   	   WHERE id_tipo_activ::text ~ '" . $sid_tipo . "' $scondicion
+	   	   WHERE id_tipo_activ::text ~ :tipo $scondicion
 		   ORDER by f_ini";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, ['tipo' => $sid_tipo], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
