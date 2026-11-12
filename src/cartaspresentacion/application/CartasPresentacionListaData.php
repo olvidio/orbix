@@ -417,17 +417,23 @@ final class CartasPresentacionListaData
      *   a_direccion: list<array{direccion: string, a_p: string, c_p: string, poblacion: string, telf: string}>
      * } $a_texto
      */
+    /** Texto de la BD (escrito por los usuarios) dentro del HTML del listado. */
+    private static function h(mixed $texto): string
+    {
+        return htmlspecialchars(is_scalar($texto) ? (string) $texto : '', ENT_QUOTES, 'UTF-8');
+    }
+
     private function datosACeldas(array $a_texto): string
     {
-        $pres_nom = $a_texto['pres_nom'];
-        $pres_telf = self::formatTelf($a_texto['pres_telf']);
-        $pres_mail = $a_texto['pres_mail'];
-        $direccion = $a_texto['direccion'];
-        $nom_sede = $a_texto['nom_sede'];
-        $a_p = $a_texto['a_p'];
-        $c_p = $a_texto['c_p'];
-        $poblacion = $a_texto['poblacion'];
-        $telf = self::formatTelf($a_texto['telf']);
+        $pres_nom = self::h($a_texto['pres_nom']);
+        $pres_telf = self::h(self::formatTelf($a_texto['pres_telf']));
+        $pres_mail = self::h($a_texto['pres_mail']);
+        $direccion = self::h($a_texto['direccion']);
+        $nom_sede = self::h($a_texto['nom_sede']);
+        $a_p = self::h($a_texto['a_p']);
+        $c_p = self::h($a_texto['c_p']);
+        $poblacion = self::h($a_texto['poblacion']);
+        $telf = self::h(self::formatTelf($a_texto['telf']));
         $a_direccion = $a_texto['a_direccion'];
 
         $nom_sede = $nom_sede === '' ? '' : "$nom_sede<br>";
@@ -436,10 +442,10 @@ final class CartasPresentacionListaData
         $col2 = "$pres_telf<br>$pres_mail<br>$telf";
         if ($a_direccion !== []) {
             foreach ($a_direccion as $aa_direccion) {
-                $d1 = $aa_direccion['direccion'];
-                $c1 = $aa_direccion['c_p'];
-                $p1 = $aa_direccion['poblacion'];
-                $tf1 = self::formatTelf($aa_direccion['telf']);
+                $d1 = self::h($aa_direccion['direccion']);
+                $c1 = self::h($aa_direccion['c_p']);
+                $p1 = self::h($aa_direccion['poblacion']);
+                $tf1 = self::h(self::formatTelf($aa_direccion['telf']));
 
                 $col1 .= "<br>---<br>$d1<br>$c1  $p1";
                 $col2 .= "<br>---<br>$tf1";
@@ -465,7 +471,7 @@ final class CartasPresentacionListaData
                 }
                 uksort($a_dl_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                 $html .= '<h3>';
-                $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
+                $html .= sprintf(_("Cartas de presentación de %s"), self::h($tipo));
                 $html .= '</h3>';
                 $dl_anterior = '';
                 foreach ($a_dl_pob_edad as $dl => $a_pob_edad) {
@@ -474,7 +480,7 @@ final class CartasPresentacionListaData
                     }
                     uksort($a_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                     if ($dl !== $dl_anterior) {
-                        $html .= '<h3>' . (string)$dl . ' - ' . (string)$tipo . '</h3>';
+                        $html .= '<h3>' . self::h($dl) . ' - ' . self::h($tipo) . '</h3>';
                     }
                     $html .= '<table>';
                     $html .= $this->renderPoblacionesTabla($a_pob_edad, $class);
@@ -489,7 +495,7 @@ final class CartasPresentacionListaData
                 }
                 uksort($a_pob_edad, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
                 $html .= '<h3>';
-                $html .= sprintf(_("Cartas de presentación de %s"), (string)$tipo);
+                $html .= sprintf(_("Cartas de presentación de %s"), self::h($tipo));
                 $html .= '</h3>';
                 $html .= '<table>';
                 $html .= $this->renderPoblacionesTabla($a_pob_edad, $class);
@@ -513,7 +519,7 @@ final class CartasPresentacionListaData
             }
             krsort($a_edad); // primero m, despues j
             if ($poblacion !== $poblacion_anterior || $poblacion === '') {
-                $html .= '<tr><td ' . $class . '>' . \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)$poblacion) . '</td>';
+                $html .= '<tr><td ' . $class . '>' . self::h(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)$poblacion)) . '</td>';
             }
             $f = 0;
             foreach ($a_edad as $edad => $texto) {
@@ -528,12 +534,12 @@ final class CartasPresentacionListaData
                         if ($ff > 1) {
                             $html .= '<tr><td></td><td ' . $class . '></td>';
                         } else {
-                            $html .= '<td ' . $class . '>' . (string)$edad . '</td>';
+                            $html .= '<td ' . $class . '>' . self::h($edad) . '</td>';
                         }
                         $html .= (is_scalar($txt) ? (string)$txt : '') . '</tr>';
                     }
                 } else {
-                    $html .= '<td ' . $class . '>' . (string)$edad . '</td>'
+                    $html .= '<td ' . $class . '>' . self::h($edad) . '</td>'
                         . (is_scalar($texto) ? (string)$texto : '') . '</tr>';
                 }
             }
