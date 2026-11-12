@@ -487,7 +487,10 @@ final class SelectAsistentesAUnaActividadTest extends myTest
         $this->assertSame('dlb', $d['links_dl_specs']['n']['query']['que_dl']);
         $this->assertSame('PersonaN', $d['links_dl_specs']['n']['query']['obj_pau']);
         $this->assertArrayHasKey('n de paso', $d['links_otros_specs']);
-        $this->assertArrayNotHasKey('que_dl', $d['links_otros_specs']['n de paso']['query']);
+        $paso = $d['links_otros_specs']['n de paso']['query'];
+        $this->assertArrayNotHasKey('que_dl', $paso);
+        // Regresión: obj_pau llegaba como «PersonaEx&na=n» (un solo parámetro) y el formulario no lo reconocía.
+        $this->assertSame(['PersonaEx', 'n'], [$paso['obj_pau'], $paso['na']]);
     }
 
     public function test_en_la_region_del_stgr_o_sin_permiso_no_hay_enlaces_para_anyadir(): void

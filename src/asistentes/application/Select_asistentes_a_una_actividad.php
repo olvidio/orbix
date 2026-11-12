@@ -993,6 +993,13 @@ class Select_asistentes_a_una_actividad
             $obj_pau_str = is_scalar($obj_pau) ? (string) $obj_pau : '';
             $nomTxt = $val['nom'] ?? '';
             $nom = is_scalar($nomTxt) ? (string) $nomTxt : '';
+            // PermDossier da «PersonaEx&na=n»: se separa en obj_pau y na; si no, la «&» se codifica al montar
+            // la URL y el formulario recibe un obj_pau que no reconoce (desplegable de personas vacío).
+            $extra = [];
+            if (str_contains($obj_pau_str, '&')) {
+                [$obj_pau_str, $resto] = explode('&', $obj_pau_str, 2);
+                parse_str($resto, $extra);
+            }
             $aQuery = [
                 'mod' => 'nuevo',
                 'pau' => $this->pau,
@@ -1000,6 +1007,9 @@ class Select_asistentes_a_una_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
+            if (isset($extra['na']) && is_string($extra['na'])) {
+                $aQuery['na'] = $extra['na'];
+            }
             // Personas de la dl: con que_dl. De paso (PersonaEx): línea "otra dl", sin que_dl.
             if (str_starts_with($obj_pau_str, 'PersonaEx')) {
                 $this->aLinks_otros[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);

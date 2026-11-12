@@ -14,6 +14,7 @@ use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
 
@@ -84,28 +85,8 @@ final class FormAsistentesAUnaActividadData
                     'error' => "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__,
                 ];
             }
-            $id_tabla = $oPersona->getId_tabla();
-            switch ($id_tabla) {
-                case 'n':
-                    $obj_pau = 'PersonaN';
-                    break;
-                case 'a':
-                    $obj_pau = 'PersonaAgd';
-                    break;
-                case 's':
-                    $obj_pau = 'PersonaS';
-                    break;
-                case 'nax':
-                    $obj_pau = 'PersonaNax';
-                    break;
-                case 'sssc':
-                    $obj_pau = 'PersonaSSSC';
-                    break;
-                case 'pn':
-                case 'pa':
-                    $obj_pau = 'PersonaEx';
-                    break;
-            }
+            // Mismo mapa que el resto del módulo de personas (n, x = nax, a, s, sssc, y los de paso pn/pa/px/psssc).
+            $obj_pau = PersonaRepositoryResolver::entityTypeByIdTabla()[(string) $oPersona->getId_tabla()] ?? $obj_pau;
             $ape_nom = $oPersona->getPrefApellidosNombre();
             $id_nom_real = (string)$Qid_nom;
 
@@ -141,6 +122,15 @@ final class FormAsistentesAUnaActividadData
             $mod = 'nuevo';
             $obj_pau = $Qobj_pau !== '' ? urldecode($Qobj_pau) : '';
             $Qna = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'na');
+            // Enlaces antiguos: «PersonaEx&na=n» llegaba como un solo valor de obj_pau (la «&» va codificada
+            // en la URL) y el tipo no coincidía con ningún caso: el desplegable de personas salía vacío.
+            if (str_contains($obj_pau, '&')) {
+                [$obj_pau, $resto] = explode('&', $obj_pau, 2);
+                parse_str($resto, $extra);
+                if ($Qna === '' && isset($extra['na']) && is_string($extra['na'])) {
+                    $Qna = $extra['na'];
+                }
+            }
             $na_val = 'p' . $Qna;
 
             switch ($obj_pau) {
