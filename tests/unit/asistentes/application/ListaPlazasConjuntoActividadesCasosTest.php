@@ -64,9 +64,14 @@ final class ListaPlazasConjuntoActividadesCasosTest extends myTest
     /** @var array<string, mixed> */
     private array $anterior = [];
 
+    private string|false $errorLogAnterior = false;
+
     public function setUp(): void
     {
         parent::setUp();
+        // El código registra con error_log() las personas que no encuentra; en estos tests es lo esperado.
+        $this->errorLogAnterior = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
         $this->anterior['config'] = $_SESSION['config'] ?? null;
         $this->apps([]);
         $finder = $this->createMock(PersonaFinderService::class);
@@ -109,6 +114,7 @@ final class ListaPlazasConjuntoActividadesCasosTest extends myTest
 
     public function tearDown(): void
     {
+        ini_set('error_log', (string) $this->errorLogAnterior);
         $this->reponerServicios();
         if ($this->anterior['config'] === null) {
             unset($_SESSION['config']);

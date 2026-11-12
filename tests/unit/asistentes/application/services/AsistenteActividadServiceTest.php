@@ -54,9 +54,14 @@ final class AsistenteActividadServiceTest extends myTest
     /** @var array<string, mixed> */
     private array $sesionAnterior = [];
 
+    private string|false $errorLogAnterior = false;
+
     public function setUp(): void
     {
         parent::setUp();
+        // El código registra con error_log() las personas que no encuentra; en estos tests es lo esperado.
+        $this->errorLogAnterior = ini_get('error_log');
+        ini_set('error_log', '/dev/null');
         $this->sesionAnterior = $_SESSION['session_auth'];
         $this->actividades = $this->createMock(ActividadRepositoryInterface::class);
         $this->actividadesAll = $this->createMock(ActividadAllRepositoryInterface::class);
@@ -78,6 +83,7 @@ final class AsistenteActividadServiceTest extends myTest
 
     public function tearDown(): void
     {
+        ini_set('error_log', (string) $this->errorLogAnterior);
         $_SESSION['session_auth'] = $this->sesionAnterior;
         parent::tearDown();
     }
