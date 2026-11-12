@@ -121,7 +121,10 @@ final class TrasladoUpdate
             $reg_dl_org = empty($dl_form) ? '' : ConfigGlobal::mi_region() . '-' . $dl_form;
             $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
             $reg_dl_org .= $sfsv_txt;
-            $new_dl_sfsv = $new_dl . $sfsv_txt;
+            // El desplegable (DelegacionDropdown::listaRegDele) ya trae la «f» en sf
+            // («H-dlpf»): añadirla otra vez daba «H-dlpff», la dl destino no coincidía
+            // con ninguna y el traslado solo cambiaba la ficha («No existe la dl destino»).
+            $new_dl_sfsv = ($sfsv_txt === 'f' && str_ends_with($new_dl, 'f')) ? $new_dl : $new_dl . $sfsv_txt;
 
             $oTrasladoDl = $this->trasladar;
             $oTrasladoDl->setId_nom($id_pau);

@@ -232,14 +232,30 @@ final class TrasladoPersonaTest extends myTest
         $this->repoN->method('findById')->willReturn(new PersonaN());
         $this->trasladar->expects($this->once())->method('setId_nom')->with(10011);
         $this->trasladar->expects($this->once())->method('setReg_dl_org')->with('H-dlbv');
-        $this->trasladar->expects($this->once())->method('setReg_dl_dst')->with('dlpv');
+        $this->trasladar->expects($this->once())->method('setReg_dl_dst')->with('H-dlpv');
         $this->trasladar->expects($this->once())->method('trasladar')->willReturn(['success' => false]);
         $this->trasladar->method('getError')->willReturn('sin esquema');
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
 
-        $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'dlp', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']);
+        // El desplegable manda región y dl («H-dlp», DelegacionDropdown::listaRegDele).
+        $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlp', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']);
 
         $this->assertSame('sin esquema', $r);
+    }
+
+    public function test_en_sf_el_destino_no_lleva_la_f_dos_veces(): void
+    {
+        $_SESSION['session_auth'] = ['sfsv' => 2, 'esquema' => 'H-dlbf'];
+        $uc = $this->update();
+        $this->repoN->method('findById')->willReturn(new PersonaN());
+        $this->trasladar->expects($this->once())->method('setReg_dl_org')->with('H-dlbf');
+        // En sf el desplegable ya trae la «f» («H-dlpf»); antes quedaba «H-dlpff».
+        $this->trasladar->expects($this->once())->method('setReg_dl_dst')->with('H-dlpf');
+        $this->trasladar->method('trasladar')->willReturn(['success' => true]);
+        $this->trasladar->method('getError')->willReturn('');
+        $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+
+        $this->assertSame('', $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlpf', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']));
     }
 
     // ---- TrasladoFormData ----------------------------------------------------------------------
