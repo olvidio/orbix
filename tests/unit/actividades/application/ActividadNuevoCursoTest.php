@@ -135,6 +135,17 @@ final class ActividadNuevoCursoTest extends TestCase
         $this->assertStringContainsString('cv sr (7/9/2026-13/9/2026) Pozoalbero', $txt);
     }
 
+    public function test_si_no_se_guarda_la_actividad_se_avisa_sin_cortar_la_peticion(): void
+    {
+        $this->actividades->method('getNewId')->willReturn(9001);
+        $this->actividades->expects($this->once())->method('Guardar')->willReturn(false);
+        $uc = $this->uc();
+        $txt = $uc->crear_actividad($this->origen(11));
+        $this->assertStringContainsString('ERROR: no se ha guardado la actividad', $txt);
+        $this->assertStringContainsString('Pozoalbero', $txt);
+        $this->assertSame(0, $uc->getNumCreadas());
+    }
+
     public function test_tipo_no_se_repite_no_crea_nada(): void
     {
         $this->actividades->expects($this->never())->method('Guardar');

@@ -271,8 +271,9 @@ class ActividadNuevoCurso
         $oActividad->setH_ini($hIni instanceof TimeLocal ? $hIni : null);
         $oActividad->setH_fin($hFin instanceof TimeLocal ? $hFin : null);
         if ($ActividadDlRepository->Guardar($oActividad, $this->registrarCambios) === false) {
-            echo _("ERROR: no se ha guardado la actividad") . "<br>";
-            exit;
+            // Sin echo ni exit en application/: el error se devuelve con los demás avisos.
+            return $txt . _("ERROR: no se ha guardado la actividad") . ': '
+                . htmlspecialchars((string) $oActividadOrigen->getNom_activ(), ENT_QUOTES, 'UTF-8') . '<br>';
         }
 
         $this->numCreadas++;
@@ -289,8 +290,8 @@ class ActividadNuevoCurso
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
                 if ($CentroEncargadoRepository->Guardar($newEncargado, $this->registrarCambios) === false) {
-                    echo _("hay un error, no se ha guardado");
-                    echo "\n" . $CentroEncargadoRepository->getErrorTxt();
+                    $txt .= _("hay un error, no se ha guardado") . ': '
+                        . htmlspecialchars($CentroEncargadoRepository->getErrorTxt(), ENT_QUOTES, 'UTF-8') . '<br>';
                 }
             }
         }
