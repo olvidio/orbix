@@ -106,3 +106,52 @@ export function marcaE2e(): string {
   }
   return 'Zze' + s;
 }
+
+/**
+ * Crea por la interfaz una actividad sv · n · ca («sin especificar») de la dl `dl`, del 10 al 12 de
+ * febrero de 2031, con el nombre `nombre`. Devuelve su id_activ (leído de la BD `comun`, esquema `esquema`).
+ */
+export async function crearActividad(page: Page, nombre: string, dl: string, esquema: string): Promise<string> {
+  const form = page.locator('#main form#modifica');
+  await abrirPantalla(page, 'frontend/actividades/controller/actividad_ver.php?mod=nuevo', 'form#modifica');
+  // Cada desplegable del tipo recarga el siguiente por AJAX (`actividad_tipo_get`).
+  for (const [campo, valor] of [['#isfsv_val', '1'], ['#iasistentes_val', '1'], ['#iactividad_val', '2'], ['#inom_tipo_val', '000']]) {
+    await Promise.all([
+      page.waitForResponse((r) => r.url().includes('actividad_tipo_get'), { timeout: 15_000 }),
+      form.locator(campo).selectOption(valor),
+    ]);
+    await page.waitForLoadState('networkidle');
+  }
+  await form.locator('#nom_activ').fill(nombre);
+  await form.locator('#f_ini').fill('10/2/2031');
+  await form.locator('#f_fin').fill('12/2/2031');
+  await form.locator('#dl_org').selectOption(dl);
+  const alta = await esperarSrc(page, 'actividad_mutacion_ajax', () => form.locator(`input[onclick*="fnjs_guardar('nuevo')"]`).click());
+  expect(alta.success, alta.mensaje).toBe(true);
+  const id = sqlDev('comun', `SELECT id_activ FROM "${esquema}".a_actividades_dl WHERE nom_activ = '${nombre.replace(/'/g, "''")}'`);
+  expect(id, 'la actividad está en la BD').toMatch(/^\d+$/);
+  return id;
+}
+
+/** Borra con SQL una actividad de prueba y las fases de su proceso. */
+export function borrarActividadSql(esquema: string, nombre: string): void {
+  const ids = `(SELECT id_activ FROM "${esquema}".a_actividades_dl WHERE nom_activ = '${nombre.replace(/'/g, "''")}')`;
+  sqlDev('comun', `DELETE FROM "${esquema}".a_actividad_proceso_sv WHERE id_activ IN ${ids}`);
+  sqlDev('comun', `DELETE FROM "${esquema}".a_actividad_proceso_sf WHERE id_activ IN ${ids}`);
+  sqlDev('comun', `DELETE FROM "${esquema}".a_actividades_dl WHERE nom_activ = '${nombre.replace(/'/g, "''")}'`);
+}
+
+/** Ejecuta cada paso de limpieza aunque falle alguno; al final relanza el primer error. */
+export function limpiar(...pasos: Array<() => void>): void {
+  let primero: unknown = null;
+  for (const paso of pasos) {
+    try {
+      paso();
+    } catch (e) {
+      primero ??= e;
+    }
+  }
+  if (primero !== null) {
+    throw primero;
+  }
+}

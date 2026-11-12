@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujos de escritura de personas (fase 3.3), por la interfaz:
@@ -22,8 +22,10 @@ const numerario = (campos: string) => sqlDev('sv', `SELECT ${campos} FROM "${ESQ
 const dePaso = (campos: string) => sqlDev('sv', `SELECT ${campos} FROM restov.p_de_paso_ex WHERE apellido1 = '${marca}'`);
 
 test.afterAll(() => {
-  sqlDev('sv', `DELETE FROM "${ESQUEMA}".p_numerarios WHERE apellido1 = '${marca}'`);
-  sqlDev('sv', `DELETE FROM restov.p_de_paso_ex WHERE apellido1 = '${marca}'`);
+  limpiar(
+    () => sqlDev('sv', `DELETE FROM "${ESQUEMA}".p_numerarios WHERE apellido1 = '${marca}'`),
+    () => sqlDev('sv', `DELETE FROM restov.p_de_paso_ex WHERE apellido1 = '${marca}'`),
+  );
 });
 
 test('numerario: alta desde la búsqueda y modificación de la ficha', async ({ page }) => {
