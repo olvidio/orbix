@@ -25,6 +25,25 @@ use src\shared\domain\value_objects\DateTimeLocal;
 
 final class ActaVerAddPersonaFormDataTest extends TestCase
 {
+    private mixed $configAnterior;
+    /** @var array<string, mixed> */
+    private array $authAnterior;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->configAnterior = $_SESSION['oConfig'] ?? null;
+        $this->authAnterior = $_SESSION['session_auth'] ?? [];
+        $_SESSION['session_auth'] = array_merge($this->authAnterior, ['esquema' => 'H-dlbv', 'sfsv' => 1]);
+    }
+
+    protected function tearDown(): void
+    {
+        $_SESSION['oConfig'] = $this->configAnterior;
+        $_SESSION['session_auth'] = $this->authAnterior;
+        parent::tearDown();
+    }
+
     public function test_error_sin_acta(): void
     {
         $uc = new ActaVerAddPersonaFormData(
@@ -106,5 +125,100 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
 
         $this->assertTrue($r['puede_anadir'] ?? false);
         $this->assertSame([7 => 'Pérez, Juan'], $r['opciones_personas'] ?? []);
+    }
+
+    public function test_acta_inexistente_o_sin_asignatura(): void
+    {
+        $sinAsignatura = $this->createStub(Acta::class);
+        $sinAsignatura->method('getId_asignatura')->willReturn(null);
+        $actaRepo = $this->createStub(ActaRepositoryInterface::class);
+        $actaRepo->method('findById')->willReturnCallback(static fn (string $a): ?Acta => $a === 'dlb 2/26' ? $sinAsignatura : null);
+        $uc = new ActaVerAddPersonaFormData(
+            $actaRepo,
+            $this->createStub(AsignaturaRepositoryInterface::class),
+            $this->createStub(PersonaDlRepositoryInterface::class),
+            $this->createStub(PersonaPubRepositoryInterface::class),
+            $this->createStub(PersonaNotaRepositoryInterface::class),
+        );
+
+        $this->assertSame(['error' => 'No se encuentra el acta', 'puede_anadir' => false], $uc->execute(['acta' => 'dlb 9/26']));
+        $this->assertSame(['error' => 'El acta no tiene asignatura', 'puede_anadir' => false], $uc->execute(['acta' => 'dlb 2/26']));
+    }
+
+    private function pub(int $id, string $nombre, mixed $publicadoPara, string $dl = 'dlz', int $nivel = NivelStgrId::N): \src\personas\domain\entity\PersonaPub
+    {
+        $p = $this->createStub(\src\personas\domain\entity\PersonaPub::class);
+        $p->method('getId_nom')->willReturn($id);
+        $p->method('getPrefApellidosNombre')->willReturn($nombre);
+        $p->method('getNivel_stgr')->willReturn($nivel);
+        $p->method('getPublicado_para')->willReturn($publicadoPara);
+        $p->method('getDl')->willReturn($dl);
+
+        return $p;
+    }
+
+    /**
+     * @param list<\src\personas\domain\entity\PersonaPub>|\Throwable $publicadas
+     */
+    private function conPublicadas(array|\Throwable $publicadas): ActaVerAddPersonaFormData
+    {
+        $_SESSION['oConfig'] = new class {
+            public function getNotaMax(): int
+            {
+                return 10;
+            }
+        };
+        $acta = $this->createStub(Acta::class);
+        $acta->method('getId_asignatura')->willReturn(100);
+        $actaRepo = $this->createStub(ActaRepositoryInterface::class);
+        $actaRepo->method('findById')->willReturn($acta);
+
+        $local = $this->createStub(PersonaDl::class);
+        $local->method('getId_nom')->willReturn(7);
+        $local->method('getPrefApellidosNombre')->willReturn('Pérez, Juan');
+        $local->method('getNivel_stgr')->willReturn(NivelStgrId::N);
+        $dlRepo = $this->createStub(PersonaDlRepositoryInterface::class);
+        $dlRepo->method('matching')->willReturn([$local]);
+
+        $pubRepo = $this->createStub(PersonaPubRepositoryInterface::class);
+        if ($publicadas instanceof \Throwable) {
+            $pubRepo->method('matching')->willThrowException($publicadas);
+        } else {
+            $pubRepo->method('matching')->willReturn($publicadas);
+        }
+        $notaRepo = $this->createStub(PersonaNotaRepositoryInterface::class);
+        $notaRepo->method('matching')->willReturn([]);
+
+        return new ActaVerAddPersonaFormData($actaRepo, $this->createStub(AsignaturaRepositoryInterface::class), $dlRepo, $pubRepo, $notaRepo);
+    }
+
+    public function test_publicadas_solo_si_lo_estan_para_mi_dl_y_vigentes(): void
+    {
+        $r = $this->conPublicadas([
+            $this->pub(20, 'Abad, Pedro', '{"dlb": null}'),
+            $this->pub(21, 'Zamora, Luis', ['dlb' => '2999-01-01']),
+            $this->pub(22, 'Caducada, Eva', ['dlb' => '2001-01-01']),
+            $this->pub(23, 'Otra, Ana', ['dlmE' => null]),
+            $this->pub(24, 'Todas, Ruth', ['*' => null]),
+            $this->pub(25, 'Repaso, Iván', ['dlb' => null], 'dlz', NivelStgrId::R),
+            $this->pub(7, 'Pérez, Juan (duplicado)', ['dlb' => null]),
+            $this->pub(26, 'Sin Dl, Rosa', ['dlb' => null], ''),
+        ])->execute(['acta' => 'dlb 1/26']);
+
+        $this->assertSame(
+            [20 => 'Abad, Pedro (dlz)', 7 => 'Pérez, Juan', 26 => 'Sin Dl, Rosa', 21 => 'Zamora, Luis (dlz)'],
+            $r['opciones_personas'],
+            'ordenadas por nombre; sin caducadas, de otra dl, «*», repaso ni duplicados'
+        );
+        $this->assertSame(10, $r['nota_max_default']);
+        $this->assertSame(0, $r['id_nivel'], 'asignatura fuera del plan 2026');
+    }
+
+    public function test_error_al_leer_las_publicadas(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No se han podido cargar las personas publicadas: sin conexión');
+
+        $this->conPublicadas(new \RuntimeException('sin conexión'))->execute(['acta' => 'dlb 1/26']);
     }
 }
