@@ -77,7 +77,7 @@ final class NombresPermisoTest extends TestCase
     public function test_no_hay_literales_en_las_llamadas_de_permisos(): void
     {
         $raiz = dirname(__DIR__, 4);
-        $patron = '/\b(havePermOficina|havePermActiv|onlyPerm|have_perm_activ|have_perm_action|have_perm_oficina|only_perm)\(\s*[\'"]/';
+        $patron = '/\b(havePermOficina|havePermActiv|onlyPerm|have_perm_activ|have_perm_action|have_perm_oficina|only_perm|permOficina)\(\s*[\'"]/';
         $infractores = [];
         foreach (['src', 'frontend'] as $dir) {
             $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($raiz . '/' . $dir, \FilesystemIterator::SKIP_DOTS));

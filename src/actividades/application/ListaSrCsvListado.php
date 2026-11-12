@@ -16,6 +16,7 @@ use src\usuarios\domain\value_objects\ValorPreferencia;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
+use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\XPermisos;
 
 /**
@@ -190,7 +191,10 @@ final class ListaSrCsvListado
             $sactividad = $oTipoActiv->getActividadText();
             $snom_tipo = $oTipoActiv->getNom_tipoText();
 
-            if (($permOficina('sg') || $permOficina('vcsd') || $permOficina('des')) && !$permOficina('admin')) {
+            // «admin» no es un permiso de oficina (siempre daba falso): los administradores son admin_sv/admin_sf.
+            $esAdmin = $oPerm instanceof XPermisos
+                && ($oPerm->only_perm(MenuDlPermissionBits::ADMIN_SV) || $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF));
+            if (($permOficina(MenuDlPermissionBits::SG) || $permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES)) && !$esAdmin) {
                 if ($snom_tipo === "(sin especificar)") {
                     $snom_tipo = "";
                 }
