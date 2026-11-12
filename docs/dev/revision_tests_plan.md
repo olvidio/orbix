@@ -171,7 +171,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
-- [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 11 bugs corregidos; quedan dos decisiones (enlaces de alta sin la app de cargos, permiso del widget 3101)
+- [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [ ] 2.3 `notas` + `certificados`
 - [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite)
 - [ ] 2.5 `personas`
@@ -703,9 +703,9 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 1. **Permisos al guardar (corregido):** `AsistenteGuardar` solo comprobaba `perm_modificar()` con `mod=editar`; con `nuevo` o `mover` sobre una asistencia existente de otra dl se sobrescribía y pasaba a mi dl. Ahora, si la asistencia ya existe, se exige el permiso con cualquier modo.
 2. **`ActividadEx` (código muerto quitado, sin cambio de comportamiento):** `AsistenteActividadService::getRepoAsistente` compara `getClassName() === 'ActividadEx'`, que nunca se cumple. Esas ramas se añadieron en el refactor del 24-12-2025 (`dbcd8cea8`) y nunca han funcionado; el modelo antiguo (`AsistentePub::getClaseAsistente`) no distinguía las actividades «ex»: una persona de mi dl en una actividad que no es de mi dl iba siempre a `d_asistentes_out`, como hoy (en desarrollo: 844 asistencias de actividades «ex» en out, 11 en dl, 77 en ex). Una primera lectura de este plan decía que antes iban a `d_asistentes_dl`: era errónea. Las ramas muertas se han quitado de `getRepoAsistente`.
 
-**Pendiente de decisión:**
-1. **Widget 3101 sin la app `actividadcargos`: no hay enlaces para añadir asistentes.** Los permisos para añadir por tipo de persona (`a_ref_perm`) solo se calculan dentro de `getCargos()`, que solo se ejecuta con esa app.
-2. **Widget 3101: el permiso de la última persona con cargo decide si se pueden seleccionar los asistentes** (`getCargos()` sobrescribe `$this->permiso` en el bucle).
+**Decisiones (12-11-2026):**
+1. ~~Widget 3101 sin la app `actividadcargos`: no había enlaces para añadir asistentes~~ (corregido: los permisos de alta se calculan siempre).
+2. ~~Widget 3101: el permiso de la última persona con cargo decidía si se podían seleccionar los asistentes~~ (corregido: el permiso de cada fila de cargo es local y no cambia el del widget).
 3. Persona de otra dl en una actividad que no es de mi dl: el modelo antiguo la mandaba a `d_asistentes_out`; el actual la rechaza (se deja así salvo que se diga lo contrario).
 
 **Hallazgos (sin corregir):**

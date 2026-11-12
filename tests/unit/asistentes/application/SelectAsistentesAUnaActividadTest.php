@@ -504,38 +504,41 @@ final class SelectAsistentesAUnaActividadTest extends myTest
     }
 
     /**
-     * Hallazgo: los permisos para añadir personas (`a_ref_perm`) solo se calculan dentro de `getCargos()`, que
-     * solo se ejecuta con la app `actividadcargos`. Sin esa app no se ofrece ningún enlace para añadir asistentes
-     * desde este dossier.
+     * Regresión: los permisos para añadir personas solo se calculaban dentro de `getCargos()`, que solo se ejecuta
+     * con la app `actividadcargos`; sin ella el dossier no ofrecía enlaces para añadir asistentes.
      */
-    public function test_sin_la_app_de_cargos_no_se_ofrecen_enlaces_para_anyadir_asistentes(): void
+    public function test_sin_la_app_de_cargos_tambien_se_ofrecen_los_enlaces_para_anyadir(): void
     {
         $this->actividad();
 
         $d = $this->widget()->getSegmentData();
 
-        $this->assertSame([], $d['links_dl_specs']);
-        $this->assertSame([], $d['links_otros_specs']);
+        $this->assertArrayHasKey('n', $d['links_dl_specs']);
+        $this->assertArrayHasKey('n de paso', $d['links_otros_specs']);
     }
 
     /**
-     * Hallazgo: `getCargos()` sobrescribe el permiso del widget con el de la última persona con cargo (según su
-     * tipo y los permisos del dossier); ese permiso decide después si los asistentes se pueden seleccionar.
+     * Regresión: `getCargos()` guardaba en el permiso del widget el de cada persona con cargo; el de la última
+     * decidía si los asistentes se podían seleccionar (y si había enlaces para añadir).
      */
-    public function test_el_permiso_de_la_ultima_persona_con_cargo_decide_si_se_seleccionan_los_asistentes(): void
+    public function test_el_permiso_de_las_personas_con_cargo_no_cambia_el_del_widget(): void
     {
         $this->apps(['asistentes', 'actividadcargos']);
         $this->actividad();
         $this->persona(20001, 'Vidal, Pere', false, 'a');
         $this->persona(10011, 'Pla, Joan');
         $this->cargo(20001, 1, 501);
+        $this->asistente(20001);
         $this->asistente(10011);
 
         $w = $this->widget(3);
-        $valores = $w->getSegmentData()['tabla']['valores'];
+        $d = $w->getSegmentData();
+        $valores = $d['tabla']['valores'];
 
-        $this->assertSame(1, $w->getPermiso(), 'un agd en un ca de n: sin permiso');
-        $this->assertSame('', $valores[2]['sel']);
+        $this->assertSame(3, $w->getPermiso());
+        $this->assertSame('', $valores[1]['sel'], 'un agd en un ca de n: su fila de cargo no se puede seleccionar');
+        $this->assertSame('10011', $valores[2]['sel']);
+        $this->assertNotSame([], $d['links_dl_specs']);
     }
 
     // ------------------------------------------------------------------ plazas

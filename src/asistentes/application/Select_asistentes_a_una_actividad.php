@@ -332,21 +332,6 @@ class Select_asistentes_a_una_actividad
 
             return;
         }
-        $dl_org = $oActividad->getDl_org();
-        $dl_propia = (ConfigGlobal::mi_delef() === $dl_org);
-        $oPermDossier = new PermDossier();
-        $rawRefPerm = $oPermDossier->perm_pers_activ($this->id_tipo_activ, $dl_propia);
-        $this->a_ref_perm = [];
-        foreach ($rawRefPerm as $key => $value) {
-            if (!is_array($value)) {
-                continue;
-            }
-            $this->a_ref_perm[(string) $key] = [
-                'perm' => $value['perm'] ?? null,
-                'obj' => $value['obj'] ?? null,
-                'nom' => $value['nom'] ?? null,
-            ];
-        }
 
         $c = 0;
         $num = 0;
@@ -406,11 +391,13 @@ class Select_asistentes_a_una_actividad
             $observ_cargo = $oActividadCargo->getObserv();
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
+            // Permiso de esta fila según el tipo de persona. Variable local: antes se guardaba en
+            // $this->permiso y el de la última persona con cargo decidía si los asistentes se podían seleccionar.
             if ($id_tabla = $oPersona->getId_tabla()) {
                 $a_act = $this->a_ref_perm[(string) $id_tabla] ?? [];
-                $this->permiso = !empty($a_act['perm']) ? 3 : 1;
+                $permisoFila = !empty($a_act['perm']) ? 3 : 1;
             } else {
-                $this->permiso = 3;
+                $permisoFila = 3;
             }
 
             $plaza = PlazaId::PEDIDA;
@@ -503,7 +490,7 @@ class Select_asistentes_a_una_actividad
                     $eliminar = 1;
                 }
 
-                $a_valores[$c]['sel'] = $this->permiso == 3 ? "$id_nom_int#$id_item_cargo#$eliminar#$id_schema" : "";
+                $a_valores[$c]['sel'] = $permisoFila == 3 ? "$id_nom_int#$id_item_cargo#$eliminar#$id_schema" : "";
                 $a_valores[$c][4] = $chk_propio;
                 $a_valores[$c][5] = $chk_est_ok;
                 $a_valores[$c][6] = $chk_falta;
@@ -859,8 +846,33 @@ class Select_asistentes_a_una_actividad
         return $this->a_valores;
     }
 
+    /**
+     * Permisos para añadir personas según su tipo y el de la actividad. Se calculan siempre: antes solo se hacía
+     * dentro de getCargos() y, sin la app actividadcargos, el dossier no ofrecía enlaces para añadir asistentes.
+     */
+    private function calcularPermisosAlta(): void
+    {
+        $this->a_ref_perm = [];
+        if ($this->id_tipo_activ === 0) {
+            return;
+        }
+        $dl_propia = (ConfigGlobal::mi_delef() === $this->dl_org);
+        $rawRefPerm = (new PermDossier())->perm_pers_activ($this->id_tipo_activ, $dl_propia);
+        foreach ($rawRefPerm as $key => $value) {
+            if (!is_array($value)) {
+                continue;
+            }
+            $this->a_ref_perm[(string) $key] = [
+                'perm' => $value['perm'] ?? null,
+                'obj' => $value['obj'] ?? null,
+                'nom' => $value['nom'] ?? null,
+            ];
+        }
+    }
+
     public function getTabla(): void
     {
+        $this->calcularPermisosAlta();
         if (ConfigGlobal::is_app_installed('actividadcargos')) {
             $this->getCargos();
             $c = count($this->a_valores);
