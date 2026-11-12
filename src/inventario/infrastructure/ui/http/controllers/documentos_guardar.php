@@ -43,9 +43,18 @@ $anyFieldToUpdate = FuncTablasSupport::isTrue($Qchk_f_recibido) === true
     || FuncTablasSupport::isTrue($Qchk_num_ini) === true
     || FuncTablasSupport::isTrue($Qchk_num_fin) === true;
 
+// Una fecha mal escrita no se puede tomar como «vacía»: borraría la que había.
+$fechasNoValidas = [];
+foreach ([[$Qchk_f_recibido, $Qf_recibido], [$Qchk_f_asignado, $Qf_asignado], [$Qchk_f_eliminado, $Qf_eliminado]] as [$chk, $txt]) {
+    if (FuncTablasSupport::isTrue($chk) === true && $txt !== '' && !(DateTimeLocal::createFromLocal($txt) instanceof DateTimeLocal)) {
+        $fechasNoValidas[] = $txt;
+    }
+}
 if (!empty($Qdocumentos)) {
     if (!$anyFieldToUpdate) {
         $error_txt = _("Debe marcar al menos un campo a modificar");
+    } elseif ($fechasNoValidas !== []) {
+        $error_txt = sprintf(_("Fecha no válida: %s"), implode(', ', $fechasNoValidas));
     } else {
     $a_documentos = explode('#', $Qdocumentos);
     /** @var DocumentoRepositoryInterface $Repository */

@@ -207,6 +207,7 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 6. **(2.8) Permisos de dossiers, supernumerarios y oficina est:** en `PermDossier::perm_activ_pers('s')` la oficina `est` recibe la tabla de `sr` (puede apuntar supernumerarios a crt y cv de sr). En el legacy usaba `$ref_perm_est`, que no estaba definida en ningún sitio: `est` no tenía ningún permiso. Además el legacy se quedaba con la última oficina y ahora se suman. ¿Qué debe poder `est` con los supernumerarios? (Sin tocar.)
 7. **(2.10, seguridad) Menú «burger»:** `MenusBurgerLayoutDataUseCase` muestra todas las entradas de los grupos de menú del usuario sin mirar los bits de permiso de cada entrada (`menu_perm`); el layout clásico (`MenusLegacyLayoutItemsUseCase`) sí las oculta con `PermisoMenu::visible()`. Así ha sido desde que se creó el burger. ¿Filtrar igual que el clásico? (Sin tocar.)
 8. **(2.1) Piloto de Infection:** Infection no está instalado. Hace falta añadirlo como dependencia de desarrollo (`composer require --dev infection/infection`, cambia `composer.json` y `composer.lock`). ¿Se instala? (Sin tocar.)
+9. **(2.10) Fechas imposibles aceptadas:** `DateTimeLocal::createFromLocal` no rechaza los desbordamientos: «31/02/2026» se guarda como 3 de marzo y «31/31/2026» como julio de 2028, en todos los formularios con fecha. ¿Rechazarlas en `createFromLocal` (afecta a toda la aplicación)? (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 

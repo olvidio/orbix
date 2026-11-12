@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-12 14:03+0100\n"
+"POT-Creation-Date: 2026-11-12 16:31+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -261,7 +261,7 @@ msgstr "Can it be agd?"
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:101
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:103
 #: src/actividades/application/ActividadSelectListado.php:263
-#: src/actividades/application/ListaActivTabla.php:212
+#: src/actividades/application/ListaActivTabla.php:217
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:156
 #: src/casas/application/CasaActividadesListaData.php:78
 #: src/casas/application/CasaIngresosListaData.php:72
@@ -538,7 +538,7 @@ msgstr "activity"
 #: src/ubiscamas/infrastructure/ui/http/controllers/cama_delete.php:16
 #: src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php:20
 #: src/ubiscamas/infrastructure/ui/http/controllers/habitacion_delete.php:15
-#: src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php:27
+#: src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php:18
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php:12
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php:19
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php:28
@@ -1114,7 +1114,7 @@ msgstr "according to dl or"
 #: frontend/notas/view/acta_ver.phtml:154
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:56
 #: src/actividades/application/ActividadQueFiltrosBloque.php:94
-#: src/actividades/application/ListaActivTabla.php:205
+#: src/actividades/application/ListaActivTabla.php:210
 #: src/actividades/application/ListaActividadesSgListado.php:128
 #: src/actividades/application/ListaSrCsvListado.php:169
 #: src/casas/application/CasaActividadesListaData.php:74
@@ -1156,7 +1156,7 @@ msgid "tiene que escribir un lugar"
 msgstr "have to write a place"
 
 #: frontend/actividades/view/actividad_select_ubi.phtml:264
-#: src/actividades/application/ActividadVerDatos.php:170
+#: src/actividades/application/ActividadVerDatos.php:155
 #: src/actividades/application/ListaActividadesSgListado.php:236
 msgid "sin determinar"
 msgstr "undetermined"
@@ -1226,7 +1226,7 @@ msgstr "delete"
 #: frontend/ubis/view/ubis_buscar.phtml:200
 #: frontend/usuarios/view/usuario_form.phtml:40
 #: src/actividades/application/ActividadSelectListado.php:262
-#: src/actividades/application/ListaActivTabla.php:209
+#: src/actividades/application/ListaActivTabla.php:214
 #: src/actividades/application/ListaSrCsvListado.php:170
 #: src/asistentes/application/ListaUltimaActivData.php:267
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
@@ -1275,9 +1275,9 @@ msgstr "assigned centers"
 #: frontend/ubis/view/teleco_tabla.phtml:55
 #: src/encargossacd/application/PropuestasAjaxMutations.php:250
 #: src/encargossacd/application/PropuestasAjaxMutations.php:283
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:152
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:190
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:228
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:153
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:191
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:229
 #: src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php:52
 msgid "nuevo"
 msgstr "new"
@@ -1356,7 +1356,7 @@ msgstr "Title: nom_tipo"
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:28
 #: frontend/usuarios/view/usuario_form.phtml:30
 #: src/actividades/application/ActividadSelectListado.php:259
-#: src/actividades/application/ListaActivTabla.php:211
+#: src/actividades/application/ListaActivTabla.php:216
 #: src/actividades/application/ListaActividadesSgListado.php:130
 #: src/cambios/domain/AvisoObjetoCatalog.php:40
 #: src/casas/application/CasaActividadesListaData.php:77
@@ -3286,7 +3286,7 @@ msgid "oficina"
 msgstr "office"
 
 #: frontend/casas/controller/prevision_asistentes.php:122
-#: src/actividades/application/ListaActivTabla.php:166
+#: src/actividades/application/ListaActivTabla.php:171
 #: src/actividades/application/ListaSrCsvListado.php:230
 #: src/actividadessacd/application/ListaActividadesSacdData.php:184
 msgid "listado de actividades"
@@ -4637,7 +4637,7 @@ msgstr "class"
 #: src/personas/domain/entity/TelecoPersona.php:190
 #: src/personas/domain/entity/UltimaAsistencia.php:182
 #: src/procesos/domain/entity/ActividadFase.php:115
-#: src/ubis/domain/entity/DescTeleco.php:403
+#: src/ubis/domain/entity/DescTeleco.php:413
 #: src/ubis/domain/entity/TelecoUbi.php:437
 msgid "descripción"
 msgstr "description"
@@ -4695,7 +4695,7 @@ msgstr "variation"
 
 #: frontend/encargossacd/controller/encargo_horario_select.php:80
 #: src/actividades/application/ActividadSelectListado.php:251
-#: src/actividades/application/ListaActivTabla.php:193
+#: src/actividades/application/ListaActivTabla.php:198
 #: src/casas/application/CasaActividadesListaData.php:67
 msgid "hora ini"
 msgstr "ini time"
@@ -4706,7 +4706,7 @@ msgstr "ini time"
 #: src/actividades/application/ActividadSelectListado.php:252
 #: src/actividades/application/CalendarioListasDatos.php:344
 #: src/actividades/application/CalendarioListasDatos.php:357
-#: src/actividades/application/ListaActivTabla.php:197
+#: src/actividades/application/ListaActivTabla.php:202
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:112
 #: src/casas/application/CasaActividadesListaData.php:69
 #: src/pasarela/application/ExportarActividadesData.php:130
@@ -4932,9 +4932,9 @@ msgid "colaborador"
 msgstr "collaborator"
 
 #: frontend/encargossacd/helpers/PropuestasAjaxPayload.php:152
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:166
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:204
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:244
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:167
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:205
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:245
 msgid "+ info"
 msgstr "+ info"
 
@@ -5057,23 +5057,23 @@ msgstr "sacd no."
 #: frontend/encargossacd/view/listas_com_ctr.phtml:81
 #: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:73
 #: src/encargossacd/application/PropuestasAjaxMutations.php:255
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:139
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:276
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:140
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:278
 msgid "titular"
 msgstr "Primary holder"
 
 #: frontend/encargossacd/view/listas_com_ctr.phtml:89
 #: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:75
 #: src/encargossacd/application/PropuestasAjaxMutations.php:255
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:140
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:277
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:141
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:279
 msgid "suplente"
 msgstr "Substitute"
 
 #: frontend/encargossacd/view/listas_com_ctr.phtml:97
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:156
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:233
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:339
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:157
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:234
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:341
 msgid "colaboradores"
 msgstr "collaborators"
 
@@ -5194,7 +5194,7 @@ msgid "fin"
 msgstr "end"
 
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:69
-#: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:545
+#: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:546
 msgid "ausencias/tareas"
 msgstr "absences/assignments"
 
@@ -5481,14 +5481,14 @@ msgid "B) Documentación que envía la Delegación."
 msgstr "B) Documentation sent by the Delegation."
 
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:40
-#: src/actividades/application/ListaActivTabla.php:191
+#: src/actividades/application/ListaActivTabla.php:196
 #: src/actividades/application/ListaSrCsvListado.php:163
 #: src/casas/application/CasaActividadesListaData.php:66
 msgid "empieza"
 msgstr "Starts"
 
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:41
-#: src/actividades/application/ListaActivTabla.php:195
+#: src/actividades/application/ListaActivTabla.php:200
 #: src/actividades/application/ListaSrCsvListado.php:164
 #: src/casas/application/CasaActividadesListaData.php:68
 msgid "termina"
@@ -5722,7 +5722,7 @@ msgstr "groupMenu"
 #: src/actividades/domain/entity/NivelStgr.php:249
 #: src/menus/domain/entity/GrupMenu.php:125
 #: src/misas/application/ModificarEncargosData.php:47
-#: src/ubis/domain/entity/DescTeleco.php:365
+#: src/ubis/domain/entity/DescTeleco.php:375
 #: src/zonassacd/domain/entity/Zona.php:152
 #: src/zonassacd/domain/entity/ZonaGrupo.php:125
 msgid "orden"
@@ -7948,7 +7948,7 @@ msgstr ""
 
 #: frontend/notas/view/acta_ver.phtml:283
 #: frontend/usuarios/view/usuario_form.phtml:20
-#: src/ubis/domain/entity/DescTeleco.php:426
+#: src/ubis/domain/entity/DescTeleco.php:436
 #: src/ubis/domain/entity/TipoTeleco.php:403
 msgid "persona"
 msgstr "person"
@@ -9878,8 +9878,8 @@ msgstr "Y"
 #: src/actividades/application/ActividadDuplicar.php:60
 #: src/actividades/application/ActividadEditar.php:141
 #: src/actividades/application/ActividadEditar.php:185
-#: src/actividades/application/ActividadNueva.php:164
-#: src/actividades/application/ActividadNueva.php:196
+#: src/actividades/application/ActividadNueva.php:166
+#: src/actividades/application/ActividadNueva.php:198
 #: src/actividades/application/ActividadNuevoCurso.php:292
 #: src/actividades/application/ActividadPublicar.php:38
 #: src/actividades/application/BorrarActividad.php:58
@@ -9907,9 +9907,9 @@ msgstr "Y"
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
 #: src/asistentes/application/AsistenteGuardar.php:171
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
-#: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:106
-#: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:115
-#: src/dbextern/domain/SincroDB.php:552
+#: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
+#: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
+#: src/dbextern/domain/SincroDB.php:548
 #: src/dbextern/domain/VincularIdMatch.php:112
 #: src/devel_db_admin/application/AbsorberEsquema.php:304
 #: src/encargossacd/application/CtrFichaUpdate.php:203
@@ -9931,21 +9931,21 @@ msgstr "Y"
 #: src/encargossacd/application/SacdFichaUpdate.php:126
 #: src/encargossacd/application/SacdFichaUpdate.php:136
 #: src/encargossacd/application/services/EncargoAplicacionService.php:270
-#: src/encargossacd/application/services/EncargoAplicacionService.php:297
-#: src/encargossacd/application/services/EncargoAplicacionService.php:319
-#: src/encargossacd/application/services/EncargoAplicacionService.php:335
-#: src/encargossacd/application/services/EncargoAplicacionService.php:362
-#: src/encargossacd/application/services/EncargoAplicacionService.php:367
-#: src/encargossacd/application/services/EncargoAplicacionService.php:376
-#: src/encargossacd/application/services/EncargoAplicacionService.php:384
-#: src/encargossacd/application/services/EncargoAplicacionService.php:406
-#: src/encargossacd/application/services/EncargoAplicacionService.php:425
-#: src/encargossacd/application/services/EncargoAplicacionService.php:444
-#: src/encargossacd/application/services/EncargoAplicacionService.php:492
+#: src/encargossacd/application/services/EncargoAplicacionService.php:307
+#: src/encargossacd/application/services/EncargoAplicacionService.php:329
+#: src/encargossacd/application/services/EncargoAplicacionService.php:345
+#: src/encargossacd/application/services/EncargoAplicacionService.php:372
+#: src/encargossacd/application/services/EncargoAplicacionService.php:377
+#: src/encargossacd/application/services/EncargoAplicacionService.php:386
+#: src/encargossacd/application/services/EncargoAplicacionService.php:394
+#: src/encargossacd/application/services/EncargoAplicacionService.php:416
+#: src/encargossacd/application/services/EncargoAplicacionService.php:435
+#: src/encargossacd/application/services/EncargoAplicacionService.php:454
+#: src/encargossacd/application/services/EncargoAplicacionService.php:502
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php:27
 #: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:81
 #: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:85
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:109
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:118
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php:42
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php:57
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:42
@@ -9971,12 +9971,14 @@ msgstr "Y"
 #: src/personas/application/StgrUpdate.php:71
 #: src/personas/application/TrasladoUpdate.php:93
 #: src/personas/application/TrasladoUpdate.php:107
-#: src/personas/domain/Trasladar.php:436 src/personas/domain/Trasladar.php:597
-#: src/personas/domain/Trasladar.php:1136
+#: src/personas/domain/Trasladar.php:436 src/personas/domain/Trasladar.php:601
+#: src/personas/domain/Trasladar.php:1144
 #: src/procesos/application/ActividadProcesoUpdate.php:39
 #: src/procesos/application/FasesActivCambioUpdate.php:73
 #: src/procesos/application/ProcesosUpdate.php:62
 #: src/ubis/application/CalendarioPeriodoGuardar.php:44
+#: src/ubis/application/TrasladarUbis.php:59
+#: src/ubis/application/TrasladarUbis.php:65
 #: src/ubis/application/UbisGuardar.php:145
 #: src/ubis/application/UbisGuardar.php:172
 #: src/ubis/application/UbisGuardar.php:239
@@ -10774,26 +10776,26 @@ msgstr "home"
 msgid "avisos cambios actividades"
 msgstr "notices changes activities"
 
-#: frontend/usuarios/controller/recovery.php:72
+#: frontend/usuarios/controller/recovery.php:73
 msgid ""
 "Por razones de seguridad, debe configurar la autenticación de dos factores "
 "(2FA)."
 msgstr ""
 "For security reasons, you must configure two-factor authentication (2FA)."
 
-#: frontend/usuarios/controller/recovery.php:76
+#: frontend/usuarios/controller/recovery.php:77
 msgid "El doble factor ha sido desactivado con éxito"
 msgstr "Two-factor authentication has been successfully disabled"
 
-#: frontend/usuarios/controller/recovery.php:77
+#: frontend/usuarios/controller/recovery.php:78
 msgid "Por seguridad, debes configurar uno nuevo ahora mismo"
 msgstr "For security reasons, you must configure a new one now"
 
-#: frontend/usuarios/controller/recovery.php:78
+#: frontend/usuarios/controller/recovery.php:79
 msgid "Configurar nuevo 2FA"
 msgstr "Configure new 2FA"
 
-#: frontend/usuarios/controller/recovery.php:81
+#: frontend/usuarios/controller/recovery.php:82
 msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
 msgstr "The link has expired or is invalid. Please request a new one"
 
@@ -11796,7 +11798,7 @@ msgstr "id_item is missing"
 #: src/encargossacd/application/EncargoVerEliminar.php:37
 #: src/encargossacd/application/SacdAusenciasUpdate.php:74
 #: src/encargossacd/application/SacdFichaUpdate.php:121
-#: src/encargossacd/application/services/EncargoAplicacionService.php:460
+#: src/encargossacd/application/services/EncargoAplicacionService.php:470
 #: src/inventario/application/EquipajeEliminar.php:28
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:38
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar_grupo.php:37
@@ -11950,7 +11952,7 @@ msgid "No tiene permiso para borrar esta actividad"
 msgstr "You do not have permission to delete this activity"
 
 #: src/actividades/application/ActividadImportar.php:41
-#: src/actividades/application/ActividadNueva.php:171
+#: src/actividades/application/ActividadNueva.php:173
 msgid "hay un error, no se ha importado"
 msgstr "there is an error, it has not been imported"
 
@@ -12087,7 +12089,7 @@ msgid "sf/sv"
 msgstr "sf / sv"
 
 #: src/actividades/application/ActividadSelectListado.php:257
-#: src/actividades/application/ListaActivTabla.php:207
+#: src/actividades/application/ListaActivTabla.php:212
 #: src/casas/application/CasaActividadesListaData.php:75
 msgid "tar."
 msgstr "tar"
@@ -12118,7 +12120,7 @@ msgstr "%s activities found"
 msgid "del mismo tipo"
 msgstr "of the same type"
 
-#: src/actividades/application/ActividadVerDatos.php:163
+#: src/actividades/application/ActividadVerDatos.php:148
 msgid "ya no existe: cambiarlo"
 msgstr "no longer exists: change it"
 
@@ -12139,7 +12141,7 @@ msgstr "SV/SF"
 
 #: src/actividades/application/CalendarioListasDatos.php:341
 #: src/actividades/application/CalendarioListasDatos.php:353
-#: src/actividades/application/ListaActivTabla.php:204
+#: src/actividades/application/ListaActivTabla.php:209
 #: src/actividades/application/ListaSrCsvListado.php:168
 #: src/actividades/application/TipoActivLista.php:34
 #: src/actividadtarifas/application/RelacionTarifaListaData.php:72
@@ -12164,16 +12166,16 @@ msgstr "responsible centers"
 msgid "cdc"
 msgstr "cdc"
 
-#: src/actividades/application/ListaActivTabla.php:189
+#: src/actividades/application/ListaActivTabla.php:194
 msgid "común"
 msgstr "common"
 
-#: src/actividades/application/ListaActivTabla.php:202
+#: src/actividades/application/ListaActivTabla.php:207
 #: src/casas/application/CasaActividadesListaData.php:71
 msgid "activ."
 msgstr "act."
 
-#: src/actividades/application/ListaActivTabla.php:203
+#: src/actividades/application/ListaActivTabla.php:208
 #: src/actividades/application/ListaActividadesSgListado.php:127
 #: src/actividades/application/ListaSrCsvListado.php:166
 #: src/casas/application/CasaActividadesListaData.php:72
@@ -13886,6 +13888,7 @@ msgstr "Invalid activity type ID"
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:25
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php:22
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:32
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php:34
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:25
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:81
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:23
@@ -14102,8 +14105,8 @@ msgstr "There is an error; it has not been saved."
 msgid "Centros con el campo 'tipo labor' mal puesto:"
 msgstr "Centers with the field 'type work' wrong:"
 
-#: src/cartaspresentacion/application/CartasPresentacionListaData.php:468
-#: src/cartaspresentacion/application/CartasPresentacionListaData.php:492
+#: src/cartaspresentacion/application/CartasPresentacionListaData.php:474
+#: src/cartaspresentacion/application/CartasPresentacionListaData.php:498
 #, php-format
 msgid "Cartas de presentación de %s"
 msgstr "Cover letters for %s"
@@ -14649,7 +14652,7 @@ msgstr "Option not defined for person type %s"
 #: src/dbextern/application/VerOrbixData.php:42
 #: src/dbextern/application/VerTrasladosData.php:33
 #: src/dbextern/application/VerTrasladosData.php:39
-#: src/dbextern/domain/SincroDB.php:464
+#: src/dbextern/domain/SincroDB.php:462
 #: src/personas/application/HomePersonaData.php:60
 #: src/personas/application/PersonaEliminar.php:56
 #: src/personas/application/PersonaUpdate.php:53
@@ -14706,21 +14709,21 @@ msgstr "Cannot connect to the BDU database"
 msgid "No se encuentra la dl %s en la tabla Aux de listas"
 msgstr "Delegation %s not found in the Aux lists table"
 
-#: src/dbextern/domain/SincroDB.php:435
+#: src/dbextern/domain/SincroDB.php:433
 #, php-format
 msgid "parece que %s no tiene puesto el ctr en la BDU"
 msgstr "It appears that %s has not set the ctr in the BDU"
 
-#: src/dbextern/domain/SincroDB.php:437
+#: src/dbextern/domain/SincroDB.php:435
 #, php-format
 msgid "no se encuentra el ctr %s en la lista de ctr"
 msgstr "can not find the ctr %s in the ctr list"
 
-#: src/dbextern/domain/SincroDB.php:469
+#: src/dbextern/domain/SincroDB.php:467
 msgid "No se encontró la persona en Orbix"
 msgstr "Person not found in Orbix"
 
-#: src/dbextern/domain/SincroDB.php:503
+#: src/dbextern/domain/SincroDB.php:499
 #, php-format
 msgid ""
 "sincronización interrumpida en %s (id listas %s, id orbix %s): no se ha "
@@ -15891,7 +15894,7 @@ msgstr "Error with the tasks"
 msgid "No existe text para el idioma: %s"
 msgstr "No text exists for the language: %s"
 
-#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:134
+#: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:135
 msgid "nombre del encargo"
 msgstr "Assignment name"
 
@@ -16206,16 +16209,21 @@ msgstr "name of the center/house"
 msgid "No se encuentra el documento"
 msgstr "The document cannot be found"
 
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:48
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:55
 #: src/inventario/view/buscarDocsxSigla.phtml:114
 msgid "Debe marcar al menos un campo a modificar"
 msgstr "You must select at least one field to modify"
 
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:116
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:57
+#, php-format
+msgid "Fecha no válida: %s"
+msgstr "Invalid date: %s"
+
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:125
 msgid "No se pudo aplicar la modificación a los documentos seleccionados"
 msgstr "Could not apply the modification to the selected documents"
 
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:120
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:129
 msgid "No ha seleccionado ningún documento"
 msgstr "No document has been selected"
 
@@ -16405,10 +16413,10 @@ msgstr "Schedule %d not found"
 msgid "No existe"
 msgstr "Does not exist"
 
-#: src/misas/application/crear_nuevo_periodo_data_build.php:566
-#: src/misas/application/crear_nuevo_periodo_data_build.php:614
-#: src/misas/application/crear_nuevo_periodo_data_build.php:654
-#: src/misas/application/crear_nuevo_periodo_data_build.php:773
+#: src/misas/application/crear_nuevo_periodo_data_build.php:567
+#: src/misas/application/crear_nuevo_periodo_data_build.php:615
+#: src/misas/application/crear_nuevo_periodo_data_build.php:655
+#: src/misas/application/crear_nuevo_periodo_data_build.php:774
 #: src/misas/application/importar_plantilla_data_build.php:230
 #: src/misas/application/importar_plantilla_data_build.php:267
 #: src/misas/application/importar_plantilla_data_build.php:304
@@ -17509,7 +17517,7 @@ msgstr "Unable to determine the person's schema"
 msgid "No se encuentra el usuario"
 msgstr "User not found"
 
-#: src/personas/application/PersonasSelectData.php:214
+#: src/personas/application/PersonasSelectData.php:210
 msgid "No se encuentra ningún centro con esta condición"
 msgstr "No center found with this condition"
 
@@ -17627,14 +17635,14 @@ msgstr "The destination dl does not exist."
 msgid "Solamente se anotará el traslado. No se mueven los datos."
 msgstr "Only the transfer will be noted. No data will be moved."
 
-#: src/personas/domain/Trasladar.php:408 src/personas/domain/Trasladar.php:540
+#: src/personas/domain/Trasladar.php:408 src/personas/domain/Trasladar.php:544
 #, php-format
 msgid "No se ha encontrado la persona con id: %s"
 msgstr "The person with id: %s was not found."
 
 #: src/personas/domain/Trasladar.php:417 src/personas/domain/Trasladar.php:421
-#: src/personas/domain/Trasladar.php:551 src/personas/domain/Trasladar.php:556
-#: src/personas/domain/Trasladar.php:586
+#: src/personas/domain/Trasladar.php:555 src/personas/domain/Trasladar.php:560
+#: src/personas/domain/Trasladar.php:590
 #, php-format
 msgid "No se reconoce el tipo de persona: %s"
 msgstr "The type of person is not recognized: %s"
@@ -17644,35 +17652,35 @@ msgstr "The type of person is not recognized: %s"
 msgid "No se ha encontrado la persona origen con id: %s"
 msgstr "The source person with id: %s was not found."
 
-#: src/personas/domain/Trasladar.php:522
+#: src/personas/domain/Trasladar.php:526
 msgid "no puede existir una persona con el mismo id!!"
 msgstr "There can not be a person with the same id!"
 
-#: src/personas/domain/Trasladar.php:562
+#: src/personas/domain/Trasladar.php:566
 #, php-format
 msgid "No se ha encontrado la persona en origen con id: %s"
 msgstr "The person in origin with id: %s has not been found"
 
-#: src/personas/domain/Trasladar.php:581
+#: src/personas/domain/Trasladar.php:585
 #, php-format
 msgid "no existe el esquema destino %s en la base de datos"
 msgstr "there is no destination schema %s in the database"
 
-#: src/personas/domain/Trasladar.php:871
+#: src/personas/domain/Trasladar.php:876
 #, php-format
 msgid "No se ha guardado la asistencia(dl) a id_activ: %s"
 msgstr "Attendance (dl) for id_activ: %s has not been saved."
 
-#: src/personas/domain/Trasladar.php:876 src/personas/domain/Trasladar.php:895
+#: src/personas/domain/Trasladar.php:882 src/personas/domain/Trasladar.php:900
 #, php-format
 msgid "No se ha guardado la asistencia(out) a id_activ: %s"
 msgstr "Attendance (out) for id_activ: %s has not been saved."
 
-#: src/personas/domain/Trasladar.php:1077
+#: src/personas/domain/Trasladar.php:1085
 msgid "Algo falló"
 msgstr "Something went wrong"
 
-#: src/personas/domain/Trasladar.php:1188
+#: src/personas/domain/Trasladar.php:1196
 #, php-format
 msgid "No se ha guardado el dossier: %s"
 msgstr "The dossier has not been saved: %s"
@@ -17694,13 +17702,12 @@ msgstr "situation name"
 #: src/profesores/domain/entity/ProfesorLatin.php:70
 #: src/profesores/domain/entity/ProfesorPublicacion.php:320
 #: src/profesores/domain/entity/ProfesorStgr.php:224
-#: src/profesores/domain/entity/ProfesorTipo.php:108
 #: src/profesores/domain/entity/ProfesorTituloEst.php:177
 msgid "id_nom"
 msgstr "id_nom"
 
 #: src/personas/domain/entity/TelecoPersona.php:175
-#: src/ubis/domain/entity/DescTeleco.php:383
+#: src/ubis/domain/entity/DescTeleco.php:393
 #: src/ubis/domain/entity/TelecoUbi.php:422
 #: src/ubis/domain/entity/TipoTeleco.php:380
 msgid "nombre teleco"
@@ -17855,11 +17862,11 @@ msgstr "No process found. You must create one."
 msgid "Ya la tiene"
 msgstr "It already exists."
 
-#: src/procesos/application/FasesActivCambioLista.php:155
+#: src/procesos/application/FasesActivCambioLista.php:164
 msgid "ok, tiene la(s) fase(s) previa(s)"
 msgstr "OK, the previous phase(s) are present."
 
-#: src/procesos/application/FasesActivCambioLista.php:186
+#: src/procesos/application/FasesActivCambioLista.php:187
 #, php-format
 msgid "%s actividades, %s para cambiar"
 msgstr "%s activities, %s to change"
@@ -18018,7 +18025,7 @@ msgid "sf / sv"
 msgstr "sf / sv"
 
 #: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:197
-#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:431
+#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:439
 #, php-format
 msgid "La actividad: %s ya no existe"
 msgstr "The activity: %s no longer exists"
@@ -18028,18 +18035,18 @@ msgstr "The activity: %s no longer exists"
 msgid "No existe este tipo de actividad: %s"
 msgstr "This type of activity does not exist: %s"
 
-#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:242
+#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:245
 #, php-format
 msgid ""
 "No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"
 msgstr "The process for this type of activity is not defined: %s of sv/sf: %s"
 
-#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:441
+#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:449
 #, php-format
 msgid "error al generar el proceso de la actividad: '%s'. Está para borrar."
 msgstr "Error generating the activity process: '%s'. It is pending deletion."
 
-#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:580
+#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:588
 #, php-format
 msgid ""
 "error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' "
@@ -18048,7 +18055,7 @@ msgstr ""
 "Error generating the activity process: '%s'. Process type: '%s' for sf/sv: "
 "%s."
 
-#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:581
+#: src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php:589
 msgid "Probablemente no esté definido el proceso"
 msgstr "The process is probably not defined."
 
@@ -18232,7 +18239,7 @@ msgid "referencia"
 msgstr "reference"
 
 #: src/profesores/domain/entity/ProfesorStgr.php:273
-#: src/profesores/domain/entity/ProfesorTipo.php:120
+#: src/profesores/domain/entity/ProfesorTipo.php:107
 msgid "tipo de profesor"
 msgstr "type of teacher"
 
@@ -18815,9 +18822,18 @@ msgstr "Teleco ID %s not found."
 msgid "telecomunicaciones de un centro o casa"
 msgstr "telecommunications of a center or house"
 
-#: src/ubis/application/TrasladarUbis.php:28
+#: src/ubis/application/TrasladarUbis.php:30
 msgid "No se han seleccionado ubis."
 msgstr "No locations selected."
+
+#: src/ubis/application/TrasladarUbis.php:35
+#: src/usuarios/application/AppMobileLogin.php:75
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:43
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:48
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:41
+msgid "Esquema no válido"
+msgstr "Invalid schema"
 
 #: src/ubis/application/UbisEditarLoadData.php:51
 #: src/ubis/application/UbisEditarLoadData.php:130
@@ -19161,7 +19177,7 @@ msgstr "stgr region"
 msgid "en activo"
 msgstr "active"
 
-#: src/ubis/domain/entity/DescTeleco.php:415
+#: src/ubis/domain/entity/DescTeleco.php:425
 #: src/ubis/domain/entity/TipoTeleco.php:392
 msgid "ubi"
 msgstr "ubi"
@@ -19190,6 +19206,16 @@ msgstr "A centers resynchronization is already in progress"
 #: src/ubis/infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php:12
 msgid "Se requiere region_stgr"
 msgstr "Region stgr is required"
+
+#: src/ubiscamas/application/HabitacionGuardar.php:58
+#: src/ubiscamas/application/HabitacionGuardar.php:87
+msgid "Error al guardar la habitación"
+msgstr "Error saving the room"
+
+#: src/ubiscamas/application/HabitacionGuardar.php:99
+#: src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php:38
+msgid "Habitación no válida"
+msgstr "Invalid room"
 
 #: src/ubiscamas/application/HabitacionesCamaLista.php:99
 #: src/ubiscamas/domain/Select_habitaciones_cdc.php:64
@@ -19288,11 +19314,6 @@ msgstr "Bed ID not provided"
 msgid "Error al eliminar la cama"
 msgstr "Error deleting the bed"
 
-#: src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php:38
-#: src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php:58
-msgid "Habitación no válida"
-msgstr "Invalid room"
-
 #: src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php:49
 msgid "Cama no válida"
 msgstr "Invalid bed"
@@ -19313,10 +19334,6 @@ msgstr "There is an error; the room has not been deleted"
 msgid "Error al eliminar la habitación"
 msgstr "Error deleting the room"
 
-#: src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php:130
-msgid "Error al guardar la habitación"
-msgstr "Error saving the room"
-
 #: src/usuarios/application/AppMobileLogin.php:53
 msgid "Usuario y contraseña obligatorios"
 msgstr "User and password are required"
@@ -19324,14 +19341,6 @@ msgstr "User and password are required"
 #: src/usuarios/application/AppMobileLogin.php:64
 msgid "Esquema no indicado"
 msgstr "Schema not specified"
-
-#: src/usuarios/application/AppMobileLogin.php:75
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:40
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:48
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:40
-msgid "Esquema no válido"
-msgstr "Invalid schema"
 
 #: src/usuarios/application/AppMobileLogin.php:85
 #: src/usuarios/application/AppMobileLogin.php:90
@@ -19485,13 +19494,13 @@ msgstr "Permission on"
 msgid "Permiso de menú no encontrado"
 msgstr "Menu permission not found"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:83
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:86
 #: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:80
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:69
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
 msgid "No hay email asociado a este usuario"
 msgstr "No email associated with this user"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:134
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:137
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19510,7 +19519,7 @@ msgstr ""
 "Best regards,\n"
 "The administration team"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:140
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:143
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19529,16 +19538,16 @@ msgstr ""
 "Best regards,\n"
 "The administration team"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:145
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:148
 msgid "Recuperación de código de seguridad"
 msgstr "Security code recovery"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:167
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:170
 #: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:127
 msgid "Error al enviar el correo electrónico"
 msgstr "Error sending email"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:172
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:175
 #: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:134
 msgid "No se encontró ningún usuario con ese nombre"
 msgstr "No user found with that name"
@@ -19607,11 +19616,11 @@ msgstr "Invalid verification code"
 msgid "Código de verificación o clave secreta no válidos"
 msgstr "Invalid verification code or secret key"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:63
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:65
 msgid "Debe ingresar un nombre de usuario válido"
 msgstr "Please enter a valid username"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:91
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:94
 msgid "El administrador de esta circunscripción no tiene email asociado"
 msgstr "The administrator of this district does not have an associated email"
 
