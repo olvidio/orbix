@@ -16,7 +16,9 @@ if ($_POST === [] && $_GET !== []) {
 $Qusername = UsuariosPostInput::requestString('username');
 $Qubicacion = UsuariosPostInput::requestString('ubicacion');
 $Qesquema = UsuariosPostInput::requestString('esquema');
-$Qurl_base = UsuariosPostInput::requestString('url_base');
+// Base de la aplicación desde la configuración, no desde la petición (evita
+// que el servidor llame a otra URL y el enlace «volver» con HTML inyectado).
+$Qurl_base = \frontend\shared\config\AppUrlConfig::getPublicAppBaseUrl() . '/';
 
 $a_cosas = ['url_base' => $Qurl_base, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);

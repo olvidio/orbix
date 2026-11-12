@@ -15,7 +15,10 @@ $Qusername = (string)\src\shared\domain\helpers\FilterPostGet::post('username');
 $Qubicacion = (string)\src\shared\domain\helpers\FilterPostGet::post('ubicacion');
 $Qesquema = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema');
 $Qesquema_web = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema_web');
-$Qurl_base = (string)\src\shared\domain\helpers\FilterPostGet::post('url_base');
+// La base del enlace del correo sale de la configuración del servidor, nunca de la
+// petición (anónima): con un url_base ajeno el token de recuperación se enviaría
+// a otro servidor.
+$urlBaseEnlace = \src\shared\config\ConfigGlobal::publicAppBaseUrl() . '/';
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
@@ -128,8 +131,8 @@ if (is_array($row)) {
                     return false;
                 }
                 // 5. Construimos el enlace para el email
-                $url = $Qurl_base . 'frontend/usuarios/controller/recovery.php';
-                $link_recuperacion = $url . '?token=' . $token_bruto.'&esquema='.$esquema.'&id_usuario='.$id_usuario;
+                $url = $urlBaseEnlace . 'frontend/usuarios/controller/recovery.php';
+                $link_recuperacion = $url . '?' . http_build_query(['token' => $token_bruto, 'esquema' => $esquema, 'id_usuario' => $id_usuario]);
 
                 $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Haz clik en el link: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $link_recuperacion);
             } catch (Exception $e) {

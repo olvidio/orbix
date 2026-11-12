@@ -19,7 +19,9 @@ $Qusername = (string)filter_input(INPUT_GET, 'username');
 $Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
-$Qurl_base = (string)filter_input(INPUT_GET, 'url_base');
+// Base de la aplicación desde la configuración, no desde la petición (evita
+// que el servidor llame a otra URL y el enlace «volver» con HTML inyectado).
+$Qurl_base = \frontend\shared\config\AppUrlConfig::getPublicAppBaseUrl() . '/';
 
 // Si no hay username, redirigir a la página de ayuda
 if (empty($Qusername)) {

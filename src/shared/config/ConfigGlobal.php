@@ -72,6 +72,18 @@ class ConfigGlobal extends ServerConf
         return self::$web_server . self::getWebPort() . self::getWebPath();
     }
 
+    /**
+     * URL pública de la aplicación, sin barra final: `ORBIX_PUBLIC_APP_BASE_URL`
+     * si está definida, o la del servidor configurado. Para enlaces que salen de
+     * la aplicación (correos): nunca usar una base que llegue en la petición.
+     */
+    public static function publicAppBaseUrl(): string
+    {
+        $env = getenv('ORBIX_PUBLIC_APP_BASE_URL');
+        $base = is_string($env) && $env !== '' ? $env : self::getWeb();
+        return rtrim($base, '/');
+    }
+
     public static function getWeb_scripts(): string
     {
         return self::getWeb() . '/scripts';

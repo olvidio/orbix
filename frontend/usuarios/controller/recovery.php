@@ -30,7 +30,8 @@ $usuario_encontrado = $oDBSt !== false ? UsuariosPayload::recoveryRowFromFetch($
 if ($usuario_encontrado !== null) {
     $id_usuario = $usuario_encontrado['id_usuario'];
     $id_role = $usuario_encontrado['id_role'];
-    $sql_reset = 'UPDATE "H-dlbv".aux_usuarios 
+    // Sin esquema fijo: la conexión ya apunta al esquema del usuario (como el SELECT).
+    $sql_reset = 'UPDATE aux_usuarios 
                       SET has_2fa = false, 
                           secret_2fa = NULL, 
                           token_recuperacion_2fa = NULL, 

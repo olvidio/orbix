@@ -41,7 +41,7 @@
     </div>
 
     <div class="footer">
-        <p><a href="<?= $url_base ?>"><?= _("Volver al inicio de sesión") ?></a></p>
+        <p><a href="<?= htmlspecialchars((string)$url_base, ENT_QUOTES) ?>"><?= _("Volver al inicio de sesión") ?></a></p>
     </div>
 </div>
 
