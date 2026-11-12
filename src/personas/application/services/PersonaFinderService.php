@@ -243,7 +243,8 @@ class PersonaFinderService
                 }
             }
 
-            if (in_array($esquema, ['global', 'public', 'publicv'], true)) {
+            // pg_temp_N / pg_toast_temp_N: tablas temporales (de cualquier sesión), no una dl.
+            if (in_array($esquema, ['global', 'public', 'publicv'], true) || str_starts_with($esquema, 'pg_')) {
                 continue;
             }
 

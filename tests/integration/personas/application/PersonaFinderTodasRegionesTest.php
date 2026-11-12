@@ -12,7 +12,8 @@ use Tests\myTest;
 /**
  * Buscar una persona activa en todos los esquemas de la BD (lo usa el envío de
  * certificados emitidos): la encuentra en el esquema de su dl, no en los demás,
- * y deja el search_path de las conexiones como estaba.
+ * no confunde los esquemas de tablas temporales (pg_temp_N) con una dl, y deja
+ * el search_path de las conexiones como estaba.
  */
 final class PersonaFinderTodasRegionesTest extends myTest
 {
@@ -29,12 +30,19 @@ final class PersonaFinderTodasRegionesTest extends myTest
         }
         $pathDe = static fn (string $con): string => (string) GlobalPdo::get($con)->query('SHOW search_path')->fetchColumn();
         $antes = [$pathDe('oDB'), $pathDe('oDBR')];
+        // Una tabla temporal aparece en pg_stat_user_tables con esquema pg_temp_N.
+        GlobalPdo::get('oDBR')->exec('CREATE TEMP TABLE IF NOT EXISTS tmp_finder_todas_regiones (x int)');
+        GlobalPdo::get('oDBR')->exec('ANALYZE tmp_finder_todas_regiones');
 
-        $resultados = $GLOBALS['container']->get(PersonaFinderService::class)->buscarEnTodasRegiones((int) $id);
+        try {
+            $resultados = $GLOBALS['container']->get(PersonaFinderService::class)->buscarEnTodasRegiones((int) $id);
 
-        $this->assertSame([ConfigGlobal::mi_region_dl()], array_column($resultados, 'esquema'));
-        $this->assertSame((int) $id, $resultados[0]['persona']->getId_nom());
-        $this->assertSame($antes, [$pathDe('oDB'), $pathDe('oDBR')]);
-        $this->assertSame([], $GLOBALS['container']->get(PersonaFinderService::class)->buscarEnTodasRegiones(999999981));
+            $this->assertSame([ConfigGlobal::mi_region_dl()], array_column($resultados, 'esquema'));
+            $this->assertSame((int) $id, $resultados[0]['persona']->getId_nom());
+            $this->assertSame($antes, [$pathDe('oDB'), $pathDe('oDBR')]);
+            $this->assertSame([], $GLOBALS['container']->get(PersonaFinderService::class)->buscarEnTodasRegiones(999999981));
+        } finally {
+            GlobalPdo::get('oDBR')->exec('DROP TABLE IF EXISTS tmp_finder_todas_regiones');
+        }
     }
 }

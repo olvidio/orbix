@@ -508,6 +508,10 @@ class Trasladar
             if ($esquema === 'restov' || $esquema === 'restof') {
                 continue;
             }
+            // pg_temp_N / pg_toast_temp_N: tablas temporales (de cualquier sesión), no una dl.
+            if (str_starts_with($esquema, 'pg_')) {
+                continue;
+            }
             $esquema_slash = '"' . $esquema . '"';
             $oDBR->exec("SET search_path TO public,$esquema_slash");
             $qRs = $oDBR->query("SELECT '$esquema' as schemaName,id_schema,situacion,f_situacion FROM $tabla_personas WHERE id_nom=$id_orbix");

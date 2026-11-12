@@ -321,7 +321,8 @@ class SincroDB
                     continue;
                 }
             }
-            if (in_array($esquema, ['global', 'public', 'publicv', 'restov'], true)) {
+            // pg_temp_N / pg_toast_temp_N: tablas temporales (de cualquier sesión), no una dl.
+            if (in_array($esquema, ['global', 'public', 'publicv', 'restov'], true) || str_starts_with($esquema, 'pg_')) {
                 continue;
             }
             $a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
