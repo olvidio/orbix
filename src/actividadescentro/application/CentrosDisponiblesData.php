@@ -104,8 +104,12 @@ final class CentrosDisponiblesData
                     $f_ini_act_iso = $oDate->getIso();
                 }
             }
-            $periodo = ($inicio !== '' && $fin !== '')
-                ? "f_ini BETWEEN '" . $inicio . "' AND '" . $fin . "'"
+            // El repositorio recibe la condición como SQL: solo fechas ISO válidas
+            // (inicio/fin vienen del request; antes se interpolaban tal cual).
+            $inicioIso = self::fechaIso($inicio);
+            $finIso = self::fechaIso($fin);
+            $periodo = ($inicioIso !== null && $finIso !== null)
+                ? "f_ini BETWEEN '" . $inicioIso . "' AND '" . $finIso . "'"
                 : '';
 
             foreach ($cCentros as $oCentro) {
@@ -174,5 +178,21 @@ final class CentrosDisponiblesData
         }
 
         return $criteria;
+    }
+
+    /**
+     * Fecha `Y-m-d` normalizada, o null si no es una fecha válida. Admite
+     * también `Y/m/d` (formato en que Periodo devuelve algunos periodos).
+     */
+    private static function fechaIso(string $valor): ?string
+    {
+        if (preg_match('#^(\d{4})[-/](\d{2})[-/](\d{2})$#D', $valor, $m) !== 1) {
+            return null;
+        }
+        if (!checkdate((int) $m[2], (int) $m[3], (int) $m[1])) {
+            return null;
+        }
+
+        return "$m[1]-$m[2]-$m[3]";
     }
 }
