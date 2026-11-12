@@ -173,7 +173,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
-- [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite) — **parcial** (sección 20): hechos mutaciones, dominio, plazas, comunicación a sacd, controladores y búsqueda de actividades; quedan los listados de la sección 20 «Queda»
+- [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 3 inyecciones SQL y 22 bugs corregidos
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
 - [ ] 2.7 `encargossacd` + `misas`
@@ -778,7 +778,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 7. `ActaSelectDataTest` y `ActaVerAddPersonaFormDataTest` dejaban la sesión cambiada (`session_auth`, `oConfig`): corregido.
 
 
-## 20. Fase 2, paso 2.4: `actividades` + satélites (en curso, 2026-11-12)
+## 20. Fase 2, paso 2.4: `actividades` + satélites (cerrado el 2026-11-12)
 
 **Línea base:** 951 tests en verde (749 unit + 202 integración de los seis módulos). Cobertura de líneas (unit ∪ integración, solo sus tests): `actividades` 59 % (domain 65 %), `actividadcargos` 68 %, `actividadescentro` 62 %, `actividadessacd` 52 %, `actividadplazas` 66 %, `actividadtarifas` 69 %.
 
@@ -825,4 +825,26 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 1. `ActividadSelectListado`: las filas «ocupado» tienen menos celdas que las visibles (falta la de idioma; con rol ctr, la última); `Lista` simplemente pinta menos celdas. Usa `frontend\shared\web\Periodo` desde `src/` (como `casas`).
 2. `PgCargoOAsistente::getSolapes()`: acabar y empezar el mismo día cuenta como solape (rangos cerrados `[]`).
 
-**Queda:** `ListaActividadesSgListado` (40 %), `CalendarioListasDatos` (60 %), `ActividadVerDatos` (58 %), `ListaSrCsvListado` (64 %), `ListaActivTabla` (69 %), `ListaCentrosActivDatos` (47 %); en `actividadessacd`, `ListaActividadesSacdData` (33 %), `SacdsDisponiblesData` (36 %) y `SolapesSacdData` (58 %); `FormCargosDeActividadData` (64 %), `ResumenPlazasData` (37 %) y los repositorios `PgActividadCargoDlRepository` (67 %) y `PgCentroEncargadoRepository` (67 %).
+**Tercera parte (listados pendientes, hecha):** cobertura final `actividades` 93 % (domain 93 %, application 97 %), `actividadcargos` 85 % (lo que falta es sobre todo el script CLI de resincronización), `actividadescentro` 74 % y `actividadessacd` 81 % (el resto es `db/`, DDL), `actividadplazas` 93 %, `actividadtarifas` 87 %. Suite completa: 9830 tests en verde.
+- Tests nuevos: `ListaActividadesSgListado`, `CalendarioListasDatos` (modos casa y oficina), `ActividadVerDatos`, `ListaCentrosActivDatos`, `ListaSrCsvListado`, `ListaActivTabla`, `ListaActividadesSacdData`, `SacdsDisponiblesData`, `SolapesSacdData`, `ResumenPlazasData`, `FormCargosDeActividadData` (edición y 3101); integración de los sacd de una actividad (`PgActividadCargoDlRepository`) y de las consultas de `PgCentroEncargadoRepository`.
+
+**Bugs corregidos (tercera parte):**
+13. **Calendario por oficina** (`CalendarioListasDatos`): la migración perdió los grupos únicos de las oficinas sg («s y sg») y des (sssc + crt de s/sg): des repetía las mismas actividades bajo cada grupo. El mapa grupo → oficina usaba la etiqueta «sss+» en vez de «sssc»: el grupo de sssc nunca se quitaba a quien no tiene permiso de des.
+14. **Listado «falta sacd»** (`ListaActividadesSacdData`): no mostraba las actividades sin sacd, justo las que la nota de la pantalla describe como primer grupo. Ahora solo se quitan las que tienen sacd y la fase «ok sacd».
+15. **Listado de sr** (`ListaSrCsvListado`): comprobaba el administrador con la oficina inexistente «admin» (siempre falso). El test-guardia de nombres de permiso no lo veía porque la llamada iba por un closure `$permOficina('…')`: ampliado el guardia y pasados a constantes los literales de `ListaSrCsvListado` y `ActividadSelectListado`.
+16. **Listado de actividades** (`ListaActivTabla` / `lista_activ_datos`): con varias casillas de estado el listado salía **sin filtrar por estado** (el controlador leía `status` sin `FILTER_REQUIRE_ARRAY`) y, si hubiera llegado la lista, la regex «12» no coincidía con ninguno; las horas salían recortadas («20» en vez de «20:30»); el título de sg no se tomaba por una errata (`list_active_inv_sg`).
+17. **Inyección SQL** en `CentrosDisponiblesData`: `inicio`/`fin` del POST se interpolaban en la condición de periodo que `PgCentroEncargadoRepository::getActividadesDeCentros()` añade al `WHERE`. Ahora solo fechas válidas (`Y-m-d`, o `Y/m/d` como las da `Periodo`).
+18. `PgActividadCargoDlRepository::getActividadSacds()` hacía `echo` de un aviso (en sf o en la DMZ) que rompía las respuestas JSON de los listados que lo usan; ahora va al log (y salen sus dos cadenas de los catálogos).
+19. `FormCargosDeActividadData`: editar un cargo que ya no existe era un error fatal (`$cActividadCargo[0]` sin comprobar).
+20. `ListaCentrosActivDatos`: los nombres de los otros centros encargados iban sin escapar al HTML (el value object no admite `<`/`>`, pero sí comillas).
+
+**Pendiente de decisión (tercera parte):**
+3. **Nivel stgr por defecto:** para un ca de cuadrienio (112021) la ficha (`ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad`) propone N, mientras que `NivelStgrId::generarNivelStgr()` —el que usa el alta cuando el nivel llega vacío— da 2 (cuadrienio). Como la ficha siempre manda un nivel, un ca de cuadrienio nuevo se guarda con N salvo que el usuario lo cambie. Hay que decidir cuál de las dos reglas vale y unificarlas.
+
+**Hallazgos (tercera parte, sin corregir):**
+1. `ListaActividadesSgListado`: con `procesos` y sin permisos en la sesión, las actividades se saltan sin contarlas (la búsqueda general las muestra todas); el texto «ocupado» va en la columna de inicio.
+2. `CalendarioListasDatos` construye la tabla con `frontend\shared\web\Lista` y devuelve HTML desde `src/`; usa `PermisoDossier` dentro del caso de uso.
+3. `ActividadVerDatos`: el desplegable de dl organizadora devuelve un mapa, no pares ordenados (regla de `AGENTS.md`).
+4. `SolapesSacdData`: dos actividades sin casa seguidas se marcan como «tachado» (misma casa).
+5. `PgCentroEncargadoRepository::getActividadesDeCentros()` sigue recibiendo la condición como SQL en texto: los dos llamadores la montan ya con fechas validadas, pero convendría pasar las fechas como parámetros.
+
