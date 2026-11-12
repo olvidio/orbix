@@ -62,4 +62,3 @@ if ($error_txt !== '') {
 }
 
 echo json_encode($jsondata, JSON_THROW_ON_ERROR);
-exit;

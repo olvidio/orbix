@@ -20,7 +20,7 @@ $TemplateMenuRepository = DependencyResolver::get(TemplateMenuRepositoryInterfac
 $oTemplateMenu = $TemplateMenuRepository->findByName($Qnombre);
 if ($oTemplateMenu !== null && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qsobreescribir)) {
     ContestarJson::enviar('ya existe', 'ok');
-    exit();
+    return;
 }
 
 if ($oTemplateMenu !== null) {

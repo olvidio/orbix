@@ -38,7 +38,7 @@ $errorBorrador = $guardarBorrador->execute($_POST);
 if ($errorBorrador !== '') {
     header('Content-type: application/json; charset=utf-8');
     echo json_encode(['success' => false, 'mensaje' => $errorBorrador], JSON_THROW_ON_ERROR);
-    exit();
+    return;
 }
 
 /** @var ActaNotasDefinitivasGrabar $useCase */
@@ -46,4 +46,3 @@ $useCase = DependencyResolver::get(ActaNotasDefinitivasGrabar::class);
 $response = $useCase->execute($_POST);
 header('Content-type: application/json; charset=utf-8');
 echo json_encode($response, JSON_THROW_ON_ERROR);
-exit();
