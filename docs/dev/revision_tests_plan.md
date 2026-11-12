@@ -184,7 +184,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 **Fase 3**
 - [ ] 3.1 Inventario de pantallas y matriz en `e2e/README.md`.
-- [ ] 3.2 Specs «carga sin error» para todos los módulos con pantalla (lote).
+- [~] 3.2 Specs «carga sin error» para todos los módulos con pantalla (lote). El spec existente `menu-links` recorre los enlaces del menú (2026-11-12, 52 min): solo falla `dbextern/sincro_index.php`, que se cuelga sin BD de Listas (caso previsto en `test:e2e:docker-skip-bdu-menu`). Además, en 2.10 se recorrieron en proceso los 310 controladores de lectura de `src/` (sección 27). Falta cubrir las pantallas que no salen como enlace directo del menú (formularios por POST).
 - [ ] 3.3 Flujos de escritura: personas, actividades, asistentes.
 - [ ] 3.4 Flujos de escritura: notas/certificados, usuarios, subidas.
 - [ ] 3.5 Spec de rol restringido.
