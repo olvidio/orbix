@@ -151,6 +151,24 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 - Si el caso de uso tiene que ver la conexión cambiada a través del contenedor: guardar `getoDbl()` en `setUp()` y restaurarla en `tearDown()` (ejemplo: `BuscaPersonaNotasTrait::guardarConexionNotasDl()` / `restaurarConexionNotasDl()`).
 - Datos aleatorios de factory sobre personas reales: limpiar antes **y** después de cada test con una marca propia de la factory (p. ej. `id_activ` fijo), no solo al final del test.
 
+## Tests-guardia globales (recorren todo `src/`)
+
+Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un caso es una excepción legítima, se añade a su lista **con el motivo**, no se relaja el test.
+
+- `tests/integration/shared/infrastructure/ControladoresConTokenSinTokenTest`: todo controlador de `src/` que abre una cápsula `HashB`, llamado sin cápsula, responde JSON «Operación no autorizada» sin cortar la petición. Los de cápsula por fila u opcional (`CAPSULA_NO_OBLIGATORIA`) solo tienen que responder JSON.
+- `tests/unit/shared/infrastructure/ControladoresSinExitTest`: ningún controlador de `src/` usa `exit`/`die` (en el despacho en proceso de `PostRequest` cortaría al frontend que llama), salvo las descargas de binarios y los casos de `PERMITIDOS`.
+- `tests/unit/shared/domain/DatosCamposMetodosTest`: en las entidades con `getDatosCampos()`, el getter y el setter de cada `DatosCampo` existen (si no, la pantalla genérica de tablas da un error fatal al abrirla).
+- `tests/unit/usuarios/infrastructure/RecuperacionAccesoGuardTest`: las páginas y endpoints de recuperación de acceso no toman `url_base` de la petición.
+- `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
+
+## Escapar el HTML que se monta en `src/`
+
+- Si un caso de uso o servicio de `src/` monta HTML (listados legacy, correos), los textos de la BD que escriben los usuarios van con `htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`. Los nombres de centro (`UbiNombreText`) y de persona (`PersonaTextoChars`) tienen lista blanca sin `<`/`>`; observaciones, descripciones, lugares, cartas de presentación y similares **no**. Añadir un test que meta `<script>` en el texto y compruebe que sale escapado (ejemplos: `CartasPresentacionListaDataEscapadoTest`, `PropuestasEncargosUbiHtmlTest`).
+
+## Fechas que no escribe el usuario
+
+- `DateTimeLocal::createFromLocal()` usa el formato del **idioma del usuario** (en inglés `n/j/Y`). No sirve para textos con formato fijo (ISO de la BD, `j/m/Y` de la BDU): con otro idioma cambia día y mes o desborda a otro año. Para esos textos, parsear el formato conocido (ejemplos: `PersonaBDU::getFechaNacimientoVo()`, `SincroDB::fechaIncorporacion()`) y probarlo con la sesión en `en_US`.
+
 ## Ejecutar PHPUnit
 
 - PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.
