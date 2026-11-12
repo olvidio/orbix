@@ -3,7 +3,7 @@
 Punto de entrada único para el estado de la migración `apps/` → `frontend/` + `src/`,
 la deuda arquitectónica residual y el trabajo con PHPStan.
 
-**Normas canónicas (no duplicar aquí):** [`AGENTS.md`](../AGENTS.md)
+**Normas canónicas (no duplicar aquí):** [`AGENTS.md`](../../AGENTS.md)
 
 **Última actualización de inventarios:** 2026-06-09
 
@@ -14,17 +14,17 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 | Fichero | Rol |
 |---------|-----|
 | [`guia_tecnica_onboarding.md`](guia_tecnica_onboarding.md) | Mapa técnico para nuevos programadores (stack, DDD, BD, tests) |
-| [`AGENTS.md`](../AGENTS.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
+| [`AGENTS.md`](../../AGENTS.md) | Reglas DDD, capas, migración por slices, PostRequest, naming, checklist PR |
 | [`agents_reglas_retiradas_historico.md`](agents_reglas_retiradas_historico.md) | Reglas de `AGENTS.md` retiradas al terminar la migración (solo consulta) |
 | [`docs/dev/backlog.md`](backlog.md) | Mejoras diferidas (ServerConf→`.env`, PostRequest interno sin HTTP) |
 | [`docs/dev/notas_modelo_acta.md`](notas_modelo_acta.md) | ADR: notas ancladas al acta/DL; certificado solo a entidad externa; plan técnico |
 | [`docs/dev/hash_arquitectura.md`](hash_arquitectura.md) | HashF/HashB, patrón `link_spec` |
-| [`tests/AGENTS.md`](../tests/AGENTS.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
+| [`tests/AGENTS.md`](../../tests/AGENTS.md) | Convenciones de tests; riesgos de `$GLOBALS['container']` en tests |
 | [`docs/dev/revision_tests_plan.md`](revision_tests_plan.md) | Revisión de tests (nov. 2026): fases, cobertura por módulo, bugs corregidos, hallazgos y **dudas pendientes** (sección 6b) |
 | [`docs/dev/reports/cobertura_por_modulo.md`](reports/cobertura_por_modulo.md) | Cobertura de líneas por módulo y capa (regenerable con `tools/qa/cobertura_por_modulo.php`) |
 | [`docs/dev/*_migracion_baseline.md`](.) | Plan e historial por módulo (slices, inventario, deuda post-refactor) |
 | [`docs/dev/frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md) | Controladores frontend con `use src\...` (regenerable; ver abajo) |
-| [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) | Resumen baseline PHPStan por prioridad A/B/C |
+| [`build/phpstan-baseline-priority-summary.md`](../../build/phpstan-baseline-priority-summary.md) | Resumen baseline PHPStan por prioridad A/B/C |
 
 ---
 
@@ -33,7 +33,7 @@ la deuda arquitectónica residual y el trabajo con PHPStan.
 - **`apps/<modulo>/` de negocio:** eliminados; solo persisten `apps/core/` y `apps/web/`.
 - **Frontend con `use src\...` en controladores:** **3** excepciones (`login.php`, `recovery.php`, `devel_codegen/factory.php`); ver [`frontend_pendiente_refactor_src.md`](frontend_pendiente_refactor_src.md).
 - **`$GLOBALS['container']` en `src/`:** **0** en módulos de negocio (runtime). Solo bootstrap (`DependencyResolver`, `DiContainerBootstrap`) y comentarios en `configuracion/`.
-- **`$GLOBALS['oDB*']` en `src/`:** **0** lecturas directas en producción; acceso canónico vía [`GlobalPdo`](../src/shared/infrastructure/GlobalPdo.php).
+- **`$GLOBALS['oDB*']` en `src/`:** **0** lecturas directas en producción; acceso canónico vía [`GlobalPdo`](../../src/shared/infrastructure/GlobalPdo.php).
 - **`global_object.inc`:** orquestador ~74 líneas → `ConnectionBootstrap`, `BootstrapPdoGlobals`, `DiContainerBootstrap`, hidratadores en `src/shared/application/`.
 - **PHPStan (julio 2026):**
   - **Baseline global:** `phpstan-baseline.neon` está **vacío** (`ignoreErrors: []`). El informe A/B/C en `build/phpstan-baseline-priority-summary.md` está **obsoleto**.
@@ -142,7 +142,7 @@ Lecturas directas `$GLOBALS['oDB*']` en `src/**/*.php` de producción → **0**;
 **Con baseline global** (mantenimiento):
 
 - Al tocar un fichero: quitar entradas obsoletas de `phpstan-baseline.neon` (rutas movidas, ficheros borrados).
-- `composer phpstan:baseline-report` → [`build/phpstan-baseline-priority-summary.md`](../build/phpstan-baseline-priority-summary.md) (regenerar; cifras A/B/C del índice estaban desactualizadas).
+- `composer phpstan:baseline-report` → [`build/phpstan-baseline-priority-summary.md`](../../build/phpstan-baseline-priority-summary.md) (regenerar; cifras A/B/C del índice estaban desactualizadas).
 - No aspirar a baseline cero global de golpe (`composer phpstan` completo ~300s timeout).
 
 ### Fase 4 — Backlog diferido
@@ -155,15 +155,15 @@ Ver [`backlog.md`](backlog.md): ServerConf→`.env`, dispatcher interno PostRequ
 
 | Componente | Rol |
 |------------|-----|
-| [`global_object.inc`](../src/shared/global_object.inc) | Orquestador sesión/PDO/DI (~74 líneas) |
-| [`ConnectionBootstrap`](../src/shared/infrastructure/ConnectionBootstrap.php) | Matriz de conexiones PDO desde sesión |
-| [`BootstrapPdoGlobals`](../src/shared/infrastructure/BootstrapPdoGlobals.php) | Exporta PDO a `$GLOBALS` (compat) |
-| [`DiContainerBootstrap`](../src/shared/infrastructure/DiContainerBootstrap.php) | Contenedor PHP-DI + `dependencies.php` por módulo |
-| [`GlobalPdo`](../src/shared/infrastructure/GlobalPdo.php) | Acceso canónico a PDO |
-| [`HydrateSessionConfig`](../src/shared/application/HydrateSessionConfig.php) | `$_SESSION['oConfig']` |
-| [`HydrateMenuPermissions`](../src/shared/application/HydrateMenuPermissions.php) | Permisos menú en sesión |
-| [`HydratePermisosActividades`](../src/shared/application/HydratePermisosActividades.php) | Permisos actividades en sesión |
-| [`RefreshCrStgrMaterializedViews`](../src/shared/application/RefreshCrStgrMaterializedViews.php) | Refresh vistas materializadas cr-stgr |
+| [`global_object.inc`](../../src/shared/global_object.inc) | Orquestador sesión/PDO/DI (~74 líneas) |
+| [`ConnectionBootstrap`](../../src/shared/infrastructure/ConnectionBootstrap.php) | Matriz de conexiones PDO desde sesión |
+| [`BootstrapPdoGlobals`](../../src/shared/infrastructure/BootstrapPdoGlobals.php) | Exporta PDO a `$GLOBALS` (compat) |
+| [`DiContainerBootstrap`](../../src/shared/infrastructure/DiContainerBootstrap.php) | Contenedor PHP-DI + `dependencies.php` por módulo |
+| [`GlobalPdo`](../../src/shared/infrastructure/GlobalPdo.php) | Acceso canónico a PDO |
+| [`HydrateSessionConfig`](../../src/shared/application/HydrateSessionConfig.php) | `$_SESSION['oConfig']` |
+| [`HydrateMenuPermissions`](../../src/shared/application/HydrateMenuPermissions.php) | Permisos menú en sesión |
+| [`HydratePermisosActividades`](../../src/shared/application/HydratePermisosActividades.php) | Permisos actividades en sesión |
+| [`RefreshCrStgrMaterializedViews`](../../src/shared/application/RefreshCrStgrMaterializedViews.php) | Refresh vistas materializadas cr-stgr |
 
 **PHPStan sin baseline (jun 2026):** 1004→0 en 6 lotes (quick wins → `Datos*` → config → persistence infra → `DB*` DDL → resto). Tres `ignoreErrors` `trait.unused` en `phpstan-nobaseline.neon` para traits consumidos desde otros módulos al analizar solo `shared/`.
 
