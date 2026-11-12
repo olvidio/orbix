@@ -66,5 +66,65 @@ class PgPersonaPubRepositoryTest extends myTest
         }
     }
 
+    private function idNomDeOtraDlSinPublicar(): int
+    {
+        $mio = \src\shared\config\ConfigGlobal::mi_id_schema();
+        $id = \src\shared\infrastructure\GlobalPdo::get('oDBP')->query(
+            "SELECT p.id_nom FROM global.personas p WHERE p.situacion = 'A' AND p.id_schema <> $mio AND p.publicado_para IS NULL
+             AND NOT EXISTS (SELECT 1 FROM global.personas o WHERE o.id_nom = p.id_nom AND o.id_schema <> p.id_schema)
+             ORDER BY p.id_nom LIMIT 1"
+        )->fetchColumn();
+        if ($id === false) {
+            $this->markTestSkipped('No hay personas activas de otra dl');
+        }
+        return (int) $id;
+    }
 
+    public function test_una_persona_de_otra_dl_publicada_para_mi_dl_sale_en_los_listados()
+    {
+        $id = $this->idNomDeOtraDlSinPublicar();
+        $pdo = \src\shared\infrastructure\GlobalPdo::get('oDBP');
+        $schema = (int) $pdo->query("SELECT id_schema FROM global.personas WHERE id_nom = $id")->fetchColumn();
+        $porId = Criteria::create()->where(Filter::eq(PersonaField::IdNom, $id));
+        $this->assertSame([], $this->repository->matching($porId), 'sin publicar no sale');
+        $this->assertNull($this->repository->findById($id));
+
+        $all = $GLOBALS['container']->get(\src\personas\domain\contracts\PersonaAllRepositoryInterface::class);
+        try {
+            $this->assertTrue($all->marcarPublicadoPara($id, $schema, \src\shared\config\ConfigGlobal::mi_dele()));
+
+            $lista = $this->repository->matching($porId);
+            $this->assertCount(1, $lista);
+            $this->assertSame([$id, $schema], [$lista[0]->getId_nom(), $lista[0]->getId_schema()]);
+
+            $problemas = [];
+            $sinRegion = [];
+            $this->assertCount(1, $this->repository->getPersonasParaListado($porId, $problemas, $sinRegion));
+            $this->assertSame([], $sinRegion);
+
+            $p = $this->repository->findById($id);
+            $this->assertSame($id, $p->getId_nom());
+            $marca = true;
+            $p = $this->repository->findByIdParaListado($id, $problemas, $marca);
+            $this->assertSame($id, $p->getId_nom());
+            $this->assertFalse($marca);
+            $this->assertNull($this->repository->findByIdParaListado(99999999, $problemas, $marca));
+        } finally {
+            $pdo->exec("UPDATE global.personas SET publicado_para = NULL WHERE id_nom = $id AND id_schema = $schema");
+        }
+    }
+
+    public function test_una_publicacion_caducada_no_sale_en_los_listados_pero_se_encuentra_por_id()
+    {
+        $id = $this->idNomDeOtraDlSinPublicar();
+        $pdo = \src\shared\infrastructure\GlobalPdo::get('oDBP');
+        $dl = $pdo->quote(\src\shared\config\ConfigGlobal::mi_dele());
+        try {
+            $pdo->exec("UPDATE global.personas SET publicado_para = jsonb_build_object($dl, '2001-01-01 00:00:00+00') WHERE id_nom = $id");
+            $this->assertSame([], $this->repository->matching(Criteria::create()->where(Filter::eq(PersonaField::IdNom, $id))));
+            $this->assertSame($id, $this->repository->findById($id)?->getId_nom());
+        } finally {
+            $pdo->exec("UPDATE global.personas SET publicado_para = NULL WHERE id_nom = $id");
+        }
+    }
 }
