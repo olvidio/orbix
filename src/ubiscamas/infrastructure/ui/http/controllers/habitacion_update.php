@@ -1,133 +1,40 @@
 <?php
 
-use Ramsey\Uuid\Uuid;
+/**
+ * Guardar una habitación de una casa (alta o modificación) y sus camas.
+ * La habitación y la casa salen de la cápsula `ctx_update`; el resto, del formulario.
+ */
+
+use src\shared\domain\helpers\FuncTablasSupport as F;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
-use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
-use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
-use src\ubiscamas\domain\entity\Cama;
-use src\ubiscamas\domain\entity\Habitacion;
-use src\ubiscamas\domain\value_objects\CamaDescripcion;
-use src\ubiscamas\domain\value_objects\CamaId;
-use src\ubiscamas\domain\value_objects\HabitacionId;
-use src\ubiscamas\domain\value_objects\HabitacionNombre;
-use src\ubiscamas\domain\value_objects\HabitacionOrden;
-use src\ubiscamas\domain\value_objects\NumeroCamas;
-use src\ubiscamas\domain\value_objects\PlantaText;
-use src\ubiscamas\domain\value_objects\TipoLavabo;
+use src\ubiscamas\application\HabitacionGuardar;
 
 try {
-    $ctx = HashB::open(
-        (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_update'),
-        'habitacion_update'
-    );
+    $ctx = HashB::open((string) \src\shared\domain\helpers\FilterPostGet::post('ctx_update'), 'habitacion_update');
 } catch (HashBInvalidException $e) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
 
-$Qid_habitacion = \src\shared\domain\helpers\FuncTablasSupport::inputString($ctx, 'id_habitacion');
-$Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi');
-
-$Qorden = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'orden');
-$Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nombre');
-$Qnumero_camas = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'numero_camas');
-$Qnumero_camas_vip = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'numero_camas_vip');
-$Qplanta = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'planta');
-$QtipoLavabo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'tipoLavabo');
-$Qsillon = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sillon'));
-$Qadaptada = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'adaptada'));
-$Qobservaciones = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'observaciones');
-$Qdespacho = \src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'despacho'));
-
-/** @var HabitacionDlRepositoryInterface $habitacionRepository */
-$habitacionRepository = DependencyResolver::get(HabitacionDlRepositoryInterface::class);
-
-$error_txt = '';
-try {
-    if ($Qid_habitacion === '') {
-        $uuid_habitacion = new HabitacionId(Uuid::uuid4()->toString());
-        $oHabitacion = new Habitacion();
-        $oHabitacion->setIdHabitacionVo($uuid_habitacion);
-        $oHabitacion->setIdUbiVo($Qid_ubi);
-    } else {
-        $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
-        if ($uuid_habitacion === null) {
-            throw new Exception(_("Habitación no válida"));
-        }
-        $oHabitacion = $habitacionRepository->findById($uuid_habitacion->value());
-        if ($oHabitacion === null) {
-            $oHabitacion = new Habitacion();
-            $oHabitacion->setIdHabitacionVo($uuid_habitacion);
-            $oHabitacion->setIdUbiVo($Qid_ubi);
-        }
-    }
-
-    $oHabitacion->setOrdenVo(new HabitacionOrden($Qorden));
-    $oHabitacion->setNombreVo(HabitacionNombre::fromNullableString($Qnombre));
-    $oHabitacion->setNumeroCamasVo(NumeroCamas::fromNullableInt($Qnumero_camas));
-    $oHabitacion->setNumeroCamasVipVo(NumeroCamas::fromNullableInt($Qnumero_camas_vip));
-    $oHabitacion->setPlantaVo(PlantaText::fromNullableString($Qplanta));
-    $oHabitacion->settipoLavaboVo(TipoLavabo::fromNullableInt($QtipoLavabo));
-    $oHabitacion->setSillon($Qsillon);
-    $oHabitacion->setAdaptada($Qadaptada);
-    $oHabitacion->setObservacionesVo($Qobservaciones);
-    $oHabitacion->setDespacho($Qdespacho);
-
-    $habitacionRepository->Guardar($oHabitacion);
-
-    /** @var CamaDlRepositoryInterface $camaRepository */
-    $camaRepository = DependencyResolver::get(CamaDlRepositoryInterface::class);
-    $a_camas_actuales = $camaRepository->getCamasByHabitacion($uuid_habitacion);
-    $num_camas_actuales = count($a_camas_actuales);
-
-    $new_camas_desc = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_desc');
-    $new_camas_larga = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_larga');
-    $new_camas_vip = \src\shared\domain\helpers\FuncTablasSupport::inputStringList($_POST, 'new_camas_vip');
-
-    foreach ($new_camas_desc as $index => $descripcion) {
-        if ($descripcion !== '') {
-            $oCama = new Cama();
-            $oCama->setIdCamaVo(new CamaId(Uuid::uuid4()->toString()));
-            $oCama->setIdHabitacionVo($uuid_habitacion);
-            $oCama->setDescripcionVo(CamaDescripcion::fromNullableString($descripcion) ?? new CamaDescripcion(''));
-            $oCama->setLarga(($new_camas_larga[$index] ?? '') !== '');
-            $oCama->setVip(($new_camas_vip[$index] ?? '') !== '');
-
-            $camaRepository->Guardar($oCama);
-            $num_camas_actuales++;
-        }
-    }
-
-    if ($Qnumero_camas > $num_camas_actuales) {
-        $camas_a_crear = $Qnumero_camas - $num_camas_actuales;
-        $num_camas_vip_actuales = 0;
-        for ($i = 1; $i <= $camas_a_crear; $i++) {
-            $oCama = new Cama();
-            $oCama->setIdCamaVo(new CamaId(Uuid::uuid4()->toString()));
-            $oCama->setIdHabitacionVo($uuid_habitacion);
-
-            $desc_generada = '';
-            if ($Qnombre !== '') {
-                $desc_generada .= $Qnombre;
-            }
-            if ($camas_a_crear > 1) {
-                $desc_generada .= $desc_generada === '' ? '' : ' - ';
-                $desc_generada .= 'Cama ' . ($num_camas_actuales + $i);
-            }
-
-            $oCama->setDescripcionVo(CamaDescripcion::fromNullableString($desc_generada) ?? new CamaDescripcion(''));
-            $oCama->setLarga(false);
-            $oCama->setVip($num_camas_vip_actuales < $Qnumero_camas_vip);
-
-            $camaRepository->Guardar($oCama);
-            $num_camas_vip_actuales++;
-        }
-    }
-} catch (Exception $e) {
-    $error_txt = _("Error al guardar la habitación") . ": " . $e->getMessage();
-}
+$error_txt = DependencyResolver::get(HabitacionGuardar::class)->execute([
+    'id_habitacion' => F::inputString($ctx, 'id_habitacion'),
+    'id_ubi' => F::inputInt($ctx, 'id_ubi'),
+    'orden' => F::inputInt($_POST, 'orden'),
+    'nombre' => F::inputString($_POST, 'nombre'),
+    'numero_camas' => F::inputInt($_POST, 'numero_camas'),
+    'numero_camas_vip' => F::inputInt($_POST, 'numero_camas_vip'),
+    'planta' => F::inputString($_POST, 'planta'),
+    'tipoLavabo' => F::inputInt($_POST, 'tipoLavabo'),
+    'sillon' => F::isTrue(F::inputString($_POST, 'sillon')) === true,
+    'adaptada' => F::isTrue(F::inputString($_POST, 'adaptada')) === true,
+    'observaciones' => F::inputString($_POST, 'observaciones'),
+    'despacho' => F::isTrue(F::inputString($_POST, 'despacho')) === true,
+    'new_camas_desc' => F::inputStringList($_POST, 'new_camas_desc'),
+    'new_camas_larga' => F::inputStringList($_POST, 'new_camas_larga'),
+    'new_camas_vip' => F::inputStringList($_POST, 'new_camas_vip'),
+]);
 
 ContestarJson::enviar($error_txt, 'ok');

@@ -4,6 +4,7 @@ use src\ubiscamas\application\CamaFormData;
 use src\ubiscamas\application\HabitacionFormData;
 use src\ubiscamas\application\HabitacionesCamaLista;
 use src\ubiscamas\application\UpdateCamaAsistente;
+use src\ubiscamas\application\HabitacionGuardar;
 use src\ubiscamas\domain\Select_habitaciones_cdc;
 use src\ubiscamas\domain\contracts\HabitacionRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
@@ -25,5 +26,6 @@ return [
     HabitacionFormData::class => autowire(HabitacionFormData::class),
     HabitacionesCamaLista::class => autowire(HabitacionesCamaLista::class),
     UpdateCamaAsistente::class => autowire(UpdateCamaAsistente::class),
+    HabitacionGuardar::class => autowire(HabitacionGuardar::class),
     Select_habitaciones_cdc::class => autowire(Select_habitaciones_cdc::class),
 ];
