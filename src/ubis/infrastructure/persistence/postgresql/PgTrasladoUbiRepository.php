@@ -15,6 +15,10 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
 
     public function trasladoCdc(int $id_ubi, string $esquema_org, string $esquema_dst): bool
     {
+        // Los nombres de esquema van dentro del SQL: solo identificadores válidos.
+        if (!$this->esIdentificadorEsquemaValido($esquema_org) || !$this->esIdentificadorEsquemaValido($esquema_dst)) {
+            return false;
+        }
         $db = $this->importConnection('public');
 
         $aInserts = [
@@ -35,6 +39,10 @@ class PgTrasladoUbiRepository extends ClaseRepository implements TrasladoUbiRepo
 
     public function trasladoCtr(int $id_ubi, string $esquema_org, string $esquema_dst): bool
     {
+        // Los nombres de esquema van dentro del SQL: solo identificadores válidos.
+        if (!$this->esIdentificadorEsquemaValido($esquema_org) || !$this->esIdentificadorEsquemaValido($esquema_dst)) {
+            return false;
+        }
         $db = $this->importConnection('publicv');
 
         $aInserts = [

@@ -2,6 +2,8 @@
 
 namespace src\ubis\application;
 
+use src\ubis\application\services\UbiEsquemaDestino;
+
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -28,10 +30,16 @@ final class TrasladarUbis
             return _("No se han seleccionado ubis.");
         }
 
+        // dl_dst llega del formulario y acaba en el SQL del traslado: tiene que ser un esquema («H-dlp»).
+        if (!UbiEsquemaDestino::esIdentificadorValido($dl_dst) || !str_contains($dl_dst, '-')) {
+            return _("Esquema no válido");
+        }
+
         $mi_region_dl = ConfigGlobal::mi_region_dl();
         $esquema_org = substr($mi_region_dl, 0, -1);
 
         $TrasladoUbiRepository = $this->rasladoUbiRepository;
+        $errores = '';
 
         foreach ($a_sel as $id_ubi) {
             if (!is_int($id_ubi) && !is_string($id_ubi)) {
@@ -47,16 +55,20 @@ final class TrasladarUbis
             switch ($classname) {
                 case 'Centro':
                 case 'CentroDl':
-                    $TrasladoUbiRepository->trasladoCtr($idUbiInt, $esquema_org, $dl_dst);
+                    if (!$TrasladoUbiRepository->trasladoCtr($idUbiInt, $esquema_org, $dl_dst)) {
+                        $errores .= _("hay un error, no se ha guardado") . " (id_ubi: $idUbiInt)\n";
+                    }
                     break;
                 case 'Casa':
                 case 'CasaDl':
-                    $TrasladoUbiRepository->trasladoCdc($idUbiInt, $esquema_org, $dl_dst);
+                    if (!$TrasladoUbiRepository->trasladoCdc($idUbiInt, $esquema_org, $dl_dst)) {
+                        $errores .= _("hay un error, no se ha guardado") . " (id_ubi: $idUbiInt)\n";
+                    }
                     break;
             }
         }
 
-        return '';
+        return trim($errores);
     }
 
     private static function shortClassName(object $o): string
