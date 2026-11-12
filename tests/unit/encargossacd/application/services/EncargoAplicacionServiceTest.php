@@ -500,6 +500,118 @@ final class EncargoAplicacionServiceTest extends TestCase
         $this->assertSame([2, 3, null], [$viejo->getDia_inc(), $viejo->getN_sacd(), $viejo->getF_fin()]);
     }
 
+    /** @param list<object> $existentes @return array{guardados: list<object>, eliminados: list<object>} */
+    private function conRepo(string $interfaz, array $existentes, callable $accion): array
+    {
+        $r = ['guardados' => [], 'eliminados' => []];
+        $repo = $this->createMock($interfaz);
+        $repo->method('matching')->willReturn($existentes);
+        $repo->method('getNewId')->willReturn(901);
+        $repo->method('Guardar')->willReturnCallback(function ($o) use (&$r): bool {
+            $r['guardados'][] = $o;
+            return true;
+        });
+        $repo->method('Eliminar')->willReturnCallback(function ($o) use (&$r): bool {
+            $r['eliminados'][] = $o;
+            return true;
+        });
+        $accion($this->makeService([$interfaz => $repo]));
+        return $r;
+    }
+
+    private static function horarioSacd(int $diaInc, string $fIni, ?string $fFin = null): \src\encargossacd\domain\entity\EncargoSacdHorario
+    {
+        $h = new \src\encargossacd\domain\entity\EncargoSacdHorario();
+        $h->setId_item(11);
+        $h->setId_enc(5);
+        $h->setId_nom(3);
+        $h->setDiaRefVo('m');
+        $h->setDia_inc($diaInc);
+        $h->setF_ini(new \src\shared\domain\value_objects\DateTimeLocal($fIni));
+        $h->setF_fin($fFin === null ? null : new \src\shared\domain\value_objects\DateTimeLocal($fFin));
+        return $h;
+    }
+
+    public function test_horario_sacd_cambiar_dedicacion_cierra_y_abre_o_modifica_si_es_de_hoy(): void
+    {
+        $viejo = self::horarioSacd(1, '2020-01-01');
+        $r = $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [$viejo], fn ($s) => $s->modificar_horario_sacd(40, 5, 3, 'm', '2'));
+        $this->assertCount(2, $r['guardados']);
+        $this->assertSame([1, date('Y-m-d')], [$viejo->getDia_inc(), $viejo->getF_fin()?->format('Y-m-d')]);
+        $this->assertSame([2, 40, null], [$r['guardados'][1]->getDia_inc(), $r['guardados'][1]->getId_item_tarea_sacd(), $r['guardados'][1]->getF_fin()]);
+
+        $hoy = self::horarioSacd(1, date('Y-m-d'));
+        $r = $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [$hoy], fn ($s) => $s->modificar_horario_sacd(40, 5, 3, 'm', '2'));
+        $this->assertSame([$hoy], $r['guardados']);
+        $this->assertSame(2, $hoy->getDia_inc());
+    }
+
+    public function test_horario_sacd_quitar_la_dedicacion_lo_cierra_y_la_misma_lo_reabre_si_se_cerro_hoy(): void
+    {
+        $h = self::horarioSacd(2, '2020-01-01');
+        $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [$h], fn ($s) => $s->modificar_horario_sacd(40, 5, 3, 'm', ''));
+        $this->assertSame([null, date('Y-m-d')], [$h->getDia_inc(), $h->getF_fin()?->format('Y-m-d')]);
+
+        $cerradoHoy = self::horarioSacd(2, '2020-01-01', date('Y-m-d'));
+        $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [$cerradoHoy], fn ($s) => $s->modificar_horario_sacd(40, 5, 3, 'm', '2'));
+        $this->assertNull($cerradoHoy->getF_fin());
+
+        $r = $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [], fn ($s) => $s->modificar_horario_sacd(40, 5, 3, 'm', '1'));
+        $this->assertSame([901, 1], [$r['guardados'][0]->getId_item(), $r['guardados'][0]->getDia_inc()]);
+    }
+
+    public function test_finalizar_el_horario_de_un_sacd(): void
+    {
+        $a = self::horarioSacd(1, '2020-01-01');
+        $b = self::horarioSacd(2, '2020-01-01');
+        $fin = new \src\shared\domain\value_objects\DateTimeLocal('2026-06-30');
+        $r = $this->conRepo(EncargoSacdHorarioRepositoryInterface::class, [$a, $b], fn ($s) => $s->finalizar_horario_sacd(5, 3, $fin));
+        $this->assertCount(2, $r['guardados']);
+        $this->assertSame(['2026-06-30', '2026-06-30'], [$a->getF_fin()->format('Y-m-d'), $b->getF_fin()->format('Y-m-d')]);
+    }
+
+    private static function encargoSacd(string $fIni, ?string $fFin): \src\encargossacd\domain\entity\EncargoSacd
+    {
+        $e = new \src\encargossacd\domain\entity\EncargoSacd();
+        $e->setId_item(12);
+        $e->setId_enc(5);
+        $e->setId_nom(3);
+        $e->setModo(2);
+        $e->setF_ini(new \src\shared\domain\value_objects\DateTimeLocal($fIni));
+        $e->setF_fin($fFin === null ? null : new \src\shared\domain\value_objects\DateTimeLocal($fFin));
+        return $e;
+    }
+
+    public function test_asignar_un_sacd_crea_reabre_o_respeta_el_vigente(): void
+    {
+        $r = $this->conRepo(EncargoSacdRepositoryInterface::class, [], fn ($s) => $s->insert_sacd(5, 3, 2));
+        $this->assertSame([901, 5, 3, 2, null], [$r['guardados'][0]->getId_item(), $r['guardados'][0]->getId_enc(), $r['guardados'][0]->getId_nom(), $r['guardados'][0]->getModoVo()->value(), $r['guardados'][0]->getF_fin()]);
+
+        $cerradoHoy = self::encargoSacd('2020-01-01', date('Y-m-d'));
+        $r = $this->conRepo(EncargoSacdRepositoryInterface::class, [$cerradoHoy], fn ($s) => $s->insert_sacd(5, 3, 2));
+        $this->assertSame([$cerradoHoy], $r['guardados'], 'se reabre el que se cerró hoy');
+        $this->assertNull($cerradoHoy->getF_fin());
+
+        $vigente = self::encargoSacd('2020-01-01', null);
+        $r = $this->conRepo(EncargoSacdRepositoryInterface::class, [$vigente], fn ($s) => $s->insert_sacd(5, 3, 2));
+        $this->assertSame([], $r['guardados'], 'ya lo tiene');
+
+        $antiguo = self::encargoSacd('2010-01-01', '2015-01-01');
+        $r = $this->conRepo(EncargoSacdRepositoryInterface::class, [$antiguo], fn ($s) => $s->insert_sacd(5, 3, 2));
+        $this->assertCount(1, $r['guardados']);
+        $this->assertNotSame($antiguo, $r['guardados'][0], 'uno nuevo si el anterior acabó otro día');
+    }
+
+    public function test_finalizar_y_borrar_un_sacd_del_encargo(): void
+    {
+        $e = self::encargoSacd('2020-01-01', null);
+        $fin = new \src\shared\domain\value_objects\DateTimeLocal('2026-06-30');
+        $this->conRepo(EncargoSacdRepositoryInterface::class, [$e], fn ($s) => $s->finalizar_sacd(5, 3, 2, $fin));
+        $this->assertSame('2026-06-30', $e->getF_fin()->format('Y-m-d'));
+        $r = $this->conRepo(EncargoSacdRepositoryInterface::class, [$e], fn ($s) => $s->delete_sacd(5, 3, 2));
+        $this->assertSame([$e], $r['eliminados']);
+    }
+
     private function makeService(array $overrides = []): EncargoAplicacionService
     {
         $services = array_merge([
