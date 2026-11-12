@@ -152,11 +152,15 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
                         continue;
                     }
                     $nom_activ = $oActividad->getNom_activ();
-                    $msg = sprintf(_("No se tiene acceso al nombre de (es de otra dl o el sacd no está en DB-comun) id_nom: %s"), $id_nom);
-                    $msg .= '<br>';
-                    $msg .= sprintf(_("afecta a la actividad: %s"), $nom_activ);
-                    $msg .= '<br>';
-                    echo $msg;
+                    // Solo al log: este repositorio lo usan endpoints JSON y un echo
+                    // aquí antepone texto a la respuesta y la rompe.
+                    error_log(sprintf(
+                        '[%s] sin acceso al sacd id_nom=%d (otra dl o no está en DB-comun) en la actividad %d «%s»',
+                        __METHOD__,
+                        $id_nom,
+                        $iid_activ,
+                        $nom_activ
+                    ));
                 }
             }
             else {
