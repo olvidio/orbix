@@ -684,7 +684,7 @@ final class UbisTablaData
             if (!empty($cDirecciones)) {
                 foreach ($cDirecciones as $oDireccion) {
                     // Comportamiento preexistente: sólo toma la última dirección.
-                    $poblacion = $oDireccion->getPoblacionVo()->value();
+                    $poblacion = $oDireccion->getPoblacionVo()?->value() ?? '';
                     $pais = $oDireccion->getPaisVo()?->value() ?? '';
                     $direccion = $oDireccion->getDireccionVo()?->value() ?? '';
                     $c_p = $oDireccion->getCodigoPostalVo()?->value() ?? '';

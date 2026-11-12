@@ -33,7 +33,7 @@ final readonly class ListaAsistentesData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{nom_activ: string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>}
+     * @return array{nom_activ: string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>}|array{error: string}
      */
     public function build(array $input): array
     {
@@ -101,13 +101,13 @@ final readonly class ListaAsistentesData
                     : [];
                 if ($cAsistente !== []) {
                     if (count($cAsistente) > 1) {
-                        $tabla = '';
+                        $tablas = [];
                         foreach ($cAsistente as $Asistente) {
-                            $tabla .= '<li>' . $Asistente->getNomTabla() . '</li>';
+                            $tablas[] = $Asistente->getNomTabla();
                         }
-                        $msg_err .= 'ERROR: más de un asistente con el mismo id_nom<br>';
-                        $msg_err .= "<br>$nom(" . $oPersona->getId_tabla() . ")<br><br>En las tablas:<ul>$tabla</ul>";
-                        exit("$msg_err");
+                        // Sin exit en application/: se responde como error.
+                        return ['error' => 'ERROR: más de un asistente con el mismo id_nom: '
+                            . "$nom (" . $oPersona->getId_tabla() . '). En las tablas: ' . implode(', ', $tablas)];
                     }
                     $propio = $cAsistente[0]->isPropio();
                     $falta = $cAsistente[0]->isFalta();

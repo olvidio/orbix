@@ -32,7 +32,9 @@ class Direccion
 
     private ?CodigoPostalText $c_p = null;
 
-    private PoblacionText $poblacion;
+    // La columna admite NULL y hay direcciones antiguas sin población: una sola
+    // fila así rompía la hidratación (TypeError) y el listado entero.
+    private ?PoblacionText $poblacion = null;
 
     private ?ProvinciaText $provincia = null;
 
@@ -152,19 +154,19 @@ class Direccion
      */
     public function getPoblacion(): string
     {
-        return $this->poblacion->value();
+        return $this->poblacion?->value() ?? '';
     }
 
 
     /**
      * @deprecated Usar `setPoblacionVo(PoblacionText $poblacion): void` en su lugar.
      */
-    public function setPoblacion(string $poblacion): void
+    public function setPoblacion(?string $poblacion): void
     {
-        $this->poblacion = new PoblacionText($poblacion);
+        $this->poblacion = PoblacionText::fromNullableString($poblacion);
     }
 
-    public function getPoblacionVo(): PoblacionText
+    public function getPoblacionVo(): ?PoblacionText
     {
         return $this->poblacion;
     }

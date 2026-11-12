@@ -38,7 +38,7 @@ final class ListaUltimaActivData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{alert_html: string, titulo: string, stats_html: string, tabla_html: string}
+     * @return array{alert_html: string, titulo: string, stats_html: string, tabla_html: string}|array{error: string}
      */
     public function build(array $input): array
     {
@@ -178,7 +178,8 @@ final class ListaUltimaActivData
                 $filtrosP[] = Filter::isNull(PersonaField::CeFin);
                 break;
             default:
-                exit(_("No sé en que tipo de actividad hay que mirar las asistencias"));
+                // Sin exit en application/: cortaría la petición (y al frontend que llama en proceso).
+                return ['error' => _("No sé en que tipo de actividad hay que mirar las asistencias")];
         }
 
         $a_id_activ_f_ini = $this->actividadRepository->idsConFechaInicio(

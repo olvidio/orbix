@@ -45,7 +45,6 @@ class Select_cargos_personas_en_actividad
     /** @var array<string, array{perm: mixed, nom: mixed}>|null */
     private ?array $ref_perm = null;
 
-    private string $msg_err = '';
 
     /** @var array<int|string, mixed> */
     private array $a_valores = [];
@@ -138,8 +137,10 @@ class Select_cargos_personas_en_actividad
 
         $oPersona = $this->resolvePersona();
         if ($oPersona === null) {
-            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: {$this->id_pau} en  " . __FILE__ . ": line " . __LINE__;
-            exit($this->msg_err);
+            // Persona inexistente (p. ej. borrada): dossier vacío, sin cortar la petición con exit.
+            error_log("Select_cargos_personas_en_actividad: no encuentro a ninguna persona con id_nom {$this->id_pau}");
+            $this->a_valores = [];
+            return;
         }
 
         $id_tabla = $oPersona->getId_tabla();

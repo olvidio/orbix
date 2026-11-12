@@ -233,4 +233,13 @@ class DireccionTest extends myTest
         $this->assertEquals('Test', $direccion->getPlanoNomVo()->value());
         $this->assertEquals('Test', $direccion->getNomSedeVo()->value());
     }
+
+    public function test_direccion_sin_poblacion_de_la_bd_no_rompe(): void
+    {
+        $d = \src\ubis\domain\entity\Direccion::fromArray(['id_direccion' => 100555, 'poblacion' => null]);
+        $this->assertSame('', $d->getPoblacion());
+        $this->assertNull($d->getPoblacionVo());
+        $d->setPoblacion('Reus');
+        $this->assertSame('Reus', $d->getPoblacionVo()?->value());
+    }
 }
