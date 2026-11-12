@@ -997,13 +997,15 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
 1. **XSS almacenado en el listado de cartas de presentación** (`CartasPresentacionListaData`): persona de contacto, teléfono, correo y dirección sin escapar (los VO no limitan caracteres).
 2. **XSS almacenado en las propuestas de encargos de un centro** (`PropuestasEncargosUbiHtml`): la descripción del encargo sin escapar.
 3. **HTML inyectable en el correo de comunicación de actividades a los sacd** (`ComunicarActividadesSacdService`, hallazgo de 2.4): observación, lugar especial, encargado… sin escapar en el correo al sacd, al jefe de calendario y al centro.
-- Tests nuevos: `CartaPresentacionUpdate` (carta nueva de un centro de la dl, de un cr, de otra dl; existente), escapado de los tres casos.
+4. **Inventario, cambio en lote de documentos** (`documentos_guardar`): una fecha mal escrita se tomaba como vacía y borraba la fecha de todos los documentos seleccionados. Ahora da «Fecha no válida» y no toca nada (cadena nueva traducida a mano en los cuatro catálogos).
+5. **Orden con acentos:** varios listados ordenaban por nombre con `array_multisort` (comparación por bytes) y dejaban «Álvarez» u «Óscar» detrás de la Z: profesores con dl (docencia y congresos), sacd de una zona, seis listados de inventario y matrículas de otras regiones. Nuevo `FuncTablasSupport::clavesOrdenSinAcentos()` (mismo orden que `strsinacentocmp`).
+- Tests nuevos: `CartaPresentacionUpdate` (carta nueva de un centro de la dl, de un cr, de otra dl; existente), escapado de los tres casos, estructura del menú burger, fechas de `documentos_guardar`, orden sin acentos.
 
 **Hallazgos (sin corregir):**
 1. `CartaPresentacionUpdate`: al crear una carta comprueba que el centro sea de la dl (o un cr), pero al modificar una existente no. `sanear()` recorre todas las cartas de la dl en cada guardado (una consulta de direcciones por carta) y borra las que ya no tienen esa dirección.
 2. `ZonasAComun` (script de migración de `zonassacd` de sv-e a comun, 320 líneas) no tiene tests: como el DDL de `devel_db_admin`, necesita una BD aislada.
 3. Varios listados de `encargossacd` (`Listas*Data`) y `CartasPresentacionListaData` siguen montando HTML en `application/` (contra la regla de capas), aunque con los datos ya escapados o restringidos.
-4. `inventario/documentos_guardar` (cambio en lote de documentos): toda la lógica en el controlador; la cápsula `ctx_guardar` no fija qué documentos (los ids llegan en `documentos` del POST); y una fecha mal escrita no da error, sino que borra la fecha que había (`createFromLocal` falla → `null`).
+4. `inventario/documentos_guardar` (cambio en lote de documentos): toda la lógica en el controlador; la cápsula `ctx_guardar` no fija qué documentos (los ids llegan en `documentos` del POST).
 5. `menus`: el menú «burger» no filtra por permisos (duda 7 de la sección 6b).
 
 **Pendiente:** la pasada de cobertura de estos módulos (sobre todo `inventario` 21 %, `utils_database` 36 %, `zonassacd` 41 %, `menus` 47 %).
