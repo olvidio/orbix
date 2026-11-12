@@ -136,7 +136,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 | actividadestudios | — | — | — | — | — | |
 | encargossacd | — | — | — | — | — | 2 repos sin test |
 | misas | — | — | — | — | — | `PgPlantillaRepository` sin test |
-| personas | — | — | — | — | — | |
+| personas | ok | ok | ok | ok | — | 2.5: 73 %; falta `Trasladar` (61 %) y el CLI de resincronización de sacd |
 | usuarios | — | — | — | — | — | |
 | procesos | — | — | — | — | — | |
 | dossiers | — | — | — | — | — | |
@@ -174,7 +174,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
 - [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 2 inyecciones SQL y unos 20 bugs corregidos, más los tokens HashB de cargos y centros encargados
-- [ ] 2.5 `personas`
+- [x] 2.5 `personas` (sección 21): cobertura 55 % → 73 % (application 89 %); 8 bugs corregidos (traslados, búsqueda por centro, esquemas temporales) y un test-guardia global de `DatosCampo`
 - [ ] 2.6 `usuarios` + `procesos`
 - [ ] 2.7 `encargossacd` + `misas`
 - [ ] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas`
@@ -848,3 +848,31 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 4. `SolapesSacdData`: dos actividades sin casa seguidas se marcan como «tachado» (misma casa).
 5. `PgCentroEncargadoRepository::getActividadesDeCentros()` sigue recibiendo la condición como SQL en texto: los dos llamadores la montan ya con fechas validadas, pero convendría pasar las fechas como parámetros.
 
+## 21. Fase 2, paso 2.5: `personas` (cerrado el 2026-11-12)
+
+**Línea base:** 502 tests en verde (428 unit + 74 integración). Cobertura de líneas (unit ∪ integración, solo sus tests): `personas` 55 %, con `Trasladar` 17 %, `PgPersonaAllRepository` 17 %, `TelecoPersonaService` 0 %, `PersonaFinderService` 36 %, `HomePersonaData` 25 %, `PersonaEliminar` 47 %, `StgrUpdate` 52 %, `PersonaUpdate` 63 %.
+
+**Cierre:** 610 tests. Cobertura `personas` 73 % (domain 65 %, application 89 %, infrastructure 75 %): `Trasladar` 61 %, `PgPersonaAllRepository` 89 %, `PgPersonaPubRepository` 69 %. Lo que falta es sobre todo `Trasladar` (pasos con conexiones a otras dl), el script CLI `sacd_resincronizar` (0 %) y ramas de VOs de las entidades. Suite completa: 9951 tests en verde.
+- Tests nuevos: traslado de dl paso a paso (`TrasladarPasosTest`, con conexiones simuladas por esquema, e integración de ficha, copia de la persona, notas pendientes y dossiers); valores que graba la ficha para cada tipo (`PersonaUpdateValoresTest`); borrar y nivel stgr para cada tipo; búsquedas de `PersonaFinderService` (dl, global, de paso, no activas, listados, todas las regiones); cabecera de la ficha (`HomePersonaData`); `TelecoPersonaService`; integración de `global.personas` (`PgPersonaAllRepository`, con «publicado para») y de las personas publicadas para mi dl (`PgPersonaPubRepository`); ida y vuelta de los VOs de las entidades con filas reales; contrato de los controladores (`PersonasControllersContractTest`, 27 casos).
+- Test-guardia global (`tests/unit/shared/domain/DatosCamposMetodosTest`): en todas las entidades de `src/` con `getDatosCampos()`, el getter y el setter de cada `DatosCampo` existen.
+
+**Bugs corregidos** (commits `fix(...)` con su test, comprobado que falla sin el arreglo):
+1. **Traslado en sf:** `TrasladoUpdate` añadía una «f» a la dl destino, que ya viene como «H-dlpf» de la lista de delegaciones (quedaba «dlpff»).
+2. **Traslado, asistencias «out»:** `Trasladar::copiarAsistencias` copiaba las asistencias de actividades de otras dl a la tabla de asistencias propias del destino (regresión de la migración).
+3. **Traslado, certificados:** si fallaba la copia de los certificados al destino, se borraban igualmente en el origen; y el error de `trasladarDossierCertificados` se perdía.
+4. **Datos de campo inexistentes** (`ubis`, `profesores`): la tabla genérica de descripciones de teleco llamaba a `getIdTipoTelecoVo()` y `getDesc_teleco()`, que no existían (error fatal al listar); `ProfesorTipo` declaraba un campo oculto `id_nom` sin getter ni setter (y `DatosUpdateRepo` sustituye `id_nom` por `id_pau`). Lo encontró el test-guardia nuevo.
+5. **Buscar personas por centro** (`PersonasSelectData`): con «exacto» el nombre del centro se comparaba, ya como parámetro enlazado, tras `addslashes` y cambiando «+» por «.»: «D'Aran», «L'Estudi» o «Terrassa (sss+)» daban «No se encuentra ningún centro». Por el principio del nombre solo se escapaba «+»: «Barcelona (n)» no se encontraba a sí mismo y «Barcelona (» era una regex inválida (error SQL). Ahora el exacto va tal cual y la regex con `preg_quote` (también apellidos y nombre).
+6. **Esquemas de tablas temporales** (`personas`, `dbextern`): las búsquedas en todos los esquemas (`PersonaFinderService::buscarEnTodasRegiones`, que usa el envío de certificados emitidos; `Trasladar::getEsquemas`, que usan traslados y la sincronización con Listas; `SincroDB::posiblesOrbixOtrasDl`) recorren `pg_stat_user_tables`, que también lista las tablas temporales de **cualquier sesión** con esquema `pg_temp_N`. Con una sola tabla temporal abierta en la BD (varios informes las crean), fallaban con «relation personas_dl / p_numerarios does not exist», y `getEsquemas` dejaba cambiado el `search_path` de `oDBR`. Se saltan los esquemas `pg_*`. Lo destapó la suite completa: un test anterior dejaba una tabla temporal.
+
+**Pendiente de decisión:**
+1. `Trasladar::trasladar()` con el código 3 de `comprobar()` (dl destino que no está en la lista de activas) avisa «Solamente se anotará el traslado» pero no llama a `apuntar()`, así que no se anota nada (el legacy hacía lo mismo). ¿Debe anotar el traslado o cambiar el mensaje?
+2. `/src/personas/sacd_resincronizar` (GET o POST) ejecuta el script CLI de reconciliación de `cp_sacd`: con `aplicar=1` escribe en todos los esquemas sin token ni comprobación de rol. Es el mismo caso que `cargos_activ_resincronizar` (aplazado en `docs/dev/backlog.md`).
+
+**Hallazgos (sin corregir):**
+1. `PersonaEliminar` solo deja borrar personas de mi dl (`mi_delef() === getDl()`): una persona de paso (de otra dl) no se puede borrar nunca. El legacy hacía lo mismo.
+2. `Trasladar`: `cambiarFichaPersona()` hace `exit` si la situación es «A»; `getEsquemas()` hace `exit` si una persona sale repetida en un esquema; `copiarAsistencias()` borra la asistencia del origen cuando la actividad no existe en el destino, sin copiarla. `TrasladoUpdate` no mira el array que devuelve `trasladar()` (usa `getError()`).
+3. `PersonaUpdate` vacía los campos que no llegan en el POST (el formulario los manda todos, así que hoy no se nota).
+4. `ProfesoresAsignaturaLista` concatena teléfonos fijos y móviles sin separador («93 1600 1»).
+5. `OdbcDlListasRepository` hace `exit` en el constructor si no conecta con la BD de Listas: cualquier servicio que lo reciba (`SincroDB`) corta la petición al construirse.
+6. `PgPersonaPubRepository::createEntityParaListado()`: la rama que captura «dl sin región stgr» parece inalcanzable, porque `withIdSchema()` ya captura cualquier excepción y pone `id_schema = 0`.
+7. La copia de sf de la BD de desarrollo no tiene personas: los formatos de sf no se han podido comprobar con datos reales.
