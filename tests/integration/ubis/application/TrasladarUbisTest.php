@@ -31,7 +31,7 @@ class TrasladarUbisTest extends myTest
     public function test_seleccion_con_ids_que_no_resuelven_a_ubi_no_falla(): void
     {
         $msg = $GLOBALS['container']->get(TrasladarUbis::class)->execute([
-            'dl_dst' => 'cr',
+            'dl_dst' => 'H-dlp',
             'sel' => [99999998, 99999999],
         ]);
         $this->assertSame('', $msg, 'Debería completarse sin error aunque no existan los ubis.');
