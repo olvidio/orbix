@@ -209,6 +209,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 8. **(2.1) Piloto de Infection:** Infection no está instalado. Hace falta añadirlo como dependencia de desarrollo (`composer require --dev infection/infection`, cambia `composer.json` y `composer.lock`). ¿Se instala? (Sin tocar.)
 9. **(2.10) Fechas imposibles aceptadas:** `DateTimeLocal::createFromLocal` no rechaza los desbordamientos: «31/02/2026» se guarda como 3 de marzo y «31/31/2026» como julio de 2028, en todos los formularios con fecha. ¿Rechazarlas en `createFromLocal` (afecta a toda la aplicación)? (Sin tocar.)
 
+10. **(2.10) Listado «cl» de encargos:** `ListasClData` lee los cargos de la tabla `d_cargos`, que no existe en ninguna BD (ni en el legacy): el listado falla siempre. ¿De dónde deben salir esos cargos, o se quita el listado? (Sin tocar.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.
@@ -1007,5 +1009,10 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
 3. Varios listados de `encargossacd` (`Listas*Data`) y `CartasPresentacionListaData` siguen montando HTML en `application/` (contra la regla de capas), aunque con los datos ya escapados o restringidos.
 4. `inventario/documentos_guardar` (cambio en lote de documentos): toda la lógica en el controlador; la cápsula `ctx_guardar` no fija qué documentos (los ids llegan en `documentos` del POST).
 5. `menus`: el menú «burger» no filtra por permisos (duda 7 de la sección 6b).
+6. **Recorrido de los controladores de lectura sin parámetros** (prueba suelta, no versionada: 310 controladores de `src/` que no abren cápsula, llamados en proceso con el POST vacío). Además de los arreglos (dirección sin población, `exit` en listados de asistentes y cargos), quedan:
+   - unos 15 controladores lanzan una excepción (no un JSON de error) si falta un parámetro obligatorio (`perm_dossier_ver_data`, `direcciones_*`, `teleco_*`, `persona_nota_editar`, `perm_menu_lista`, `lista_casas_posibles_periodo`, `sacd_ausencias_jefe_zona_data`, `ver_plan_sacd_data`…); otros sacan avisos de PHP (`encargo_ver_data`, `list_ctr_data`, `ver_cuadricula_zona_data` con la plantilla vacía);
+   - `encargossacd/listas_cl_data` consulta la tabla `d_cargos`, que no existe en ninguna BD: ese listado falla siempre (heredado del legacy). Duda 10 de la sección 6b;
+   - `certificados/textos_certificados.php` es un fichero de textos que se incluye desde la impresión, pero está registrado como ruta (`/src/certificados/textos_certificados`) y no responde nada;
+   - `OdbcDlListasRepository` (dbextern) corta con `exit` si no hay BD de Listas (ya anotado).
 
 **Pendiente:** la pasada de cobertura de estos módulos (sobre todo `inventario` 21 %, `utils_database` 36 %, `zonassacd` 41 %, `menus` 47 %).
