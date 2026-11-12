@@ -72,6 +72,27 @@ final class ProfesoresAsignaturaListaTest extends TestCase
         $this->assertSame('', $out['a_valores'][1][3]);
     }
 
+    public function test_telefonos_fijos_y_moviles_separados(): void
+    {
+        $this->stubOConfigAmbito('dl');
+        $asigSvc = $this->createMock(ProfesorAsignaturaService::class);
+        $asigSvc->method('getArrayProfesoresAsignatura')->willReturn(['departamento' => [200 => 'Martínez, Luis'], 'ampliacion' => []]);
+        $oPersonaRepo = $this->createMock(PersonaDlRepositoryInterface::class);
+        $oPersonaRepo->method('findById')->willReturn($this->createMock(PersonaDl::class));
+        $oDocRepo = $this->createMock(ProfesorDocenciaStgrRepositoryInterface::class);
+        $oDocRepo->method('matching')->willReturn([]);
+        $telecoSvc = $this->createMock(TelecoPersonaService::class);
+        $telecos = ['telf' => '93 1', 'móvil' => '600 1', 'e-mail' => 'l@x.org'];
+        $telecoSvc->method('getTelecosPorTipo')->willReturnCallback(function (int $id, string $tipo) use (&$telecos): string {
+            return $telecos[$tipo];
+        });
+        $uc = new ProfesoresAsignaturaLista($asigSvc, $oPersonaRepo, $oDocRepo, $this->createMock(TelecoPersonaDlRepositoryInterface::class), $telecoSvc);
+
+        $this->assertSame(['93 1 / 600 1', 'l@x.org'], [$uc->getTablaData(1001)['a_valores'][1][4], $uc->getTablaData(1001)['a_valores'][1][5]]);
+        $telecos['telf'] = '';
+        $this->assertSame('600 1', $uc->getTablaData(1001)['a_valores'][1][4], 'sin separador si solo hay uno');
+    }
+
     private function stubOConfigAmbito(string $ambito): void
     {
         $_SESSION['oConfig'] = new class ($ambito) {

@@ -59,8 +59,11 @@ final class ProfesoresAsignaturaLista
             $txt_docencia = $this->buildTextoDocencia($cDocencia);
 
             $mails = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
-            $telfs = $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
-            $telfs .= $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
+            // Fijos y móviles separados como dentro de cada tipo (antes salían pegados).
+            $telfs = implode(' / ', array_filter([
+                $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'telf', " / ", "*"),
+                $this->telecoPersonaService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*"),
+            ], static fn (string $t): bool => $t !== ''));
 
             $a_valores[$i]['sel'] = (string)$id_nom;
             $a_valores[$i][1] = ['ira' => '', 'valor' => $ap_nom];
