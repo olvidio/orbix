@@ -267,6 +267,35 @@ final class ActividadesPorCasasServiceTest extends TestCase
         $this->assertArrayHasKey('u#1#Zeta', $aActividades['Zeta']);
     }
 
+    public function test_por_lugar_de_las_actividades_con_lugares_por_determinar_y_otros(): void
+    {
+        $vistos = [];
+        $actividadRepo = $this->createMock(ActividadRepositoryInterface::class);
+        $actividadRepo->method('getUbis')->willReturnCallback(function (Criteria $c) use (&$vistos): array {
+            $vistos = \Tests\support\DescribeCriteria::filtros($c);
+            return [0, 1];
+        });
+        $actividadRepo->method('actividadesDeUnaCasa')->willReturnCallback(fn (int $id): array => [['id_ubi' => $id]]);
+
+        [$sCdc, $a] = $this->createService($this->createStub(CasaDlRepositoryInterface::class), $actividadRepo)->actividadesPorCasas(
+            11,
+            $this->fecha('2030/1/1'),
+            $this->fecha('2030/3/31'),
+            0,
+            $this->fecha('2030/3/31'),
+            $this->fecha('2030/1/1'),
+        );
+
+        $this->assertSame('', $sCdc);
+        $this->assertContains('id_tipo_activ matches ^1', $vistos, 'solo actividades de sv');
+        $this->assertContains('f_ini lte 2030-03-31', $vistos);
+        $this->assertContains('f_fin gte 2030-01-01', $vistos);
+        $this->assertContains('status lt 4', $vistos);
+        $this->assertSame([['id_ubi' => 0]], $a['por determinar']['u#2#por determinar']);
+        $this->assertSame([['id_ubi' => 1]], $a['otros lugares']['u#1#otros lugares']);
+        $this->assertSame([[ '##' => []]], array_values(array_filter($a, 'is_int', ARRAY_FILTER_USE_KEY)), 'línea final en blanco');
+    }
+
     private function crearCasaStub(int $id, string $nombre): Casa
     {
         $stub = $this->createStub(Casa::class);
