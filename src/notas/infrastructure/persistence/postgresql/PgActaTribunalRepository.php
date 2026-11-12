@@ -50,36 +50,30 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        // El texto llega del usuario (autocompletado): va como parámetro y escapado para que se busque literal.
+        // Antes se interpolaba en el SQL (inyección) y una comilla rompía la consulta.
+        $params = [];
+        $sCondi = "WHERE substring(acta, '\\/(\\d{2})')::integer > 19 ";
         if ($sQuery !== '') {
-            $sCondi = "WHERE public.sin_acentos(examinador::text)  ~* public.sin_acentos('$sQuery'::text)
-                        AND substring(acta, '\/(\d{2})')::integer > 19 ";
-        } else {
-            $sCondi = "WHERE substring(acta, '\/(\d{2})')::integer > 19 ";
+            $sCondi .= "AND public.sin_acentos(examinador::text) ~* public.sin_acentos(:patron::text) ";
+            $params['patron'] = preg_quote($sQuery);
         }
-        $sOrdre = " ORDER BY examinador";
-        $sLimit = " LIMIT 25";
-        $sQry = "SELECT DISTINCT examinador FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT DISTINCT examinador FROM $nom_tabla " . $sCondi . " ORDER BY examinador LIMIT 25";
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return '[]';
         }
 
-        $json = '[';
-        $i = 0;
+        $examinadores = [];
         while (($aDades = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
-            if (!is_array($aDades)) {
-                continue;
+            $examinador = is_array($aDades) ? ($aDades['examinador'] ?? '') : '';
+            if (is_string($examinador) && $examinador !== '') {
+                $examinadores[] = ['label' => $examinador];
             }
-            $examinador = $aDades['examinador'] ?? '';
-            if (!is_string($examinador) || $examinador === '') {
-                continue;
-            }
-            $i++;
-            $json .= ($i > 1) ? ',' : '';
-            $json .= '{"label":"' . $examinador . '"}';
         }
-        $json .= ']';
-        return $json;
+
+        // json_encode: con la concatenación anterior un nombre con comillas rompía el JSON.
+        return json_encode($examinadores, JSON_UNESCAPED_UNICODE) ?: '[]';
     }
 
 
