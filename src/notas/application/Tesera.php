@@ -446,7 +446,7 @@ final class Tesera
             'asignatura' => $asignatura,
             'nota' => (string) ($row['nota'] ?? ''),
             'fecha' => $row['fecha']?->getFromLocal() ?? '',
-            'bAprobada' => (string) $row['bAprobada'],
+            'bAprobada' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($row['bAprobada']) ? 't' : 'f',
         ];
     }
 }
