@@ -38,13 +38,22 @@ export async function abrirApp(page: Page): Promise<Incidencias> {
   return inc;
 }
 
-/** Carga `path` (relativo a la raíz de Orbix, con su query) en `#main` y espera a que pinte. */
-export async function abrirPantalla(page: Page, path: string, esperar: string): Promise<void> {
+/**
+ * Carga `path` (relativo a la raíz de Orbix, con su query) en `#main` y espera a que pinte `esperar`.
+ * `soloPresente`: basta con que exista (p. ej. casillas de una rejilla SlickGrid, que Playwright no
+ * siempre da por visibles).
+ */
+export async function abrirPantalla(page: Page, path: string, esperar: string, soloPresente = false): Promise<void> {
   await page.evaluate((p) => {
     // @ts-expect-error función global de Orbix (scripts/index.js.php)
     fnjs_update_div('#main', p);
   }, path);
-  await expect(page.locator('#main').locator(esperar).first()).toBeVisible({ timeout: 20_000 });
+  const loc = page.locator('#main').locator(esperar).first();
+  if (soloPresente) {
+    await expect(loc).toBeAttached({ timeout: 20_000 });
+  } else {
+    await expect(loc).toBeVisible({ timeout: 20_000 });
+  }
   await sinErrorDeBackend(page);
 }
 
