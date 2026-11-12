@@ -62,25 +62,25 @@ class PersonaNotaOtraRegionStgr
 
     protected NotaSituacion $id_situacion;
 
-    protected ?ActaNumero $acta;
+    protected ?ActaNumero $acta = null;
 
     protected ?DateTimeLocal $f_acta = null;
 
-    protected ?Detalle $detalle;
+    protected ?Detalle $detalle = null;
 
-    protected ?bool $preceptor;
+    protected ?bool $preceptor = null;
 
-    protected ?int $id_preceptor;
+    protected ?int $id_preceptor = null;
 
-    protected ?NotaEpoca $epoca;
+    protected ?NotaEpoca $epoca = null;
 
-    protected ?ActividadId $id_activ;
+    protected ?ActividadId $id_activ = null;
 
-    protected ?NotaNum $nota_num;
+    protected ?NotaNum $nota_num = null;
 
-    protected ?NotaMax $nota_max;
+    protected ?NotaMax $nota_max = null;
 
-    protected ?TipoActa $tipo_acta;
+    protected ?TipoActa $tipo_acta = null;
 
     protected ?string $json_certificados = null;
 
