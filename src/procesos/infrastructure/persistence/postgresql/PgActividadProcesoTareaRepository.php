@@ -214,49 +214,56 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $a_sfsv = [$isfsv];
         }
         $iid_fase = [];
-        foreach ($a_sfsv as $sfsv) {
-            if ($sfsv === 1) {
-                $this->setNomTabla('a_actividad_proceso_sv');
-            } else {
-                $this->setNomTabla('a_actividad_proceso_sf');
-            }
-            if ($dl_org_no_f === ConfigGlobal::mi_dele()) {
-                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso((int) $sfsv);
-            } else {
-                // NO se genera si:
-                // - es una actividad de otra dl,
-                // - y de la otra sección
-                // - y no se hace en una casa de la dl.
-                if ($isfsv != $sfsv) {
-                    $id_ubi = $oActividad->getId_ubi();
-                    $oCasa = $this->casaRepository->findById($id_ubi ?? 0);
-                    $dl_casa = $oCasa?->getDlVo()?->value();
-                    if ($dl_casa != ConfigGlobal::mi_dele()) {
-                        continue;
-                    }
-                }
-                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex((int) $sfsv);
-            }
-            if (empty($id_tipo_proceso)) {
-                $this->registrarAvisoGenerarProceso(
-                    sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"), $iid_tipo_activ, $sfsv)
-                );
-                return TRUE;
-            }
-            // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
-            // >> Cuando se hace manual, es porque se quiere regenerar y hay que forzar:
-            if ($force === FALSE) {
-                $cActividadProcesoTarea = $this->matching(
-                    Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $iid_activ))
-                );
-                if (empty($cActividadProcesoTarea)) {
-                    $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+        // Servicio compartido en la petición: al acabar, volver a la tabla de entrada.
+        $nomTablaOriginal = $this->getNomTabla();
+        try {
+            foreach ($a_sfsv as $sfsv) {
+                if ($sfsv === 1) {
+                    $this->setNomTabla('a_actividad_proceso_sv');
                 } else {
-                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()?->value() ?? 0;
+                    $this->setNomTabla('a_actividad_proceso_sf');
                 }
-            } else {
-                $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+                if ($dl_org_no_f === ConfigGlobal::mi_dele()) {
+                    $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso((int) $sfsv);
+                } else {
+                    // NO se genera si:
+                    // - es una actividad de otra dl,
+                    // - y de la otra sección
+                    // - y no se hace en una casa de la dl.
+                    if ($isfsv != $sfsv) {
+                        $id_ubi = $oActividad->getId_ubi();
+                        $oCasa = $this->casaRepository->findById($id_ubi ?? 0);
+                        $dl_casa = $oCasa?->getDlVo()?->value();
+                        if ($dl_casa != ConfigGlobal::mi_dele()) {
+                            continue;
+                        }
+                    }
+                    $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex((int) $sfsv);
+                }
+                if (empty($id_tipo_proceso)) {
+                    $this->registrarAvisoGenerarProceso(
+                        sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"), $iid_tipo_activ, $sfsv)
+                    );
+                    return TRUE;
+                }
+                // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
+                // >> Cuando se hace manual, es porque se quiere regenerar y hay que forzar:
+                if ($force === FALSE) {
+                    $cActividadProcesoTarea = $this->matching(
+                        Criteria::create()->where(Filter::eq(ActividadProcesoTareaField::IdActiv, $iid_activ))
+                    );
+                    if (empty($cActividadProcesoTarea)) {
+                        $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+                    } else {
+                        $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()?->value() ?? 0;
+                    }
+                } else {
+                    $iid_fase[$sfsv] = $this->generar($id_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
+                }
             }
+
+        } finally {
+            $this->setNomTabla($nomTablaOriginal);
         }
 
         // devuelve la fase del proceso propio
@@ -371,13 +378,14 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         } else {
             $a_sfsv = [$isfsv];
         }
-        foreach ($a_sfsv as $sfsv) {
-            if ($sfsv === 1) {
-                $this->setNomTabla('a_actividad_proceso_sv');
-            } else {
-                $this->setNomTabla('a_actividad_proceso_sf');
+        $nomTablaOriginal = $this->getNomTabla();
+        try {
+            foreach ($a_sfsv as $sfsv) {
+                $this->setNomTabla($sfsv === 1 ? 'a_actividad_proceso_sv' : 'a_actividad_proceso_sf');
+                $this->borrar($iid_activ);
             }
-            $this->borrar($iid_activ);
+        } finally {
+            $this->setNomTabla($nomTablaOriginal);
         }
     }
 
