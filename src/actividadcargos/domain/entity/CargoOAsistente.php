@@ -8,7 +8,7 @@ class CargoOAsistente
     private int $id_activ;
     private int $id_nom;
     private bool $propio;
-    private int $id_cargo;
+    private int $id_cargo = 0;
 
     public function __construct(int $id_activ)
     {

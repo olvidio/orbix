@@ -68,6 +68,10 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             if (isset($aDades['propio'])) {
                 $oCargoOAsistente->setPropio(\src\shared\domain\helpers\FuncTablasSupport::isTrue($aDades['propio']) ?? false);
             }
+            // Si la primera fila de la actividad ya es un cargo (sin asistencia), guardarlo.
+            if (isset($aDades['id_cargo']) && is_numeric($aDades['id_cargo'])) {
+                $oCargoOAsistente->setId_cargo((int) $aDades['id_cargo']);
+            }
             $oCargoOAsistenteSet->add($oCargoOAsistente);
             $aRepe[] = $id_activ;
             $c++;
@@ -89,6 +93,10 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
 
         $tabla_tmp = 'tmp_activ_solape';
         $tabla_p_tmp = 'tmp_sacd_solape';
+
+        // Una segunda llamada en la misma conexión no debe fallar al crearlas ni
+        // arrastrar las filas de la anterior.
+        $this->pdoExec($oDbl, "DROP TABLE IF EXISTS $tabla_tmp; DROP TABLE IF EXISTS $tabla_p_tmp", __METHOD__, __FILE__, __LINE__);
 
         $sqlCreateA = "CREATE TEMP TABLE $tabla_tmp (
 						id_activ bigint,
