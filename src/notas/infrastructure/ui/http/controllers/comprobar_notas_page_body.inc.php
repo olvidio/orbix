@@ -310,7 +310,9 @@ if ($Qactualizar === 'r') {
 if ($Qactualizar === 'borrar_cursada') {
 
     $Qid_nom = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_nom');
-    $Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'id_asignatura');
+    // Entero: antes se interpolaba el texto tal cual en el DELETE (inyección SQL; «0 OR 1=1» borraba todas las
+    // notas «cursada» de la dl).
+    $Qid_asignatura = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_asignatura');
 
     $ssql = "DELETE FROM {$tablaNotasDl} n
 		WHERE n.id_situacion = " . $nota_situ_cursada . "
