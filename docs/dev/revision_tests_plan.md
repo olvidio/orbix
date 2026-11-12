@@ -180,7 +180,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
 - [x] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (sección 25): `dbextern` 59 % → 67 %, `pasarela` 61 % → 65 %; `devel_db_admin` sin cambios (DDL, necesita BD aislada); fecha de nacimiento de la BDU corregida (el `f_inc` de la sección 11 ya estaba arreglado y probado)
 - [x] 2.11 `planning` (sección 26): 62 % → 71 % (application 70 → 82 %): `ActividadesDePersonaService` 35 → ~90 %, `ActividadesPorCasasService` 58 → ~85 %; `ActividadesPorZonasService` sigue en 64 % (ya tenía 10 casos).
-- [ ] 2.10 resto (asignaturas, profesores, cambios, configuracion, menus, inventario, cartaspresentacion, tablonanuncios, zonassacd, shared, utils_database)
+- [~] 2.10 resto (sección 27): repaso por riesgo; corregidos 3 casos de HTML sin escapar (cartas de presentación, propuestas de encargos, correo a los sacd). Cobertura apenas cambia (`cartaspresentacion` 34 → 40 %); queda una pasada de cobertura módulo a módulo
 
 **Fase 3**
 - [ ] 3.1 Inventario de pantallas y matriz en `e2e/README.md`.
@@ -983,3 +983,22 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 **Hallazgos (sin corregir):**
 1. `ActividadesPorCasasService` agrupa por nombre de casa: dos casas con el mismo nombre (p. ej. una casa y un centro de ellas en la opción 6) se pisan. El parámetro `$sin_activ` no se usa. Con la selección 9 sin ninguna casa marcada se muestran todas.
 2. Para las actividades sin lugar se pinta `u#2#por determinar` pero se consultan las de `id_ubi` 0.
+
+## 27. Fase 2, paso 2.10: resto de módulos (repaso por riesgo, 2026-11-12, sin atención del usuario)
+
+**Línea base** (unit ∪ integración de cada módulo): `asignaturas` 54 %, `cambios` 59 %, `cartaspresentacion` 34 %, `configuracion` 58 %, `inventario` 21 %, `menus` 47 %, `profesores` 58 %, `tablonanuncios` 64 %, `utils_database` 36 %, `zonassacd` 41 %.
+
+En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que escribe datos y en el **HTML montado en `src/` sin escapar** (se buscaron los ficheros que generan tablas sin ningún `htmlspecialchars` y se comprobó qué textos libres llegan a ellos). Los nombres de centro (`UbiNombreText`) y de persona (`PersonaTextoChars`) tienen lista blanca de caracteres sin `<`/`>`; las observaciones, descripciones de encargos, cartas de presentación y lugares no.
+
+**Bugs corregidos:**
+1. **XSS almacenado en el listado de cartas de presentación** (`CartasPresentacionListaData`): persona de contacto, teléfono, correo y dirección sin escapar (los VO no limitan caracteres).
+2. **XSS almacenado en las propuestas de encargos de un centro** (`PropuestasEncargosUbiHtml`): la descripción del encargo sin escapar.
+3. **HTML inyectable en el correo de comunicación de actividades a los sacd** (`ComunicarActividadesSacdService`, hallazgo de 2.4): observación, lugar especial, encargado… sin escapar en el correo al sacd, al jefe de calendario y al centro.
+- Tests nuevos: `CartaPresentacionUpdate` (carta nueva de un centro de la dl, de un cr, de otra dl; existente), escapado de los tres casos.
+
+**Hallazgos (sin corregir):**
+1. `CartaPresentacionUpdate`: al crear una carta comprueba que el centro sea de la dl (o un cr), pero al modificar una existente no. `sanear()` recorre todas las cartas de la dl en cada guardado (una consulta de direcciones por carta) y borra las que ya no tienen esa dirección.
+2. `ZonasAComun` (script de migración de `zonassacd` de sv-e a comun, 320 líneas) no tiene tests: como el DDL de `devel_db_admin`, necesita una BD aislada.
+3. Varios listados de `encargossacd` (`Listas*Data`) y `CartasPresentacionListaData` siguen montando HTML en `application/` (contra la regla de capas), aunque con los datos ya escapados o restringidos.
+
+**Pendiente:** la pasada de cobertura de estos módulos (sobre todo `inventario` 21 %, `utils_database` 36 %, `zonassacd` 41 %, `menus` 47 %).
