@@ -51,6 +51,7 @@ class trasladosNotasTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->guardarConexionNotasDl();
         // Lo usa el setConnection
         putenv("UBICACION=sv");
         $this->session_org = $_SESSION['session_auth']['esquema'];
@@ -767,6 +768,7 @@ class trasladosNotasTest extends myTest
      */
     protected function tearDown(): void
     {
+        $this->restaurarConexionNotasDl();
         $_SESSION['session_auth']['esquema'] = $this->session_org;
         parent::tearDown();
     }

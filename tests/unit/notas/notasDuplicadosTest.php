@@ -10,6 +10,8 @@ use Tests\myTest;
 
 class notasDuplicadosTest extends myTest
 {
+    use BuscaPersonaNotasTrait;
+
     private string $session_org;
 
     private string $snew_esquema;
@@ -36,6 +38,7 @@ class notasDuplicadosTest extends myTest
         // Lo usa el setConnection
         putenv("UBICACION=sv");
         $this->session_org = $_SESSION['session_auth']['esquema'];
+        $this->limpiarNotasDeFactory([1036156]);
     }
 
     private function nuevoEditarPersonaNota(\src\notas\domain\entity\PersonaNota $oPersonaNota): EditarPersonaNota
@@ -93,15 +96,15 @@ class notasDuplicadosTest extends myTest
         $a_ObjetosPersonaNota2 = $oEditarPersonaNota2->getReposPersonaNota($datosRegionStgr2, $id_schema_persona);
         $repoPersonaNota2 = $a_ObjetosPersonaNota2['repo_real'];
 
+        // Antes el test acababa en `assertTrue(TRUE)` dentro del catch: pasaba tanto si se rechazaba el duplicado
+        // como si no. Ahora exige la excepción (la limpieza la hacen setUp/tearDown).
+        $this->assertNotNull($oPersonaNotaDB, 'la primera nota se guarda');
         try {
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota2);
-            $repoPersonaNota2->Eliminar($oPersonaNotaDB);
+            $this->fail('una segunda nota de la misma asignatura debe rechazarse');
         } catch (\RuntimeException $e) {
-            // no hacer nada
-            //$msg_err .= "\r\n";
-            //$msg_err .= $e->getMessage();
-            $repoPersonaNota->Eliminar($oPersonaNotaDB);
-            $this->assertTrue(TRUE);
+            $this->assertStringContainsString((string) $id_nom, $e->getMessage());
+            $this->assertStringContainsString((string) $personaNota->getId_asignatura(), $e->getMessage());
         }
 
     }
@@ -137,6 +140,7 @@ class notasDuplicadosTest extends myTest
      */
     protected function tearDown(): void
     {
+        $this->limpiarNotasDeFactory([1036156]);
         $_SESSION['session_auth']['esquema'] = $this->session_org;
         parent::tearDown();
     }

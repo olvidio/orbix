@@ -34,7 +34,12 @@ class notasTest extends myTest
         parent::setUp();
         $this->session_org = $_SESSION['session_auth']['esquema'];
         $this->limpiarNotasDePasoEnRegionStgr([-1001124, -1001125]);
+        $this->limpiarNotasDeFactory(self::PERSONAS_DE_PRUEBA);
     }
+
+    /** Personas con las que estos tests crean notas en la dl de la sesión. */
+    private const PERSONAS_DE_PRUEBA = [-1001123, -1001124, -1001125, 1036156, 10051256, 10011255, 100112345];
+
 
     /**
      * @param int[] $idsNom
@@ -66,7 +71,9 @@ class notasTest extends myTest
 
     private function personaNotaDlRepositoryForSchema(string $esquema): PersonaNotaDlRepositoryInterface
     {
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        // Copia: cambiar la conexión del repositorio compartido del contenedor hacía que los tests siguientes
+        // leyeran y escribieran en este otro esquema (choques con notas reales: «Ya existe esta nota»).
+        $PersonaNotaDBRepository = clone $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $oConfigDB = new ConfigDB(ConfigGlobal::mi_sfsv() === 1 ? 'sv' : 'sf');
         $config = $oConfigDB->getEsquema($esquema);
         $config['schema'] = $esquema;
@@ -642,6 +649,7 @@ class notasTest extends myTest
      */
     protected function tearDown(): void
     {
+        $this->limpiarNotasDeFactory(self::PERSONAS_DE_PRUEBA);
         $_SESSION['session_auth']['esquema'] = $this->session_org;
         parent::tearDown();
     }

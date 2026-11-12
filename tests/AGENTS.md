@@ -143,6 +143,14 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 - Algunos casos de uso tocan la BD aunque sus repositorios estén simulados (p. ej. `AsignaturasPendientes` crea tablas temporales y consulta `e_notas` con el PDO global). Si el test extiende `myTest` y llega a esa SQL, usar **ids que no pueden existir** (negativos tipo `-999000001`) y no escribir nada. Si tiene que escribir, es un test de integración: va a `tests/integration`, con datos fijos y limpieza en `finally`.
 - Contraejemplo: `Tests\unit\notas\notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` escribe notas con datos aleatorios del factory sobre la BD real y falla de forma intermitente («Ya existe esta nota»).
 
+## No cambiar la conexión de un repositorio del contenedor
+
+- `$GLOBALS['container']->get(...)` devuelve **la misma instancia** a todos los tests del proceso. Un `setoDbl()` sobre ella hace que todos los tests siguientes lean y escriban en ese otro esquema.
+- Caso real: `notasTest` cambiaba la conexión del repositorio de notas para comprobar el esquema de Galbel; el test siguiente buscaba duplicados en las notas reales de esa persona y fallaba de forma intermitente («Ya existe esta nota») cuando la asignatura aleatoria coincidía con una aprobada.
+- Si solo se necesita para consultar en el test: `$repo = clone $GLOBALS['container']->get(X::class); $repo->setoDbl(...)`.
+- Si el caso de uso tiene que ver la conexión cambiada a través del contenedor: guardar `getoDbl()` en `setUp()` y restaurarla en `tearDown()` (ejemplo: `BuscaPersonaNotasTrait::guardarConexionNotasDl()` / `restaurarConexionNotasDl()`).
+- Datos aleatorios de factory sobre personas reales: limpiar antes **y** después de cada test con una marca propia de la factory (p. ej. `id_activ` fijo), no solo al final del test.
+
 ## Ejecutar PHPUnit
 
 - PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.

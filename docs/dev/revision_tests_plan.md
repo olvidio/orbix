@@ -172,7 +172,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
 - [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
-- [ ] 2.3 `notas` + `certificados`
+- [ ] 2.3 `notas` + `certificados` — en curso (sección 19)
 - [ ] 2.4 `actividades` (+ los cinco `actividad*` satélite)
 - [ ] 2.5 `personas`
 - [ ] 2.6 `usuarios` + `procesos`
@@ -719,3 +719,9 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 8. `ListaAsisConjuntoActivData`: con «solo sacd» el bloque de otras dl muestra a todos (se pone `setSacd(false)` al clonar). Construye HTML en `application` (`content_html`), igual que `ListaPlazasConjuntoActividades`, que devuelve un `frontend\shared\web\Lista` desde `src/`.
 9. `Periodo` devuelve las fechas de «desde hoy» con «/» (`Y/m/d`) y el resto con «-»; PostgreSQL acepta las dos.
 10. ≈ 90 ficheros de tests usan `@dataProvider` en docblock, que PHPUnit 12 no leerá (156 avisos en la suite); los tocados en este paso usan ya `#[DataProvider]`. Conviene convertir el resto en un paso mecánico.
+
+## 19. Fase 2, paso 2.3: `notas` + `certificados` (en curso desde el 2026-11-12)
+
+**Línea base:** 631 tests (unit + integración de los dos módulos). Cobertura de líneas: `notas` 69 %, `certificados` 24 %. En `certificados`, el «cerrado» de la fase 1 solo miraba `application/`: hay lógica sin test en `domain/` (`CertificadoEmitidoEnviar`, `CertificadoEmitidoSelect`, `Select_certificados_de_una_persona`) y en controladores grandes (`certificado_emitido_guardar`, `certificado_emitido_imprimir_mpdf_datos`…). `db/` son utilidades de esquema (DDL): fuera, como en `devel_db_admin`.
+
+**Test intermitente de notas (resuelto):** `notasTest::test_modificar_nota_dl_persona_otra_region_desde_dl_stgr` fallaba con «Ya existe esta nota» (1 de cada 3–4 ejecuciones). Causa: el helper `personaNotaDlRepositoryForSchema()` cambiaba con `setoDbl()` la conexión del repositorio de notas **compartido** del contenedor para mirar el esquema de Galbel; el test siguiente buscaba duplicados en las notas reales de esa persona en Galbel y chocaba cuando la asignatura aleatoria ya estaba aprobada. Arreglo: copia del repositorio en ese helper y en dos tests de certificados que hacían lo mismo; los tests de traslados (que sí necesitan que el caso de uso vea la conexión cambiada) la guardan y la restauran; limpieza de las notas de la factory (marca `id_activ` 30012345) antes y después de cada test. 0 fallos en 12 ejecuciones seguidas. `notasDuplicadosTest::test_nueva_nota_ya_existe` solo hacía `assertTrue(TRUE)` y pasaba con o sin duplicado: ahora exige la excepción. Lección añadida a `tests/AGENTS.md`.

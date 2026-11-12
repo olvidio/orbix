@@ -32,7 +32,8 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
         $this->session_org = $_SESSION['session_auth']['esquema'];
         $_SESSION['session_auth']['esquema'] = 'H-Hv';
 
-        $this->repository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
+        // Copia: no cambiar la conexión del repositorio compartido del contenedor (afectaría a los tests siguientes).
+        $this->repository = clone $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $oDBdst = $this->setConexion('H-Hv');
         $this->repository->setoDbl($oDBdst);
         $this->repository->setoDbl_select($oDBdst);
