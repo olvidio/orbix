@@ -16,7 +16,7 @@ class EquipajeCabecerabTest extends myTest
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new EquipajeCabecerab(str_repeat('a', 1000)); // Assuming max length validation
+        new EquipajeCabecerab(str_repeat('a', 401));
     }
 
     public function test_to_string_returns_equipajeCabecerab_value()
@@ -37,4 +37,10 @@ class EquipajeCabecerabTest extends myTest
         $this->assertNull($equipajeCabecerab);
     }
 
+
+    /** Hay textos de 359 caracteres en la BD dev (columna text): antes el límite era menor y el equipaje no se podía cargar. */
+    public function test_admite_los_textos_largos_que_hay_en_la_bd(): void
+    {
+        $this->assertSame(400, mb_strlen((new EquipajeCabecerab(str_repeat('á', 400)))->value()));
+    }
 }

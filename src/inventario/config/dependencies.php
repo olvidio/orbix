@@ -3,6 +3,7 @@
 use src\inventario\application\ColeccionesOpcionesData;
 use src\inventario\application\EquipajeEliminar;
 use src\inventario\application\InventarioCssInlineData;
+use src\inventario\application\EquipajesMovimientosData;
 use src\inventario\application\InventarioDocumentosData;
 use src\inventario\application\TipoDocOpcionesData;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
@@ -45,6 +46,7 @@ return [
     InventarioCssInlineData::class => autowire(InventarioCssInlineData::class),
     TipoDocOpcionesData::class => autowire(TipoDocOpcionesData::class),
     InventarioDocumentosData::class => autowire(InventarioDocumentosData::class),
+    EquipajesMovimientosData::class => autowire(EquipajesMovimientosData::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),
