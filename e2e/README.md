@@ -149,6 +149,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | ubis | `ubis-alta-baja.spec.ts` | casa de la dl: búsqueda sin resultados → ficha nueva → guardar → tabla → modificar → ficha → guardar → ficha → eliminar → vuelve a la búsqueda |
 | procesos | `procesos-fases.spec.ts` | crear una actividad (tipo con proceso coherente en dev) → fases de la actividad → marcar una fase con observación → desmarcarla. Se salta si el diseño del proceso depende de fases que no tiene |
 | cambios | `cambios-avisos.spec.ts` | usuario nuevo → avisos de cambios → añadir aviso (objeto, fase de referencia, tipo de aviso, una propiedad) → guardar → eliminar desde la lista |
+| encargossacd | `encargossacd-alta-baja.spec.ts` | buscar encargos → añadir encargo (grupo y tipo encadenados) → guardar → buscarlo → modificar → borrar desde la lista; comprueba que los demás encargos no cambian |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
@@ -164,6 +165,8 @@ Reglas para escribir más:
 - Los desplegables encadenados se recargan por AJAX: esperar la respuesta antes de elegir en el siguiente.
 - Al abrir una pantalla que comparte elementos con la anterior (p. ej. `equipajes_ver.php` con otro parámetro), esperar a un elemento que solo tenga la nueva; si no, `abrirPantalla` da por buena la que aún está pintada.
 - Ojo con los `id` repetidos entre pantallas (p. ej. `#b_mas` en la búsqueda de ubis y en su tabla): acotar el selector con algo propio de la pantalla que se espera.
+- **No abrir fichas de datos reales por descuido:** en una lista, el enlace de alta suele convivir con los enlaces de cada fila; elegirlo por algo propio (`que=nuevo`…) y comprobar antes de guardar que la ficha es de alta (o la del dato del test).
+- Si el alta usa una secuencia de ids, comprobar al final que los datos que ya había no han cambiado (ver `encargossacd-alta-baja`).
 - Si el flujo toca datos de una persona real (p. ej. marcas de dossier), guardar una foto antes y reponerla al final.
 - Ejecutar Playwright modifica `test-results/` (versionado): restaurarlo con `git checkout -- test-results/ && git clean -fdq test-results/`.
 
@@ -178,7 +181,7 @@ Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escri
 | misas | 23 | 23 | 31 | 11 | — |
 | ubis | 35 | 35 | 36 | 9 | casa de la dl |
 | actividades | 18 | 16 | 28 | 9 | sí |
-| encargossacd | 35 | 35 | 32 | 8 | — |
+| encargossacd | 35 | 35 | 32 | 8 | encargo |
 | certificados | 14 | 14 | 18 | 7 | subida |
 | cambios | 6 | 6 | 11 | 7 | avisos de un usuario |
 | procesos | 12 | 12 | 17 | 6 | fases de una actividad |

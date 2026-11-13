@@ -170,4 +170,30 @@ final class EncargoVerNuevoTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->useCase->execute($this->input(['idioma_enc' => 'es']));
     }
+
+    /**
+     * Antes: con la secuencia por detrás de los ids reales, el alta usaba un id que ya existía y
+     * `Guardar` sobrescribía ese encargo.
+     */
+    public function test_no_reutiliza_el_id_de_un_encargo_que_ya_existe(): void
+    {
+        $this->encargos->method('getNewId')->willReturnOnConsecutiveCalls(51, 52, 53);
+        $this->encargos->method('findById')->willReturnCallback(static fn (int $id): ?Encargo => $id < 53 ? new Encargo() : null);
+        $guardado = null;
+        $this->encargos->method('Guardar')->willReturnCallback(function (Encargo $e) use (&$guardado): bool {
+            $guardado = $e;
+            return true;
+        });
+
+        $this->assertSame(['error' => ''], $this->useCase->execute($this->input()));
+        $this->assertSame(53, $guardado?->getId_enc());
+    }
+
+    public function test_sin_id_nuevo_no_guarda(): void
+    {
+        $this->encargos->method('getNewId')->willReturn(0);
+        $this->encargos->expects($this->never())->method('Guardar');
+
+        $this->assertNotSame('', $this->useCase->execute($this->input())['error']);
+    }
 }

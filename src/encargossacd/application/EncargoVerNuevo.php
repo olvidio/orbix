@@ -58,7 +58,10 @@ final class EncargoVerNuevo
             return ['error' => _("Debe llenar el campo descripción")];
         }
 
-        $newId = $this->encargoRepository->getNewId();
+        $newId = $this->idLibre();
+        if ($newId === 0) {
+            return ['error' => _("hay un error, no se ha guardado")];
+        }
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc((int)$id_tipo_enc);
@@ -78,5 +81,26 @@ final class EncargoVerNuevo
         }
 
         return ['error' => ''];
+    }
+
+    /**
+     * Siguiente id de la secuencia que no esté ya en uso (0 si no se encuentra).
+     *
+     * `Guardar` actualiza la fila si el id existe: con la secuencia por detrás de los ids reales
+     * (pasa en una BD restaurada de una copia), dar de alta un encargo **sobrescribía otro**.
+     */
+    private function idLibre(): int
+    {
+        for ($i = 0; $i < 10000; $i++) {
+            $id = $this->encargoRepository->getNewId();
+            if ($id === 0) {
+                return 0;
+            }
+            if ($this->encargoRepository->findById($id) === null) {
+                return $id;
+            }
+        }
+
+        return 0;
     }
 }

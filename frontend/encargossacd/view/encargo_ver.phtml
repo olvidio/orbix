@@ -8,6 +8,8 @@
         }).join('&');
     };
 
+    // Los campos enviados tienen que ser los del hash de cada URL (incluidas las cápsulas `ctx_*`:
+    // sin ellas el servidor rechazaba el guardado y la aplicación volvía al inicio).
     fnjs_guardar_serialize = function (formulario, que) {
         var allowEditar = {
             desc_enc: 1,
@@ -20,6 +22,8 @@
             lst_ctrs: 1,
             que: 1,
             id_enc: 1,
+            ctx_nuevo: 1,
+            ctx_editar: 1,
         };
         var allowNuevo = {
             desc_enc: 1,
@@ -31,6 +35,8 @@
             id_zona: 1,
             lst_ctrs: 1,
             que: 1,
+            ctx_nuevo: 1,
+            ctx_editar: 1,
         };
         var allow = (que === 'nuevo') ? allowNuevo : allowEditar;
         return $(formulario).serializeArray()
