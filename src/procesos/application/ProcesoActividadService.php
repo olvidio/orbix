@@ -123,13 +123,15 @@ class ProcesoActividadService
             $this->abort(_("No tiene permiso para marcar o desmarcar esta fase"));
         }
         $this->cargarFases($id_activ, $id_tipo_proceso);
+        // El status de la actividad es el de la fase marcada más avanzada, tanto al marcar como al
+        // desmarcar: marcar tarde una fase de una etapa anterior no hace retroceder la actividad
+        // (para retroceder hay que desmarcar la fase que la hizo avanzar).
         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($completado)) {
-            $statusProceso = $oTareaProceso->getStatusVo()->value();
             $this->marcar($id_activ, $id_tipo_proceso, $fase_tarea);
         } else {
             $this->desmarcar($id_activ, $id_tipo_proceso, $fase_tarea);
-            $statusProceso = $this->tareaProcesoRepository->getStatusProceso($id_tipo_proceso, $this->getFasesEstado());
         }
+        $statusProceso = $this->tareaProcesoRepository->getStatusProceso($id_tipo_proceso, $this->getFasesEstado());
         if ($statusProceso !== $statusActividad) { // cambiar el status de la actividad.
             // OJO si la actividad no es de la dl, no puedo cambiarla.
             $dl_org = $oActividad->getDl_org() ?? '';

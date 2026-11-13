@@ -284,6 +284,34 @@ final class ProcesoActividadServiceTest extends TestCase
         $this->assertSame([FaseId::FASE_APROBADA . '=on', '5=on'], $guardadas);
     }
 
+    public function test_marcar_tarde_una_fase_de_proyecto_no_devuelve_la_actividad_actual_a_proyecto(): void
+    {
+        // La fase 2 (status proyecto) no tiene dependencias y se quedó sin marcar; la actividad ya
+        // es actual por la 5. Antes tomaba el status de la fase marcada: intentaba volver a proyecto
+        // y, sin ser dre, abortaba con «debe hacerlo dre».
+        $this->actividad(StatusId::ACTUAL, 'dlb');
+        $this->estado = ['1#0' => true, '2#0' => false, '5#0' => true];
+        $this->permisos('est');
+        $this->apt->expects($this->once())->method('Guardar')->willReturn(true);
+        $this->actividades->expects($this->never())->method('Guardar');
+        $svc = $this->svc();
+        $this->assertTrue($svc->guardar($this->tarea(2, true)));
+        $this->assertSame(['2#0=on'], $this->marcadas);
+        $this->assertSame('', $svc->getErrorTxt());
+        $this->assertSame(StatusId::ACTUAL, $this->actividad?->getStatus());
+    }
+
+    public function test_marcar_una_fase_de_actual_en_una_actividad_terminada_no_la_devuelve_a_actual(): void
+    {
+        $this->statusFase = [1 => 1, 2 => 2, 5 => 3];
+        $this->actividad(StatusId::TERMINADA, 'dlb');
+        $this->estado = ['1#0' => true, '2#0' => false, '5#0' => true];
+        $this->apt->method('Guardar')->willReturn(true);
+        $this->actividades->expects($this->never())->method('Guardar');
+        $this->assertTrue($this->svc()->guardar($this->tarea(2, true)));
+        $this->assertSame(StatusId::TERMINADA, $this->actividad?->getStatus());
+    }
+
     public function test_actividad_de_otra_dl_marca_la_fase_pero_no_cambia_el_status(): void
     {
         $this->statusFase = [1 => 1, 2 => 3, 5 => 2];
