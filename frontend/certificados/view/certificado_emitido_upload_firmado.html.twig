@@ -7,7 +7,7 @@
     {{ oHashCertificadoPdf.getCamposHtml()|raw }}
     <br>
     {{ "Fichero"|trans|raw }}:
-    <input type="file" name="certificado_pdf" id="fileToUpload" />
+    <input type="file" name="certificado_pdf" id="fileToUpload" accept=".pdf,application/pdf"/>
     <br>
     <br>
     <input type="button" onclick="fnjs_upload_pdf();" value="{{ "subir pdf"|trans|raw }}">

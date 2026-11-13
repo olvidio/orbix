@@ -30,6 +30,9 @@ if ($tmpFilePath === '') {
         fclose($fp);
         if ($contenido_doc === false) {
             $error_txt = sprintf(_("No se puede leer el archivo %s"), $fileName);
+        } elseif (!\src\shared\domain\helpers\DocumentoPdf::esPdf($contenido_doc)) {
+            // Se guarda y se descarga como PDF: no aceptar otros ficheros.
+            $error_txt = sprintf(_("El archivo %s no es un PDF"), $fileName);
         } else {
             $oF_certificado = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_certificado'));
             $oF_recibido = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido'));

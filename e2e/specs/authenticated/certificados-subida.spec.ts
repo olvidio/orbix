@@ -5,7 +5,7 @@ import { abrirApp, abrirPantalla, aceptarDialogos, crearNumerario, esperarSrc, l
  * Subida de ficheros (fase 3.4): adjuntar a una persona un certificado recibido en PDF.
  * Crear un numerario → «adjuntar certificado» → número, fechas y el PDF → «subir pdf»
  * (`certificado_recibido_pdf_upload`, multipart) → el certificado está en la BD con el mismo
- * fichero. (Hoy no se comprueba que el fichero sea un PDF: duda 11 de la sección 6b del plan.)
+ * fichero. Un fichero que no es PDF se rechaza (duda 11 de la sección 6b del plan).
  *
  * La persona es del propio test; al final se borran con SQL sus certificados, sus marcas de
  * dossier y la persona.
@@ -41,6 +41,13 @@ test('certificado recibido: subir el PDF a una persona', async ({ page }) => {
   await form.locator('[name="certificado"]').fill('E2E 1/31');
   await form.locator('#f_certificado').fill('1/3/2031');
   await form.locator('#f_recibido').fill('5/3/2031');
+
+  // Un .txt con extensión .pdf: se rechaza y no se guarda nada.
+  await form.locator('#fileToUpload').setInputFiles({ name: 'falso.pdf', mimeType: 'application/pdf', buffer: Buffer.from('no soy un pdf') });
+  const falso = await esperarSrc(page, 'certificado_recibido_pdf_upload', () => form.locator('input[onclick*="fnjs_upload_pdf"]').click());
+  expect(falso.success, 'rechaza lo que no es PDF').toBe(false);
+  expect(falso.mensaje).toContain('falso.pdf');
+  expect(certificados('id_item'), 'no guarda nada').toBe('');
 
   await form.locator('#fileToUpload').setInputFiles({ name: 'certificado.pdf', mimeType: 'application/pdf', buffer: PDF });
   const subida = await esperarSrc(page, 'certificado_recibido_pdf_upload', () => form.locator('input[onclick*="fnjs_upload_pdf"]').click());

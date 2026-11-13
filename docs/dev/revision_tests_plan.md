@@ -211,7 +211,7 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 10. ~~**(2.10) Listado «cl» de encargos.**~~ **Resuelta (2026-11-13): eliminado.** Necesitaba los cargos de gobierno de los centros (tabla `d_cargos`), que Orbix no guarda; el enlace ya estaba comentado en el menú. Se han quitado `ListasClData`, su endpoint, el controlador frontend, la ruta, el test de caracterización y sus entradas en `docs/`. Si algún día se gestionan los cargos de centro, se rehace sobre esa tabla.
 
-11. **(3.4) Subidas de «PDF» sin comprobar el tipo:** la subida del certificado recibido (`certificado_recibido_pdf_upload`) guarda cualquier fichero como documento del certificado (un `.txt` se acepta), y luego se descarga como PDF. ¿Exigir que sea un PDF (cabecera `%PDF`)? Puede haber quien suba escaneos en imagen. (Sin tocar.)
+11. ~~**(3.4) Subidas de «PDF» sin comprobar el tipo.**~~ **Resuelta (2026-11-13): solo PDF.** `certificado_recibido_pdf_upload` y `certificado_emitido_pdf_upload` rechazan con «El archivo %s no es un PDF» lo que no lleva la cabecera `%PDF-` (`DocumentoPdf::esPdf`), y los `<input type=file>` de certificados piden `.pdf`. E2E `certificados-subida.spec.ts` comprueba el rechazo.
 
 ## 7. Presupuesto y ritmo
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 08:48+0100\n"
+"POT-Creation-Date: 2026-11-13 09:08+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -8802,66 +8802,66 @@ msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:34
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "lunes"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:35
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "martes"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:36
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "miércoles"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:37
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "jueves"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:38
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "viernes"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:39
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "sábado"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:40
-#: src/shared/domain/value_objects/DateTimeLocal.php:208
+#: src/shared/domain/value_objects/DateTimeLocal.php:214
 msgid "domingo"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:306
-#: src/shared/domain/value_objects/DateTimeLocal.php:314
+#: src/shared/domain/value_objects/DateTimeLocal.php:320
 #, php-format
 msgid "la fecha fin es igual a la fecha inicio en el periodo %s: %s"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:311
-#: src/shared/domain/value_objects/DateTimeLocal.php:319
+#: src/shared/domain/value_objects/DateTimeLocal.php:325
 #, php-format
 msgid "la fecha fin es menor que la fecha inicio en el periodo %s: %s"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:321
-#: src/shared/domain/value_objects/DateTimeLocal.php:329
+#: src/shared/domain/value_objects/DateTimeLocal.php:335
 #, php-format
 msgid "dias libres cerca de %s"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:326
-#: src/shared/domain/value_objects/DateTimeLocal.php:334
+#: src/shared/domain/value_objects/DateTimeLocal.php:340
 #, php-format
 msgid "hay un solape cerca de %s"
 msgstr ""
@@ -9523,8 +9523,8 @@ msgstr ""
 #: src/personas/application/StgrUpdate.php:71
 #: src/personas/application/TrasladoUpdate.php:93
 #: src/personas/application/TrasladoUpdate.php:107
-#: src/personas/domain/Trasladar.php:436 src/personas/domain/Trasladar.php:601
-#: src/personas/domain/Trasladar.php:1144
+#: src/personas/domain/Trasladar.php:440 src/personas/domain/Trasladar.php:605
+#: src/personas/domain/Trasladar.php:1148
 #: src/procesos/application/ActividadProcesoUpdate.php:39
 #: src/procesos/application/FasesActivCambioUpdate.php:73
 #: src/procesos/application/ProcesosUpdate.php:62
@@ -12260,7 +12260,7 @@ msgstr ""
 #: src/notas/application/ListadoAnualActasData.php:72
 #: src/notas/application/NotaPersonaFormData.php:111
 #: src/notas/application/NotasDeUnaPersonaData.php:98
-#: src/personas/domain/Trasladar.php:380
+#: src/personas/domain/Trasladar.php:384
 #: src/profesores/application/FichaProfesorStgr.php:190
 #: src/profesores/application/FichaProfesorStgr.php:223
 #: src/profesores/domain/services/ProfesorAsignaturaService.php:33
@@ -13850,6 +13850,12 @@ msgstr ""
 msgid "No se puede leer el archivo %s"
 msgstr ""
 
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:35
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:35
+#, php-format
+msgid "El archivo %s no es un PDF"
+msgstr ""
+
 #: src/configuracion/application/ModulosSelectData.php:56
 msgid "aplicaciones requeridas"
 msgstr ""
@@ -13975,8 +13981,8 @@ msgid "mes de fin crt"
 msgstr ""
 
 #: src/dbextern/application/BajaPersonaUseCase.php:40
-#: src/personas/domain/Trasladar.php:252 src/personas/domain/Trasladar.php:272
-#: src/personas/domain/Trasladar.php:400
+#: src/personas/domain/Trasladar.php:254 src/personas/domain/Trasladar.php:276
+#: src/personas/domain/Trasladar.php:404
 msgid "OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."
 msgstr ""
 
@@ -15948,13 +15954,13 @@ msgid "fin bienio"
 msgstr ""
 
 #: src/notas/application/NotasDeUnaPersonaData.php:67
-#: src/personas/domain/Trasladar.php:384
+#: src/personas/domain/Trasladar.php:388
 #, php-format
 msgid "ca: %s, asignatura: %s"
 msgstr ""
 
 #: src/notas/application/NotasDeUnaPersonaData.php:72
-#: src/personas/domain/Trasladar.php:388
+#: src/personas/domain/Trasladar.php:392
 msgid "tiene pendiente de poner las notas de:"
 msgstr ""
 
@@ -16663,96 +16669,96 @@ msgstr ""
 msgid "¿Está seguro que desea eliminar esta actividad?"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:256
-msgid "comprobar:"
-msgstr ""
-
-#: src/personas/domain/Trasladar.php:281
-msgid "copiar persona."
-msgstr ""
-
-#: src/personas/domain/Trasladar.php:289
-msgid "copiar notas"
-msgstr ""
-
-#: src/personas/domain/Trasladar.php:297
+#: src/personas/domain/Trasladar.php:257 src/personas/domain/Trasladar.php:301
 msgid "apuntar traslado"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:304
+#: src/personas/domain/Trasladar.php:260
+msgid "comprobar:"
+msgstr ""
+
+#: src/personas/domain/Trasladar.php:285
+msgid "copiar persona."
+msgstr ""
+
+#: src/personas/domain/Trasladar.php:293
+msgid "copiar notas"
+msgstr ""
+
+#: src/personas/domain/Trasladar.php:308
 msgid "copiar dossiers"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:312
+#: src/personas/domain/Trasladar.php:316
 msgid "trasladar certificados"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:320
+#: src/personas/domain/Trasladar.php:324
 msgid "copiar asistencias"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:334
+#: src/personas/domain/Trasladar.php:338
 msgid "ya está trasladado. No se ha hecho ningún cambio."
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:345
+#: src/personas/domain/Trasladar.php:349
 msgid "No existe la dl origen. Ponerla bien en la ficha de la persona."
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:349
+#: src/personas/domain/Trasladar.php:353
 msgid "No existe la dl destino."
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:351
+#: src/personas/domain/Trasladar.php:355
 msgid "Solamente se anotará el traslado. No se mueven los datos."
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:408 src/personas/domain/Trasladar.php:544
+#: src/personas/domain/Trasladar.php:412 src/personas/domain/Trasladar.php:548
 #, php-format
 msgid "No se ha encontrado la persona con id: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:417 src/personas/domain/Trasladar.php:421
-#: src/personas/domain/Trasladar.php:555 src/personas/domain/Trasladar.php:560
-#: src/personas/domain/Trasladar.php:590
+#: src/personas/domain/Trasladar.php:421 src/personas/domain/Trasladar.php:425
+#: src/personas/domain/Trasladar.php:559 src/personas/domain/Trasladar.php:564
+#: src/personas/domain/Trasladar.php:594
 #, php-format
 msgid "No se reconoce el tipo de persona: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:426
+#: src/personas/domain/Trasladar.php:430
 #, php-format
 msgid "No se ha encontrado la persona origen con id: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:526
+#: src/personas/domain/Trasladar.php:530
 msgid "no puede existir una persona con el mismo id!!"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:566
+#: src/personas/domain/Trasladar.php:570
 #, php-format
 msgid "No se ha encontrado la persona en origen con id: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:585
+#: src/personas/domain/Trasladar.php:589
 #, php-format
 msgid "no existe el esquema destino %s en la base de datos"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:876
+#: src/personas/domain/Trasladar.php:880
 #, php-format
 msgid "No se ha guardado la asistencia(dl) a id_activ: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:882 src/personas/domain/Trasladar.php:900
+#: src/personas/domain/Trasladar.php:886 src/personas/domain/Trasladar.php:904
 #, php-format
 msgid "No se ha guardado la asistencia(out) a id_activ: %s"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:1085
+#: src/personas/domain/Trasladar.php:1089
 msgid "Algo falló"
 msgstr ""
 
-#: src/personas/domain/Trasladar.php:1196
+#: src/personas/domain/Trasladar.php:1200
 #, php-format
 msgid "No se ha guardado el dossier: %s"
 msgstr ""
