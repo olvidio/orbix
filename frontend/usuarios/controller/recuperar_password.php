@@ -1,55 +1,60 @@
 <?php
 /**
- * Página para recuperar la contraseña de un usuario.
- * Genera una contraseña aleatoria, marca en la tabla del usuario que debe cambiarla
- * y envía la nueva contraseña por correo electrónico.
+ * Recuperar la contraseña (sin sesión).
+ *
+ * - GET (desde la ayuda de acceso): pide confirmación con un botón; abrir el enlace no
+ *   envía nada (un rastreador o una vista previa no disparan el correo).
+ * - POST: pide al backend que envíe al correo del usuario un enlace para elegir una
+ *   contraseña nueva. La contraseña actual no cambia hasta usar el enlace.
+ *
+ * No usa FrontBootstrap::boot(): exige sesión y el usuario que ha olvidado la contraseña no la tiene.
  */
 
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\FrontBootstrap;
+use frontend\usuarios\helpers\UsuariosPayload;
+use frontend\usuarios\helpers\UsuariosPostInput;
 
-require_once 'frontend/shared/FrontBootstrap.php';
-FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
+require __DIR__ . '/../../../libs/vendor/autoload.php';
+require_once __DIR__ . '/../../../src/shared/load_env.php';
 
+$Qusername = UsuariosPostInput::requestString('username');
+$Qesquema = UsuariosPostInput::requestString('esquema');
+$Qesquema_web = UsuariosPostInput::requestString('esquema_web');
+// Base de la aplicación desde la configuración, no desde la petición.
+$Qurl_base = AppUrlConfig::getPublicAppBaseUrl() . '/';
 
-$Qusername = (string)filter_input(INPUT_GET, 'username');
-$Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
-$Qesquema = (string)filter_input(INPUT_GET, 'esquema');
-$Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
-// Base de la aplicación desde la configuración, no desde la petición (evita
-// que el servidor llame a otra URL y el enlace «volver» con HTML inyectado).
-$Qurl_base = \frontend\shared\config\AppUrlConfig::getPublicAppBaseUrl() . '/';
-
-// Si no hay username, redirigir a la página de ayuda
-if (empty($Qusername)) {
-    header("Location: ayuda_acceso.php");
+if ($Qusername === '') {
+    header('Location: ' . $Qurl_base);
     exit;
 }
 
-$url_backend = $Qurl_base . 'src/usuarios/recuperar_password_mail';
-$a_campos_backend = [
-    'username' => $Qusername,
-    'esquema' => $Qesquema,
-    'ubicacion' => $Qubicacion,
-    'esquema_web' => $Qesquema_web,
-];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$error_txt = $data['error_txt'];
-$email = $data['email'];
-$success = $data['success'];
-
-// Preparar los datos para la vista
 $a_campos = [
-    'error_txt' => $error_txt,
-    'success' => $success,
+    'confirmar' => false,
+    'error_txt' => '',
+    'success' => false,
     'username' => $Qusername,
     'esquema' => $Qesquema,
-    'email' => $email,
+    'esquema_web' => $Qesquema_web,
+    'email' => '',
     'url_base' => $Qurl_base,
+    'url_accion' => $Qurl_base . 'frontend/usuarios/controller/recuperar_password.php',
 ];
 
-// Renderizar la vista
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+    $a_campos['confirmar'] = true;
+} else {
+    $data = UsuariosPayload::postData(PostRequest::getDataFromUrl($Qurl_base . 'src/usuarios/recuperar_password_mail', [
+        'username' => $Qusername,
+        'esquema' => $Qesquema,
+        'esquema_web' => $Qesquema_web,
+    ]));
+    $a_campos['error_txt'] = PayloadCoercion::string($data['error_txt'] ?? '');
+    $a_campos['email'] = PayloadCoercion::string($data['email'] ?? '');
+    $a_campos['success'] = ($data['success'] ?? false) === true;
+}
+
 $oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('recuperar_password.phtml', $a_campos);

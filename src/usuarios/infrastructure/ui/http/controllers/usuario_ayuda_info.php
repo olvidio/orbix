@@ -3,7 +3,7 @@
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use frontend\shared\OfuscarEmail;
+use src\shared\domain\helpers\OfuscarEmail;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 

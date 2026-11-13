@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 08:36+0100\n"
+"POT-Creation-Date: 2026-11-13 08:48+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10660,6 +10660,7 @@ msgstr "VIP"
 
 #: frontend/ubiscamas/view/cama_form.phtml:58
 #: frontend/ubiscamas/view/habitacion_form.phtml:225
+#: frontend/usuarios/view/restablecer_password.phtml:76
 msgid "Guardar"
 msgstr "Speichern"
 
@@ -10839,30 +10840,6 @@ msgstr "Startseite"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:50
 msgid "avisos cambios actividades"
 msgstr "avisos cambios actividades"
-
-#: frontend/usuarios/controller/recovery.php:73
-msgid ""
-"Por razones de seguridad, debe configurar la autenticación de dos factores "
-"(2FA)."
-msgstr ""
-"Aus Sicherheitsgründen muss die zweifaktorische Authentifizierung (2FA) "
-"konfiguriert werden."
-
-#: frontend/usuarios/controller/recovery.php:77
-msgid "El doble factor ha sido desactivado con éxito"
-msgstr "Zweifaktorische Authentifizierung erfolgreich deaktiviert"
-
-#: frontend/usuarios/controller/recovery.php:78
-msgid "Por seguridad, debes configurar uno nuevo ahora mismo"
-msgstr "Aus Sicherheitsgründen muss ein neuer 2FA konfiguriert werden."
-
-#: frontend/usuarios/controller/recovery.php:79
-msgid "Configurar nuevo 2FA"
-msgstr "Neuen 2FA konfigurieren"
-
-#: frontend/usuarios/controller/recovery.php:82
-msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
-msgstr "Der Link ist abgelaufen oder ungültig. Bitte einen neuen anfordern."
 
 #: frontend/usuarios/controller/role_form.php:80
 msgid "guardar datos rol"
@@ -11045,7 +11022,9 @@ msgid "Contactar al administrador"
 msgstr "Kontakt zum Administrator"
 
 #: frontend/usuarios/view/ayuda_acceso.phtml:99
-#: frontend/usuarios/view/recuperar_password.phtml:68
+#: frontend/usuarios/view/recovery.phtml:75
+#: frontend/usuarios/view/recuperar_password.phtml:78
+#: frontend/usuarios/view/restablecer_password.phtml:82
 msgid "Volver a la página de inicio"
 msgstr "Zurück zur Startseite"
 
@@ -11287,72 +11266,145 @@ msgstr "Passwort ändern"
 msgid "configurar autenticación de dos factores (2FA)"
 msgstr "Zwei-Faktor-Authentifizierung konfigurieren"
 
+#: frontend/usuarios/view/recovery.phtml:4
+#: frontend/usuarios/view/recovery.phtml:51
+msgid "Recuperación del doble factor"
+msgstr "Wiederherstellung der Zwei-Faktor-Authentifizierung"
+
+#: frontend/usuarios/view/recovery.phtml:55
+msgid "Se desactivará la autenticación de dos factores (2FA) de su usuario."
+msgstr ""
+"Die Zwei-Faktor-Authentifizierung (2FA) Ihres Benutzers wird deaktiviert."
+
+#: frontend/usuarios/view/recovery.phtml:56
+msgid ""
+"Después tendrá que iniciar sesión con su contraseña y configurar un doble "
+"factor nuevo."
+msgstr ""
+"Danach müssen Sie sich mit Ihrem Passwort anmelden und einen neuen zweiten "
+"Faktor einrichten."
+
+#: frontend/usuarios/view/recovery.phtml:61
+msgid "Desactivar el doble factor"
+msgstr "Zwei-Faktor-Authentifizierung deaktivieren"
+
+#: frontend/usuarios/view/recovery.phtml:66
+msgid "El doble factor ha sido desactivado con éxito"
+msgstr "Zweifaktorische Authentifizierung erfolgreich deaktiviert"
+
+#: frontend/usuarios/view/recovery.phtml:67
+msgid ""
+"Inicie sesión con su contraseña y configure un doble factor nuevo en sus "
+"preferencias."
+msgstr ""
+"Melden Sie sich mit Ihrem Passwort an und richten Sie in Ihren Einstellungen "
+"einen neuen zweiten Faktor ein."
+
+#: frontend/usuarios/view/recovery.phtml:71
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:136
+msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
+msgstr "Der Link ist abgelaufen oder ungültig. Bitte einen neuen anfordern."
+
 #: frontend/usuarios/view/recuperar_2fa.phtml:4
 #: frontend/usuarios/view/recuperar_2fa.phtml:51
 msgid "Recuperación del código de seguridad"
 msgstr "Sicherheitscode wiederherstellen"
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:55
-msgid "Código recuperado"
-msgstr "Wiederhergestellter Code"
+#, php-format
+msgid ""
+"Se enviará a la dirección de correo del usuario %s un enlace para recuperar "
+"el doble factor."
+msgstr ""
+"An die E-Mail-Adresse des Benutzers %s wird ein Link zur Wiederherstellung "
+"der Zwei-Faktor-Authentifizierung gesendet."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:56
-msgid "Se ha enviado a su dirección de correo electrónico."
-msgstr "Der Code wurde an Ihre E-Mail-Adresse gesendet."
+#: frontend/usuarios/view/recuperar_2fa.phtml:60
+#: frontend/usuarios/view/recuperar_password.phtml:61
+msgid "Enviar el correo de recuperación"
+msgstr "Wiederherstellungs-E-Mail senden"
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:57
+#: frontend/usuarios/view/recuperar_2fa.phtml:65
+#: frontend/usuarios/view/recuperar_password.phtml:66
+msgid "Correo enviado"
+msgstr "E-Mail gesendet"
+
+#: frontend/usuarios/view/recuperar_2fa.phtml:66
+#, php-format
+msgid "Se ha enviado a %s."
+msgstr "Sie wurde an %s gesendet."
+
+#: frontend/usuarios/view/recuperar_2fa.phtml:67
 msgid "Por favor, revise su bandeja de entrada y siga las instrucciones."
 msgstr "Bitte überprüfen Sie Ihre E-Mail-Box und folgen Sie den Anweisungen."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:61
-#: frontend/usuarios/view/recuperar_password.phtml:62
+#: frontend/usuarios/view/recuperar_2fa.phtml:71
+#: frontend/usuarios/view/recuperar_password.phtml:72
 msgid "Error en la recuperación"
 msgstr "Fehler bei der Wiederherstellung"
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:63
-#: frontend/usuarios/view/recuperar_password.phtml:64
+#: frontend/usuarios/view/recuperar_2fa.phtml:73
+#: frontend/usuarios/view/recuperar_password.phtml:74
 msgid ""
 "Si continúa teniendo problemas, contacte con el administrador del sistema."
 msgstr ""
 "Wenn Sie weiterhin Probleme haben, wenden Sie sich bitte an den "
 "Systemadministrator."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:67
+#: frontend/usuarios/view/recuperar_2fa.phtml:77
 msgid "Volver al inicio"
 msgstr "Zurück zur Startseite"
 
 #: frontend/usuarios/view/recuperar_password.phtml:4
 #: frontend/usuarios/view/recuperar_password.phtml:51
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:97
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:85
 msgid "Recuperación de contraseña"
 msgstr "Passwortwiederherstellung"
 
 #: frontend/usuarios/view/recuperar_password.phtml:55
-msgid "Contraseña restablecida"
-msgstr "Passwort wiederhergestellt"
+#, php-format
+msgid ""
+"Se enviará un enlace a la dirección de correo del usuario %s para elegir una "
+"contraseña nueva."
+msgstr ""
+"An die E-Mail-Adresse des Benutzers %s wird ein Link gesendet, um ein neues "
+"Passwort zu wählen."
 
 #: frontend/usuarios/view/recuperar_password.phtml:56
-msgid ""
-"Se ha generado una nueva contraseña y se ha enviado a su dirección de correo "
-"electrónico."
-msgstr ""
-"Eine neue Passwort wurde generiert und an Ihre E-Mail-Adresse gesendet."
+msgid "Su contraseña actual no cambia hasta que use el enlace."
+msgstr "Ihr aktuelles Passwort ändert sich erst, wenn Sie den Link verwenden."
 
-#: frontend/usuarios/view/recuperar_password.phtml:57
-msgid ""
-"Por favor, revise su bandeja de entrada y siga las instrucciones para "
-"acceder con su nueva contraseña."
-msgstr ""
-"Bitte überprüfen Sie Ihre E-Mail-Box und folgen Sie den Anweisungen, um mit "
-"Ihrem neuen Passwort anzumelden."
+#: frontend/usuarios/view/recuperar_password.phtml:67
+#, php-format
+msgid "Se ha enviado un enlace para elegir una contraseña nueva a %s."
+msgstr "Ein Link zum Wählen eines neuen Passworts wurde an %s gesendet."
 
-#: frontend/usuarios/view/recuperar_password.phtml:58
-msgid ""
-"Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal la "
-"próxima vez que inicie sesión."
-msgstr ""
-"Hinweis: Aus Sicherheitsgründen müssen Sie dieses temporäre Passwort das "
-"nächste Mal, wenn Sie sich anmelden, ändern."
+#: frontend/usuarios/view/recuperar_password.phtml:68
+msgid "El enlace caduca en 30 minutos y solo se puede usar una vez."
+msgstr "Der Link läuft in 30 Minuten ab und kann nur einmal verwendet werden."
+
+#: frontend/usuarios/view/restablecer_password.phtml:4
+#: frontend/usuarios/view/restablecer_password.phtml:54
+#: frontend/usuarios/view/restablecer_password.phtml:72
+msgid "Contraseña nueva"
+msgstr "Neues Passwort"
+
+#: frontend/usuarios/view/restablecer_password.phtml:58
+msgid "Contraseña cambiada"
+msgstr "Passwort geändert"
+
+#: frontend/usuarios/view/restablecer_password.phtml:59
+msgid "Ya puede iniciar sesión con la contraseña nueva."
+msgstr "Sie können sich jetzt mit dem neuen Passwort anmelden."
+
+#: frontend/usuarios/view/restablecer_password.phtml:69
+#, php-format
+msgid "Usuario: %s"
+msgstr "Benutzer: %s"
+
+#: frontend/usuarios/view/restablecer_password.phtml:74
+msgid "Repita la contraseña"
+msgstr "Passwort wiederholen"
 
 #: frontend/usuarios/view/role_form.phtml:66
 msgid "pau"
@@ -19029,8 +19081,8 @@ msgstr "Es wurden keine UBIs ausgewählt."
 
 #: src/ubis/application/TrasladarUbis.php:35
 #: src/usuarios/application/AppMobileLogin.php:75
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:43
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:48
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:41
 msgid "Esquema no válido"
@@ -19644,6 +19696,56 @@ msgstr "Kürzel der Sprache"
 msgid "nombre de idioma"
 msgstr "Name der Sprache"
 
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:77
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:154
+msgid "No se encontró ningún usuario con ese nombre"
+msgstr "Es wurde kein Benutzer mit diesem Namen gefunden"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:80
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:82
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
+msgid "No hay email asociado a este usuario"
+msgstr "Kein E-Mail-Adresse zugeordnet diesem Benutzer."
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:86
+#, php-format
+msgid ""
+"Hola %s,\n"
+"\n"
+"Has solicitado recuperar tu contraseña. Para elegir una nueva, abre este "
+"enlace (caduca en 30 minutos):\n"
+"%s\n"
+"\n"
+"Si no lo has pedido tú, ignora este correo: tu contraseña no ha cambiado.\n"
+"\n"
+"Saludos,\n"
+"El equipo de administración"
+msgstr ""
+"Hallo %s,\n"
+"\n"
+"Sie haben die Wiederherstellung Ihres Passworts angefordert. Um ein neues zu "
+"wählen, öffnen Sie diesen Link (er läuft in 30 Minuten ab):\n"
+"%s\n"
+"\n"
+"Wenn Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail: Ihr "
+"Passwort wurde nicht geändert.\n"
+"\n"
+"Mit freundlichen Grüßen\n"
+"Das Administrationsteam"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:149
+msgid "Error al enviar el correo electrónico"
+msgstr "Fehler beim Versenden des E-Mail"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:118
+msgid "Las dos contraseñas no coinciden"
+msgstr "Die beiden Passwörter stimmen nicht überein"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:128
+msgid "Error al actualizar la contraseña"
+msgstr "Fehler beim Aktualisieren des Passworts"
+
 #: src/usuarios/infrastructure/ui/http/controllers/app_login.php:49
 msgid "Error de autenticación"
 msgstr "Authentifizierungsfehler"
@@ -19698,13 +19800,7 @@ msgstr "Berechtigung aktiviert"
 msgid "Permiso de menú no encontrado"
 msgstr "Menüberechtigung nicht gefunden"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:86
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:80
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
-msgid "No hay email asociado a este usuario"
-msgstr "Kein E-Mail-Adresse zugeordnet diesem Benutzer."
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:137
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:133
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19723,7 +19819,7 @@ msgstr ""
 "Mit freundlichen Grüßen,\n"
 "Das Administrations-Team"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:143
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:139
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19742,54 +19838,9 @@ msgstr ""
 "Mit freundlichen Grüßen,\n"
 "Das Administrations-Team"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:148
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:144
 msgid "Recuperación de código de seguridad"
 msgstr "Rücksetzen des Sicherheitscodes"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:170
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:127
-msgid "Error al enviar el correo electrónico"
-msgstr "Fehler beim Versenden des E-Mail"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:175
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:134
-msgid "No se encontró ningún usuario con ese nombre"
-msgstr "Es wurde kein Benutzer mit diesem Namen gefunden"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:60
-msgid "Error al preparar la consulta"
-msgstr "Fehler bei der Vorbereitung der Abfrage"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:68
-msgid "Error al ejecutar la consulta"
-msgstr "Fehler bei der Ausführung der Abfrage"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:98
-#, php-format
-msgid ""
-"Hola %s,\n"
-"\n"
-"Has solicitado recuperar tu contraseña. Tu nueva contraseña temporal es: %s\n"
-"\n"
-"Por razones de seguridad, deberás cambiar esta contraseña la próxima vez que "
-"inicies sesión.\n"
-"\n"
-"Saludos,\n"
-"El equipo de administración"
-msgstr ""
-"Hallo %s,\n"
-"\n"
-"Sie haben Ihre Passwort zurückgesetzt. Ihr temporäres Passwort ist: %s\n"
-"\n"
-"Aus Sicherheitsgründen müssen Sie dieses Passwort das nächste Mal, wenn Sie "
-"sich anmelden, ändern.\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"Das Administrations-Team"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:130
-msgid "Error al actualizar la contraseña"
-msgstr "Fehler beim Aktualisieren des Passworts"
 
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:52
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:35
@@ -20578,6 +20629,51 @@ msgstr "Berechtigung aus (nicht markiert)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "Berechtigung ein (markiert)"
+
+#~ msgid ""
+#~ "Por razones de seguridad, debe configurar la autenticación de dos "
+#~ "factores (2FA)."
+#~ msgstr ""
+#~ "Aus Sicherheitsgründen muss die zweifaktorische Authentifizierung (2FA) "
+#~ "konfiguriert werden."
+
+#~ msgid "Por seguridad, debes configurar uno nuevo ahora mismo"
+#~ msgstr "Aus Sicherheitsgründen muss ein neuer 2FA konfiguriert werden."
+
+#~ msgid "Configurar nuevo 2FA"
+#~ msgstr "Neuen 2FA konfigurieren"
+
+#~ msgid "Código recuperado"
+#~ msgstr "Wiederhergestellter Code"
+
+#~ msgid "Se ha enviado a su dirección de correo electrónico."
+#~ msgstr "Der Code wurde an Ihre E-Mail-Adresse gesendet."
+
+#~ msgid ""
+#~ "Se ha generado una nueva contraseña y se ha enviado a su dirección de "
+#~ "correo electrónico."
+#~ msgstr ""
+#~ "Eine neue Passwort wurde generiert und an Ihre E-Mail-Adresse gesendet."
+
+#~ msgid ""
+#~ "Por favor, revise su bandeja de entrada y siga las instrucciones para "
+#~ "acceder con su nueva contraseña."
+#~ msgstr ""
+#~ "Bitte überprüfen Sie Ihre E-Mail-Box und folgen Sie den Anweisungen, um "
+#~ "mit Ihrem neuen Passwort anzumelden."
+
+#~ msgid ""
+#~ "Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal "
+#~ "la próxima vez que inicie sesión."
+#~ msgstr ""
+#~ "Hinweis: Aus Sicherheitsgründen müssen Sie dieses temporäre Passwort das "
+#~ "nächste Mal, wenn Sie sich anmelden, ändern."
+
+#~ msgid "Error al preparar la consulta"
+#~ msgstr "Fehler bei der Vorbereitung der Abfrage"
+
+#~ msgid "Error al ejecutar la consulta"
+#~ msgstr "Fehler bei der Ausführung der Abfrage"
 
 #~ msgid "cl sss+ (cr 1/14, 10,c)"
 #~ msgstr "cl sss+ (cr 1/14, 10,c)"

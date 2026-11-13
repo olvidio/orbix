@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "usuarios"
-endpoints: 47
+endpoints: 49
 estado_revision: "generado"
 ---
 
@@ -147,15 +147,29 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `usuarios.recuperar_2fa_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php`
-- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`, `post.url_base:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`
+- Respuesta: `standard_envelope_string_data` (`success`, `error_txt`, `email` enmascarado). Anónimo. El enlace del correo (`frontend/usuarios/controller/recovery.php`) desactiva el 2FA tras confirmar, sin abrir sesión.
 
 ## `/src/usuarios/recuperar_password_mail`
 
 - Id: `usuarios.recuperar_password_mail`
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php`
-- Entrada: `post.username:string`, `post.ubicacion:string`, `post.esquema:string`, `post.esquema_web:string`, `post.url_index:string`
-- Respuesta: `standard_envelope_string_data`
+- Entrada: `post.username:string`, `post.esquema:string`, `post.esquema_web:string`
+- Respuesta: `standard_envelope_string_data` (`success`, `error_txt`, `email` enmascarado). Anónimo. Envía un enlace para elegir contraseña nueva; no cambia la actual.
+
+## `/src/usuarios/restablecer_password_datos`
+
+- Id: `usuarios.restablecer_password_datos`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/restablecer_password_datos.php`
+- Entrada: `post.tk:string` (enlace del correo de recuperación)
+- Respuesta: `standard_envelope_string_data` (`success`, `error_txt`, `username`). Anónimo.
+
+## `/src/usuarios/restablecer_password_guardar`
+
+- Id: `usuarios.restablecer_password_guardar`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/restablecer_password_guardar.php`
+- Entrada: `post.tk:string`, `post.password:string`, `post.password2:string`
+- Respuesta: `standard_envelope_string_data` (`success`, `error_txt`). Anónimo. Guarda la contraseña nueva; el enlace deja de valer.
 
 ## `/src/usuarios/role_eliminar`
 

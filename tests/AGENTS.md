@@ -158,7 +158,7 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 - `tests/integration/shared/infrastructure/ControladoresConTokenSinTokenTest`: todo controlador de `src/` que abre una cápsula `HashB`, llamado sin cápsula, responde JSON «Operación no autorizada» sin cortar la petición. Los de cápsula por fila u opcional (`CAPSULA_NO_OBLIGATORIA`) solo tienen que responder JSON.
 - `tests/unit/shared/infrastructure/ControladoresSinExitTest`: ningún controlador de `src/` usa `exit`/`die` (en el despacho en proceso de `PostRequest` cortaría al frontend que llama), salvo las descargas de binarios y los casos de `PERMITIDOS`.
 - `tests/unit/shared/domain/DatosCamposMetodosTest`: en las entidades con `getDatosCampos()`, el getter y el setter de cada `DatosCampo` existen (si no, la pantalla genérica de tablas da un error fatal al abrirla).
-- `tests/unit/usuarios/infrastructure/RecuperacionAccesoGuardTest`: las páginas y endpoints de recuperación de acceso no toman `url_base` de la petición.
+- `tests/unit/usuarios/infrastructure/RecuperacionAccesoGuardTest`: las páginas y endpoints de recuperación de acceso no toman `url_base` de la petición, no exigen ni abren sesión (`FrontBootstrap::boot()`, `session_start`, `$_SESSION`) y abrir un enlace (GET) solo pide confirmación.
 - `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
 
 ## Escapar el HTML que se monta en `src/`

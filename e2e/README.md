@@ -143,8 +143,10 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | asistentes | `asistentes-alta-baja.spec.ts` | dossier 3101 → «+ n» → guardar → borrar asistencia (repone las marcas de dossier de la persona) |
 | notas | `notas-alta-baja.spec.ts` | dossier 1011 → añadir nota con acta → borrar |
 | usuarios | `usuarios-alta-baja.spec.ts` | nuevo usuario con contraseña → modificar → borrar desde la lista filtrada |
+| usuarios (sin sesión) | `recuperar-password.spec.ts` | pedir el correo (confirmación, correo enmascarado, la contraseña no cambia) → enlace de la cola `cola_mails` → contraseña nueva → login; el enlace no se reutiliza |
+| usuarios (sin sesión) | `recuperar-2fa.spec.ts` | pedir el correo de 2FA → enlace → confirmar → 2FA desactivado sin abrir sesión; el enlace no se reutiliza |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
-| permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
+| permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos (creado con SQL): inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
 
 Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad`, `crearNumerario`.

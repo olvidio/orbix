@@ -66,8 +66,14 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/usuarios/recuperar_2fa_mail', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/recuperar_2fa_mail.php';
     });
-    $r->addRoute(['GET','POST'], '/src/usuarios/recuperar_password_mail', function () {
+    $r->addRoute('POST', '/src/usuarios/recuperar_password_mail', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/recuperar_password_mail.php';
+    });
+    $r->addRoute('POST', '/src/usuarios/restablecer_password_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/restablecer_password_datos.php';
+    });
+    $r->addRoute('POST', '/src/usuarios/restablecer_password_guardar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/restablecer_password_guardar.php';
     });
     $r->addRoute(['GET','POST'], '/src/usuarios/role_eliminar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/role_eliminar.php';

@@ -3,10 +3,6 @@
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use src\shared\infrastructure\persistence\postgresql\PgColaMailRepository;
-use src\shared\domain\entity\ColaMail;
-use src\shared\domain\value_objects\ColaMailId;
-use src\shared\domain\value_objects\Uuid;
 use src\usuarios\domain\entity\Usuario;
 use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
@@ -147,24 +143,7 @@ if (is_array($row)) {
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");
 
-        // Crear un nuevo email en la cola
-        $ColaMailId = new ColaMailId(Uuid::random());
-        $oColaMail = new ColaMail();
-        $oColaMail->setUuid_item($ColaMailId);
-        $oColaMail->setMail_to($email);
-        $oColaMail->setSubject($subject);
-        $oColaMail->setMessage($message);
-        $oColaMail->setWrited_by('system');
-
-        // Guardar el email en la cola
-        $oConfigDB = new ConfigDB('comun');
-        $config = $oConfigDB->getEsquema('public');
-        $oConexion = new DBConnection($config);
-        $oDBPC = $oConexion->getPDO();
-
-        $oColaMailRepository = new PgColaMailRepository();
-        $oColaMailRepository->setoDbl($oDBPC);
-        if ($oColaMailRepository->Guardar($oColaMail)) {
+        if (\src\usuarios\infrastructure\security\ColaMailSinSesion::encolar($email, $subject, $message, 'system')) {
             $success = true;
         } else {
             $error_txt = _("Error al enviar el correo electrónico");
@@ -177,6 +156,7 @@ if (is_array($row)) {
 
 $data['error_txt'] = $error_txt;
 $data['success'] = $success;
-$data['email'] = $email;
+// Petición anónima: el correo se devuelve enmascarado, nunca entero.
+$data['email'] = ($email === null || $email === '????') ? '' : \src\shared\domain\helpers\OfuscarEmail::ofuscarEmailParcial($email, 3, 2);
 
 ContestarJson::enviar('', $data);

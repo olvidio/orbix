@@ -84,13 +84,4 @@ public static function loginInputFromPost(): array
     ];
 }
 
-public static function recoverySessionIdFromCookie(): ?string
-{
-    $cookie = $_COOKIE['PHPSESSID'] ?? null;
-    if (!is_string($cookie) || $cookie === '') {
-        return null;
-    }
-
-    return $cookie;
-}
 }

@@ -526,23 +526,4 @@ final class UsuariosPayload
         textdomain($domain);
     }
 
-    /**
-     * @return array{id_usuario: int, id_role: int}|null
-     */
-    public static function recoveryRowFromFetch(mixed $row): ?array
-    {
-        if (!is_array($row)) {
-            return null;
-        }
-        $idUsuario = $row['id_usuario'] ?? null;
-        $idRole = $row['id_role'] ?? null;
-        if (!is_numeric($idUsuario) || !is_numeric($idRole)) {
-            return null;
-        }
-
-        return [
-            'id_usuario' => PayloadCoercion::int($idUsuario),
-            'id_role' => PayloadCoercion::int($idRole),
-        ];
-    }
 }

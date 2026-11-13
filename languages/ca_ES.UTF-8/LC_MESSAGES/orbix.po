@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 08:36+0100\n"
+"POT-Creation-Date: 2026-11-13 08:48+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10594,6 +10594,7 @@ msgstr "VIP"
 
 #: frontend/ubiscamas/view/cama_form.phtml:58
 #: frontend/ubiscamas/view/habitacion_form.phtml:225
+#: frontend/usuarios/view/restablecer_password.phtml:76
 msgid "Guardar"
 msgstr "Guardar"
 
@@ -10772,30 +10773,6 @@ msgstr "home"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:50
 msgid "avisos cambios actividades"
 msgstr "avisos canvis activitats"
-
-#: frontend/usuarios/controller/recovery.php:73
-msgid ""
-"Por razones de seguridad, debe configurar la autenticación de dos factores "
-"(2FA)."
-msgstr ""
-"Per motius de seguretat, es recomana configurar l'autenticació de dos "
-"factors (2FA)."
-
-#: frontend/usuarios/controller/recovery.php:77
-msgid "El doble factor ha sido desactivado con éxito"
-msgstr "El doble factor s'ha deshabitat amb èxit"
-
-#: frontend/usuarios/controller/recovery.php:78
-msgid "Por seguridad, debes configurar uno nuevo ahora mismo"
-msgstr "Per seguretat, n'has de configurar un de nou ara mateix"
-
-#: frontend/usuarios/controller/recovery.php:79
-msgid "Configurar nuevo 2FA"
-msgstr "Configurar nou 2FA"
-
-#: frontend/usuarios/controller/recovery.php:82
-msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
-msgstr "L'enllaç ha caducat o és invàlid. Si us plau, sol·licita'n un de nou"
 
 #: frontend/usuarios/controller/role_form.php:80
 msgid "guardar datos rol"
@@ -10976,7 +10953,9 @@ msgid "Contactar al administrador"
 msgstr "Contactar al administrador"
 
 #: frontend/usuarios/view/ayuda_acceso.phtml:99
-#: frontend/usuarios/view/recuperar_password.phtml:68
+#: frontend/usuarios/view/recovery.phtml:75
+#: frontend/usuarios/view/recuperar_password.phtml:78
+#: frontend/usuarios/view/restablecer_password.phtml:82
 msgid "Volver a la página de inicio"
 msgstr "Tornar a la pàgina d'inici"
 
@@ -11218,74 +11197,147 @@ msgstr "canviar el password"
 msgid "configurar autenticación de dos factores (2FA)"
 msgstr "configurar autenticació de dos factors (2FA)"
 
+#: frontend/usuarios/view/recovery.phtml:4
+#: frontend/usuarios/view/recovery.phtml:51
+msgid "Recuperación del doble factor"
+msgstr "Recuperació del doble factor"
+
+#: frontend/usuarios/view/recovery.phtml:55
+msgid "Se desactivará la autenticación de dos factores (2FA) de su usuario."
+msgstr "Es desactivarà l'autenticació de dos factors (2FA) del vostre usuari."
+
+#: frontend/usuarios/view/recovery.phtml:56
+msgid ""
+"Después tendrá que iniciar sesión con su contraseña y configurar un doble "
+"factor nuevo."
+msgstr ""
+"Després haureu d'iniciar sessió amb la vostra contrasenya i configurar un "
+"doble factor nou."
+
+#: frontend/usuarios/view/recovery.phtml:61
+msgid "Desactivar el doble factor"
+msgstr "Desactivar el doble factor"
+
+#: frontend/usuarios/view/recovery.phtml:66
+msgid "El doble factor ha sido desactivado con éxito"
+msgstr "El doble factor s'ha deshabitat amb èxit"
+
+#: frontend/usuarios/view/recovery.phtml:67
+msgid ""
+"Inicie sesión con su contraseña y configure un doble factor nuevo en sus "
+"preferencias."
+msgstr ""
+"Inicieu sessió amb la vostra contrasenya i configureu un doble factor nou a "
+"les vostres preferències."
+
+#: frontend/usuarios/view/recovery.phtml:71
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:136
+msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
+msgstr "L'enllaç ha caducat o és invàlid. Si us plau, sol·licita'n un de nou"
+
 #: frontend/usuarios/view/recuperar_2fa.phtml:4
 #: frontend/usuarios/view/recuperar_2fa.phtml:51
 msgid "Recuperación del código de seguridad"
 msgstr "Recuperació del codi de seguretat"
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:55
-msgid "Código recuperado"
-msgstr "Codi recuperat"
+#, php-format
+msgid ""
+"Se enviará a la dirección de correo del usuario %s un enlace para recuperar "
+"el doble factor."
+msgstr ""
+"S'enviarà a l'adreça de correu de l'usuari %s un enllaç per recuperar el "
+"doble factor."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:56
-msgid "Se ha enviado a su dirección de correo electrónico."
-msgstr "S'ha enviat a la teva adreça de correu electrònic."
+#: frontend/usuarios/view/recuperar_2fa.phtml:60
+#: frontend/usuarios/view/recuperar_password.phtml:61
+msgid "Enviar el correo de recuperación"
+msgstr "Enviar el correu de recuperació"
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:57
+#: frontend/usuarios/view/recuperar_2fa.phtml:65
+#: frontend/usuarios/view/recuperar_password.phtml:66
+msgid "Correo enviado"
+msgstr "Correu enviat"
+
+#: frontend/usuarios/view/recuperar_2fa.phtml:66
+#, php-format
+msgid "Se ha enviado a %s."
+msgstr "S'ha enviat a %s."
+
+#: frontend/usuarios/view/recuperar_2fa.phtml:67
 msgid "Por favor, revise su bandeja de entrada y siga las instrucciones."
 msgstr ""
 "Si us plau, comproveu la vostra safata d'entrada i seguiu les instruccions."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:61
-#: frontend/usuarios/view/recuperar_password.phtml:62
+#: frontend/usuarios/view/recuperar_2fa.phtml:71
+#: frontend/usuarios/view/recuperar_password.phtml:72
 msgid "Error en la recuperación"
 msgstr "Error de recuperació"
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:63
-#: frontend/usuarios/view/recuperar_password.phtml:64
+#: frontend/usuarios/view/recuperar_2fa.phtml:73
+#: frontend/usuarios/view/recuperar_password.phtml:74
 msgid ""
 "Si continúa teniendo problemas, contacte con el administrador del sistema."
 msgstr ""
 "Si continueu tenint problemes, poseu-vos en contacte amb l'administrador del "
 "vostre sistema."
 
-#: frontend/usuarios/view/recuperar_2fa.phtml:67
+#: frontend/usuarios/view/recuperar_2fa.phtml:77
 msgid "Volver al inicio"
 msgstr "Tornar a l'inici"
 
 #: frontend/usuarios/view/recuperar_password.phtml:4
 #: frontend/usuarios/view/recuperar_password.phtml:51
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:97
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:85
 msgid "Recuperación de contraseña"
 msgstr "Recuperació de contrasenya"
 
 #: frontend/usuarios/view/recuperar_password.phtml:55
-msgid "Contraseña restablecida"
-msgstr "Contrasenya restablerta"
+#, php-format
+msgid ""
+"Se enviará un enlace a la dirección de correo del usuario %s para elegir una "
+"contraseña nueva."
+msgstr ""
+"S'enviarà un enllaç a l'adreça de correu de l'usuari %s per triar una "
+"contrasenya nova."
 
 #: frontend/usuarios/view/recuperar_password.phtml:56
-msgid ""
-"Se ha generado una nueva contraseña y se ha enviado a su dirección de correo "
-"electrónico."
+msgid "Su contraseña actual no cambia hasta que use el enlace."
 msgstr ""
-"S'ha generat una contrasenya nova i enviada a la vostra adreça de correu "
-"electrònic."
+"La vostra contrasenya actual no canvia fins que no feu servir l'enllaç."
 
-#: frontend/usuarios/view/recuperar_password.phtml:57
-msgid ""
-"Por favor, revise su bandeja de entrada y siga las instrucciones para "
-"acceder con su nueva contraseña."
-msgstr ""
-"Si us plau, comproveu la vostra safata d'entrada i seguiu les instruccions "
-"per iniciar sessió amb la vostra nova contrasenya."
+#: frontend/usuarios/view/recuperar_password.phtml:67
+#, php-format
+msgid "Se ha enviado un enlace para elegir una contraseña nueva a %s."
+msgstr "S'ha enviat un enllaç per triar una contrasenya nova a %s."
 
-#: frontend/usuarios/view/recuperar_password.phtml:58
-msgid ""
-"Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal la "
-"próxima vez que inicie sesión."
+#: frontend/usuarios/view/recuperar_password.phtml:68
+msgid "El enlace caduca en 30 minutos y solo se puede usar una vez."
 msgstr ""
-"Nota: per motius de seguretat, haureu de canviar aquesta contrasenya "
-"temporal la propera vegada que inicieu sessió."
+"L'enllaç caduca d'aquí a 30 minuts i només es pot fer servir una vegada."
+
+#: frontend/usuarios/view/restablecer_password.phtml:4
+#: frontend/usuarios/view/restablecer_password.phtml:54
+#: frontend/usuarios/view/restablecer_password.phtml:72
+msgid "Contraseña nueva"
+msgstr "Contrasenya nova"
+
+#: frontend/usuarios/view/restablecer_password.phtml:58
+msgid "Contraseña cambiada"
+msgstr "Contrasenya canviada"
+
+#: frontend/usuarios/view/restablecer_password.phtml:59
+msgid "Ya puede iniciar sesión con la contraseña nueva."
+msgstr "Ja podeu iniciar sessió amb la contrasenya nova."
+
+#: frontend/usuarios/view/restablecer_password.phtml:69
+#, php-format
+msgid "Usuario: %s"
+msgstr "Usuari: %s"
+
+#: frontend/usuarios/view/restablecer_password.phtml:74
+msgid "Repita la contraseña"
+msgstr "Repetiu la contrasenya"
 
 #: frontend/usuarios/view/role_form.phtml:66
 msgid "pau"
@@ -18829,8 +18881,8 @@ msgstr "No s'han seleccionat ubis."
 
 #: src/ubis/application/TrasladarUbis.php:35
 #: src/usuarios/application/AppMobileLogin.php:75
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:43
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:48
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:41
 msgid "Esquema no válido"
@@ -19442,6 +19494,56 @@ msgstr "sigla de idioma"
 msgid "nombre de idioma"
 msgstr "nom de l'idioma"
 
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:77
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:154
+msgid "No se encontró ningún usuario con ese nombre"
+msgstr "No s'ha trobat cap usuari amb aquest nom"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:80
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:82
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
+msgid "No hay email asociado a este usuario"
+msgstr "No hi ha cap correu electrònic associat amb aquest usuari"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:86
+#, php-format
+msgid ""
+"Hola %s,\n"
+"\n"
+"Has solicitado recuperar tu contraseña. Para elegir una nueva, abre este "
+"enlace (caduca en 30 minutos):\n"
+"%s\n"
+"\n"
+"Si no lo has pedido tú, ignora este correo: tu contraseña no ha cambiado.\n"
+"\n"
+"Saludos,\n"
+"El equipo de administración"
+msgstr ""
+"Hola %s,\n"
+"\n"
+"Has sol·licitat recuperar la teva contrasenya. Per triar-ne una de nova, "
+"obre aquest enllaç (caduca d'aquí a 30 minuts):\n"
+"%s\n"
+"\n"
+"Si no ho has demanat tu, ignora aquest correu: la teva contrasenya no ha "
+"canviat.\n"
+"\n"
+"Salutacions,\n"
+"L'equip d'administració"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:149
+msgid "Error al enviar el correo electrónico"
+msgstr "Error en enviar el correu electrònic"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:118
+msgid "Las dos contraseñas no coinciden"
+msgstr "Les dues contrasenyes no coincideixen"
+
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:128
+msgid "Error al actualizar la contraseña"
+msgstr "S'ha produït un error en actualitzar la contrasenya"
+
 #: src/usuarios/infrastructure/ui/http/controllers/app_login.php:49
 msgid "Error de autenticación"
 msgstr "Error d'autenticació"
@@ -19496,13 +19598,7 @@ msgstr "permís on"
 msgid "Permiso de menú no encontrado"
 msgstr "Permís de menú no trobat"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:86
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:80
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
-msgid "No hay email asociado a este usuario"
-msgstr "No hi ha cap correu electrònic associat amb aquest usuari"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:137
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:133
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19520,7 +19616,7 @@ msgstr ""
 "salutacions,\n"
 "L'equip directiu"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:143
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:139
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19537,55 +19633,9 @@ msgstr ""
 "salutacions,\n"
 "L'equip directiu"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:148
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:144
 msgid "Recuperación de código de seguridad"
 msgstr "Recuperació del codi de seguretat"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:170
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:127
-msgid "Error al enviar el correo electrónico"
-msgstr "Error en enviar el correu electrònic"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:175
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:134
-msgid "No se encontró ningún usuario con ese nombre"
-msgstr "No s'ha trobat cap usuari amb aquest nom"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:60
-msgid "Error al preparar la consulta"
-msgstr "S'ha produït un error en preparar la consulta"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:68
-msgid "Error al ejecutar la consulta"
-msgstr "Error en executar la consulta"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:98
-#, php-format
-msgid ""
-"Hola %s,\n"
-"\n"
-"Has solicitado recuperar tu contraseña. Tu nueva contraseña temporal es: %s\n"
-"\n"
-"Por razones de seguridad, deberás cambiar esta contraseña la próxima vez que "
-"inicies sesión.\n"
-"\n"
-"Saludos,\n"
-"El equipo de administración"
-msgstr ""
-"Hola %s,\n"
-"\n"
-"Heu sol·licitat recuperar la vostra contrasenya.La vostra nova contrasenya "
-"temporal és: %s\n"
-"\n"
-"Per motius de seguretat, haureu de canviar aquesta contrasenya la propera "
-"vegada que inicieu sessió.\n"
-"\n"
-"salutacions,\n"
-"L'equip directiu"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:130
-msgid "Error al actualizar la contraseña"
-msgstr "S'ha produït un error en actualitzar la contrasenya"
 
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:52
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:35
@@ -20372,6 +20422,52 @@ msgstr "permís off (sense marcar)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permís on (marcat)"
+
+#~ msgid ""
+#~ "Por razones de seguridad, debe configurar la autenticación de dos "
+#~ "factores (2FA)."
+#~ msgstr ""
+#~ "Per motius de seguretat, es recomana configurar l'autenticació de dos "
+#~ "factors (2FA)."
+
+#~ msgid "Por seguridad, debes configurar uno nuevo ahora mismo"
+#~ msgstr "Per seguretat, n'has de configurar un de nou ara mateix"
+
+#~ msgid "Configurar nuevo 2FA"
+#~ msgstr "Configurar nou 2FA"
+
+#~ msgid "Código recuperado"
+#~ msgstr "Codi recuperat"
+
+#~ msgid "Se ha enviado a su dirección de correo electrónico."
+#~ msgstr "S'ha enviat a la teva adreça de correu electrònic."
+
+#~ msgid ""
+#~ "Se ha generado una nueva contraseña y se ha enviado a su dirección de "
+#~ "correo electrónico."
+#~ msgstr ""
+#~ "S'ha generat una contrasenya nova i enviada a la vostra adreça de correu "
+#~ "electrònic."
+
+#~ msgid ""
+#~ "Por favor, revise su bandeja de entrada y siga las instrucciones para "
+#~ "acceder con su nueva contraseña."
+#~ msgstr ""
+#~ "Si us plau, comproveu la vostra safata d'entrada i seguiu les "
+#~ "instruccions per iniciar sessió amb la vostra nova contrasenya."
+
+#~ msgid ""
+#~ "Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal "
+#~ "la próxima vez que inicie sesión."
+#~ msgstr ""
+#~ "Nota: per motius de seguretat, haureu de canviar aquesta contrasenya "
+#~ "temporal la propera vegada que inicieu sessió."
+
+#~ msgid "Error al preparar la consulta"
+#~ msgstr "S'ha produït un error en preparar la consulta"
+
+#~ msgid "Error al ejecutar la consulta"
+#~ msgstr "Error en executar la consulta"
 
 #~ msgid "cl sss+ (cr 1/14, 10,c)"
 #~ msgstr "cl sss+ (cr 1/14, 10,c)"
