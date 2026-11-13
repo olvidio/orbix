@@ -124,6 +124,12 @@ class DateTimeLocal extends DateTime
         if (!$parent_dt) {
             return false;
         }
+        // Fechas imposibles (31/02, mes 13…): PHP las desborda al mes o año siguiente y solo
+        // avisa con «The parsed date was invalid». Se rechazan como cualquier fecha no válida.
+        $errores = \DateTime::getLastErrors();
+        if ($errores !== false && $errores['warning_count'] > 0) {
+            return false;
+        }
 
         $extnd_dt->setTimestamp($parent_dt->getTimestamp());
         /* corregir en el caso que el año tenga dos dígitos
