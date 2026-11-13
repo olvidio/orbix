@@ -29,7 +29,12 @@ class ActividadProcesoUpdate
             return _("no se encuentra la tarea del proceso");
         }
         $oFicha->setCompletado(\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qcompletado));
-        $oFicha->setObserv($Qobserv);
+        try {
+            $oFicha->setObserv($Qobserv);
+        } catch (\InvalidArgumentException $e) {
+            // Antes la excepción salía como texto suelto (ni JSON ni mensaje en la pantalla).
+            return _("hay un error, no se ha guardado") . "\n" . $e->getMessage();
+        }
         if ($this->procesoActividadService->guardar($oFicha) === false) {
             $err = $this->procesoActividadService->getErrorTxt();
             if ($err !== '') {

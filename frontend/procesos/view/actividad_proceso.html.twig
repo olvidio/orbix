@@ -18,10 +18,12 @@ fnjs_generar_proceso=function(){
 		})
 		.done(function (json) {
 			if (json && json.success === false && json.mensaje) {
-				alert('respuesta: ' + json.mensaje);
+				alert('{{ "respuesta"|trans }}: ' + json.mensaje);
 			}
+		})
+		.always(function () {
+			fnjs_actualizar();
 		});
-		fnjs_actualizar();
 	}
 }
 
@@ -39,7 +41,8 @@ fnjs_guardar=function(id_item, ctx){
 	var completado=$('#comp'+id_item).prop('checked');
 	var observ=$('#observ'+id_item).val();
 	var url = "{{ url_update }}";
-	var parametros='ctx_update='+encodeURIComponent(ctx)+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
+	// La observación va codificada: con «&», «+» o «#» el servidor recibía otros campos y rechazaba la petición.
+	var parametros='ctx_update='+encodeURIComponent(ctx)+'&completado='+completado+'&force='+force+'&observ='+encodeURIComponent(observ === undefined ? '' : observ)+'{{ h_update|raw }}';
 		 
 	$.ajax({
 		url: url,
@@ -49,10 +52,14 @@ fnjs_guardar=function(id_item, ctx){
 	})
 	.done(function (json) {
 		if (json && json.success === false && json.mensaje) {
-			alert('respuesta: ' + json.mensaje);
+			alert('{{ "respuesta"|trans }}: ' + json.mensaje);
 		}
+	})
+	// Repintar cuando el servidor ha contestado (antes se pedía la tabla a la vez que se guardaba
+	// y podía pintarse el estado anterior).
+	.always(function () {
+		fnjs_actualizar();
 	});
-	fnjs_actualizar();
 }
 fnjs_actualizar();
 </script>

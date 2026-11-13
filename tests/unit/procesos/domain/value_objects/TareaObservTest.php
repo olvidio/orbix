@@ -45,4 +45,15 @@ class TareaObservTest extends myTest
         $this->assertNull($tareaObserv);
     }
 
+    /** Antes solo admitía una lista corta de signos y rechazaba observaciones corrientes. */
+    public function test_texto_libre_con_signos_corrientes()
+    {
+        $this->assertSame('¿revisado? sí & conforme; 100% (ok)!', (new TareaObserv(' ¿revisado? sí & conforme; 100% (ok)! '))->value());
+    }
+
+    public function test_caracteres_de_control_no_validos()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new TareaObserv("línea\x07con campana");
+    }
 }

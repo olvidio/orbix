@@ -15,7 +15,9 @@ final class TareaObserv
 
     private function validate(string $value): void
     {
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {
+        // Texto libre (como las observaciones de una actividad): letras, números, puntuación, símbolos
+        // y espacios. La lista corta anterior rechazaba «¿falta?», «&», «;», «!»…
+        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]*$/u", $value)) {
             throw new \InvalidArgumentException('TareaObserv has invalid characters');
         }
     }

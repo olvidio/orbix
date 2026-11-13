@@ -208,6 +208,17 @@ final class ProcesosCasosDeUsoTest extends myTest
         $this->assertSame('', $this->update()->execute(['id_item' => '9', 'completado' => 'on', 'observ' => 'hecho']));
     }
 
+    /** Antes la excepción del VO salía como texto suelto (ni JSON ni aviso en la pantalla). */
+    public function test_observacion_no_valida_devuelve_el_error_sin_guardar(): void
+    {
+        $this->apt->method('findById')->willReturn(new ActividadProcesoTarea());
+        $this->servicio->expects($this->never())->method('guardar');
+
+        $r = $this->update()->execute(['id_item' => '9', 'completado' => 'true', 'observ' => "con\x07campana"]);
+
+        $this->assertStringStartsWith('hay un error, no se ha guardado', $r);
+    }
+
     public function test_el_error_del_servicio_tiene_prioridad_sobre_el_del_repositorio(): void
     {
         $this->apt->method('findById')->willReturn($this->createMock(ActividadProcesoTarea::class));
