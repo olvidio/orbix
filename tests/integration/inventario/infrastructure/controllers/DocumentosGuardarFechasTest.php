@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\inventario\infrastructure\controllers;
 
+use src\inventario\application\DocumentosModificar;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\infrastructure\InProcessSrcDispatch;
 use src\shared\security\HashB;
@@ -57,6 +58,9 @@ final class DocumentosGuardarFechasTest extends myTest
         $repo->expects($this->never())->method('findById');
         $repo->expects($this->never())->method('Guardar');
         $this->sustituirServicio(DocumentoRepositoryInterface::class, $repo);
+        // El controlador pide la clase de aplicación al contenedor: si ya estuviera construida con el
+        // repositorio real, el doble no llegaría a ella.
+        $this->sustituirServicio(DocumentosModificar::class, new DocumentosModificar($repo));
 
         $json = $this->ejecutar(['documentos' => 'abc#def', 'chk_f_recibido' => 'on', 'f_recibido' => 'ayer']);
 
@@ -68,6 +72,9 @@ final class DocumentosGuardarFechasTest extends myTest
     {
         $repo = $this->createMock(DocumentoRepositoryInterface::class);
         $this->sustituirServicio(DocumentoRepositoryInterface::class, $repo);
+        // El controlador pide la clase de aplicación al contenedor: si ya estuviera construida con el
+        // repositorio real, el doble no llegaría a ella.
+        $this->sustituirServicio(DocumentosModificar::class, new DocumentosModificar($repo));
         $json = $this->ejecutar(['documentos' => 'zz', 'chk_f_recibido' => 'on', 'f_recibido' => '']);
         $this->assertNotSame('Fecha no válida: ', $json['mensaje'] ?? '');
         $json = $this->ejecutar(['documentos' => 'zz']);

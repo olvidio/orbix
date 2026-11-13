@@ -5,6 +5,7 @@ use src\inventario\application\EquipajeEliminar;
 use src\inventario\application\InventarioCssInlineData;
 use src\inventario\application\DocAsignarListaData;
 use src\inventario\application\DocumentosDeEgmData;
+use src\inventario\application\DocumentosModificar;
 use src\inventario\application\DocumentosDeLugarData;
 use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\DocumentosMarcadosData;
@@ -71,6 +72,7 @@ return [
     EquipajeEgmData::class => autowire(EquipajeEgmData::class),
     MaletasPosiblesData::class => autowire(MaletasPosiblesData::class),
     DocAsignarListaData::class => autowire(DocAsignarListaData::class),
+    DocumentosModificar::class => autowire(DocumentosModificar::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),
