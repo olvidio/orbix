@@ -45,4 +45,26 @@ final class GenerateIdGlobalTest extends myTest
         $this->expectException(\Exception::class);
         GenerateIdGlobal::schemaForLookup('tabla_inexistente', 'H-dlbv');
     }
+
+    /** Contra `public.db_idschema` de la BD de desarrollo: el prefijo es el id del esquema. */
+    public function test_genera_el_id_con_el_id_del_esquema_de_la_bd(): void
+    {
+        $idSchema = (string) $GLOBALS['oDBPC']->query("SELECT id FROM public.db_idschema WHERE schema = 'H-dlbv'")->fetchColumn();
+        $this->assertNotSame('', $idSchema);
+
+        $this->assertSame((int) ($idSchema . '1' . '1351'), GenerateIdGlobal::generateIdGlobal('H-dlbv', 'p_numerarios', 1351));
+        $this->assertSame((int) ($idSchema . '77'), GenerateIdGlobal::generateIdGlobal('H-dlbv', 'a_actividades_dl', 77));
+    }
+
+    public function test_esquema_sin_id_en_la_bd_lanza(): void
+    {
+        $this->expectExceptionMessage('No se encontró ID para el esquema: Zzt-noexiste');
+        GenerateIdGlobal::generateIdGlobal('Zzt-noexiste', 'p_numerarios', 1);
+    }
+
+    public function test_tabla_desconocida_lanza_tambien_al_generar(): void
+    {
+        $this->expectExceptionMessage('Tabla no reconocida para generar ID: x_tabla');
+        GenerateIdGlobal::generateIdGlobal('H-dlbv', 'x_tabla', 1);
+    }
 }
