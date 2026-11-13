@@ -6,7 +6,7 @@ modulo: "encargossacd"
 nombre: "Listas Index"
 controller: "frontend/encargossacd/controller/listas_index.php"
 vistas: ["frontend/encargossacd/view/listas_index.phtml"]
-fragmentos_frontend: ["frontend/encargossacd/controller/comprobaciones.php", "frontend/encargossacd/controller/listas_cl.php"]
+fragmentos_frontend: ["frontend/encargossacd/controller/comprobaciones.php"]
 endpoints: []
 capacidades: []
 campos: ["form.que"]
@@ -30,7 +30,6 @@ Construye la URL firmada a un controlador de `frontend/encargossacd/controller` 
 ## Fragmentos Frontend Relacionados
 
 - `frontend/encargossacd/controller/comprobaciones.php`
-- `frontend/encargossacd/controller/listas_cl.php`
 
 ## Endpoints Usados
 

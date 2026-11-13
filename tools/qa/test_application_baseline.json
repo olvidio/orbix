@@ -97,7 +97,6 @@
     "src/encargossacd/infrastructure/ui/http/controllers/listas_a_data.php",
     "src/encargossacd/infrastructure/ui/http/controllers/listas_b_data.php",
     "src/encargossacd/infrastructure/ui/http/controllers/listas_c_data.php",
-    "src/encargossacd/infrastructure/ui/http/controllers/listas_cl_data.php",
     "src/encargossacd/infrastructure/ui/http/controllers/listas_com_ctr_data.php",
     "src/encargossacd/infrastructure/ui/http/controllers/listas_com_sacd_data.php",
     "src/encargossacd/infrastructure/ui/http/controllers/listas_com_txt_data.php",

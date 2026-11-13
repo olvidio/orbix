@@ -143,10 +143,6 @@ return static function ($r) {
         require $base . '/listas_com_sacd_data.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/encargossacd/listas_cl_data', function () use ($base) {
-        require $base . '/listas_cl_data.php';
-    });
-
     $r->addRoute(['GET', 'POST'], '/src/encargossacd/propuestas_ajax', function () use ($base) {
         require $base . '/propuestas_ajax.php';
     });

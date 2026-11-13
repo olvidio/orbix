@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "encargossacd"
-endpoints: 39
+endpoints: 38
 estado_revision: "generado"
 ---
 
@@ -140,13 +140,6 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `encargossacd.listas_c_data`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_c_data.php`
-- Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
-
-## `/src/encargossacd/listas_cl_data`
-
-- Id: `encargossacd.listas_cl_data`
-- Controller: `src/encargossacd/infrastructure/ui/http/controllers/listas_cl_data.php`
 - Entrada: ninguna detectada.
 - Respuesta: `standard_envelope_string_data`
 

@@ -768,41 +768,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/encargossacd_ListasCDataDataResponse"
-  "/src/encargossacd/listas_cl_data":
-    post:
-      operationId: "post_encargossacd_listas_cl_data"
-      summary: "Listas Cl Data"
-      description: |
-        Listado de cl para cr, restringido a los centros de la sss+. Sustituye la logica de `frontend/encargossacd/controller/listas_cl.php` (era una plantilla con SQL crudo). Devuelve el HTML completo listo para volcarlo al cliente; el frontend se limita a pasar `sf` y a echo del resultado.
-        
-        Operacion: `lista_data`.
-        
-        Fuente catalogo: `docs/catalogo/encargossacd/api/listas_cl_data.md`
-      tags:
-        - "encargossacd"
-      requestBody:
-        required: false
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
-      responses:
-        "200":
-          description: "Respuesta generada por Orbix."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/encargossacd_ListasClDataDataResponse"
-        "400":
-          description: "Peticion no valida o error de validacion."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/encargossacd_ListasClDataDataResponse"
+
   "/src/encargossacd/listas_com_ctr_data":
     post:
       operationId: "post_encargossacd_listas_com_ctr_data"
@@ -1859,21 +1825,6 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/encargossacd_ListasCDataData"
-    encargossacd_ListasClDataData:
-      type: object
-      properties:
-        Html:
-          type: "string"
-    encargossacd_ListasClDataDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/encargossacd_ListasClDataData"
     encargossacd_ListasComCtrDataData:
       type: object
       properties:

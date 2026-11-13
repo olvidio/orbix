@@ -3379,18 +3379,6 @@
                 }
             ]
         },
-        "frontend/encargossacd/controller/listas_cl.php": {
-            "titulo": "Listas Cl",
-            "modulo": "encargossacd",
-            "manual": [
-                {
-                    "modulo": "encargossacd",
-                    "ancla": "listar-los-centros-de-la-sss",
-                    "titulo": "Listar los centros de la sss+",
-                    "sirve": "Sacar el listado de los centros de la sss+ (cr 1/14, 10,c)."
-                }
-            ]
-        },
         "frontend/encargossacd/controller/listas_com_ctr.php": {
             "titulo": "Listas Com Ctr",
             "modulo": "encargossacd",

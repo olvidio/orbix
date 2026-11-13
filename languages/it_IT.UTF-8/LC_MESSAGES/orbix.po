@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-12 16:31+0100\n"
+"POT-Creation-Date: 2026-11-13 08:36+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -226,7 +226,7 @@ msgstr "assistente"
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:79
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:73
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:98
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:100
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:99
 #: src/actividadcargos/domain/entity/Cargo.php:207
 msgid "cargo"
 msgstr "ufficio"
@@ -234,7 +234,7 @@ msgstr "ufficio"
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:83
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:77
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:100
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:102
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:101
 msgid "¿Puede ser agd?"
 msgstr "Può essere?"
 
@@ -260,7 +260,7 @@ msgstr "Può essere?"
 #: frontend/ubis/view/ctrdl_form.phtml:80
 #: frontend/ubis/view/teleco_form.phtml:25
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:101
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:103
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:102
 #: src/actividades/application/ActividadSelectListado.php:263
 #: src/actividades/application/ListaActivTabla.php:217
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:156
@@ -316,7 +316,7 @@ msgstr ""
 #: frontend/casas/view/casas_resumen_periodo.phtml:20
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:42
 #: frontend/notas/view/actividad_buscar_form.phtml:6
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:101
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:100
 #: src/actividades/application/ActividadSelectListado.php:250
 #: src/actividades/application/ListaSrCsvListado.php:167
 #: src/actividadplazas/application/GestionPlazasData.php:244
@@ -1230,10 +1230,10 @@ msgstr "cancellare"
 #: src/actividades/application/ActividadSelectListado.php:262
 #: src/actividades/application/ListaActivTabla.php:214
 #: src/actividades/application/ListaSrCsvListado.php:170
-#: src/asistentes/application/ListaUltimaActivData.php:267
+#: src/asistentes/application/ListaUltimaActivData.php:268
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
 #: src/casas/application/CasaActividadesListaData.php:76
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_no_asignados_por_tipo.php:57
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_no_asignados_por_tipo.php:58
 #: src/inventario/view/buscarDocsxCtr.phtml:7
 #: src/notas/application/TablaAlumnosAsignaturas.php:184
 #: src/personas/domain/value_objects/TrasladoTipoCmbCode.php:22
@@ -1364,7 +1364,7 @@ msgstr "titolo: nome_tipo"
 #: src/casas/application/CasaActividadesListaData.php:77
 #: src/encargossacd/application/SacdSelectData.php:39
 #: src/encargossacd/application/SacdSelectData.php:50
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 #: src/zonassacd/application/ZonaSacdListaTot.php:70
 msgid "sacd"
 msgstr "SACD"
@@ -2747,7 +2747,7 @@ msgstr "aggiungere attività di un'altra dl"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:157
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:132
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:156
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:157
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
 msgstr "Sei sicuro di voler rimuovere questa carica da questa persona?"
 
@@ -2890,7 +2890,7 @@ msgstr "Di valore"
 #: src/ubis/application/UbisTablaData.php:109
 #: src/usuarios/application/rolesLista.php:66
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
-#: src/zonassacd/application/ZonaSacdLista.php:123
+#: src/zonassacd/application/ZonaSacdLista.php:124
 msgid "modificar"
 msgstr "cambiamento"
 
@@ -3210,7 +3210,7 @@ msgstr "e-mail"
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:126
 #: src/encargossacd/application/EncargoZonasSelectData.php:29
 #: src/zonassacd/application/ZonaCtrLista.php:83
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 #: src/zonassacd/application/ZonaSacdListaTot.php:70
 msgid "zona"
 msgstr "zona"
@@ -4895,10 +4895,10 @@ msgstr "Fatto!"
 #: src/actividades/application/CalendarioListasDatos.php:130
 #: src/configuracion/domain/value_objects/ConfigSnapshot.php:279
 #: src/dbextern/domain/SincroDB.php:98
-#: src/shared/domain/helpers/FuncTablasSupport.php:218
-#: src/shared/domain/helpers/FuncTablasSupport.php:224
-#: src/shared/domain/helpers/FuncTablasSupport.php:241
-#: src/shared/domain/helpers/FuncTablasSupport.php:266
+#: src/shared/domain/helpers/FuncTablasSupport.php:234
+#: src/shared/domain/helpers/FuncTablasSupport.php:240
+#: src/shared/domain/helpers/FuncTablasSupport.php:257
+#: src/shared/domain/helpers/FuncTablasSupport.php:282
 #: src/shared/infrastructure/persistence/ConverterDate.php:41
 #: src/ubis/application/UbiFactory.php:68
 #: src/ubis/application/UbisListaData.php:56
@@ -5122,71 +5122,67 @@ msgstr "Eliminare gli ordini da centri inesistenti"
 msgid "listados de encargos para cr"
 msgstr "elenchi di ordini per cr"
 
-#: frontend/encargossacd/view/listas_index.phtml:17
-msgid "cl sss+ (cr 1/14, 10,c)"
-msgstr "cl sss+ (cr 1/14, 10,c)"
-
-#: frontend/encargossacd/view/listas_index.phtml:19
+#: frontend/encargossacd/view/listas_index.phtml:16
 msgid "atención ctr sf (cr 1/14, 10,a)"
 msgstr "attenzione ctr sf (cr 1/14, 10,a)"
 
-#: frontend/encargossacd/view/listas_index.phtml:20
+#: frontend/encargossacd/view/listas_index.phtml:17
 msgid "atención ctr sv (cr 1/14, 10,a)"
 msgstr "attenzione ctr sv (cr 1/14, 10,a)"
 
-#: frontend/encargossacd/view/listas_index.phtml:21
+#: frontend/encargossacd/view/listas_index.phtml:18
 msgid "atención iglesias, oc y lp (cr 1/14, 10,b)"
 msgstr "attenzione chiese, oc e lp (cr 1/14, 10,b)"
 
-#: frontend/encargossacd/view/listas_index.phtml:22
+#: frontend/encargossacd/view/listas_index.phtml:19
 msgid "oc y lp sf (cr 1/14, 10,b)"
 msgstr "oc e lp sf (cr 1/14, 10,b)"
 
-#: frontend/encargossacd/view/listas_index.phtml:23
+#: frontend/encargossacd/view/listas_index.phtml:20
 msgid "por sacd (cr 1/14, 10,d)"
 msgstr "da sacd (cr 1/14, 10,d)"
 
-#: frontend/encargossacd/view/listas_index.phtml:24
+#: frontend/encargossacd/view/listas_index.phtml:21
 msgid "tabla por sacd (cr 9/20, 10)"
 msgstr "tavola di sacd (cr 9/20, 10)"
 
-#: frontend/encargossacd/view/listas_index.phtml:25
+#: frontend/encargossacd/view/listas_index.phtml:22
 msgid "tabla por sacd sf (cr 9/20, 10)"
 msgstr "tavola di sacd sf (cr 9/20, 10)"
 
-#: frontend/encargossacd/view/listas_index.phtml:28
+#: frontend/encargossacd/view/listas_index.phtml:25
 msgid "listados comunicaciones"
 msgstr "elenchi di comunicazioni"
 
-#: frontend/encargossacd/view/listas_index.phtml:30
+#: frontend/encargossacd/view/listas_index.phtml:27
 msgid "exigencias ctr sv"
 msgstr "requisiti ctr sv"
 
-#: frontend/encargossacd/view/listas_index.phtml:31
+#: frontend/encargossacd/view/listas_index.phtml:28
 msgid "exigencias ctr sf"
 msgstr "requisiti ctr sf"
 
-#: frontend/encargossacd/view/listas_index.phtml:32
+#: frontend/encargossacd/view/listas_index.phtml:29
 msgid "exigencias igl, oc..."
 msgstr "igl richiede, oc..."
 
-#: frontend/encargossacd/view/listas_index.phtml:33
+#: frontend/encargossacd/view/listas_index.phtml:30
 msgid "comunicación a sacd Prelatura"
 msgstr "comunicazione alla sacd Prelatura"
 
-#: frontend/encargossacd/view/listas_index.phtml:34
+#: frontend/encargossacd/view/listas_index.phtml:31
 msgid "comunicación a sacd sss+"
 msgstr "comunicazione a sacd sss+"
 
-#: frontend/encargossacd/view/listas_index.phtml:35
+#: frontend/encargossacd/view/listas_index.phtml:32
 msgid "comunicación a los centros sv"
 msgstr "comunicazione ai centri sv"
 
-#: frontend/encargossacd/view/listas_index.phtml:36
+#: frontend/encargossacd/view/listas_index.phtml:33
 msgid "comunicación a los centros sf"
 msgstr "comunicazione ai centri sf"
 
-#: frontend/encargossacd/view/listas_index.phtml:37
+#: frontend/encargossacd/view/listas_index.phtml:34
 msgid "modificar los textos de las comunicaciones"
 msgstr "modificare i testi delle comunicazioni"
 
@@ -5309,7 +5305,7 @@ msgstr "Stampa"
 #: frontend/inventario/controller/docs_con_observaciones.php:24
 #: frontend/inventario/controller/docs_en_busqueda.php:24
 #: frontend/inventario/controller/docs_perdidos.php:24
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:62
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:63
 msgid "centro - lugar"
 msgstr "centro - luogo"
 
@@ -5350,7 +5346,7 @@ msgstr "Accordato (firma)"
 #: frontend/inventario/controller/docs_con_observaciones.php:26
 #: frontend/inventario/controller/docs_perdidos.php:26
 #: frontend/ubis/view/teleco_form.phtml:24
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:62
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:63
 msgid "número"
 msgstr "numero"
 
@@ -8642,37 +8638,37 @@ msgid "(por defecto: periodo desde 1/6 hasta 30/%s)"
 msgstr "(default: periodo da 1/6 a 30/%s)"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "D"
 msgstr "D"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "L"
 msgstr "L"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "M"
 msgstr "M"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "X"
 msgstr "X"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "J"
 msgstr "J"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "V"
 msgstr "V"
 
 #: frontend/planning/support/PlanningRenderer.php:56
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "S"
 msgstr "S"
 
@@ -9914,7 +9910,7 @@ msgstr "e"
 #: src/actividades/application/ActividadEditar.php:185
 #: src/actividades/application/ActividadNueva.php:166
 #: src/actividades/application/ActividadNueva.php:198
-#: src/actividades/application/ActividadNuevoCurso.php:292
+#: src/actividades/application/ActividadNuevoCurso.php:293
 #: src/actividades/application/ActividadPublicar.php:38
 #: src/actividades/application/BorrarActividad.php:58
 #: src/actividades/application/BorrarActividad.php:72
@@ -11686,7 +11682,7 @@ msgid "añadir asignación iglesia/cgi"
 msgstr "aggiungi incarico chiesa/cgi"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:49
-#: src/zonassacd/application/ZonaSacdLista.php:129
+#: src/zonassacd/application/ZonaSacdLista.php:130
 #: src/zonassacd/application/ZonaSacdListaTot.php:70
 msgid "propia"
 msgstr "Proprio"
@@ -11892,19 +11888,19 @@ msgid "actividad no encontrada"
 msgstr "attività non trovata"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:89
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:91
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:90
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:244
 msgid "modificar cargo"
 msgstr "modifica addebito"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:90
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:92
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:91
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:245
 msgid "quitar cargo"
 msgstr "rimuovere la carica"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:141
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:161
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:162
 msgid "esto también borrará a esta persona de la lista de asistentes"
 msgstr "questo cancellerà anche questa persona dall'elenco dei partecipanti"
 
@@ -12046,7 +12042,7 @@ msgstr "errore (nessuna ripetizione definita) nell'attività: %s"
 msgid "fechas de actividad no válidas"
 msgstr "date dell'attività non valide"
 
-#: src/actividades/application/ActividadNuevoCurso.php:274
+#: src/actividades/application/ActividadNuevoCurso.php:275
 msgid "ERROR: no se ha guardado la actividad"
 msgstr "ERRORE: non è stata salvata l'attività"
 
@@ -12197,7 +12193,7 @@ msgstr "sv/sf"
 #: src/actividades/application/ListaSrCsvListado.php:168
 #: src/actividades/application/TipoActivLista.php:34
 #: src/actividadtarifas/application/RelacionTarifaListaData.php:72
-#: src/asistentes/application/ListaUltimaActivData.php:269
+#: src/asistentes/application/ListaUltimaActivData.php:270
 #: src/casas/application/CasaActividadesListaData.php:73
 #: src/procesos/application/TipoActivProcesoLista.php:44
 msgid "tipo actividad"
@@ -12963,7 +12959,7 @@ msgstr "Persone di passaggio in attesa di certificato"
 msgid "sin ficha (%d)"
 msgstr "senza scheda (%d)"
 
-#: src/actividadestudios/application/MatriculasListaOtrasRData.php:217
+#: src/actividadestudios/application/MatriculasListaOtrasRData.php:218
 msgid "No se pudo determinar el esquema región STGR de la sesión."
 msgstr ""
 "Non è stato possibile determinare lo schema regione STGR della sessione."
@@ -13568,23 +13564,23 @@ msgstr "ultimo cv: %s"
 msgid "s jóvenes (<30) que no han asistido a cv de s"
 msgstr "s giovani (<30 anni) che non hanno frequentato cv de s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:181
+#: src/asistentes/application/ListaUltimaActivData.php:182
 msgid "No sé en que tipo de actividad hay que mirar las asistencias"
 msgstr "Non so in che tipo di attività devi guardare alle presenze"
-
-#: src/asistentes/application/ListaUltimaActivData.php:228
-#: src/asistentes/application/ListaUltimaActivData.php:235
-#: src/asistentes/application/ListaUltimaActivData.php:254
-msgid "No hay datos"
-msgstr "Nessun dato"
 
 #: src/asistentes/application/ListaUltimaActivData.php:229
 #: src/asistentes/application/ListaUltimaActivData.php:236
 #: src/asistentes/application/ListaUltimaActivData.php:255
+msgid "No hay datos"
+msgstr "Nessun dato"
+
+#: src/asistentes/application/ListaUltimaActivData.php:230
+#: src/asistentes/application/ListaUltimaActivData.php:237
+#: src/asistentes/application/ListaUltimaActivData.php:256
 msgid "No consta"
 msgstr "Non appare"
 
-#: src/asistentes/application/ListaUltimaActivData.php:266
+#: src/asistentes/application/ListaUltimaActivData.php:267
 #: src/notas/application/TablaAlumnosAsignaturas.php:185
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:456
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:494
@@ -13598,11 +13594,11 @@ msgstr "Non appare"
 msgid "apellidos, nombre"
 msgstr "Cognome, nome"
 
-#: src/asistentes/application/ListaUltimaActivData.php:268
+#: src/asistentes/application/ListaUltimaActivData.php:269
 msgid "fecha última asistencia"
 msgstr "data dell'ultima presenza"
 
-#: src/asistentes/application/ListaUltimaActivData.php:276
+#: src/asistentes/application/ListaUltimaActivData.php:277
 #, php-format
 msgid "número de personas: %s de %s"
 msgstr "numero di persone: %s di %s"
@@ -15918,15 +15914,6 @@ msgstr "collabora con la scuola %s sf"
 msgid "colabora con %s colegios sf"
 msgstr "collabora con %s scuole sf"
 
-#: src/encargossacd/application/ListasClData.php:34
-#, php-format
-msgid "Curso %s"
-msgstr "Corso %s"
-
-#: src/encargossacd/application/ListasClData.php:36
-msgid "ref. cr 1/14, 10,c)"
-msgstr "rif.cr 1/14, 10,c)"
-
 #: src/encargossacd/application/ListasDData.php:78
 msgid "ref. cr 9/20, 10)"
 msgstr "rif.cr 9/20, 10)"
@@ -18004,7 +17991,7 @@ msgstr "Attività %s non trovata"
 msgid "No tiene permiso para marcar o desmarcar esta fase"
 msgstr "Non hai l'autorizzazione per selezionare o deselezionare questa fase"
 
-#: src/procesos/application/ProcesoActividadService.php:152
+#: src/procesos/application/ProcesoActividadService.php:154
 msgid ""
 "no se puede cambiar el status de la actividad a 'actual', porque debe "
 "hacerlo dre"
@@ -18012,27 +17999,27 @@ msgstr ""
 "Non puoi cambiare lo stato dell'attività in 'corrente' perché devi farlo "
 "direttamente"
 
-#: src/procesos/application/ProcesoActividadService.php:156
-#: src/procesos/application/ProcesoActividadService.php:169
+#: src/procesos/application/ProcesoActividadService.php:158
+#: src/procesos/application/ProcesoActividadService.php:171
 #, php-format
 msgid "no se puede modificar el status de una actividad de otra dl (%s)"
 msgstr "Non è possibile modificare lo stato di un'attività da un altro dl (%s)"
 
-#: src/procesos/application/ProcesoActividadService.php:216
+#: src/procesos/application/ProcesoActividadService.php:218
 msgid "Hay un error en el diseño del proceso: referencias circulares."
 msgstr "C'è un errore nella progettazione del processo: riferimenti circolari."
 
-#: src/procesos/application/ProcesoActividadService.php:289
+#: src/procesos/application/ProcesoActividadService.php:291
 #, php-format
 msgid "No tienen completada la fase: %s"
 msgstr "Non hanno completato la fase: %s"
 
-#: src/procesos/application/ProcesoActividadService.php:292
+#: src/procesos/application/ProcesoActividadService.php:294
 #, php-format
 msgid "La fase: %s está marcada, y depende de esta."
 msgstr "La fase: %s è selezionata e dipende da essa."
 
-#: src/procesos/application/ProcesoActividadService.php:321
+#: src/procesos/application/ProcesoActividadService.php:323
 #, php-format
 msgid "Proceso mal diseñado. La fase %s, con tarea %s no está en el proceso"
 msgstr "Processo mal progettato.La fase %s, con l'attività %s non è in corso"
@@ -19336,7 +19323,7 @@ msgstr "Si richiede region_stgr"
 msgid "Error al guardar la habitación"
 msgstr "Errore nel salvare la stanza"
 
-#: src/ubiscamas/application/HabitacionGuardar.php:99
+#: src/ubiscamas/application/HabitacionGuardar.php:100
 #: src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php:38
 msgid "Habitación no válida"
 msgstr "Camera non valida"
@@ -20506,6 +20493,16 @@ msgstr "autorizzazione disattivata (non selezionata)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "autorizzazione attiva (selezionata)"
+
+#~ msgid "cl sss+ (cr 1/14, 10,c)"
+#~ msgstr "cl sss+ (cr 1/14, 10,c)"
+
+#, php-format
+#~ msgid "Curso %s"
+#~ msgstr "Corso %s"
+
+#~ msgid "ref. cr 1/14, 10,c)"
+#~ msgstr "rif.cr 1/14, 10,c)"
 
 #, php-format
 #~ msgid ""

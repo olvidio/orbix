@@ -5,7 +5,6 @@ namespace Tests\integration\encargossacd\application;
 use src\encargossacd\application\ListasAData;
 use src\encargossacd\application\ListasBData;
 use src\encargossacd\application\ListasCData;
-use src\encargossacd\application\ListasClData;
 use src\encargossacd\application\ListasComCtrData;
 use src\encargossacd\application\ListasComSacdData;
 use src\encargossacd\application\ListasComTxtData;
@@ -219,19 +218,5 @@ class ListasIntegracionTest extends myTest
         $this->assertIsString($r['texto_inicial']);
         $this->assertSame(['clave' => 'com_sacd', 'idioma' => 'es'], HashB::open($r['ctx_guardar'], 'listas_com_txt_update'));
         $this->assertSerializable($r);
-    }
-
-    /**
-     * Hallazgo (docs/dev/revision_tests_plan.md, sección 17): ListasClData consulta la tabla `d_cargos`, que no
-     * existe en ninguna base ni la crea ninguna migración (solo existe `d_cargos_activ`, otra cosa). La pantalla
-     * «cl sss+ (cr 1/14, 10,c)» del menú de listas falla con una excepción SQL. Cuando se repare (tabla correcta o
-     * retirada de la pantalla) este test debe cambiarse por las aserciones de estructura de las demás listas.
-     */
-    public function test_el_listado_de_cargos_de_centros_sssc_esta_roto_por_una_tabla_inexistente(): void
-    {
-        $this->expectException(\PDOException::class);
-        $this->expectExceptionMessage('d_cargos');
-
-        $this->usar(ListasClData::class)->execute();
     }
 }

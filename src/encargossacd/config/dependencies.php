@@ -21,7 +21,6 @@ use src\encargossacd\application\EncargoZonasSelectData;
 use src\encargossacd\application\ListasAData;
 use src\encargossacd\application\ListasBData;
 use src\encargossacd\application\ListasCData;
-use src\encargossacd\application\ListasClData;
 use src\encargossacd\application\PropuestasCentrosPorFiltro;
 use src\encargossacd\application\PropuestasAjaxDispatch;
 use src\encargossacd\application\PropuestasAjaxGetLista;
@@ -106,7 +105,6 @@ return [
     ListasAData::class => autowire(ListasAData::class),
     ListasBData::class => autowire(ListasBData::class),
     ListasCData::class => autowire(ListasCData::class),
-    ListasClData::class => autowire(ListasClData::class),
     ListasComCtrData::class => autowire(ListasComCtrData::class),
     ListasComSacdData::class => autowire(ListasComSacdData::class),
     ListasComTxtData::class => autowire(ListasComTxtData::class),

@@ -37,7 +37,6 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Listar la atención de los centros -> `flujos/listas_a.md`
 - Listar la atención de iglesias, oc y lp -> `flujos/listas_b.md`
 - Listar los encargos por sacerdote -> `flujos/listas_c.md`
-- Listar los centros de la sss+ -> `flujos/listas_cl.md`
 - Preparar la comunicación a los centros -> `flujos/listas_com_ctr.md`
 - Preparar la comunicación a los sacerdotes -> `flujos/listas_com_sacd.md`
 - Modificar los textos de las comunicaciones -> `flujos/listas_com_txt.md`
@@ -70,7 +69,6 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Listas A -> `pantallas/listas_a.md`
 - Listas B -> `pantallas/listas_b.md`
 - Listas C -> `pantallas/listas_c.md`
-- Listas Cl -> `pantallas/listas_cl.md`
 - Listas Com Ctr -> `pantallas/listas_com_ctr.md`
 - Listas Com Sacd -> `pantallas/listas_com_sacd.md`
 - Listas Com Txt -> `pantallas/listas_com_txt.md`

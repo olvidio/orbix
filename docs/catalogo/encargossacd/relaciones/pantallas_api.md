@@ -223,20 +223,6 @@ Capacidades:
 Endpoints aportados por capacidades:
 - Ninguno adicional.
 
-### `encargossacd.pantalla.listas_cl`
-
-- Controller: `frontend/encargossacd/controller/listas_cl.php`
-- Subtipo: `fragmento_ajax`
-
-Endpoints directos:
-- `/src/encargossacd/listas_cl_data`
-
-Capacidades:
-- `encargossacd.listas_cl.gestionar`
-
-Endpoints aportados por capacidades:
-- Ninguno adicional.
-
 ### `encargossacd.pantalla.listas_com_ctr`
 
 - Controller: `frontend/encargossacd/controller/listas_com_ctr.php`
@@ -591,14 +577,6 @@ Pantallas via capacidad:
 
 Pantallas directas:
 - `encargossacd.pantalla.listas_c`
-
-Pantallas via capacidad:
-- Ninguna adicional.
-
-### `/src/encargossacd/listas_cl_data`
-
-Pantallas directas:
-- `encargossacd.pantalla.listas_cl`
 
 Pantallas via capacidad:
 - Ninguna adicional.

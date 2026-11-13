@@ -516,35 +516,6 @@ Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 - Flujo: `encargossacd.listas_c.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_c.md`
 
-## Listar los centros de la sss+
-
-### Para Que Sirve
-
-Sacar el listado de los centros de la sss+ (cr 1/14, 10,c).
-
-### Donde Entrar
-
-- Listas Cl (frontend/encargossacd/controller/listas_cl.php)
-- **Legacy:** sin entrada de menú en el índice
-- **Pills2:** sin entrada de menú en el índice
-
-### Tareas Habituales
-
-#### Listar los centros de la sss+
-
-1. Entrar en **listados**.
-2. Elegir **cl sss+**.
-3. Se muestra el listado.
-
-### Errores O Avisos Frecuentes
-
-- No hay errores documentados en el catalogo para este flujo.
-
-### Referencias Internas
-
-- Flujo: `encargossacd.listas_cl.gestionar.flujo`
-- Fichero catalogo: `docs/catalogo/encargossacd/flujos/listas_cl.md`
-
 ## Preparar la comunicación a los centros
 
 ### Para Que Sirve
