@@ -1,11 +1,11 @@
 <?php
 
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\inventario\domain\criteria\EgmField as EgmF;
-use src\shared\infrastructure\DependencyResolver;
+/**
+ * La lógica está en {@see \src\inventario\application\EquipajeMaletas}; aquí solo se abre la cápsula.
+ */
 
-use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\application\EquipajeMaletas;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
@@ -20,25 +20,6 @@ try {
     return;
 }
 
-$Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupo');
-$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje');
-
-$error_txt = '';
-
-// Nuevo egm:
-/** @var EgmRepositoryInterface $EgmRepository */
-$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-$cEgm = $EgmRepository->matching(Criteria::create()
-        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
-        ->andWhere(Filter::eq(EgmF::IdGrupo, $Qid_grupo)));
-if (!empty($cEgm)) {
-    $oEgm = $cEgm[0];
-    if ($EgmRepository->Eliminar($oEgm) === false) {
-        $error_txt .= _("hay un error, no se ha eliminado");
-        $error_txt .= "\n" . $EgmRepository->getErrorTxt();
-    }
-    // los docs en whereis deberían eliminarse por la base de datos, al tener una foreign key.
-}
-
-ContestarJson::enviar($error_txt, 'ok');
-
+/** @var EquipajeMaletas $useCase */
+$useCase = DependencyResolver::get(EquipajeMaletas::class);
+ContestarJson::enviar($useCase->eliminarGrupo(\src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje'), \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupo')), 'ok');

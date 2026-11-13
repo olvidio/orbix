@@ -15,6 +15,8 @@ use src\inventario\application\DocumentosTrasladar;
 use src\inventario\application\EquipajeActividadesData;
 use src\inventario\application\EquipajeDocCasaData;
 use src\inventario\application\EquipajeEgmData;
+use src\inventario\application\EquipajeMaletas;
+use src\inventario\application\EquipajeNuevo;
 use src\inventario\application\ListaDocsDeCtrData;
 use src\inventario\application\LugaresDeDlbData;
 use src\inventario\application\MaletasPosiblesData;
@@ -77,6 +79,8 @@ return [
     DocumentosModificar::class => autowire(DocumentosModificar::class),
     DocumentosAsignar::class => autowire(DocumentosAsignar::class),
     DocumentosTrasladar::class => autowire(DocumentosTrasladar::class),
+    EquipajeNuevo::class => autowire(EquipajeNuevo::class),
+    EquipajeMaletas::class => autowire(EquipajeMaletas::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),

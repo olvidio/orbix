@@ -1,15 +1,11 @@
 <?php
 
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\inventario\domain\criteria\EgmField as EgmF;
-use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FilterPostGet;
+/**
+ * La lógica está en {@see \src\inventario\application\EquipajeMaletas}; aquí solo se abre la cápsula.
+ */
 
-use src\inventario\domain\contracts\EgmRepositoryInterface;
-use src\inventario\domain\contracts\WhereisRepositoryInterface;
-use src\inventario\domain\entity\Egm;
-use src\inventario\domain\entity\Whereis;
+use src\inventario\application\EquipajeMaletas;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
@@ -24,58 +20,12 @@ try {
     return;
 }
 
-$Qid_grupo = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupo');
-$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje');
-$Qid_lugar = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_lugar');
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-$error_txt = '';
-
-// Nuevo egm:
-/** @var EgmRepositoryInterface $EgmRepository */
-$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-$cEgm = $EgmRepository->matching(
-    Criteria::create()
-        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
-        ->andWhere(Filter::eq(EgmF::IdGrupo, $Qid_grupo))
-        ->andWhere(Filter::eq(EgmF::IdLugar, $Qid_lugar))
+/** @var EquipajeMaletas $useCase */
+$useCase = DependencyResolver::get(EquipajeMaletas::class);
+$r = $useCase->guardarGrupo(
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_grupo'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_lugar'),
+    array_values((array) \src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY)),
 );
-if (empty($cEgm)) {
-    // nuevo
-    $id_item_egm = $EgmRepository->getNewId();
-    $oEgm = new Egm();
-    $oEgm->setId_item($id_item_egm);
-    $oEgm->setId_equipaje($Qid_equipaje);
-    $oEgm->setId_grupo($Qid_grupo);
-    $oEgm->setId_lugar($Qid_lugar);
-    if ($EgmRepository->Guardar($oEgm) === false) {
-        $error_txt .= _("hay un error, no se ha guardado");
-        $error_txt .= "\n" . $EgmRepository->getErrorTxt();
-    }
-} else {
-    $oEgm = $cEgm[0];
-    $id_item_egm = $oEgm->getId_item();
-}
-
-/** @var WhereisRepositoryInterface $WhereisRepository */
-$WhereisRepository = DependencyResolver::get(WhereisRepositoryInterface::class);
-foreach ($a_sel as $id_doc_raw) {
-    if (!is_numeric($id_doc_raw)) {
-        continue;
-    }
-    $id_doc = (int) $id_doc_raw;
-    $new_id = $WhereisRepository->getNewId();
-    $oWhereis = new Whereis();
-    $oWhereis->setId_item_whereis($new_id);
-    $oWhereis->setId_item_egm($id_item_egm);
-    $oWhereis->setId_doc($id_doc);
-    if ($WhereisRepository->Guardar($oWhereis) === false) {
-        $error_txt .= _("hay un error, no se ha guardado");
-        $error_txt .= "\n" . $WhereisRepository->getErrorTxt();
-    }
-}
-
-$data['id_item_egm'] = $id_item_egm;
-
-ContestarJson::enviar($error_txt, $data);
-
+ContestarJson::enviar($r['error'], ['id_item_egm' => $r['id_item_egm']]);

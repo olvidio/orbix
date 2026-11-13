@@ -1,10 +1,11 @@
 <?php
 
-use src\shared\infrastructure\DependencyResolver;
+/**
+ * La lógica está en {@see \src\inventario\application\EquipajeNuevo}; aquí solo se abre la cápsula.
+ */
 
-use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use src\inventario\domain\entity\Equipaje;
-use src\shared\domain\value_objects\DateTimeLocal;
+use src\inventario\application\EquipajeNuevo;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
@@ -19,44 +20,13 @@ try {
     return;
 }
 
-$Qid_ubi_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi_activ');
-$Qnom_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom_equipaje');
-$Qids_activ = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ids_activ');
-$Qf_ini = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini');
-if (empty($Qf_ini)) {
-    $oF_ini = null;
-} else {
-    $rawF_ini = DateTimeLocal::createFromLocal($Qf_ini);
-    $oF_ini = $rawF_ini instanceof DateTimeLocal ? $rawF_ini : null;
-}
-$Qf_fin = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_fin');
-if (empty($Qf_fin)) {
-    $oF_fin = null;
-} else {
-    $rawF_fin = DateTimeLocal::createFromLocal($Qf_fin);
-    $oF_fin = $rawF_fin instanceof DateTimeLocal ? $rawF_fin : null;
-}
-$Qlugar = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'lugar');
-
-$error_txt = '';
-
-/** @var EquipajeRepositoryInterface $EquipajesRepository */
-$EquipajesRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
-$newId = $EquipajesRepository->getNewId();
-
-$oEquipaje = new Equipaje();
-$oEquipaje->setId_equipaje($newId);
-$oEquipaje->setIds_activ($Qids_activ);
-$oEquipaje->setLugarVo($Qlugar);
-$oEquipaje->setF_ini($oF_ini);
-$oEquipaje->setF_fin($oF_fin);
-$oEquipaje->setId_ubi_activ($Qid_ubi_activ);
-$oEquipaje->setNom_equipaje($Qnom_equipaje);
-
-if ($EquipajesRepository->Guardar($oEquipaje) === false) {
-    $error_txt .= _("hay un error, no se ha guardado");
-    $error_txt .= "\n" . $EquipajesRepository->getErrorTxt();
-}
-
-ContestarJson::enviar($error_txt, 'ok');
-
+/** @var EquipajeNuevo $useCase */
+$useCase = DependencyResolver::get(EquipajeNuevo::class);
+ContestarJson::enviar($useCase->execute(
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_ubi_activ'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nom_equipaje'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ids_activ'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_ini'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_fin'),
+    \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'lugar'),
+), 'ok');
