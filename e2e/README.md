@@ -147,11 +147,12 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | usuarios (sin sesión) | `recuperar-2fa.spec.ts` | pedir el correo de 2FA → enlace → confirmar → 2FA desactivado sin abrir sesión; el enlace no se reutiliza |
 | inventario | `inventario-equipajes.spec.ts` | hacer equipaje (periodo → casa → actividad → nombre) → nueva valija de un lugar → añadir y quitar un documento → eliminar la valija → texto de cabecera del listado → eliminar el equipaje |
 | ubis | `ubis-alta-baja.spec.ts` | casa de la dl: búsqueda sin resultados → ficha nueva → guardar → tabla → modificar → ficha → guardar → ficha → eliminar → vuelve a la búsqueda |
+| procesos | `procesos-fases.spec.ts` | crear una actividad (tipo con proceso coherente en dev) → fases de la actividad → marcar una fase con observación → desmarcarla. Se salta si el diseño del proceso depende de fases que no tiene |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
 
-Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú; la primera del test lleva `nav=reset`, como las entradas del menú, para no heredar la pila de navegación de otro spec), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad`, `crearNumerario`.
+Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú; la primera del test lleva `nav=reset`, como las entradas del menú, para no heredar la pila de navegación de otro spec), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad` (con el tipo de actividad opcional), `crearNumerario`.
 
 Reglas para escribir más:
 
@@ -179,7 +180,7 @@ Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escri
 | encargossacd | 35 | 35 | 32 | 8 | — |
 | certificados | 14 | 14 | 18 | 7 | subida |
 | cambios | 6 | 6 | 11 | 7 | — |
-| procesos | 12 | 12 | 17 | 6 | — |
+| procesos | 12 | 12 | 17 | 6 | fases de una actividad |
 | notas | 27 | 26 | 31 | 5 | sí |
 | devel_db_admin | 20 | 19 | 15 | 5 | — (DDL) |
 | menus | 7 | 7 | 15 | 5 | — |

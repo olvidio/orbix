@@ -123,13 +123,13 @@ export function marcaE2e(): string {
 
 /**
  * Crea por la interfaz una actividad sv · n · ca («sin especificar») de la dl `dl`, del 10 al 12 de
- * febrero de 2031, con el nombre `nombre`. Devuelve su id_activ (leído de la BD `comun`, esquema `esquema`).
+ * febrero de 2031, con el nombre `nombre` (`tipo`: otros valores para los cuatro desplegables del tipo). Devuelve su id_activ (leído de la BD `comun`, esquema `esquema`).
  */
-export async function crearActividad(page: Page, nombre: string, dl: string, esquema: string): Promise<string> {
+export async function crearActividad(page: Page, nombre: string, dl: string, esquema: string, tipo: [string, string, string, string] = ['1', '1', '2', '000']): Promise<string> {
   const form = page.locator('#main form#modifica');
   await abrirPantalla(page, 'frontend/actividades/controller/actividad_ver.php?mod=nuevo', 'form#modifica');
   // Cada desplegable del tipo recarga el siguiente por AJAX (`actividad_tipo_get`).
-  for (const [campo, valor] of [['#isfsv_val', '1'], ['#iasistentes_val', '1'], ['#iactividad_val', '2'], ['#inom_tipo_val', '000']]) {
+  for (const [campo, valor] of [['#isfsv_val', tipo[0]], ['#iasistentes_val', tipo[1]], ['#iactividad_val', tipo[2]], ['#inom_tipo_val', tipo[3]]]) {
     await Promise.all([
       page.waitForResponse((r) => r.url().includes('actividad_tipo_get'), { timeout: 15_000 }),
       form.locator(campo).selectOption(valor),
