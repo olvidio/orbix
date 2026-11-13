@@ -34,6 +34,7 @@ use src\personas\domain\value_objects\SituacionCode;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\entity\Delegacion;
 use Tests\myTest;
 
 /**
@@ -62,15 +63,22 @@ final class TrasladarPasosTest extends myTest
         return $this->repos["$interfaz@$esquema"] ??= $this->createMock($interfaz);
     }
 
-    private function trasladar(): Trasladar
+    /** @param list<string> $dlActivas */
+    private function trasladar(array $dlActivas = []): Trasladar
     {
+        $delegaciones = $this->createMock(DelegacionRepositoryInterface::class);
+        $delegaciones->method('matching')->willReturn(array_map(static function (string $dl): Delegacion {
+            $d = new Delegacion();
+            $d->setDlVo($dl);
+            return $d;
+        }, $dlActivas));
         $fabrica = $this->createMock(ConnectionRepositoryFactoryInterface::class);
         $fabrica->method('createWithConnection')->willReturnCallback(function (string $id, \PDO $db): object {
             $esquema = (string) $db->query('select current_schema()')->fetchColumn();
             return $this->repo($id, $esquema);
         });
         $t = new Trasladar(
-            $this->createMock(DelegacionRepositoryInterface::class),
+            $delegaciones,
             $this->asignaturas,
             $this->actividades,
             $this->tiposDossier,
@@ -166,6 +174,36 @@ final class TrasladarPasosTest extends myTest
             return true;
         });
         $this->assertTrue($this->trasladar()->apuntar());
+    }
+
+    /**
+     * Duda 1 de la sección 6b del plan: con la dl destino no activa avisaba «Solamente se anotará
+     * el traslado», cambiaba la ficha pero no anotaba nada.
+     */
+    public function test_a_una_dl_no_activa_cambia_la_ficha_y_anota_el_traslado_sin_mover_datos(): void
+    {
+        $this->repo(PersonaDlRepositoryInterface::class, 'H-dlbv')->method('findById')->willReturn($this->personaDl());
+        $n = $this->personaN();
+        $repoN = $this->repo(PersonaNRepositoryInterface::class, 'H-dlbv');
+        $repoN->method('findById')->willReturn($n);
+        $repoN->expects($this->once())->method('Guardar')->willReturn(true);
+        $traslados = $this->repo(TrasladoRepositoryInterface::class, 'H-dlbv');
+        $traslados->method('getNewId')->willReturn(9);
+        $traslados->expects($this->once())->method('Guardar')->willReturnCallback(function (Traslado $t): bool {
+            $this->assertSame(['dlb', 'dlp'], [$t->getCtr_origen(), $t->getCtr_destino()]);
+            return true;
+        });
+        $this->repo(PersonaNRepositoryInterface::class, 'H-dlpv')->expects($this->never())->method('Guardar');
+
+        $t = $this->trasladar(['dlb']);
+        $t->setDl_persona('dlb');
+        $t->setSituacionVo(new SituacionCode('L'));
+        $t->setF_traslado(new DateTimeLocal('2027-03-01'));
+        $r = $t->trasladar();
+
+        $this->assertFalse($r['success']);
+        $this->assertStringContainsString('Solamente se anotará el traslado', $r['mensaje'] ?? '');
+        $this->assertSame(['L', 'dlp'], [$n->getSituacion(), $n->getDl()]);
     }
 
     public function test_certificados_recibidos_se_mueven_al_destino_y_un_fallo_conserva_el_mensaje(): void

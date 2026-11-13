@@ -247,11 +247,15 @@ class Trasladar
         if (($rta = $this->comprobar()) > 0) {
             $msg = $this->serror;
             if ($rta === 3) {
+                // Dl destino no activa: se cambia la ficha y se anota el traslado (como dice el
+                // aviso), pero no se mueven los datos.
                 if ($this->cambiarFichaPersona() === false) {
                     $msg .= "\n";
                     $msg .= _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
+                } elseif ($this->apuntar() === false) {
+                    $msg .= "\n";
+                    $msg .= _("apuntar traslado") . $this->serror;
                 }
-
             }
             $error_txt = _("comprobar:") . " " . $msg;
 

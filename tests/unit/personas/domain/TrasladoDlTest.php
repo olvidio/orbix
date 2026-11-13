@@ -82,7 +82,8 @@ class TrasladoDlTest extends TestCase
         );
     }
 
-    public function test_trasladar_si_no_existe_dl_destino_solo_toca_ficha_y_falla(): void
+    /** Dl destino no activa: cambia la ficha y anota el traslado (duda 1 de la sección 6b), sin mover datos. */
+    public function test_trasladar_si_no_existe_dl_destino_cambia_ficha_anota_y_falla(): void
     {
         $traslado = $this->makeTrasladarSpy(['dlOrigen']);
 
@@ -96,7 +97,7 @@ class TrasladoDlTest extends TestCase
 
         $this->assertFalse($result['success']);
         $this->assertStringContainsString('comprobar:', $result['mensaje']);
-        $this->assertSame(['cambiarFichaPersona'], $traslado->calls);
+        $this->assertSame(['cambiarFichaPersona', 'apuntar'], $traslado->calls);
     }
 
     public function test_trasladar_si_ya_esta_trasladado_no_hace_mas_operaciones(): void
