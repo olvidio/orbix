@@ -7,6 +7,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -14,6 +16,17 @@ $oPosicion = FrontBootstrap::boot();
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
+
+// Abierta en `#main` (ficha nueva desde la tabla) es una pantalla más del recorrido: entra en la pila
+// para que «atrás» tras guardar vuelva a la tabla. Dentro de `home_ubis` (`bloque=ficha`) no.
+if ((string)filter_input(INPUT_POST, 'bloque') === '') {
+    $oPosicion->nav()->enter(
+        PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
+        '#main',
+        $Qid_ubi !== 0 ? ['id_ubi' => $Qid_ubi] : ['nuevo' => $Qnuevo, 'obj_pau' => $Qobj_pau],
+        ListNavSupport::buildReturnParametrosFromPost(),
+    );
+}
 
 $loadPayload = [
     'id_ubi' => $Qid_ubi,

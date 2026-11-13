@@ -146,6 +146,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | usuarios (sin sesión) | `recuperar-password.spec.ts` | pedir el correo (confirmación, correo enmascarado, la contraseña no cambia) → enlace de la cola `cola_mails` → contraseña nueva → login; el enlace no se reutiliza |
 | usuarios (sin sesión) | `recuperar-2fa.spec.ts` | pedir el correo de 2FA → enlace → confirmar → 2FA desactivado sin abrir sesión; el enlace no se reutiliza |
 | inventario | `inventario-equipajes.spec.ts` | hacer equipaje (periodo → casa → actividad → nombre) → nueva valija de un lugar → añadir y quitar un documento → eliminar la valija → texto de cabecera del listado → eliminar el equipaje |
+| ubis | `ubis-alta-baja.spec.ts` | casa de la dl: búsqueda sin resultados → ficha nueva → guardar → tabla → modificar → ficha → guardar → ficha → eliminar → vuelve a la búsqueda |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
@@ -160,6 +161,7 @@ Reglas para escribir más:
 - Listados en **SlickGrid**: las casillas `input.sel` se marcan con `click({ force: true })` (no `check()`), y la rejilla solo pinta las filas visibles: filtrar la lista para que salga solo la fila del test.
 - Los desplegables encadenados se recargan por AJAX: esperar la respuesta antes de elegir en el siguiente.
 - Al abrir una pantalla que comparte elementos con la anterior (p. ej. `equipajes_ver.php` con otro parámetro), esperar a un elemento que solo tenga la nueva; si no, `abrirPantalla` da por buena la que aún está pintada.
+- Ojo con los `id` repetidos entre pantallas (p. ej. `#b_mas` en la búsqueda de ubis y en su tabla): acotar el selector con algo propio de la pantalla que se espera.
 - Si el flujo toca datos de una persona real (p. ej. marcas de dossier), guardar una foto antes y reponerla al final.
 - Ejecutar Playwright modifica `test-results/` (versionado): restaurarlo con `git checkout -- test-results/ && git clean -fdq test-results/`.
 
@@ -172,7 +174,7 @@ Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escri
 | inventario | 34 | 34 | 44 | 14 | equipajes |
 | usuarios | 24 | 24 | 33 | 13 | sí |
 | misas | 23 | 23 | 31 | 11 | — |
-| ubis | 35 | 35 | 36 | 9 | — |
+| ubis | 35 | 35 | 36 | 9 | casa de la dl |
 | actividades | 18 | 16 | 28 | 9 | sí |
 | encargossacd | 35 | 35 | 32 | 8 | — |
 | certificados | 14 | 14 | 18 | 7 | subida |

@@ -7,10 +7,20 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\ListNavSupport;
+use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
-FrontBootstrap::boot();
+$oPosicion = FrontBootstrap::boot();
+// La búsqueda es el inicio del recorrido (búsqueda → tabla → ficha): sin entrar en la pila, la tabla
+// se apilaba sobre las pantallas anteriores y «atrás» tras eliminar un centro iba a cualquier sitio.
+$oPosicion->nav()->enter(
+    PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
+    '#main',
+    [],
+    ListNavSupport::buildReturnParametrosFromPost(),
+);
 $data = UbisPayload::postData(PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []));
 $opciones = UbisPayload::editarOpcionesFromPayload($data);
 $opciones_pais = NotasFormSupport::desplegableOpciones($data['opciones_pais'] ?? []);
