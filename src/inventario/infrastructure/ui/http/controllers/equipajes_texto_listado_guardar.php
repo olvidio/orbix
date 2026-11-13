@@ -1,102 +1,28 @@
 <?php
 
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\inventario\domain\criteria\EgmField as EgmF;
-use src\shared\infrastructure\DependencyResolver;
+/**
+ * Guarda la cabecera, la cabecera B, el pie o el texto de una maleta del equipaje de la cápsula.
+ * La lógica está en {@see \src\inventario\application\EquipajeTextoGuardar}.
+ */
 
-// grabar la cabecera, pie o texto en las maletas.
-use src\inventario\domain\contracts\EgmRepositoryInterface;
-use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\inventario\application\EquipajeTextoGuardar;
+use src\shared\domain\helpers\FuncTablasSupport;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
-$error_txt = '';
-
 try {
-    $ctx = HashB::open(
-        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
-        'equipajes_texto_listado_guardar'
-    );
+    $ctx = HashB::open(FuncTablasSupport::inputString($_POST, 'ctx_guardar'), 'equipajes_texto_listado_guardar');
 } catch (HashBInvalidException $e) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
 
-$Qtexto = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'texto');
-$Qloc = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'loc');
-$Qid_equipaje = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_equipaje');
-
-try {
-    /** @var EquipajeRepositoryInterface $EquipajeRepository */
-    $EquipajeRepository = DependencyResolver::get(EquipajeRepositoryInterface::class);
-    switch ($Qloc) {
-    case 'cabecera':
-        $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
-        if ($oEquipaje === null) {
-            break;
-        }
-        $oEquipaje->setCabecera($Qtexto);
-        if ($EquipajeRepository->Guardar($oEquipaje) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $EquipajeRepository->getErrorTxt();
-        }
-        break;
-    case 'cabeceraB':
-        $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
-        if ($oEquipaje === null) {
-            break;
-        }
-        $oEquipaje->setCabeceraB($Qtexto);
-        if ($EquipajeRepository->Guardar($oEquipaje) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $EquipajeRepository->getErrorTxt();
-        }
-        break;
-    case 'pie':
-        $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
-        if ($oEquipaje === null) {
-            break;
-        }
-        $oEquipaje->setPie($Qtexto);
-        if ($EquipajeRepository->Guardar($oEquipaje) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $EquipajeRepository->getErrorTxt();
-        }
-        break;
-    default:
-        preg_match('/docs_grupo_(.*)/', $Qloc, $matches);
-        $id_grupo = $matches[1] ?? '';
-        if ($id_grupo === '') {
-            break;
-        }
-
-        /** @var EgmRepositoryInterface $EgmRepository */
-$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-        $cEgm = $EgmRepository->matching(Criteria::create()
-        ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
-        ->andWhere(Filter::eq(EgmF::IdGrupo, $id_grupo)));
-        $oEgm = $cEgm[0];
-
-        $oEgm->setTextoVo($Qtexto);
-        if ($EgmRepository->Guardar($oEgm) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $EgmRepository->getErrorTxt();
-        }
-    }
-} catch (\InvalidArgumentException $e) {
-    if (str_contains($e->getMessage(), 'must be at most')) {
-        $error_txt = match ($Qloc) {
-            'pie' => _("El texto no puede superar 1000 caracteres"),
-            'cabecera' => _("El texto no puede superar 400 caracteres"),
-            default => _("El texto no puede superar 255 caracteres"),
-        };
-    } else {
-        $error_txt = _("hay un error, no se ha guardado");
-        $error_txt .= "\n" . $e->getMessage();
-    }
-}
-
-// envía una Response
-ContestarJson::enviar($error_txt, 'ok');
+/** @var EquipajeTextoGuardar $useCase */
+$useCase = DependencyResolver::get(EquipajeTextoGuardar::class);
+ContestarJson::enviar($useCase->execute(
+    FuncTablasSupport::inputInt($ctx, 'id_equipaje'),
+    FuncTablasSupport::inputString($_POST, 'loc'),
+    FuncTablasSupport::inputString($_POST, 'texto'),
+), 'ok');

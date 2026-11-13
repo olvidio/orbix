@@ -10,7 +10,7 @@ use src\shared\web\ContestarJson;
 $capsules = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = [];
 foreach ($capsules as $capsule) {
-    if (!is_scalar($capsule) || (string) $capsule === '') {
+    if (!is_string($capsule) || $capsule === '') {
         continue;
     }
     try {

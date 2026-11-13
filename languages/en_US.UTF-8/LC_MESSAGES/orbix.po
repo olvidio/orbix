@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 11:13+0100\n"
+"POT-Creation-Date: 2026-11-13 12:25+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -460,17 +460,17 @@ msgstr "activity"
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php:15
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ficha_update.php:15
 #: src/inventario/infrastructure/ui/http/controllers/cabecera_pie_txt_guardar.php:15
-#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:21
-#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:21
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:33
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php:18
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:18
+#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:19
+#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:19
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:20
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php:19
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:19
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar.php:15
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar_grupo.php:19
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php:18
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:23
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:23
-#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:28
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php:19
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:18
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:19
+#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:27
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:19
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:17
 #: src/menus/infrastructure/ui/http/controllers/menu_copiar.php:15
@@ -9943,20 +9943,16 @@ msgstr "Y"
 #: src/encargossacd/application/services/EncargoAplicacionService.php:454
 #: src/encargossacd/application/services/EncargoAplicacionService.php:502
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php:27
-#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:81
-#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:85
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:118
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php:42
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php:57
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:42
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:53
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:64
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:84
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:96
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:52
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:73
-#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:49
-#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:61
+#: src/inventario/application/DocumentosAsignar.php:122
+#: src/inventario/application/DocumentosModificar.php:86
+#: src/inventario/application/DocumentosTrasladar.php:43
+#: src/inventario/application/EquipajeMaletas.php:55
+#: src/inventario/application/EquipajeMaletas.php:86
+#: src/inventario/application/EquipajeNuevo.php:44
+#: src/inventario/application/EquipajeTextoGuardar.php:48
+#: src/inventario/application/EquipajeTextoGuardar.php:60
+#: src/inventario/application/EquipajeTextoGuardar.php:64
+#: src/inventario/application/EquipajeTextoGuardar.php:73
 #: src/menus/application/MenuCopiar.php:45
 #: src/menus/application/MenuGuardar.php:66
 #: src/menus/application/MenuMover.php:25
@@ -11851,8 +11847,8 @@ msgstr "id_item is missing"
 #: src/encargossacd/application/SacdFichaUpdate.php:121
 #: src/encargossacd/application/services/EncargoAplicacionService.php:470
 #: src/inventario/application/EquipajeEliminar.php:28
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:38
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar_grupo.php:37
+#: src/inventario/application/EquipajeMaletas.php:108
+#: src/inventario/application/EquipajeMaletas.php:126
 #: src/menus/application/MenuEliminar.php:23
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:36
 #: src/notas/application/ActaEliminar.php:49
@@ -14556,8 +14552,9 @@ msgstr "The file %s is not a PDF"
 
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
+#: src/inventario/application/DocumentosTrasladar.php:30
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:29
-#: src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php:33
+#: src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php:24
 #: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
 #: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
 #: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
@@ -16134,7 +16131,32 @@ msgstr "Mass zones"
 msgid "se han eliminado %s sacd de encargos inexistentes \n"
 msgstr "%s sacd records have been removed from non-existent assignments\n"
 
-#: src/inventario/application/EquipajeActividadesData.php:124
+#: src/inventario/application/DocumentosAsignar.php:76
+#: src/inventario/application/DocumentosAsignar.php:88
+msgid "No se encuentra el documento"
+msgstr "The document cannot be found"
+
+#: src/inventario/application/DocumentosAsignar.php:97
+#: src/inventario/application/DocumentosModificar.php:60
+#: src/inventario/application/EquipajeNuevo.php:31
+#, php-format
+msgid "Fecha no válida: %s"
+msgstr "Invalid date: %s"
+
+#: src/inventario/application/DocumentosModificar.php:39
+msgid "No ha seleccionado ningún documento"
+msgstr "No document has been selected"
+
+#: src/inventario/application/DocumentosModificar.php:43
+#: src/inventario/view/buscarDocsxSigla.phtml:114
+msgid "Debe marcar al menos un campo a modificar"
+msgstr "You must select at least one field to modify"
+
+#: src/inventario/application/DocumentosModificar.php:92
+msgid "No se pudo aplicar la modificación a los documentos seleccionados"
+msgstr "Could not apply the modification to the selected documents"
+
+#: src/inventario/application/EquipajeActividadesData.php:151
 #, php-format
 msgid "OJO! No se encuentra la actividad con id: %s"
 msgstr "WARNING! The activity with id: %s cannot be found"
@@ -16154,6 +16176,11 @@ msgstr "Missing id_equipaje"
 #, php-format
 msgid "No se encuentra el equipaje %d"
 msgstr "Luggage %d not found"
+
+#: src/inventario/application/EquipajeTextoGuardar.php:70
+#, php-format
+msgid "El texto no puede superar %d caracteres"
+msgstr "The text cannot exceed %d characters"
 
 #: src/inventario/application/LugaresDeDlbData.php:81
 msgid "Para imprimir inventario"
@@ -16286,43 +16313,9 @@ msgstr "numbered"
 msgid "nombre del centro/casa"
 msgstr "name of the center/house"
 
-#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:62
-msgid "No se encuentra el documento"
-msgstr "The document cannot be found"
-
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:55
-#: src/inventario/view/buscarDocsxSigla.phtml:114
-msgid "Debe marcar al menos un campo a modificar"
-msgstr "You must select at least one field to modify"
-
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:57
-#, php-format
-msgid "Fecha no válida: %s"
-msgstr "Invalid date: %s"
-
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:125
-msgid "No se pudo aplicar la modificación a los documentos seleccionados"
-msgstr "Could not apply the modification to the selected documents"
-
-#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:129
-msgid "No ha seleccionado ningún documento"
-msgstr "No document has been selected"
-
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:22
 msgid "debe seleccionar un lugar"
 msgstr "you must select a location"
-
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:91
-msgid "El texto no puede superar 1000 caracteres"
-msgstr "The text cannot exceed 1000 characters"
-
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:92
-msgid "El texto no puede superar 400 caracteres"
-msgstr "The text cannot exceed 400 characters"
-
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:93
-msgid "El texto no puede superar 255 caracteres"
-msgstr "The text cannot exceed 255 characters"
 
 #: src/inventario/view/buscarDocsxSigla.phtml:74
 msgid "Debe seleccionar un tipo de documento"
@@ -20430,6 +20423,12 @@ msgstr "permission off (unchecked)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permission on (checked)"
+
+#~ msgid "El texto no puede superar 1000 caracteres"
+#~ msgstr "The text cannot exceed 1000 characters"
+
+#~ msgid "El texto no puede superar 255 caracteres"
+#~ msgstr "The text cannot exceed 255 characters"
 
 #~ msgid ""
 #~ "Por razones de seguridad, debe configurar la autenticación de dos "

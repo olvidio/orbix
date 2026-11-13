@@ -27,10 +27,10 @@ $file = ConfigGlobal::$dir_web ."/data/inventario/cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
 
-$Config->set("cabecera", $_POST['cabecera'], "texto_tipo");
-$Config->set("cabeceraB", $_POST['cabeceraB'], "texto_tipo");
-$Config->set("firma", $_POST['firma'], "texto_tipo");
-$Config->set("pie", $_POST['pie'], "texto_tipo");
+$Config->set("cabecera", $Qcabecera, "texto_tipo");
+$Config->set("cabeceraB", $QcabeceraB, "texto_tipo");
+$Config->set("firma", $Qfirma, "texto_tipo");
+$Config->set("pie", $Qpie, "texto_tipo");
 
 $Config->save($file);
 
