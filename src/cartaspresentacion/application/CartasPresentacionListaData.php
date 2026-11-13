@@ -276,7 +276,7 @@ final class CartasPresentacionListaData
             // 15 es el id para otros asuntos (20 es para asuntos de gobierno).
             $mail = $this->ubiTelecoService->texto($obj_pau_centro, $id_ubi, 'e-mail', '15', ' / ');
             if ($mail !== '') {
-                $pres_mail .= 'mail casa: ' . $mail;
+                $pres_mail .= ($pres_mail !== '' ? ' / ' : '') . 'mail casa: ' . $mail;
             }
         }
 
@@ -372,10 +372,10 @@ final class CartasPresentacionListaData
             $this->msgError .= (string)$oCentro->getNombre_ubi();
         }
         if ($zona !== '') {
-            $edad .= "<br>$zona";
+            $edad .= "\n$zona";
         }
 
-        $poblacion .= $pais === '' ? '' : '<br>(' . $pais . ')';
+        $poblacion .= $pais === '' ? '' : "\n(" . $pais . ')';
         $celdas = $this->datosACeldas($a_texto);
         if ($ordenar_dl === 1) {
             foreach ($aTipo as $tipo) {
@@ -421,6 +421,15 @@ final class CartasPresentacionListaData
     private static function h(mixed $texto): string
     {
         return htmlspecialchars(is_scalar($texto) ? (string) $texto : '', ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * Como {@see self::h()}, pero los saltos de línea (la zona bajo la edad, el país bajo la población)
+     * pasan a `<br>`. (Antes se unían con `<br>` y al escapar se veía el `<br>` literal.)
+     */
+    private static function hMultilinea(mixed $texto): string
+    {
+        return str_replace("\n", '<br>', self::h($texto));
     }
 
     private function datosACeldas(array $a_texto): string
@@ -519,7 +528,7 @@ final class CartasPresentacionListaData
             }
             krsort($a_edad); // primero m, despues j
             if ($poblacion !== $poblacion_anterior || $poblacion === '') {
-                $html .= '<tr><td ' . $class . '>' . self::h(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)$poblacion)) . '</td>';
+                $html .= '<tr><td ' . $class . '>' . self::hMultilinea(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)$poblacion)) . '</td>';
             }
             $f = 0;
             foreach ($a_edad as $edad => $texto) {
@@ -534,12 +543,12 @@ final class CartasPresentacionListaData
                         if ($ff > 1) {
                             $html .= '<tr><td></td><td ' . $class . '></td>';
                         } else {
-                            $html .= '<td ' . $class . '>' . self::h($edad) . '</td>';
+                            $html .= '<td ' . $class . '>' . self::hMultilinea($edad) . '</td>';
                         }
                         $html .= (is_scalar($txt) ? (string)$txt : '') . '</tr>';
                     }
                 } else {
-                    $html .= '<td ' . $class . '>' . self::h($edad) . '</td>'
+                    $html .= '<td ' . $class . '>' . self::hMultilinea($edad) . '</td>'
                         . (is_scalar($texto) ? (string)$texto : '') . '</tr>';
                 }
             }

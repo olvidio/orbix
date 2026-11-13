@@ -115,7 +115,8 @@ final class CartasPresentacionUbisListaData
         foreach ($cDirCentros as $Cen) {
             $txt_direccion = $Cen['dir'];
             $id_direccion = $Cen['id_direccion'];
-            $nom_sede = $Cen['nom_sede'];
+            // Sin sede, la dirección devuelve null: antes el centro salía como «Nombre ()».
+            $nom_sede = (string) ($Cen['nom_sede'] ?? '');
             foreach ($Cen['colCentros'] as $oCentro) {
                 $c++;
                 $id_ubi = $oCentro->getId_ubi();
@@ -165,7 +166,6 @@ final class CartasPresentacionUbisListaData
         $a_valores = [];
         $orden_nom = [];
         foreach ($cCentros as $oCentro) {
-            $c++;
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi_base = $oCentro->getNombre_ubi();
 
@@ -187,7 +187,8 @@ final class CartasPresentacionUbisListaData
                 $nom_sede = (string)$oDireccion->getNom_sede();
                 $nombre_ubi = $nombre_ubi_base . ($nom_sede === '' ? '' : " ($nom_sede)");
                 $activo = $this->cartaPresentacionDlRepository->findById($id_ubi, $id_direccion) !== null;
-
+                // Una fila por dirección (antes el contador iba por centro y la segunda dirección pisaba a la primera).
+                $c++;
                 $a_valores[$c] = $this->buildFila($id_direccion, $id_ubi, $nombre_ubi, $activo, $txt_direccion);
                 $orden_nom[$c] = strtolower($nombre_ubi);
             }

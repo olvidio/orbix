@@ -1073,3 +1073,13 @@ Pasos en la sección 6; descripción en la sección 3. Los resultados de cada pa
   2. `DireccionId` rechazaba los ids `-3…` (direcciones de casas de fuera con esquema de tipo 3), que `CasaId` y `TelecoUbiId` sí admiten: en la BD dev hay una, y la lista de casas y centros (`ubis_lista_data`) daba una excepción al cargar su dirección.
 - Suite completa en verde (10 621). Quitada la entrada del backlog; guardia añadida a `tests/AGENTS.md` y a `AGENTS.md`.
 
+### Paso 5.2: cobertura de los módulos con menos tests (2026-11-13)
+
+Medido solo con los tests de cada módulo; sin contar `db/` (DDL, necesita BD aislada) ni `config/`.
+
+- **`cartaspresentacion`: 43 % → 83 %.** Tests nuevos: `CartasPresentacionListaDataCasosTest` (modos `lista_dl`, `lista_todo` y `get` por población/país/zona/región/dl, tipos de labor, segunda dirección, teléfonos y correo de las r de fuera, errores de tipo de labor), `CartasPresentacionUbisListaDataCasosTest` (centros de la dl por población y cr/dl de fuera) y el de las opciones de búsqueda (integración). Bugs corregidos:
+  1. **Regresión del escapado del paso 2.10:** la zona (bajo la edad) y el país (bajo la población) se unían con `<br>` y luego se escapaban, así que el listado mostraba `<br>` literal. Ahora se unen con salto de línea y se pintan con `<br>` tras escapar.
+  2. El correo de la casa de las r de fuera se pegaba al de la persona de contacto sin separador.
+  3. Lista de cr/dl de fuera: con un centro de dos direcciones, la segunda pisaba a la primera (contador de filas por centro, no por dirección).
+  4. Lista de centros de la dl: un centro con dirección sin sede salía como «Nombre ()».
+
