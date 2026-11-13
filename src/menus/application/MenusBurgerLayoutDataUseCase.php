@@ -6,6 +6,7 @@ use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\criteria\MenuDbField;
 use src\menus\domain\entity\MenuDb;
+use src\menus\domain\PermisoMenu;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\shared\config\ConfigGlobal;
@@ -13,6 +14,10 @@ use src\shared\config\ConfigGlobal;
 /**
  * Datos para {@see \frontend\shared\layouts\BurgerLayout} y {@see \frontend\shared\layouts\PillsLayout}:
  * "Utilidades", sin acceso a repos desde `frontend/`.
+ *
+ * Como el layout clásico ({@see MenusLegacyLayoutItemsUseCase}), oculta las entradas cuyos bits de
+ * permiso (`menu_perm`) no coinciden con los del usuario ({@see PermisoMenu::visible()}); si se oculta
+ * una entrada, también sus submenús. (Antes el burger las enseñaba todas.)
  */
 final class MenusBurgerLayoutDataUseCase
 {
@@ -43,8 +48,10 @@ final class MenusBurgerLayoutDataUseCase
                 ->addOrderBy(MenuDbField::Orden)
         );
 
-        $userMenuNodes = $this->buildUserMenuNodes($cMenusUtilidades);
-        $menuConfig = $this->buildMenuStructure($cMenuDbs, $listaGrupMenu);
+        $oPermisoMenu = new PermisoMenu();
+        $visible = static fn (MenuDb $m): bool => $oPermisoMenu->visible($m->getMenu_perm() ?? 0);
+        $userMenuNodes = $this->buildUserMenuNodes(array_values(array_filter($cMenusUtilidades, $visible)));
+        $menuConfig = $this->buildMenuStructure(array_values(array_filter($cMenuDbs, $visible)), $listaGrupMenu);
 
         return [
             'menu_config' => $menuConfig,
@@ -153,6 +160,11 @@ final class MenusBurgerLayoutDataUseCase
             $id_metamenu = $itemObject->getId_metamenu();
 
             if (count($orden) === 1) {
+                continue;
+            }
+            // Los nodos también salen en lista plana: sin el padre (oculto o inexistente), fuera.
+            // El repositorio los da ordenados por `orden`, así que el padre ya está procesado.
+            if (count($orden) > 2 && !isset($indexedNodes[$id_grupmenu . '_' . implode('_', array_slice($orden, 0, -1))])) {
                 continue;
             }
 

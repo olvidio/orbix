@@ -15,24 +15,35 @@ use Tests\support\DescribeCriteria;
 /**
  * Estructura del menú «burger»: árbol de entradas por grupo según el orden
  * (1, 1.1, 1.1.1…), solo grupos del usuario, sin las de módulos no instalados
- * ni las de metamenús inexistentes; enlace o acción de cliente; menú de utilidades.
+ * ni las de metamenús inexistentes; enlace o acción de cliente; menú de utilidades;
+ * sin las entradas (ni sus submenús) cuyos bits de permiso no tiene el usuario,
+ * como el layout clásico (duda 7 de la sección 6b del plan).
  */
 final class MenusBurgerLayoutDataUseCaseTest extends TestCase
 {
+    /** Bits de permiso del usuario de los tests y de las entradas que sí puede ver. */
+    private const PERM_USUARIO = 0b0110;
+    private const PERM_VISIBLE = 0b0010;
+    private const PERM_OCULTO = 0b1000;
+
     private mixed $config = null;
+    private mixed $permMenus = null;
 
     protected function setUp(): void
     {
         $this->config = $_SESSION['config'] ?? null;
+        $this->permMenus = $_SESSION['iPermMenus'] ?? null;
         $_SESSION['config'] = ['mod_installed' => [7 => true]];
+        $_SESSION['iPermMenus'] = self::PERM_USUARIO;
     }
 
     protected function tearDown(): void
     {
         $_SESSION['config'] = $this->config;
+        $_SESSION['iPermMenus'] = $this->permMenus;
     }
 
-    private static function menu(int $grupo, array $orden, string $nombre, ?int $meta = null, ?string $param = null): MenuDb
+    private static function menu(int $grupo, array $orden, string $nombre, ?int $meta = null, ?string $param = null, ?int $perm = self::PERM_VISIBLE): MenuDb
     {
         $m = new MenuDb();
         $m->setId_menu(random_int(1, 99999));
@@ -41,6 +52,7 @@ final class MenusBurgerLayoutDataUseCaseTest extends TestCase
         $m->setMenu($nombre);
         $m->setId_metamenu($meta);
         $m->setParametros($param);
+        $m->setMenu_perm($perm);
         return $m;
     }
 
@@ -107,5 +119,29 @@ final class MenusBurgerLayoutDataUseCaseTest extends TestCase
         $this->assertSame([2, 3], array_column($out['user_menu_nodes'], 'indice'));
         $this->assertSame(['Sub'], array_column($out['user_menu_nodes'][0]['submenu'], 'name'));
         $this->assertSame([], $out['menu_config']);
+    }
+
+    public function test_oculta_las_entradas_sin_permiso_y_sus_submenus(): void
+    {
+        $out = ($this->uc([
+            self::menu(1, [1], 'Utilidades'),
+            self::menu(1, [1, 1], 'Preferencias', 10),
+            self::menu(1, [1, 2], 'Solo administración', 10, null, self::PERM_OCULTO),
+            self::menu(1, [1, 2, 1], 'Hijo de oculto', 10),
+        ], [
+            self::menu(2, [1], 'Personas'),
+            self::menu(2, [1, 1], 'Buscar', 10),
+            self::menu(2, [1, 2], 'Sin permiso', 10, null, self::PERM_OCULTO),
+            self::menu(2, [1, 2, 1], 'Nieto de oculto', 10),
+            self::menu(2, [2], 'Raíz sin permiso', null, null, self::PERM_OCULTO),
+            self::menu(2, [2, 1], 'Hijo de raíz oculta', 10),
+            self::menu(2, [3], 'Sin bits', 10, null, null),
+            self::menu(2, [4], 'Otro bit del usuario', 10, null, 0b0100),
+        ]))([2 => 'personas']);
+
+        $raices = $out['menu_config']['personas'];
+        $this->assertSame(['Personas', 'Otro bit del usuario'], array_column($raices, 'name'));
+        $this->assertSame(['Buscar'], array_column($raices[0]['submenu'], 'name'));
+        $this->assertSame(['Preferencias'], array_column($out['user_menu_nodes'], 'name'));
     }
 }
