@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\inventario\application;
 
+use src\inventario\application\support\NombreDocumento;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -140,20 +141,7 @@ final class InventarioDocumentosData
             return null;
         }
         $oTipoDoc = $tipo['tipo'];
-        $numReg = $oDocumento->getNumRegVo()?->value();
-        $numEjemplares = $oDocumento->getNumEjemplaresVo()?->value();
-        $numIni = $oDocumento->getNumIniVo()?->value();
-        $numFin = $oDocumento->getNumFinVo()?->value();
-
-        $nom = ($oTipoDoc->isBajo_llave() ? '* ' : '') . $oTipoDoc->getSigla();
-        $nomDoc = $oTipoDoc->getNom_doc();
-        $nom .= empty($nomDoc) ? '' : ' ' . $nomDoc;
-        $nom .= !empty($numReg) ? ", $numReg" : '';
-        $nom .= (!empty($numEjemplares) && $numEjemplares > 1) ? " ($numEjemplares ej.)" : '';
-        if (!empty($numIni)) {
-            $nom .= " desde el $numIni-";
-            $nom .= !empty($numFin) ? " $numFin" : _("Actual");
-        }
+        $nom = NombreDocumento::compuesto($oTipoDoc, $oDocumento);
 
         return [
             'valores' => [
