@@ -127,6 +127,19 @@ final class PermDossierTest extends myTest
         $this->assertSame([], array_diff($est, $ambas));
     }
 
+    /** Duda 6 de la sección 6b del plan: est solo ve las actividades de los supernumerarios. */
+    public function test_est_no_apunta_supernumerarios_a_ninguna_actividad(): void
+    {
+        $this->oficinas('est');
+        $this->assertSame([], self::conPermiso((new PermDossier())->perm_activ_pers('s')), 'est sola: nada');
+
+        $this->oficinas('sr');
+        $sr = self::conPermiso((new PermDossier())->perm_activ_pers('s'));
+        $this->assertNotSame([], $sr, 'sr sí');
+        $this->oficinas('est', 'sr');
+        $this->assertSame($sr, self::conPermiso((new PermDossier())->perm_activ_pers('s')), 'est no añade nada a sr');
+    }
+
     public function test_tipos_de_actividad_solo_los_que_existen(): void
     {
         $this->oficinas('des');

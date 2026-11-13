@@ -475,9 +475,8 @@ class PermDossier
                 if (self::havePermOficina(MenuDlPermissionBits::SR)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::EST)) {
-                    $ref_perm = $this->addPerm($ref_perm, $ref_perm_sr);
-                }
+                // est solo ve las actividades de los supernumerarios (se listan igual), no las apunta:
+                // no suma ninguna tabla. (Recibía la de sr; en el legacy, `$ref_perm_est` no existía.)
                 if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
