@@ -1,103 +1,14 @@
 <?php
 
-use src\inventario\domain\criteria\WhereisField as WhF;
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\shared\infrastructure\DependencyResolver;
+/**
+ * Documentos de la maleta (egm) `id_item_egm`.
+ * La lógica está en {@see \src\inventario\application\DocumentosDeEgmData}.
+ */
 
-use src\inventario\domain\contracts\DocumentoRepositoryInterface;
-use src\inventario\domain\contracts\EgmRepositoryInterface;
-use src\inventario\domain\contracts\LugarRepositoryInterface;
-use src\inventario\domain\contracts\TipoDocRepositoryInterface;
-use src\inventario\domain\contracts\WhereisRepositoryInterface;
-use src\shared\security\HashB;
+use src\inventario\application\DocumentosDeEgmData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_item_egm = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item_egm');
-$error_txt = '';
-
-/** @var LugarRepositoryInterface $LugarRepository */
-$LugarRepository = DependencyResolver::get(LugarRepositoryInterface::class);
-/** @var TipoDocRepositoryInterface $TipoDocRepository */
-$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
-/** @var DocumentoRepositoryInterface $DocumentoRepository */
-$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-/** @var WhereisRepositoryInterface $WhereisRepository */
-$WhereisRepository = DependencyResolver::get(WhereisRepositoryInterface::class);
-/** @var EgmRepositoryInterface $EgmRepository */
-$EgmRepository = DependencyResolver::get(EgmRepositoryInterface::class);
-$oEgm = $EgmRepository->findById($Qid_item_egm);
-if ($oEgm === null) {
-    ContestarJson::enviar($error_txt, []);
-    return;
-}
-$id_lugar = $oEgm->getId_lugar();
-$oLugar = $LugarRepository->findById((int) $id_lugar);
-if ($oLugar === null) {
-    ContestarJson::enviar($error_txt, []);
-    return;
-}
-$nombre_valija = $oLugar->getNom_lugar();
-
-$cWhereis = $WhereisRepository->matching(Criteria::create()->where(Filter::eq(WhF::IdItemEgm, $Qid_item_egm)));
-
-$d = 0;
-$a_valores = [];
-$a_tipo = [];
-foreach ($cWhereis as $oWhereis) {
-    $d++;
-    $id_item_whereis = $oWhereis->getId_item_whereis();
-    $id_doc = $oWhereis->getId_doc();
-    $oDocumento = $DocumentoRepository->findById((int) $id_doc);
-    if ($oDocumento === null) {
-        continue;
-    }
-    //extract($oDocumento->getTot());
-    $identificador = $oDocumento->getIdentificador();
-    $id_tipo_doc = $oDocumento->getId_tipo_doc();
-    $oTipoDoc = $TipoDocRepository->findById((int) $id_tipo_doc);
-    if ($oTipoDoc === null) {
-        continue;
-    }
-    $id_lugar_doc = $oDocumento->getId_lugar();
-    $lugar = '';
-    if ($id_lugar_doc !== null) {
-        $oLugar = $LugarRepository->findById($id_lugar_doc);
-        if ($oLugar === null) {
-            continue;
-        }
-        $lugar = $oLugar->getNom_lugar();
-    }
-    //$identificador = _("de") . " $lugar: $identificador";
-    $identificador = $identificador;
-
-    $a_valores[$d]['sel'] = $id_item_whereis;
-    $a_valores[$d][1] = $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc();
-    $a_valores[$d][2] = $identificador;
-    //para poder ordenar
-    $a_tipo[$d] = $a_valores[$d][1];
-}
-// ordenar por sigla
-if (!empty($a_valores)) {
-    array_multisort($a_tipo, SORT_ASC, $a_valores);
-}
-
-$data = [
-    'a_valores' => $a_valores,
-    'nombre_valija' => $nombre_valija,
-    'ctx_del' => HashB::sign('equipajes_del_doc', [
-        'id_item_egm' => $Qid_item_egm,
-        'id_grupo' => (int) $oEgm->getId_grupo(),
-        'id_equipaje' => (int) $oEgm->getId_equipaje(),
-    ]),
-    'ctx_add' => HashB::sign('equipajes_add_doc', [
-        'id_item_egm' => $Qid_item_egm,
-    ]),
-    'ctx_eliminar_grupo' => HashB::sign('equipajes_eliminar_grupo', [
-        'id_grupo' => (int) $oEgm->getId_grupo(),
-        'id_equipaje' => (int) $oEgm->getId_equipaje(),
-    ]),
-];
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+/** @var DocumentosDeEgmData $useCase */
+$useCase = DependencyResolver::get(DocumentosDeEgmData::class);
+ContestarJson::enviar('', $useCase->execute(\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item_egm')));
