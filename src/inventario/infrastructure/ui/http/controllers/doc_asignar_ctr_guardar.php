@@ -1,87 +1,38 @@
 <?php
 
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\inventario\domain\criteria\DocumentoField as DocF;
-use src\shared\infrastructure\DependencyResolver;
+/**
+ * Guarda la asignación de un tipo de documento (el de la cápsula) a los centros de `str_selected_id`,
+ * con el número de cada uno en `num_<id>`.
+ * La lógica está en {@see \src\inventario\application\DocumentosAsignar::aCentros()}.
+ */
 
-use src\inventario\domain\contracts\DocumentoRepositoryInterface;
-use src\inventario\domain\entity\Documento;
-use src\shared\domain\value_objects\DateTimeLocal;
+use src\inventario\application\DocumentosAsignar;
+use src\shared\domain\helpers\FuncTablasSupport;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
 try {
-    $ctx = HashB::open(
-        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
-        'doc_asignar_ctr_guardar'
-    );
+    $ctx = HashB::open(FuncTablasSupport::inputString($_POST, 'ctx_guardar'), 'doc_asignar_ctr_guardar');
 } catch (HashBInvalidException $e) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
 
-$Qid_tipo_doc = (string) \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_tipo_doc');
-$Qnumerado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'numerado');
-$Qstr_selected_id = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'str_selected_id');
-$Qf_recibido = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido');
-$Qf_asignado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_asignado');
-
-$selected_id = json_decode(rawurldecode($Qstr_selected_id), true);
-if (!is_array($selected_id)) {
-    $selected_id = [];
-}
-$error_txt = '';
-
-/** @var DocumentoRepositoryInterface $DocumentoRepository */
-$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-$i = 0;
-foreach ($selected_id as $id_ubi_raw) {
-    if (!is_numeric($id_ubi_raw)) {
-        continue;
-    }
-    $id_ubi = (int) $id_ubi_raw;
-    $var_num = 'num_' . $id_ubi;
-    $numRaw = $_POST[$var_num] ?? 0;
-    $num = is_numeric($numRaw) ? (int) $numRaw : 0;
-    $cDocumentos = $DocumentoRepository->matching(Criteria::create()
-        ->where(Filter::eq(DocF::IdUbi, $id_ubi))
-        ->andWhere(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc)));
-    if (empty($cDocumentos)) {
-        /** @var DocumentoRepositoryInterface $DocumentoRepository */
-$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-        $id_new = $DocumentoRepository->getNewId();
-        $oDocumento = new Documento();
-        $oDocumento->setId_doc($id_new);
-        $oDocumento->setIdUbiVo($id_ubi);
-        $oDocumento->setId_tipo_doc((int) $Qid_tipo_doc);
-    } else {
-        $oDocumento = $cDocumentos[0];
-    }
-
-    if (!empty($Qnumerado)) {
-        $oDocumento->setNum_reg($num);
-    } else {
-        $oDocumento->setNum_ejemplares($num);
-    }
-
-    // Si está vacío no hago nada (dejo lo que esté)
-    if (!empty($Qf_recibido)) {
-        $rawF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
-        $oDocumento->setF_recibido($rawF_recibido instanceof DateTimeLocal ? $rawF_recibido : null);
-    }
-
-    if (!empty($Qf_asignado)) {
-        $rawF_asignado = DateTimeLocal::createFromLocal($Qf_asignado);
-        $oDocumento->setF_asignado($rawF_asignado instanceof DateTimeLocal ? $rawF_asignado : null);
-    }
-
-    if ($DocumentoRepository->Guardar($oDocumento) === false) {
-        $error_txt .= _("hay un error, no se ha guardado");
-        $error_txt .= "\n" . $DocumentoRepository->getErrorTxt();
+$seleccion = json_decode(rawurldecode(FuncTablasSupport::inputString($_POST, 'str_selected_id')), true);
+$numeros = [];
+foreach (is_array($seleccion) ? $seleccion : [] as $id) {
+    if (is_numeric($id)) {
+        $numeros[(int) $id] = $_POST['num_' . (int) $id] ?? 0;
     }
 }
 
-ContestarJson::enviar($error_txt, 'ok');
-
+/** @var DocumentosAsignar $useCase */
+$useCase = DependencyResolver::get(DocumentosAsignar::class);
+ContestarJson::enviar($useCase->aCentros(
+    FuncTablasSupport::inputInt($ctx, 'id_tipo_doc'),
+    $numeros,
+    FuncTablasSupport::inputString($_POST, 'f_recibido'),
+    FuncTablasSupport::inputString($_POST, 'f_asignado'),
+), 'ok');

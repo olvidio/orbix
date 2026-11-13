@@ -4,12 +4,14 @@ use src\inventario\application\ColeccionesOpcionesData;
 use src\inventario\application\EquipajeEliminar;
 use src\inventario\application\InventarioCssInlineData;
 use src\inventario\application\DocAsignarListaData;
+use src\inventario\application\DocumentosAsignar;
 use src\inventario\application\DocumentosDeEgmData;
 use src\inventario\application\DocumentosModificar;
 use src\inventario\application\DocumentosDeLugarData;
 use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\DocumentosMarcadosData;
 use src\inventario\application\DocumentosPorTipoData;
+use src\inventario\application\DocumentosTrasladar;
 use src\inventario\application\EquipajeActividadesData;
 use src\inventario\application\EquipajeDocCasaData;
 use src\inventario\application\EquipajeEgmData;
@@ -73,6 +75,8 @@ return [
     MaletasPosiblesData::class => autowire(MaletasPosiblesData::class),
     DocAsignarListaData::class => autowire(DocAsignarListaData::class),
     DocumentosModificar::class => autowire(DocumentosModificar::class),
+    DocumentosAsignar::class => autowire(DocumentosAsignar::class),
+    DocumentosTrasladar::class => autowire(DocumentosTrasladar::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),
