@@ -148,6 +148,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | inventario | `inventario-equipajes.spec.ts` | hacer equipaje (periodo → casa → actividad → nombre) → nueva valija de un lugar → añadir y quitar un documento → eliminar la valija → texto de cabecera del listado → eliminar el equipaje |
 | ubis | `ubis-alta-baja.spec.ts` | casa de la dl: búsqueda sin resultados → ficha nueva → guardar → tabla → modificar → ficha → guardar → ficha → eliminar → vuelve a la búsqueda |
 | procesos | `procesos-fases.spec.ts` | crear una actividad (tipo con proceso coherente en dev) → fases de la actividad → marcar una fase con observación → desmarcarla. Se salta si el diseño del proceso depende de fases que no tiene |
+| cambios | `cambios-avisos.spec.ts` | usuario nuevo → avisos de cambios → añadir aviso (objeto, fase de referencia, tipo de aviso, una propiedad) → guardar → eliminar desde la lista |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
@@ -179,7 +180,7 @@ Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escri
 | actividades | 18 | 16 | 28 | 9 | sí |
 | encargossacd | 35 | 35 | 32 | 8 | — |
 | certificados | 14 | 14 | 18 | 7 | subida |
-| cambios | 6 | 6 | 11 | 7 | — |
+| cambios | 6 | 6 | 11 | 7 | avisos de un usuario |
 | procesos | 12 | 12 | 17 | 6 | fases de una actividad |
 | notas | 27 | 26 | 31 | 5 | sí |
 | devel_db_admin | 20 | 19 | 15 | 5 | — (DDL) |
