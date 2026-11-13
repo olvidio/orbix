@@ -10,12 +10,14 @@ use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\criteria\LugarField as LugarF;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
- * Lugares de los centros de la dl que tienen lugares, agrupados por centro (`lista_docs_de_dlb`): para
- * asignar un tipo de documento a lugares o, con `inventario`, para elegir de cuáles imprimir el inventario.
+ * Dónde asignar un tipo de documento o, con `inventario`, de dónde imprimir el inventario: los lugares de
+ * los centros que tienen lugares, agrupados por centro (`lista_docs_de_dlb`), o los centros sin lugares
+ * (`lista_de_ctr_con_docs`).
  *
- * Sucesor de la lógica del controlador `lista_docs_de_dlb.php` (fase 5, paso 5.2). La respuesta es la misma.
+ * Sucesor de la lógica de esos dos controladores (fase 5, paso 5.2). La respuesta es la misma.
  */
 final class LugaresDeDlbData
 {
@@ -29,15 +31,9 @@ final class LugaresDeDlbData
     /** @return array{a_valores: array<int, array<int, array<int|string, mixed>>>, aGrupos: array<int, string>, nombreDoc: string}|array{} */
     public function execute(int $idTipoDoc, bool $paraInventario): array
     {
-        if ($paraInventario) {
-            $nombreDoc = _("Para imprimir inventario");
-        } else {
-            $oTipoDoc = $this->tipoDocRepository->findById($idTipoDoc);
-            if ($oTipoDoc === null) {
-                return [];
-            }
-            $nomDoc = $oTipoDoc->getNom_doc();
-            $nombreDoc = empty($nomDoc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nomDoc . ')';
+        $nombreDoc = $this->nombreDoc($idTipoDoc, $paraInventario);
+        if ($nombreDoc === null) {
+            return [];
         }
         $valores = [];
         $grupos = [];
@@ -56,5 +52,40 @@ final class LugaresDeDlbData
         }
 
         return ['a_valores' => $valores, 'aGrupos' => $grupos, 'nombreDoc' => $nombreDoc];
+    }
+
+    /**
+     * Centros sin lugares (los ctr), ordenados sin acentos (`lista_de_ctr_con_docs`).
+     *
+     * @return array{a_valores: list<array<int|string, mixed>>, nombreDoc: string}|array{}
+     */
+    public function centros(int $idTipoDoc, bool $paraInventario): array
+    {
+        $nombreDoc = $this->nombreDoc($idTipoDoc, $paraInventario);
+        if ($nombreDoc === null) {
+            return [];
+        }
+        $valores = [];
+        foreach ($this->ubiInventarioRepository->getUbisInventarioLugar(false) as $oUbi) {
+            $valores[] = ['sel' => $oUbi->getId_ubi(), 1 => $oUbi->getNom_ubi()];
+        }
+        $claves = FuncTablasSupport::clavesOrdenSinAcentos(array_column($valores, 1));
+        array_multisort($claves, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $valores);
+
+        return ['a_valores' => $valores, 'nombreDoc' => $nombreDoc];
+    }
+
+    private function nombreDoc(int $idTipoDoc, bool $paraInventario): ?string
+    {
+        if ($paraInventario) {
+            return _("Para imprimir inventario");
+        }
+        $oTipoDoc = $this->tipoDocRepository->findById($idTipoDoc);
+        if ($oTipoDoc === null) {
+            return null;
+        }
+        $nomDoc = $oTipoDoc->getNom_doc();
+
+        return empty($nomDoc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nomDoc . ')';
     }
 }

@@ -10,8 +10,10 @@ use src\inventario\application\DocumentosMarcadosData;
 use src\inventario\application\DocumentosPorTipoData;
 use src\inventario\application\EquipajeActividadesData;
 use src\inventario\application\EquipajeDocCasaData;
+use src\inventario\application\EquipajeEgmData;
 use src\inventario\application\ListaDocsDeCtrData;
 use src\inventario\application\LugaresDeDlbData;
+use src\inventario\application\MaletasPosiblesData;
 use src\inventario\application\EquipajesMovimientosData;
 use src\inventario\application\InventarioDocumentosData;
 use src\inventario\application\TipoDocOpcionesData;
@@ -65,6 +67,8 @@ return [
     DocumentosLibresData::class => autowire(DocumentosLibresData::class),
     LugaresDeDlbData::class => autowire(LugaresDeDlbData::class),
     EquipajeActividadesData::class => autowire(EquipajeActividadesData::class),
+    EquipajeEgmData::class => autowire(EquipajeEgmData::class),
+    MaletasPosiblesData::class => autowire(MaletasPosiblesData::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),

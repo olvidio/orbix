@@ -77,11 +77,14 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
             return $t;
         });
         $ubis = $this->createMock(UbiInventarioRepositoryInterface::class);
-        $ubis->method('getUbisInventarioLugar')->with(true)->willReturnCallback(static function (): array {
-            $u = new UbiInventario();
-            $u->setId_ubi(40);
-            $u->setNom_ubi('Almacén');
-            return [$u];
+        $ubis->method('getUbisInventarioLugar')->willReturnCallback(static function (bool $conLugares): array {
+            $ubi = static function (int $id, string $nom): UbiInventario {
+                $u = new UbiInventario();
+                $u->setId_ubi($id);
+                $u->setNom_ubi($nom);
+                return $u;
+            };
+            return $conLugares ? [$ubi(40, 'Almacén')] : [$ubi(2, 'Burgos'), $ubi(1, 'Ávila'), $ubi(3, 'Albacete')];
         });
         $lugares = $this->createMock(LugarRepositoryInterface::class);
         $lugares->method('matching')->willReturnCallback(function ($c): array {
@@ -109,5 +112,15 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
 
         $this->assertSame('Para imprimir inventario', $r['nombreDoc']);
         $this->assertSame(['id' => 20, 'select' => ''], $r['a_valores'][40][1]['sel']);
+    }
+
+    public function test_centros_sin_lugares_ordenados_sin_acentos(): void
+    {
+        $r = $this->lugaresDlb()->centros(1, false);
+
+        $this->assertSame('B (Carta)', $r['nombreDoc']);
+        $this->assertSame([['sel' => 3, 1 => 'Albacete'], ['sel' => 1, 1 => 'Ávila'], ['sel' => 2, 1 => 'Burgos']], $r['a_valores']);
+        $this->assertSame('Para imprimir inventario', $this->lugaresDlb()->centros(0, true)['nombreDoc']);
+        $this->assertSame([], $this->lugaresDlb()->centros(2, false));
     }
 }
