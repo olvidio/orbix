@@ -8,6 +8,7 @@ use src\inventario\application\DocumentosDeLugarData;
 use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\DocumentosMarcadosData;
 use src\inventario\application\DocumentosPorTipoData;
+use src\inventario\application\EquipajeActividadesData;
 use src\inventario\application\EquipajeDocCasaData;
 use src\inventario\application\ListaDocsDeCtrData;
 use src\inventario\application\LugaresDeDlbData;
@@ -63,6 +64,7 @@ return [
     DocumentosDeLugarData::class => autowire(DocumentosDeLugarData::class),
     DocumentosLibresData::class => autowire(DocumentosLibresData::class),
     LugaresDeDlbData::class => autowire(LugaresDeDlbData::class),
+    EquipajeActividadesData::class => autowire(EquipajeActividadesData::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),

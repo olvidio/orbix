@@ -1,64 +1,17 @@
 <?php
 
-use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FilterPostGet;
+/**
+ * Resumen de las actividades elegidas (`sel`) en la casa `id_cdc` para crear un equipaje.
+ * La lógica está en {@see \src\inventario\application\EquipajeActividadesData::seleccion()}.
+ */
 
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\ubis\domain\entity\Ubi;
-use src\shared\security\HashB;
+use src\inventario\application\EquipajeActividadesData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qid_cdc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_cdc');
-
-$error_txt = '';
-
-// buscar un nombre (lugar f_ini-f_fin).
-$oUbi = Ubi::NewUbi($Qid_cdc);
-$nombreUbiVo = $oUbi?->getNombreUbiVo();
-$nombre_ubi = ($nombreUbiVo === null || empty($nombreUbiVo->value())) ? 'sin determinar' : $nombreUbiVo->value();
-
-$a = 0;
-$aF_ini = [];
-$aF_fin = [];
-$ids_activ = '';
-/** @var ActividadAllRepositoryInterface $ActividadAllRepository */
-$ActividadAllRepository = DependencyResolver::get(ActividadAllRepositoryInterface::class);
-foreach ($a_sel as $id_activ_raw) {
-    if (!is_numeric($id_activ_raw)) {
-        continue;
-    }
-    $id_activ = (int) $id_activ_raw;
-    $ids_activ .= empty($ids_activ) ? '' : ',';
-    $ids_activ .= $id_activ;
-    $a++;
-    $oActividad = $ActividadAllRepository->findById($id_activ);
-    if ($oActividad === null) {
-        continue;
-    }
-    $fIni = $oActividad->getF_ini();
-    $fFin = $oActividad->getF_fin();
-    if (!$fIni instanceof DateTimeLocal || !$fFin instanceof DateTimeLocal) {
-        continue;
-    }
-    $iso_ini = $fIni->getIso();
-    $aF_ini[$iso_ini] = $fIni->getFromLocal();
-    $iso_fin = $fFin->getIso();
-    $aF_fin[$iso_fin] = $fFin->getFromLocal();
-}
-ksort($aF_ini);
-$ini = reset($aF_ini);
-ksort($aF_fin);
-$fin = end($aF_fin);
-
-$data = [
-    'nombre_ubi' => $nombre_ubi,
-    'ini' => $ini,
-    'fin' => $fin,
-    'ids_activ' => $ids_activ,
-    'ctx_nuevo' => HashB::sign('equipajes_nuevo_guardar', ['id_ubi_activ' => $Qid_cdc]),
-];
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+/** @var EquipajeActividadesData $useCase */
+$useCase = DependencyResolver::get(EquipajeActividadesData::class);
+ContestarJson::enviar('', $useCase->seleccion(
+    array_values((array) \src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY)),
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_cdc'),
+));
