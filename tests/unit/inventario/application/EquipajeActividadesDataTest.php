@@ -42,6 +42,10 @@ final class EquipajeActividadesDataTest extends myTest
     private function uc(?string $idsActiv = '3001,3002,3009'): EquipajeActividadesData
     {
         $actividades = $this->createMock(ActividadRepositoryInterface::class);
+        $actividades->method('getUbis')->willReturnCallback(function ($c): array {
+            $this->filtros = DescribeCriteria::filtros($c);
+            return [self::CASA, null, self::CASA + 1];
+        });
         $actividades->method('matching')->willReturnCallback(function ($c): array {
             $this->filtros = DescribeCriteria::filtros($c);
             return [self::actividad(3001, 'crt A', '2026-07-01', '2026-07-05')];
@@ -95,5 +99,14 @@ final class EquipajeActividadesDataTest extends myTest
         );
         $this->assertSame(['a_actividades' => []], $this->uc(null)->deEquipaje(5), 'equipaje sin actividades');
         $this->assertSame([], $this->uc()->deEquipaje(6), 'equipaje inexistente');
+    }
+
+    public function test_casas_con_actividades_en_el_periodo(): void
+    {
+        $r = $this->uc()->casasConActividades('2026-07-01', '2026-07-31');
+
+        $this->assertContains('f_ini lte 2026-07-31', $this->filtros);
+        $this->assertContains('f_fin gte 2026-07-01', $this->filtros);
+        $this->assertSame([self::CASA => 'sin determinar', self::CASA + 1 => 'sin determinar'], $r['a_opciones'], 'sin las actividades sin casa');
     }
 }

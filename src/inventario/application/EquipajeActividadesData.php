@@ -16,7 +16,8 @@ use src\shared\security\HashB;
 use src\ubis\domain\entity\Ubi;
 
 /**
- * Actividades para los equipajes: las de una casa en un periodo, para elegir las del equipaje
+ * Actividades para los equipajes: las casas con actividades en un periodo
+ * (`lista_casas_posibles_periodo`); las de una casa en un periodo, para elegir las del equipaje
  * (`equipajes_lista_activ_periodo`); el resumen de las elegidas para crear el equipaje
  * (`equipajes_lista_activ_sel`); y los nombres de las actividades de un equipaje ya creado
  * (`equipajes_lista_activ_equipaje`).
@@ -63,6 +64,32 @@ final class EquipajeActividadesData
         }
 
         return ['a_valores' => $valores, 'nombre_ubi' => self::nombreUbi($idCdc)];
+    }
+
+    /**
+     * Casas con actividades de mi dl y sección que se solapan con el rango (fechas ISO), por nombre
+     * (`lista_casas_posibles_periodo`).
+     *
+     * @return array{a_opciones: array<int, string>}
+     */
+    public function casasConActividades(string $inicioIso, string $finIso): array
+    {
+        $criteria = Criteria::create()
+            ->where(Filter::eq(ActividadAllField::DlOrg, ConfigGlobal::mi_dele()))
+            ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv()))
+            ->andWhere(Filter::lte(ActividadAllField::FIni, $finIso))
+            ->andWhere(Filter::gte(ActividadAllField::FFin, $inicioIso))
+            ->andWhere(Filter::lt(ActividadAllField::Status, 4));
+        $casas = [];
+        foreach ($this->actividadRepository->getUbis($criteria) as $idUbi) {
+            if ($idUbi === null) {
+                continue;
+            }
+            $casas[$idUbi] = Ubi::NewUbi($idUbi)?->getNombreUbiVo()?->value() ?? 'sin determinar';
+        }
+        asort($casas);
+
+        return ['a_opciones' => $casas];
     }
 
     /**
