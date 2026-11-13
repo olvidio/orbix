@@ -29,6 +29,10 @@ $mes = date("m");
 if (empty($Qperiodo) || $Qperiodo === 'otro') {
     $inicio = empty($Qinicio) ? $Qempiezamin : $Qinicio;
     $fin = empty($Qfin) ? $Qempiezamax : $Qfin;
+    if ($inicio === '' || $fin === '') {
+        ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'periodo / empiezamin / empiezamax'), 'none');
+        return;
+    }
 } else {
     $oPeriodo = new Periodo();
     $oPeriodo->setAny($any);

@@ -26,7 +26,11 @@ if (!empty($Qid_item_egm)) {
     $cEgm = $EgmRepository->matching(Criteria::create()
         ->where(Filter::eq(EgmF::IdEquipaje, $Qid_equipaje))
         ->andWhere(Filter::eq(EgmF::IdGrupo, $Qid_grupo)));
-    $oEgm = $cEgm[0];
+    $oEgm = $cEgm[0] ?? null;
+    if ($oEgm === null) {
+        ContestarJson::enviar($error_txt, ['texto' => '']);
+        return;
+    }
 }
 
 $texto = $oEgm->getTextoVo()?->value() ?? '';

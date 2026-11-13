@@ -10,12 +10,17 @@ $tipo_persona = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST
 $first_load = (bool)\src\shared\domain\helpers\FilterPostGet::post('first_load');
 $id_nom_bdu = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom_bdu');
 
-$useCase = DependencyResolver::get(VerListasData::class);
-
-if ($id_nom_bdu > 0) {
-    $data = $useCase->getPosiblesMatches($tipo_persona, $region, $dl, $id_nom_bdu);
-} else {
-    $data = $useCase($region, $dl, $tipo_persona, $first_load);
+try {
+    $useCase = DependencyResolver::get(VerListasData::class);
+    if ($id_nom_bdu > 0) {
+        $data = $useCase->getPosiblesMatches($tipo_persona, $region, $dl, $id_nom_bdu);
+    } else {
+        $data = $useCase($region, $dl, $tipo_persona, $first_load);
+    }
+} catch (\RuntimeException $e) {
+    // Sin conexión con la BD de Listas (OdbcDlListasRepository).
+    ContestarJson::enviar($e->getMessage(), 'none');
+    return;
 }
 
 ContestarJson::enviar('', $data);

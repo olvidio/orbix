@@ -26,4 +26,20 @@ class DireccionIdTest extends myTest
     }
 
 
+
+    /** Direcciones de casas de fuera con id de esquema 3 (había una en la BD dev): antes se rechazaban. */
+    public function test_acepta_ids_negativos_de_los_tres_tipos_y_rechaza_los_demas(): void
+    {
+        foreach ([-10019254, -20019254, -30019254] as $id) {
+            $this->assertSame($id, (new DireccionId($id))->value());
+        }
+        foreach ([-40019254, 40019254, 1234, -1234] as $id) {
+            try {
+                new DireccionId($id);
+                $this->fail("debería rechazar $id");
+            } catch (\InvalidArgumentException) {
+                $this->addToAssertionCount(1);
+            }
+        }
+    }
 }

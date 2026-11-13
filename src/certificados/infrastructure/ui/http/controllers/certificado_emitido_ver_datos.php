@@ -10,6 +10,10 @@ use src\shared\web\ContestarJson;
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
 $Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
+if ($Qid_item <= 0) {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'id_item'), 'none');
+    return;
+}
 $error_txt = '';
 $data = [];
 

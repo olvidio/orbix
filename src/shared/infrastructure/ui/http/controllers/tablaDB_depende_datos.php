@@ -4,6 +4,10 @@ use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
 $Qclase_info_encoded = (string)\src\shared\domain\helpers\FilterPostGet::post('clase_info');
+if ((string)$Qclase_info_encoded === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'clase_info'), 'none');
+    return;
+}
 $QpKeyRepository = (string)\src\shared\domain\helpers\FilterPostGet::post('pKeyRepository');
 $Qvalor_depende = (string)\src\shared\domain\helpers\FilterPostGet::post('valor_depende');
 

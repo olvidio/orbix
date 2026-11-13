@@ -6,4 +6,9 @@ use src\shared\web\ContestarJson;
 
 /** @var ProfesoresAsignaturaLista $useCase */
 $useCase = DependencyResolver::get(ProfesoresAsignaturaLista::class);
-ContestarJson::enviar('', $useCase->getTablaData(\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_asignatura')));
+$Qid_asignatura = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_asignatura');
+if ($Qid_asignatura <= 0) {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'id_asignatura'), 'none');
+    return;
+}
+ContestarJson::enviar('', $useCase->getTablaData($Qid_asignatura));

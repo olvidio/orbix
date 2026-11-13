@@ -162,6 +162,27 @@ final class SacdAusenciasJefeZonaDataTest extends TestCase
         $this->assertSame(['RM#999' => 'Ruiz, Maria'], $out['a_sacd']);
     }
 
+    /** Usuario sin sacd asociado (p. ej. un administrador): antes, excepción al filtrar las zonas con null. */
+    public function test_usuario_sin_sacd_asociado_no_busca_zonas_ni_falla(): void
+    {
+        $oUsuario = new Usuario();
+        $oUsuario->setId_role(1);
+        $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
+        $usuarioRepo->method('findById')->willReturn($oUsuario);
+        $roleRepo = $this->createMock(RoleRepositoryInterface::class);
+        $roleRepo->method('getArrayRoles')->willReturn([1 => 'admin']);
+        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
+        $zonaRepo->expects($this->never())->method('matching');
+
+        $out = $this->makeUseCase([
+            UsuarioRepositoryInterface::class => $usuarioRepo,
+            RoleRepositoryInterface::class => $roleRepo,
+            ZonaRepositoryInterface::class => $zonaRepo,
+        ])->execute();
+
+        $this->assertSame([], $out['a_sacd']);
+    }
+
     // ============================================================
     // Helpers
     // ============================================================

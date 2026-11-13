@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 09:08+0100\n"
+"POT-Creation-Date: 2026-11-13 09:41+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -14451,7 +14451,7 @@ msgid "fecha certificado"
 msgstr "certificate date"
 
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:24
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:18
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:22
 #, php-format
 msgid "No encuentro certificado emitido con id_item: %d"
 msgstr "Certificate not found issued with id_item: %d"
@@ -14502,7 +14502,7 @@ msgstr ""
 msgid "Debe definir la región del stgr a la que pertenece"
 msgstr "You must define the stgr region to which it belongs"
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_lista_datos.php:19
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_lista_datos.php:24
 msgid "No se encuentra la tabla. ¿Seguro que es una región del stgr?"
 msgstr "Table not found. Are you sure it's a stgr region?"
 
@@ -14549,6 +14549,25 @@ msgstr "The file %s cannot be read"
 #, php-format
 msgid "El archivo %s no es un PDF"
 msgstr "The file %s is not a PDF"
+
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
+#: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
+#: src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php:33
+#: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
+#: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
+#: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php:12
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php:8
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:11
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php:13
+#: src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php:8
+#: src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php:8
+#: src/ubis/infrastructure/ui/http/controllers/list_ctr_data.php:10
+#: src/ubis/infrastructure/ui/http/controllers/teleco_editar.php:10
+#: src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php:9
+#, php-format
+msgid "Faltan parámetros: %s"
+msgstr "Missing parameters: %s"
 
 #: src/configuracion/application/ModulosSelectData.php:56
 msgid "aplicaciones requeridas"
@@ -14790,7 +14809,7 @@ msgstr ""
 msgid "esta persona de aquinate ya está unida a la BDU (id=%s)"
 msgstr "this Aquinate person is already linked to the BDU (id=%s)"
 
-#: src/dbextern/infrastructure/persistence/postgresql/OdbcDlListasRepository.php:21
+#: src/dbextern/infrastructure/persistence/postgresql/OdbcDlListasRepository.php:22
 msgid "no se puede conectar con la base de datos de Listas"
 msgstr "can not connect to the Lists database"
 

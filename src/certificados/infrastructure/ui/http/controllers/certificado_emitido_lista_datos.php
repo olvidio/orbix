@@ -12,7 +12,12 @@ $inicurs_ca_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($_PO
 $fincurs_ca_iso = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'fincurs_ca_iso');
 
 $error_txt = '';
-$data = $useCase->getCamposVista($Qcertificado, $inicurs_ca_iso, $fincurs_ca_iso);
+try {
+    $data = $useCase->getCamposVista($Qcertificado, $inicurs_ca_iso, $fincurs_ca_iso);
+} catch (\RuntimeException $e) {
+    // Fuera de una región del stgr la tabla no existe y el repositorio lanza la excepción.
+    $data = ['success' => false, 'error_txt' => $e->getMessage()];
+}
 if (($data['success'] ?? true) === false) {
     $errorTxt = is_string($data['error_txt'] ?? null) ? $data['error_txt'] : '';
     if (str_contains($errorTxt, '"e_certificados_rstgr" does not exis')) {

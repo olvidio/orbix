@@ -6,6 +6,10 @@ use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
 $Qobj_pau = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_pau');
+if ($Qobj_pau === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'obj_pau'), 'none');
+    return;
+}
 $Qmod = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'mod');
 $Qid_ubi = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi');
 $a_sel = $_POST['sel'] ?? [];

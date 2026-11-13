@@ -51,7 +51,10 @@ final class SacdAusenciasJefeZonaData
 
         $aRoles = $this->roleRepository->getArrayRoles();
 
-        $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
+        // Un usuario sin sacd asociado no es jefe de ninguna zona (antes: excepción por filtrar con null).
+        $cZonas = $id_sacd === null || $id_sacd === ''
+            ? []
+            : $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd)));
 
         $a_sacd = [];
 

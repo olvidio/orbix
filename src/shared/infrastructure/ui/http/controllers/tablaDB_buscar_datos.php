@@ -8,6 +8,10 @@ use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
 $Qclase_info_encoded = (string)\src\shared\domain\helpers\FilterPostGet::post('clase_info');
+if ((string)$Qclase_info_encoded === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'clase_info'), 'none');
+    return;
+}
 $Qk_buscar = (string)\src\shared\domain\helpers\FilterPostGet::post('k_buscar');
 $QaSerieBuscar = (string)\src\shared\domain\helpers\FilterPostGet::post('aSerieBuscar');
 $Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');

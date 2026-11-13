@@ -105,7 +105,7 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
             ksort($t_grupo);
             $grupo = $t_grupo;
         } else {
-            $grupo = $t_grupo[$ta1];
+            $grupo = $t_grupo[$ta1] ?? [];
         }
 
         $query = "SELECT * FROM $nom_tabla where id_tipo_enc::text ~ '^" . $id_tipo_enc . "' order by tipo_enc";

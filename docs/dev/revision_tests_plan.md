@@ -102,6 +102,15 @@ Hoy solo hay smoke de login y comprobación de enlaces de menú. Plan:
 - Actualizar `AGENTS.md` (sección de tests) y `tests/AGENTS.md` con las lecciones nuevas; enlazar este documento desde `docs/dev/REFACTOR_INDICE.md`.
 - Mover lo aplazado a `docs/dev/backlog.md`.
 
+### Fase 5 — Robustez y cobertura (añadida el 2026-11-13)
+
+Continuación con lo que quedó en `docs/dev/backlog.md` sin decisiones de diseño pendientes. Mismo protocolo que la fase 2 (sección 4): tests, corregir los bugs que salgan (comprobando que el test falla sin el arreglo) y un commit por paso.
+
+1. **Controladores que fallan sin un parámetro:** los controladores de `src/` que, sin un parámetro obligatorio, responden con una excepción o con avisos de PHP en vez de con un JSON de error (lista en la sección 27). Corregirlos y añadir un test-guardia global que recorra los controladores de lectura sin parámetros y exija siempre JSON.
+2. **Cobertura de los módulos con menos tests:** `inventario` (pasando antes a `application/` la lógica que está en los controladores), `cartaspresentacion`, `zonassacd`, `utils_database` y `misas`.
+3. **Más flujos E2E:** inventario, misas, ubis, encargossacd, cambios y procesos, y una pasada «carga sin error» por las pantallas que se abren desde un formulario (no desde el menú).
+4. **Limpieza de las marcas de dossier** que dejan los tests PHPUnit en `d_dossiers_abiertos`.
+
 ---
 
 ## 4. Protocolo de cada paso (para retomar sin contexto)
@@ -191,6 +200,12 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 
 **Fase 4**
 - [x] 4.1 CI/guardas, actualizar `AGENTS.md`/`tests/AGENTS.md`, enlazar en `REFACTOR_INDICE.md` (sección 29).
+
+**Fase 5** (sección 30)
+- [x] 5.1 Controladores de `src/` que fallan sin un parámetro obligatorio + test-guardia global (sección 30).
+- [ ] 5.2 Cobertura: `inventario`, `cartaspresentacion`, `zonassacd`, `utils_database`, `misas`.
+- [ ] 5.3 Flujos E2E: inventario, misas, ubis, encargossacd, cambios, procesos; «carga sin error» de pantallas por formulario.
+- [ ] 5.4 Limpieza de las marcas de dossier de los tests PHPUnit.
 
 ---
 
@@ -1042,3 +1057,19 @@ En vez de subir cobertura módulo a módulo, este paso se ha centrado en lo que 
 - **Documentación:** `AGENTS.md` (sección de tests: `qa:huecos`, guardias, E2E), `tests/AGENTS.md` (guardias, escapar HTML en `src/`, fechas con formato fijo), `e2e/README.md` (flujos, ayudas, reglas, inventario) y enlace a este plan desde `docs/dev/REFACTOR_INDICE.md`.
 - **Aplazado a `docs/dev/backlog.md`:** tests del DDL con BD aislada, piloto de Infection, cobertura pendiente de los módulos con menos tests, controladores que lanzan excepciones si falta un parámetro, más flujos E2E y limpieza de marcas de dossier en los tests PHPUnit (además de los dos endpoints de resincronización ya anotados).
 - **Queda abierto:** las dudas de la sección 6b, que son decisiones del usuario (repasadas con él el 2026-11-13: ver cada una).
+
+## 30. Fase 5: robustez y cobertura (empezada el 2026-11-13)
+
+Pasos en la sección 6; descripción en la sección 3. Los resultados de cada paso se anotan aquí.
+
+### Paso 5.1: controladores de lectura sin parámetros (2026-11-13)
+
+- **Test-guardia nuevo:** `tests/integration/shared/infrastructure/ControladoresLecturaSinParametrosTest` recorre los 327 controladores de lectura de `src/` (sin cápsula `HashB` y sin nombre de acción que escribe, envía o descarga) y los llama en proceso con el POST vacío: tienen que responder JSON, sin excepciones ni avisos de PHP. Excluidos con motivo: `comprobar_notas_page_body.inc.php` y `textos_certificados.php` (no son controladores; los incluye otro).
+- **Al empezar fallaban 24** (y el recorrido se cortaba: `OdbcDlListasRepository` hacía `exit` si no hay BD de Listas, lo que mataba también al controlador frontend que llama en proceso; ahora lanza una `RuntimeException`).
+- **Parámetro obligatorio ausente → «Faltan parámetros: %s»** (una sola cadena nueva, traducida): `perm_dossier_ver_data`, `ver_plan_sacd_data`, `lista_casas_posibles_periodo`, `profesor_asignatura_ajax`, los cuatro `tablaDB_*_datos`, `direcciones_editar` / `_tabla`, `teleco_editar` / `_tabla`, `list_ctr_data`, `ver_cuadricula_zona_data`, `certificado_emitido_ver_datos`.
+- **Errores capturados y devueltos como JSON:** `certificado_emitido_lista_datos` (fuera de una región del stgr la tabla no existe), `ver_listas_datos` (sin BD de Listas), `persona_nota_editar` (los errores de validación de los VO, además de los `RuntimeException`), `texto_de_egm` (sin texto para ese equipaje: antes, método sobre `null`), `PgEncargoTipoRepository::getArrayEncargoTipo` con un tipo desconocido.
+- **Bugs reales que afectaban a usuarios (no solo a llamadas sin parámetros), con test:**
+  1. `SacdAusenciasJefeZonaData` y `VerPlanSacdData`: con un usuario sin sacd asociado (p. ej. un administrador que lleva el calendario) filtraban las zonas con `null` y la pantalla daba una excepción. Ahora ese usuario no es jefe de ninguna zona.
+  2. `DireccionId` rechazaba los ids `-3…` (direcciones de casas de fuera con esquema de tipo 3), que `CasaId` y `TelecoUbiId` sí admiten: en la BD dev hay una, y la lista de casas y centros (`ubis_lista_data`) daba una excepción al cargar su dirección.
+- Suite completa en verde (10 621). Quitada la entrada del backlog; guardia añadida a `tests/AGENTS.md` y a `AGENTS.md`.
+

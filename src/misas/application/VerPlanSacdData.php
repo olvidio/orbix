@@ -44,7 +44,10 @@ class VerPlanSacdData
             return ['rows' => []];
         }
         $id_sacd_csv = $oMiUsuario->getCsvIdPauAsString();
-        $cZonas = $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd_csv)));
+        // Un usuario sin sacd asociado no es jefe de ninguna zona (antes: excepción por filtrar con null).
+        $cZonas = $id_sacd_csv === null || $id_sacd_csv === ''
+            ? []
+            : $this->zonaRepository->matching(Criteria::create()->where(Filter::eq(ZonaField::IdNom, $id_sacd_csv)));
         $jefe_zona = count($cZonas) > 0;
 
         $exp_id_sacd = explode('#', $id_sacd_key);

@@ -18,7 +18,8 @@ class OdbcDlListasRepository extends ClaseRepository
         try {
             $oDbl = GlobalPdo::get('oDBListas');
         } catch (RuntimeException) {
-            exit(_("no se puede conectar con la base de datos de Listas"));
+            // Sin exit: cortaría también al controlador frontend que llama en proceso.
+            throw new RuntimeException(_("no se puede conectar con la base de datos de Listas"));
         }
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl);

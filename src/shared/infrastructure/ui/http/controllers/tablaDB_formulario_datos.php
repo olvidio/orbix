@@ -7,6 +7,10 @@ use src\shared\web\ContestarJson;
 use src\shared\domain\helpers\FilterPostGet;
 
 $Qclase_info_encoded = \src\shared\domain\helpers\FilterPostGet::post('clase_info');
+if ((string)$Qclase_info_encoded === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'clase_info'), 'none');
+    return;
+}
 $a_pkey = \src\shared\domain\helpers\FilterPostGet::post('a_pkey');
 if (is_string($a_pkey) && $a_pkey !== '') {
     $decoded = json_decode($a_pkey, true);

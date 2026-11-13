@@ -60,7 +60,7 @@ final class PersonaNotaEditar
                 'mensaje' => sprintf(_("Nota guardada en el esquema %s"), $esquema),
                 'esquema' => $esquema,
             ];
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException|\InvalidArgumentException $e) {
             return [
                 'error' => $e->getMessage(),
                 'mensaje' => '',

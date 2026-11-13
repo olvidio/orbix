@@ -66,12 +66,6 @@ Formato sugerido por ítem:
 - **Por qué no ahora:** la fase 2 priorizó lo que escribe datos o decide permisos; aquí lo que queda es sobre todo lectura y lógica en controladores que conviene pasar antes a `application/`.
 - **Notas:** cifras en [`reports/cobertura_por_modulo.md`](reports/cobertura_por_modulo.md); paso 2.10 del plan.
 
-### Controladores de `src/` que lanzan excepciones si falta un parámetro
-
-- **Qué:** unos 15 controladores de lectura responden con una excepción (no con un JSON de error) cuando falta un parámetro obligatorio (`perm_dossier_ver_data`, `direcciones_*`, `teleco_*`, `persona_nota_editar`, `lista_casas_posibles_periodo`, `sacd_ausencias_jefe_zona_data`, `ver_plan_sacd_data`…), y otros sacan avisos de PHP.
-- **Por qué no ahora:** el frontend siempre manda esos parámetros; no hay fallo visible para el usuario.
-- **Notas:** lista completa en la sección 27 del plan (recorrido de los controladores de lectura).
-
 ### E2E: más flujos y pantallas por formulario
 
 - **Qué:** specs de flujos de escritura para los módulos con más flujos sin cubrir (inventario, misas, ubis, encargossacd, cambios, procesos) y una pasada «carga sin error» de las pantallas que no salen como enlace directo del menú (se abren por POST desde un formulario).

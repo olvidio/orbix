@@ -4,6 +4,10 @@ use src\shared\infrastructure\DependencyResolver;
 use src\ubis\application\DireccionesTablaData;
 use src\shared\web\ContestarJson;
 
+if (\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_dir') === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'obj_dir'), 'none');
+    return;
+}
 ContestarJson::enviar('', DependencyResolver::get(DireccionesTablaData::class)->execute(
     \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_ubi'),
     \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'obj_dir'),

@@ -51,18 +51,22 @@ final class VerPlanSacdYNuevoStatusTest extends myTest
 
     // ---- VerPlanSacdData ----------------------------------------------------------------------
 
-    private function planSacd(bool $jefeZona, bool $usuarioExiste = true): VerPlanSacdData
+    private function planSacd(bool $jefeZona, bool $usuarioExiste = true, bool $conSacd = true): VerPlanSacdData
     {
         $usuarios = $this->createMock(UsuarioRepositoryInterface::class);
         if ($usuarioExiste) {
             $u = $this->createMock(Usuario::class);
-            $u->method('getCsvIdPauAsString')->willReturn('10011');
+            $u->method('getCsvIdPauAsString')->willReturn($conSacd ? '10011' : null);
             $usuarios->method('findById')->willReturn($u);
         } else {
             $usuarios->method('findById')->willReturn(null);
         }
         $zonas = $this->createMock(ZonaRepositoryInterface::class);
-        $zonas->method('matching')->willReturn($jefeZona ? [new \src\zonassacd\domain\entity\Zona()] : []);
+        if ($conSacd) {
+            $zonas->method('matching')->willReturn($jefeZona ? [new \src\zonassacd\domain\entity\Zona()] : []);
+        } else {
+            $zonas->expects($this->never())->method('matching');
+        }
 
         return new VerPlanSacdData($usuarios, $zonas, $this->encargosDia, $this->encargos);
     }
@@ -82,6 +86,14 @@ final class VerPlanSacdYNuevoStatusTest extends myTest
     public function test_sin_usuario_no_hay_plan(): void
     {
         $this->assertSame(['rows' => []], $this->planSacd(false, false)->getData('10#x', 'otro', '01/03/2026', '04/03/2026'));
+    }
+
+    /** Usuario sin sacd asociado (p. ej. un administrador): antes, excepción al filtrar las zonas con null. */
+    public function test_usuario_sin_sacd_asociado_ve_el_plan_como_no_jefe(): void
+    {
+        $this->encargosDia->method('matching')->willReturn([]);
+        $r = $this->planSacd(false, true, false)->getData('10#AB', 'otro', '02/03/2026', '04/03/2026');
+        $this->assertCount(2, $r['rows']);
     }
 
     public function test_cada_dia_del_rango_sin_el_ultimo_tiene_su_fila_aunque_este_libre(): void

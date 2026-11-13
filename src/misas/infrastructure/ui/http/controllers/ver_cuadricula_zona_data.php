@@ -18,6 +18,10 @@ $in = [
     'seleccion' => \src\shared\domain\helpers\FilterPostGet::post('seleccion'),
 ];
 
+if ((string)($in['id_zona'] ?? '') === '') {
+    ContestarJson::enviar(sprintf(_("Faltan parámetros: %s"), 'id_zona'), 'none');
+    return;
+}
 /** @var CuadriculaZonaGridData $useCase */
 $useCase = DependencyResolver::get(CuadriculaZonaGridData::class);
 $result = $useCase->build($in);
