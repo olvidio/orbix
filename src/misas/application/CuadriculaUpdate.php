@@ -24,7 +24,6 @@ use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\criteria\ZonaSacdField;
-use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Use case del endpoint `cuadricula_update` (migracion de
@@ -237,11 +236,19 @@ class CuadriculaUpdate
                 continue;
             }
             $oActividad = $cActividades[0];
-            $oTipoActividad = new TiposActividades($oActividad->getId_tipo_activ());
-            // Mantenemos la misma heuristica que el original.
-            $esta = $esta === 1 ? 2 : $esta;
-            unset($oTipoActividad);
-            $donde = $oActividad->getNom_activ();
+            // Igual que la cuadrícula (cuadricula_zona_grid_data_build): el día que empieza la
+            // actividad aún está (2), el que termina ya no (-1) y los intermedios tampoco (0).
+            // Antes ponía siempre 2, y la fila del sacd decía «SI» en vez de «Está en …».
+            $ini = $oActividad->getF_ini()?->format('Y-m-d');
+            $fin = $oActividad->getF_fin()?->format('Y-m-d');
+            if ($fin === $dia_iso) {
+                $esta = -1;
+            } elseif ($ini === $dia_iso) {
+                $esta = $esta === 1 ? 2 : $esta;
+            } else {
+                $esta = 0;
+            }
+            $donde = (string) $oActividad->getNom_activ();
         }
 
         // Ausencias (encargos horario) del sacd en el dia.
@@ -272,7 +279,8 @@ class CuadriculaUpdate
             $nom = $oEncargo->getDesc_enc();
             $nom .= ($ini !== $fi) ? " ($ini-$fi)" : " ($ini)";
 
-            $esta = $esta === 1 ? 2 : $esta;
+            // Las ausencias ocupan el día entero (como en la cuadrícula).
+            $esta = 0;
             $donde = $nom;
         }
 

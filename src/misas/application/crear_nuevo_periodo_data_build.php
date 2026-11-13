@@ -631,14 +631,18 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
 
                     if ($id_nom != null) {
                         $ok_encargo = true;
+                        // Un sacd de fuera de la zona no tiene fila en estos arrays (como en la 1.ª semana).
+                        if (!isset($esta_sacd[$id_nom][$num_dia])) {
+                            $esta_sacd[$id_nom][$num_dia] = 1;
+                        }
                         if ($esta_sacd[$id_nom][$num_dia] > 0) {
                             if (($id_tipo >= 8100) && ($id_tipo < 8200)) {
-                                if ($contador_1a_sacd[$id_nom][$num_dia] > 0) {
+                                if (($contador_1a_sacd[$id_nom][$num_dia] ?? 0) > 0) {
                                     $ok_encargo = false;
                                 }
                             }
                             if (($id_tipo >= 8200) && ($id_tipo < 8300)) {
-                                if ($contador_total_sacd[$id_nom][$num_dia] > 1) {
+                                if (($contador_total_sacd[$id_nom][$num_dia] ?? 0) > 1) {
                                     $ok_encargo = false;
                                 }
                             }
@@ -671,14 +675,18 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
 
                     if ($id_nom != null) {
                         $ok_encargo = true;
+                        // Un sacd de fuera de la zona no tiene fila en estos arrays (como en la 1.ª semana).
+                        if (!isset($esta_sacd[$id_nom][$num_dia])) {
+                            $esta_sacd[$id_nom][$num_dia] = 1;
+                        }
                         if ($esta_sacd[$id_nom][$num_dia] > 0) {
                             if (($id_tipo >= 8100) && ($id_tipo < 8200)) {
-                                if ($contador_1a_sacd[$id_nom][$num_dia] > 0) {
+                                if (($contador_1a_sacd[$id_nom][$num_dia] ?? 0) > 0) {
                                     $ok_encargo = false;
                                 }
                             }
                             if (($id_tipo >= 8200) && ($id_tipo < 8300)) {
-                                if ($contador_total_sacd[$id_nom][$num_dia] > 1) {
+                                if (($contador_total_sacd[$id_nom][$num_dia] ?? 0) > 1) {
                                     $ok_encargo = false;
                                 }
                             }

@@ -810,7 +810,8 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
         $dia_mes = $date->format('d');
         $num_mes = $date->format('m');
 
-        $data_cols["$num_dia"] = $titulo_sacd[$num_dia];
+        // Con un tipo de plantilla desconocido el switch no rellena el título: se usa la fecha.
+        $data_cols["$num_dia"] = $titulo_sacd[$num_dia] ?? $num_dia;
         $meta["$num_dia"] = [
             "texto" => $num_dia,
             "tipo" => 'titulo',
@@ -892,7 +893,8 @@ function misas_cuadricula_zona_grid_build(array $in, \src\misas\application\Cuad
             }
             //       echo $misas_dia.$misas_1a_hora.'<br>';
             $num_dia = $date->format('Y-m-d');
-            $dws = $dia_week_sacd[$num_dia];
+            // Día de la semana de la fecha (antes solo se calculaba en algunas ramas del switch).
+            $dws = $dia_week_sacd[$num_dia] ?? $date->format('N');
     //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
             $color_fondo = 'verdeclaro';
             $texto = '';
