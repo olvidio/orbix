@@ -5,10 +5,12 @@ use src\inventario\application\EquipajeEliminar;
 use src\inventario\application\InventarioCssInlineData;
 use src\inventario\application\DocumentosDeEgmData;
 use src\inventario\application\DocumentosDeLugarData;
+use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\DocumentosMarcadosData;
 use src\inventario\application\DocumentosPorTipoData;
 use src\inventario\application\EquipajeDocCasaData;
 use src\inventario\application\ListaDocsDeCtrData;
+use src\inventario\application\LugaresDeDlbData;
 use src\inventario\application\EquipajesMovimientosData;
 use src\inventario\application\InventarioDocumentosData;
 use src\inventario\application\TipoDocOpcionesData;
@@ -59,6 +61,8 @@ return [
     DocumentosPorTipoData::class => autowire(DocumentosPorTipoData::class),
     DocumentosDeEgmData::class => autowire(DocumentosDeEgmData::class),
     DocumentosDeLugarData::class => autowire(DocumentosDeLugarData::class),
+    DocumentosLibresData::class => autowire(DocumentosLibresData::class),
+    LugaresDeDlbData::class => autowire(LugaresDeDlbData::class),
 
     InfoColeccion::class => autowire(InfoColeccion::class),
     InfoDocsxCtr::class => autowire(InfoDocsxCtr::class),
