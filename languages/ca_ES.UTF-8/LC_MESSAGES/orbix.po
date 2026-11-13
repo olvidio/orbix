@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 09:41+0100\n"
+"POT-Creation-Date: 2026-11-13 11:13+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -1230,9 +1230,9 @@ msgstr "esborrar"
 #: src/actividades/application/ListaActivTabla.php:214
 #: src/actividades/application/ListaSrCsvListado.php:170
 #: src/asistentes/application/ListaUltimaActivData.php:268
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:247
 #: src/casas/application/CasaActividadesListaData.php:76
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_no_asignados_por_tipo.php:58
+#: src/inventario/application/DocumentosPorTipoData.php:78
 #: src/inventario/view/buscarDocsxCtr.phtml:7
 #: src/notas/application/TablaAlumnosAsignaturas.php:184
 #: src/personas/domain/value_objects/TrasladoTipoCmbCode.php:22
@@ -1279,7 +1279,7 @@ msgstr "ctr encarregats"
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:153
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:191
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:229
-#: src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php:52
+#: src/inventario/application/MaletasPosiblesData.php:51
 msgid "nuevo"
 msgstr "nou"
 
@@ -2220,7 +2220,7 @@ msgstr "si"
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:630
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:212
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:213
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:17
 #: src/notas/application/NotasDeUnaPersonaData.php:124
@@ -2621,7 +2621,7 @@ msgstr "guardar i afegir un altre assistent"
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
 #: src/asistentes/application/TablaPeticionesData.php:71
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:245
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
 #: src/configuracion/application/ModulosSelectData.php:53
 #: src/configuracion/domain/entity/ModuloInstalado.php:83
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:268
@@ -5283,7 +5283,7 @@ msgstr "Imprimeix"
 #: frontend/inventario/controller/docs_con_observaciones.php:24
 #: frontend/inventario/controller/docs_en_busqueda.php:24
 #: frontend/inventario/controller/docs_perdidos.php:24
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:63
+#: src/inventario/application/DocumentosPorTipoData.php:57
 msgid "centro - lugar"
 msgstr "centre - lloc"
 
@@ -5324,7 +5324,7 @@ msgstr "Conforme (signatura)"
 #: frontend/inventario/controller/docs_con_observaciones.php:26
 #: frontend/inventario/controller/docs_perdidos.php:26
 #: frontend/ubis/view/teleco_form.phtml:24
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:63
+#: src/inventario/application/DocumentosPorTipoData.php:57
 msgid "número"
 msgstr "nombre"
 
@@ -5362,7 +5362,7 @@ msgstr "eliminat"
 
 #: frontend/inventario/controller/documentos_form.php:36
 #: src/actividades/application/ActividadQueFiltrosBloque.php:97
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:212
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:213
 #: src/shared/domain/helpers/FuncTablasSupport.php:106
 #: src/ubis/application/CentrosGetPlazasData.php:34
 #: src/zonassacd/application/ZonaSacdListaTot.php:58
@@ -5501,7 +5501,7 @@ msgid "añadir"
 msgstr "afegir"
 
 #: frontend/inventario/controller/equipajes_movimientos.php:49
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:230
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:231
 #: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:19
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:77
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php:51
@@ -5529,6 +5529,10 @@ msgstr "exemplars"
 #, php-format
 msgid " (del %d al %d)"
 msgstr " (del %d al %d)"
+
+#: frontend/inventario/helpers/InventarioPayload.php:92
+msgid "Ya es el número: último + 1"
+msgstr "Ja és el número: últim + 1"
 
 #: frontend/inventario/view/cabecera_pie_txt.phtml:14
 msgid "textos guardados correctamente"
@@ -10010,8 +10014,8 @@ msgstr "hi ha un error, no s'ha guardat"
 #: frontend/ubis/controller/calendario_periodos_form_periodo.php:26
 #: frontend/ubis/controller/calendario_periodos_get.php:48
 #: frontend/ubis/controller/calendario_periodos_nuevo.php:27
+#: src/inventario/application/EquipajesMovimientosData.php:168
 #: src/inventario/domain/ListaDocsGrupo.php:79
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:134
 msgid "de"
 msgstr "de"
 
@@ -10289,7 +10293,7 @@ msgstr "ajuda!"
 
 #: frontend/ubis/view/direccion_form.phtml:79
 #: frontend/ubis/view/home_ubis.phtml:39
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:248
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:249
 #: src/ubis/application/DireccionesTablaData.php:61
 #: src/ubis/application/ListCtrData.php:225
 #: src/ubis/application/UbisListaData.php:91
@@ -14173,17 +14177,17 @@ msgstr "Hi ha un error, no s'ha guardat."
 msgid "Centros con el campo 'tipo labor' mal puesto:"
 msgstr "Centres amb el camp 'tipus de labor' mal posat:"
 
-#: src/cartaspresentacion/application/CartasPresentacionListaData.php:474
-#: src/cartaspresentacion/application/CartasPresentacionListaData.php:498
+#: src/cartaspresentacion/application/CartasPresentacionListaData.php:483
+#: src/cartaspresentacion/application/CartasPresentacionListaData.php:507
 #, php-format
 msgid "Cartas de presentación de %s"
 msgstr "Cartes de presentació de %s"
 
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:124
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:125
 msgid "ANULADO"
 msgstr "ANUL·LAT"
 
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:137
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:138
 msgid ""
 "para añadir un centro como carta de presentación, basta con poner el nombre "
 "del director."
@@ -14191,11 +14195,11 @@ msgstr ""
 "per afegir un centre com a carta de presentació, n'hi ha prou amb posar el "
 "nom del director."
 
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:247
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:248
 msgid "carta de presentación"
 msgstr "cartes de presentació"
 
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:258
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:259
 msgid "direccion"
 msgstr "direcció"
 
@@ -14573,6 +14577,7 @@ msgstr "El fitxer %s no és un PDF"
 
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:29
 #: src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php:33
 #: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
 #: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
@@ -16151,6 +16156,18 @@ msgstr "zones de misses"
 msgid "se han eliminado %s sacd de encargos inexistentes \n"
 msgstr "s'han eliminat %s sacd de encàrrecs inexistents \n"
 
+#: src/inventario/application/EquipajeActividadesData.php:124
+#, php-format
+msgid "OJO! No se encuentra la actividad con id: %s"
+msgstr "ULL!Activitat amb id: %s no s'ha trobat"
+
+#: src/inventario/application/EquipajeDocCasaData.php:90
+#: src/inventario/application/EquipajesMovimientosData.php:124
+#: src/inventario/application/EquipajesMovimientosData.php:171
+#: src/inventario/domain/ListaDocsGrupo.php:84
+msgid "ejemplares de"
+msgstr "còpies de"
+
 #: src/inventario/application/EquipajeEliminar.php:20
 msgid "falta id_equipaje"
 msgstr "falta id_equipaje"
@@ -16159,6 +16176,14 @@ msgstr "falta id_equipaje"
 #, php-format
 msgid "No se encuentra el equipaje %d"
 msgstr "No es troba l'equipatge %d"
+
+#: src/inventario/application/LugaresDeDlbData.php:81
+msgid "Para imprimir inventario"
+msgstr "Per imprimir l'inventari"
+
+#: src/inventario/application/support/NombreDocumento.php:31
+msgid "Actual"
+msgstr "Actual"
 
 #: src/inventario/domain/InfoColeccion.php:20
 msgid "¿Está seguro que desea eliminar esta colección?"
@@ -16193,13 +16218,6 @@ msgstr "Esteu segur que voleu suprimir aquest tipus de document?"
 #: src/inventario/domain/InfoTipoDoc.php:21
 msgid "buscar en 'detalle'"
 msgstr "cerca amb \"detall\""
-
-#: src/inventario/domain/ListaDocsGrupo.php:84
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_doc_casa.php:88
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:88
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:130
-msgid "ejemplares de"
-msgstr "còpies de"
 
 #: src/inventario/domain/entity/Coleccion.php:112
 msgid "nombre colección"
@@ -16312,12 +16330,7 @@ msgstr "No s'ha pogut aplicar la modificació als documents seleccionats"
 msgid "No ha seleccionado ningún documento"
 msgstr "No heu seleccionat cap document"
 
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_equipaje.php:39
-#, php-format
-msgid "OJO! No se encuentra la actividad con id: %s"
-msgstr "ULL!Activitat amb id: %s no s'ha trobat"
-
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:26
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:22
 msgid "debe seleccionar un lugar"
 msgstr "has de seleccionar un lloc"
 
@@ -16332,21 +16345,6 @@ msgstr "El text no pot superar 400 caràcters"
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:93
 msgid "El texto no puede superar 255 caracteres"
 msgstr "El text no pot superar 255 caràcters"
-
-#: src/inventario/infrastructure/ui/http/controllers/inventario_ctr.php:114
-#: src/inventario/infrastructure/ui/http/controllers/inventario_dlb.php:112
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_de_ctr.php:100
-msgid "Actual"
-msgstr "Actual"
-
-#: src/inventario/infrastructure/ui/http/controllers/lista_de_ctr_con_docs.php:24
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_de_dlb.php:28
-msgid "Para imprimir inventario"
-msgstr "Per imprimir l'inventari"
-
-#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignar_ctr.php:61
-msgid "Ya es el número: último + 1"
-msgstr "Ja és el número: últim + 1"
 
 #: src/inventario/view/buscarDocsxSigla.phtml:74
 msgid "Debe seleccionar un tipo de documento"
@@ -16444,31 +16442,31 @@ msgstr "PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"
 msgid "No se han podido actualizar los menus"
 msgstr "No s'han pogut actualitzar els menús"
 
-#: src/misas/application/CuadriculaUpdate.php:75
+#: src/misas/application/CuadriculaUpdate.php:74
 msgid "Falta el id_item"
 msgstr "Falta el id_item"
 
-#: src/misas/application/CuadriculaUpdate.php:351
+#: src/misas/application/CuadriculaUpdate.php:359
 msgid "Este día tiene más de dos Misas"
 msgstr "Aquest dia té més de dues misses"
 
-#: src/misas/application/CuadriculaUpdate.php:354
+#: src/misas/application/CuadriculaUpdate.php:362
 msgid "Este día tiene dos Misas"
 msgstr "Aquest dia té dues misses"
 
-#: src/misas/application/CuadriculaUpdate.php:357
+#: src/misas/application/CuadriculaUpdate.php:365
 msgid "Este día no tiene ninguna Misa"
 msgstr "Aquest día no té cap Missa"
 
-#: src/misas/application/CuadriculaUpdate.php:362
+#: src/misas/application/CuadriculaUpdate.php:370
 msgid "Tiene dos Misas a primera hora"
 msgstr "Té dues misses a primera hora"
 
-#: src/misas/application/CuadriculaUpdate.php:371
+#: src/misas/application/CuadriculaUpdate.php:379
 msgid "No está en la zona y tiene Misa a primera hora"
 msgstr "No és a la zona i té missa a primera hora"
 
-#: src/misas/application/CuadriculaUpdate.php:380
+#: src/misas/application/CuadriculaUpdate.php:388
 msgid "Está en "
 msgstr "És a "
 
@@ -16500,8 +16498,8 @@ msgstr "No existeix"
 
 #: src/misas/application/crear_nuevo_periodo_data_build.php:567
 #: src/misas/application/crear_nuevo_periodo_data_build.php:615
-#: src/misas/application/crear_nuevo_periodo_data_build.php:655
-#: src/misas/application/crear_nuevo_periodo_data_build.php:774
+#: src/misas/application/crear_nuevo_periodo_data_build.php:659
+#: src/misas/application/crear_nuevo_periodo_data_build.php:782
 #: src/misas/application/importar_plantilla_data_build.php:230
 #: src/misas/application/importar_plantilla_data_build.php:267
 #: src/misas/application/importar_plantilla_data_build.php:304

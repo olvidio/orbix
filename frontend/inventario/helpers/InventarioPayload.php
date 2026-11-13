@@ -85,11 +85,33 @@ public static function listaDocsFromPayload(array $payload): array
      */
     public static function docAsignarFromPayload(array $payload): array
     {
+        // El backend da filas neutras (id, nombre, num); el campo de texto y la lista de campos del
+        // formulario se montan aquí. En los tipos numerados se avisa de que el número ya es el siguiente.
+        $numerado = !empty($payload['isNumerado']);
+        $aviso = $numerado
+            ? ' <span class="explicacion_txt">' . htmlspecialchars(_("Ya es el número: último + 1"), ENT_QUOTES, 'UTF-8') . '</span>'
+            : '';
+        $valores = [];
+        $campos = [];
+        $filas = is_array($payload['filas'] ?? null) ? $payload['filas'] : [];
+        $i = 0;
+        foreach ($filas as $fila) {
+            if (!is_array($fila)) {
+                continue;
+            }
+            $i++;
+            $id = \frontend\shared\helpers\PayloadCoercion::int($fila['id'] ?? 0);
+            $num = htmlspecialchars(\frontend\shared\helpers\PayloadCoercion::string($fila['num'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $valores[$i][1] = \frontend\shared\helpers\PayloadCoercion::string($fila['nombre'] ?? '');
+            $valores[$i][2] = "<input type=text name='num_$id' size=5 value='$num'>" . $aviso;
+            $campos[] = "num_$id";
+        }
+
         return [
-            'a_valores' => ActividadesListaSupport::datos($payload['a_valores'] ?? []),
+            'a_valores' => $valores,
             'nombreDoc' => \frontend\shared\helpers\PayloadCoercion::string($payload['nombreDoc'] ?? ''),
-            'isNumerado' => !empty($payload['isNumerado']),
-            'sCamposForm' => \frontend\shared\helpers\PayloadCoercion::string($payload['sCamposForm'] ?? ''),
+            'isNumerado' => $numerado,
+            'sCamposForm' => implode('!', $campos),
             'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }

@@ -1,89 +1,17 @@
 <?php
 
-use src\shared\domain\criteria\Criteria;
-use src\shared\domain\criteria\Filter;
-use src\shared\domain\criteria\OrderDirection;
-use src\inventario\domain\criteria\DocumentoField as DocF;
-use src\inventario\domain\criteria\UbiInventarioField as UbiF;
-use src\shared\infrastructure\DependencyResolver;
-use src\shared\domain\helpers\FilterPostGet;
+/**
+ * Filas del formulario para asignar el tipo `id_tipo_doc` a los centros elegidos (`sel`).
+ * La lógica está en {@see \src\inventario\application\DocAsignarListaData::paraCentros()}.
+ */
 
-use src\inventario\domain\contracts\DocumentoRepositoryInterface;
-use src\inventario\domain\contracts\TipoDocRepositoryInterface;
-use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use src\shared\security\HashB;
+use src\inventario\application\DocAsignarListaData;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 
-$Qid_tipo_doc = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_tipo_doc');
-$a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$error_txt = '';
-
-/** @var TipoDocRepositoryInterface $TipoDocRepository */
-$TipoDocRepository = DependencyResolver::get(TipoDocRepositoryInterface::class);
-$oTipoDoc = $TipoDocRepository->findById($Qid_tipo_doc);
-if ($oTipoDoc === null) {
-    ContestarJson::enviar($error_txt, []);
-    return;
-}
-$nom_doc = $oTipoDoc->getNom_doc();
-$nombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nom_doc . ')';
-$isNumerado = $oTipoDoc->isNumerado();
-
-/** @var DocumentoRepositoryInterface $DocumentoRepository */
-$DocumentoRepository = DependencyResolver::get(DocumentoRepositoryInterface::class);
-if ($isNumerado) {
-    //conseguir el último número.
-    $ultimo = 0;
-    $cDocumentos = $DocumentoRepository->matching(
-        Criteria::create()->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))->orderBy(DocF::NumReg, OrderDirection::Desc)
-    );
-    if (!empty($cDocumentos[0])) {
-        $ultimo = $cDocumentos[0]->getNum_reg();
-    }
-}
-
-/** @var UbiInventarioRepositoryInterface $UbiInventarioRepository */
-$UbiInventarioRepository = DependencyResolver::get(UbiInventarioRepositoryInterface::class);
-$cUbisInventario = $UbiInventarioRepository->matching(Criteria::create()->orderBy(UbiF::NomUbi));
-$a_valores = [];
-$i = 0;
-$sCamposForm = '';
-foreach ($cUbisInventario as $oUbiInventario) {
-    $id_ubi = $oUbiInventario->getId_ubi();
-    $nom_ubi = $oUbiInventario->getNom_ubi();
-    if (!in_array($id_ubi, $a_sel)) {
-        continue;
-    }
-    $i++;
-    $explicacion_txt ='';
-    if ($isNumerado) {
-        $num = $ultimo + $i;
-        $explicacion_txt = ' <span class="explicacion_txt">'._("Ya es el número: último + 1").'</span>';
-    } else {
-        // es el número de ejemplares
-        $cDocumentos = $DocumentoRepository->matching(Criteria::create()
-        ->where(Filter::eq(DocF::IdTipoDoc, $Qid_tipo_doc))
-        ->andWhere(Filter::eq(DocF::IdUbi, $id_ubi)));
-        if (!empty($cDocumentos[0])) {
-            $num_ej = $cDocumentos[0]->getNum_ejemplares();
-        } else {
-            $num_ej = 1;
-        }
-        $num = $num_ej;
-    }
-    $a_valores[$i][1] = $nom_ubi;
-    $a_valores[$i][2] = "<input type=text name='num_$id_ubi' size=5 value=$num>".$explicacion_txt;
-    $sCamposForm .= empty($sCamposForm)? '' : '!';
-    $sCamposForm .= "num_$id_ubi";
-}
-
-$data = [
-    'a_valores' => $a_valores,
-    'nombreDoc' => $nombreDoc,
-    'isNumerado' => $isNumerado,
-    'sCamposForm' => $sCamposForm,
-    'ctx_guardar' => HashB::sign('doc_asignar_ctr_guardar', ['id_tipo_doc' => $Qid_tipo_doc]),
-];
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+/** @var DocAsignarListaData $useCase */
+$useCase = DependencyResolver::get(DocAsignarListaData::class);
+ContestarJson::enviar('', $useCase->paraCentros(
+    \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_tipo_doc'),
+    array_values((array) \src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY)),
+));
