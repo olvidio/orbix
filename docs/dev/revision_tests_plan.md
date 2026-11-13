@@ -1082,4 +1082,5 @@ Medido solo con los tests de cada módulo; sin contar `db/` (DDL, necesita BD ai
   2. El correo de la casa de las r de fuera se pegaba al de la persona de contacto sin separador.
   3. Lista de cr/dl de fuera: con un centro de dos direcciones, la segunda pisaba a la primera (contador de filas por centro, no por dirección).
   4. Lista de centros de la dl: un centro con dirección sin sede salía como «Nombre ()».
+- **`zonassacd`:** lo que faltaba era `ZonasAComun` (migración de un solo uso a comun, `tools/fix/zonas_a_comun.php`) y los `getDatosCampos()` de las entidades (cubiertos por el guardia global `DatosCamposMetodosTest` en la suite completa). Test nuevo del modo simulación de `ZonasAComun` (solo lee); aplicarla es DDL y queda con los demás en el backlog. En la BD dev la migración ya está hecha.
 
