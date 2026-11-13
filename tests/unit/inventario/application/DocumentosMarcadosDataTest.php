@@ -37,6 +37,8 @@ final class DocumentosMarcadosDataTest extends TestCase
                 $d->setId_lugar($lugar);
                 $d->setNum_reg($reg);
                 $d->setF_perdido(new DateTimeLocal('2026-03-01'));
+                $d->setObserv("obs$ubi");
+                $d->setObserv_ctr("ctr$ubi");
                 $lista[] = $d;
             }
             return $lista;
@@ -94,5 +96,17 @@ final class DocumentosMarcadosDataTest extends TestCase
 
         $this->assertSame([['en_busqueda eq true']], $this->consultas);
         $this->assertSame([1, 2, 3], array_keys($r['a_valores'][0]));
+    }
+
+    public function test_con_observaciones_de_la_dl_o_del_centro_sin_repetir(): void
+    {
+        $r = $this->uc()->conObservaciones();
+
+        $this->assertSame([
+            ['eliminado eq false', 'perdido eq false', 'observ is_not_null'],
+            ['eliminado eq false', 'perdido eq false', 'observ_ctr is_not_null'],
+        ], $this->consultas);
+        $this->assertCount(2, $r['a_valores'], 'los mismos documentos en las dos consultas salen una vez');
+        $this->assertSame(['obs2', 'ctr2'], [$r['a_valores'][0][4], $r['a_valores'][0][5]]);
     }
 }

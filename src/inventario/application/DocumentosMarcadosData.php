@@ -15,11 +15,12 @@ use src\shared\domain\criteria\Filter;
 use src\shared\domain\helpers\FuncTablasSupport;
 
 /**
- * Documentos marcados como perdidos (`lista_docs_perdidos`) o en búsqueda (`lista_docs_en_busqueda`):
- * centro (y lugar), documento, número de registro (y fecha de pérdida), ordenados por centro sin acentos.
+ * Documentos marcados como perdidos (`lista_docs_perdidos`), en búsqueda (`lista_docs_en_busqueda`) o
+ * con observaciones (`lista_docs_con_observaciones`): centro (y lugar), documento, número de registro
+ * (y fecha de pérdida u observaciones), ordenados por centro sin acentos.
  *
- * Sucesor de la lógica de esos dos controladores, que estaba duplicada (fase 5, paso 5.2). La respuesta
- * es la misma.
+ * Sucesor de la lógica de esos tres controladores, que estaba duplicada (fase 5, paso 5.2). La respuesta
+ * es la misma (salvo que, sin documentos con observaciones, `a_valores` era una variable sin definir).
  */
 final class DocumentosMarcadosData
 {
@@ -34,24 +35,55 @@ final class DocumentosMarcadosData
     /** @return array{a_valores: list<array<int, mixed>>} */
     public function perdidos(): array
     {
-        return $this->lista(DocF::Perdido, static fn (Documento $d): array => [4 => $d->getF_perdido()?->getFromLocal()]);
+        return $this->lista(
+            $this->documentoRepository->matching(Criteria::create()->where(Filter::eq(DocF::Perdido, true))),
+            static fn (Documento $d): array => [4 => $d->getF_perdido()?->getFromLocal()],
+        );
     }
 
     /** @return array{a_valores: list<array<int, mixed>>} */
     public function enBusqueda(): array
     {
-        return $this->lista(DocF::EnBusqueda, static fn (Documento $d): array => []);
+        return $this->lista(
+            $this->documentoRepository->matching(Criteria::create()->where(Filter::eq(DocF::EnBusqueda, true))),
+            static fn (Documento $d): array => [],
+        );
     }
 
     /**
+     * Documentos no eliminados ni perdidos con observaciones de la dl o del centro (sin repetir).
+     *
+     * @return array{a_valores: list<array<int, mixed>>}
+     */
+    public function conObservaciones(): array
+    {
+        $documentos = [];
+        foreach ([DocF::Observ, DocF::ObservCtr] as $campo) {
+            $c = $this->documentoRepository->matching(Criteria::create()
+                ->where(Filter::eq(DocF::Eliminado, false))
+                ->andWhere(Filter::eq(DocF::Perdido, false))
+                ->andWhere(Filter::isNotNull($campo)));
+            foreach ($c as $oDocumento) {
+                $documentos[$oDocumento->getId_doc()] ??= $oDocumento;
+            }
+        }
+
+        return $this->lista($documentos, static fn (Documento $d): array => [
+            4 => $d->getObservVo()?->value(),
+            5 => $d->getObservCtrVo()?->value(),
+        ]);
+    }
+
+    /**
+     * @param iterable<Documento> $documentos
      * @param callable(Documento): array<int, mixed> $columnasExtra
      * @return array{a_valores: list<array<int, mixed>>}
      */
-    private function lista(DocF $marca, callable $columnasExtra): array
+    private function lista(iterable $documentos, callable $columnasExtra): array
     {
         $valores = [];
         $nombres = [];
-        foreach ($this->documentoRepository->matching(Criteria::create()->where(Filter::eq($marca, true))) as $oDocumento) {
+        foreach ($documentos as $oDocumento) {
             $oTipoDoc = $this->tipoDocRepository->findById((int) $oDocumento->getId_tipo_doc());
             if ($oTipoDoc === null) {
                 continue;
