@@ -205,7 +205,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 5.1 Controladores de `src/` que fallan sin un parámetro obligatorio + test-guardia global (sección 30).
 - [x] 5.2 Cobertura: `inventario`, `cartaspresentacion`, `zonassacd`, `utils_database`, `misas`.
 - [ ] 5.3 Flujos E2E: inventario, misas, ubis, encargossacd, cambios, procesos; «carga sin error» de pantallas por formulario.
-- [ ] 5.4 Limpieza de las marcas de dossier de los tests PHPUnit.
+- [x] 5.4 Limpieza de las marcas de dossier de los tests PHPUnit (la suite ya no deja marcas; restos antiguos: duda 16).
 
 ---
 
@@ -235,6 +235,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 14. **(5.2) Asignar un documento a un lugar de la dl no lo crea:** `doc_asignar_dlb_guardar` exige que en el lugar haya exactamente un documento de ese tipo; si no hay ninguno (o hay varios) responde «No se encuentra el documento» y no crea nada, mientras que la variante de centros (`doc_asignar_ctr_guardar`) sí crea el documento cuando falta. ¿Debe crearlo también? (Sin tocar.)
 
 15. **(5.3) Procesos con dependencias de fases que no tienen:** en la BD de desarrollo, en 18 de los 35 tipos de proceso de `"H-dlb".a_tareas_proceso` alguna fase depende (`json_fases_previas`) de otra que no está en ese proceso (p. ej. el tipo 6: las fases 16, 35 y 36 dependen de la 2, que no existe). Al marcar cualquier fase de una actividad de esos tipos la aplicación responde «Proceso mal diseñado» y no guarda. ¿Son datos de desarrollo incompletos o pasa también en producción? Si pasa en producción habría que avisar al diseñar el proceso (en `procesos_ver`), no al marcar la fase. (Sin tocar.)
+
+16. **(5.4) Marcas de dossier huérfanas antiguas:** en `"H-dlbv".d_dossiers_abiertos` hay 509 marcas de persona cuyo `id_pau` no está en `global.personas` (408 con id negativo, 101 con id positivo de 7 a 9 cifras). ¿Se borran todas, solo las de id positivo, o ninguna? (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 
@@ -1107,5 +1109,6 @@ Medido solo con los tests de cada módulo; sin contar `db/` (DDL, necesita BD ai
 - **5.3 E2E, `ubis` (`ubis-alta-baja.spec.ts`):** casa de la dl por la ruta real (búsqueda → tabla → ficha nueva; tabla → modificar → ficha; eliminar). Fallo corregido: ni la búsqueda ni la ficha nueva entraban en la pila de navegación, así que tras guardar un alta no pasaba nada (la ficha seguía abierta, lista para guardar un duplicado) y tras eliminar tampoco se salía de la ficha del centro borrado (o se iba a una pantalla anterior al recorrido). Ahora `ubis_buscar.php` y `ubis_editar.php` (cuando se abre en `#main`) entran en la pila: tras el alta se vuelve a la tabla, que ya muestra el centro, y tras eliminar, a la búsqueda.
 - **5.3 E2E, `procesos` (`procesos-fases.spec.ts`):** crear una actividad y marcar / desmarcar una fase de su proceso con una observación. Fallos corregidos: la observación iba sin codificar en la petición (con «&», «+» o «#» el hash la rechazaba y se volvía al inicio); `TareaObserv` solo admitía una lista corta de signos (ahora texto libre, como las observaciones de una actividad); una observación no válida salía como texto suelto en vez de JSON; la tabla de fases se repintaba a la vez que se guardaba (podía mostrar el estado anterior). El spec usa el tipo 171000, cuyo proceso es coherente en dev, y se salta si no lo es (duda 15).
 - **5.3 E2E, `cambios` (`cambios-avisos.spec.ts`):** avisos de cambios de un usuario propio del test: añadir un aviso (objeto, fase de referencia, tipo de aviso y una propiedad; se guarda en dos pasos) y eliminarlo desde la lista. Sin fallos.
+- **5.4 Marcas de dossier (2026-11-13):** medido con una copia de `"H-dlbv".d_dossiers_abiertos` antes y después de la suite completa (10 717 tests, en verde): **la suite ya no deja ninguna marca nueva** (5 214 filas antes y después), así que no hace falta ningún mecanismo de limpieza en los tests. Lo que queda son los restos antiguos: 509 marcas de persona de `H-dlbv` cuyo `id_pau` no está en `global.personas`. No se han borrado: 408 tienen ids negativos (podrían ser personas de fuera de la dl, que no están en esa tabla) y no se pueden distinguir con seguridad de los restos de tests (duda 16).
 - **Cobertura tras 5.2 (2026-11-13, `docs/dev/reports/cobertura_por_modulo.md`):** total 70,5 % de líneas; `inventario` 31 → 61 %, `cartaspresentacion` 43 → 76 %, `misas` 60 → 75 %, `utils_database` 48 → 58 %, `zonassacd` 47 → 50 %.
 
