@@ -22,7 +22,7 @@ $a_campos_backend = [
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'incio' => $Qinicio,
+    'inicio' => $Qinicio,
     'fin' => $Qfin,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);

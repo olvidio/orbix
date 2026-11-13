@@ -77,6 +77,9 @@ foreach ($a_egm as $aEgm) {
     $oLista->setDatos($a_valores_grupo);
 
     $oHashGrupo = new HashF();
+    // Las casillas de la lista están dentro del formulario: no forman parte del hash.
+    $oHashGrupo->setCamposForm('sel');
+    $oHashGrupo->setCamposNo('sel');
     $oHashGrupo->setArrayCamposHidden([
         'id_grupo' => $id_grupo,
         'id_equipaje' => $Qid_equipaje,

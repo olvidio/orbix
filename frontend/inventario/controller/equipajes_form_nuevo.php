@@ -36,7 +36,7 @@ $oHashForm->setArrayCamposHidden([
     'f_fin' => $fin,
     'id_ubi_activ' => $Qid_cdc,
     'ids_activ' => $ids_activ,
-    'ctx_nuevo' => \frontend\shared\helpers\PayloadCoercion::string($view['ctx_nuevo'] ?? ''),
+    'ctx_nuevo' => $view['ctx_nuevo'],
 ]);
 
 $a_campos = [

@@ -28,7 +28,7 @@ $a_campos_backend = [
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'incio' => $Qinicio,
+    'inicio' => $Qinicio,
     'fin' => $Qfin,
     'id_cdc' => $Qid_cdc,
 ];

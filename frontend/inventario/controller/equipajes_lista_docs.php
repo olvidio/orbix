@@ -16,10 +16,12 @@ $Qid_lugar = (int)filter_input(INPUT_POST, 'id_lugar');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 $url_backend = '';
-if ($Qid_lugar !== 0) {
-    $url_backend = '/src/inventario/lista_docs_de_lugar';
-} elseif ($Qid_item_egm !== 0) {
+// Si la valija ya existe se listan sus documentos (no todos los del lugar, que salían marcados
+// aunque al crearla se hubieran elegido solo algunos).
+if ($Qid_item_egm !== 0) {
     $url_backend = '/src/inventario/lista_docs_de_egm';
+} elseif ($Qid_lugar !== 0) {
+    $url_backend = '/src/inventario/lista_docs_de_lugar';
 }
 $a_campos_backend = [
     'id_lugar' => $Qid_lugar,
@@ -43,6 +45,9 @@ $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 
 $oHashGrupo = new HashF();
+// Las casillas de la lista están dentro del formulario: una marcada rompía el hash de «añadir» y «quitar».
+$oHashGrupo->setCamposForm('sel');
+$oHashGrupo->setCamposNo('sel');
 $oHashGrupo->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,

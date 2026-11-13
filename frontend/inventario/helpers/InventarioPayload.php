@@ -207,6 +207,8 @@ public static function equipajesDocCasaFromPayload(array $payload): array
  *     id_item_egm: int,
  *     texto: string,
  *     a_valores: array<int|string, mixed>,
+ *     ctx_add: string,
+ *     ctx_eliminar_grupo: string,
  * }
  */
 public static function egmRow(mixed $raw): array
@@ -244,6 +246,8 @@ public static function egmRow(mixed $raw): array
  *     id_item_egm: int,
  *     texto: string,
  *     a_valores: array<int|string, mixed>,
+ *     ctx_add: string,
+ *     ctx_eliminar_grupo: string,
  * }>
  */
 public static function egmRows(mixed $raw): array
