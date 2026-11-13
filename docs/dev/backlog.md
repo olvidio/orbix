@@ -78,12 +78,6 @@ Formato sugerido por ítem:
 - **Por qué no ahora:** la fase 3 cubrió los flujos críticos que pedía el plan (personas, actividades, asistentes, notas, usuarios, subidas y un rol restringido).
 - **Notas:** inventario y reglas en [`e2e/README.md`](../../e2e/README.md).
 
-### E2E: la pila de navegación de la sesión del administrador pasa de un spec a otro
-
-- **Qué:** los specs autenticados comparten la sesión PHP del administrador (global-setup), y con ella la pila de `$oPosicion`. Si `rol-restringido` daba de alta su usuario por `usuario_form.php?nuevo=1`, el spec siguiente (`usuarios-alta-baja`) guardaba la ficha de un usuario existente como un alta («nombre de usuario en uso»). Se evitó dando de alta ese usuario con SQL.
-- **Por qué no ahora:** no se ha comprobado si un usuario real puede llegar a ese estado (abrir un alta, salir sin guardar y luego editar otro usuario); habría que reproducirlo a mano y mirar `ListNavSupport::restoreSelectionFromStackPost()` en `usuario_form.php`.
-- **Notas:** si es un fallo de la aplicación, va con test E2E que abra primero un alta y luego edite.
-
 ### Limpieza de las marcas de dossier en los tests PHPUnit
 
 - **Qué:** los tests de integración que crean personas (ids aleatorios de las factories) dejan filas en `d_dossiers_abiertos` cuando las borran (unas 280 de un solo día de ejecuciones); los specs E2E ya limpian las suyas.

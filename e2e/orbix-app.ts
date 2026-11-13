@@ -35,15 +35,29 @@ export async function abrirApp(page: Page): Promise<Incidencias> {
   });
   await page.goto(indexPathForE2e());
   await expect(page.locator('#main')).toBeAttached();
+  pilaNueva.add(page);
   return inc;
 }
+
+/** Páginas cuya próxima `abrirPantalla` empieza una pila de navegación nueva (ver abajo). */
+const pilaNueva = new WeakSet<Page>();
 
 /**
  * Carga `path` (relativo a la raíz de Orbix, con su query) en `#main` y espera a que pinte `esperar`.
  * `soloPresente`: basta con que exista (p. ej. casillas de una rejilla SlickGrid, que Playwright no
  * siempre da por visibles).
+ *
+ * La primera pantalla que se abre tras `abrirApp` lleva `nav=reset`, como las entradas del menú
+ * (`fnjs_link_submenu`): cada test empieza una pila de navegación nueva, y las pantallas siguientes
+ * se apilan encima (así «atrás» vuelve a la anterior del mismo test). Sin él, la pila de la sesión
+ * del administrador, que comparten todos los specs, pasaba de un spec a otro: tras dar de alta un
+ * usuario abriendo directamente su formulario (`rol-restringido`), «atrás» en `usuarios-alta-baja`
+ * volvía a ese formulario de alta en vez de a la lista.
  */
 export async function abrirPantalla(page: Page, path: string, esperar: string, soloPresente = false): Promise<void> {
+  if (pilaNueva.delete(page)) {
+    path += (path.includes('?') ? '&' : '?') + 'nav=reset';
+  }
   await page.evaluate((p) => {
     // @ts-expect-error función global de Orbix (scripts/index.js.php)
     fnjs_update_div('#main', p);
