@@ -4,6 +4,7 @@ namespace src\actividadestudios\application;
 
 use RuntimeException;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\application\support\MatriculaNotaEstado;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
@@ -62,16 +63,16 @@ final readonly class MatriculasPendientesData
 
             $oPersona = $personaLookup->resolver($idNom, $msgErr, $problemasRegionStgr);
             if ($oPersona === null) {
-                // La persona ya no está (o no está en situación «A»): la matrícula pendiente se borra.
-                // Pero si tiene acta debería tener también nota: solo se borra si la nota está en
-                // `e_notas_dl`; si no, se conserva y se avisa (duda 18 del plan de tests).
-                $acta = trim((string) $oMatricula->getActa());
-                if ($acta !== '' && !$this->tieneNota($idNom, $idAsignatura)) {
+                // La persona ya no está (o no está en situación «A»): la matrícula pendiente se borra,
+                // aunque tenga acta. Solo si la propia matrícula lleva nota y esa nota no está en
+                // `e_notas_dl` se conserva y se avisa, para no perderla (duda 18 del plan de tests).
+                if (MatriculaNotaEstado::tieneNota($oMatricula->getNota_num()) && !$this->tieneNota($idNom, $idAsignatura)) {
+                    $acta = trim((string) $oMatricula->getActa());
                     $msgErr .= '<br>' . sprintf(
                         _("La matrícula de la persona %1\$s (asignatura %2\$s, acta %3\$s) no tiene nota guardada: no se borra"),
                         (string) $idNom,
                         (string) $idAsignatura,
-                        htmlspecialchars($acta, ENT_QUOTES, 'UTF-8'),
+                        $acta === '' ? '—' : htmlspecialchars($acta, ENT_QUOTES, 'UTF-8'),
                     );
                     continue;
                 }

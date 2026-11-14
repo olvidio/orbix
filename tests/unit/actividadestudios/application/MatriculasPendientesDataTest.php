@@ -208,27 +208,30 @@ final class MatriculasPendientesDataTest extends TestCase
     }
 
     /**
-     * Persona que ya no está: la matrícula pendiente se borra, salvo que tenga acta y su nota no esté
-     * guardada en `e_notas_dl` (duda 18 del plan de tests: antes se borraban todas).
+     * Persona que ya no está: la matrícula pendiente se borra, aunque tenga acta. Solo se conserva (con
+     * aviso) si la propia matrícula lleva nota y esa nota no está en `e_notas_dl` (duda 18 del plan).
      */
-    public function test_persona_no_encontrada_borra_la_matricula_salvo_con_acta_y_sin_nota(): void
+    public function test_persona_no_encontrada_borra_la_matricula_salvo_si_lleva_una_nota_sin_guardar(): void
     {
-        $matricula = function (int $idAsignatura, ?string $acta): Matricula {
+        $matricula = function (int $idAsignatura, ?string $acta, ?string $notaNum): Matricula {
             $m = $this->createMock(Matricula::class);
             $m->method('getId_nom')->willReturn(100);
             $m->method('getId_activ')->willReturn(200);
             $m->method('getIdAsignaturaVo')->willReturn(new AsignaturaId($idAsignatura));
             $m->method('isPreceptor')->willReturn(false);
             $m->method('getActa')->willReturn($acta);
+            $m->method('getNota_num')->willReturn($notaNum);
             return $m;
         };
-        $sinActa = $matricula(3000, null);
-        $conActaYNota = $matricula(3001, 'dlb 1/25');
-        $conActaSinNota = $matricula(3002, 'dlb 2/25');
 
         $borradas = [];
         $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
-        $matRepo->method('getMatriculasPendientes')->willReturn([$sinActa, $conActaYNota, $conActaSinNota]);
+        $matRepo->method('getMatriculasPendientes')->willReturn([
+            $matricula(3000, null, null),          // sin acta ni nota
+            $matricula(3001, 'dlb 1/25', null),    // con acta pero sin nota: se borra igualmente
+            $matricula(3002, 'dlb 2/25', '8'),     // con nota, y la nota está en e_notas_dl
+            $matricula(3003, 'dlb 3/25', '7'),     // con nota que no está guardada: se conserva
+        ]);
         $matRepo->method('Eliminar')->willReturnCallback(function (Matricula $m) use (&$borradas): bool {
             $borradas[] = $m->getIdAsignaturaVo()->value();
             return true;
@@ -237,7 +240,7 @@ final class MatriculasPendientesDataTest extends TestCase
         $finder->method('findPersonaParaListado')->willReturn(null);
         $notas = $this->createMock(PersonaNotaDlRepositoryInterface::class);
         $notas->method('matching')->willReturnCallback(static fn ($c): array
-            => DescribeCriteria::filtros($c) === ['id_nom eq 100', 'id_asignatura eq 3001'] ? [new PersonaNota()] : []);
+            => DescribeCriteria::filtros($c) === ['id_nom eq 100', 'id_asignatura eq 3002'] ? [new PersonaNota()] : []);
 
         $out = (new MatriculasPendientesData(
             $matRepo,
@@ -247,9 +250,9 @@ final class MatriculasPendientesDataTest extends TestCase
             $notas,
         ))->execute();
 
-        $this->assertSame([3000, 3001], $borradas, 'la de acta sin nota guardada se conserva');
+        $this->assertSame([3000, 3001, 3002], $borradas);
         $this->assertSame([], $out['a_valores']);
-        $this->assertStringContainsString('asignatura 3002, acta dlb 2/25', $out['msg_err']);
-        $this->assertStringNotContainsString('asignatura 3001', $out['msg_err']);
+        $this->assertStringContainsString('asignatura 3003, acta dlb 3/25', $out['msg_err']);
+        $this->assertSame(1, substr_count($out['msg_err'], 'no se borra'));
     }
 }
