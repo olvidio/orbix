@@ -7,6 +7,7 @@ namespace Tests\integration\shared\infrastructure;
 use PHPUnit\Framework\Attributes\DataProvider;
 use src\shared\infrastructure\InProcessSrcDispatch;
 use Tests\myTest;
+use Tests\support\UbiscamasEnDlInstalada;
 
 /**
  * Test-guardia: un controlador de lectura de `src/` llamado sin parámetros (POST vacío) responde
@@ -20,6 +21,8 @@ use Tests\myTest;
  */
 final class ControladoresLecturaSinParametrosTest extends myTest
 {
+    use UbiscamasEnDlInstalada;
+
     private const RAIZ = __DIR__ . '/../../../../';
 
     /** Nombres de acción que escriben, envían o descargan: fuera de este test. */
@@ -62,6 +65,10 @@ final class ControladoresLecturaSinParametrosTest extends myTest
             $avisos[] = "$mensaje (" . basename($f) . ":$linea)";
             return true;
         });
+        // Los controladores de ubiscamas, contra la dl que tiene el módulo de habitaciones instalado.
+        if (str_contains($fichero, '/src/ubiscamas/')) {
+            $this->usarUbiscamasDeDlInstalada();
+        }
         InProcessSrcDispatch::begin();
         ob_start();
         $excepcion = null;
@@ -73,6 +80,7 @@ final class ControladoresLecturaSinParametrosTest extends myTest
             $salida = (string) ob_get_clean();
             InProcessSrcDispatch::end();
             restore_error_handler();
+            $this->dejarUbiscamasComoEstaba();
             $_POST = $postAnterior;
             $_GET = $getAnterior;
         }

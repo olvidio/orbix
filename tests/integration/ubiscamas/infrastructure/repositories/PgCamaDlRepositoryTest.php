@@ -2,26 +2,34 @@
 
 namespace Tests\integration\ubiscamas\infrastructure\persistence\postgresql;
 
-use src\ubiscamas\db\DBEsquema;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\entity\Cama;
 use Tests\factories\ubiscamas\CamaFactory;
 use Tests\factories\ubiscamas\HabitacionFactory;
 use Tests\myTest;
+use Tests\support\UbiscamasEnDlInstalada;
 
 class PgCamaDlRepositoryTest extends myTest
 {
+    use UbiscamasEnDlInstalada;
+
     private CamaDlRepositoryInterface $repository;
     private HabitacionDlRepositoryInterface $habitacionRepository;
     private CamaFactory $camaFactory;
     private HabitacionFactory $habitacionFactory;
 
+    public function tearDown(): void
+    {
+        $this->dejarUbiscamasComoEstaba();
+        parent::tearDown();
+    }
+
     public function setUp(): void
     {
         parent::setUp();
-        // Las tablas _dl de ubiscamas no existen en todas las copias de la BD comun: crearlas si faltan (idempotente).
-        (new DBEsquema('H-dlbv'))->createAll();
+        // La dl de la sesión de los tests no tiene el módulo de habitaciones: se usa la que lo tiene.
+        $this->usarUbiscamasDeDlInstalada();
         $this->repository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
         $this->habitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
         $this->camaFactory = new CamaFactory();

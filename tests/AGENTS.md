@@ -185,6 +185,7 @@ En noviembre de 2026 se perdieron así, sin que fallara ningún test, diseños d
 - Las purgas de la propia aplicación que los tests ejecutan de verdad salen como **aviso**, no como fallo: el generador de avisos borra los cambios de más de un año (`av_cambios*`) y «nuevo curso» borra los procesos de actividades que no existen (`a_actividad_proceso_*`; en dev, las de delegaciones no cargadas).
 - Si un módulo deja una fila de prueba sin limpiar y otro la borra, el segundo aparece como si hubiera perdido una fila: comprobar si la tabla coincide con la copia antes de reponer nada.
 - Si la comprobación falla: reponer las filas desde las copias (`~/trasvases/*.sql`) y corregir el test que las borró.
+- **Módulos que no están instalados en la dl de la sesión de los tests** (`H-dlb`): no crear sus tablas en esa dl. Para ubiscamas (habitaciones y camas), el trait `Tests\support\UbiscamasEnDlInstalada` pone en el contenedor repositorios conectados a la dl que sí lo tiene (`H-dlmE` por defecto; `ORBIX_TEST_ESQUEMA_UBISCAMAS` para otra) y salta el test si no está.
 
 ## Ejecutar PHPUnit
 
