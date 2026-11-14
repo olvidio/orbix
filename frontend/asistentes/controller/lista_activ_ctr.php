@@ -23,6 +23,7 @@ $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asisten
 $a_campos = [
     'oPosicion' => $oPosicion,
     'aCentros' => (array)($payload['aCentros'] ?? []),
+    'aviso_txt' => PayloadCoercion::string($payload['aviso_txt'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\asistentes\\controller');

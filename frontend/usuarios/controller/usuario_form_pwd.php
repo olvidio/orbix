@@ -11,10 +11,8 @@ use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
 
-$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
-$usuario = UsuariosPostInput::sessionAuthString('username');
-$expire = UsuariosPostInput::sessionAuthString('expire');
-
+// Primero el arranque: abierta directamente (no incrustada en el índice) aún no hay autoload ni sesión,
+// y leer antes la sesión con `UsuariosPostInput` daba «Class not found».
 if (!defined('ORBIX_INDEX_EMBED')) {
     require_once 'frontend/shared/FrontBootstrap.php';
     $oPosicion = FrontBootstrap::boot();
@@ -25,6 +23,10 @@ if (!defined('ORBIX_INDEX_EMBED')) {
         $oPosicion = new frontend\shared\web\Posicion($phpSelf, $_POST);
     }
 }
+
+$id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
+$usuario = UsuariosPostInput::sessionAuthString('username');
+$expire = UsuariosPostInput::sessionAuthString('expire');
 
 $dataCtx = $id_usuario > 0
     ? \frontend\shared\helpers\PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/usuarios/usuario_guardar_pwd_form_data'))

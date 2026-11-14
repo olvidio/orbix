@@ -38,10 +38,26 @@ final class ListaActivCtrData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{aCentros: array<int|string, array{nombre_ubi: string, personas: array<int, array{ap_nom: string, actividades: list<string>}>}>}
+     * @return array{aCentros: array<int|string, array{nombre_ubi: string, personas: array<int, array{ap_nom: string, actividades: list<string>}>}>, aviso_txt?: string}
      */
     public function build(array $input): array
     {
+        // Sin ningún criterio (pantalla abierta sin pasar por su formulario) serían todos los centros,
+        // todas las personas y todos los tipos de actividad: agotaba el tiempo de ejecución.
+        $hayCriterio = false;
+        foreach (['n_agd', 'sasistentes', 'sactividad', 'periodo', 'empiezamin', 'empiezamax', 'year', 'id_ubi'] as $campo) {
+            if (\src\shared\domain\helpers\FuncTablasSupport::inputString($input, $campo) !== '') {
+                $hayCriterio = true;
+                break;
+            }
+        }
+        if (!$hayCriterio) {
+            return [
+                'aviso_txt' => sprintf(_("Faltan parámetros: %s"), 'n_agd / sasistentes / sactividad / periodo'),
+                'aCentros' => [],
+            ];
+        }
+
         $Qssfsv = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'ssfsv');
 
         if (ConfigGlobal::mi_sfsv() === 1) {

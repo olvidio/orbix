@@ -29,6 +29,10 @@ $a_campos_backend = [
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,
 ];
+// Sin lugar ni valija no hay nada que listar (antes se llamaba a /src con una URL vacía).
+if ($url_backend === '') {
+    AjaxJsonSupport::html('', _("debe seleccionar un lugar"));
+}
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $payload = InventarioPayload::postPayload($data);
 $view = InventarioPayload::listaDocsGrupoFromPayload($payload);

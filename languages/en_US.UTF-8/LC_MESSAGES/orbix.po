@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 18:45+0100\n"
+"POT-Creation-Date: 2026-11-14 19:20+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -2596,7 +2596,7 @@ msgstr "save assistant data"
 msgid "guardar y añadir otro asistente"
 msgstr "save and add another assistant"
 
-#: frontend/asistentes/view/lista_activ_ctr.phtml:15
+#: frontend/asistentes/view/lista_activ_ctr.phtml:18
 #: frontend/asistentes/view/lista_asistentes.phtml:15
 #: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:20
 #: frontend/dbextern/view/ver_desaparecidos_de_listas.phtml:40
@@ -2634,11 +2634,11 @@ msgstr "save and add another assistant"
 msgid "nombre"
 msgstr "first name"
 
-#: frontend/asistentes/view/lista_activ_ctr.phtml:16
+#: frontend/asistentes/view/lista_activ_ctr.phtml:19
 msgid "actividades previstas"
 msgstr "Planned activities"
 
-#: frontend/asistentes/view/lista_activ_ctr.phtml:23
+#: frontend/asistentes/view/lista_activ_ctr.phtml:26
 msgid "pendiente de solicitar"
 msgstr "pending request"
 
@@ -5391,7 +5391,7 @@ msgstr "you must select a luggage"
 #: frontend/inventario/controller/equipajes_doc_casa.php:31
 #: frontend/inventario/controller/equipajes_doc_casa.php:65
 #: frontend/inventario/controller/equipajes_form_del.php:32
-#: frontend/inventario/controller/equipajes_lista_docs.php:40
+#: frontend/inventario/controller/equipajes_lista_docs.php:44
 #: frontend/inventario/controller/equipajes_ver_docs.php:31
 #: src/inventario/domain/entity/Documento.php:708
 msgid "identificador"
@@ -5399,7 +5399,7 @@ msgstr "identifier"
 
 #: frontend/inventario/controller/equipajes_doc_casa.php:64
 #: frontend/inventario/controller/equipajes_form_del.php:31
-#: frontend/inventario/controller/equipajes_lista_docs.php:39
+#: frontend/inventario/controller/equipajes_lista_docs.php:43
 #: frontend/inventario/controller/equipajes_ver_docs.php:30
 #: frontend/shared/view/regiones_en_orbix.phtml:13
 #: src/ubis/domain/entity/Delegacion.php:413
@@ -5489,6 +5489,11 @@ msgstr "Starts"
 #: src/casas/application/CasaActividadesListaData.php:68
 msgid "termina"
 msgstr "ends"
+
+#: frontend/inventario/controller/equipajes_lista_docs.php:34
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:18
+msgid "debe seleccionar un lugar"
+msgstr "you must select a location"
 
 #: frontend/inventario/controller/equipajes_movimientos.php:45
 #: frontend/inventario/view/equipajes_form_add.phtml:8
@@ -10796,7 +10801,7 @@ msgid "se ha actualizado la configuración de 2FA"
 msgstr "2FA settings have been updated"
 
 #: frontend/usuarios/controller/usuario_form_mail.php:35
-#: frontend/usuarios/controller/usuario_form_pwd.php:45
+#: frontend/usuarios/controller/usuario_form_pwd.php:47
 msgid "guardar datos"
 msgstr "Save data"
 
@@ -10804,7 +10809,7 @@ msgstr "Save data"
 msgid "se ha cambiado el mail"
 msgstr "The email has been changed"
 
-#: frontend/usuarios/controller/usuario_form_pwd.php:46
+#: frontend/usuarios/controller/usuario_form_pwd.php:48
 msgid "se ha cambiado el password"
 msgstr "The password has been changed"
 
@@ -12850,7 +12855,7 @@ msgstr "there is no registration of this person"
 #: src/actividadestudios/application/ListaClasesCaData.php:101
 #: src/actividadestudios/application/MatriculaNueva.php:86
 #: src/actividadestudios/application/MatriculasListaData.php:135
-#: src/actividadestudios/application/MatriculasPendientesData.php:89
+#: src/actividadestudios/application/MatriculasPendientesData.php:90
 #: src/actividadestudios/application/PlanEstudiosCaData.php:111
 #: src/actividadestudios/application/PlanEstudiosCaData.php:193
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
@@ -12961,7 +12966,7 @@ msgstr "no record (%d)"
 msgid "No se pudo determinar el esquema región STGR de la sesión."
 msgstr "Failed to determine the STGR region schema of the session."
 
-#: src/actividadestudios/application/MatriculasPendientesData.php:71
+#: src/actividadestudios/application/MatriculasPendientesData.php:72
 #, php-format
 msgid ""
 "La matrícula de la persona %1$s (asignatura %2$s, acta %3$s) no tiene nota "
@@ -13459,6 +13464,27 @@ msgstr "the attendance data is modified by the owner of the place: %s"
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:97
 msgid "No se encontró el asistente para esta actividad."
 msgstr "The assistant for this activity was not found."
+
+#: src/asistentes/application/ListaActivCtrData.php:56
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
+#: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
+#: src/inventario/application/DocumentosTrasladar.php:30
+#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:35
+#: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
+#: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
+#: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php:12
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php:8
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:11
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php:13
+#: src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php:8
+#: src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php:8
+#: src/ubis/infrastructure/ui/http/controllers/list_ctr_data.php:10
+#: src/ubis/infrastructure/ui/http/controllers/teleco_editar.php:10
+#: src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php:9
+#, php-format
+msgid "Faltan parámetros: %s"
+msgstr "Missing parameters: %s"
 
 #: src/asistentes/application/ListaAsisConjuntoActivData.php:163
 msgid "actividades de la dl/r"
@@ -14560,26 +14586,6 @@ msgstr "The file %s cannot be read"
 #, php-format
 msgid "El archivo %s no es un PDF"
 msgstr "The file %s is not a PDF"
-
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
-#: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
-#: src/inventario/application/DocumentosTrasladar.php:30
-#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:35
-#: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
-#: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
-#: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php:12
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php:8
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:11
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php:13
-#: src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php:8
-#: src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php:8
-#: src/ubis/infrastructure/ui/http/controllers/list_ctr_data.php:10
-#: src/ubis/infrastructure/ui/http/controllers/teleco_editar.php:10
-#: src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php:9
-#, php-format
-msgid "Faltan parámetros: %s"
-msgstr "Missing parameters: %s"
 
 #: src/configuracion/application/ModulosSelectData.php:56
 msgid "aplicaciones requeridas"
@@ -16329,10 +16335,6 @@ msgstr "numbered"
 #: src/inventario/domain/entity/UbiInventario.php:124
 msgid "nombre del centro/casa"
 msgstr "name of the center/house"
-
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:18
-msgid "debe seleccionar un lugar"
-msgstr "you must select a location"
 
 #: src/inventario/view/buscarDocsxSigla.phtml:74
 msgid "Debe seleccionar un tipo de documento"

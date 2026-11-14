@@ -128,6 +128,15 @@ final class ListaActivCtrDataTest extends myTest
         yield 'sin grupo' => ['', [], ['tipo_ctr matches ^n', 'tipo_ctr matches ^a']];
     }
 
+    /** Antes: sin ningún criterio recorría todos los centros y personas y agotaba el tiempo de ejecución. */
+    public function test_sin_ningun_criterio_avisa_y_no_busca(): void
+    {
+        $r = $this->uc()->build(['e2e_sin_parametros' => '']);
+
+        $this->assertSame([], $r['aCentros']);
+        $this->assertStringStartsWith('Faltan parámetros', $r['aviso_txt'] ?? '');
+    }
+
     public function test_sin_centros_el_resultado_esta_vacio(): void
     {
         $this->assertSame(['aCentros' => []], $this->uc()->build(self::PERIODO));
