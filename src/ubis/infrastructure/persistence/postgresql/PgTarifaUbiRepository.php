@@ -57,10 +57,11 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
 
     public function Eliminar(TarifaUbi $TarifaUbi): bool
     {
-        $id_ubi = $TarifaUbi->getId_ubi();
+        // Por su clave: filtrando por `id_ubi` se borraban todas las tarifas de la casa.
+        $id_item = $TarifaUbi->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 

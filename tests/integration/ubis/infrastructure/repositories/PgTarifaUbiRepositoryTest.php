@@ -147,4 +147,29 @@ class PgTarifaUbiRepositoryTest extends myTest
         $this->assertIsNumeric($newId);
     }
 
+    /**
+     * Regresión: `Eliminar` borraba por `id_ubi`, así que al borrar una tarifa se borraban todas las de
+     * esa casa (todos los años y tipos de tarifa).
+     */
+    public function test_eliminar_una_tarifa_no_borra_las_demas_de_la_casa(): void
+    {
+        $una = $this->factory->createSimple();
+        $otra = $this->factory->createSimple($una->getId_item() + 1);
+        $otra->setId_ubi($una->getId_ubi());
+        $this->assertNull($this->repository->findById($una->getId_item()), 'el id de prueba no existe en la BD');
+        $this->assertNull($this->repository->findById($otra->getId_item()), 'el id de prueba no existe en la BD');
+
+        try {
+            $this->assertTrue($this->repository->Guardar($una));
+            $this->assertTrue($this->repository->Guardar($otra));
+
+            $this->assertTrue($this->repository->Eliminar($una));
+
+            $this->assertNull($this->repository->findById($una->getId_item()));
+            $this->assertNotNull($this->repository->findById($otra->getId_item()), 'la otra tarifa de la misma casa sigue ahí');
+        } finally {
+            $this->repository->Eliminar($una);
+            $this->repository->Eliminar($otra);
+        }
+    }
 }

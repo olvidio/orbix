@@ -106,7 +106,8 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 					f_camb_dossier           = :f_camb_dossier,
 					active                   = :active,
 					f_active                 = :f_active";
-            $sql = "UPDATE $nom_tabla SET $update WHERE tabla = '$tabla'";
+            // Con la clave completa: filtrando solo por `tabla` se cambiaban todas las marcas de la tabla.
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT

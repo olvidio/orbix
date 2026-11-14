@@ -97,4 +97,43 @@ class PgDossierRepositoryTest extends myTest
         $this->assertNull($oDossierEliminado);
     }
 
+    /**
+     * Regresión: el UPDATE de `Guardar` filtraba solo por `tabla`, así que abrir o cerrar un dossier
+     * cambiaba el estado y las fechas de **todas** las marcas de esa tabla (todas las personas de la dl).
+     */
+    public function test_actualizar_un_dossier_no_cambia_los_demas(): void
+    {
+        $uno = new Dossier();
+        $uno->setTabla('p');
+        $uno->setId_pau(999999001);
+        $uno->setId_tipo_dossier(3005);
+        $otro = new Dossier();
+        $otro->setTabla('p');
+        $otro->setId_pau(999999002);
+        $otro->setId_tipo_dossier(3005);
+        $this->assertNull($this->repository->findByPk($uno->getDossierPk()), 'el id de prueba no existe en la BD');
+        $this->assertNull($this->repository->findByPk($otro->getDossierPk()), 'el id de prueba no existe en la BD');
+
+        try {
+            $uno->abrir();
+            $otro->abrir();
+            $this->assertTrue($this->repository->Guardar($uno));
+            $this->assertTrue($this->repository->Guardar($otro));
+
+            $uno->setActive(false);
+            $uno->setF_active(null);
+            $this->assertTrue($this->repository->Guardar($uno));
+
+            $unoGuardado = $this->repository->findByPk($uno->getDossierPk());
+            $otroGuardado = $this->repository->findByPk($otro->getDossierPk());
+            $this->assertNotNull($unoGuardado);
+            $this->assertNotNull($otroGuardado);
+            $this->assertFalse($unoGuardado->isActive(), 'el dossier modificado queda cerrado');
+            $this->assertTrue($otroGuardado->isActive(), 'el otro dossier de la misma tabla sigue abierto');
+            $this->assertNotNull($otroGuardado->getF_active());
+        } finally {
+            $this->repository->Eliminar($uno);
+            $this->repository->Eliminar($otro);
+        }
+    }
 }
