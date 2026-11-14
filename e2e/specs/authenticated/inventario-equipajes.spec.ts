@@ -31,6 +31,10 @@ test.afterAll(() => {
 });
 
 test('equipaje: alta, valija, documentos, texto del listado y borrado', async ({ page }) => {
+  // Las valijas salen de los lugares del almacén, que es un parámetro de configuración de la dl.
+  const almacen = sqlDev('comun', `SELECT valor FROM "${ESQUEMA_V.replace(/v$/, '')}".x_config_schema WHERE parametro = 'inventario_ubi_almacen'`);
+  test.skip(!/^[1-9]\d*$/.test(almacen), 'falta el parámetro de configuración «inventario_ubi_almacen» (almacén de inventario) en la dl');
+
   const inc = await abrirApp(page);
   const dialogos = aceptarDialogos(page);
   const main = page.locator('#main');

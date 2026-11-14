@@ -154,6 +154,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | misas | `misas-encargos-zona.spec.ts` | encargos de la zona: rejilla de la primera zona → nuevo → grabar → clic en su fila → modificar → eliminar; comprueba que los demás encargos no cambian |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
+| todos | `pantallas-sin-parametros.spec.ts` | abre cada `frontend/<modulo>/controller/*.php` con un POST sin parámetros (≈300 pantallas, ≈2 min): sin error de PHP, sin 5xx y sin «sesión no autenticada en una llamada interna». No abre los controladores que por su nombre ejecutan una acción, ni los módulos de administración de la BD |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
 
 Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú; la primera del test lleva `nav=reset`, como las entradas del menú, para no heredar la pila de navegación de otro spec), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad` (con el tipo de actividad opcional), `crearNumerario`.
@@ -170,6 +171,9 @@ Reglas para escribir más:
 - **No abrir fichas de datos reales por descuido:** en una lista, el enlace de alta suele convivir con los enlaces de cada fila; elegirlo por algo propio (`que=nuevo`…) y comprobar antes de guardar que la ficha es de alta (o la del dato del test).
 - Si el alta usa una secuencia de ids, comprobar al final que los datos que ya había no han cambiado (ver `encargossacd-alta-baja`).
 - Si el flujo toca datos de una persona real (p. ej. marcas de dossier), guardar una foto antes y reponerla al final.
+- **Lanzar los specs bajo la comprobación de filas**: `php tools/qa/phpunit_protegido.php --comando "npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ --grep-invert enlaces"`. No ejecuta nada si hay secuencias atrasadas, falla si alguna tabla pierde filas y lista las tablas cuyo contenido ha cambiado.
+- **Hay pantallas que son una acción**: `propuestas_aprobar.php` aprueba todas las propuestas de encargos solo con abrirla. Antes de abrir un controlador «a ciegas», mirar qué hace; `pantallas-sin-parametros.spec.ts` excluye por nombre (guardar, eliminar, aprobar…) y por lista.
+- Abrir una pantalla puede guardar «la última búsqueda» como preferencia del usuario: si el spec abre pantallas en bloque, guardar y reponer `web_preferencias` del usuario de E2E.
 - Ejecutar Playwright modifica `test-results/` (versionado): restaurarlo con `git checkout -- test-results/ && git clean -fdq test-results/`.
 
 ### Inventario de pantallas por módulo (fase 3.1, 2026-11-12)

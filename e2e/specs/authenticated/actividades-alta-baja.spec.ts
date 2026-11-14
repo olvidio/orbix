@@ -17,8 +17,11 @@ const NOMBRE = `${marca} actividad`;
 
 const actividad = (campos: string) => sqlDev('comun', `SELECT ${campos} FROM "${ESQUEMA}".a_actividades_dl WHERE nom_activ = '${NOMBRE}'`);
 
+/** Id de la actividad del test: al borrarla por la interfaz sus fases de proceso se quedan (la aplicación las purga más tarde). */
+let idActivCreada = '';
+
 test.afterAll(() => {
-  const ids = `(SELECT id_activ FROM "${ESQUEMA}".a_actividades_dl WHERE nom_activ = '${NOMBRE}')`;
+  const ids = `(SELECT id_activ FROM "${ESQUEMA}".a_actividades_dl WHERE nom_activ = '${NOMBRE}'${/^\d+$/.test(idActivCreada) ? ` UNION SELECT ${idActivCreada}` : ''})`;
   sqlDev('comun', `DELETE FROM "${ESQUEMA}".a_actividad_proceso_sv WHERE id_activ IN ${ids}`);
   sqlDev('comun', `DELETE FROM "${ESQUEMA}".a_actividad_proceso_sf WHERE id_activ IN ${ids}`);
   sqlDev('comun', `DELETE FROM "${ESQUEMA}".a_actividades_dl WHERE nom_activ = '${NOMBRE}'`);
@@ -52,6 +55,7 @@ test('actividad: alta, modificación y borrado desde el listado', async ({ page 
 
   const idActiv = actividad('id_activ');
   expect(idActiv, 'la actividad está en la BD').toMatch(/^\d+$/);
+  idActivCreada = idActiv;
   expect(actividad(`id_tipo_activ || '|' || f_ini || '|' || f_fin || '|' || dl_org`)).toBe(`112000|2031-02-10|2031-02-12|${DL}`);
 
   await abrirPantalla(page, `frontend/actividades/controller/actividad_ver.php?sel[]=${idActiv}`, 'form#modifica');

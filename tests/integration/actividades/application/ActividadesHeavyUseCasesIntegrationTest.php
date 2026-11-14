@@ -74,16 +74,32 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
 
     public function test_lista_sr_csv_listado_devuelve_estructura(): void
     {
-        $out = DependencyResolver::get(ListaSrCsvListado::class)->ejecutar([
-            'periodo' => 'curso_ca',
-            'year' => '',
-            'dl_org' => '',
-            'empiezamin' => '',
-            'empiezamax' => '',
-            'c_activ' => [1],
-            'status' => [1, 2],
-            'id_cdc' => [],
-        ]);
+        // El listado guarda la búsqueda como preferencia del usuario de la sesión, que es un usuario
+        // real de la BD de desarrollo: se guarda la que tenía y se repone al acabar.
+        $prefs = $GLOBALS['container']->get(\src\usuarios\domain\contracts\PreferenciaRepositoryInterface::class);
+        $anterior = $prefs->datosById(ConfigGlobal::mi_id_usuario(), 'busqueda_activ_sr');
+        try {
+            $out = DependencyResolver::get(ListaSrCsvListado::class)->ejecutar([
+                'periodo' => 'curso_ca',
+                'year' => '',
+                'dl_org' => '',
+                'empiezamin' => '',
+                'empiezamax' => '',
+                'c_activ' => [1],
+                'status' => [1, 2],
+                'id_cdc' => [],
+            ]);
+        } finally {
+            $actual = $prefs->findById(ConfigGlobal::mi_id_usuario(), 'busqueda_activ_sr');
+            if ($actual !== null) {
+                if ($anterior === false) {
+                    $prefs->Eliminar($actual);
+                } else {
+                    $actual->setPreferenciaVo(new \src\usuarios\domain\value_objects\ValorPreferencia((string) ($anterior['preferencia'] ?? '')));
+                    $prefs->Guardar($actual);
+                }
+            }
+        }
 
         $this->assertArrayHasKey('html_tabla', $out);
         $this->assertArrayHasKey('a_cabeceras', $out);
