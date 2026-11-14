@@ -106,6 +106,9 @@ class PgEquipajeRepositoryTest extends myTest
             $coinciden = $this->repository->getEquipajesCoincidentes('2091-01-15', '2091-02-15');
             $this->assertContains($antiguo->getId_equipaje(), $coinciden);
             $this->assertNotContains($nuevo->getId_equipaje(), $coinciden);
+            $this->assertContains($antiguo->getId_equipaje(), $this->repository->getEquipajesCoincidentes('2091-01-12', '2091-01-14'), 'un periodo dentro del equipaje');
+            $this->assertContains($antiguo->getId_equipaje(), $this->repository->getEquipajesCoincidentes('2091-01-01', '2091-01-31'), 'un periodo que abarca el equipaje');
+            $this->assertNotContains($antiguo->getId_equipaje(), $this->repository->getEquipajesCoincidentes('2091-01-21', '2091-01-31'), 'empieza al día siguiente');
         } finally {
             $this->repository->Eliminar($antiguo);
             $this->repository->Eliminar($nuevo);

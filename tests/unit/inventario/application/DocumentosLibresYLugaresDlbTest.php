@@ -11,15 +11,20 @@ use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\LugaresDeDlbData;
 use src\inventario\application\services\AlmacenInventarioService;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Documento;
+use src\inventario\domain\entity\Egm;
 use src\inventario\domain\entity\Equipaje;
 use src\inventario\domain\entity\Lugar;
 use src\inventario\domain\entity\TipoDoc;
 use src\inventario\domain\entity\UbiInventario;
+use src\inventario\domain\entity\Whereis;
+use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\support\DescribeCriteria;
 
 /**
@@ -74,7 +79,7 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
         });
         $lugares = $this->createMock(LugarRepositoryInterface::class);
         $lugares->method('findById')->willReturnCallback(static fn (int $id): ?Lugar => $id === 20 ? self::lugar(20, 'Estante 1') : null);
-        $uc = new DocumentosLibresData($equipajes, $docs, $lugares, $this->almacen('77'));
+        $uc = new DocumentosLibresData($equipajes, $docs, $lugares, $this->almacen('77'), $this->createMock(EgmRepositoryInterface::class), $this->createMock(WhereisRepositoryInterface::class));
 
         $r = $uc->execute(5, 3);
 
@@ -83,13 +88,56 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
         $this->assertSame([], $uc->execute(6, 3), 'equipaje inexistente');
     }
 
+    /** Duda 13: antes se ofrecían también los documentos que ya iban en un equipaje de las mismas fechas. */
+    public function test_descarta_los_documentos_de_este_equipaje_y_de_los_de_fechas_que_se_cruzan(): void
+    {
+        $equipaje = new Equipaje();
+        $equipaje->setId_equipaje(5);
+        $equipaje->setF_ini(new DateTimeLocal('2026-07-01'));
+        $equipaje->setF_fin(new DateTimeLocal('2026-07-10'));
+        $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
+        $equipajes->method('findById')->willReturn($equipaje);
+        $equipajes->expects($this->once())->method('getEquipajesCoincidentes')->with('2026-07-01', '2026-07-10')->willReturn([5, 6]);
+        $egms = $this->createMock(EgmRepositoryInterface::class);
+        $egms->method('matching')->willReturnCallback(function ($c): array {
+            $this->assertSame(['id_equipaje in [5,6]'], DescribeCriteria::filtros($c));
+            return array_map(static function (int $id): Egm {
+                $e = new Egm();
+                $e->setId_item($id);
+                return $e;
+            }, [900, 901]);
+        });
+        $whereis = $this->createMock(WhereisRepositoryInterface::class);
+        $whereis->method('matching')->willReturnCallback(function ($c): array {
+            $this->assertSame(['id_item_egm in [900,901]'], DescribeCriteria::filtros($c));
+            $w = new Whereis();
+            $w->setId_doc(12);
+            return [$w];
+        });
+        $docs = $this->createMock(DocumentoRepositoryInterface::class);
+        $docs->method('matching')->willReturnCallback(static fn (): array => array_map(static function (int $id): Documento {
+            $d = new Documento();
+            $d->setId_doc($id);
+            $d->setId_tipo_doc(3);
+            $d->setId_ubi(77);
+            $d->setId_lugar(20);
+            return $d;
+        }, [11, 12, 13]));
+        $lugares = $this->createMock(LugarRepositoryInterface::class);
+        $lugares->method('findById')->willReturn(self::lugar(20, 'Estante 1'));
+
+        $r = (new DocumentosLibresData($equipajes, $docs, $lugares, $this->almacen('77'), $egms, $whereis))->execute(5, 3);
+
+        $this->assertSame([11, 13], array_column($r['a_valores'], 0), 'el 12 ya va en una maleta');
+    }
+
     public function test_sin_almacen_definido_avisa_y_no_busca_documentos(): void
     {
         $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
         $equipajes->method('findById')->willReturn(new Equipaje());
         $docs = $this->createMock(DocumentoRepositoryInterface::class);
         $docs->expects($this->never())->method('matching');
-        $uc = new DocumentosLibresData($equipajes, $docs, $this->createMock(LugarRepositoryInterface::class), $this->almacen(null));
+        $uc = new DocumentosLibresData($equipajes, $docs, $this->createMock(LugarRepositoryInterface::class), $this->almacen(null), $this->createMock(EgmRepositoryInterface::class), $this->createMock(WhereisRepositoryInterface::class));
 
         $r = $uc->execute(5, 3);
 

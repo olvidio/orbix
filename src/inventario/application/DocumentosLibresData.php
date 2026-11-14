@@ -6,9 +6,13 @@ namespace src\inventario\application;
 
 use src\inventario\application\services\AlmacenInventarioService;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\criteria\DocumentoField as DocF;
+use src\inventario\domain\criteria\EgmField as EgmF;
+use src\inventario\domain\criteria\WhereisField as WhF;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 
@@ -18,10 +22,9 @@ use src\shared\domain\criteria\Filter;
  * Sucesor de la lógica del controlador `lista_docs_libres.php` (fase 5, paso 5.2).
  * - El almacén es el centro de inventario definido en los parámetros de configuración
  *   ({@see AlmacenInventarioService}); si falta, la respuesta es solo un `aviso_txt`.
- * - Pendiente de decisión (duda 13 de la sección 6b del plan de tests): pese al nombre, **no** se
- *   descartan los documentos que ya están en otro equipaje de las mismas fechas: el controlador
- *   calculaba esos documentos ocupados y no los usaba (así desde que se creó el módulo). Ese cálculo,
- *   que no tenía efecto, se ha quitado.
+ * - Solo se ofrecen los documentos **libres**: se descartan los que ya van en este equipaje o en otro
+ *   cuyas fechas se cruzan con las suyas (duda 13 de la sección 6b del plan de tests). Antes el
+ *   controlador calculaba esos documentos ocupados y no los usaba, así que se ofrecían todos.
  */
 final class DocumentosLibresData
 {
@@ -30,19 +33,23 @@ final class DocumentosLibresData
         private DocumentoRepositoryInterface $documentoRepository,
         private LugarRepositoryInterface $lugarRepository,
         private AlmacenInventarioService $almacen,
+        private EgmRepositoryInterface $egmRepository,
+        private WhereisRepositoryInterface $whereisRepository,
     ) {
     }
 
     /** @return array{a_valores: array<int, array<int, mixed>>}|array{aviso_txt: string}|array{} */
     public function execute(int $idEquipaje, int $idTipoDoc): array
     {
-        if ($this->equipajeRepository->findById($idEquipaje) === null) {
+        $oEquipaje = $this->equipajeRepository->findById($idEquipaje);
+        if ($oEquipaje === null) {
             return [];
         }
         $idUbiAlmacen = $this->almacen->idUbi();
         if ($idUbiAlmacen === null) {
             return ['aviso_txt' => $this->almacen->avisoSinDefinir()];
         }
+        $ocupados = $this->documentosOcupados($idEquipaje, $oEquipaje->getF_ini()?->getIso(), $oEquipaje->getF_fin()?->getIso());
         $valores = [];
         $d = 0;
         $cDocumentos = $this->documentoRepository->matching(Criteria::create()
@@ -50,6 +57,9 @@ final class DocumentosLibresData
             ->andWhere(Filter::eq(DocF::IdUbi, $idUbiAlmacen)));
         foreach ($cDocumentos as $oDocumento) {
             $d++;
+            if (isset($ocupados[(int) $oDocumento->getId_doc()])) {
+                continue;
+            }
             $oLugar = $this->lugarRepository->findById((int) $oDocumento->getId_lugar());
             if ($oLugar === null) {
                 continue;
@@ -58,5 +68,33 @@ final class DocumentosLibresData
         }
 
         return ['a_valores' => $valores];
+    }
+
+    /**
+     * Documentos que ya van en alguna maleta de este equipaje o de otro con fechas que se cruzan.
+     *
+     * @return array<int, true> id_doc => true
+     */
+    private function documentosOcupados(int $idEquipaje, ?string $fIniIso, ?string $fFinIso): array
+    {
+        $idsEquipaje = [$idEquipaje];
+        if (!empty($fIniIso) && !empty($fFinIso)) {
+            foreach ($this->equipajeRepository->getEquipajesCoincidentes($fIniIso, $fFinIso) as $id) {
+                $idsEquipaje[] = (int) $id;
+            }
+        }
+        $idsEgm = [];
+        foreach ($this->egmRepository->matching(Criteria::create()->where(Filter::in(EgmF::IdEquipaje, array_values(array_unique($idsEquipaje))))) as $oEgm) {
+            $idsEgm[] = (int) $oEgm->getId_item();
+        }
+        if ($idsEgm === []) {
+            return [];
+        }
+        $ocupados = [];
+        foreach ($this->whereisRepository->matching(Criteria::create()->where(Filter::in(WhF::IdItemEgm, $idsEgm))) as $oWhereis) {
+            $ocupados[(int) $oWhereis->getId_doc()] = true;
+        }
+
+        return $ocupados;
     }
 }

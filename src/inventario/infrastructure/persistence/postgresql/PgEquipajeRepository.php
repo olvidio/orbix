@@ -44,11 +44,12 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
-        $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
-			WHERE (f_ini BETWEEN :ini AND :fin)
-		   		OR (f_fin BETWEEN :ini2 AND :fin2)
+        // Dos periodos se cruzan si cada uno empieza antes de que acabe el otro. (Antes solo se miraba
+        // si el inicio o el fin del equipaje caían dentro del periodo: uno que lo abarcara entero no salía.)
+        $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla
+			WHERE f_ini <= :fin AND f_fin >= :ini
 			ORDER BY nom_equipaje";
-        $params = ['ini' => $f_ini_iso, 'fin' => $f_fin_iso, 'ini2' => $f_ini_iso, 'fin2' => $f_fin_iso];
+        $params = ['ini' => $f_ini_iso, 'fin' => $f_fin_iso];
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
