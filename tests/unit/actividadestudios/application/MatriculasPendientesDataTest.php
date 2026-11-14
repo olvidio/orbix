@@ -12,6 +12,9 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
+use Tests\support\DescribeCriteria;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 
@@ -31,7 +34,7 @@ final class MatriculasPendientesDataTest extends TestCase
         $finder = $this->createMock(PersonaFinderService::class);
         $finder->expects($this->never())->method('findPersonaParaListado');
 
-        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder);
+        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder, $this->createMock(PersonaNotaDlRepositoryInterface::class));
 
         $out = $useCase->execute();
         $this->assertSame('', $out['msg_err']);
@@ -68,7 +71,7 @@ final class MatriculasPendientesDataTest extends TestCase
         $asigRepo = $this->createMock(AsignaturaRepositoryInterface::class);
         $asigRepo->method('findById')->with(3000)->willReturn($oAsig);
 
-        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder);
+        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder, $this->createMock(PersonaNotaDlRepositoryInterface::class));
 
         $out = $useCase->execute();
         $this->assertSame('', $out['msg_err']);
@@ -121,7 +124,7 @@ final class MatriculasPendientesDataTest extends TestCase
             [3001, $oAsig2],
         ]);
 
-        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder);
+        $useCase = new MatriculasPendientesData($matRepo, $asigRepo, $actRepo, $finder, $this->createMock(PersonaNotaDlRepositoryInterface::class));
 
         $out = $useCase->execute();
         $this->assertCount(2, $out['a_valores']);
@@ -156,6 +159,7 @@ final class MatriculasPendientesDataTest extends TestCase
             $this->createMock(AsignaturaRepositoryInterface::class),
             $this->createMock(ActividadAllRepositoryInterface::class),
             $finder,
+            $this->createMock(PersonaNotaDlRepositoryInterface::class),
         );
 
         $out = $useCase->execute();
@@ -194,11 +198,58 @@ final class MatriculasPendientesDataTest extends TestCase
             $this->createMock(AsignaturaRepositoryInterface::class),
             $actRepo,
             $finder,
+            $this->createMock(PersonaNotaDlRepositoryInterface::class),
         );
 
         $out = $useCase->execute();
         $this->assertSame([], $out['a_valores']);
         $this->assertSame(1, substr_count($out['msg_err'], 'actividad con id: 200'));
         $this->assertSame(1, substr_count($out['msg_err'], 'alumno id_nom: 100'));
+    }
+
+    /**
+     * Persona que ya no está: la matrícula pendiente se borra, salvo que tenga acta y su nota no esté
+     * guardada en `e_notas_dl` (duda 18 del plan de tests: antes se borraban todas).
+     */
+    public function test_persona_no_encontrada_borra_la_matricula_salvo_con_acta_y_sin_nota(): void
+    {
+        $matricula = function (int $idAsignatura, ?string $acta): Matricula {
+            $m = $this->createMock(Matricula::class);
+            $m->method('getId_nom')->willReturn(100);
+            $m->method('getId_activ')->willReturn(200);
+            $m->method('getIdAsignaturaVo')->willReturn(new AsignaturaId($idAsignatura));
+            $m->method('isPreceptor')->willReturn(false);
+            $m->method('getActa')->willReturn($acta);
+            return $m;
+        };
+        $sinActa = $matricula(3000, null);
+        $conActaYNota = $matricula(3001, 'dlb 1/25');
+        $conActaSinNota = $matricula(3002, 'dlb 2/25');
+
+        $borradas = [];
+        $matRepo = $this->createMock(MatriculaDlRepositoryInterface::class);
+        $matRepo->method('getMatriculasPendientes')->willReturn([$sinActa, $conActaYNota, $conActaSinNota]);
+        $matRepo->method('Eliminar')->willReturnCallback(function (Matricula $m) use (&$borradas): bool {
+            $borradas[] = $m->getIdAsignaturaVo()->value();
+            return true;
+        });
+        $finder = $this->createMock(PersonaFinderService::class);
+        $finder->method('findPersonaParaListado')->willReturn(null);
+        $notas = $this->createMock(PersonaNotaDlRepositoryInterface::class);
+        $notas->method('matching')->willReturnCallback(static fn ($c): array
+            => DescribeCriteria::filtros($c) === ['id_nom eq 100', 'id_asignatura eq 3001'] ? [new PersonaNota()] : []);
+
+        $out = (new MatriculasPendientesData(
+            $matRepo,
+            $this->createMock(AsignaturaRepositoryInterface::class),
+            $this->createMock(ActividadAllRepositoryInterface::class),
+            $finder,
+            $notas,
+        ))->execute();
+
+        $this->assertSame([3000, 3001], $borradas, 'la de acta sin nota guardada se conserva');
+        $this->assertSame([], $out['a_valores']);
+        $this->assertStringContainsString('asignatura 3002, acta dlb 2/25', $out['msg_err']);
+        $this->assertStringNotContainsString('asignatura 3001', $out['msg_err']);
     }
 }

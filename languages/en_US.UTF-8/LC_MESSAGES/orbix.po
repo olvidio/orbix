@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 17:05+0100\n"
+"POT-Creation-Date: 2026-11-14 18:45+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -9944,7 +9944,7 @@ msgstr "Y"
 #: src/encargossacd/application/services/EncargoAplicacionService.php:454
 #: src/encargossacd/application/services/EncargoAplicacionService.php:502
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php:27
-#: src/inventario/application/DocumentosAsignar.php:122
+#: src/inventario/application/DocumentosAsignar.php:135
 #: src/inventario/application/DocumentosModificar.php:86
 #: src/inventario/application/DocumentosTrasladar.php:43
 #: src/inventario/application/EquipajeMaletas.php:55
@@ -12850,7 +12850,7 @@ msgstr "there is no registration of this person"
 #: src/actividadestudios/application/ListaClasesCaData.php:101
 #: src/actividadestudios/application/MatriculaNueva.php:86
 #: src/actividadestudios/application/MatriculasListaData.php:135
-#: src/actividadestudios/application/MatriculasPendientesData.php:72
+#: src/actividadestudios/application/MatriculasPendientesData.php:89
 #: src/actividadestudios/application/PlanEstudiosCaData.php:111
 #: src/actividadestudios/application/PlanEstudiosCaData.php:193
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
@@ -12960,6 +12960,15 @@ msgstr "no record (%d)"
 #: src/actividadestudios/application/MatriculasListaOtrasRData.php:218
 msgid "No se pudo determinar el esquema región STGR de la sesión."
 msgstr "Failed to determine the STGR region schema of the session."
+
+#: src/actividadestudios/application/MatriculasPendientesData.php:71
+#, php-format
+msgid ""
+"La matrícula de la persona %1$s (asignatura %2$s, acta %3$s) no tiene nota "
+"guardada: no se borra"
+msgstr ""
+"The enrolment of person %1$s (subject %2$s, record %3$s) has no saved grade: "
+"it is not deleted"
 
 #: src/actividadestudios/application/PlanEstudiosCaData.php:172
 #: src/asistentes/application/ListaEstCtrData.php:151
@@ -16132,12 +16141,12 @@ msgstr "Mass zones"
 msgid "se han eliminado %s sacd de encargos inexistentes \n"
 msgstr "%s sacd records have been removed from non-existent assignments\n"
 
-#: src/inventario/application/DocumentosAsignar.php:76
-#: src/inventario/application/DocumentosAsignar.php:88
+#: src/inventario/application/DocumentosAsignar.php:78
+#: src/inventario/application/DocumentosAsignar.php:101
 msgid "No se encuentra el documento"
 msgstr "The document cannot be found"
 
-#: src/inventario/application/DocumentosAsignar.php:97
+#: src/inventario/application/DocumentosAsignar.php:110
 #: src/inventario/application/DocumentosModificar.php:60
 #: src/inventario/application/EquipajeNuevo.php:31
 #: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:45
@@ -16189,8 +16198,10 @@ msgid "Para imprimir inventario"
 msgstr "Print inventory"
 
 #: src/inventario/application/services/AlmacenInventarioService.php:39
-msgid "Falta definir el almacén de inventario en los parámetros de configuración."
-msgstr "The inventory warehouse has not been defined in the configuration parameters."
+msgid ""
+"Falta definir el almacén de inventario en los parámetros de configuración."
+msgstr ""
+"The inventory warehouse has not been defined in the configuration parameters."
 
 #: src/inventario/application/support/NombreDocumento.php:31
 msgid "Actual"

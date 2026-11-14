@@ -6,6 +6,10 @@ use RuntimeException;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\criteria\PersonaNotaField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\application\services\PersonaListadoLookup;
 use src\ubis\domain\RegionStgrAviso;
@@ -25,6 +29,7 @@ final readonly class MatriculasPendientesData
         private AsignaturaRepositoryInterface   $asignaturaRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private PersonaFinderService            $personaFinderService,
+        private PersonaNotaDlRepositoryInterface $personaNotaDlRepository,
     ) {
     }
 
@@ -57,7 +62,19 @@ final readonly class MatriculasPendientesData
 
             $oPersona = $personaLookup->resolver($idNom, $msgErr, $problemasRegionStgr);
             if ($oPersona === null) {
-                // borrar la matricula
+                // La persona ya no está (o no está en situación «A»): la matrícula pendiente se borra.
+                // Pero si tiene acta debería tener también nota: solo se borra si la nota está en
+                // `e_notas_dl`; si no, se conserva y se avisa (duda 18 del plan de tests).
+                $acta = trim((string) $oMatricula->getActa());
+                if ($acta !== '' && !$this->tieneNota($idNom, $idAsignatura)) {
+                    $msgErr .= '<br>' . sprintf(
+                        _("La matrícula de la persona %1\$s (asignatura %2\$s, acta %3\$s) no tiene nota guardada: no se borra"),
+                        (string) $idNom,
+                        (string) $idAsignatura,
+                        htmlspecialchars($acta, ENT_QUOTES, 'UTF-8'),
+                    );
+                    continue;
+                }
                 $this->matriculaDlRepository->Eliminar($oMatricula);
                 continue;
             }
@@ -94,6 +111,17 @@ final readonly class MatriculasPendientesData
             'aviso' => RegionStgrAviso::formatear($problemasRegionStgr),
             'a_valores' => $aValores,
         ];
+    }
+
+    /** ¿Hay nota de esa asignatura para la persona en `e_notas_dl`? */
+    private function tieneNota(int $idNom, int $idAsignatura): bool
+    {
+        return $this->personaNotaDlRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(PersonaNotaField::IdNom, $idNom))
+                ->andWhere(Filter::eq(PersonaNotaField::IdAsignatura, $idAsignatura))
+                ->limit(1)
+        ) !== [];
     }
 
     /**

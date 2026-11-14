@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 17:05+0100\n"
+"POT-Creation-Date: 2026-11-14 18:45+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -9946,7 +9946,7 @@ msgstr "i"
 #: src/encargossacd/application/services/EncargoAplicacionService.php:454
 #: src/encargossacd/application/services/EncargoAplicacionService.php:502
 #: src/encargossacd/infrastructure/ui/http/controllers/sacd_ausencias_update.php:27
-#: src/inventario/application/DocumentosAsignar.php:122
+#: src/inventario/application/DocumentosAsignar.php:135
 #: src/inventario/application/DocumentosModificar.php:86
 #: src/inventario/application/DocumentosTrasladar.php:43
 #: src/inventario/application/EquipajeMaletas.php:55
@@ -12869,7 +12869,7 @@ msgstr "no hi ha cap matrícula d'aquesta persona"
 #: src/actividadestudios/application/ListaClasesCaData.php:101
 #: src/actividadestudios/application/MatriculaNueva.php:86
 #: src/actividadestudios/application/MatriculasListaData.php:135
-#: src/actividadestudios/application/MatriculasPendientesData.php:72
+#: src/actividadestudios/application/MatriculasPendientesData.php:89
 #: src/actividadestudios/application/PlanEstudiosCaData.php:111
 #: src/actividadestudios/application/PlanEstudiosCaData.php:193
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
@@ -12978,6 +12978,15 @@ msgstr "sense fitxa (%d)"
 #: src/actividadestudios/application/MatriculasListaOtrasRData.php:218
 msgid "No se pudo determinar el esquema región STGR de la sesión."
 msgstr "No s'ha pogut determinar l'esquema regió STGR de la sessió."
+
+#: src/actividadestudios/application/MatriculasPendientesData.php:71
+#, php-format
+msgid ""
+"La matrícula de la persona %1$s (asignatura %2$s, acta %3$s) no tiene nota "
+"guardada: no se borra"
+msgstr ""
+"La matrícula de la persona %1$s (assignatura %2$s, acta %3$s) no té nota "
+"desada: no s'esborra"
 
 #: src/actividadestudios/application/PlanEstudiosCaData.php:172
 #: src/asistentes/application/ListaEstCtrData.php:151
@@ -16154,12 +16163,12 @@ msgstr "zones de misses"
 msgid "se han eliminado %s sacd de encargos inexistentes \n"
 msgstr "s'han eliminat %s sacd de encàrrecs inexistents \n"
 
-#: src/inventario/application/DocumentosAsignar.php:76
-#: src/inventario/application/DocumentosAsignar.php:88
+#: src/inventario/application/DocumentosAsignar.php:78
+#: src/inventario/application/DocumentosAsignar.php:101
 msgid "No se encuentra el documento"
 msgstr "No s'ha trobat el document"
 
-#: src/inventario/application/DocumentosAsignar.php:97
+#: src/inventario/application/DocumentosAsignar.php:110
 #: src/inventario/application/DocumentosModificar.php:60
 #: src/inventario/application/EquipajeNuevo.php:31
 #: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:45
@@ -16211,7 +16220,8 @@ msgid "Para imprimir inventario"
 msgstr "Per imprimir l'inventari"
 
 #: src/inventario/application/services/AlmacenInventarioService.php:39
-msgid "Falta definir el almacén de inventario en los parámetros de configuración."
+msgid ""
+"Falta definir el almacén de inventario en los parámetros de configuración."
 msgstr "Falta definir el magatzem d'inventari als paràmetres de configuració."
 
 #: src/inventario/application/support/NombreDocumento.php:31
