@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, borrarActividadSql, crearActividad, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, borrarActividadSql, crearActividad, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de asistentes (fase 3.3), por la interfaz:
@@ -67,7 +67,7 @@ test('asistente: apuntar a un numerario en una actividad y quitarlo', async ({ p
   await abrirPantalla(page, dossier, 'input.sel', true);
   const casillas = page.locator('#main input.sel');
   await expect(casillas, 'el asistente sale en la lista').toHaveCount(1);
-  await casillas.first().click({ force: true });
+  await marcarFila(page, casillas.first());
   const borrado = await esperarSrc(page, 'asistente_eliminar', () => page.locator('#main [onclick*="fnjs_borrar(this.form)"]').first().click());
   expect(borrado.success, borrado.mensaje).toBe(true);
   expect(dialogos.length, 'pide confirmación antes de borrar').toBeGreaterThan(0);

@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, elegirOpcion, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de cambios (fase 5.3), por la interfaz:
@@ -64,12 +64,13 @@ test('avisos de cambios de un usuario: añadir y eliminar', async ({ page }) => 
   const propiedad = main.locator(`#propiedades_obj input[type="checkbox"][name="${objeto}[]"]`).first();
   await expect(propiedad).toBeVisible({ timeout: 20_000 });
   await page.waitForLoadState('networkidle');
-  const faseRef = main.locator('#id_fase_ref');
-  await faseRef.selectOption((await opciones(faseRef))[0]);
   const avisoTipo = form.locator('#aviso_tipo');
   await avisoTipo.selectOption((await opciones(avisoTipo))[0]);
   await form.locator('[name="aviso_on"]').check();
   await propiedad.check();
+  // La fase, al final y comprobando que sigue elegida: la pantalla recarga ese desplegable cuando
+  // acaban de cargarse los del tipo de actividad.
+  await elegirOpcion(page, main.locator('#id_fase_ref'));
   const guardado = await esperarSrc(page, 'cambio_usuario_propiedad_pref_guardar_todas', () => main.locator('input[onclick*="fnjs_grabar_todo"]').click());
   expect(guardado.success, `${guardado.mensaje ?? ''} ${dialogos.join(' / ')}`).toBe(true);
   expect(avisos(), 'el aviso está en la BD').toBe('1');
@@ -83,7 +84,7 @@ test('avisos de cambios de un usuario: añadir y eliminar', async ({ page }) => 
   const casilla = main.locator('form#avisos input.sel');
   await expect(casilla).toHaveCount(1, { timeout: 20_000 });
   await sinErrorDeBackend(page);
-  await casilla.click({ force: true });
+  await marcarFila(page, casilla);
   const antes = dialogos.length;
   const borrado = await esperarSrc(page, 'cambio_usuario_objeto_pref_eliminar', () => main.locator('form#avisos [onclick*="fnjs_del_cambio"]').first().click());
   expect(borrado.success, borrado.mensaje).toBe(true);

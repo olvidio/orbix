@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de actividades (fase 3.3), por la interfaz:
@@ -81,7 +81,7 @@ test('actividad: alta, modificación y borrado desde el listado', async ({ page 
   const casillas = page.locator('#main input.sel');
   await expect(casillas, 'solo sale la actividad del test').toHaveCount(1);
   // La rejilla SlickGrid gestiona la casilla (re-pinta la fila): basta el clic.
-  await casillas.first().click({ force: true });
+  await marcarFila(page, casillas.first());
   const borrado = await esperarSrc(page, 'actividad_eliminar', () => page.locator('#main [onclick*="fnjs_borrar"]').first().click());
   expect(borrado.success, borrado.mensaje).toBe(true);
   expect(dialogos.length, 'pide confirmación antes de borrar').toBeGreaterThan(0);

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de ubis (fase 5.3), por la interfaz, con una casa de la dl:
@@ -59,7 +59,7 @@ test('casa de la dl: alta, modificación y borrado', async ({ page }) => {
   const abrirFicha = async () => {
     const casilla = main.locator('#seleccionados input.sel');
     await expect(casilla).toHaveCount(1, { timeout: 20_000 });
-    await casilla.click({ force: true });
+    await marcarFila(page, casilla);
     await main.locator('#seleccionados [onclick*="fnjs_modificar"]').first().click();
     const editar = main.locator('span.link_inv[onclick*="ubis_editar.php"]');
     await expect(editar).toBeVisible({ timeout: 20_000 });

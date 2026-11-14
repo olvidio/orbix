@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de usuarios (fase 3.4), por la interfaz:
@@ -60,7 +60,7 @@ test('usuario: alta, modificación y borrado', async ({ page }) => {
   await abrirPantalla(page, `frontend/usuarios/controller/usuario_lista.php?username=${USUARIO}`, 'input.sel', true);
   const casilla = page.locator('#main input.sel');
   await expect(casilla).toHaveCount(1);
-  await casilla.click({ force: true });
+  await marcarFila(page, casilla);
   const borrado = await esperarSrc(page, 'usuario_eliminar', () => page.locator('#main [onclick*="fnjs_eliminar()"]').first().click());
   expect(borrado.success, borrado.mensaje).toBe(true);
   expect(dialogos.length, 'pide confirmación antes de borrar').toBeGreaterThan(0);

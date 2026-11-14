@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, crearNumerario, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, crearNumerario, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de notas (fase 3.4), por la interfaz:
@@ -61,7 +61,7 @@ test('nota: añadir una asignatura superada a una persona y borrarla', async ({ 
   await abrirPantalla(page, dossier, 'input.sel', true);
   const casillas = page.locator('#main input.sel');
   await expect(casillas, 'la nota sale en la lista').toHaveCount(1);
-  await casillas.first().click({ force: true });
+  await marcarFila(page, casillas.first());
   const borrado = await esperarSrc(page, 'persona_nota_eliminar', () => page.locator('#main [onclick*="fnjs_borrar"]').first().click());
   expect(borrado.success, borrado.mensaje).toBe(true);
   expect(dialogos.length, 'pide confirmación antes de borrar').toBeGreaterThan(0);

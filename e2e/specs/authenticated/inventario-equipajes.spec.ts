@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de inventario (fase 5.3), por la interfaz:
@@ -53,7 +53,7 @@ test('equipaje: alta, valija, documentos, texto del listado y borrado', async ({
   const actividad = main.locator('#frm_sel_activ input[name="sel[]"]').first();
   await expect(actividad).toBeAttached({ timeout: 20_000 });
   await sinErrorDeBackend(page);
-  await actividad.click({ force: true });
+  await marcarFila(page, actividad);
   await main.locator('#frm_sel_activ [onclick*="fnjs_nombrar_equipaje"]').first().click();
   const nombre = main.locator('#frm_equipaje [name="nom_equipaje"]');
   await expect(nombre).toBeVisible({ timeout: 20_000 });
@@ -121,7 +121,7 @@ test('equipaje: alta, valija, documentos, texto del listado y borrado', async ({
   await quitar.click();
   const aQuitar = main.locator('#frm_del input[name="sel[]"]').last();
   await expect(aQuitar).toBeAttached({ timeout: 20_000 });
-  await aQuitar.click({ force: true });
+  await marcarFila(page, aQuitar);
   const quitado = await esperarSrc(page, 'equipajes_del_doc', () => main.locator('#frm_del [onclick*="fnjs_del_doc"]').first().click());
   expect(quitado.success, quitado.mensaje).toBe(true);
   expect(Number(enValija()), 'el documento ya no está en la valija').toBe(alCrear);

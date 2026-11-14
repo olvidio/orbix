@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de encargos de sacd (fase 5.3), por la interfaz:
@@ -33,7 +33,7 @@ test('encargo: alta, modificación y borrado desde la lista', async ({ page }) =
     const casilla = main.locator('form#seleccionados input.sel');
     await expect(casilla).toHaveCount(1, { timeout: 20_000 });
     await sinErrorDeBackend(page);
-    await casilla.click({ force: true });
+    await marcarFila(page, casilla);
   };
 
   // Los encargos que hay antes de empezar: al final tienen que seguir todos y ser los mismos (el alta

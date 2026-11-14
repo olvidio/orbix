@@ -1,4 +1,4 @@
-import { expect, type Page, type Response } from '@playwright/test';
+import { expect, type Locator, type Page, type Response } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { diagnoseBackendHtml } from './backend-diagnostics';
 import { indexPathForE2e } from './grupmenu';
@@ -38,6 +38,9 @@ export async function abrirApp(page: Page): Promise<Incidencias> {
   pilaNueva.add(page);
   return inc;
 }
+
+/** Textos de los `alert`/`confirm` aceptados en cada página (para los mensajes de error). */
+const dialogosDe = new WeakMap<Page, string[]>();
 
 /** Páginas cuya próxima `abrirPantalla` empieza una pila de navegación nueva (ver abajo). */
 const pilaNueva = new WeakSet<Page>();
@@ -83,7 +86,13 @@ export async function sinErrorDeBackend(page: Page): Promise<void> {
 export async function esperarSrc(page: Page, ruta: string, accion: () => Promise<unknown>): Promise<{ success?: boolean; mensaje?: string; data?: unknown }> {
   const enc = encodeURIComponent(ruta);
   const [resp] = await Promise.all([
-    page.waitForResponse((r) => r.url().includes(ruta) || r.url().includes(enc), { timeout: 30_000 }),
+    page.waitForResponse((r) => r.url().includes(ruta) || r.url().includes(enc), { timeout: 30_000 }).catch(async (e) => {
+      // Sin respuesta: decir qué endpoint se esperaba y qué hay en pantalla (un `alert` de validación
+      // o un formulario que no llegó a enviarse no dejan otro rastro).
+      const texto = (await page.locator('#main').innerText().catch(() => '')).replace(/\s+/g, ' ').slice(0, 300);
+      const avisos = (dialogosDe.get(page) ?? []).slice(-3).join(' / ');
+      throw new Error(`no hubo petición a ${ruta} (${e instanceof Error ? e.message.split('\n')[0] : e}). Últimos avisos: ${avisos || '—'}. En pantalla: ${texto}`);
+    }),
     accion(),
   ]);
   const body = await resp.text();
@@ -94,9 +103,48 @@ export async function esperarSrc(page: Page, ruta: string, accion: () => Promise
   }
 }
 
+/**
+ * Marca la casilla de una fila de una lista y comprueba que sigue marcada.
+ *
+ * Las listas son rejillas SlickGrid que pueden repintar sus filas justo después de cargarse: un clic
+ * dado antes del repintado se pierde (la casilla nueva sale sin marcar) y el botón de la lista avisa
+ * «no ha seleccionado ninguna fila» sin enviar nada. Era la causa de los fallos intermitentes de los
+ * specs que modifican o borran desde una lista.
+ */
+export async function marcarFila(page: Page, casilla: Locator): Promise<void> {
+  await expect(async () => {
+    if (!(await casilla.isChecked())) {
+      await casilla.click({ force: true });
+    }
+    await page.waitForTimeout(200);
+    expect(await casilla.isChecked(), 'la casilla sigue marcada').toBe(true);
+  }).toPass({ timeout: 15_000 });
+}
+
+/**
+ * Elige la primera opción con valor de un desplegable (o `valor`) y comprueba que sigue elegida.
+ *
+ * Hay desplegables que la pantalla vuelve a pedir por AJAX cuando cambia otro campo o cuando acaban
+ * de cargarse los desplegables encadenados (p. ej. las fases de referencia de un aviso): lo elegido
+ * antes de esa recarga se pierde y el guardado avisa de que falta el dato.
+ */
+export async function elegirOpcion(page: Page, select: Locator, valor?: string): Promise<string> {
+  let elegido = '';
+  await expect(async () => {
+    elegido = valor ?? (await select.locator('option').evaluateAll((os) => os.map((o) => (o as HTMLOptionElement).value).filter((v) => v !== '')))[0] ?? '';
+    expect(elegido, 'el desplegable tiene alguna opción').not.toBe('');
+    await select.selectOption(elegido);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(300);
+    expect(await select.inputValue(), 'la opción sigue elegida').toBe(elegido);
+  }).toPass({ timeout: 20_000 });
+  return elegido;
+}
+
 /** Acepta el siguiente `confirm`/`alert` y devuelve su texto. */
 export function aceptarDialogos(page: Page): string[] {
   const textos: string[] = [];
+  dialogosDe.set(page, textos);
   page.on('dialog', async (d) => {
     textos.push(d.message());
     await d.accept();
