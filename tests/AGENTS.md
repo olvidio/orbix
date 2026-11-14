@@ -170,6 +170,19 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 
 - `DateTimeLocal::createFromLocal()` usa el formato del **idioma del usuario** (en inglés `n/j/Y`). No sirve para textos con formato fijo (ISO de la BD, `j/m/Y` de la BDU): con otro idioma cambia día y mes o desborda a otro año. Para esos textos, parsear el formato conocido (ejemplos: `PersonaBDU::getFechaNacimientoVo()`, `SincroDB::fechaIncorporacion()`) y probarlo con la sesión en `en_US`.
 
+## Los tests escriben en la BD de desarrollo: no pisar filas reales
+
+Los tests de integración crean filas, las guardan y las borran en la BD de desarrollo. `Guardar` actualiza la fila si el id ya existe, así que **un test que use un id que ya está en la tabla sobrescribe una fila real y, al limpiar, la borra**. Pasa de dos maneras:
+
+- **Secuencia por detrás de los ids reales.** `comun` y `sv-e` son réplicas y al restaurarlas las secuencias quedan sin ajustar (casi todas en 1): `getNewId()` devuelve ids que ya existen. Tras restaurar hay que poner cada secuencia al máximo de su tabla.
+- **Ids fijos** en la factory o en el test que coinciden con datos reales.
+
+En noviembre de 2026 se perdieron así, sin que fallara ningún test, diseños de procesos, usuarios, preferencias y avisos de la BD de desarrollo (hubo que recrearla). Por eso:
+
+- **Lanzar PHPUnit con `php tools/qa/phpunit_protegido.php <ruta>`** (mismos argumentos que PHPUnit). No ejecuta nada si hay secuencias atrasadas en `comun` / `sv-e`, cuenta las filas de todas las tablas antes y después, y termina con código 1 si alguna tabla ha perdido filas. No detecta una fila real sobrescrita que no se llegue a borrar.
+- En un test nuevo, el id de una fila propia sale de `getNewId()` (o de un rango que no pueda existir) y se comprueba que no existe antes de guardar. No usar ids «pequeños» escritos a mano.
+- Si la comprobación falla: reponer las filas desde las copias (`~/trasvases/*.sql`) y corregir el test que las borró.
+
 ## Ejecutar PHPUnit
 
 - PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.
