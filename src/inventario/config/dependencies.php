@@ -1,5 +1,6 @@
 <?php
 
+use src\inventario\application\AlmacenOpcionesData;
 use src\inventario\application\ColeccionesOpcionesData;
 use src\inventario\application\EquipajeEliminar;
 use src\inventario\application\InventarioCssInlineData;
@@ -24,6 +25,7 @@ use src\inventario\application\MaletasPosiblesData;
 use src\inventario\application\EquipajesMovimientosData;
 use src\inventario\application\InventarioDocumentosData;
 use src\inventario\application\TipoDocOpcionesData;
+use src\inventario\application\services\AlmacenInventarioService;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -59,6 +61,8 @@ return [
     UbiInventarioRepositoryInterface::class => autowire(PgUbiInventarioRepository::class),
     WhereisRepositoryInterface::class => autowire(PgWhereisRepository::class),
 
+    AlmacenInventarioService::class => autowire(AlmacenInventarioService::class),
+    AlmacenOpcionesData::class => autowire(AlmacenOpcionesData::class),
     ColeccionesOpcionesData::class => autowire(ColeccionesOpcionesData::class),
     EquipajeEliminar::class => autowire(EquipajeEliminar::class),
     InventarioCssInlineData::class => autowire(InventarioCssInlineData::class),

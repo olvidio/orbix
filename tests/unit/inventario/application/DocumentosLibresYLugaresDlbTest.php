@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\unit\inventario\application;
 
 use PHPUnit\Framework\TestCase;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\configuracion\domain\entity\ConfigSchema;
 use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\LugaresDeDlbData;
+use src\inventario\application\services\AlmacenInventarioService;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
@@ -34,6 +37,23 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
         return $l;
     }
 
+    /** Almacén según el parámetro de configuración (null: sin definir). */
+    private function almacen(?string $valor): AlmacenInventarioService
+    {
+        $config = $this->createMock(ConfigSchemaRepositoryInterface::class);
+        $config->method('findById')->willReturnCallback(static function (string $parametro) use ($valor): ?ConfigSchema {
+            if ($valor === null || $parametro !== AlmacenInventarioService::PARAMETRO) {
+                return null;
+            }
+            $c = new ConfigSchema();
+            $c->setParametro($parametro);
+            $c->setValor($valor);
+            return $c;
+        });
+
+        return new AlmacenInventarioService($config);
+    }
+
     public function test_documentos_del_almacen_de_un_tipo(): void
     {
         $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
@@ -54,13 +74,27 @@ final class DocumentosLibresYLugaresDlbTest extends TestCase
         });
         $lugares = $this->createMock(LugarRepositoryInterface::class);
         $lugares->method('findById')->willReturnCallback(static fn (int $id): ?Lugar => $id === 20 ? self::lugar(20, 'Estante 1') : null);
-        $uc = new DocumentosLibresData($equipajes, $docs, $lugares);
+        $uc = new DocumentosLibresData($equipajes, $docs, $lugares, $this->almacen('77'));
 
         $r = $uc->execute(5, 3);
 
-        $this->assertSame(['id_tipo_doc eq 3', 'id_ubi eq ' . DocumentosLibresData::ID_UBI_ALMACEN], $consulta);
+        $this->assertSame(['id_tipo_doc eq 3', 'id_ubi eq 77'], $consulta, 'el almacén es el del parámetro de configuración');
         $this->assertSame([1 => [11, 'Estante 1', 'a'], 3 => [13, 'Estante 1', null]], $r['a_valores'], 'sin el de lugar inexistente');
         $this->assertSame([], $uc->execute(6, 3), 'equipaje inexistente');
+    }
+
+    public function test_sin_almacen_definido_avisa_y_no_busca_documentos(): void
+    {
+        $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
+        $equipajes->method('findById')->willReturn(new Equipaje());
+        $docs = $this->createMock(DocumentoRepositoryInterface::class);
+        $docs->expects($this->never())->method('matching');
+        $uc = new DocumentosLibresData($equipajes, $docs, $this->createMock(LugarRepositoryInterface::class), $this->almacen(null));
+
+        $r = $uc->execute(5, 3);
+
+        $this->assertSame(['aviso_txt'], array_keys($r));
+        $this->assertNotSame('', $r['aviso_txt']);
     }
 
     private function lugaresDlb(): LugaresDeDlbData

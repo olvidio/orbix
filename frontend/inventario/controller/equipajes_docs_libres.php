@@ -17,9 +17,14 @@ $a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$a_valores = InventarioPayload::docsLibresRows(InventarioPayload::postPayload($data)['a_valores'] ?? []);
+$payload = InventarioPayload::postPayload($data);
+$a_valores = InventarioPayload::docsLibresRows($payload['a_valores'] ?? []);
 
 $txt = '<br>';
+$aviso_txt = InventarioPayload::avisoTxt($payload);
+if ($aviso_txt !== '') {
+    $txt .= htmlspecialchars($aviso_txt, ENT_QUOTES, 'UTF-8') . '<br>';
+}
 foreach ($a_valores as $a_valor) {
     $id = $a_valor['sigla'];
     $txt .= "<input class='sel' type='checkbox' name='sel[]' id='a$id' value='$id'>";

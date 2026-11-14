@@ -182,6 +182,21 @@ $oHashC1->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar($parametro)]);
 
 $a_campos['oHashC1'] = $oHashC1;
 
+// ----------- Inventario: centro que hace de almacén -------------------
+// El backend solo lo envía si el esquema tiene instalado inventario.
+$almacen = ConfiguracionPayload::parametrosAlmacenInventario($data);
+$a_campos['almacen_inventario'] = null;
+if ($almacen !== null) {
+    $oHashAlm = new HashF();
+    $oHashAlm->setUrl($url);
+    $oHashAlm->setCamposForm('valor');
+    $oHashAlm->setArrayCamposHidden(['ctx_guardar' => $ctxGuardar('inventario_ubi_almacen')]);
+    $a_campos['oHashAlm'] = $oHashAlm;
+
+    $oDesplAlmacen = Desplegable::desdeOpciones($almacen['opciones'], 'valor');
+    $oDesplAlmacen->setOpcion_sel($almacen['selected']);
+    $a_campos['almacen_inventario'] = $oDesplAlmacen;
+}
 
 $oView = new ViewNewTwig('frontend/configuracion/controller');
 $oView->renderizar('parametros.html.twig', $a_campos);

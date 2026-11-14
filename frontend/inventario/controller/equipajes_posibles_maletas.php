@@ -15,7 +15,9 @@ $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 $url_backend = '/src/inventario/lista_equipajes_posibles_maletas';
 $a_campos_backend = ['id_equipaje' => $Qid_equipaje];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$view = InventarioPayload::posiblesMaletasFromPayload(InventarioPayload::postPayload($data));
+$payload = InventarioPayload::postPayload($data);
+$view = InventarioPayload::posiblesMaletasFromPayload($payload);
+$aviso_txt = InventarioPayload::avisoTxt($payload);
 
 $a_opciones = $view['a_opciones'];
 $new_id_grupo = $view['new_id_grupo'];
@@ -44,6 +46,9 @@ echo $oHash->getCamposHtml();
 echo '<br>';
 echo _("valija") . $new_id_grupo;
 echo $oDespl->desplegable();
+if ($aviso_txt !== '') {
+    echo '<br>' . htmlspecialchars($aviso_txt, ENT_QUOTES, 'UTF-8');
+}
 echo '</form>';
 echo "<span id='docs_grupo_$new_id_grupo'>";
 echo '</span>';

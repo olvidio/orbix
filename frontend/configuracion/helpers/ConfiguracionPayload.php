@@ -100,6 +100,26 @@ final class ConfiguracionPayload
     }
 
     /**
+     * Desplegable del centro de inventario que hace de almacén; null si el backend no lo envía
+     * (esquema sin inventario).
+     *
+     * @param array<int|string, mixed> $data
+     * @return array{opciones: array<int|string, string>, selected: string}|null
+     */
+    public static function parametrosAlmacenInventario(array $data): ?array
+    {
+        $raw = $data['almacen_inventario'] ?? null;
+        if (!is_array($raw)) {
+            return null;
+        }
+
+        return [
+            'opciones' => NotasFormSupport::desplegableOpciones($raw['opciones'] ?? []),
+            'selected' => PayloadCoercion::string($raw['selected'] ?? ''),
+        ];
+    }
+
+    /**
      * @param array<int|string, mixed> $data
      * @return array<string, mixed>
      */

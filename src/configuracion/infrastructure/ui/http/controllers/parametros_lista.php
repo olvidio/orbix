@@ -1,6 +1,9 @@
 <?php
 
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\inventario\application\AlmacenOpcionesData;
+use src\inventario\application\services\AlmacenInventarioService;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
@@ -220,6 +223,14 @@ $valor = $oConfigSchema?->getValorVo()?->value();
 
 $a_campos['ini_contador_certificados'] = $valor;
 
+// ----------- Inventario: centro que hace de almacén -------------------
+// Solo si el esquema tiene instalado inventario; sin `almacen_inventario` la pantalla no lo muestra.
+if (ConfigGlobal::is_app_installed('inventario')) {
+    /** @var AlmacenOpcionesData $almacenOpciones */
+    $almacenOpciones = DependencyResolver::get(AlmacenOpcionesData::class);
+    $a_campos['almacen_inventario'] = $almacenOpciones->execute();
+}
+
 $parametrosCtx = [
     'curso_crt',
     'curso_stgr',
@@ -236,6 +247,7 @@ $parametrosCtx = [
     'ambito',
     'gesCalendario',
     'ini_contador_certificados',
+    AlmacenInventarioService::PARAMETRO,
 ];
 $ctx_guardar = [];
 foreach ($parametrosCtx as $nombreParametro) {

@@ -145,6 +145,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | usuarios | `usuarios-alta-baja.spec.ts` | nuevo usuario con contraseña → modificar → borrar desde la lista filtrada |
 | usuarios (sin sesión) | `recuperar-password.spec.ts` | pedir el correo (confirmación, correo enmascarado, la contraseña no cambia) → enlace de la cola `cola_mails` → contraseña nueva → login; el enlace no se reutiliza |
 | usuarios (sin sesión) | `recuperar-2fa.spec.ts` | pedir el correo de 2FA → enlace → confirmar → 2FA desactivado sin abrir sesión; el enlace no se reutiliza |
+| configuracion | `configuracion-almacen-inventario.spec.ts` | parámetros → elegir otro centro de inventario como almacén → guardar → sale elegido al recargar (repone el valor que había) |
 | inventario | `inventario-equipajes.spec.ts` | hacer equipaje (periodo → casa → actividad → nombre) → nueva valija de un lugar → añadir y quitar un documento → eliminar la valija → texto de cabecera del listado → eliminar el equipaje |
 | ubis | `ubis-alta-baja.spec.ts` | casa de la dl: búsqueda sin resultados → ficha nueva → guardar → tabla → modificar → ficha → guardar → ficha → eliminar → vuelve a la búsqueda |
 | procesos | `procesos-fases.spec.ts` | crear una actividad (tipo con proceso coherente en dev) → fases de la actividad → marcar una fase con observación → desmarcarla. Se salta si el diseño del proceso depende de fases que no tiene |

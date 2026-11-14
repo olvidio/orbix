@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\unit\inventario\application;
 
 use PHPUnit\Framework\TestCase;
-use src\inventario\application\DocumentosLibresData;
 use src\inventario\application\EquipajeEgmData;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\configuracion\domain\entity\ConfigSchema;
 use src\inventario\application\MaletasPosiblesData;
+use src\inventario\application\services\AlmacenInventarioService;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
@@ -118,6 +120,23 @@ final class EquipajeEgmYMaletasTest extends TestCase
         $this->assertSame(['id_grupo' => null, 'id_lugar' => 21, 'texto' => null, 'nom_lugar' => 'Armario'], $r['a_egm'][2], 'maleta sin grupo: sin documentos ni cápsulas');
     }
 
+    /** Almacén según el parámetro de configuración (null: sin definir). */
+    private function almacen(?string $valor): AlmacenInventarioService
+    {
+        $config = $this->createMock(ConfigSchemaRepositoryInterface::class);
+        $config->method('findById')->willReturnCallback(static function (string $parametro) use ($valor): ?ConfigSchema {
+            if ($valor === null || $parametro !== AlmacenInventarioService::PARAMETRO) {
+                return null;
+            }
+            $c = new ConfigSchema();
+            $c->setParametro($parametro);
+            $c->setValor($valor);
+            return $c;
+        });
+
+        return new AlmacenInventarioService($config);
+    }
+
     public function test_maletas_del_almacen_que_no_estan_en_equipajes_coincidentes(): void
     {
         $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
@@ -137,15 +156,34 @@ final class EquipajeEgmYMaletasTest extends TestCase
         $egms->method('getUltimoGrupo')->with(5)->willReturn(3);
         $lugares = $this->createMock(LugarRepositoryInterface::class);
         $lugares->method('matching')->willReturnCallback(function ($c): array {
-            $this->assertSame(['id_ubi eq ' . DocumentosLibresData::ID_UBI_ALMACEN], DescribeCriteria::filtros($c));
+            $this->assertSame(['id_ubi eq 77'], DescribeCriteria::filtros($c), 'el almacén es el del parámetro de configuración');
             return [self::lugar(22, 'Maleta C'), self::lugar(21, 'Maleta B'), self::lugar(20, 'Maleta A')];
         });
-        $uc = new MaletasPosiblesData($equipajes, $egms, $lugares);
+        $uc = new MaletasPosiblesData($equipajes, $egms, $lugares, $this->almacen('77'));
 
         $r = $uc->execute(5);
 
         $this->assertSame([20 => 'Maleta A', 22 => 'Maleta C', 1 => 'nuevo'], $r['a_opciones'], 'sin la ocupada, por nombre, con «nuevo»');
         $this->assertSame(4, $r['new_id_grupo']);
+        $this->assertArrayNotHasKey('aviso_txt', $r);
         $this->assertSame([], $uc->execute(6));
+    }
+
+    public function test_sin_almacen_definido_solo_ofrece_nuevo_y_avisa(): void
+    {
+        $equipajes = $this->createMock(EquipajeRepositoryInterface::class);
+        $equipajes->method('findById')->willReturn(new Equipaje());
+        $equipajes->expects($this->never())->method('getEquipajesCoincidentes');
+        $egms = $this->createMock(EgmRepositoryInterface::class);
+        $egms->method('getUltimoGrupo')->willReturn(0);
+        $lugares = $this->createMock(LugarRepositoryInterface::class);
+        $lugares->expects($this->never())->method('matching');
+        $uc = new MaletasPosiblesData($equipajes, $egms, $lugares, $this->almacen(null));
+
+        $r = $uc->execute(5);
+
+        $this->assertSame([1 => 'nuevo'], $r['a_opciones']);
+        $this->assertSame(1, $r['new_id_grupo']);
+        $this->assertNotSame('', $r['aviso_txt']);
     }
 }

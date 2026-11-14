@@ -132,6 +132,16 @@ fnjs_guardar=function(formulario){
 </form>
 <hr>
 
+{% if almacen_inventario %}
+<h3>{{ "inventario: centro que hace de almacén"|trans|raw }}:</h3>
+<form id="frm_almacen_inventario" name="frm_almacen_inventario" action="">
+{{ oHashAlm.getCamposHtml|raw }}
+{{ almacen_inventario.desplegable|raw }}
+<input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+{% endif %}
+
 <h3>{{ "idioma por defecto"|trans|raw }}:</h3>
 <form id="frm_idioma_default" name="frm_idioma_default" action="">
 {{ oHashI.getCamposHtml|raw }}

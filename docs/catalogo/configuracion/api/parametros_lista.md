@@ -54,6 +54,7 @@ Sin parámetros POST: el controller lee toda la configuración persistida.
   - `jefe_calendario`, `ce_lugar`, `region_latin`, `vstgr`, `lugar_firma`, `dir_stgr`: cadenas de texto de configuración.
   - `nota_corte`, `nota_max`, `caduca_cursada`, `ini_contador_certificados`: valores numéricos/textuales.
   - `a_locales`: catálogo de locales disponibles; `idioma_select`: locale seleccionado.
+  - `almacen_inventario` (solo si el esquema tiene instalado inventario): `{opciones: [[id_ubi, nombre], …], selected}` para elegir el centro de inventario que hace de almacén (parámetro `inventario_ubi_almacen`).
   - `chk_dl`, `chk_r`, `chk_rstgr`: flags `checked` del ámbito (`ambito`).
   - `chk_central`, `chk_of`: flags `checked` de la gestión de calendario (`gesCalendario`).
 

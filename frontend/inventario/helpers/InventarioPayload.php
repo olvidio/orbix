@@ -296,6 +296,16 @@ public static function docsLibresRows(mixed $raw): array
 }
 
 /**
+ * Aviso de una situación prevista (p. ej. falta definir el almacén); texto plano, la vista lo escapa.
+ *
+ * @param array<int|string, mixed> $payload
+ */
+public static function avisoTxt(array $payload): string
+{
+    return \frontend\shared\helpers\PayloadCoercion::string($payload['aviso_txt'] ?? '');
+}
+
+/**
  * @param array<int|string, mixed> $payload
  * @return array{a_opciones: array<int|string, string>, new_id_grupo: int}
  */

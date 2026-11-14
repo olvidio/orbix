@@ -45,6 +45,7 @@ gestión de calendario. Cada bloque es un formulario independiente con HashF.
 | `vstgr`, `lugar_firma`, `dir_stgr` | Datos certificados STGR |
 | `nota_corte`, `nota_max`, `caduca_cursada` | Notas y caducidad asignaturas |
 | `ini_contador_certificados` | Contador inicial certificados |
+| `inventario_ubi_almacen` | Centro de inventario que hace de almacén (desplegable de centros con lugares; solo si el esquema tiene inventario) |
 | `idioma_default` | Desplegable de locales |
 | `ambito` | `dl` / `r` / `rstgr` |
 | `gesCalendario` | `central` / `oficinas` |

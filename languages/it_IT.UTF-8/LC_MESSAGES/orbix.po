@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-13 12:25+0100\n"
+"POT-Creation-Date: 2026-11-14 17:05+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -104,7 +104,7 @@ msgstr "errore sconosciuto"
 #: frontend/encargossacd/view/encargo_horario_select.phtml:32
 #: frontend/encargossacd/view/encargo_select.phtml:43
 #: frontend/encargossacd/view/encargo_select.phtml:59
-#: frontend/encargossacd/view/encargo_ver.phtml:153
+#: frontend/encargossacd/view/encargo_ver.phtml:159
 #: frontend/inventario/view/cabecera_pie_txt.phtml:12
 #: frontend/inventario/view/doc_asignar_ctr.phtml:12
 #: frontend/inventario/view/doc_asignar_dlb.phtml:12
@@ -1111,7 +1111,7 @@ msgstr "secondo dl o"
 
 #: frontend/actividades/view/actividad_select_ubi.phtml:55
 #: frontend/encargossacd/controller/encargo_select.php:67
-#: frontend/encargossacd/view/encargo_ver.phtml:266
+#: frontend/encargossacd/view/encargo_ver.phtml:272
 #: frontend/inventario/controller/equipajes_doc_casa.php:32
 #: frontend/notas/view/acta_ver.phtml:154
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:56
@@ -1210,7 +1210,7 @@ msgstr "cancellare"
 #: frontend/actividadestudios/view/ca_posibles_que.phtml:91
 #: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:18
 #: frontend/encargossacd/view/ctr_ficha.phtml:82
-#: frontend/encargossacd/view/encargo_ver.phtml:253
+#: frontend/encargossacd/view/encargo_ver.phtml:259
 #: frontend/inventario/controller/doc_asignar_ctr.php:55
 #: frontend/inventario/controller/doc_de_ctr.php:62
 #: frontend/misas/view/buscar_plan_ctr.phtml:15
@@ -1280,7 +1280,7 @@ msgstr "gestori ctr"
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:153
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:191
 #: src/encargossacd/application/services/PropuestasEncargosUbiHtml.php:229
-#: src/inventario/application/MaletasPosiblesData.php:51
+#: src/inventario/application/MaletasPosiblesData.php:56
 msgid "nuevo"
 msgstr "nuovo"
 
@@ -3205,7 +3205,7 @@ msgid "e-mail"
 msgstr "e-mail"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:29
-#: frontend/encargossacd/view/encargo_ver.phtml:249
+#: frontend/encargossacd/view/encargo_ver.phtml:255
 #: frontend/misas/view/buscar_plan_ctr.phtml:12
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:126
 #: src/encargossacd/application/EncargoZonasSelectData.php:29
@@ -4651,7 +4651,7 @@ msgstr "classe"
 
 #: frontend/dossiers/view/perm_dossier_pres.phtml:73
 #: frontend/encargossacd/controller/encargo_select.php:66
-#: frontend/encargossacd/view/encargo_ver.phtml:259
+#: frontend/encargossacd/view/encargo_ver.phtml:265
 #: frontend/ubis/view/teleco_form.phtml:23
 #: src/configuracion/application/ModulosSelectData.php:54
 #: src/configuracion/domain/entity/Modulo.php:215
@@ -4778,7 +4778,7 @@ msgid "descripción lugar"
 msgstr "luogo della descrizione"
 
 #: frontend/encargossacd/controller/encargo_select.php:69
-#: frontend/encargossacd/view/encargo_ver.phtml:270
+#: frontend/encargossacd/view/encargo_ver.phtml:276
 #: frontend/usuarios/view/preferencias.phtml:100
 #: src/actividades/application/ActividadSelectListado.php:264
 #: src/certificados/domain/CertificadoEmitidoSelect.php:70
@@ -4966,7 +4966,7 @@ msgid "cerrar"
 msgstr "vicino"
 
 #: frontend/encargossacd/view/ctr_ficha.phtml:79
-#: frontend/encargossacd/view/encargo_ver.phtml:243
+#: frontend/encargossacd/view/encargo_ver.phtml:249
 msgid "grupo de ctrs"
 msgstr "gruppo di ctrs"
 
@@ -5005,20 +5005,20 @@ msgstr "cercare un incarico"
 msgid "añadir encargo"
 msgstr "aggiungi ordine"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:211
+#: frontend/encargossacd/view/encargo_ver.phtml:217
 #: frontend/misas/view/ver_encargos_zona.phtml:251
 msgid "nuevo encargo"
 msgstr "nuovo incarico"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:216
+#: frontend/encargossacd/view/encargo_ver.phtml:222
 msgid "modificar encargo"
 msgstr "modificare l'ordine"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:221
+#: frontend/encargossacd/view/encargo_ver.phtml:227
 msgid "escoger el tipo de encargo"
 msgstr "scegli il tipo di incarico"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:227
+#: frontend/encargossacd/view/encargo_ver.phtml:233
 #: frontend/menus/view/menus_que.phtml:12
 #: frontend/usuarios/view/grupo_form.phtml:20
 #: src/usuarios/application/GruposLista.php:32
@@ -5027,12 +5027,12 @@ msgstr "scegli il tipo di incarico"
 msgid "grupo"
 msgstr "gruppo"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:231
+#: frontend/encargossacd/view/encargo_ver.phtml:237
 #: frontend/menus/view/traducir_menu.phtml:209
 msgid "tipo encargo"
 msgstr "tipo personalizzato"
 
-#: frontend/encargossacd/view/encargo_ver.phtml:262
+#: frontend/encargossacd/view/encargo_ver.phtml:268
 #: frontend/misas/view/ver_encargos_zona.phtml:87
 msgid "generar"
 msgstr "generare"
@@ -5416,7 +5416,7 @@ msgstr "è necessario selezionare un bagaglio"
 #: frontend/inventario/controller/equipajes_doc_casa.php:31
 #: frontend/inventario/controller/equipajes_doc_casa.php:65
 #: frontend/inventario/controller/equipajes_form_del.php:32
-#: frontend/inventario/controller/equipajes_lista_docs.php:38
+#: frontend/inventario/controller/equipajes_lista_docs.php:40
 #: frontend/inventario/controller/equipajes_ver_docs.php:31
 #: src/inventario/domain/entity/Documento.php:708
 msgid "identificador"
@@ -5424,7 +5424,7 @@ msgstr "identificatore"
 
 #: frontend/inventario/controller/equipajes_doc_casa.php:64
 #: frontend/inventario/controller/equipajes_form_del.php:31
-#: frontend/inventario/controller/equipajes_lista_docs.php:37
+#: frontend/inventario/controller/equipajes_lista_docs.php:39
 #: frontend/inventario/controller/equipajes_ver_docs.php:30
 #: frontend/shared/view/regiones_en_orbix.phtml:13
 #: src/ubis/domain/entity/Delegacion.php:413
@@ -5461,7 +5461,7 @@ msgid "texto a añadir en las maletas"
 msgstr "testo da aggiungere alle valigie"
 
 #: frontend/inventario/controller/equipajes_imprimir.php:70
-#: frontend/inventario/controller/equipajes_posibles_maletas.php:45
+#: frontend/inventario/controller/equipajes_posibles_maletas.php:47
 #: frontend/inventario/view/equipajes_doc_maleta.phtml:5
 msgid "valija"
 msgstr "valigia"
@@ -9957,7 +9957,8 @@ msgstr "e"
 #: src/encargossacd/application/EncargoSacdHorarioUpdate.php:88
 #: src/encargossacd/application/EncargoSacdHorarioUpdate.php:117
 #: src/encargossacd/application/EncargoVerEditar.php:54
-#: src/encargossacd/application/EncargoVerNuevo.php:77
+#: src/encargossacd/application/EncargoVerNuevo.php:63
+#: src/encargossacd/application/EncargoVerNuevo.php:80
 #: src/encargossacd/application/SacdAusenciasUpdate.php:84
 #: src/encargossacd/application/SacdAusenciasUpdate.php:98
 #: src/encargossacd/application/SacdAusenciasUpdate.php:119
@@ -10003,7 +10004,8 @@ msgstr "e"
 #: src/personas/application/TrasladoUpdate.php:107
 #: src/personas/domain/Trasladar.php:440 src/personas/domain/Trasladar.php:605
 #: src/personas/domain/Trasladar.php:1148
-#: src/procesos/application/ActividadProcesoUpdate.php:39
+#: src/procesos/application/ActividadProcesoUpdate.php:36
+#: src/procesos/application/ActividadProcesoUpdate.php:44
 #: src/procesos/application/FasesActivCambioUpdate.php:73
 #: src/procesos/application/ProcesosUpdate.php:62
 #: src/ubis/application/CalendarioPeriodoGuardar.php:44
@@ -10159,50 +10161,50 @@ msgstr "C'è già una scrittura. Vuoi sostituirlo?"
 msgid "ubicación del fichero"
 msgstr "posizione del file"
 
-#: frontend/ubis/controller/ubis_buscar.php:30
+#: frontend/ubis/controller/ubis_buscar.php:40
 msgid "centros de la delegación"
 msgstr "Centri di delegazione"
 
-#: frontend/ubis/controller/ubis_buscar.php:31
-#: frontend/ubis/controller/ubis_buscar.php:39
-#: frontend/ubis/controller/ubis_buscar.php:55
+#: frontend/ubis/controller/ubis_buscar.php:41
+#: frontend/ubis/controller/ubis_buscar.php:49
+#: frontend/ubis/controller/ubis_buscar.php:65
 msgid "¿qué centro te interesa?"
 msgstr "A quale centro sei interessato?"
 
-#: frontend/ubis/controller/ubis_buscar.php:34
+#: frontend/ubis/controller/ubis_buscar.php:44
 msgid "centros o casas de otras dl/r"
 msgstr "centri o case di altri dl / r"
 
-#: frontend/ubis/controller/ubis_buscar.php:35
+#: frontend/ubis/controller/ubis_buscar.php:45
 msgid "¿qué centro o casa te interesa?"
 msgstr "A quale centro o casa sei interessato?"
 
-#: frontend/ubis/controller/ubis_buscar.php:38
+#: frontend/ubis/controller/ubis_buscar.php:48
 msgid "centros de otras dl/r"
 msgstr "altri centri dl / r"
 
-#: frontend/ubis/controller/ubis_buscar.php:42
+#: frontend/ubis/controller/ubis_buscar.php:52
 msgid "casas de la delegación"
 msgstr "case della delegazione"
 
-#: frontend/ubis/controller/ubis_buscar.php:43
-#: frontend/ubis/controller/ubis_buscar.php:47
+#: frontend/ubis/controller/ubis_buscar.php:53
+#: frontend/ubis/controller/ubis_buscar.php:57
 msgid "¿qué casa te interesa?"
 msgstr "A quale casa sei interessato?"
 
-#: frontend/ubis/controller/ubis_buscar.php:46
+#: frontend/ubis/controller/ubis_buscar.php:56
 msgid "casas de otras dl/r"
 msgstr "altre case dl / r"
 
-#: frontend/ubis/controller/ubis_buscar.php:50
+#: frontend/ubis/controller/ubis_buscar.php:60
 msgid "buscar e-mails de los centros de la dl"
 msgstr "cercare e-mail dai centri del dl"
 
-#: frontend/ubis/controller/ubis_buscar.php:51
+#: frontend/ubis/controller/ubis_buscar.php:61
 msgid "escoge un grupo de centros"
 msgstr "scegli un gruppo di centri"
 
-#: frontend/ubis/controller/ubis_buscar.php:54
+#: frontend/ubis/controller/ubis_buscar.php:64
 msgid "centros de la sf"
 msgstr "centri sf"
 
@@ -14625,8 +14627,7 @@ msgstr "Il file %s non è un PDF"
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
 #: src/inventario/application/DocumentosTrasladar.php:30
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:29
-#: src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php:24
+#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:35
 #: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
 #: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
 #: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
@@ -15810,7 +15811,7 @@ msgid "Debe nombrar un sacerdote tirular"
 msgstr "Deve nominare un sacerdote titolare"
 
 #: src/encargossacd/application/CtrFichaUpdate.php:196
-#: src/encargossacd/application/EncargoVerNuevo.php:67
+#: src/encargossacd/application/EncargoVerNuevo.php:70
 msgid "grupo de encargo no valido"
 msgstr "gruppo di incarico non valido"
 
@@ -16231,6 +16232,7 @@ msgstr "Documento non trovato"
 #: src/inventario/application/DocumentosAsignar.php:97
 #: src/inventario/application/DocumentosModificar.php:60
 #: src/inventario/application/EquipajeNuevo.php:31
+#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:45
 #, php-format
 msgid "Fecha no válida: %s"
 msgstr "Data non valida: %s"
@@ -16277,6 +16279,10 @@ msgstr "Il testo non può superare %d caratteri"
 #: src/inventario/application/LugaresDeDlbData.php:81
 msgid "Para imprimir inventario"
 msgstr "Per stampare l'inventario"
+
+#: src/inventario/application/services/AlmacenInventarioService.php:39
+msgid "Falta definir el almacén de inventario en los parámetros de configuración."
+msgstr "Manca definire il magazzino dell'inventario nei parametri di configurazione."
 
 #: src/inventario/application/support/NombreDocumento.php:31
 msgid "Actual"
@@ -16405,7 +16411,7 @@ msgstr "numerato"
 msgid "nombre del centro/casa"
 msgstr "nome del centro/casa"
 
-#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:22
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:18
 msgid "debe seleccionar un lugar"
 msgstr "devi selezionare un luogo"
 
@@ -20345,27 +20351,31 @@ msgstr "valore iniziale dei contatori"
 msgid "para los certificados"
 msgstr "per i certificati"
 
-#: frontend/configuracion/view/parametros.html.twig:143
+#: frontend/configuracion/view/parametros.html.twig:136
+msgid "inventario: centro que hace de almacén"
+msgstr "inventario: centro che funge da magazzino"
+
+#: frontend/configuracion/view/parametros.html.twig:153
 msgid "Ámbito del esquema: delegación, región, regiónStgr"
 msgstr "Ambito dello schema: delegazione, regione, regioneStgr"
 
-#: frontend/configuracion/view/parametros.html.twig:148
+#: frontend/configuracion/view/parametros.html.twig:158
 msgid "región: como una dl (tiene personas y actividades) + región del stgr"
 msgstr "regione: come un dl (ha persone e attività) + regione stgr"
 
-#: frontend/configuracion/view/parametros.html.twig:150
+#: frontend/configuracion/view/parametros.html.twig:160
 msgid "región del Stgr (gestiona un conjunto de dl,r)(no tiene personas)"
 msgstr "Regione Stgr (gestisce un insieme di dl,r)(non ha persone)"
 
-#: frontend/configuracion/view/parametros.html.twig:156
+#: frontend/configuracion/view/parametros.html.twig:166
 msgid "gestión de calendario"
 msgstr "gestione del calendario"
 
-#: frontend/configuracion/view/parametros.html.twig:159
+#: frontend/configuracion/view/parametros.html.twig:169
 msgid "centralizada"
 msgstr "centralizzato"
 
-#: frontend/configuracion/view/parametros.html.twig:160
+#: frontend/configuracion/view/parametros.html.twig:170
 msgid "por oficinas"
 msgstr "dagli uffici"
 
@@ -20479,19 +20489,19 @@ msgstr "Il contributo non dorme"
 msgid "Contribución reserva"
 msgstr "Contributo di riserva"
 
-#: frontend/procesos/view/actividad_proceso.html.twig:75
+#: frontend/procesos/view/actividad_proceso.html.twig:82
 msgid "fases de la actividad"
 msgstr "fasi dell'attività"
 
-#: frontend/procesos/view/actividad_proceso.html.twig:77
+#: frontend/procesos/view/actividad_proceso.html.twig:84
 msgid "regenerar"
 msgstr "rigenerare"
 
-#: frontend/procesos/view/actividad_proceso.html.twig:79
+#: frontend/procesos/view/actividad_proceso.html.twig:86
 msgid "forzar"
 msgstr "forza"
 
-#: frontend/procesos/view/actividad_proceso.html.twig:84
+#: frontend/procesos/view/actividad_proceso.html.twig:91
 msgid "actualizar"
 msgstr "aggiornare"
 
