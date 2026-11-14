@@ -166,7 +166,7 @@ fnjs_ver_sacd_posibles=function(tipo,id_item,id_enc){
 	var id_td='#td_'+id_item;
 	
 	var url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
-    var parametros='que=lista_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'{{ h_cmb|raw }}';
+    var parametros='que=lista_sacd&tipo='+tipo+'&id_item='+id_item+'&id_enc='+id_enc+'&id_sacd='+id_sacd+'{{ h_lista_sacd|raw }}';
     request=$.ajax({
         data: parametros,
         url: url_ajax,

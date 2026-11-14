@@ -58,10 +58,12 @@
     "test:report:granular": "bash tools/qa/check_test_granular.sh",
     "qa:criteria-legacy": "php tools/qa/check_criteria_legacy.php --strict",
     "qa:test-application": "php tools/qa/check_test_application.php --baseline",
+    "qa:hash-campos": "php tools/audit/audit_hash_campos.php --strict",
     "qa:huecos": [
       "STRICT=1 bash tools/qa/check_test_granular.sh",
       "@composer qa:test-application",
-      "@composer qa:criteria-legacy"
+      "@composer qa:criteria-legacy",
+      "@composer qa:hash-campos"
     ],
     "test:report": [
       "@composer test:report:buckets",

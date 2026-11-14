@@ -33,8 +33,12 @@ $oHash->setUrl($url_ajax);
 $oHash->setCamposForm('que!filtro_ctr');
 $h = $oHash->linkSinValParams();
 
+// Dos peticiones con los mismos campos salvo la cápsula: pedir la lista de sacd posibles (sin ella)
+// y cambiar el sacd (con ella). Con un solo hash, la primera se rechazaba.
 $oHash1 = new HashF();
 $oHash1->setUrl($url_ajax);
+$oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd');
+$h_lista_sacd = $oHash1->linkSinValParams();
 $oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd!ctx_cmb_sacd');
 $h_cmb = $oHash1->linkSinValParams();
 
@@ -45,13 +49,16 @@ $h_info = $oHash2->linkSinValParams();
 
 $oHash3 = new HashF();
 $oHash3->setUrl($url_ajax);
-$oHash3->setCamposForm('que!id_sacd!id_item!id_enc!ctx_dedicacion_update');
+// Abre la ventana de dedicación; la cápsula `ctx_dedicacion_update` viaja en el formulario de esa
+// ventana (con su propio hash), no en esta petición.
+$oHash3->setCamposForm('que!id_sacd!id_item!id_enc');
 $h_dedicacion = $oHash3->linkSinValParams();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'h' => $h,
     'h_cmb' => $h_cmb,
+    'h_lista_sacd' => $h_lista_sacd,
     'h_info' => $h_info,
     'h_dedicacion' => $h_dedicacion,
     'url_ajax' => $url_ajax,

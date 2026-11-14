@@ -889,6 +889,9 @@ Funciones expuestas: `fnjs_construir_desplegable` (envelope JSON o payload direc
 - Preferir pasar URLs ya construidas desde PHP a la vista (`$a_campos['url_foo']`) para facilitar `rg` y coherencia.
 - Modos de formulario distintos (`nueva` / `modificar`): generar dos URLs/hashes en PHP y elegir en JS.
 
+#### Comprobación automática de los campos firmados
+Con `linkSinVal()` / `linkSinValParams()` el servidor compara **los nombres** de los campos que llegan con los de `setCamposForm(...)`; un campo de más o de menos rechaza la petición (302 al inicio) sin ningún mensaje. `php tools/audit/audit_hash_campos.php` (`composer qa:hash-campos`, incluido en `composer qa:huecos`) compara cada hash con los parámetros que monta la vista y falla si no coinciden. No cubre los formularios con `getCamposHtml()` ni los parámetros montados con `serialize()` (los lista como «no analizables»).
+
 #### Checklist URL + AJAX
 1. Nuevo `HashF` en controlador frontend para esa URL.
 2. Pasar `url_xxx` en `$a_campos`.
