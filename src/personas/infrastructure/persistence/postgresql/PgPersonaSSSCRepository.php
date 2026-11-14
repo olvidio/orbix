@@ -133,7 +133,10 @@ class PgPersonaSSSCRepository extends PgPersonaDlRepositoryBase implements Perso
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('p_supernumerarios_id_auto_seq'::regclass)";
+        // La secuencia de esta tabla (la misma que usa `GenerateIdGlobal`). Antes se tomaba la de
+        // supernumerarios: en una dl donde esa secuencia va por detrás de los ids de esta tabla, el alta
+        // recibía un id que ya existía y `Guardar` sobrescribía a esa persona.
+        $sQuery = "select nextval('p_sssc_id_auto_seq'::regclass)";
         $stmt = $oDbl->query($sQuery);
         if ($stmt === false) {
             return 0;

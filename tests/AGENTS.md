@@ -160,6 +160,7 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 - `tests/unit/shared/infrastructure/ControladoresSinExitTest`: ningún controlador de `src/` usa `exit`/`die` (en el despacho en proceso de `PostRequest` cortaría al frontend que llama), salvo las descargas de binarios y los casos de `PERMITIDOS`.
 - `tests/unit/shared/domain/DatosCamposMetodosTest`: en las entidades con `getDatosCampos()`, el getter y el setter de cada `DatosCampo` existen (si no, la pantalla genérica de tablas da un error fatal al abrirla).
 - `tests/unit/usuarios/infrastructure/RecuperacionAccesoGuardTest`: las páginas y endpoints de recuperación de acceso no toman `url_base` de la petición, no exigen ni abren sesión (`FrontBootstrap::boot()`, `session_start`, `$_SESSION`) y abrir un enlace (GET) solo pide confirmación.
+- `tests/integration/shared/infrastructure/SecuenciasDeRepositoriosTest`: cada `Pg*Repository` que toma ids con `nextval('…')` usa una secuencia que es el valor por defecto de una columna de **su** tabla. Con la de otra tabla, un alta acaba recibiendo un id que ya existe y `Guardar` sobrescribe esa fila. Límite: en un repositorio de varias tablas solo comprueba que cada secuencia sea de alguna de ellas, no de cuál.
 - `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
 
 ## Escapar el HTML que se monta en `src/`

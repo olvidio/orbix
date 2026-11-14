@@ -775,7 +775,11 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('a_actividad_proceso_sv_id_item_seq'::regclass)";
+        // Cada tabla (sv / sf) tiene su secuencia. Antes se usaba siempre la de sv: una fila nueva de sf
+        // podía recibir un id que ya existía en la tabla de sf y sobrescribirla.
+        $sQuery = $this->getNomTabla() === 'a_actividad_proceso_sf'
+            ? "select nextval('a_actividad_proceso_sf_id_item_seq'::regclass)"
+            : "select nextval('a_actividad_proceso_sv_id_item_seq'::regclass)";
         $stmt = $oDbl->query($sQuery);
         if ($stmt === false) {
             return 0;

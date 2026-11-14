@@ -143,7 +143,10 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('p_numerarios_id_auto_seq'::regclass)";
+        // La secuencia de esta tabla (la misma que usa `GenerateIdGlobal`). Antes se tomaba la de
+        // numerarios: en una dl donde esa secuencia va por detrás de los ids de esta tabla, el alta
+        // recibía un id que ya existía y `Guardar` sobrescribía a esa persona.
+        $sQuery = "select nextval('p_nax_id_auto_seq'::regclass)";
         $stmt = $oDbl->query($sQuery);
         if ($stmt === false) {
             return 0;
