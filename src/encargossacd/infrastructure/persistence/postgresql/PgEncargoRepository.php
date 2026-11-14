@@ -160,16 +160,30 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         return Encargo::fromArray($aDatos);
     }
 
+    /**
+     * Siguiente id de la secuencia que no esté ya en uso (0 si falla la consulta).
+     *
+     * `Guardar` actualiza la fila si el id existe: con la secuencia por detrás de los ids reales
+     * (una BD restaurada de una copia sin ajustar las secuencias) un alta sobrescribía otro encargo.
+     */
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('encargos_id_enc_seq'::regclass)";
-        $stmt = $oDbl->query($sQuery);
-        if ($stmt === false) {
-            return 0;
+        for ($i = 0; $i < 10000; $i++) {
+            $stmt = $oDbl->query($sQuery);
+            if ($stmt === false) {
+                return 0;
+            }
+            $id = $stmt->fetchColumn();
+            if (!is_numeric($id)) {
+                return 0;
+            }
+            if ($this->findById((int) $id) === null) {
+                return (int) $id;
+            }
         }
-        $id = $stmt->fetchColumn();
 
-        return is_numeric($id) ? (int) $id : 0;
+        return 0;
     }
 }

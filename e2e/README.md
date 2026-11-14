@@ -150,6 +150,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | procesos | `procesos-fases.spec.ts` | crear una actividad (tipo con proceso coherente en dev) → fases de la actividad → marcar una fase con observación → desmarcarla. Se salta si el diseño del proceso depende de fases que no tiene |
 | cambios | `cambios-avisos.spec.ts` | usuario nuevo → avisos de cambios → añadir aviso (objeto, fase de referencia, tipo de aviso, una propiedad) → guardar → eliminar desde la lista |
 | encargossacd | `encargossacd-alta-baja.spec.ts` | buscar encargos → añadir encargo (grupo y tipo encadenados) → guardar → buscarlo → modificar → borrar desde la lista; comprueba que los demás encargos no cambian |
+| misas | `misas-encargos-zona.spec.ts` | encargos de la zona: rejilla de la primera zona → nuevo → grabar → clic en su fila → modificar → eliminar; comprueba que los demás encargos no cambian |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
@@ -178,7 +179,7 @@ Del catálogo (`docs/catalogo/<modulo>/pantallas` y `flujos`; «flujos que escri
 |---|---:|---:|---:|---:|---|
 | inventario | 34 | 34 | 44 | 14 | equipajes |
 | usuarios | 24 | 24 | 33 | 13 | sí |
-| misas | 23 | 23 | 31 | 11 | — |
+| misas | 23 | 23 | 31 | 11 | encargos de una zona |
 | ubis | 35 | 35 | 36 | 9 | casa de la dl |
 | actividades | 18 | 16 | 28 | 9 | sí |
 | encargossacd | 35 | 35 | 32 | 8 | encargo |

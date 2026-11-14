@@ -45,7 +45,8 @@ $oDesplIdiomas = new Desplegable('idioma_enc', MisasDesplegableSupport::opciones
 $url_guardar_encargo_zona = AppUrlConfig::srcBrowserUrl('/src/misas/guardar_encargo_zona');
 $oHashGuardar = new HashF();
 $oHashGuardar->setUrl($url_guardar_encargo_zona);
-$oHashGuardar->setCamposForm('ctx_guardar!id_tipo_enc!id_ubi!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
+// Los mismos campos que envía la vista (faltaba `id_zona`: el guardado se rechazaba y se volvía al inicio).
+$oHashGuardar->setCamposForm('ctx_guardar!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
 $h_guardar_encargo_zona = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_zona = AppUrlConfig::srcBrowserUrl('/src/misas/eliminar_encargo_zona');
