@@ -19,8 +19,9 @@ use src\shared\domain\value_objects\DateTimeLocal;
  * y, si no, el número de ejemplares; las fechas de recibido y asignado solo se cambian si llegan.
  *
  * - A centros: si el centro no tiene el documento, se crea; si lo tiene, se actualiza el primero.
- * - A lugares: tiene que haber exactamente un documento de ese tipo en el lugar; si no, se avisa y no se
- *   crea ninguno (comportamiento heredado: duda 14 de la sección 6b del plan de tests).
+ * - A lugares: si en el lugar no hay ningún documento de ese tipo, se crea (como en los centros: duda 14
+ *   de la sección 6b del plan de tests); si hay uno, se actualiza; si hay varios no se sabe cuál es y
+ *   se avisa sin tocar ninguno.
  *
  * Sucesor de la lógica de esos dos controladores (fase 5, paso 5.2). Cambios: una fecha mal escrita ya
  * no borra la que tenía el documento (se devuelve el error sin guardar nada), y si el tipo es numerado
@@ -73,7 +74,19 @@ final class DocumentosAsignar
                 ->andWhere(Filter::eq(DocF::IdLugar, $idLugar))
                 ->andWhere(Filter::eq(DocF::IdTipoDoc, $idTipoDoc)));
 
-            return count($cDocumentos) === 1 ? $cDocumentos[0] : _("No se encuentra el documento") . "\n";
+            if (count($cDocumentos) > 1) {
+                return _("No se encuentra el documento") . "\n";
+            }
+            if ($cDocumentos !== []) {
+                return $cDocumentos[0];
+            }
+            $oDocumento = new Documento();
+            $oDocumento->setId_doc($this->documentoRepository->getNewId());
+            $oDocumento->setIdUbiVo($oLugar->getId_ubi());
+            $oDocumento->setId_lugar($idLugar);
+            $oDocumento->setId_tipo_doc($idTipoDoc);
+
+            return $oDocumento;
         });
     }
 

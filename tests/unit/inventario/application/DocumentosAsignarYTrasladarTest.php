@@ -127,15 +127,21 @@ final class DocumentosAsignarYTrasladarTest extends TestCase
         $this->assertSame([], $this->guardados);
     }
 
-    public function test_a_lugares_exige_un_unico_documento_del_tipo_en_el_lugar(): void
+    /** Duda 14: antes, sin documento en el lugar respondía «No se encuentra el documento» y no creaba nada. */
+    public function test_a_lugares_crea_el_documento_si_falta_actualiza_el_que_hay_y_avisa_si_hay_varios(): void
     {
         $this->existentes['40#20'] = [self::doc(80, 40, 20)];
         $this->existentes['40#21'] = [self::doc(81, 40, 21), self::doc(82, 40, 21)];
 
         $error = $this->asignar()->aLugares(1, [20 => '905', 21 => '906', 22 => '907', 66 => '908'], '', '');
 
-        $this->assertSame("No se encuentra el documento\nNo se encuentra el documento\n", $error, 'el de dos documentos y el de ninguno; el lugar inexistente se salta');
-        $this->assertSame([[80, 905]], array_map(static fn (Documento $d): array => [$d->getId_doc(), $d->getNum_reg()], $this->guardados));
+        $this->assertSame("No se encuentra el documento\n", $error, 'solo el lugar con dos documentos; el lugar inexistente se salta');
+        $this->assertSame(
+            [[80, 40, 20, 905], [500, 40, 22, 907]],
+            array_map(static fn (Documento $d): array => [$d->getId_doc(), $d->getId_ubi(), $d->getId_lugar(), $d->getNum_reg()], $this->guardados),
+            'actualiza el del lugar 20 y crea el del 22, en el centro del lugar'
+        );
+        $this->assertSame(1, $this->guardados[1]->getId_tipo_doc());
     }
 
     public function test_tipo_inexistente_y_fallo_al_guardar(): void
