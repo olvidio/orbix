@@ -158,16 +158,31 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         return Grupo::fromArray($aDatos);
     }
 
+    /**
+     * Id nuevo que no esté ya en uso (0 si falla la consulta).
+     *
+     * El id se forma con una secuencia que no es el valor por defecto de ninguna columna; en una BD
+     * restaurada queda por detrás de los ids reales y, como `Guardar` actualiza si el id existe, un
+     * alta sobrescribía a otro usuario o grupo.
+     */
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select (5::text || nextval('aux_grupos_y_usuarios_id_usuario_seq'::regclass))::numeric";
-        $stmt = $oDbl->query($sQuery);
-        if ($stmt === false) {
-            return 0;
+        for ($i = 0; $i < 100000; $i++) {
+            $stmt = $oDbl->query($sQuery);
+            if ($stmt === false) {
+                return 0;
+            }
+            $id = $stmt->fetchColumn();
+            if (!is_numeric($id)) {
+                return 0;
+            }
+            if ($this->findById((int) $id) === null) {
+                return (int) $id;
+            }
         }
-        $id = $stmt->fetchColumn();
 
-        return is_numeric($id) ? (int) $id : 0;
+        return 0;
     }
 }

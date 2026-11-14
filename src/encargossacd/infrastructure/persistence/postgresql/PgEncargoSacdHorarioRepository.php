@@ -17,7 +17,7 @@ use src\shared\traits\HandlesPdoErrors;
 
 
 /**
- * Clase que adapta la tabla propuesta_encargo_sacd_horario a la interfaz del repositorio
+ * Clase que adapta la tabla encargo_sacd_horario a la interfaz del repositorio
  *
  * @package orbix
  * @subpackage model
@@ -188,7 +188,10 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('propuesta_encargo_sacd_horario_id_item_seq'::regclass)";
+        // La secuencia de esta tabla. Antes se usaba la de las propuestas
+        // (`propuesta_encargo_sacd_horario_id_item_seq`): al aprobar las propuestas, los horarios nuevos
+        // recibían ids que ya existían y `Guardar` sobrescribía horarios reales.
+        $sQuery = "select nextval('encargo_sacd_horario_id_item_seq'::regclass)";
         $stmt = $oDbl->query($sQuery);
         if ($stmt === false) {
             return 0;

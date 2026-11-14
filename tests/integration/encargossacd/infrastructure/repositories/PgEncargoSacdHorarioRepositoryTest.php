@@ -143,9 +143,11 @@ class PgEncargoSacdHorarioRepositoryTest extends myTest
     public function test_get_new_id()
     {
         $newId = $this->repository->getNewId();
-        
-        $this->assertNotNull($newId);
-        $this->assertIsNumeric($newId);
+
+        $this->assertGreaterThan(0, $newId);
+        // Regresión: se usaba la secuencia de las propuestas y el id nuevo podía ser el de un horario
+        // que ya existía (al guardarlo se sobrescribía).
+        $this->assertNull($this->repository->findById($newId), 'el id nuevo no puede estar ya en la tabla');
     }
 
 }
