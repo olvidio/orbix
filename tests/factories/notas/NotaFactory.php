@@ -14,6 +14,13 @@ use src\notas\domain\value_objects\NotaSituacion;
  */
 class NotaFactory
 {
+    /**
+     * Único valor de `NotaSituacion` que no tiene fila en el catálogo `e_notas_situacion` (0…12).
+     * Antes se elegía un id al azar entre 1 y 13: el test guardaba encima de una situación real del
+     * catálogo y al limpiar la borraba (en cada ejecución desaparecían varias).
+     */
+    public const ID_SITUACION_LIBRE = NotaSituacion::FALTA_CERTIFICADO;
+
     private int $count = 1;
 
     public function setCount(int $count): void
@@ -33,7 +40,7 @@ class NotaFactory
     public function createSimple(?int $id = null): Nota
     {
         $faker = Factory::create('es_ES');
-        $id = $id ?? $faker->numberBetween(1, 13);
+        $id = $id ?? self::ID_SITUACION_LIBRE;
         $oNota = new Nota();
         $oNota->setId_situacion($id);
 
@@ -51,7 +58,7 @@ class NotaFactory
     public function create(?int $id = null): Nota
     {
         $faker = Factory::create('es_ES');
-        $id = $id ?? $faker->numberBetween(1, 13);
+        $id = $id ?? self::ID_SITUACION_LIBRE;
 
         $oNota = new Nota();
         $oNota->setId_situacion($id);

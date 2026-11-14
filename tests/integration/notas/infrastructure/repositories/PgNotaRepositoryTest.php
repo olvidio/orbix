@@ -18,6 +18,11 @@ class PgNotaRepositoryTest extends myTest
         parent::setUp();
         $this->repository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $this->factory = new NotaFactory();
+        // Estos tests guardan y borran la situación de la factory: si algún día el catálogo la tiene,
+        // no deben tocarla (sobrescribirían y borrarían una fila real).
+        if ($this->repository->findById(NotaFactory::ID_SITUACION_LIBRE) !== null) {
+            $this->markTestSkipped('La situación ' . NotaFactory::ID_SITUACION_LIBRE . ' ya existe en e_notas_situacion');
+        }
     }
 
     public function test_guardar_nuevo_nota()

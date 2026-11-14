@@ -150,8 +150,9 @@ $despues = recuento($dbContainer, $dbs);
  *  - av_cambios*: el generador de avisos borra los cambios de más de un año (`borrarCambios('P1Y')`).
  *  - a_actividad_proceso_*: «nuevo curso» borra los procesos de actividades que no existen (en dev, las
  *    de delegaciones que no están cargadas; solo ocurre la primera vez tras restaurar la BD).
+ *  - tmp_notas_*: tablas de trabajo de los resúmenes de notas, que la aplicación vacía y vuelve a llenar.
  */
-const PURGAS_DE_LA_APLICACION = '/\.(av_cambios|av_cambios_dl|av_cambios_anotados_dl|av_cambios_anotados_dl_sf|a_actividad_proceso_sv|a_actividad_proceso_sf)$/';
+const PURGAS_DE_LA_APLICACION = '/\.(av_cambios|av_cambios_dl|av_cambios_anotados_dl|av_cambios_anotados_dl_sf|a_actividad_proceso_sv|a_actividad_proceso_sf|tmp_notas_\w+)$/';
 
 $perdidas = false;
 foreach ($antes as $db => $tablas) {

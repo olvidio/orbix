@@ -27,6 +27,7 @@ final class ControladoresLecturaSinParametrosTest extends myTest
 
     /** controlador relativo a src/ => motivo */
     private const EXCLUIDOS = [
+        'actividadestudios/infrastructure/ui/http/controllers/matriculas_pendientes_data.php' => 'no es solo lectura: borra las matrículas pendientes de personas que no encuentra (duda 18 del plan de tests); abrirlo aquí borraba matrículas reales de dev',
         'notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php' => 'no es un controlador: lo incluye comprobar_notas_page_data.php',
         'certificados/infrastructure/ui/http/controllers/textos_certificados.php' => 'no es un controlador: plantilla de textos en latín que incluye otro controlador',
     ];
