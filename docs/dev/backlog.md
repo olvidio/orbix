@@ -78,3 +78,17 @@ Formato sugerido por ítem:
 - **Por qué no ahora:** no afecta a los resultados; hay que localizar qué tests generan esas marcas y añadir la limpieza.
 - **Notas:** hallazgo 3 de la sección 28 del plan.
 
+### Endpoints que escriben sin cápsula `HashB`
+
+Controladores de `src/` con nombre de acción que no abren ninguna cápsula (2026-11-14, fase 6.3 del plan de tests; duda 21). Revisar uno a uno (alguno es un formulario o va protegido de otra forma) y ponerles cápsula:
+
+`actividadcargos/cargos_activ_resincronizar`, `personas/sacd_resincronizar` (ya anotados arriba), `actividades/tipo_activ_form_nuevo`, `asistentes/asistente_eliminar`, `asistentes/asistente_guardar`, `asistentes/asistente_plaza_asignar`, `certificados/certificado_emitido_enviar`, `certificados/certificado_emitido_guardar_pdf`, `certificados/certificado_emitido_pdf_upload`, `certificados/certificado_recibido_pdf_upload`, `inventario/lista_docs_asignar_ctr`, `inventario/lista_docs_asignar_dlb`, `menus/menus_generar_txt`, `notas/acta_pdf_eliminar`, `notas/acta_pdf_subir`, `notas/acta_ver_add_persona`, `notas/persona_nota_nueva`, `notas/tessera_copiar`, `procesos/actividad_proceso_generar`, `usuarios/restablecer_password_guardar` (este va con su propio enlace firmado).
+
+### Lecturas que borran según los filtros de la pantalla
+
+`PeticionesActivData` borra las peticiones de plazas que no salen en la lista pintada (duda 19 del plan de tests). `PgDelegacionRepository::Eliminar` y `PgRegionRepository::Eliminar` borran por el nombre, no por el id.
+
+### Restos que deja la suite de PHPUnit
+
+5 marcas de dossier 1303 de personas reales (`d_dossiers_abiertos`) y, de forma intermitente, una fila «test_nom_activ_vo» en `public.a_actividades_all` (tabla padre). Localizar el test y limpiar.
+

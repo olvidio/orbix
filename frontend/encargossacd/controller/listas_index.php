@@ -1,6 +1,8 @@
 <?php
 
+use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 
@@ -28,8 +30,10 @@ $lnk = static function (string $script, array $params = []): string {
 $url = 'frontend/encargossacd/controller/comprobaciones.php';
 $oHash = new HashF();
 $oHash->setUrl($url);
-$oHash->setCamposForm('que');
+$oHash->setCamposForm('que!ctx_comprobar');
 $h = $oHash->linkSinValParams();
+$ctxData = PostRequest::getDataFromUrl('/src/encargossacd/comprobaciones_ctr_data', []);
+$ctx_comprobar = PayloadCoercion::string($ctxData['ctx_comprobar'] ?? '');
 
 $url_lista_a = $lnk('listas_a.php', ['sf' => 0]);
 $url_lista_af = $lnk('listas_a.php', ['sf' => 1]);
@@ -55,6 +59,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'url' => $url,
     'h' => $h,
+    'ctx_comprobar' => $ctx_comprobar,
     'url_lista_a' => $url_lista_a,
     'url_lista_af' => $url_lista_af,
     'url_lista_b' => $url_lista_b,

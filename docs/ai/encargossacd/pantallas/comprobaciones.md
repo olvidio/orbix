@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Proxy AJAX: la lógica vive en {@see \src\encargossacd\application\EncargoComprobacionesCtr} y se expone en `/src/encargossacd/comprobaciones_ctr`.
+Proxy AJAX: la lógica vive en {@see \src\encargossacd\application\EncargoComprobacionesCtr} y se expone en `/src/encargossacd/comprobaciones_ctr`. Borra los encargos de centros inactivos; solo se ejecuta con la cápsula `ctx_comprobar` que firma la pantalla de listas de encargos (`/src/encargossacd/comprobaciones_ctr_data`), tras confirmar.
 
 ## Uso En Ayuda
 

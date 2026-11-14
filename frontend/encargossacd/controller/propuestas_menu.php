@@ -27,6 +27,11 @@ $lnk = static function (string $script, array $params = []): string {
 $ctxData = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_crear_tabla_data', []);
 $ctx_crear_tabla = PayloadCoercion::string($ctxData['ctx_crear_tabla'] ?? '');
 
+// Aprobar las propuestas es una acción: la cápsula se firma aquí y viaja en el enlace que se abre
+// tras confirmar; `propuestas_aprobar.php` solo la reenvía (abierta sin ella no hace nada).
+$ctxAprobar = PostRequest::getDataFromUrl('/src/encargossacd/propuestas_aprobar_data', []);
+$ctx_aprobar = PayloadCoercion::string($ctxAprobar['ctx_aprobar'] ?? '');
+
 $url_ajax = 'frontend/encargossacd/controller/propuestas_ajax.php';
 $oHashCrear = new HashF();
 $oHashCrear->setUrl($url_ajax);
@@ -39,7 +44,7 @@ $a_campos = [
     'url_ajax' => $url_ajax,
     'h_crear_tabla' => $h_crear_tabla,
     'ctx_crear_tabla' => $ctx_crear_tabla,
-    'url_aprobar' => $lnk('propuestas_aprobar.php', ['sf' => 0]),
+    'url_aprobar' => $lnk('propuestas_aprobar.php', ['sf' => 0, 'ctx_aprobar' => $ctx_aprobar]),
     'url_lista_sacd' => $lnk('propuestas_lista_sacd.php', ['sel' => 'nagd']),
     'url_lista_enc' => $lnk('propuestas_lista_enc.php', ['sel' => 'nagd']),
 ];

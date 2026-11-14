@@ -35,6 +35,10 @@ return static function ($r) {
         require $base . '/comprobaciones_ctr.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/encargossacd/comprobaciones_ctr_data', function () use ($base) {
+        require $base . '/comprobaciones_ctr_data.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/encargossacd/listas_com_txt_get', function () use ($base) {
         require $base . '/listas_com_txt_get.php';
     });

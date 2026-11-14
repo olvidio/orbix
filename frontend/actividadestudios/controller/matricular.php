@@ -20,11 +20,17 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 // La matriculación automática afecta a todas las personas: se pide confirmación antes de ejecutarla.
+// La cápsula de la acción se firma al pintar la confirmación y viaja en el enlace «confirmar»; al
+// ejecutar solo se reenvía la que llega (sin ella el backend responde «Operación no autorizada»).
 $confirmado = (string)filter_input(INPUT_POST, 'confirmar') === 'si';
 if (!$confirmado) {
+    $formCtx = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica_form_data', []));
     $url_confirmar = HashFSignedLink::fromSpec([
         'path' => 'frontend/actividadestudios/controller/matricular.php',
-        'query' => ['confirmar' => 'si'],
+        'query' => [
+            'confirmar' => 'si',
+            'ctx_auto' => PayloadCoercion::string($formCtx['ctx_auto'] ?? ''),
+        ],
     ]);
     (new ViewNewPhtml('frontend\\actividadestudios\\controller'))
         ->renderizar('matricular_confirmar.phtml', [
@@ -34,9 +40,7 @@ if (!$confirmado) {
     return;
 }
 
-$formCtx = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica_form_data', []));
 $post = (array)$_POST;
-$post['ctx_auto'] = \frontend\shared\helpers\PayloadCoercion::string($formCtx['ctx_auto'] ?? '');
 $data = ActividadestudiosRenderSupport::stringKeyRow(PostRequest::getDataFromUrl('/src/actividadestudios/matricula_automatica', $post));
 $msg = \frontend\shared\helpers\PayloadCoercion::string($data['msg'] ?? '');
 

@@ -111,6 +111,17 @@ Continuación con lo que quedó en `docs/dev/backlog.md` sin decisiones de dise�
 3. **Más flujos E2E:** inventario, misas, ubis, encargossacd, cambios y procesos, y una pasada «carga sin error» por las pantallas que se abren desde un formulario (no desde el menú).
 4. **Limpieza de las marcas de dossier** que dejan los tests PHPUnit en `d_dossiers_abiertos`.
 
+### Fase 6 — Datos seguros y acciones explícitas (añadida el 2026-11-14)
+
+Sale de las incidencias de la fase 5: los tests y los specs corren contra una copia de producción y varios fallos de la aplicación (no de los tests) pisaban o borraban filas reales.
+
+1. **BD de tests aislada:** que PHPUnit y Playwright no trabajen sobre la copia de producción (pendiente; decisión de infraestructura).
+2. **Auditoría de los ids nuevos:** cada repositorio toma el id de la secuencia de su tabla.
+3. **Pantallas que ejecutan una acción al abrirse** y lecturas que escriben: una acción solo se ejecuta con la cápsula que firma la pantalla anterior.
+4. **Hashes de formulario con `getCamposHtml()`**, que la auditoría de hashes no cubre.
+5. **Resto del backlog:** endpoints de resincronización y demás endpoints que escriben sin cápsula, cobertura de `shared`, `zonassacd` y `utils_database`, Infection.
+6. **Fallos intermitentes de E2E.**
+
 ---
 
 ## 4. Protocolo de cada paso (para retomar sin contexto)
@@ -207,6 +218,14 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 5.3 Flujos E2E: inventario, misas, ubis, encargossacd, cambios, procesos; «carga sin error» de pantallas por formulario.
 - [x] 5.4 Limpieza de las marcas de dossier de los tests PHPUnit (la suite ya no deja marcas; restos antiguos: duda 16).
 
+**Fase 6** (sección 31)
+- [ ] 6.1 BD de tests aislada.
+- [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
+- [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
+- [ ] 6.4 Hashes de formulario con `getCamposHtml()`.
+- [ ] 6.5 Resto del backlog.
+- [x] 6.6 Fallos intermitentes de E2E (sección 31).
+
 ---
 
 ## 6b. Dudas pendientes para el usuario
@@ -241,6 +260,12 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 17. ~~**(5.3) Secuencias por detrás de los ids reales.**~~ **Resuelta (2026-11-14).** Las BD `comun` y `sv-e` de desarrollo son réplicas y sus secuencias no venían ajustadas: 26 de 93 atrasadas en `comun` y 14 de 65 en `sv-e` (p. ej. `encargos`, `zonas`, `zonas_sacd`, `a_actividad_proceso_*`, `av_cambios_*`, `encargos_sacd`, `encargo_sacd_horario`). Ajustadas con `setval` al máximo de su tabla (todas menos `public.xa_asignaturas`, que no está atrasada: sus ids 9998 y 9999 son especiales y el máximo real es 3417). En `sv` no hay ninguna atrasada (117 revisadas), así que no hay nada que mirar en producción. Tras restaurar de nuevo `comun` o `sv-e` hay que repetir el ajuste. `EncargoVerNuevo` conserva la protección de no reutilizar ids. El encargo 51 se repuso de la copia del 10 de noviembre: si se había cambiado después de esa fecha, ese cambio se ha perdido.
 
 18. ~~**(5.4) El listado «matrículas pendientes» borra matrículas.**~~ **Resuelta (2026-11-14).** Decisión: las matrículas pendientes de personas que no están en «A» se borran, aunque tengan acta, si la matrícula no lleva nota. Si la matrícula lleva nota (`nota_num`) y esa nota no está en `e_notas_dl`, `MatriculasPendientesData` la conserva y lo avisa en el listado, para no perderla (en dev no hay ninguna así: las 345 pendientes, 86 con acta, no tienen nota). El controlador sigue excluido del test-guardia de lectura porque borra.
+
+19. **(6.3) «Peticiones de plazas» borra peticiones al abrirse.** `PeticionesActivData` borra las peticiones de la persona cuya actividad no sale en la lista que se está pintando. La lista depende de los filtros de la pantalla (tipo de persona, tipo de actividad y grupo de estudios `todos`): vista con un grupo de estudios, se borran las peticiones de actividades de otras delegaciones; con un tipo de persona no previsto la lista sale vacía y se borran todas. ¿Se deja de borrar al leer (y solo se ocultan), o se borra solo lo que ya no existe o está fuera del curso? (Sin tocar.)
+
+20. **(6.3) Estado de las marcas de dossier en producción.** Por el fallo de `PgDossierRepository::Guardar` (sección 31), en la copia de producción todas las marcas de persona de `H-dlbv` tienen el mismo estado y fecha (3 912 abiertas con fecha 2026-11-09; las 1 296 de actividad, abiertas con tres fechas). El dato «abierto/cerrado» de cada dossier se ha perdido. ¿Hace falta recalcularlo (abierto si el dossier tiene datos) con una herramienta, o basta con que a partir de ahora se guarde bien? (Corregido el fallo; los datos, sin tocar.)
+
+21. **(6.3) Endpoints que escriben sin cápsula.** Quedan 20 controladores de `src/` con nombre de acción que no abren ninguna cápsula `HashB` (lista en `docs/dev/backlog.md`); entre ellos `certificado_emitido_guardar_pdf` (sobrescribe el PDF de un certificado con el `id_item` que llegue) y los dos de resincronización de la duda 2. ¿Se les pone cápsula a todos como paso 6.5? (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 
@@ -1131,3 +1156,48 @@ Medido solo con los tests de cada módulo; sin contar `db/` (DDL, necesita BD ai
 - **5.4 Marcas de dossier (2026-11-13):** medido con una copia de `"H-dlbv".d_dossiers_abiertos` antes y después de la suite completa (10 717 tests, en verde): **la suite ya no deja ninguna marca nueva** (5 214 filas antes y después), así que no hace falta ningún mecanismo de limpieza en los tests. Lo que queda son los restos antiguos: 509 marcas de persona de `H-dlbv` cuyo `id_pau` no está en `global.personas`. No se han borrado: 408 tienen ids negativos (podrían ser personas de fuera de la dl, que no están en esa tabla) y no se pueden distinguir con seguridad de los restos de tests (duda 16).
 - **Cobertura tras 5.2 (2026-11-13, `docs/dev/reports/cobertura_por_modulo.md`):** total 70,5 % de líneas; `inventario` 31 → 61 %, `cartaspresentacion` 43 → 76 %, `misas` 60 → 75 %, `utils_database` 48 → 58 %, `zonassacd` 47 → 50 %.
 
+## 31. Fase 6: datos seguros y acciones explícitas (empezada el 2026-11-14)
+
+Paso 6.2 (ids nuevos): en la sección 30.
+
+### Paso 6.3: pantallas que ejecutan una acción al abrirse y lecturas que escriben (2026-11-14)
+
+**Cómo se buscó.** (1) Controladores de `frontend/` que llaman desde PHP a un endpoint de `src/` con cápsula `HashB` y de dónde sacan la cápsula. (2) Controladores de lectura de `src/` cuyas clases de `application/` escriben (`Guardar`, `Eliminar`, SQL directo). (3) El test-guardia de controladores de lectura, ampliado para ver en qué tablas escribe cada uno.
+
+**Corregido:**
+
+1. **`encargossacd/propuestas_aprobar.php` (aprobar las propuestas de encargos).** El controlador pedía la cápsula y la usaba en la misma petición: bastaba abrirlo para pasar las propuestas a real y borrar sus tablas (así ocurrió la incidencia de la fase 5). Ahora la cápsula la firma el menú de propuestas y viaja en el enlace que se abre tras la confirmación; el controlador solo la reenvía.
+2. **`encargossacd/comprobaciones.php` («Eliminar encargos de centros inexistentes»).** `/src/encargossacd/comprobaciones_ctr` borraba los encargos de centros inactivos con cualquier petición, sin cápsula (y el test-guardia de lecturas lo ejecutaba en cada pasada). Ahora exige la cápsula `ctx_comprobar` que firma la pantalla de listas (`comprobaciones_ctr_data`, endpoint nuevo) y el enlace pide confirmación.
+3. **`actividadestudios/matricular.php` («matricular a todos»).** Tenía confirmación, pero al ejecutar pedía él mismo la cápsula. Ahora se firma al pintar la confirmación y viaja en el enlace «continuar».
+4. **«Comprobar notas» (`/src/notas/comprobar_notas_page_data`).** Con el parámetro `actualizar` (por POST o por GET) cambiaba niveles del stgr de todas las personas o borraba notas «cursada», sin cápsula. Ahora cada enlace de acción lleva una cápsula `ctx_actualizar` (acción, tipo de persona y, al borrar una cursada, persona y asignatura, que ya no se leen de la petición). Al volver atrás se repinta la consulta, no se repite la acción.
+
+**Dos fallos de la aplicación que afectan a producción**, encontrados al revisar los cambios de contenido que lista `phpunit_protegido.php`:
+
+5. **`PgDossierRepository::Guardar` cambiaba todas las marcas de dossier.** El UPDATE filtraba solo por `tabla` (`WHERE tabla = 'p'`), no por persona y tipo de dossier: abrir o cerrar un dossier ponía ese estado y esas fechas en todas las marcas de la tabla. En la copia de producción las 3 912 marcas de persona de `H-dlbv` tienen el mismo estado y fecha. Corregido (clave completa) con test. En dev, los tests las habían dejado todas cerradas; repuestas al valor de la copia. Duda 20.
+6. **`PgTarifaUbiRepository::Eliminar` borraba todas las tarifas de la casa.** Filtraba por `id_ubi`, no por `id_item`: «eliminar esta tarifa» borraba las de todos los años y tipos de esa casa (en dev, unas 92 por casa). Corregido con test.
+
+Revisados los 127 UPDATE y los DELETE de todos los `Pg*Repository` comparando sus filtros con los de la comprobación de existencia: no hay más casos. Queda anotado `PgDelegacionRepository` / `PgRegionRepository`, que borran por el nombre (`dl`, `region`) y no por el id; hoy no hay nombres repetidos.
+
+**Tests-guardia:**
+
+- `ControladoresLecturaSinParametrosTest` ejecuta ahora cada controlador dentro de una transacción en todas las conexiones, mira en qué tablas ha escrito (`pg_stat_xact_user_tables`) y la deshace (trait `Tests\support\DetectaEscriturasEnBd`). Falla si un controlador de lectura escribe en una tabla que no está en `ESCRITURAS_ADMITIDAS`. Admitidas: las matrículas pendientes (duda 18), la preferencia «última búsqueda» de `lista_sr_csv_datos` y las tablas de trabajo de los tres informes del stgr. Como todo se deshace, el test ya no cambia datos de dev y `matriculas_pendientes_data` vuelve a estar dentro.
+- `PantallasNoFirmanSuPropiaAccionTest` (estático): un controlador de `frontend/` no pasa a un endpoint con cápsula una cápsula que sale de otro `PostRequest` del mismo fichero. Comprobado que falla con el código anterior de `propuestas_aprobar.php` y `matricular.php`.
+- E2E `acciones-sin-capsula.spec.ts`: abiertas sin cápsula, las tres acciones responden «Operación no autorizada» y no cambian ninguna tabla; desde su pantalla piden confirmación y, al cancelar, no se pide nada. No ejecuta ninguna de las tres.
+
+**Sin tocar (anotado):**
+
+- «Peticiones de plazas» borra peticiones al abrirse según los filtros de la pantalla (duda 19).
+- 20 endpoints con nombre de acción sin cápsula (duda 21, `backlog.md`).
+- Restos de los tests: 5 marcas de dossier 1303 de personas reales que la suite crea la primera vez tras restaurar y luego mantiene; y, de forma intermitente, una fila «test_nom_activ_vo» en la tabla padre `public.a_actividades_all` (borradas las dos que había; no se reproduce lanzando los tests sueltos).
+
+Suite completa en verde (10 849 tests) bajo la comprobación de filas.
+
+### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
+
+Los dos specs que fallaban de vez en cuando (`encargossacd-alta-baja` y `cambios-avisos`) se reproducían lanzándolos con `--repeat-each` (uno de cada tres o cuatro; el de avisos, hasta seis de ocho). Eran carreras del spec con la pantalla, no fallos de la aplicación:
+
+- **Casilla de una fila que se desmarca.** Las listas (SlickGrid) pueden repintar sus filas justo después de cargarse; el clic dado antes se pierde y el botón de la lista avisa «no ha seleccionado ninguna fila» sin enviar nada. Nueva ayuda `marcarFila()` (marca y comprueba que sigue marcada), usada en los ocho specs que seleccionan filas.
+- **Desplegable que se recarga.** En los avisos de cambios, la fase de referencia se vuelve a pedir cuando acaban de cargarse los desplegables del tipo de actividad, y lo elegido antes se pierde («debe indicar la fase de referencia»). Nueva ayuda `elegirOpcion()` (elige y comprueba que sigue elegido).
+- `esperarSrc()` dice ahora, si no llega la petición, qué endpoint esperaba, los últimos avisos (`alert`) y lo que hay en pantalla; antes solo se veía un timeout.
+
+Tras el cambio, 8 de 8 pasadas de cada uno y la pasada completa de specs autenticados en verde (19; el de equipajes se salta mientras no esté el parámetro del almacén).

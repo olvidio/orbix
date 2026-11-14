@@ -161,7 +161,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.comprobar_notas_page_data`
 - Controller: `src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_data.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.id_tabla:string`, `post.plan_estudios:int`, `post.dl:array`; para ejecutar una acción, `post.actualizar:string` + `post.ctx_actualizar:string` (cápsula `HashB` que la propia respuesta pone en cada enlace de acción; sin ella responde «Operación no autorizada»)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/examinadores_search`

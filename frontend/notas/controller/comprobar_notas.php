@@ -32,6 +32,11 @@ $actualizar = $requestPayload['actualizar'] ?? '';
 if (is_string($actualizar) && $actualizar !== '') {
     $forward['actualizar'] = $actualizar;
 }
+// Cápsula de la acción: la firma el backend al pintar el enlace; aquí solo se reenvía.
+$ctxActualizar = $requestPayload['ctx_actualizar'] ?? '';
+if (is_string($ctxActualizar) && $ctxActualizar !== '') {
+    $forward['ctx_actualizar'] = $ctxActualizar;
+}
 $idNom = $requestPayload['id_nom'] ?? null;
 if (is_int($idNom) || (is_string($idNom) && is_numeric($idNom))) {
     $forward['id_nom'] = (int) $idNom;
@@ -48,11 +53,14 @@ if (isset($requestPayload['dl']) && is_array($requestPayload['dl'])) {
     $forward['dl'] = $requestPayload['dl'];
 }
 
+// Al volver atrás se repinta la consulta, no se repite la acción.
+$parametrosVolver = ListNavSupport::buildReturnParametrosFromPost($forward);
+unset($parametrosVolver['actualizar'], $parametrosVolver['ctx_actualizar']);
 $oPosicion->nav()->enter(
     PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),
     '#main',
     [],
-    ListNavSupport::buildReturnParametrosFromPost($forward),
+    $parametrosVolver,
 );
 
 $payload = PostRequest::getDataFromUrl(

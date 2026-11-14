@@ -1,7 +1,10 @@
 <script type="text/javascript">
 fnjs_comprobaciones=function(){
+	if (!confirm(<?= json_encode(_("Se eliminarán los encargos de los centros que ya no están activos. ¿Continuar?"), JSON_UNESCAPED_UNICODE) ?>)) {
+		return;
+	}
 	var url='<?= $url ?>';
-	var parametros='que=ctr<?= $h ?>';
+	var parametros='que=ctr&ctx_comprobar=' + encodeURIComponent(<?= json_encode($ctx_comprobar) ?>) + '<?= $h ?>';
 	fnjs_ajax_json_alert({ url: url, data: parametros });
 }
 </script>

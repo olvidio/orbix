@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "encargossacd"
-endpoints: 38
+endpoints: 39
 estado_revision: "generado"
 ---
 
@@ -14,8 +14,15 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `encargossacd.comprobaciones_ctr`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/comprobaciones_ctr.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.ctx_comprobar:string` (cápsula `HashB` que firma `comprobaciones_ctr_data`; sin ella responde «Operación no autorizada»)
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/encargossacd/comprobaciones_ctr_data`
+
+- Id: `encargossacd.comprobaciones_ctr_data`
+- Controller: `src/encargossacd/infrastructure/ui/http/controllers/comprobaciones_ctr_data.php`
+- Entrada: ninguna.
+- Respuesta: `standard_envelope_string_data` (`ctx_comprobar`)
 
 ## `/src/encargossacd/ctr_ficha_data`
 
@@ -210,7 +217,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `encargossacd.propuestas_aprobar`
 - Controller: `src/encargossacd/infrastructure/ui/http/controllers/propuestas_aprobar.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.ctx_aprobar:string` (cápsula `HashB` que firma `propuestas_aprobar_data`; sin ella responde «Operación no autorizada»)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/encargossacd/propuestas_lista_enc_data`

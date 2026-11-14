@@ -13,5 +13,8 @@ use frontend\encargossacd\helpers\EncargossacdPayload;
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
-$data = PostRequest::getDataFromUrl('/src/encargossacd/comprobaciones_ctr');
+// La cápsula la firma la pantalla de listas (`listas_index.php`); aquí solo se reenvía.
+$data = PostRequest::getDataFromUrl('/src/encargossacd/comprobaciones_ctr', [
+    'ctx_comprobar' => (string) filter_input(INPUT_POST, 'ctx_comprobar'),
+]);
 AjaxJsonSupport::response('', ['text' => EncargossacdPayload::comprobacionesTexto($data)]);

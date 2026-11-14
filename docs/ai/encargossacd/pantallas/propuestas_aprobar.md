@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Proxy que llama a `/src/encargossacd/propuestas_aprobar` e imprime el texto de resultado («Hecho!») en `#main`. Invocado tras confirmación desde el menú de propuestas.
+Acción, no pantalla: reenvía a `/src/encargossacd/propuestas_aprobar` la cápsula `ctx_aprobar` que llega en el enlace del menú de propuestas (tras la confirmación) e imprime el texto de resultado («Hecho!») en `#main`. Abierta sin esa cápsula no aprueba nada («Operación no autorizada»).
 
 ## Uso En Ayuda
 

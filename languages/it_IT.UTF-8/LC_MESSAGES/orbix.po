@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 19:20+0100\n"
+"POT-Creation-Date: 2026-11-14 23:40+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -450,6 +450,7 @@ msgstr "attività"
 #: src/devel_db_admin/infrastructure/ui/http/controllers/verificar_renombrar_esquema.php:26
 #: src/dossiers/infrastructure/ui/http/controllers/tipo_dossier_eliminar.php:15
 #: src/dossiers/infrastructure/ui/http/controllers/tipo_dossier_guardar.php:15
+#: src/encargossacd/infrastructure/ui/http/controllers/comprobaciones_ctr.php:18
 #: src/encargossacd/infrastructure/ui/http/controllers/ctr_ficha_update.php:15
 #: src/encargossacd/infrastructure/ui/http/controllers/encargo_ver_editar.php:15
 #: src/encargossacd/infrastructure/ui/http/controllers/encargo_ver_eliminar.php:15
@@ -496,6 +497,8 @@ msgstr "attività"
 #: src/notas/infrastructure/ui/http/controllers/acta_eliminar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_modificar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_nueva.php:15
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:93
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:96
 #: src/notas/infrastructure/ui/http/controllers/persona_nota_eliminar.php:18
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_default_guardar.php:16
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_eliminar.php:16
@@ -1196,8 +1199,8 @@ msgstr "- priorità"
 #: frontend/ubis/controller/calendario_periodos_get.php:53
 #: frontend/ubis/view/direcciones_que.phtml:7
 #: src/actividades/application/ActividadSelectListado.php:211
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:659
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:673
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:689
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:703
 #: src/tablonanuncios/domain/TablonAnunciosParaGM.php:65
 #: src/usuarios/application/GruposLista.php:36
 #: src/usuarios/application/rolesLista.php:73
@@ -1667,8 +1670,8 @@ msgstr "data e luogo del sem, ca o cv"
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:301
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:316
 #: src/notas/application/Select_notas_de_una_persona.php:57
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:545
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:659
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:575
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:689
 #: src/profesores/application/DocenciaLista.php:40
 #: src/profesores/domain/entity/ProfesorAmpliacion.php:204
 #: src/profesores/domain/entity/ProfesorDocenciaStgr.php:227
@@ -1789,9 +1792,9 @@ msgstr "allarme"
 #: src/asignaturas/domain/InfoAsignaturas.php:19
 #: src/asistentes/application/ListaEstCtrData.php:205
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:268
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:456
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:494
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:585
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:615
 msgid "asignaturas"
 msgstr "soggetti"
 
@@ -4880,7 +4883,7 @@ msgstr "titolo: collaboratore"
 msgid "titulo: otros"
 msgstr "titolo: altri"
 
-#: frontend/encargossacd/controller/propuestas_aprobar.php:15
+#: frontend/encargossacd/controller/propuestas_aprobar.php:21
 #: src/encargossacd/application/services/PropuestasAprobarService.php:67
 msgid "Hecho!"
 msgstr "Fatto!"
@@ -5110,79 +5113,87 @@ msgstr "coordinatore"
 msgid "textos para las comunicaciones"
 msgstr "testi per le comunicazioni"
 
-#: frontend/encargossacd/view/listas_index.phtml:8
+#: frontend/encargossacd/view/listas_index.phtml:3
+msgid ""
+"Se eliminarán los encargos de los centros que ya no están activos. "
+"¿Continuar?"
+msgstr ""
+"Verranno eliminati gli incarichi dei centri che non sono più attivi. "
+"Continuare?"
+
+#: frontend/encargossacd/view/listas_index.phtml:11
 msgid "comprobaciones"
 msgstr "controlli"
 
-#: frontend/encargossacd/view/listas_index.phtml:11
+#: frontend/encargossacd/view/listas_index.phtml:14
 msgid "Eliminar encargos de centros inexistentes"
 msgstr "Eliminare gli ordini da centri inesistenti"
 
-#: frontend/encargossacd/view/listas_index.phtml:14
+#: frontend/encargossacd/view/listas_index.phtml:17
 msgid "listados de encargos para cr"
 msgstr "elenchi di ordini per cr"
 
-#: frontend/encargossacd/view/listas_index.phtml:16
+#: frontend/encargossacd/view/listas_index.phtml:19
 msgid "atención ctr sf (cr 1/14, 10,a)"
 msgstr "attenzione ctr sf (cr 1/14, 10,a)"
 
-#: frontend/encargossacd/view/listas_index.phtml:17
+#: frontend/encargossacd/view/listas_index.phtml:20
 msgid "atención ctr sv (cr 1/14, 10,a)"
 msgstr "attenzione ctr sv (cr 1/14, 10,a)"
 
-#: frontend/encargossacd/view/listas_index.phtml:18
+#: frontend/encargossacd/view/listas_index.phtml:21
 msgid "atención iglesias, oc y lp (cr 1/14, 10,b)"
 msgstr "attenzione chiese, oc e lp (cr 1/14, 10,b)"
 
-#: frontend/encargossacd/view/listas_index.phtml:19
+#: frontend/encargossacd/view/listas_index.phtml:22
 msgid "oc y lp sf (cr 1/14, 10,b)"
 msgstr "oc e lp sf (cr 1/14, 10,b)"
 
-#: frontend/encargossacd/view/listas_index.phtml:20
+#: frontend/encargossacd/view/listas_index.phtml:23
 msgid "por sacd (cr 1/14, 10,d)"
 msgstr "da sacd (cr 1/14, 10,d)"
 
-#: frontend/encargossacd/view/listas_index.phtml:21
+#: frontend/encargossacd/view/listas_index.phtml:24
 msgid "tabla por sacd (cr 9/20, 10)"
 msgstr "tavola di sacd (cr 9/20, 10)"
 
-#: frontend/encargossacd/view/listas_index.phtml:22
+#: frontend/encargossacd/view/listas_index.phtml:25
 msgid "tabla por sacd sf (cr 9/20, 10)"
 msgstr "tavola di sacd sf (cr 9/20, 10)"
 
-#: frontend/encargossacd/view/listas_index.phtml:25
+#: frontend/encargossacd/view/listas_index.phtml:28
 msgid "listados comunicaciones"
 msgstr "elenchi di comunicazioni"
 
-#: frontend/encargossacd/view/listas_index.phtml:27
+#: frontend/encargossacd/view/listas_index.phtml:30
 msgid "exigencias ctr sv"
 msgstr "requisiti ctr sv"
 
-#: frontend/encargossacd/view/listas_index.phtml:28
+#: frontend/encargossacd/view/listas_index.phtml:31
 msgid "exigencias ctr sf"
 msgstr "requisiti ctr sf"
 
-#: frontend/encargossacd/view/listas_index.phtml:29
+#: frontend/encargossacd/view/listas_index.phtml:32
 msgid "exigencias igl, oc..."
 msgstr "igl richiede, oc..."
 
-#: frontend/encargossacd/view/listas_index.phtml:30
+#: frontend/encargossacd/view/listas_index.phtml:33
 msgid "comunicación a sacd Prelatura"
 msgstr "comunicazione alla sacd Prelatura"
 
-#: frontend/encargossacd/view/listas_index.phtml:31
+#: frontend/encargossacd/view/listas_index.phtml:34
 msgid "comunicación a sacd sss+"
 msgstr "comunicazione a sacd sss+"
 
-#: frontend/encargossacd/view/listas_index.phtml:32
+#: frontend/encargossacd/view/listas_index.phtml:35
 msgid "comunicación a los centros sv"
 msgstr "comunicazione ai centri sv"
 
-#: frontend/encargossacd/view/listas_index.phtml:33
+#: frontend/encargossacd/view/listas_index.phtml:36
 msgid "comunicación a los centros sf"
 msgstr "comunicazione ai centri sf"
 
-#: frontend/encargossacd/view/listas_index.phtml:34
+#: frontend/encargossacd/view/listas_index.phtml:37
 msgid "modificar los textos de las comunicaciones"
 msgstr "modificare i testi delle comunicazioni"
 
@@ -7696,7 +7707,7 @@ msgstr "in attesa di"
 msgid "cursada"
 msgstr "studiato"
 
-#: frontend/notas/controller/comprobar_notas.php:64
+#: frontend/notas/controller/comprobar_notas.php:72
 msgid "No se pudo cargar la comprobación de notas."
 msgstr "Non è stato possibile caricare la verifica delle note."
 
@@ -7896,8 +7907,8 @@ msgstr "Formato: num/aa"
 #: frontend/notas/view/acta_ver.phtml:133
 #: frontend/notas/view/form_notas_de_una_persona.phtml:418
 #: src/notas/application/Select_notas_de_una_persona.php:60
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:545
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:659
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:575
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:689
 msgid "fecha acta"
 msgstr "data di registrazione"
 
@@ -13453,10 +13464,10 @@ msgstr "nome della persona"
 
 #: src/asistentes/application/ActivPendientesSelectData.php:186
 #: src/notas/application/TablaAlumnosAsignaturas.php:183
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:456
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:494
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:585
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:625
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:615
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:655
 msgid "nivel stgr"
 msgstr "livello stgr"
 
@@ -13670,12 +13681,12 @@ msgstr "Non appare"
 
 #: src/asistentes/application/ListaUltimaActivData.php:267
 #: src/notas/application/TablaAlumnosAsignaturas.php:185
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:456
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:494
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:545
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:585
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:625
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:659
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:575
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:615
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:655
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:689
 #: src/profesores/application/CongresosLista.php:30
 #: src/profesores/application/DocenciaLista.php:38
 #: src/profesores/application/ProfesoresAsignaturaLista.php:38
@@ -17359,11 +17370,11 @@ msgstr "Il verbale d'esame non è stato trovato."
 msgid "No hay PDF asociado a este acta."
 msgstr "Non esiste un PDF associata a questo verbale d'esame."
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:417
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:447
 msgid "Comprobación del Fichero de Notas"
 msgstr "Verifica del file dei voti"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:429
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:459
 #, php-format
 msgid ""
 "Plan de estudios: %1$d (cambiar a %2$s). Umbral bienio: %3$d asignaturas; "
@@ -17372,7 +17383,7 @@ msgstr ""
 "Piano di studi: %1$d (cambia a %2$s). Soglia biennio: %3$d materie; "
 "quadriennio: %4$d."
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:451
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:481
 #, php-format
 msgid ""
 "1. %s con el bienio terminado (plan %d) y sin poner que lo ha terminado: %d"
@@ -17380,19 +17391,19 @@ msgstr ""
 "1. %s con il biennio terminato (piano %d) e senza indicare che è terminato: "
 "%d"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:452
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:482
 msgid "Es importante poner bien la fecha en que lo ha terminado"
 msgstr "È importante inserire correttamente la data in cui lo ha terminato"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:468
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:506
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:596
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:635
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:679
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:498
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:536
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:626
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:665
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:709
 msgid "clic aquí"
 msgstr "clicca qui"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:470
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:500
 #, php-format
 msgid ""
 "para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto "
@@ -17401,7 +17412,7 @@ msgstr ""
 "per impostare c1 e biennio completato per tutti gli elementi della lista, "
 "eseguire %s. Questo imposterà la data del verbale d'esame più recente."
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:489
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:519
 #, php-format
 msgid ""
 "2. %s con el cuadrienio terminado (plan %d) y sin poner que lo ha terminado: "
@@ -17410,7 +17421,7 @@ msgstr ""
 "2. %s con il quadriennio terminato (piano %d) e senza indicare che è "
 "terminato: %d"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:508
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:538
 #, php-format
 msgid ""
 "para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto "
@@ -17419,39 +17430,39 @@ msgstr ""
 "per impostare r e quadriennio completato per tutti gli elementi della lista, "
 "eseguire %s. Questo imposterà la data del verbale d'esame più recente."
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:527
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:557
 #, php-format
 msgid "(asignatura %s desconocida)"
 msgstr "(materia %s sconosciuta)"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:599
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:629
 #, php-format
 msgid "para poner c1 a todos los de la lista, hacer %s"
 msgstr "per inserire c1 in tutto l'elenco, crea %s"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:600
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:630
 #, php-format
 msgid "para poner c2 a todos los de la lista, hacer %s"
 msgstr "per mettere c2 a tutta la lista, fai %s"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:606
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:636
 #, php-format
 msgid "5. %1$s con \"c1\" mal puesto (plan %2$d, umbral %4$d): %3$d"
 msgstr ""
 "5. %1$s con \"c1\" posizionato in modo errato (piano %2$d, soglia %4$d): %3$d"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:610
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:640
 #, php-format
 msgid "6. %1$s con \"c2\" mal puesto (plan %2$d, umbral %4$d): %3$d"
 msgstr ""
 "6. %1$s con \"c2\" posizionato in modo errato (piano %2$d, soglia %4$d): %3$d"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:638
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:668
 #, php-format
 msgid "para poner r a todos los de la lista, hacer %s"
 msgstr "per mettere r a tutti nella lista, fai %s"
 
-#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:681
+#: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:711
 #, php-format
 msgid "para borrar las cursadas de más de %s años, hacer %s"
 msgstr "per eliminare corsi più vecchi di %s anni, esegui %s"

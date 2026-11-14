@@ -154,6 +154,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | misas | `misas-encargos-zona.spec.ts` | encargos de la zona: rejilla de la primera zona → nuevo → grabar → clic en su fila → modificar → eliminar; comprueba que los demás encargos no cambian |
 | certificados | `certificados-subida.spec.ts` | subida multipart del PDF de un certificado recibido |
 | permisos | `rol-restringido.spec.ts` | usuario Oficial_dl sin grupos: inicia sesión en un contexto limpio; sin administración de usuarios |
+| encargossacd, actividadestudios | `acciones-sin-capsula.spec.ts` | aprobar propuestas, comprobaciones de encargos y «matricular a todos» abiertas sin cápsula: «Operación no autorizada» y ninguna tabla cambia; desde su pantalla piden confirmación (se cancela: no ejecuta ninguna) |
 | todos | `pantallas-sin-parametros.spec.ts` | abre cada `frontend/<modulo>/controller/*.php` con un POST sin parámetros (≈300 pantallas, ≈2 min): sin error de PHP, sin 5xx y sin «sesión no autenticada en una llamada interna». No abre los controladores que por su nombre ejecutan una acción, ni los módulos de administración de la BD |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
 
@@ -168,11 +169,12 @@ Reglas para escribir más:
 - Los desplegables encadenados se recargan por AJAX: esperar la respuesta antes de elegir en el siguiente.
 - Al abrir una pantalla que comparte elementos con la anterior (p. ej. `equipajes_ver.php` con otro parámetro), esperar a un elemento que solo tenga la nueva; si no, `abrirPantalla` da por buena la que aún está pintada.
 - Ojo con los `id` repetidos entre pantallas (p. ej. `#b_mas` en la búsqueda de ubis y en su tabla): acotar el selector con algo propio de la pantalla que se espera.
+- **Marcar una fila o elegir en un desplegable que la pantalla recarga:** usar `marcarFila()` y `elegirOpcion()` (comprueban que la marca o la opción siguen ahí). Un `click` o un `selectOption` dados antes de que la rejilla se repinte o el desplegable se recargue se pierden, y el spec falla de forma intermitente. Para ver si un spec es estable: `--repeat-each=8`.
 - **No abrir fichas de datos reales por descuido:** en una lista, el enlace de alta suele convivir con los enlaces de cada fila; elegirlo por algo propio (`que=nuevo`…) y comprobar antes de guardar que la ficha es de alta (o la del dato del test).
 - Si el alta usa una secuencia de ids, comprobar al final que los datos que ya había no han cambiado (ver `encargossacd-alta-baja`).
 - Si el flujo toca datos de una persona real (p. ej. marcas de dossier), guardar una foto antes y reponerla al final.
 - **Lanzar los specs bajo la comprobación de filas**: `php tools/qa/phpunit_protegido.php --comando "npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ --grep-invert enlaces"`. No ejecuta nada si hay secuencias atrasadas, falla si alguna tabla pierde filas y lista las tablas cuyo contenido ha cambiado.
-- **Hay pantallas que son una acción**: `propuestas_aprobar.php` aprueba todas las propuestas de encargos solo con abrirla. Antes de abrir un controlador «a ciegas», mirar qué hace; `pantallas-sin-parametros.spec.ts` excluye por nombre (guardar, eliminar, aprobar…) y por lista.
+- **Hay pantallas que son una acción**: `propuestas_aprobar.php` aprobaba todas las propuestas de encargos solo con abrirla (ahora exige la cápsula del menú de propuestas; `acciones-sin-capsula.spec.ts`). Antes de abrir un controlador «a ciegas», mirar qué hace; `pantallas-sin-parametros.spec.ts` excluye por nombre (guardar, eliminar, aprobar…) y por lista.
 - Abrir una pantalla puede guardar «la última búsqueda» como preferencia del usuario: si el spec abre pantallas en bloque, guardar y reponer `web_preferencias` del usuario de E2E.
 - Ejecutar Playwright modifica `test-results/` (versionado): restaurarlo con `git checkout -- test-results/ && git clean -fdq test-results/`.
 

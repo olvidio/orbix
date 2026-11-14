@@ -19,6 +19,8 @@ use src\notas\domain\value_objects\CursoStgr;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
 /**
  * Cuerpo de la pantalla legacy “comprobar notas” (SQL + HTML).
@@ -75,6 +77,25 @@ $nota_situ_cursada = NotaSituacion::CURSADA;
 $requestInput = $_POST !== [] ? $_POST : $_GET;
 $Qactualizar = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'actualizar');
 $Qid_tabla = \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'id_tabla');
+
+// Las acciones (`actualizar`) cambian niveles del stgr o borran notas: solo se ejecutan con la
+// cápsula que esta misma pantalla firma al pintar cada enlace (`$comprobarNotasUrl`). Sin ella, o
+// con una firmada para otra acción o tipo de persona, no se hace nada.
+/** @var array<string, mixed> $accionCtx */
+$accionCtx = [];
+if ($Qactualizar !== '') {
+    try {
+        $accionCtx = HashB::open(
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($requestInput, 'ctx_actualizar'),
+            'comprobar_notas_actualizar'
+        );
+    } catch (HashBInvalidException) {
+        throw new RuntimeException(_("Operación no autorizada"));
+    }
+    if ((string) ($accionCtx['actualizar'] ?? '') !== $Qactualizar || (string) ($accionCtx['id_tabla'] ?? '') !== $Qid_tabla) {
+        throw new RuntimeException(_("Operación no autorizada"));
+    }
+}
 
 [$tabla, $tabla_txt] = match ($Qid_tabla) {
     'n' => ['p_numerarios', 'Numerarios'],
@@ -178,6 +199,14 @@ $superada = "(n.id_situacion = " . $nota_situ_numerica . " OR n.id_situacion::te
 $linkSpecs = [];
 $comprobarNotasUrl = static function (array $params) use (&$linkSpecs, $Qid_tabla, $Qplan): string {
     $params += ['id_tabla' => $Qid_tabla, 'plan_estudios' => $Qplan];
+    if (isset($params['actualizar'])) {
+        $params['ctx_actualizar'] = HashB::sign('comprobar_notas_actualizar', [
+            'actualizar' => (string) $params['actualizar'],
+            'id_tabla' => $Qid_tabla,
+            'id_nom' => (int) ($params['id_nom'] ?? 0),
+            'id_asignatura' => (int) ($params['id_asignatura'] ?? 0),
+        ]);
+    }
     $token = '__COMPROBAR_NOTAS_LINK_' . count($linkSpecs) . '__';
     $linkSpecs[$token] = [
         'path' => 'frontend/notas/controller/comprobar_notas.php',
@@ -309,10 +338,11 @@ if ($Qactualizar === 'r') {
 }
 if ($Qactualizar === 'borrar_cursada') {
 
-    $Qid_nom = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_nom');
-    // Entero: antes se interpolaba el texto tal cual en el DELETE (inyección SQL; «0 OR 1=1» borraba todas las
-    // notas «cursada» de la dl).
-    $Qid_asignatura = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($requestInput, 'id_asignatura');
+    // La persona y la asignatura salen de la cápsula (las del enlace que se pintó), no de la petición.
+    // Enteros: antes se interpolaba el texto tal cual en el DELETE (inyección SQL; «0 OR 1=1» borraba
+    // todas las notas «cursada» de la dl).
+    $Qid_nom = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($accionCtx, 'id_nom');
+    $Qid_asignatura = (string)\src\shared\domain\helpers\FuncTablasSupport::inputInt($accionCtx, 'id_asignatura');
 
     $ssql = "DELETE FROM {$tablaNotasDl} n
 		WHERE n.id_situacion = " . $nota_situ_cursada . "

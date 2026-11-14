@@ -41,6 +41,7 @@ final class ControladoresConTokenSinTokenTest extends myTest
     /** Fuera del test. controlador => motivo */
     private const EXCLUIDOS = [
         'configuracion/infrastructure/ui/http/controllers/modulos_update.php' => 'responde texto; el proxy frontend lo adapta (AjaxJsonSupport::fromPlainText)',
+        'notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php' => 'no es un controlador: lo incluye comprobar_notas_page_data.php; la cápsula es solo para sus acciones (ComprobarNotasControllerTest)',
     ];
 
     /** @return iterable<string, array{string}> */
