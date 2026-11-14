@@ -144,10 +144,23 @@ passthru(implode(' ', array_map('escapeshellarg', $cmd)), $rc);
 echo "== Contando filas después de PHPUnit ==\n";
 $despues = recuento($dbContainer, $dbs);
 
+/*
+ * Tablas que la propia aplicación purga cuando los tests ejecutan de verdad sus tareas de mantenimiento
+ * (no es un test pisando datos): se avisa, pero no cuenta como fallo.
+ *  - av_cambios*: el generador de avisos borra los cambios de más de un año (`borrarCambios('P1Y')`).
+ *  - a_actividad_proceso_*: «nuevo curso» borra los procesos de actividades que no existen (en dev, las
+ *    de delegaciones que no están cargadas; solo ocurre la primera vez tras restaurar la BD).
+ */
+const PURGAS_DE_LA_APLICACION = '/\.(av_cambios|av_cambios_dl|av_cambios_anotados_dl|av_cambios_anotados_dl_sf|a_actividad_proceso_sv|a_actividad_proceso_sf)$/';
+
 $perdidas = false;
 foreach ($antes as $db => $tablas) {
     foreach ($tablas as $tabla => $n) {
         $ahora = $despues[$db][$tabla] ?? 0;
+        if ($ahora < $n && preg_match(PURGAS_DE_LA_APLICACION, $tabla) === 1) {
+            printf("  aviso: [%s] %s tiene %d filas menos (purga de la propia aplicación)\n", $db, $tabla, $n - $ahora);
+            continue;
+        }
         if ($ahora < $n) {
             if (!$perdidas) {
                 fwrite(STDERR, "TABLAS QUE HAN PERDIDO FILAS DURANTE LOS TESTS:\n");

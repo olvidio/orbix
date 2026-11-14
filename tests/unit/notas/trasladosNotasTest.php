@@ -28,6 +28,7 @@ use Tests\myTest;
 class trasladosNotasTest extends myTest
 {
     use BuscaPersonaNotasTrait;
+    use \Tests\support\ConservaFilasDePersona;
 
     private string $session_org;
 
@@ -729,7 +730,9 @@ class trasladosNotasTest extends myTest
             PersonaNotaOtraRegionStgrRepositoryInterface::class,
             ['esquema_region_stgr' => $esquema_region_stgr]
         );
-        $repo->setoDbl($this->setConexion($esquema_region_stgr));
+        $oDbRegion = $this->setConexion($esquema_region_stgr);
+        $this->conservarFilasDePersona($oDbRegion, 'e_notas_otra_region_stgr', $id_nom);
+        $repo->setoDbl($oDbRegion);
         foreach ($this->buscarPersonaNotas($repo, ['id_nom' => $id_nom]) as $oNota) {
             $repo->Eliminar($oNota);
         }
@@ -747,6 +750,8 @@ class trasladosNotasTest extends myTest
     private function borrar_antes_de_crear_notas($id_nom, $esquema)
     {
         $oDBdst = $this->setConexion($esquema . 'v');
+        // La persona es real: sus notas se guardan la primera vez y se reponen al acabar la clase.
+        $this->conservarFilasDePersona($oDBdst, 'e_notas_dl', (int) $id_nom);
 
         $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $PersonaNotaDBRepository->setoDbl($oDBdst);

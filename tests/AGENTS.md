@@ -181,6 +181,9 @@ En noviembre de 2026 se perdieron así, sin que fallara ningún test, diseños d
 
 - **Lanzar PHPUnit con `php tools/qa/phpunit_protegido.php <ruta>`** (mismos argumentos que PHPUnit). No ejecuta nada si hay secuencias atrasadas en `comun` / `sv-e`, cuenta las filas de todas las tablas antes y después, y termina con código 1 si alguna tabla ha perdido filas. No detecta una fila real sobrescrita que no se llegue a borrar.
 - En un test nuevo, el id de una fila propia sale de `getNewId()` (o de un rango que no pueda existir) y se comprueba que no existe antes de guardar. No usar ids «pequeños» escritos a mano.
+- Un test que trabaja sobre una persona **real** y vacía sus filas antes de crear las de prueba (traslados de notas) usa el trait `Tests\support\ConservaFilasDePersona`: guarda las filas reales antes de vaciar y las repone al acabar la clase.
+- Las purgas de la propia aplicación que los tests ejecutan de verdad salen como **aviso**, no como fallo: el generador de avisos borra los cambios de más de un año (`av_cambios*`) y «nuevo curso» borra los procesos de actividades que no existen (`a_actividad_proceso_*`; en dev, las de delegaciones no cargadas).
+- Si un módulo deja una fila de prueba sin limpiar y otro la borra, el segundo aparece como si hubiera perdido una fila: comprobar si la tabla coincide con la copia antes de reponer nada.
 - Si la comprobación falla: reponer las filas desde las copias (`~/trasvases/*.sql`) y corregir el test que las borró.
 
 ## Ejecutar PHPUnit
