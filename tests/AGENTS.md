@@ -172,6 +172,12 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 
 - `DateTimeLocal::createFromLocal()` usa el formato del **idioma del usuario** (en inglés `n/j/Y`). No sirve para textos con formato fijo (ISO de la BD, `j/m/Y` de la BDU): con otro idioma cambia día y mes o desborda a otro año. Para esos textos, parsear el formato conocido (ejemplos: `PersonaBDU::getFechaNacimientoVo()`, `SincroDB::fechaIncorporacion()`) y probarlo con la sesión en `en_US`.
 
+## Los tests corren contra las BD de pruebas
+
+Desde el 2026-11-15 PHPUnit y Playwright trabajan contra clones de las BD de desarrollo (`pruebas-comun`, `pruebas-sv`, `pruebas-sv-e`, `pruebas-sf`) y una segunda instancia web (`http://orbix.local:8003/orbix`), no contra las BD de desarrollo. Lo hace solo `php tools/qa/phpunit_protegido.php` (crea y regenera los clones cuando hace falta, comprueba con `ConexionesDelEntornoTest` que todas las conexiones van a ellos y avisa si desarrollo cambia). Lanzar PHPUnit a mano con `docker exec … phpunit` **sin** `-e WEBDIR=pruebas` vuelve a escribir en desarrollo: no hacerlo. Detalle en [`docs/dev/bd_pruebas.md`](../docs/dev/bd_pruebas.md).
+
+Lo que sigue vale igual para los clones: un test que pisa una fila que no creó es un test mal hecho, aunque ahora el daño se quede en una BD que se regenera.
+
 ## Los tests escriben en la BD de desarrollo: no pisar filas reales
 
 Los tests de integración crean filas, las guardan y las borran en la BD de desarrollo. `Guardar` actualiza la fila si el id ya existe, así que **un test que use un id que ya está en la tabla sobrescribe una fila real y, al limpiar, la borra**. Pasa de dos maneras:

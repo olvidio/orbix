@@ -260,6 +260,7 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 ### Resumen de cobertura esperada
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
 - **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones. El test va **antes** que el código: ver «Primero el test que falla, después el código» más abajo.
+- **PHPUnit y Playwright se lanzan con `php tools/qa/phpunit_protegido.php`**, que los ejecuta contra las BD de pruebas (`pruebas-*`, clones de las de desarrollo) y la instancia web de pruebas; nunca directamente contra desarrollo. Ver [`docs/dev/bd_pruebas.md`](docs/dev/bd_pruebas.md).
 - **Antes de escribir o modificar un test, leer [`tests/AGENTS.md`](tests/AGENTS.md)** (patrones de mocks y repositorios, sesión, `findById`/`null`, localizadores estáticos, `Criteria`, hallazgos, cómo ejecutar la suite).
 - **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
 - Usar el script `tools/qa/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).

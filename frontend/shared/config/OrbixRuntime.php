@@ -101,7 +101,7 @@ final class OrbixRuntime
 
     public static function webServer(): string
     {
-        return (string)\src\shared\config\ConfigGlobal::$web_server;
+        return \src\shared\config\ConfigGlobal::webServer();
     }
 
     public static function getWebPort(): string

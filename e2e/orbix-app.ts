@@ -102,7 +102,10 @@ export async function redEnCalma(page: Page, timeout = 20_000): Promise<void> {
 export async function sinErrorDeBackend(page: Page): Promise<void> {
   const html = await page.locator('#main').innerHTML();
   const diag = diagnoseBackendHtml(html);
-  expect(diag, diag ?? '').toBeNull();
+  // Con el texto del error a la vista: sin él solo se sabe que «hay un fatal».
+  const texto = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  const donde = Math.max(0, texto.search(/Fatal error|Uncaught |Exception|SQLSTATE/) - 40);
+  expect(diag, diag === null ? '' : `${diag}\n${texto.slice(donde, donde + 600)}`).toBeNull();
   expect(html).not.toMatch(/Fatal error|Uncaught |Warning: |Notice: /);
 }
 
@@ -184,7 +187,10 @@ export function aceptarDialogos(page: Page): string[] {
 
 /** SQL en la BD de desarrollo (solo para limpiar datos del propio test). */
 export function sqlDev(db: string, sql: string): string {
-  return execFileSync('docker', ['exec', 'orbix-db-1', 'psql', '-U', 'postgres', '-d', db, '-Atc', sql], { encoding: 'utf8' }).trim();
+  // Con el entorno de pruebas (`tools/qa/phpunit_protegido.php` pone `E2E_BD_PREFIJO=pruebas-`) las
+  // consultas van al clon de la BD, que es el que usa la instancia web de pruebas.
+  const bd = (process.env.E2E_BD_PREFIJO ?? '') + db;
+  return execFileSync('docker', ['exec', 'orbix-db-1', 'psql', '-U', 'postgres', '-d', bd, '-Atc', sql], { encoding: 'utf8' }).trim();
 }
 
 /** Marca alfabética única para los datos de un test (los VO de nombres no admiten dígitos). */

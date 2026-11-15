@@ -67,9 +67,21 @@ class ConfigGlobal extends ServerConf
         return $path;
     }
 
+    /**
+     * Protocolo y servidor de esta instancia (`http://orbix.docker`). Una segunda instancia sobre el
+     * mismo código (la de pruebas, con otro nombre de servidor) lo indica con `ORBIX_WEB_SERVER`
+     * (en nginx: `fastcgi_param ORBIX_WEB_SERVER http://…;`); si no, el de `ServerConf`.
+     */
+    public static function webServer(): string
+    {
+        $env = getenv('ORBIX_WEB_SERVER');
+
+        return is_string($env) && $env !== '' ? rtrim($env, '/') : self::$web_server;
+    }
+
     public static function getWeb(): string
     {
-        return self::$web_server . self::getWebPort() . self::getWebPath();
+        return self::webServer() . self::getWebPort() . self::getWebPath();
     }
 
     /**

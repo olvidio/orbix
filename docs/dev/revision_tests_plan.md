@@ -115,7 +115,7 @@ Continuación con lo que quedó en `docs/dev/backlog.md` sin decisiones de dise�
 
 Sale de las incidencias de la fase 5: los tests y los specs corren contra una copia de producción y varios fallos de la aplicación (no de los tests) pisaban o borraban filas reales.
 
-1. **BD de tests aislada:** que PHPUnit y Playwright no trabajen sobre la copia de producción (pendiente; decisión de infraestructura).
+1. **BD de tests aislada:** que PHPUnit y Playwright no trabajen sobre las BD de desarrollo (hecho el 2026-11-15: clones `pruebas-*` y segunda instancia web).
 2. **Auditoría de los ids nuevos:** cada repositorio toma el id de la secuencia de su tabla.
 3. **Pantallas que ejecutan una acción al abrirse** y lecturas que escriben: una acción solo se ejecuta con la cápsula que firma la pantalla anterior.
 4. **Hashes de formulario con `getCamposHtml()`**, que la auditoría de hashes no cubre.
@@ -219,7 +219,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 5.4 Limpieza de las marcas de dossier de los tests PHPUnit (la suite ya no deja marcas; restos antiguos: duda 16).
 
 **Fase 6** (sección 31)
-- [ ] 6.1 BD de tests aislada.
+- [x] 6.1 BD de tests aislada (sección 31; `docs/dev/bd_pruebas.md`).
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
 - [x] 6.4 Hashes de formulario con `getCamposHtml()` (sección 31): pantallas del menú y formularios de alta que se abren en una ventana.
@@ -1161,6 +1161,18 @@ Medido solo con los tests de cada módulo; sin contar `db/` (DDL, necesita BD ai
 ## 31. Fase 6: datos seguros y acciones explícitas (empezada el 2026-11-14)
 
 Paso 6.2 (ids nuevos): en la sección 30.
+
+### Paso 6.1: BD de pruebas y segunda instancia web (2026-11-15)
+
+Decisión del usuario: clonar las BD en el mismo PostgreSQL, una segunda instancia web solo para tests y regenerar los clones cuando haga falta, a criterio del envoltorio. Montaje y uso en [`bd_pruebas.md`](bd_pruebas.md).
+
+- **Clones:** `pruebas-comun`, `pruebas-sv`, `pruebas-sv-e`, `pruebas-sf` con `CREATE DATABASE … TEMPLATE …` (1 min los 1,9 GB). `tools/qa/bd_pruebas.php` (`estado`, `asegurar`, `regenerar`, `marcar-danada`, `borrar`) los regenera si falta alguno, si el esquema de desarrollo ha cambiado desde el clonado, si una pasada los dañó o si tienen más de 15 días.
+- **La aplicación ya tenía el mecanismo:** con `WEBDIR=pruebas`, `ConfigDB` lee `pruebas-<base>.conn.inc`. PHPUnit se lanza así; la instancia web de pruebas es un segundo `server` de nginx (`http://orbix.local:8003/orbix`) sobre el mismo código. Único cambio de código: `ConfigGlobal::webServer()` admite `ORBIX_WEB_SERVER` para que la instancia construya sus URLs con su nombre.
+- **`tools/qa/phpunit_protegido.php` va por defecto contra las BD de pruebas** (`ORBIX_ENTORNO=dev` para el comportamiento anterior): asegura los clones, comprueba las conexiones, y al acabar avisa si las BD de desarrollo han cambiado de número de filas.
+- **Test-guardia `ConexionesDelEntornoTest`:** con `WEBDIR=pruebas` todas las conexiones van a `pruebas-*`. En la primera ejecución detectó que las seis conexiones de solo lectura (`*_Select`) seguían yendo a `comun` y `sv-e` de desarrollo; faltaban `pruebas-comun_select.conn.inc` y `pruebas-sv-e_select.conn.inc`.
+- `sqlDev()` de los specs antepone `E2E_BD_PREFIJO` al nombre de la BD.
+- **Primera pasada completa en el entorno de pruebas:** 12 tests daban error porque faltaba `pruebas-importar.inc` (conexiones de mantenimiento; añadido al test-guardia), y el spec de usuarios fallaba porque una llamada HTTP de la aplicación a sí misma iba a `127.0.0.1` dentro del contenedor (`PostRequest::rewriteLoopbackHost`, corregido). También salieron cinco tests de contrato de `notas` y `asistentes` que firmaban la cápsula en el proveedor de datos y solo fallaban en la suite completa (la cápsula va ligada a la sesión): ahora firman dentro del test.
+- **Resultado:** PHPUnit completo (10 891 tests) y los specs autenticados (28 correctos, 1 saltado) contra las BD de pruebas; las BD de desarrollo no cambian de número de filas durante las pasadas.
 
 ### Paso 6.3: pantallas que ejecutan una acción al abrirse y lecturas que escriben (2026-11-14)
 

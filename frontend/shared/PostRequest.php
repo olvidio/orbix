@@ -321,7 +321,9 @@ class PostRequest
 
         foreach ($sameHostCandidates as $candidate) {
             if ($candidate !== '' && strcasecmp($host, $candidate) === 0) {
-                return '127.0.0.1';
+                // Dentro de un contenedor el nginx no está en el 127.0.0.1 de php-fpm sino en el
+                // puerto publicado del host (p. ej. la instancia de pruebas, `orbix.local`).
+                return self::dockerBridgeHost();
             }
         }
 

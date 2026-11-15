@@ -28,13 +28,28 @@ declare(strict_types=1);
  *
  * `ORBIX_HUELLA=0` omite la huella de contenido (unos 50 s por ejecución) y deja solo el recuento.
  *
- * Variables de entorno: ORBIX_DB_CONTAINER (orbix-db-1), ORBIX_PHP_CONTAINER (orbix-php-fpm-1),
+ * Entorno (fase 6.1): por defecto todo corre contra las **BD de pruebas** (`pruebas-comun`, `pruebas-sv`…,
+ * clones de las de desarrollo que mantiene `tools/qa/bd_pruebas.php`), no contra las de desarrollo:
+ *  - PHPUnit se lanza con `WEBDIR=pruebas` (la aplicación lee `/var/www/conf/pruebas-*.conn.inc`);
+ *  - a `--comando` se le pasan `PLAYWRIGHT_BASE_URL` (la instancia web de pruebas) y `E2E_BD_PREFIJO`;
+ *  - antes de empezar crea o regenera los clones si hace falta y comprueba, con el test-guardia
+ *    `ConexionesDelEntornoTest`, que todas las conexiones van a ellos;
+ *  - al acabar comprueba que las BD de desarrollo tienen las mismas filas que al empezar (aviso).
+ * Si una pasada hace perder filas a un clon, queda marcado y la siguiente lo regenera.
+ * `ORBIX_ENTORNO=dev` vuelve al comportamiento anterior (contra las BD de desarrollo).
+ *
+ * Variables de entorno: ORBIX_ENTORNO (pruebas), ORBIX_PRUEBAS_URL (http://orbix.local:8003/orbix),
+ * ORBIX_DB_CONTAINER (orbix-db-1), ORBIX_PHP_CONTAINER (orbix-php-fpm-1),
  * ORBIX_DBS ("comun sv sv-e sf"), PHPUNIT_CONFIG (build/phpunit-no-stop.xml).
  */
 
 $dbContainer = getenv('ORBIX_DB_CONTAINER') ?: 'orbix-db-1';
 $phpContainer = getenv('ORBIX_PHP_CONTAINER') ?: 'orbix-php-fpm-1';
-$dbs = preg_split('/\s+/', trim(getenv('ORBIX_DBS') ?: 'comun sv sv-e sf')) ?: [];
+$dbsDev = preg_split('/\s+/', trim(getenv('ORBIX_DBS') ?: 'comun sv sv-e sf')) ?: [];
+$enPruebas = (getenv('ORBIX_ENTORNO') ?: 'pruebas') !== 'dev';
+$prefijo = $enPruebas ? 'pruebas-' : '';
+$dbs = array_map(static fn (string $db): string => $prefijo . $db, $dbsDev);
+$urlPruebas = getenv('ORBIX_PRUEBAS_URL') ?: 'http://orbix.local:8003/orbix';
 $config = getenv('PHPUNIT_CONFIG') ?: 'build/phpunit-no-stop.xml';
 
 /** Tablas con más filas que esto no llevan huella de contenido (solo recuento): sería lento. */
@@ -141,9 +156,50 @@ function recuento(string $contenedor, array $dbs): array
     return $r;
 }
 
+if ($enPruebas) {
+    echo "== Entorno de pruebas: BD pruebas-* (clones de desarrollo) ==\n";
+    passthru('php ' . escapeshellarg(__DIR__ . '/bd_pruebas.php') . ' asegurar', $rcClones);
+    if ($rcClones !== 0) {
+        fwrite(STDERR, "No hay BD de pruebas. Para ir contra las de desarrollo: ORBIX_ENTORNO=dev.\n");
+        exit(2);
+    }
+    // Todas las conexiones tienen que ir a los clones: si no, los tests escribirían en desarrollo.
+    exec(implode(' ', array_map('escapeshellarg', [
+        'docker', 'exec', '-e', 'WEBDIR=pruebas', '-w', '/var/www/orbix', $phpContainer, 'php', '-d', 'xdebug.mode=off',
+        'libs/vendor/bin/phpunit', '-c', $config, 'tests/integration/shared/infrastructure/ConexionesDelEntornoTest.php',
+    ])) . ' 2>&1', $salidaGuardia, $rcGuardia);
+    // PHPUnit sale con código distinto de 0 también por avisos suyos (cobertura sin Xdebug): se mira el resultado.
+    if (preg_match('/^OK\b/m', implode("\n", $salidaGuardia)) !== 1) {
+        fwrite(STDERR, "Las conexiones no van todas a las BD de pruebas (ConexionesDelEntornoTest). No se ejecuta nada.\n"
+            . implode("\n", array_slice($salidaGuardia, -15)) . "\n");
+        exit(2);
+    }
+    echo "  conexiones comprobadas: todas van a pruebas-*\n";
+} else {
+    echo "== ORBIX_ENTORNO=dev: se trabaja contra las BD de DESARROLLO ==\n";
+}
+
+/**
+ * Solo el número de filas de cada tabla (rápido), para ver si las BD de desarrollo cambian.
+ *
+ * @param list<string> $dbs
+ * @return array<string, array<string, int>>
+ */
+function recuentoSimple(string $contenedor, array $dbs): array
+{
+    $r = [];
+    foreach ($dbs as $db) {
+        foreach (psql($contenedor, $db, str_replace('__MAX_FILAS_HUELLA__', '-1', SQL_RECUENTO)) ?? [] as $f) {
+            $r[$db][$f[0]] = (int) ($f[1] ?? 0);
+        }
+    }
+
+    return $r;
+}
+
 echo "== Secuencias por detrás del máximo de su tabla (comun, sv-e) ==\n";
 $atrasadas = false;
-foreach (array_intersect(['comun', 'sv-e'], $dbs) as $db) {
+foreach (array_intersect([$prefijo . 'comun', $prefijo . 'sv-e'], $dbs) as $db) {
     foreach (psql($dbContainer, $db, SQL_SECUENCIAS) ?? [] as $f) {
         $atrasadas = true;
         printf("  %s  %s: secuencia %s, máximo %s\n", $db, $f[0], $f[1] ?? '', $f[2] ?? '');
@@ -158,6 +214,7 @@ echo "  ninguna\n";
 
 echo "== Contando filas antes ==\n";
 $antes = recuento($dbContainer, $dbs);
+$devAntes = $enPruebas ? recuentoSimple($dbContainer, $dbsDev) : [];
 
 if (($argv[1] ?? '') === '--comando') {
     // Otra cosa que escribe en la BD de desarrollo (p. ej. los specs de Playwright), con la misma comprobación.
@@ -165,10 +222,18 @@ if (($argv[1] ?? '') === '--comando') {
         fwrite(STDERR, "Falta el comando: php tools/qa/phpunit_protegido.php --comando \"<comando de shell>\"\n");
         exit(2);
     }
+    if ($enPruebas) {
+        // Los specs van a la instancia web de pruebas y sus consultas de comprobación, a los clones.
+        putenv('PLAYWRIGHT_BASE_URL=' . $urlPruebas);
+        putenv('E2E_BD_PREFIJO=' . $prefijo);
+    }
     passthru($argv[2], $rc);
 } else {
     $cmd = array_merge(
-        ['docker', 'exec', '-w', '/var/www/orbix', $phpContainer, 'php', '-d', 'xdebug.mode=off', '-d', 'memory_limit=2G', 'libs/vendor/bin/phpunit', '-c', $config],
+        ['docker', 'exec'],
+        // WEBDIR: BD de pruebas. ORBIX_WEB_SERVER: si un test hace una llamada HTTP, que vaya a la instancia de pruebas.
+        $enPruebas ? ['-e', 'WEBDIR=pruebas', '-e', 'ORBIX_WEB_SERVER=' . preg_replace('#^(https?://[^/:]+).*$#', '$1', $urlPruebas)] : [],
+        ['-w', '/var/www/orbix', $phpContainer, 'php', '-d', 'xdebug.mode=off', '-d', 'memory_limit=2G', 'libs/vendor/bin/phpunit', '-c', $config],
         array_slice($argv, 1),
     );
     passthru(implode(' ', array_map('escapeshellarg', $cmd)), $rc);
@@ -214,7 +279,31 @@ if ($cambiadas !== []) {
     // real sobrescrita o un resto de prueba sin limpiar solo se ven aquí.
     echo "Tablas cuyo contenido ha cambiado sin perder filas (revisar si no se esperaba):\n" . implode("\n", $cambiadas) . "\n";
 }
+if ($enPruebas) {
+    // Con el entorno de pruebas nada debería tocar las BD de desarrollo.
+    $devDespues = recuentoSimple($dbContainer, $dbsDev);
+    $devCambiadas = [];
+    foreach ($devAntes as $db => $tablas) {
+        foreach ($tablas as $tabla => $n) {
+            if (($devDespues[$db][$tabla] ?? 0) !== $n) {
+                $devCambiadas[] = sprintf('  [%s] %-66s %d → %d filas', $db, $tabla, $n, $devDespues[$db][$tabla] ?? 0);
+            }
+        }
+    }
+    if ($devCambiadas !== []) {
+        echo "AVISO: tablas de las BD de DESARROLLO que han cambiado de número de filas durante la pasada\n"
+            . "(si nadie más estaba trabajando en desarrollo, algo de la pasada no ha ido a las BD de pruebas):\n"
+            . implode("\n", $devCambiadas) . "\n";
+    } else {
+        echo "Las BD de desarrollo no han cambiado de número de filas.\n";
+    }
+}
 if ($perdidas) {
+    if ($enPruebas) {
+        passthru('php ' . escapeshellarg(__DIR__ . '/bd_pruebas.php') . ' marcar-danada ' . escapeshellarg('tablas que perdieron filas el ' . date('Y-m-d H:i')));
+        fwrite(STDERR, "Algún test ha borrado filas que no creó. Hay que corregir el test; la BD de pruebas se regenera sola en la próxima pasada.\n");
+        exit(1);
+    }
     fwrite(STDERR, "Algún test ha borrado filas que no creó. Hay que reponerlas (copias en ~/trasvases) y corregir el test.\n");
     exit(1);
 }
