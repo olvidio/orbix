@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de inventario (fase 5.3), por la interfaz:
@@ -103,7 +103,7 @@ test('equipaje: alta, valija, documentos, texto del listado y borrado', async ({
       page.waitForResponse((r) => r.url().includes('equipajes_docs_libres'), { timeout: 20_000 }),
       tipos.selectOption(v),
     ]);
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
     if ((await libre.count()) > 0) {
       hayLibre = true;
       break;

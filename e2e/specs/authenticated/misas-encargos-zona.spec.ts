@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de misas (fase 5.3), por la interfaz:
@@ -33,7 +33,7 @@ test('encargos de una zona: alta, modificación y borrado en la rejilla', async 
     const repintado = page.waitForResponse((r) => r.url().includes('ver_encargos_zona.php'), { timeout: 20_000 });
     const r = await esperarSrc(page, ruta, () => modal.locator(`button[data-action="${boton}"]`).click());
     await repintado;
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
     return r;
   };
   const abrirElDelTest = async () => {

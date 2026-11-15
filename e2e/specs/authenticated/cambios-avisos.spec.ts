@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, elegirOpcion, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, elegirOpcion, esperarSrc, limpiar, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de cambios (fase 5.3), por la interfaz:
@@ -49,7 +49,7 @@ test('avisos de cambios de un usuario: añadir y eliminar', async ({ page }) => 
   const idUsuario = idUsuarioSql();
   expect(idUsuario, 'el usuario está en la BD').toMatch(/^\d+$/);
   const avisos = () => sqlDev('sv-e', `SELECT count(*) FROM ${T}.av_cambios_usuario_objeto_pref WHERE id_usuario = ${idUsuario}`);
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
 
   // --- Añadir un aviso
   await abrirPantalla(page, `frontend/cambios/controller/usuario_form_avisos.php?id_usuario=${idUsuario}&quien=usuario`, 'form#avisos');
@@ -63,7 +63,7 @@ test('avisos de cambios de un usuario: añadir y eliminar', async ({ page }) => 
   await form.locator('#objeto').selectOption(objeto);
   const propiedad = main.locator(`#propiedades_obj input[type="checkbox"][name="${objeto}[]"]`).first();
   await expect(propiedad).toBeVisible({ timeout: 20_000 });
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   const avisoTipo = form.locator('#aviso_tipo');
   await avisoTipo.selectOption((await opciones(avisoTipo))[0]);
   await form.locator('[name="aviso_on"]').check();

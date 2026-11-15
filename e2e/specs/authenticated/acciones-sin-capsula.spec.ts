@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { indexPathForE2e } from '../../grupmenu';
-import { abrirApp, abrirPantalla, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, redEnCalma, sqlDev } from '../../orbix-app';
 
 /**
  * Pantallas que son una acción (fase 6 del plan de tests): no hacen nada si se abren sin la cápsula
@@ -76,7 +76,7 @@ test('desde su pantalla, aprobar propuestas y comprobar encargos piden confirmac
   await main.locator('span.link[onclick*="fnjs_aprobar_propuestas"]').click();
   await expect.poll(() => preguntas.length).toBe(2);
 
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   expect(peticiones, 'al cancelar no se pide nada').toEqual([]);
   expect(recuento(), 'ninguna tabla ha cambiado').toBe(antes);
   expect(inc.erroresJs, inc.erroresJs.join('\n')).toEqual([]);

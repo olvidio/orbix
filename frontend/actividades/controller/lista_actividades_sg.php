@@ -170,7 +170,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
 $oHashSel = new HashF();
-$oHashSel->setCamposForm('!sel!mod!queSel');
+$oHashSel->setCamposForm('!sel!mod!queSel!id_dossier');
 $oHashSel->setcamposNo('continuar!scroll_id!ctx_eliminar!ctx_duplicar');
 $a_camposHiddenSel = [
     'pau' => 'a',

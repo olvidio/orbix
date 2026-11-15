@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de actividades (fase 3.3), por la interfaz:
@@ -40,7 +40,7 @@ test('actividad: alta, modificación y borrado desde el listado', async ({ page 
       page.waitForResponse((r) => r.url().includes('actividad_tipo_get'), { timeout: 15_000 }),
       form.locator(campo).selectOption(valor),
     ]);
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
   };
   await elegir('#isfsv_val', '1');
   await elegir('#iasistentes_val', '1');

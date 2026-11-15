@@ -82,7 +82,9 @@ $web = AppUrlConfig::getPublicAppBaseUrl();
 $url_ajax = $web . '/frontend/casas/controller/casas_resumen_lista.php';
 
 $oHash = new HashF();
-$sCamposForm = 'cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year!que';
+// Solo los campos que pinta el formulario (`PeriodoQue` + desplegables de casas). Antes se firmaban
+// también `cdc_sel`, `que` y `extendida`, que esta pantalla no envía, y «buscar» se rechazaba siempre.
+$sCamposForm = 'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year';
 $aCamposHidden = [
     'tipo' => $Qtipo,
     'sfsv' => $Qsfsv,

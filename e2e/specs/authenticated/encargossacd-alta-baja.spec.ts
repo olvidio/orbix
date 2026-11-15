@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de encargos de sacd (fase 5.3), por la interfaz:
@@ -53,7 +53,7 @@ test('encargo: alta, modificación y borrado desde la lista', async ({ page }) =
     page.waitForResponse((r) => r.url().includes('encargo_lst_tipo_enc'), { timeout: 20_000 }),
     form.locator('#grupo').selectOption(grupo),
   ]);
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   const tipos = form.locator('#lst_tipo_enc select');
   await tipos.selectOption((await opciones(tipos))[0]);
   await form.locator('#desc_enc').fill(DESC);

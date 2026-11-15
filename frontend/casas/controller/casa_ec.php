@@ -66,6 +66,9 @@ $url_ajax = $web . '/frontend/casas/controller/casas_resumen_lista.php';
 $oHash = new HashF();
 $sCamposForm = 'cdc_sel!id_cdc!id_cdc_mas!id_cdc_num!que';
 $oHash->setCamposForm($sCamposForm);
+// Sin ninguna casa elegida `id_cdc` no viaja: fuera del hash, como en `casas_resumen.php`. Si no,
+// «buscar» sin elegir casa se rechazaba (302 al inicio y sesión cerrada).
+$oHash->setCamposNo('id_cdc');
 
 $param = 'cdc_sel=9&que=get';
 

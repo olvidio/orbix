@@ -222,7 +222,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 6.1 BD de tests aislada.
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
-- [ ] 6.4 Hashes de formulario con `getCamposHtml()`.
+- [ ] 6.4 Hashes de formulario con `getCamposHtml()`: pantallas del menú hechas (sección 31); quedan las pantallas que no cuelgan del menú.
 - [ ] 6.5 Resto del backlog.
 - [x] 6.6 Fallos intermitentes de E2E (sección 31).
 
@@ -266,6 +266,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 20. **(6.3) Estado de las marcas de dossier en producción.** Por el fallo de `PgDossierRepository::Guardar` (sección 31), en la copia de producción todas las marcas de persona de `H-dlbv` tienen el mismo estado y fecha (3 912 abiertas con fecha 2026-11-09; las 1 296 de actividad, abiertas con tres fechas). El dato «abierto/cerrado» de cada dossier se ha perdido. ¿Hace falta recalcularlo (abierto si el dossier tiene datos) con una herramienta, o basta con que a partir de ahora se guarde bien? (Corregido el fallo; los datos, sin tocar.)
 
 21. **(6.3) Endpoints que escriben sin cápsula.** Quedan 20 controladores de `src/` con nombre de acción que no abren ninguna cápsula `HashB` (lista en `docs/dev/backlog.md`); entre ellos `certificado_emitido_guardar_pdf` (sobrescribe el PDF de un certificado con el `id_item` que llegue) y los dos de resincronización de la duda 2. ¿Se les pone cápsula a todos como paso 6.5? (Sin tocar.)
+
+22. **(6.4) Botón «ctrs org» de la lista de actividades sg.** `ListaActividadesSgListado` pinta un botón «ctrs org» (`jsForm.mandar("#seleccionados","ctrs")`) que `actividades.js` no trata: no tiene destino desde que se añadió en 2019. ¿Se quita, o debe abrir el dossier 3010 «ctr encargados de la actividad»? (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 
@@ -1191,6 +1193,22 @@ Revisados los 127 UPDATE y los DELETE de todos los `Pg*Repository` comparando su
 - Restos de los tests: 5 marcas de dossier 1303 de personas reales que la suite crea la primera vez tras restaurar y luego mantiene; y, de forma intermitente, una fila «test_nom_activ_vo» en la tabla padre `public.a_actividades_all` (borradas las dos que había; no se reproduce lanzando los tests sueltos).
 
 Suite completa en verde (10 849 tests) bajo la comprobación de filas.
+
+### Paso 6.4: hashes de formulario con `getCamposHtml()` (2026-11-15, pantallas del menú)
+
+Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al enviarlo llega un campo de más o de menos, `HashF::validatePost()` rechaza la petición: 302 al inicio y sesión cerrada, sin mensaje. La auditoría estática (`audit_hash_campos.php`) no lo cubre porque los campos salen del HTML que resulta, no del código de la vista.
+
+- **Cómo se comprueba:** `e2e/form-hash-audit.ts` lee de la pantalla ya pintada los campos que enviaría cada formulario firmado (lo mismo que `serialize()`), les aplica lo que hace `validatePost()` y compara con `h` (el hash lleva el id de sesión, que el spec conoce por la cookie). Si no coincide, busca qué campo falta o sobra entre los que firma el código del módulo y lo dice («firmado y no enviado: …», «enviado y no firmado: …»). Un formulario que solo coincide marcando algo (una fila `sel`, un radio, casillas) se anota aparte como condicional.
+- **Spec `formularios-del-menu.spec.ts`:** abre en el navegador las 311 entradas de menú distintas de la BD (url + parámetros, de todas las plantillas) y comprueba sus 297 formularios firmados. Solo lectura, ≈4 min. Los formularios ocultos no cuentan; tres de misas no se envían enteros (lista `NO_SE_ENVIAN`); `casa_ec` añade dos campos por JavaScript (lista `ANADIDOS_POR_JS`).
+- **Tres fallos reales**, confirmados pulsando el botón en el navegador (la petición volvía con 302) y corregidos:
+  - `casas/casa_ec.php` («resumen económico»): «buscar» sin elegir casa. `id_cdc` estaba firmado y sin casa no viaja; ahora va en `camposNo`, como en `casas_resumen.php`.
+  - `casas/casas_resumen.php` («resumen económico por periodo»): «buscar» se rechazaba siempre; se firmaban `cdc_sel`, `que` y `extendida`, que esa pantalla no envía.
+  - `actividades/lista_actividades_sg.php`: los botones «cargos», «asistentes» y «lista» con una fila marcada; a la vista le faltaban los campos ocultos `queSel` e `id_dossier` que rellena `actividades.js`.
+- **Los nueve condicionales** tienen validación en JavaScript antes de enviar (fila marcada, grupo de casas, casillas de `lista_activ_que`), revisado en las vistas.
+- **`waitForLoadState('networkidle')` no esperaba nada:** es un estado de la carga de la página; alcanzado una vez tras abrir `index.php`, vuelve al instante aunque la pantalla cargada después en `#main` siga pidiendo desplegables. La primera pasada daba 24 falsos avisos por eso. Nueva ayuda `redEnCalma()` (espera a que jQuery no tenga peticiones en curso), que sustituye a todas las esperas `networkidle` de los specs.
+- `pantallas-sin-parametros.spec.ts` cuenta también los formularios (118; 23 no coinciden), pero solo como información: sin parámetros la pantalla no está en un estado real.
+
+**Pendiente del 6.4:** las pantallas que no cuelgan del menú (se abren desde una lista o un formulario). De la pasada sin parámetros salen para revisar: alta de relación tarifa–tipo de actividad (`extendida` enviado y no firmado), `pasarela/nombre_form`, `encargossacd/encargo_ver`, `asistentes/que_ctr_lista`, `inventario/doc_asignado` y `doc_no_asignado`, `actividades/actividad_select_ubi`. Tampoco se comprueban los hidden que el JavaScript cambia antes de enviar (los valida `hh`). Botón «ctrs org» sin destino: duda 22.
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

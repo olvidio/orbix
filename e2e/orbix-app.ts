@@ -74,6 +74,30 @@ export async function abrirPantalla(page: Page, path: string, esperar: string, s
   await sinErrorDeBackend(page);
 }
 
+/**
+ * Espera a que no quede ninguna petición AJAX de la aplicación en curso (todas van por jQuery).
+ *
+ * `page.waitForLoadState('networkidle')` no sirve para esto: es un estado de la carga de la página y,
+ * una vez alcanzado tras abrir `index.php`, vuelve al instante aunque una pantalla cargada después en
+ * `#main` siga pidiendo sus desplegables o su rejilla.
+ */
+export async function redEnCalma(page: Page, timeout = 20_000): Promise<void> {
+  const enCalma = (): Promise<boolean> =>
+    page.evaluate(() => {
+      const jq = (window as unknown as { jQuery?: { active: number } }).jQuery;
+      return jq === undefined || jq.active === 0;
+    });
+  const limite = Date.now() + timeout;
+  let seguidas = 0;
+  while (seguidas < 2) {
+    if (Date.now() > limite) {
+      throw new Error(`siguen peticiones AJAX en curso después de ${timeout} ms`);
+    }
+    seguidas = (await enCalma()) ? seguidas + 1 : 0;
+    await page.waitForTimeout(150);
+  }
+}
+
 /** Falla con un mensaje útil si `#main` contiene un fatal de PHP / PDO. */
 export async function sinErrorDeBackend(page: Page): Promise<void> {
   const html = await page.locator('#main').innerHTML();
@@ -134,7 +158,7 @@ export async function elegirOpcion(page: Page, select: Locator, valor?: string):
     elegido = valor ?? (await select.locator('option').evaluateAll((os) => os.map((o) => (o as HTMLOptionElement).value).filter((v) => v !== '')))[0] ?? '';
     expect(elegido, 'el desplegable tiene alguna opción').not.toBe('');
     await select.selectOption(elegido);
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
     await page.waitForTimeout(300);
     expect(await select.inputValue(), 'la opción sigue elegida').toBe(elegido);
   }).toPass({ timeout: 20_000 });
@@ -182,7 +206,7 @@ export async function crearActividad(page: Page, nombre: string, dl: string, esq
       page.waitForResponse((r) => r.url().includes('actividad_tipo_get'), { timeout: 15_000 }),
       form.locator(campo).selectOption(valor),
     ]);
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
   }
   await form.locator('#nom_activ').fill(nombre);
   await form.locator('#f_ini').fill('10/2/2031');
@@ -231,6 +255,6 @@ export async function crearNumerario(page: Page, apellido: string, esquemaV: str
   expect(alta.success, alta.mensaje).toBe(true);
   const id = sqlDev('sv', `SELECT id_nom FROM "${esquemaV}".p_numerarios WHERE apellido1 = '${apellido}'`);
   expect(id, 'el numerario está en la BD').toMatch(/^\d+$/);
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   return id;
 }

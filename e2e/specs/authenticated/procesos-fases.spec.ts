@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, borrarActividadSql, crearActividad, esperarSrc, limpiar, marcaE2e, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, borrarActividadSql, crearActividad, esperarSrc, limpiar, marcaE2e, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de procesos (fase 5.3), por la interfaz:
@@ -38,7 +38,7 @@ test('fases de una actividad: marcar y desmarcar una fase', async ({ page }) => 
     WHERE j->>'id_fase' <> '' AND NOT EXISTS (SELECT 1 FROM t t2 WHERE t2.id_fase = (j->>'id_fase')::int)`);
   test.skip(previasQueFaltan !== '0', `el proceso de la actividad tiene ${previasQueFaltan} dependencias de fases que no están en él (datos de desarrollo)`);
 
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   await abrirPantalla(page, `frontend/procesos/controller/actividad_proceso.php?id_activ=${idActiv}`, '#div_proceso table');
   await sinErrorDeBackend(page);
   const pendiente = main.locator('#div_proceso input[name="completado"]:not(:checked)').first();
@@ -54,7 +54,7 @@ test('fases de una actividad: marcar y desmarcar una fase', async ({ page }) => 
     const repintado = page.waitForResponse((r) => r.url().includes('actividad_proceso_get'), { timeout: 20_000 });
     const r = await esperarSrc(page, 'actividad_proceso_update', () => guardar.click());
     await repintado;
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
     return r;
   };
 

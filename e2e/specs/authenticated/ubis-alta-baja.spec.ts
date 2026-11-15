@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de ubis (fase 5.3), por la interfaz, con una casa de la dl:
@@ -34,7 +34,7 @@ test('casa de la dl: alta, modificación y borrado', async ({ page }) => {
       page.waitForResponse((r) => r.url().includes('ubis_buscar.php'), { timeout: 20_000 }),
       buscar.locator(campo).selectOption(valor),
     ]);
-    await page.waitForLoadState('networkidle');
+    await redEnCalma(page);
   }
   await buscar.locator('#nombre_ubi').fill(NOMBRE);
   await buscar.locator('#b_buscar_2').click();

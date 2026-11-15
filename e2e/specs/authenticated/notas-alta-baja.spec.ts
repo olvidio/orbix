@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, aceptarDialogos, crearNumerario, esperarSrc, limpiar, marcaE2e, marcarFila, sinErrorDeBackend, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, aceptarDialogos, crearNumerario, esperarSrc, limpiar, marcaE2e, marcarFila, redEnCalma, sinErrorDeBackend, sqlDev } from '../../orbix-app';
 
 /**
  * Flujo de escritura de notas (fase 3.4), por la interfaz:
@@ -57,7 +57,7 @@ test('nota: añadir una asignatura superada a una persona y borrarla', async ({ 
   expect(alta.success, `${alta.mensaje ?? ''} ${dialogos.join(' / ')}`).toBe(true);
   expect(notas(`id_nivel || '|' || id_situacion || '|' || acta || '|' || f_acta`)).toBe(`${ASIGNATURA_INTRO_FILOSOFIA}|${SITUACION_SUPERADA}|${DL} 999/31|2031-06-15`);
 
-  await page.waitForLoadState('networkidle');
+  await redEnCalma(page);
   await abrirPantalla(page, dossier, 'input.sel', true);
   const casillas = page.locator('#main input.sel');
   await expect(casillas, 'la nota sale en la lista').toHaveCount(1);

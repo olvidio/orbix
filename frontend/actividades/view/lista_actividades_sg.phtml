@@ -16,6 +16,9 @@
     <h3><?= $result_busqueda ?></h3>
     <form id='seleccionados' name='seleccionados' action='' method='post'>
         <input type='hidden' id='mod' name='mod' value="">
+        <?php // `actividades.js` (jsForm.mandar) pone aquí el destino del botón; van firmados en $oHashSel. ?>
+        <input type='hidden' id='queSel' name='queSel' value=''>
+        <input type='hidden' id='id_dossier' name='id_dossier' value=''>
         <?= $oHashSel->getCamposHtml() ?>
         <?= $html_tabla ?>
     </form>

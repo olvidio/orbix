@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, redEnCalma, sqlDev } from '../../orbix-app';
 
 /**
  * Permisos (fase 3.5): un usuario con rol restringido no ve lo prohibido.
@@ -68,7 +68,7 @@ test('usuario con rol restringido: sin administración de usuarios', async ({ pa
     // @ts-expect-error función global de Orbix
     fnjs_update_div('#main', 'frontend/usuarios/controller/usuario_lista.php');
   });
-  await p.waitForLoadState('networkidle');
+  await redEnCalma(p);
   await expect(p.locator('#main input.sel')).toHaveCount(0);
   const main = await p.locator('#main').innerText();
   expect(main, 'no lista a los usuarios').not.toContain('Restringido e2e');
