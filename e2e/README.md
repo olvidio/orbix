@@ -139,6 +139,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | Módulo | Spec | Qué recorre |
 |---|---|---|
 | personas | `personas-alta-baja.spec.ts` | numerario: buscar → añadir → guardar → modificar; persona de paso: alta → eliminar |
+| personas | `personas-botones-peticion.spec.ts` | solo lectura: «petición ca / crt» sale en la lista de numerarios y no en la de personas de paso |
 | actividades | `actividades-alta-baja.spec.ts` | ficha nueva (tipo con desplegables encadenados) → crear → modificar → borrar desde el listado |
 | asistentes | `asistentes-alta-baja.spec.ts` | dossier 3101 → «+ n» → guardar → borrar asistencia (repone las marcas de dossier de la persona) |
 | notas | `notas-alta-baja.spec.ts` | dossier 1011 → añadir nota con acta → borrar |

@@ -151,7 +151,9 @@ if (
     $script['fnjs_posibles_ca'] = 1;
 }
 if (AppInstalled::is('actividadplazas')) {
-    if ($tabla === 'p_numerarios' || $tabla === 'p_agregados' || $tabla === 'p_de_paso_ex') {
+    // Las peticiones de plaza son de los n y agd de la dl; a las personas de paso no se les ofrece
+    // (para `pn` / `pa` la pantalla no tiene actividades candidatas).
+    if ($tabla === 'p_numerarios' || $tabla === 'p_agregados') {
         $a_botones[] = ['txt' => _("petición ca"), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
         $a_botones[] = ['txt' => _("petición crt"), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
         $script['fnjs_posibles_activ'] = 1;
