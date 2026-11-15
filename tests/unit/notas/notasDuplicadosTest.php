@@ -35,6 +35,7 @@ class notasDuplicadosTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->anotarMarcasDossier();
         // Lo usa el setConnection
         putenv("UBICACION=sv");
         $this->session_org = $_SESSION['session_auth']['esquema'];
@@ -142,6 +143,7 @@ class notasDuplicadosTest extends myTest
     {
         $this->limpiarNotasDeFactory([1036156]);
         $_SESSION['session_auth']['esquema'] = $this->session_org;
+        $this->quitarMarcasDossierNuevas();
         parent::tearDown();
     }
 }

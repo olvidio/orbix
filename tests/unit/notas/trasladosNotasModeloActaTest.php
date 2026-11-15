@@ -40,6 +40,7 @@ class trasladosNotasModeloActaTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->anotarMarcasDossier();
         $this->guardarConexionNotasDl();
         putenv('UBICACION=sv');
         $this->session_org = $_SESSION['session_auth']['esquema'];
@@ -440,6 +441,7 @@ class trasladosNotasModeloActaTest extends myTest
     {
         $this->restaurarConexionNotasDl();
         $_SESSION['session_auth']['esquema'] = $this->session_org;
+        $this->quitarMarcasDossierNuevas();
         parent::tearDown();
     }
 }

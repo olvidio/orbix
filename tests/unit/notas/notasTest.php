@@ -32,6 +32,7 @@ class notasTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->anotarMarcasDossier();
         $this->session_org = $_SESSION['session_auth']['esquema'];
         $this->limpiarNotasDePasoEnRegionStgr([-1001124, -1001125]);
         $this->limpiarNotasDeFactory(self::PERSONAS_DE_PRUEBA);
@@ -651,6 +652,7 @@ class notasTest extends myTest
     {
         $this->limpiarNotasDeFactory(self::PERSONAS_DE_PRUEBA);
         $_SESSION['session_auth']['esquema'] = $this->session_org;
+        $this->quitarMarcasDossierNuevas();
         parent::tearDown();
     }
 

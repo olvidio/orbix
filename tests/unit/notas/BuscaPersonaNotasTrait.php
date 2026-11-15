@@ -64,4 +64,36 @@ trait BuscaPersonaNotasTrait
             }
         }
     }
+
+    private ?\PDO $pdoMarcasDossier = null;
+    private string $tablaMarcasDossier = '';
+    /** @var list<int> */
+    private array $marcasDossierAntes = [];
+
+    /**
+     * Guardar una nota abre el dossier 1303 de la persona (`EditarPersonaNota`), y esa marca en
+     * `d_dossiers_abiertos` no la borra la limpieza de las notas: cada pasada dejaba una fila por
+     * persona de prueba. Se anotan en `setUp()` las marcas que ya había y en `tearDown()`
+     * ({@see quitarMarcasDossierNuevas()}) se borran las que haya de más.
+     *
+     * Se guardan la conexión y el esquema del principio del test: varios cambian el esquema de la
+     * sesión por el camino.
+     */
+    private function anotarMarcasDossier(): void
+    {
+        $this->pdoMarcasDossier = \src\shared\infrastructure\GlobalPdo::get('oDB');
+        $this->tablaMarcasDossier = '"' . $_SESSION['session_auth']['esquema'] . '".d_dossiers_abiertos';
+        $st = $this->pdoMarcasDossier->query("SELECT id_pau FROM {$this->tablaMarcasDossier} WHERE tabla = 'p' AND id_tipo_dossier = 1303");
+        $this->marcasDossierAntes = $st === false ? [] : array_map('intval', $st->fetchAll(\PDO::FETCH_COLUMN));
+    }
+
+    private function quitarMarcasDossierNuevas(): void
+    {
+        if ($this->pdoMarcasDossier === null) {
+            return;
+        }
+        $antes = $this->marcasDossierAntes === [] ? '0' : implode(',', $this->marcasDossierAntes);
+        $this->pdoMarcasDossier->exec("DELETE FROM {$this->tablaMarcasDossier} WHERE tabla = 'p' AND id_tipo_dossier = 1303 AND id_pau NOT IN ($antes)");
+        $this->pdoMarcasDossier = null;
+    }
 }

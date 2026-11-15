@@ -52,6 +52,7 @@ class trasladosNotasTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->anotarMarcasDossier();
         $this->guardarConexionNotasDl();
         // Lo usa el setConnection
         putenv("UBICACION=sv");
@@ -775,6 +776,7 @@ class trasladosNotasTest extends myTest
     {
         $this->restaurarConexionNotasDl();
         $_SESSION['session_auth']['esquema'] = $this->session_org;
+        $this->quitarMarcasDossierNuevas();
         parent::tearDown();
     }
 }
