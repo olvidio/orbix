@@ -23,6 +23,8 @@ use src\asistentes\application\TablaPeticionesData;
 use src\shared\infrastructure\InProcessSrcDispatch;
 use Tests\myTest;
 use Tests\support\SustituyeServiciosDelContenedor;
+use src\asistentes\application\AsistenteMutationCtx;
+use src\shared\security\HashB;
 
 /**
  * Contrato de los controladores HTTP de `asistentes`: pasan `$_POST` al caso de uso y responden con el envelope de
@@ -93,10 +95,17 @@ final class AsistentesControllersContractTest extends myTest
                 return $this->resultado;
             }
 
-            /** @param array<string, mixed> $input */
-            public function execute(array $input): mixed
+            /** @var array<string, mixed>|null */
+            public ?array $fijado = null;
+
+            /**
+             * @param array<string, mixed> $input
+             * @param array<string, mixed> $fijado
+             */
+            public function execute(array $input, array $fijado = []): mixed
             {
                 $this->entrada = $input;
+                $this->fijado = $fijado;
 
                 return $this->resultado;
             }
@@ -169,25 +178,76 @@ final class AsistentesControllersContractTest extends myTest
     }
 
     /**
-     * @return iterable<string, array{string, class-string}>
+     * @return iterable<string, array{string, class-string, string, string}> controlador, caso de uso, campo y cápsula
      */
     public static function mutacionesProvider(): iterable
     {
-        yield 'asistente_guardar' => ['asistente_guardar.php', AsistenteGuardar::class];
-        yield 'asistente_eliminar' => ['asistente_eliminar.php', AsistenteEliminar::class];
-        yield 'asistente_plaza_asignar' => ['asistente_plaza_asignar.php', AsistentePlazaAsignar::class];
+        yield 'asistente_guardar' => ['asistente_guardar.php', AsistenteGuardar::class, 'ctx_guardar', AsistenteMutationCtx::guardar(3001, 10011)];
+        yield 'asistente_eliminar' => ['asistente_eliminar.php', AsistenteEliminar::class, 'ctx_eliminar_asistente', AsistenteMutationCtx::eliminar(3001, 10011)];
+        yield 'asistente_plaza_asignar' => ['asistente_plaza_asignar.php', AsistentePlazaAsignar::class, 'ctx_plaza', AsistenteMutationCtx::plazaAsignar(3001)];
     }
 
     #[DataProvider('mutacionesProvider')]
-    public function test_las_mutaciones_responden_ok_o_el_mensaje_de_error(string $controlador, string $caso): void
+    public function test_las_mutaciones_responden_ok_o_el_mensaje_de_error(string $controlador, string $caso, string $campo, string $capsula): void
     {
         $this->sustituirServicio($caso, $this->doble(''));
-        $ok = $this->ejecutar($controlador, ['id_activ' => '3001']);
+        $ok = $this->ejecutar($controlador, [$campo => $capsula]);
         $this->assertSame(['success' => true, 'data' => 'ok'], $ok);
 
         $this->sustituirServicio($caso, $this->doble('los datos los modifica otra dl'));
-        $error = $this->ejecutar($controlador, ['id_activ' => '3001']);
+        $error = $this->ejecutar($controlador, [$campo => $capsula]);
         $this->assertSame(['success' => false, 'mensaje' => 'los datos los modifica otra dl', 'data' => 'ok'], $error);
+    }
+
+    /** Sin la cápsula de su pantalla (o con la de otra acción) no se llama al caso de uso (fase 6.5). */
+    #[DataProvider('mutacionesProvider')]
+    public function test_las_mutaciones_exigen_la_capsula_de_su_pantalla(string $controlador, string $caso, string $campo, string $capsula): void
+    {
+        $doble = $this->doble('');
+        $this->sustituirServicio($caso, $doble);
+        foreach (['sin cápsula' => [], 'falsa' => [$campo => 'x'], 'de otra acción' => [$campo => HashB::sign('otra_accion', ['id_activ' => 3001, 'id_nom' => 10011])]] as $txt => $post) {
+            $json = $this->ejecutar($controlador, $post + ['id_activ' => '3001', 'id_nom' => '10011']);
+            $this->assertFalse($json['success'], $txt);
+            $this->assertSame(_("Operación no autorizada"), $json['mensaje'], $txt);
+        }
+        $this->assertNull($doble->entrada, 'el caso de uso no se ha llamado');
+    }
+
+    public function test_guardar_pasa_al_caso_de_uso_lo_que_fija_la_capsula(): void
+    {
+        $doble = $this->doble('');
+        $this->sustituirServicio(AsistenteGuardar::class, $doble);
+
+        $this->ejecutar('asistente_guardar.php', ['ctx_guardar' => AsistenteMutationCtx::guardar(0, 10011, 3001), 'id_activ' => '3002', 'mod' => 'mover']);
+
+        $this->assertSame(['id_activ' => 0, 'id_nom' => 10011, 'id_activ_old' => 3001], $doble->fijado);
+        $this->assertSame('3002', $doble->entrada['id_activ'] ?? null, 'lo que no fija la cápsula llega del formulario');
+    }
+
+    public function test_una_capsula_de_guardar_que_no_fija_ni_actividad_ni_persona_no_vale(): void
+    {
+        $doble = $this->doble('');
+        $this->sustituirServicio(AsistenteGuardar::class, $doble);
+
+        $json = $this->ejecutar('asistente_guardar.php', ['ctx_guardar' => AsistenteMutationCtx::guardar(0, 0), 'id_activ' => '3001', 'id_nom' => '10011', 'mod' => 'nuevo']);
+
+        $this->assertFalse($json['success']);
+        $this->assertNull($doble->entrada);
+    }
+
+    /** La asistencia que se borra y la actividad de la plaza salen de la cápsula, no del POST. */
+    public function test_eliminar_y_asignar_plaza_actuan_sobre_lo_que_fija_la_capsula(): void
+    {
+        $doble = $this->doble('');
+        $this->sustituirServicio(AsistenteEliminar::class, $doble);
+        $this->ejecutar('asistente_eliminar.php', ['ctx_eliminar_asistente' => AsistenteMutationCtx::eliminar(3001, 10011), 'pau' => 'a', 'id_pau' => '9999', 'sel' => ['8888#0#1#1']]);
+        $this->assertSame(['pau' => 'p', 'sel' => [], 'id_activ' => 3001, 'id_nom' => 10011], $doble->entrada);
+
+        $doble = $this->doble('');
+        $this->sustituirServicio(AsistentePlazaAsignar::class, $doble);
+        $this->ejecutar('asistente_plaza_asignar.php', ['ctx_plaza' => AsistenteMutationCtx::plazaAsignar(3001), 'id_activ' => '9999', 'plaza' => '4', 'lista_json' => '[]']);
+        $this->assertSame(3001, $doble->entrada['id_activ'] ?? null);
+        $this->assertSame('4', $doble->entrada['plaza'] ?? null);
     }
 
     public function test_cada_ruta_apunta_a_un_controlador_y_cada_controlador_tiene_ruta(): void

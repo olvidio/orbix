@@ -21,6 +21,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
+use src\shared\security\HashB;
 
 /** Peticiones de plaza de los asistentes de una actividad: filas, partes con enlace de mover, vigencia y plazas. */
 final class TablaPeticionesDataTest extends myTest
@@ -178,7 +179,8 @@ final class TablaPeticionesDataTest extends myTest
         $this->assertSame([['t' => 'p', 's' => 'ca actual'], ['t' => 'p', 's' => ', ']], array_slice($partes, 0, 2));
         $this->assertSame('m', $partes[2]['t']);
         $this->assertSame('ca otro', $partes[2]['s']);
-        $this->assertSame(['mover', 10011, 3001, 3002, PlazaId::ASIGNADA, 't'], array_values(array_diff_key($partes[2]['h'], ['propietario' => 1])));
+        $this->assertSame(['id_activ' => 3002, 'id_nom' => 10011, 'id_activ_old' => 3001], HashB::open($partes[2]['h']['ctx_guardar'], 'asistente_guardar'), 'el enlace fija persona, origen y destino');
+        $this->assertSame(['mover', 10011, 3001, 3002, PlazaId::ASIGNADA, 't'], array_values(array_diff_key($partes[2]['h'], ['propietario' => 1, 'ctx_guardar' => 1])));
         $this->assertArrayNotHasKey('propietario', $partes[2]['h'], 'sin la app de plazas no hay propietario');
         $this->assertCount(3, $partes);
     }

@@ -21,14 +21,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `asistentes.asistente_eliminar`
 - Controller: `src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php`
-- Entrada: `post.id_activ:integer`, `post.id_nom:integer`, `post.id_pau:integer`, `post.pau:string`, `post.sel:array`
+- Entrada: `post.ctx_eliminar_asistente:string` (cápsula `HashB` de la fila marcada; la actividad y la persona salen de ella)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/asistentes/asistente_guardar`
 
 - Id: `asistentes.asistente_guardar`
 - Controller: `src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php`
-- Entrada: `post.cfi:string`, `post.cfi_con:integer`, `post.encargo:string`, `post.est_ok:string`, `post.falta:string`, `post.id_activ:integer`, `post.id_activ_old:integer`, `post.id_nom:integer`, `post.id_pau:integer`, `post.mod:string`, `post.observ:string`, `post.observ_est:string`, `post.pau:string`, `post.plaza:integer`, `post.propietario:string`, `post.propio:string`, `post.sel:array`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` del formulario, `AsistenteMutationCtx::guardar`: fija la actividad, la persona o ambas, y la actividad de origen al mover) y los campos del formulario (`mod`, `id_activ`, `id_nom`, `id_activ_old`, `plaza`, `propietario`, `observ`…)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/asistentes/asistente_mover_data`
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `asistentes.asistente_plaza_asignar`
 - Controller: `src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php`
-- Entrada: `post.id_activ:integer`, `post.lista_json:string`, `post.plaza:mixed`
+- Entrada: `post.ctx_plaza:string` (cápsula `HashB` de la lista de asistentes; fija la actividad), `post.plaza:integer`, `post.lista_json:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/asistentes/form_actividades_de_una_persona_data`

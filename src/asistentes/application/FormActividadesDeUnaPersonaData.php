@@ -164,6 +164,8 @@ final class FormActividadesDeUnaPersonaData
             'obj_pau' => $obj_pau,
             'mod' => $mod,
         ];
+        // Desde una persona: la cápsula fija la persona y, al modificar, también la actividad.
+        $a_camposHidden['ctx_guardar'] = AsistenteMutationCtx::guardar($id_activ_edit !== 0 ? (int) $id_activ_real : 0, (int) $Qid_nom);
         if ($id_activ_edit !== 0) {
             $a_camposHidden['id_activ'] = $id_activ_real;
         } else {

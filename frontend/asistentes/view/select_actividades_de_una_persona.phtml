@@ -12,13 +12,19 @@
         if (rta == 1) {
             if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
                 $('#mod').val("eliminar");
+                // La cápsula de la fila marcada dice qué asistencia se borra.
+                var ctxAsistente = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar_asistente');
+                if (!ctxAsistente) {
+                    alert(<?= json_encode(_("Operación no autorizada")) ?>);
+                    return;
+                }
                 $(formulario).attr('action', "<?= $url_eliminar ?>");
                 $(formulario).one("submit", function () {
                     $.ajax({
                         url: $(this).attr('action'),
                         type: 'post',
                         dataType: 'json',
-                        data: $(this).serialize()
+                        data: $(this).serialize() + '&ctx_eliminar_asistente=' + encodeURIComponent(ctxAsistente)
                     }).done(function (rta) {
                         if (rta && rta.success) {
                             fnjs_actualizar(formulario);

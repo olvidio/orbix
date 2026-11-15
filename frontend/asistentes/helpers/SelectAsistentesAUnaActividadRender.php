@@ -64,7 +64,7 @@ final class SelectAsistentesAUnaActividadRender
         $plazaPath = \frontend\shared\helpers\FuncTablasSupport::payloadString($wrapper, 'url_plaza_asignar_path');
         $h4 = self::linkSinValParamsFromPath([
             'path' => $plazaPath !== '' ? $plazaPath : \frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxPlaza, 'path'),
-            'campos_form' => \frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxPlaza, 'campos_form', 'plaza!lista_json!id_activ'),
+            'campos_form' => \frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxPlaza, 'campos_form', 'plaza!lista_json!id_activ!ctx_plaza'),
         ]);
 
         $hashMain = isset($seg['hash_main']) && is_array($seg['hash_main']) ? $seg['hash_main'] : [];
@@ -113,6 +113,7 @@ final class SelectAsistentesAUnaActividadRender
             'url_form' => $urlForm,
             'url_mover' => $urlMover,
             'url_plaza_asignar' => $urlPlazaAsignar,
+            'ctx_plaza' => \frontend\shared\helpers\FuncTablasSupport::payloadString($ajaxPlaza, 'ctx_plaza'),
             'url_eliminar' => $urlEliminar,
             'url_form_cargos_actividad' => $urlFormCargos,
             'url_cargo_eliminar' => $urlCargoEliminar,

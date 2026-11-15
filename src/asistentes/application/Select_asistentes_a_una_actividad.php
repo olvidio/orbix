@@ -492,6 +492,7 @@ class Select_asistentes_a_una_actividad
 
                 $a_valores[$c]['sel'] = $permisoFila == 3 ? "$id_nom_int#$id_item_cargo#$eliminar#$id_schema" : "";
                 if ($permisoFila == 3) {
+                    $a_valores[$c]['ctx_eliminar_asistente'] = AsistenteMutationCtx::eliminar((int) $this->id_pau, (int) $id_nom_int);
                     $a_valores[$c]['ctx_eliminar_cargo'] = \src\actividadcargos\application\CargoMutationCtx::eliminar((int) $id_item_cargo, $eliminar);
                 }
                 $a_valores[$c][4] = $chk_propio;
@@ -633,6 +634,9 @@ class Select_asistentes_a_una_actividad
 
             $a_val = [];
             $a_val['sel'] = $this->permiso == 3 ? "$id_nom" : "";
+            if ($this->permiso == 3) {
+                $a_val['ctx_eliminar_asistente'] = AsistenteMutationCtx::eliminar((int) $this->id_pau, (int) $id_nom);
+            }
             $a_val['clase'] = 'plaza' . $plaza;
             $a_val[2] = "$nom  ($ctr_dl)";
             $a_val[3] = $dl_asistente;
@@ -950,7 +954,7 @@ class Select_asistentes_a_una_actividad
             'id_sel_value' => (string) ($this->Qid_sel ?? ''),
             'hash_main' => [
                 'campos_form' => '',
-                'campos_no' => 'sel!scroll_id!mod!que!refresh!id_sel!ctx_eliminar_cargo',
+                'campos_no' => 'sel!scroll_id!mod!que!refresh!id_sel!ctx_eliminar_cargo!ctx_eliminar_asistente',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,
@@ -978,7 +982,8 @@ class Select_asistentes_a_una_actividad
             ],
             'ajax_hash_plaza' => [
                 'path' => 'src/asistentes/asistente_plaza_asignar',
-                'campos_form' => 'plaza!lista_json!id_activ',
+                'campos_form' => 'plaza!lista_json!id_activ!ctx_plaza',
+                'ctx_plaza' => AsistenteMutationCtx::plazaAsignar((int) $this->id_pau),
             ],
             'tabla' => [
                 'id_tabla' => 'select_asistentes_a_una_actividad',

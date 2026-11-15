@@ -191,6 +191,8 @@ final class FormAsistentesAUnaActividadData
             'mod' => $mod,
             'actualizar' => 0,
         ];
+        // Desde una actividad: la cápsula fija la actividad y, al modificar, también la persona.
+        $a_camposHidden['ctx_guardar'] = AsistenteMutationCtx::guardar((int) $Qid_activ, (int) $id_nom_real);
         if ($id_nom_real !== '') {
             $a_camposHidden['id_nom'] = (int)$id_nom_real;
         } else {

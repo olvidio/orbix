@@ -22,6 +22,7 @@ use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use Tests\myTest;
 use Tests\support\SustituyeServiciosDelContenedor;
+use src\shared\security\HashB;
 
 /**
  * Formulario de asistencia desde la ficha de una actividad (dossier 3101): alta (desplegable de personas según el
@@ -126,7 +127,10 @@ final class FormAsistentesAUnaActividadDataUnitTest extends myTest
 
         $this->assertSame($opciones, $r['personas_opciones']);
         $this->assertNull($r['personas_onchange']);
-        $this->assertSame(['id_activ' => self::ID_ACTIV, 'obj_pau' => $objPau, 'mod' => 'nuevo', 'actualizar' => 0], $r['hash_main']['campos_hidden']);
+        $ocultos = $r['hash_main']['campos_hidden'];
+        $this->assertSame(['id_activ' => self::ID_ACTIV, 'id_nom' => 0, 'id_activ_old' => 0], HashB::open($ocultos['ctx_guardar'], 'asistente_guardar'), 'el alta fija la actividad; la persona se elige');
+        unset($ocultos['ctx_guardar']);
+        $this->assertSame(['id_activ' => self::ID_ACTIV, 'obj_pau' => $objPau, 'mod' => 'nuevo', 'actualizar' => 0], $ocultos);
         $this->assertSame('observ!observ_est!id_nom', $r['hash_main']['campos_form']);
         $this->assertSame(['checked', '', ''], [$r['propio_chk'], $r['falta_chk'], $r['est_chk']], 'por defecto, propio');
     }
@@ -209,7 +213,10 @@ final class FormAsistentesAUnaActividadDataUnitTest extends myTest
         $this->assertSame(['', 'checked', 'checked'], [$r['propio_chk'], $r['falta_chk'], $r['est_chk']]);
         $this->assertSame(['llega tarde', 'convalida'], [$r['observ'], $r['observ_est']]);
         $this->assertSame((string) PlazaId::CONFIRMADA, $r['plaza_selected']);
-        $this->assertSame(['id_activ' => self::ID_ACTIV, 'obj_pau' => 'PersonaN', 'mod' => 'editar', 'actualizar' => 0, 'id_nom' => 10011], $r['hash_main']['campos_hidden']);
+        $ocultos = $r['hash_main']['campos_hidden'];
+        $this->assertSame(['id_activ' => self::ID_ACTIV, 'id_nom' => 10011, 'id_activ_old' => 0], HashB::open($ocultos['ctx_guardar'], 'asistente_guardar'), 'la edición fija actividad y persona');
+        unset($ocultos['ctx_guardar']);
+        $this->assertSame(['id_activ' => self::ID_ACTIV, 'obj_pau' => 'PersonaN', 'mod' => 'editar', 'actualizar' => 0, 'id_nom' => 10011], $ocultos);
         $this->assertSame('observ!observ_est', $r['hash_main']['campos_form']);
         $this->assertArrayNotHasKey('personas_opciones', $r);
     }

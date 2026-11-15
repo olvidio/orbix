@@ -223,7 +223,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
 - [x] 6.4 Hashes de formulario con `getCamposHtml()` (sección 31): pantallas del menú y formularios de alta que se abren en una ventana.
-- [ ] 6.5 Resto del backlog: cápsulas de `notas` hechas (sección 31); quedan `asistentes`, `certificados`, `procesos` y `menus`.
+- [ ] 6.5 Resto del backlog: cápsulas de `notas` y `asistentes` hechas (sección 31); quedan `certificados`, `procesos` y `menus`.
 - [x] 6.6 Fallos intermitentes de E2E (sección 31).
 
 ---
@@ -1234,6 +1234,18 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - `persona_nota_editar` no estaba en la lista de la duda 21 (el filtro era por nombre de acción): al hacer cada módulo se revisan todos sus controladores.
 - Tests: `NotasControllersContractTest` (sin cápsula, con una falsa o con la de otra acción no se llama al caso de uso; con la buena, el dato fijado sale de ella aunque el POST traiga otro). Spec `notas-capsulas.spec.ts` (solo lectura): las pantallas de acta y de copiar tessera pintan su cápsula. `notas-alta-baja` detectó que la cápsula de la nota se perdía en `NotasPayload::personaFormFromPayload()`.
 - **Sin probar en el navegador:** subir y quitar de verdad un PDF, añadir una persona a un acta, editar una nota y copiar una tessera (solo se ha comprobado que la cápsula llega al formulario y que el endpoint la exige).
+
+**`asistentes` (tres endpoints, 2026-11-15).** Diseño acordado con el usuario, igual que el de cargos (`CargoMutationCtx`): nueva `AsistenteMutationCtx`.
+
+| Endpoint | Cápsula (campo) | La firma | Fija |
+|---|---|---|---|
+| `asistente_guardar` | `ctx_guardar` | `FormAsistentesAUnaActividadData` (desde una actividad), `FormActividadesDeUnaPersonaData` (desde una persona), `AsistenteMoverData` y `TablaPeticionesData` (cambio de actividad) | la actividad, la persona o ambas; al mover, también la actividad de origen. 0 = lo elige el usuario |
+| `asistente_eliminar` | `ctx_eliminar_asistente` | cada fila de `Select_asistentes_a_una_actividad` y de `Select_actividades_de_una_persona` | actividad y persona (salen de la cápsula, no del POST) |
+| `asistente_plaza_asignar` | `ctx_plaza` | `Select_asistentes_a_una_actividad` | la actividad |
+
+- `AsistenteGuardar::execute($input, $fijado)` resuelve los ids como antes (selección del dossier o campos) y rechaza con «Operación no autorizada» si alguno no coincide con lo que fija la cápsula. Una cápsula que no fija ni actividad ni persona no vale.
+- Tests: `AsistenteMutationCtxTest`, `AsistenteGuardarTest` (cinco formas de cambiar lo fijado), `AsistentesControllersContractTest` y los tests de los builders (cada uno comprueba qué fija su cápsula).
+- **En el navegador** (`asistentes-alta-baja.spec.ts`, ampliado): apuntar desde la actividad, modificar desde la lista, asignar plaza, borrar desde el dossier de la persona; y que los formularios de «cambiar actividad» y de modificar desde la persona llevan su cápsula. El borrado desde la lista de la actividad se probó antes de ampliar el spec. **Sin probar guardando:** apuntar desde una persona, cambiar de actividad y el enlace de la tabla de peticiones.
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

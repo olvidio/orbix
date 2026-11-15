@@ -35,11 +35,12 @@ final class AsistenteGuardar
 
     /**
      * @param array<string, mixed> $input
+     * @param array<string, mixed> $fijado ids que fija la cápsula del formulario (0 o ausente = libre)
      */
-    public function execute(array $input): string
+    public function execute(array $input, array $fijado = []): string
     {
         try {
-            return $this->executeInner($input);
+            return $this->executeInner($input, $fijado);
         } catch (\RuntimeException $e) {
             return $e->getMessage();
         }
@@ -47,8 +48,9 @@ final class AsistenteGuardar
 
     /**
      * @param array<string, mixed> $input
+     * @param array<string, mixed> $fijado
      */
-    private function executeInner(array $input): string
+    private function executeInner(array $input, array $fijado): string
     {
         $mod = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'mod');
         if (!in_array($mod, ['nuevo', 'editar', 'mover'], true)) {
@@ -82,6 +84,13 @@ final class AsistenteGuardar
 
         if ($id_activ === 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
+        }
+        // Lo que fija la cápsula del formulario ({@see AsistenteMutationCtx::guardar}) no se puede cambiar.
+        foreach (['id_activ' => $id_activ, 'id_nom' => $id_nom, 'id_activ_old' => $id_activ_old] as $campo => $valor) {
+            $esperado = \src\shared\domain\helpers\FuncTablasSupport::inputInt($fijado, $campo);
+            if ($esperado !== 0 && $esperado !== $valor) {
+                return _("Operación no autorizada");
+            }
         }
 
         if ($mod === 'nuevo') {

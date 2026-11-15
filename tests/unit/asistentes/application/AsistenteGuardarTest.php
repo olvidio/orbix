@@ -102,6 +102,47 @@ final class AsistenteGuardarTest extends TestCase
         ]));
     }
 
+    /**
+     * Lo que fija la cápsula del formulario no se puede cambiar en el POST (fase 6.5).
+     *
+     * @return iterable<string, array{array<string, int>, array<string, mixed>}>
+     */
+    public static function fijadoQueNoCoincideProvider(): iterable
+    {
+        $post = ['mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 20, 'plaza' => 1];
+        yield 'otra actividad' => [['id_activ' => 11, 'id_nom' => 0, 'id_activ_old' => 0], $post];
+        yield 'otra persona' => [['id_activ' => 0, 'id_nom' => 21, 'id_activ_old' => 0], $post];
+        yield 'al modificar, otra actividad' => [['id_activ' => 11, 'id_nom' => 20, 'id_activ_old' => 0], ['mod' => 'editar'] + $post];
+        yield 'al mover, otra actividad de origen' => [['id_activ' => 0, 'id_nom' => 20, 'id_activ_old' => 9], ['mod' => 'mover', 'id_activ_old' => 8] + $post];
+        yield 'con selección de un dossier' => [['id_activ' => 11, 'id_nom' => 0, 'id_activ_old' => 0], ['mod' => 'editar', 'pau' => 'a', 'id_pau' => 10, 'sel' => ['20#0#1#1']]];
+    }
+
+    /**
+     * @param array<string, int> $fijado
+     * @param array<string, mixed> $post
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fijadoQueNoCoincideProvider')]
+    public function test_no_guarda_si_el_post_cambia_lo_que_fija_la_capsula(array $fijado, array $post): void
+    {
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->expects($this->never())->method('guardar');
+        $app->expects($this->never())->method('eliminar');
+        $dosRepo = $this->createMock(DossierRepositoryInterface::class);
+        $dosRepo->expects($this->never())->method('Guardar');
+
+        $this->assertSame(_("Operación no autorizada"), $this->createSut($app, null, $dosRepo)->execute($post, $fijado));
+    }
+
+    public function test_guarda_si_el_post_coincide_con_lo_que_fija_la_capsula(): void
+    {
+        $guardado = null;
+        $sut = $this->createSut($this->appQueGuarda($guardado), null, $this->dossierRepo());
+
+        $this->assertSame('', $sut->execute(['mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 20, 'plaza' => 1], ['id_activ' => 10, 'id_nom' => 0, 'id_activ_old' => 0]));
+        $this->assertInstanceOf(Asistente::class, $guardado);
+        $this->assertSame([10, 20], [$guardado->getId_activ(), $guardado->getId_nom()]);
+    }
+
     public function test_mover_sin_id_activ_old(): void
     {
         $sut = $this->createSut();

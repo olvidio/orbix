@@ -26,6 +26,7 @@ use src\shared\domain\helpers\FuncTablasSupport;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
+use src\shared\security\HashB;
 
 /**
  * Modal «mover asistente»: actividades del mismo tipo en el curso a las que se puede mover, con las preferidas
@@ -195,6 +196,9 @@ final class AsistenteMoverDataTest extends myTest
         $this->assertSame('', $r['aviso_txt']);
         $this->assertSame([3002, 3003], array_keys($r['opciones_actividades']));
         $this->assertSame('ca julio', trim($r['opciones_actividades'][3002]));
+        $ctx = $r['hash_main']['campos_hidden']['ctx_guardar'];
+        $this->assertSame(['id_activ' => 0, 'id_nom' => self::ID_NOM, 'id_activ_old' => self::ACTIV_ORIGEN], HashB::open($ctx, 'asistente_guardar'), 'fija la persona y la actividad de origen');
+        unset($r['hash_main']['campos_hidden']['ctx_guardar']);
         $this->assertSame([
             'campos_no' => 'falta!est_ok',
             'campos_form' => 'observ!id_activ',

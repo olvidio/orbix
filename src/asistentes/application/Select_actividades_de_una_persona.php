@@ -208,6 +208,9 @@ class Select_actividades_de_una_persona
             \src\shared\domain\helpers\FuncTablasSupport::isTrue($est_ok) ? $chk_est_ok = "si" : $chk_est_ok = "no";
 
             $a_valores[$i]['sel'] = $permiso == 3 ? "$id_activ" : "";
+            if ($permiso == 3) {
+                $a_valores[$i]['ctx_eliminar_asistente'] = AsistenteMutationCtx::eliminar((int) $id_activ, (int) $this->id_pau);
+            }
             $a_valores[$i][1] = "$f_ini-$f_fin";
             $a_valores[$i][2] = $nom_activ;
             $a_valores[$i][3] = $chk_propio;
@@ -248,7 +251,7 @@ class Select_actividades_de_una_persona
             ],
             'hash' => [
                 'campos_form' => 'modo_curso',
-                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_asistente',
                 'campos_hidden' => [
                     'pau' => $this->pau,
                     'id_pau' => $this->id_pau,

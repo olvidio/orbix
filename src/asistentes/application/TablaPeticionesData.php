@@ -148,6 +148,7 @@ final class TablaPeticionesData
                         'id_activ' => $id_activ,
                         'plaza' => PlazaId::ASIGNADA,
                         'propio' => 't',
+                        'ctx_guardar' => AsistenteMutationCtx::guardar((int) $id_activ, (int) $id_nom, (int) $id_activ_old),
                     ];
                     if (ConfigGlobal::is_app_installed('actividadplazas')) {
                         $dl = (string) preg_replace('/f$/', '', $oActividadPosible->getDl_org() ?? '');

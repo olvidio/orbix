@@ -216,6 +216,8 @@ final class AsistenteMoverData
                 'campos_hidden' => [
                     'id_nom' => $Qid_nom,
                     'id_activ_old' => $Qid_activ_old,
+                    // Cambio de actividad: fijas la persona y la actividad de la que sale.
+                    'ctx_guardar' => AsistenteMutationCtx::guardar(0, (int) $Qid_nom, (int) $Qid_activ_old),
                     'mod' => $mod,
                     'propio' => $propio,
                     'plaza' => PlazaId::ASIGNADA,

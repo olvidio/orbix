@@ -33,6 +33,7 @@ use src\ubis\domain\entity\Casa;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 use Tests\support\SustituyeServiciosDelContenedor;
+use src\shared\security\HashB;
 
 /**
  * Widget del dossier 3101 (asistentes de una actividad): cargos primero y después asistentes, numeración, columnas,
@@ -242,6 +243,9 @@ final class SelectAsistentesAUnaActividadTest extends myTest
         $this->assertSame('', $d['msg_err']);
         $valores = $d['tabla']['valores'];
         $this->assertSame([1, 2], array_keys($valores));
+        $this->assertSame(['id_activ' => self::ID_ACTIV, 'id_nom' => 10012], HashB::open($valores[1]['ctx_eliminar_asistente'], 'asistente_eliminar'), 'cada fila lleva la cápsula para borrar esa asistencia');
+        unset($valores[1]['ctx_eliminar_asistente']);
+        $this->assertSame(['id_activ' => self::ID_ACTIV], HashB::open($d['ajax_hash_plaza']['ctx_plaza'], 'asistente_plaza_asignar'));
         $this->assertSame([
             'sel' => '10012',
             'clase' => 'plaza2',
