@@ -202,6 +202,7 @@ Cobertura (vacías, fuzzy, placeholders frente a `es_ES.pot`): `php tools/audit/
 - [ ] ¿No hay archivos vacíos?
 - [ ] ¿Nombres de clase/método siguen convención?
 - [ ] ¿Se añadieron pruebas (unitarias o integración) para comportamiento nuevo?
+- [ ] ¿Se vio fallar un test por el caso que se cambia **antes** de tocar el código, y pasa después? (ver «Primero el test que falla, después el código»)
 - [ ] ¿Se han ejecutado y pasado los tests existentes al modificar código?
 - [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
 - [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
@@ -258,7 +259,7 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 
 ### Resumen de cobertura esperada
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
-- **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
+- **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones. El test va **antes** que el código: ver «Primero el test que falla, después el código» más abajo.
 - **Antes de escribir o modificar un test, leer [`tests/AGENTS.md`](tests/AGENTS.md)** (patrones de mocks y repositorios, sesión, `findById`/`null`, localizadores estáticos, `Criteria`, hallazgos, cómo ejecutar la suite).
 - **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
 - Usar el script `tools/qa/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
@@ -269,6 +270,23 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 - **Antes de subir:** `composer qa:huecos` (entidades/VO/repos sin test en modo estricto, clases de `application/` y controladores sin test respecto a la línea base `tools/qa/test_application_baseline.json`, y usos nuevos de `$aWhere`). Si cubres un hueco de la línea base, regenérala con `php tools/qa/check_test_application.php --update-baseline`.
 - **Tests-guardia globales** que recorren todo `src/` (cápsula `HashB` obligatoria, sin `exit` en controladores, controladores de lectura que responden JSON sin parámetros y no escriben en la BD, pantallas que no se firman su propia acción, métodos de `DatosCampo`…): están listados en [`tests/AGENTS.md`](tests/AGENTS.md). Si un caso nuevo es una excepción legítima, se añade a su lista con el motivo; no se relaja el test.
 - **E2E de flujos de escritura** (`e2e/specs/authenticated/*`): alta/modificación/borrado por la interfaz con datos propios limpiados al final. Matriz módulo → spec, ayudas (`e2e/orbix-app.ts`) y reglas para escribir más en [`e2e/README.md`](e2e/README.md).
+
+### Primero el test que falla, después el código
+
+Ningún cambio de comportamiento (arreglo de un error, funcionalidad nueva, cambio de una regla) se escribe antes de tener un test que falle por ese motivo. El orden es:
+
+1. **Concretar el caso.** Qué se hace, con qué datos y con qué usuario o rol; qué ocurre ahora y qué debería ocurrir. Si la petición no lo deja claro, o admite más de una lectura, **preguntar antes de escribir el test**: un test sobre el caso equivocado pasa en verde y deja el error donde estaba.
+2. **Buscar un test que ya cubra ese caso** y ejecutarlo. Si existe y falla, sirve tal cual.
+3. **Si no existe, o existe y pasa, escribir uno nuevo** (o ampliar el existente) que reproduzca el caso, en el nivel más bajo que lo reproduzca: unitario, integración de repositorio o E2E si solo se ve en la interfaz.
+4. **Ejecutarlo y verlo fallar**, y comprobar que falla **por el motivo esperado**: la aserción del caso, no un error de montaje, un mock incompleto o un dato que falta.
+5. **Modificar el código.**
+6. **Ejecutar de nuevo:** el test pasa, y también los demás tests del módulo tocado.
+
+Si no se consigue un test que falle, no se toca el código: o el caso no está bien entendido (volver al punto 1) o el error no está donde se suponía.
+
+Un cambio que no altera el comportamiento (refactor, renombrado, mover código) no tiene test que falle: los tests que cubren ese código se ejecutan **antes** y **después**, y pasan las dos veces. Si ningún test lo cubre, se escribe primero uno que fije el comportamiento actual.
+
+En el resumen del trabajo, indicar qué test falló antes del cambio y que pasa después.
 
 ### Tests unitarios (`tests/unit/<modulo>/`)
 - Cubren `domain/entity/` y `domain/value_objects/`.
