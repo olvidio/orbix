@@ -3,7 +3,11 @@
 namespace src\notas\domain\value_objects;
 
 /**
- * Value object for Pdf
+ * Contenido binario del PDF firmado de un acta.
+ *
+ * Se guarda byte a byte: no se recortan los espacios ni los saltos de línea de los extremos (un PDF
+ * acaba normalmente en «%%EOF» + salto de línea), porque el fichero guardado tiene que ser el que se
+ * subió.
  */
 final class Pdf
 {
@@ -11,7 +15,6 @@ final class Pdf
 
     public function __construct(string $value)
     {
-        $value = trim($value);
         $this->value = $value;
     }
 
@@ -27,13 +30,10 @@ final class Pdf
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) {
+        if ($value === null || $value === '') {
             return null;
         }
-        $value_trimmed = trim($value);
-        if ($value_trimmed === '') {
-            return null;
-        }
-        return new self($value_trimmed);
+
+        return new self($value);
     }
 }

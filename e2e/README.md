@@ -143,6 +143,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | actividades | `actividades-alta-baja.spec.ts` | ficha nueva (tipo con desplegables encadenados) → crear → modificar → borrar desde el listado |
 | asistentes | `asistentes-alta-baja.spec.ts` | apuntar a un numerario desde la actividad → modificar la asistencia → asignar plaza → borrarla desde el dossier de la persona; los formularios de «cambiar actividad» y de modificar desde la persona llevan su cápsula |
 | notas | `notas-alta-baja.spec.ts` | dossier 1011 → añadir nota con acta → borrar |
+| notas | `notas-acta-y-tessera.spec.ts` | modificar una nota desde el dossier → copiar la tessera a otra persona del mismo apellido; acta nueva (asignatura con autocompletar) → añadir un alumno con nota → imprimir → subir el PDF firmado → el acta queda cerrada |
 | usuarios | `usuarios-alta-baja.spec.ts` | nuevo usuario con contraseña → modificar → borrar desde la lista filtrada |
 | usuarios (sin sesión) | `recuperar-password.spec.ts` | pedir el correo (confirmación, correo enmascarado, la contraseña no cambia) → enlace de la cola `cola_mails` → contraseña nueva → login; el enlace no se reutiliza |
 | usuarios (sin sesión) | `recuperar-2fa.spec.ts` | pedir el correo de 2FA → enlace → confirmar → 2FA desactivado sin abrir sesión; el enlace no se reutiliza |

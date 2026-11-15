@@ -271,6 +271,10 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 23. **(6.5) Entrada de menú que regenera los textos de los menús.** `/src/menus/menus_generar_txt` cuelga directamente del menú: al pulsarla reescribe `frontend/menus/view/traducir_menu.phtml` (nombres de menús para gettext). No toca datos y es idempotente, pero es una acción sin pantalla ni cápsula. **Resuelta (15-nov-2026): se deja así.** La pantalla de «exportar menús a ficheros» sigue pendiente en `backlog.md`.
 
+24. **(7) «Añadir alumno al acta» no ofrece a quien no tiene nivel de estudios.** `ActaVerAddPersonaFormData` pide las personas en situación «A» con `nivel_stgr` distinto de «repaso»; en SQL esa comparación descarta también a quien tiene el nivel vacío, aunque el código de después (`excluirAlumno`) los da por buenos. En la copia de `H-dlbv` hay 7 numerarios en «A» sin nivel. ¿Deben poder añadirse a un acta, o está bien que haya que ponerles antes el nivel? (Sin tocar; el spec da de alta a su alumno con nivel «bienio».)
+
+25. **(7) El PDF firmado de un acta no se comprueba.** `ActaPdfSubir` guarda cualquier fichero; en certificados se decidió «solo PDF» (duda 11). ¿Se aplica lo mismo a las actas? (Sin tocar.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.
@@ -1308,3 +1312,17 @@ Los dos specs que fallaban de vez en cuando (`encargossacd-alta-baja` y `cambios
 - `esperarSrc()` dice ahora, si no llega la petición, qué endpoint esperaba, los últimos avisos (`alert`) y lo que hay en pantalla; antes solo se veía un timeout.
 
 Tras el cambio, 8 de 8 pasadas de cada uno y la pasada completa de specs autenticados en verde (19; el de equipajes se salta mientras no esté el parámetro del almacén).
+
+## 32. Fase 7: flujos que faltaban en el navegador, con guardado real (empezada el 2026-11-15)
+
+Con las BD de pruebas los specs escriben en los clones, así que los flujos que en la fase 6 solo se comprobaron «hasta la cápsula» se recorren ahora guardando de verdad.
+
+### Notas: modificar una nota, copiar tessera y acta completa (2026-11-15)
+
+Spec `notas-acta-y-tessera.spec.ts`: modificar una nota desde el dossier (`persona_nota_editar`), copiar la tessera a otra persona del mismo apellido (`tessera_copiar`); crear un acta (`acta_nueva`, asignatura con autocompletar), añadirle un alumno con nota (`acta_ver_add_persona`), comprobar que sin imprimir no se puede subir el PDF, imprimirla y subir el PDF firmado (`acta_pdf_upload`): el acta queda cerrada. Quitar el PDF solo lo puede hacer la región del stgr (sin usuario E2E de región, sigue sin spec).
+
+- **Fallo corregido: el PDF firmado de un acta se guardaba recortado.** El value object `Pdf` hacía `trim()` sobre el contenido binario: se perdían los espacios, saltos de línea y bytes nulos de los extremos (un PDF acaba normalmente en «%%EOF» + salto de línea), así que el fichero guardado no era el que se subió y una firma digital que cubra el fichero entero deja de validar. En la copia de producción, ninguno de los 228 PDF de actas de `H-dlbv` acaba en un byte en blanco. Ahora se guarda byte a byte. Test que falló antes: `PdfTest::test_el_contenido_binario_se_conserva_byte_a_byte` (y la comprobación del md5 en el spec).
+- **Los tests de notas dejaban 5 marcas de dossier en cada pasada** (`tests/unit/notas`: guardar una nota abre el dossier 1303 de la persona y la limpieza solo borraba las notas). Eran las 5 marcas con fecha del día que aparecieron en desarrollo (duda 16). `BuscaPersonaNotasTrait` anota las marcas que había y borra las nuevas; medido: 5 antes, 0 después.
+- **Ayuda `crearNumerario()`**: espera a que la ficha de alta esté vacía antes de escribir. Si en pantalla seguía la ficha de la persona recién creada, lo escrito iba a esa ficha y «guardar» la modificaba en vez de crear otra (carrera del spec, no de la aplicación). Admite nombre y nivel de estudios.
+- **Anotado, sin tocar:** el plano de una dirección (`PlanoDocText`) también recorta el contenido y además lo limita a 255 caracteres, con lo que subir un plano real fallaría; no hay ningún plano guardado en la copia (ni de casas ni de centros) y no tiene test. A `backlog.md`.
+- Dudas nuevas: 24 y 25 (sección 6b).

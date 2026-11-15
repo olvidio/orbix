@@ -256,16 +256,27 @@ export function limpiar(...pasos: Array<() => void>): void {
 
 /**
  * Crea por la interfaz un numerario de la dl con el apellido `apellido` (marca del test) y devuelve
- * su id_nom (leído de la BD `sv`, esquema `esquemaV`, p. ej. «H-dlbv»).
+ * su id_nom (leído de la BD `sv`, esquema `esquemaV`, p. ej. «H-dlbv»). `opciones.nombre`: para dar de
+ * alta a varias personas con el mismo apellido; `opciones.nivelStgr`: valor del desplegable de nivel
+ * de estudios (sin él la ficha lo deja vacío).
  */
-export async function crearNumerario(page: Page, apellido: string, esquemaV: string): Promise<string> {
+export async function crearNumerario(page: Page, apellido: string, esquemaV: string, opciones: { nombre?: string; nivelStgr?: string } = {}): Promise<string> {
+  const nombre = opciones.nombre ?? 'Prueba';
   await abrirPantalla(page, `frontend/personas/controller/personas_editar.php?nuevo=1&obj_pau=PersonaN&id_tabla=n&apellido1=${apellido}`, 'form#frm2');
   const ficha = page.locator('#main form#frm2');
-  await ficha.locator('[name="nom"]').fill('Prueba');
+  // Si en `#main` estaba la ficha de otra persona (p. ej. la que se acaba de dar de alta), su
+  // `form#frm2` sigue ahí hasta que llega la nueva: sin esperar al formulario vacío, lo que se
+  // escribe va a la ficha anterior y «guardar» modifica a esa persona en vez de crear otra.
+  await expect(ficha.locator('[name="nom"]'), 'es la ficha de alta, vacía').toHaveValue('', { timeout: 20_000 });
+  await redEnCalma(page);
+  await ficha.locator('[name="nom"]').fill(nombre);
   await ficha.locator('[name="apellido1"]').fill(apellido);
+  if (opciones.nivelStgr !== undefined) {
+    await ficha.locator('select[name="nivel_stgr"]').selectOption(opciones.nivelStgr);
+  }
   const alta = await esperarSrc(page, 'persona_update', () => ficha.locator('th[onclick*="fnjs_guardar"]').click());
   expect(alta.success, alta.mensaje).toBe(true);
-  const id = sqlDev('sv', `SELECT id_nom FROM "${esquemaV}".p_numerarios WHERE apellido1 = '${apellido}'`);
+  const id = sqlDev('sv', `SELECT id_nom FROM "${esquemaV}".p_numerarios WHERE apellido1 = '${apellido}' AND nom = '${nombre}'`);
   expect(id, 'el numerario está en la BD').toMatch(/^\d+$/);
   await redEnCalma(page);
   return id;
