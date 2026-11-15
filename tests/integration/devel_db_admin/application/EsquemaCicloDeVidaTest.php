@@ -6,14 +6,21 @@ namespace Tests\integration\devel_db_admin\application;
 
 use PDO;
 use src\devel_db_admin\application\AbsorberEsquema;
+use src\devel_db_admin\application\CopiarEsquema;
+use src\devel_db_admin\application\CorregirEstadoRenombrarEsquema;
 use src\devel_db_admin\application\CrearEsquema;
 use src\devel_db_admin\application\CrearUsuarios;
 use src\devel_db_admin\application\EliminarEsquemaDl;
 use src\devel_db_admin\application\MoverTabla;
 use src\devel_db_admin\application\RenombrarEsquema;
+use src\devel_db_admin\application\VerificarEstadoRenombrarEsquema;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use Tests\myTest;
 
 /**
@@ -41,6 +48,7 @@ final class EsquemaCicloDeVidaTest extends myTest
     private const BDS = ['public' => '', 'publicv' => 'v', 'publicv-e' => 'v'];
 
     private const DIR_VOLCADOS = '/var/www/orbix/log/db';
+    private const ACTIVIDAD_RESTO = 'zz actividad de resto';
     private const DIR_CONF_REAL = '/var/www/conf';
 
     private static string $dirConf = '';
@@ -95,6 +103,24 @@ final class EsquemaCicloDeVidaTest extends myTest
         self::limpiar();
     }
 
+    /**
+     * Las operaciones de esquemas no dejan cambiados los repositorios del contenedor: al trasladar
+     * datos entre «resto» y la dl les ponen la conexión del esquema destino, y tienen que reponerla
+     * (si no, lo que venga después en el mismo proceso trabaja contra un esquema que ya no existe).
+     */
+    public function tearDown(): void
+    {
+        if (self::$dirConf !== '') {
+            foreach ([ActividadDlRepositoryInterface::class => 'oDBC', CasaDlRepositoryInterface::class => 'oDBC', CentroDlRepositoryInterface::class => 'oDB'] as $interfaz => $global) {
+                $repositorio = DependencyResolver::get($interfaz);
+                if ($repositorio instanceof ClaseRepository) {
+                    $this->assertSame($GLOBALS[$global], $repositorio->getoDbl(), "$interfaz conserva su conexión");
+                }
+            }
+        }
+        parent::tearDown();
+    }
+
     private static function pdo(string $clave): PDO
     {
         return self::$pdos[$clave] ??= (new DBConnection((new ConfigDB('importar'))->getConexionMantenimiento($clave)))->getPDO();
@@ -144,6 +170,13 @@ final class EsquemaCicloDeVidaTest extends myTest
         try {
             self::pdo('public')->exec("DELETE FROM public.xu_dl WHERE region = '" . self::REGION . "'");
         } catch (\Throwable) {
+        }
+        // La actividad de «resto» del test de copiar datos, esté donde esté.
+        foreach (['resto.a_actividades_ex', '"' . self::REF . '".a_actividades_dl'] as $tabla) {
+            try {
+                self::pdo('public')->exec("DELETE FROM $tabla WHERE nom_activ = '" . self::ACTIVIDAD_RESTO . "'");
+            } catch (\Throwable) {
+            }
         }
     }
 
@@ -268,6 +301,85 @@ final class EsquemaCicloDeVidaTest extends myTest
         $this->assertSame(1, (int) self::valor('public', 'SELECT count(*) FROM "' . $disuelta . '".a_actividades_dl'), 'el esquema de origen sigue como estaba');
     }
 
+    /**
+     * Copiar datos al esquema nuevo: las tablas de configuración del esquema de referencia (tipos de
+     * actividad, parámetros, usuarios, menús…) y las actividades que la dl tenía en «resto».
+     */
+    public function test_copiar_datos_trae_la_configuracion_de_referencia_y_las_actividades_de_resto(): void
+    {
+        $esquema = self::REGION . '-' . self::DL;
+        $this->crearDl(self::DL);
+        self::pdo('public')->exec("INSERT INTO resto.a_actividades_ex (id_tipo_activ, nom_activ, f_ini, f_fin, dl_org) VALUES (112000, '" . self::ACTIVIDAD_RESTO . "', '2031-02-01', '2031-02-05', '" . self::DL . "')");
+        $cuenta = static fn (string $clave, string $tabla): int => (int) self::valor($clave, "SELECT count(*) FROM $tabla");
+
+        (new CopiarEsquema())->ejecutar(self::REF, self::REGION, self::DL, 1, 1, 0);
+
+        foreach (['a_tipos_actividad', 'x_config_schema'] as $tabla) {
+            $this->assertSame($cuenta('public', '"' . self::REF . '".' . $tabla), $cuenta('public', '"' . $esquema . '".' . $tabla), "$tabla copiada a comun");
+        }
+        foreach (['aux_usuarios', 'aux_menus', 'm0_mods_installed_dl'] as $tabla) {
+            $this->assertSame($cuenta('publicv-e', '"' . self::REF . 'v".' . $tabla), $cuenta('publicv-e', '"' . $esquema . 'v".' . $tabla), "$tabla copiada a sv-e");
+        }
+        // Las filas copiadas llevan el id_schema del esquema nuevo, no el de referencia.
+        $this->assertSame(1, (int) self::valor('public', 'SELECT count(DISTINCT id_schema) FROM "' . $esquema . '".a_tipos_actividad'));
+        $this->assertSame(0, (int) self::valor('public', 'SELECT count(*) FROM "' . $esquema . '".a_tipos_actividad WHERE id_schema IN (SELECT id_schema FROM "' . self::REF . '".a_tipos_actividad)'));
+
+        // La actividad que la dl tenía en «resto» pasa a su esquema.
+        $donde = static fn (string $tabla): int => $cuenta('public', $tabla . " WHERE nom_activ = '" . self::ACTIVIDAD_RESTO . "'");
+        $this->assertSame(
+            ['resto' => 0, 'esquema nuevo' => 1, 'esquema de quien lo ejecuta' => 0],
+            ['resto' => $donde('resto.a_actividades_ex'), 'esquema nuevo' => $donde('"' . $esquema . '".a_actividades_dl'), 'esquema de quien lo ejecuta' => $donde('"' . self::REF . '".a_actividades_dl')],
+        );
+    }
+
+    /**
+     * Un renombre que se quedó a medias (hecho en PostgreSQL, pero no en los ficheros de contraseñas, en
+     * el registro de esquemas ni en los defaults de las columnas): la comprobación lo detecta y la
+     * corrección lo completa.
+     */
+    public function test_un_renombre_a_medias_se_detecta_y_se_corrige(): void
+    {
+        $viejo = self::REGION . '-' . self::DL;
+        $nuevo = self::REGION . '-' . self::DL_NUEVA;
+        $this->crearDl(self::DL);
+        // Solo la parte de PostgreSQL, a mano: esquemas y roles con el nombre nuevo.
+        foreach (self::BDS as $clave => $sufijo) {
+            self::pdo($clave)->exec('ALTER SCHEMA "' . $viejo . $sufijo . '" RENAME TO "' . $nuevo . $sufijo . '"');
+        }
+        foreach (['', 'v', 'f'] as $sufijo) {
+            self::pdo('public')->exec('ALTER ROLE "' . $viejo . $sufijo . '" RENAME TO "' . $nuevo . $sufijo . '"');
+        }
+
+        $antes = (new VerificarEstadoRenombrarEsquema())->ejecutar($viejo, self::REGION, self::DL_NUEVA, 1, 1, 0);
+        $this->assertFalse($antes['listo'], 'con los ficheros y el registro sin tocar, el renombre no está completo');
+
+        $corregir = DependencyResolver::get(CorregirEstadoRenombrarEsquema::class);
+        $this->assertInstanceOf(CorregirEstadoRenombrarEsquema::class, $corregir);
+        $resultado = $corregir->ejecutar($viejo, self::REGION, self::DL_NUEVA, 1, 1, 0);
+
+        $this->assertNotSame([], $resultado['acciones'], 'la corrección ha hecho algo');
+        $despues = (new VerificarEstadoRenombrarEsquema())->ejecutar($viejo, self::REGION, self::DL_NUEVA, 1, 1, 0);
+        $pendientes = [];
+        foreach ($despues['bloques'] as $bloque) {
+            foreach ($bloque['items'] as $item) {
+                if ($item['estado'] !== 'ok') {
+                    $pendientes[] = $bloque['nombre'] . ': ' . $item['texto'] . ' [' . $item['estado'] . ']';
+                }
+            }
+        }
+        $this->assertTrue($despues['listo'], $despues['resumen'] . "\n" . implode("\n", $pendientes) . "\nacciones: " . implode(' | ', $resultado['acciones']) . "\navisos: " . implode(' | ', $resultado['avisos']));
+        $this->assertStringContainsString($nuevo, self::clavesDeRoles('comun'));
+        $this->assertStringNotContainsString($viejo . ',', self::clavesDeRoles('comun') . ',');
+        foreach (array_keys(self::BDS) as $clave) {
+            $this->assertSame('0', self::valor($clave, "SELECT count(*) FROM public.db_idschema WHERE schema LIKE '" . $viejo . "%'"), "registro de $clave sin el nombre antiguo");
+            $this->assertNotSame('0', self::valor($clave, "SELECT count(*) FROM public.db_idschema WHERE schema LIKE '" . $nuevo . "%'"), "registro de $clave con el nombre nuevo");
+        }
+        // Los defaults de las columnas (id_schema, ids globales) apuntan al esquema con su nombre nuevo.
+        foreach (self::BDS as $clave => $sufijo) {
+            $this->assertSame('', (string) self::valor($clave, "SELECT string_agg(table_name || '.' || column_name || ' = ' || column_default, '; ' ORDER BY 1) FROM information_schema.columns WHERE table_schema = '" . $nuevo . $sufijo . "' AND column_default LIKE '%" . $viejo . "%'"), "defaults con el nombre antiguo en $clave");
+        }
+    }
+
     /** Una tabla de un esquema pasa de la BD sv a la BD sv-e (con sus datos) y desaparece de sv. */
     public function test_mover_una_tabla_de_sv_a_sv_e(): void
     {
@@ -331,6 +443,21 @@ final class EsquemaCicloDeVidaTest extends myTest
         $this->assertFalse(self::existeRol($esquema) || self::existeRol($esquema . 'v'), 'no quedan roles con el nombre antiguo');
         $this->assertStringContainsString($nuevo, self::clavesDeRoles('comun'));
         $this->assertStringNotContainsString($esquema . ',', self::clavesDeRoles('comun') . ',');
+
+        // La comprobación del renombre (BD, ficheros de contraseñas, registro y defaults de columnas) lo da por bueno.
+        $estado = (new VerificarEstadoRenombrarEsquema())->ejecutar($esquema, self::REGION, self::DL_NUEVA, 1, 1, 0);
+        $pendientes = [];
+        foreach ($estado['bloques'] as $bloque) {
+            foreach ($bloque['items'] as $item) {
+                if ($item['estado'] !== 'ok') {
+                    $pendientes[] = $bloque['nombre'] . ': ' . $item['texto'] . ' [' . $item['estado'] . ']';
+                }
+            }
+        }
+        $this->assertTrue($estado['listo'], $estado['resumen'] . "\n" . implode("\n", $pendientes));
+        foreach (self::BDS as $clave => $sufijo) {
+            $this->assertSame('', (string) self::valor($clave, "SELECT string_agg(table_name || '.' || column_name, ', ' ORDER BY 1) FROM information_schema.columns WHERE table_schema = '" . $nuevo . $sufijo . "' AND column_default LIKE '%" . $esquema . "%'"), "ningún default de $clave cita el nombre antiguo");
+        }
 
         // --- 4. Eliminar: esquemas, roles y contraseñas.
         (new EliminarEsquemaDl())->ejecutar(self::REGION, self::DL_NUEVA, 1, 1, 0);

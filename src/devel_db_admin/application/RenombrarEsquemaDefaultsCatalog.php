@@ -53,6 +53,13 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'zonas_ctr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            // Tablas añadidas después (encargos y misas en comun, pasarela): las detecta RenombrarEsquemaDefaultsCatalogTest.
+            ['tabla' => 'encargo_tipo', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'encargos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'misa_cuadricula_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'misa_iniciales_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'misa_rel_encargo_ctr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'pasarela_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
         ];
     }
 
@@ -106,6 +113,16 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'u_cross_ctr_dl_dir', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_direccion', 'valor' => "public.idglobal('$esquemav'::text, 'u_dir_ctr_dl'::text)"],
+            // Tablas añadidas después (certificados e inventario): las detecta RenombrarEsquemaDefaultsCatalogTest.
+            ['tabla' => 'e_certificados_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_colecciones_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_documentos_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_egm_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_equipajes_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_lugares_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_tipo_documento_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_ubis_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'i_whereis_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ];
     }
 

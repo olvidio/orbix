@@ -49,6 +49,9 @@ use src\utils_database\domain\value_objects\MapIdDl;
 use src\utils_database\domain\value_objects\MapIdResto;
 class DBTrasvase extends DBAbstract
 {
+    /** @var array<int, array{0: ClaseRepository, 1: PDO, 2: PDO|null}> repositorios a los que se ha cambiado la conexión */
+    private array $repositoriosReconfigurados = [];
+
 
     private string $sdbname;
     private string $sregion;
@@ -649,6 +652,15 @@ class DBTrasvase extends DBAbstract
     //-------------- Actividades ----------------------
     public function actividades(string $que): bool
     {
+        try {
+            return $this->actividadesTrasvase($que);
+        } finally {
+            $this->restaurarRepositorios();
+        }
+    }
+
+    private function actividadesTrasvase(string $que): bool
+    {
         // Conexión DB comun
         $oDbl = $this->getoDbl();
 
@@ -671,6 +683,9 @@ class DBTrasvase extends DBAbstract
                     $MapIdRepository = DependencyResolver::get(MapIdRepositoryInterface::class);
                     $this->configurarMapIdRepository($MapIdRepository);
                     $ActividadDlRepository = DependencyResolver::get(ActividadDlRepositoryInterface::class);
+                    // Guardar en el esquema de la dl destino (la conexión del trasvase), como hacen `cdc()` y
+                    // `ctr()`. Sin esto las actividades iban al esquema de quien ejecuta la herramienta.
+                    $this->setRepositoryPdo($ActividadDlRepository, $oDbl);
                     foreach ($cActividades as $oActividad) {
                         //TODO: $oActividadDl->setNoGenerarProceso(TRUE);
                         if ($ActividadDlRepository->Guardar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
@@ -715,6 +730,15 @@ class DBTrasvase extends DBAbstract
 //---------------- Direcciones CDC --------------------
 //---------------- Teleco CDC --------------------
     public function cdc(string $que): bool
+    {
+        try {
+            return $this->cdcTrasvase($que);
+        } finally {
+            $this->restaurarRepositorios();
+        }
+    }
+
+    private function cdcTrasvase(string $que): bool
     {
         // Conexión DB comun
         $oDbl = $this->getoDbl();
@@ -858,6 +882,15 @@ class DBTrasvase extends DBAbstract
 //---------------- Direcciones Ctr --------------------
 //---------------- Teleco Ctr --------------------
     public function ctr(string $que): bool
+    {
+        try {
+            return $this->ctrTrasvase($que);
+        } finally {
+            $this->restaurarRepositorios();
+        }
+    }
+
+    private function ctrTrasvase(string $que): bool
     {
         // Conexión DB SV/SF
         $oDbl = $this->getoDbl();
@@ -1062,6 +1095,7 @@ class DBTrasvase extends DBAbstract
     private function setRepositoryPdo(object $repository, PDO $pdo): void
     {
         if ($repository instanceof ClaseRepository) {
+            $this->recordarConexiones($repository);
             $repository->setoDbl($pdo);
         }
     }
@@ -1069,8 +1103,41 @@ class DBTrasvase extends DBAbstract
     private function setRepositoryPdoSelect(object $repository, PDO $pdo): void
     {
         if ($repository instanceof ClaseRepository) {
+            $this->recordarConexiones($repository);
             $repository->setoDbl_Select($pdo);
         }
+    }
+
+    /** Guarda las conexiones de un repositorio del contenedor la primera vez que se le cambian. */
+    private function recordarConexiones(ClaseRepository $repository): void
+    {
+        $id = spl_object_id($repository);
+        if (isset($this->repositoriosReconfigurados[$id])) {
+            return;
+        }
+        $lectura = null;
+        try {
+            $lectura = $repository->getoDbl_Select();
+        } catch (\Throwable) {
+            // sin conexión de lectura propia
+        }
+        $this->repositoriosReconfigurados[$id] = [$repository, $repository->getoDbl(), $lectura];
+    }
+
+    /**
+     * Devuelve a los repositorios del contenedor las conexiones que tenían. Los traslados les ponen
+     * la del esquema destino; si se quedaran con ella, lo que venga después en el mismo proceso
+     * trabajaría contra ese esquema (que al eliminar una dl ya ni existe).
+     */
+    private function restaurarRepositorios(): void
+    {
+        foreach ($this->repositoriosReconfigurados as [$repository, $escritura, $lectura]) {
+            $repository->setoDbl($escritura);
+            if ($lectura !== null) {
+                $repository->setoDbl_Select($lectura);
+            }
+        }
+        $this->repositoriosReconfigurados = [];
     }
 
     private static function stringConfigValue(mixed $value): string
