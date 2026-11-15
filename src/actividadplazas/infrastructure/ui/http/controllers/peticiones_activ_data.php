@@ -3,8 +3,8 @@
 
 /**
  * Endpoint backend: lista de actividades candidatas + peticiones
- * actuales para una persona+tipo. Limpia del repo las peticiones
- * que ya no esten en la lista (mismo comportamiento que legacy).
+ * actuales para una persona+tipo. Solo lee: las peticiones que ya no
+ * están en la lista no se devuelven, pero no se borran.
  */
 
 use src\actividadplazas\application\PeticionesActivData;

@@ -32,7 +32,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 ## Abrir las peticiones de una persona
 
 1. Desde un listado de personas (n, a o agd), seleccionar a la persona.
-2. Aparecen las actividades que puede pedir y las peticiones que ya tenía; las que ya no están disponibles se descartan.
+2. Aparecen las actividades que puede pedir y las peticiones que ya tenía; las que ya no están disponibles (actividad terminada, despublicada o de otro curso) no se muestran, pero no se borran hasta que se guarda.
 3. Los desplegables salen con el orden de prioridad guardado. Se pueden cambiar y guardar, o borrar todo (ver «Guardar las peticiones de una persona»).
 
 Referencias tecnicas para verificar la respuesta:

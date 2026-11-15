@@ -21,7 +21,7 @@ use src\ubis\domain\entity\Delegacion;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 
-/** Pantalla de peticiones de actividades: candidatas por tipo/curso y depuración de peticiones obsoletas. */
+/** Pantalla de peticiones de actividades: candidatas por tipo/curso; las peticiones obsoletas se ocultan sin borrarlas. */
 final class PeticionesActivDataTest extends myTest
 {
     private PersonaDlRepositoryInterface&MockObject $personas;
@@ -165,7 +165,8 @@ final class PeticionesActivDataTest extends myTest
         $this->assertContains("dl_org eq 'dlx'", DescribeCriteria::filtros($this->c[0]));
     }
 
-    public function test_se_borran_las_peticiones_que_ya_no_estan_en_la_lista_y_se_devuelven_las_vigentes_en_orden(): void
+    /** Duda 19 del plan de tests: abrir la pantalla no borra nada; la petición obsoleta solo no se enseña. */
+    public function test_las_peticiones_que_ya_no_estan_en_la_lista_se_ocultan_sin_borrarlas_y_se_devuelven_las_vigentes_en_orden(): void
     {
         $persona = $this->createMock(PersonaDl::class);
         $persona->method('getPrefApellidosNombre')->willReturn('Gil, Ana');
@@ -175,7 +176,8 @@ final class PeticionesActivDataTest extends myTest
         $vigente2 = $this->peticion(1);
         $obsoleta = $this->peticion(99);
         $this->peticiones->method('matching')->willReturn([$vigente1, $obsoleta, $vigente2]);
-        $this->peticiones->expects($this->once())->method('Eliminar')->with($obsoleta);
+        $this->peticiones->expects($this->never())->method('Eliminar');
+        $this->peticiones->expects($this->never())->method('Guardar');
 
         $r = $this->uc->execute(['id_nom' => '10011', 'na' => 'n', 'sactividad' => 'ca', 'todos' => 1]);
 
@@ -184,14 +186,15 @@ final class PeticionesActivDataTest extends myTest
         $this->assertSame(['id_nom' => 10011, 'sactividad' => 'ca'], HashB::open($r['ctx_eliminar'], 'peticiones_eliminar'));
     }
 
-    public function test_un_tipo_de_persona_desconocido_no_ofrece_actividades_y_borra_todas_las_peticiones(): void
+    /** Una persona de paso llega con `pn` / `pa`: no hay lista, pero sus peticiones se quedan como están. */
+    public function test_un_tipo_de_persona_desconocido_no_ofrece_actividades_ni_borra_las_peticiones(): void
     {
         $this->personas->method('findById')->willReturn(null);
         $this->actDl->expects($this->never())->method('matching');
         $this->peticiones->method('matching')->willReturn([$this->peticion(5)]);
-        $this->peticiones->expects($this->once())->method('Eliminar');
+        $this->peticiones->expects($this->never())->method('Eliminar');
 
-        $r = $this->uc->execute(['id_nom' => '1', 'na' => 'x', 'sactividad' => 'ca']);
+        $r = $this->uc->execute(['id_nom' => '1', 'na' => 'pn', 'sactividad' => 'ca']);
 
         $this->assertSame([[], ''], [$r['opciones'], $r['sid_activ']]);
     }

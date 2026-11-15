@@ -86,7 +86,7 @@ Controladores de `src/` con nombre de acción que no abren ninguna cápsula (202
 
 ### Lecturas que borran según los filtros de la pantalla
 
-`PeticionesActivData` borra las peticiones de plazas que no salen en la lista pintada (duda 19 del plan de tests). `PgDelegacionRepository::Eliminar` y `PgRegionRepository::Eliminar` borran por el nombre, no por el id.
+`PeticionesActivData` ya no borra las peticiones de plazas que no salen en la lista pintada (duda 19 del plan de tests, resuelta); queda decidir si el botón «petición ca / crt» se ofrece a las personas de paso (`pn` / `pa`), para las que la lista sale vacía. `PgDelegacionRepository::Eliminar` y `PgRegionRepository::Eliminar` borran por el nombre, no por el id.
 
 ### Restos que deja la suite de PHPUnit
 

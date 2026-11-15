@@ -22,8 +22,11 @@ use src\shared\security\HashB;
  * candidatas + peticiones actuales para la persona + tipo.
  *
  * Sucesor (parcial) de `apps/actividadplazas/controller/peticiones_activ.php`.
- * Limpia del repo las peticiones antiguas que ya no esten en la lista
- * (mismo comportamiento que el legacy).
+ *
+ * Solo lee: las peticiones cuya actividad no está en la lista de candidatas (terminada, devuelta a
+ * proyecto, despublicada, de otro curso…) no se devuelven, pero **no se borran** al abrir la
+ * pantalla (el legacy las borraba). Desaparecen cuando el usuario guarda, porque
+ * {@see PeticionesGuardar} sustituye todas las de la persona y tipo por las del formulario.
  */
 final class PeticionesActivData
 {
@@ -45,7 +48,9 @@ final class PeticionesActivData
      *     sactividad: string,
      *     sid_activ: string,
      *     opciones: array<int|string,string>,
-     *     tipo: string
+     *     tipo: string,
+     *     ctx_guardar: string,
+     *     ctx_eliminar: string
      * }
      */
     public function execute(array $input): array
@@ -171,7 +176,7 @@ final class PeticionesActivData
             }
         }
 
-        // Peticiones actuales: borrar las que ya no esten en la lista.
+        // Peticiones actuales: solo las de actividades que están en la lista (las demás se ocultan).
         $cPlazasPeticion = $this->plazaPeticionRepository->matching(
             Criteria::create()
                 ->where(Filter::eq(F::IdNom, $id_nom))
@@ -179,11 +184,9 @@ final class PeticionesActivData
                 ->orderBy(F::Orden)
         );
         $sid_activ = '';
-        foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
+        foreach ($cPlazasPeticion as $oPlazaPeticion) {
             $id_activ_pet = $oPlazaPeticion->getId_activ();
             if (!in_array($id_activ_pet, $a_IdActividades)) {
-                unset($cPlazasPeticion[$key]);
-                $this->plazaPeticionRepository->Eliminar($oPlazaPeticion);
                 continue;
             }
             $sid_activ .= $sid_activ === '' ? $id_activ_pet : ',' . $id_activ_pet;
