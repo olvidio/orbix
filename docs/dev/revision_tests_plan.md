@@ -275,6 +275,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 25. **(7) El PDF firmado de un acta no se comprueba.** `ActaPdfSubir` guarda cualquier fichero; en certificados se decidió «solo PDF» (duda 11). ¿Se aplica lo mismo a las actas? (Sin tocar.)
 
+26. **(7) El dossier 3010 «centros encargados de la actividad» falla con datos.** Desde la duda 22 el botón «ctrs org» abre ese dossier con la pantalla genérica de tablas, pero la entidad `CentroEncargado` no tiene lo que esa pantalla necesita: con una actividad que ya tiene centros da «Call to undefined method CentroEncargado::getPrimary_key()» y, sin centros, la lista sale vacía pero «nuevo» da «Call to undefined method … getDatosCampos()» (el spec de la duda 22 solo abría una actividad sin centros). La pantalla genérica no encaja con esta tabla: clave compuesta por dos ids ajenos (su «nuevo» pondría la actividad en `id_ubi`), el centro puede ser de sv o de sf y el permiso depende de la actividad; todo eso ya lo resuelve la pantalla propia (`CentrosEncargadosData`, con sus cápsulas). ¿Qué debe hacer el dossier? (a) Solo listar los centros (nombre y orden) y que se asignen en su pantalla; (b) permitir también añadir, quitar y reordenar desde el dossier, reutilizando los endpoints de la pantalla propia; (c) que «ctrs org» lleve a la pantalla propia y no a un dossier. (Sin tocar: en producción el dossier 3010 no era accesible antes de la duda 22.)
+
 ## 7. Presupuesto y ritmo
 
 - Cada paso está dimensionado para caber en una ventana de 5 h; los módulos grandes (2.3, 2.4, 2.7, 2.8) pueden necesitar dos ventanas: usar la parada limpia del protocolo.
@@ -1333,4 +1335,8 @@ Spec `asistentes-persona-y-cambio.spec.ts`, con una persona del propio test y tr
 
 - Dos reglas que el spec tiene que respetar: «cambiar actividad» solo ofrece actividades del mismo tipo exacto (y lleva un separador con valor 0: si se elige, responde «faltan parámetros id_activ / id_nom»), y no deja pasar a una actividad con todas las plazas ocupadas («Ya están todas las plazas ocupadas»), ni desde el formulario ni desde la tabla de peticiones.
 - **Anotado, sin tocar:** `tabla_peticiones.html.twig` tiene dos textos de interfaz sin gettext (`'error'`, `'error de comunicacion con el servidor'`).
+
+### Centros encargados desde el dossier 3010 (2026-11-15): pendiente de decisión
+
+Al ir a escribir el spec, el dossier 3010 falla en cuanto la actividad tiene centros y al pulsar «nuevo» (duda 26). No se ha tocado: la solución depende de qué deba hacer ese dossier.
 
