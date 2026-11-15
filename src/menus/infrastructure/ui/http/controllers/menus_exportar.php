@@ -10,6 +10,18 @@ use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\web\ContestarJson;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
+// Solo con la cápsula del formulario de exportar (la firma `lista_templates`).
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_exportar'),
+        'menus_exportar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 $Qnombre = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'nombre');
 $Qsobreescribir = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'sobreescribir');
 

@@ -49,6 +49,7 @@ $oHashGenerar = new HashF();
 $oHashGenerar->setUrl($url_generar);
 $oHashGenerar->setArraycamposHidden([
     'id_activ' => $Qid_activ,
+    'ctx_generar' => PayloadCoercion::string($data['ctx_generar'] ?? ''),
 ]);
 $param_generar = $oHashGenerar->getParamAjax();
 

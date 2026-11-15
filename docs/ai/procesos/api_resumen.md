@@ -21,7 +21,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `procesos.actividad_proceso_generar`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/actividad_proceso_generar.php`
-- Entrada: `post.id_activ:integer`
+- Entrada: `post.ctx_generar:string` (cápsula `HashB` de `actividad_proceso_data`; fija la actividad)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/procesos/actividad_proceso_get`

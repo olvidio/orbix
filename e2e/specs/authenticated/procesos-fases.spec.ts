@@ -73,6 +73,15 @@ test('fases de una actividad: marcar y desmarcar una fase', async ({ page }) => 
   await expect(casilla).not.toBeChecked();
 
   expect(dialogos.length, `solo el aviso del alta de la actividad: ${dialogos.join(' / ')}`).toBe(1);
+
+  // --- «regenerar»: vuelve a crear las fases de la actividad, con la cápsula que firma esta pantalla (fase 6.5).
+  const fasesDe = () => sqlDev('comun', `SELECT count(*) FROM "${ESQUEMA}".a_actividad_proceso_sv WHERE id_activ = ${idActiv}`);
+  const nFases = fasesDe();
+  const regenerado = await esperarSrc(page, 'actividad_proceso_generar', () => main.locator('input[onclick*="fnjs_generar_proceso"]').click());
+  expect(regenerado.success, regenerado.mensaje).toBe(true);
+  expect(dialogos.length, 'pide confirmación antes de regenerar').toBe(2);
+  await redEnCalma(page);
+  expect(fasesDe(), 'la actividad sigue teniendo las fases de su proceso').toBe(nFases);
   expect(inc.erroresJs, inc.erroresJs.join('\n')).toEqual([]);
   expect(inc.respuestasNoJson, inc.respuestasNoJson.join('\n')).toEqual([]);
 });

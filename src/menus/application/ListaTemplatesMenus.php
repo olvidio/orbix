@@ -12,7 +12,7 @@ class ListaTemplatesMenus
     ) {
     }
 
-    /** @return array{a_opciones: array<int|string, string>, ctx_importar: string} */
+    /** @return array{a_opciones: array<int|string, string>, ctx_importar: string, ctx_exportar: string} */
     public function __invoke(): array
     {
         $a_opciones = $this->templateMenuRepository->getArrayTemplates();
@@ -20,6 +20,7 @@ class ListaTemplatesMenus
         return [
             'a_opciones' => $a_opciones,
             'ctx_importar' => HashB::sign('menus_importar'),
+            'ctx_exportar' => HashB::sign('menus_exportar'),
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
+use src\shared\web\ContestarJson;
 
 /*
  * Para que no de errror al ejecutar psql. usuario root no coincide con dani
@@ -12,6 +15,20 @@ use src\shared\config\ServerConf;
 *     local   all             all                                     trust
  * 
  */
+
+// Vuelca las tablas de referencia de los menús a ficheros o, con `accion=importar`, las vacía y las
+// recarga con psql: solo con una cápsula. Hoy ninguna pantalla la firma (las entradas de menú apuntan
+// a `frontend/menus/controller/menus_ficheros.php`, que no existe), así que no se puede ejecutar desde
+// la web hasta que se haga esa pantalla. Ver docs/dev/backlog.md.
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_ficheros'),
+        'menus_exportar_ref_a_ficheros'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 

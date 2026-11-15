@@ -223,7 +223,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
 - [x] 6.4 Hashes de formulario con `getCamposHtml()` (sección 31): pantallas del menú y formularios de alta que se abren en una ventana.
-- [ ] 6.5 Resto del backlog: cápsulas de `notas` y `asistentes` hechas (sección 31); quedan `certificados`, `procesos` y `menus`.
+- [x] 6.5 Resto del backlog: cápsulas de `notas`, `asistentes`, `certificados`, `procesos` y `menus` (sección 31). Lo que necesita una BD aislada (DDL, `ZonasAComun`), Infection y los dos endpoints de resincronización siguen en `backlog.md` por decisión del usuario.
 - [x] 6.6 Fallos intermitentes de E2E (sección 31).
 
 ---
@@ -268,6 +268,8 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 21. **(6.3) Endpoints que escriben sin cápsula.** Quedan 20 controladores de `src/` con nombre de acción que no abren ninguna cápsula `HashB` (lista en `docs/dev/backlog.md`); entre ellos `certificado_emitido_guardar_pdf` (sobrescribe el PDF de un certificado con el `id_item` que llegue) y los dos de resincronización de la duda 2. ¿Se les pone cápsula a todos como paso 6.5? **Revisada la lista (15-nov-2026):** tres son lecturas (`actividades/tipo_activ_form_nuevo`, `inventario/lista_docs_asignar_ctr` y `_dlb`: pintan un formulario y firman ellos la cápsula) y `usuarios/restablecer_password_guardar` va con su enlace firmado; quedan 14 que escriben: 5 de `notas`, 4 de `certificados`, 3 de `asistentes`, `procesos/actividad_proceso_generar` y `menus/menus_generar_txt`, más los dos de resincronización (duda 2). Se hacen en el paso 6.5, módulo a módulo.
 
 22. **(6.4) Botón «ctrs org» de la lista de actividades sg.** `ListaActividadesSgListado` pinta un botón «ctrs org» (`jsForm.mandar("#seleccionados","ctrs")`) que `actividades.js` no trata: no tiene destino desde que se añadió en 2019. ¿Se quita, o debe abrir el dossier 3010 «ctr encargados de la actividad»? **Resuelta (15-nov-2026): abre el dossier.** `actividades.js` y `DossiersVerPantallaData` tratan `ctrs`; el dossier 3010 no tenía `app` ni `class` en `d_tipos_dossiers`, así que `DossierVerDatosTablaInfoClassResolver` lo resuelve por su id, e `Info3010::getColeccion()` filtra por la actividad (antes listaba los centros de todas). Spec `actividades-sg-botones.spec.ts`.
+
+23. **(6.5) Entrada de menú que regenera los textos de los menús.** `/src/menus/menus_generar_txt` cuelga directamente del menú: al pulsarla reescribe `frontend/menus/view/traducir_menu.phtml` (nombres de menús para gettext). No toca datos y es idempotente, pero es una acción sin pantalla ni cápsula. ¿Se deja así, o se le pone una pantalla con un botón (habría que cambiar la entrada de menú en la BD)? También falta la pantalla de «exportar menús a ficheros» (`menus_ficheros.php` no existe); su endpoint queda cerrado hasta que se haga. (Sin tocar.)
 
 ## 7. Presupuesto y ritmo
 
@@ -1258,6 +1260,23 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - `AsistenteGuardar::execute($input, $fijado)` resuelve los ids como antes (selección del dossier o campos) y rechaza con «Operación no autorizada» si alguno no coincide con lo que fija la cápsula. Una cápsula que no fija ni actividad ni persona no vale.
 - Tests: `AsistenteMutationCtxTest`, `AsistenteGuardarTest` (cinco formas de cambiar lo fijado), `AsistentesControllersContractTest` y los tests de los builders (cada uno comprueba qué fija su cápsula).
 - **En el navegador** (`asistentes-alta-baja.spec.ts`, ampliado): apuntar desde la actividad, modificar desde la lista, asignar plaza, borrar desde el dossier de la persona; y que los formularios de «cambiar actividad» y de modificar desde la persona llevan su cápsula. El borrado desde la lista de la actividad se probó antes de ampliar el spec. **Sin probar guardando:** apuntar desde una persona, cambiar de actividad y el enlace de la tabla de peticiones.
+
+**`certificados`, `procesos` y `menus` (2026-11-15).** Primeros cambios con la regla «primero el test que falla»: cada caso se vio fallar antes de tocar el código.
+
+| Endpoint | Cápsula (campo · acción) | La firma | Fija |
+|---|---|---|---|
+| `certificado_emitido_pdf_upload` | `ctx_guardar` · `certificado_emitido_guardar` | el formulario de adjuntar o de subir el PDF firmado (la misma cápsula que guarda el certificado) | certificado y persona |
+| `certificado_recibido_pdf_upload` | `ctx_guardar` · `certificado_recibido_guardar` | el formulario de adjuntar o de modificar | certificado y persona |
+| `certificado_emitido_enviar` | `ctx_enviar` · `certificado_emitido_enviar` | cada fila de la lista de emitidos | certificado |
+| `certificado_emitido_guardar_pdf` | `ctx_guardar_pdf` · `certificado_emitido_guardar_pdf` | la respuesta de `certificado_emitido_guardar`; viaja en el enlace a `certificado_emitido_2_mpdf.php`, que solo la reenvía | certificado y persona |
+| `actividad_proceso_generar` | `ctx_generar` · `actividad_proceso_generar` | `ActividadProcesoData` | actividad |
+| `menus_exportar` | `ctx_exportar` · `menus_exportar` | `ListaTemplatesMenus` | — |
+| `menus_exportar_ref_a_ficheros` | `ctx_ficheros` · `menus_exportar_ref_a_ficheros` | nadie todavía (no tiene pantalla) | — |
+
+- **Fallo que ya existía, destapado por el test:** subir el PDF firmado de un certificado emitido (`solo_pdf`) nunca entraba en su rama: el indicador se leía como entero y se pasaba a `isTrue()`, que solo entiende textos. En vez de adjuntar el PDF al certificado, creaba un certificado nuevo. Corregido.
+- `menus_exportar_ref_a_ficheros` vacía y recarga con `psql` las tablas de referencia de los menús (`accion=importar`) o las vuelca a ficheros; ninguna pantalla lo llama (las entradas de menú apuntan a `menus_ficheros.php`, que no existe). Ahora exige una cápsula que nadie firma: queda cerrado hasta que se haga la pantalla (`backlog.md`).
+- `menus_generar_txt` se deja como está (duda 23).
+- Tests: `CertificadosControllersContractTest` (subidas con un PDF de prueba en `$_FILES`), `ActividadProcesoGenerarControllerTest`, `MenusExportarControllersTest`, `CertificadosPayloadCapsulasTest` y los unitarios de los builders. Specs: `procesos-fases` (ahora también «regenerar»), `menus-exportar.spec.ts` (nuevo) y `certificados-subida` (recibido). Los flujos de certificados **emitidos** no tienen spec: solo existen en una región del stgr y el usuario de E2E es de una dl.
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

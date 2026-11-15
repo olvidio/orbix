@@ -33,5 +33,7 @@ final class ActividadProcesoDataTest extends TestCase
         $useCase = new ActividadProcesoData($repo);
         $out = $useCase->execute(3);
         $this->assertSame('Curso X', $out['nom_activ']);
+        // La pantalla del proceso firma la cápsula para volver a generarlo (fase 6.5).
+        $this->assertSame(['id_activ' => 3], \src\shared\security\HashB::open($out['ctx_generar'] ?? '', 'actividad_proceso_generar'));
     }
 }

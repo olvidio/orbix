@@ -98,14 +98,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `menus.menus_exportar`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_exportar.php`
-- Entrada: `post.nombre:string`, `post.sobreescribir:string`
+- Entrada: `post.ctx_exportar:string` (cápsula `HashB` de `lista_templates`), `post.nombre:string`, `post.sobreescribir:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/menus/menus_exportar_ref_a_ficheros`
 
 - Id: `menus.menus_exportar_ref_a_ficheros`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php`
-- Entrada: `post.accion:string`
+- Entrada: `post.ctx_ficheros:string` (cápsula `HashB`, acción `menus_exportar_ref_a_ficheros`; hoy ninguna pantalla la firma), `post.accion:string` (`exportar` | `importar`)
 - Respuesta: `raw_response`
 
 ## `/src/menus/menus_generar_txt`

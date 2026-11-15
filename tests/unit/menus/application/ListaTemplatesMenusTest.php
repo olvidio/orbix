@@ -23,6 +23,8 @@ final class ListaTemplatesMenusTest extends TestCase
         $repo->method('getArrayTemplates')->willReturn([3 => 'Tpl']);
 
         $out = (new ListaTemplatesMenus($repo))();
+        // El formulario de exportar a una plantilla toma de aquí su cápsula (fase 6.5).
+        $this->assertSame([], \src\shared\security\HashB::open($out['ctx_exportar'] ?? '', 'menus_exportar'));
         $this->assertSame([3 => 'Tpl'], $out['a_opciones']);
         $this->assertSame([], HashB::open($out['ctx_importar'], 'menus_importar'));
     }

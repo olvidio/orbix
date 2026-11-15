@@ -161,6 +161,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | todos | `formularios-de-alta.spec.ts` | abre los formularios de alta que se pintan en una ventana (tarifas, pasarela) y comprueba su hash; solo lectura. Añadir aquí cada formulario nuevo de ese tipo |
 | actividadtarifas | `tarifas-tipo-actividad.spec.ts` | relación tarifa ↔ tipo de actividad: alta («nueva relación») y borrado desde su ficha |
 | actividades | `actividades-sg-botones.spec.ts` | lista de actividades sg: con una fila marcada, «cargos», «asistentes», «ctrs org» y «lista» abren su pantalla; solo lectura |
+| menus | `menus-exportar.spec.ts` | exportar los menús a una plantilla nueva (`menus_exportar`), que se borra al final |
 | todos | `menu-links.spec.ts` | GET de los enlaces del menú (≈50 min; ver arriba) |
 
 Ayudas comunes en **`e2e/orbix-app.ts`**: `abrirApp` (abre `index.php` y recoge errores JS y respuestas no JSON de `/src`), `abrirPantalla` (carga un controlador en `#main` como el menú; la primera del test lleva `nav=reset`, como las entradas del menú, para no heredar la pila de navegación de otro spec), `esperarSrc` (espera la respuesta JSON de un endpoint), `aceptarDialogos`, `sqlDev`, `limpiar`, `crearActividad` (con el tipo de actividad opcional), `crearNumerario`.
