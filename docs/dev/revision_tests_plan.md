@@ -1326,3 +1326,11 @@ Spec `notas-acta-y-tessera.spec.ts`: modificar una nota desde el dossier (`perso
 - **Ayuda `crearNumerario()`**: espera a que la ficha de alta esté vacía antes de escribir. Si en pantalla seguía la ficha de la persona recién creada, lo escrito iba a esa ficha y «guardar» la modificaba en vez de crear otra (carrera del spec, no de la aplicación). Admite nombre y nivel de estudios.
 - **Anotado, sin tocar:** el plano de una dirección (`PlanoDocText`) también recorta el contenido y además lo limita a 255 caracteres, con lo que subir un plano real fallaría; no hay ningún plano guardado en la copia (ni de casas ni de centros) y no tiene test. A `backlog.md`.
 - Dudas nuevas: 24 y 25 (sección 6b).
+
+### Asistentes: apuntar desde la persona, cambiar de actividad y tabla de peticiones (2026-11-15)
+
+Spec `asistentes-persona-y-cambio.spec.ts`, con una persona del propio test y tres crt n reales del clon (curso actual): apuntarla desde su dossier 1301 (`asistente_guardar`), «cambiar actividad» desde la lista de asistentes (`mod=mover`: aparece en la nueva y desaparece de la anterior), guardar una petición de plaza (`peticiones_guardar`) y pasarla a la actividad pedida con el enlace de la tabla de peticiones. Los cuatro guardados funcionan; no ha salido ningún fallo de la aplicación.
+
+- Dos reglas que el spec tiene que respetar: «cambiar actividad» solo ofrece actividades del mismo tipo exacto (y lleva un separador con valor 0: si se elige, responde «faltan parámetros id_activ / id_nom»), y no deja pasar a una actividad con todas las plazas ocupadas («Ya están todas las plazas ocupadas»), ni desde el formulario ni desde la tabla de peticiones.
+- **Anotado, sin tocar:** `tabla_peticiones.html.twig` tiene dos textos de interfaz sin gettext (`'error'`, `'error de comunicacion con el servidor'`).
+
