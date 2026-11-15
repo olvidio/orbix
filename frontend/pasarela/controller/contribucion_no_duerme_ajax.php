@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\helpers\AjaxJsonSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
@@ -18,7 +19,9 @@ $oPosicion = FrontBootstrap::boot();
  *
  * Misma estructura que `activacion_ajax.php`: cada `que` delega en un endpoint
  * `/src/pasarela/contribucion_no_duerme_*` vía `PostRequest::getDataFromUrl(...)`
- * y, si toca, monta el HTML/Twig en frontend.
+ * y, si toca, monta el HTML/Twig en frontend. Las mutaciones responden JSON
+ * (`AjaxJsonSupport::proxyPostRequest`): la vista las pide con `dataType: 'json'` y con el cuerpo
+ * vacío avisaba «Error en la conexión con el servidor» aunque el cambio se hubiera guardado.
  */
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
@@ -29,29 +32,26 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'eliminar':
         $Qctx_eliminar = (string)filter_input(INPUT_POST, 'ctx_eliminar');
-        PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_excepcion_eliminar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/contribucion_no_duerme_excepcion_eliminar', [
             'ctx_eliminar' => $Qctx_eliminar,
         ]);
-        break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
         $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
-        PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_excepcion_guardar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/contribucion_no_duerme_excepcion_guardar', [
             'ctx_guardar' => $Qctx_guardar,
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qcontribucion,
         ]);
-        break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
         $Qctx_guardar = (string)filter_input(INPUT_POST, 'ctx_guardar');
-        PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_default_guardar', [
+        AjaxJsonSupport::proxyPostRequest('/src/pasarela/contribucion_no_duerme_default_guardar', [
             'default' => $Qdefault,
             'ctx_guardar' => $Qctx_guardar,
         ]);
-        break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/contribucion_no_duerme_lista');
         $lista = PasarelaPayload::excepcionListaConDefaultFromPayload($data);

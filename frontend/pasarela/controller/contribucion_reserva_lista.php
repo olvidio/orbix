@@ -34,7 +34,7 @@ $h_lista = $oHashLista->linkSinValParams();
 $url_src_contrib_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/contribucion_reserva_excepcion_guardar');
 $oHashSrcGuardar = new HashF();
 $oHashSrcGuardar->setUrl($url_src_contrib_guardar);
-$oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
+$oHashSrcGuardar->setCamposForm('id_tipo_activ!valor!ctx_guardar');
 $h_src_contrib_guardar = $oHashSrcGuardar->linkSinValParams();
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar esta fila?");

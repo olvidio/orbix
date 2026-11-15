@@ -1340,3 +1340,11 @@ Spec `asistentes-persona-y-cambio.spec.ts`, con una persona del propio test y tr
 
 Al ir a escribir el spec, el dossier 3010 falla en cuanto la actividad tiene centros y al pulsar «nuevo» (duda 26). No se ha tocado: la solución depende de qué deba hacer ese dossier.
 
+### Pasarela: contribuciones y nombres (2026-11-15)
+
+Spec `pasarela-contribuciones.spec.ts`: alta, modificación y borrado de una excepción y cambio del valor por defecto en las dos contribuciones, y alta de un nombre. Dos fallos de la aplicación corregidos (los tres tests fallaban antes con «Operación no autorizada»):
+
+- **El alta de una excepción se rechazaba siempre** en contribución de quien no duerme, contribución de reserva y nombres: la vista enviaba el alta directamente al endpoint de `src/` sin la cápsula `ctx_guardar` que lleva el formulario (solo activación la enviaba). Desde que esos endpoints exigen cápsula, «nuevo» → «guardar» respondía «Operación no autorizada». Ahora la vista la envía y el hash de esa URL la firma.
+- **Modificar, eliminar y cambiar el valor por defecto de la contribución de quien no duerme avisaban «Error en la conexión con el servidor»** aunque el cambio se guardaba: el controlador frontend respondía con el cuerpo vacío y la vista espera JSON, así que tampoco se refrescaba la lista ni se cerraba la ventana. Responde JSON como los demás parámetros de la pasarela (`AjaxJsonSupport::proxyPostRequest`).
+- La dl de los tests no tiene parámetros de pasarela guardados (la lista muestra los valores de ejemplo del código: 85 y dos excepciones); el spec repone lo que había al terminar.
+

@@ -30,7 +30,7 @@ $h_lista = $oHashLista->linkSinValParams();
 $url_src_nombre_guardar = AppUrlConfig::srcBrowserUrl('/src/pasarela/nombre_excepcion_guardar');
 $oHashSrcNombreGuardar = new HashF();
 $oHashSrcNombreGuardar->setUrl($url_src_nombre_guardar);
-$oHashSrcNombreGuardar->setCamposForm('id_tipo_activ!valor');
+$oHashSrcNombreGuardar->setCamposForm('id_tipo_activ!valor!ctx_guardar');
 $h_src_nombre_guardar = $oHashSrcNombreGuardar->linkSinValParams();
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar esta fila?");

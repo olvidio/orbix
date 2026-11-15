@@ -40,7 +40,9 @@
             err = 1;
         }
         if (!err) {
+            // La cápsula del alta viaja en el formulario (`form_nuevo`); sin ella el endpoint lo rechaza.
             var data = 'id_tipo_activ=' + encodeURIComponent(id_tipo_activ)
+                + '&ctx_guardar=' + encodeURIComponent($f.find('[name="ctx_guardar"]').val() || '')
                 + '&valor=' + encodeURIComponent(contribucion)
                 + '{{ h_src_contrib_guardar|raw }}';
             $.ajax({
