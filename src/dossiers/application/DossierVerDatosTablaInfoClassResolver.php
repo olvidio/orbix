@@ -2,6 +2,7 @@
 
 namespace src\dossiers\application;
 
+use src\actividadescentro\domain\Info3010;
 use src\dossiers\domain\entity\TipoDossier;
 use src\profesores\domain\InfoProfesorAmpliacion;
 use src\profesores\domain\InfoProfesorCongreso;
@@ -32,6 +33,8 @@ final class DossierVerDatosTablaInfoClassResolver
         1022 => InfoProfesorLatin::class,
         1024 => InfoProfesorCongreso::class,
         1025 => InfoProfesorDocenciaStgr::class,
+        // «ctr encargados de la actividad»: su fila de `d_tipos_dossiers` no tiene `app` ni `class`.
+        3010 => Info3010::class,
     ];
 
     public static function resolveFullyQualifiedClassName(TipoDossier $tipo): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\dossiers\application;
 
+use src\actividadescentro\domain\Info3010;
 use src\dossiers\application\DossierVerDatosTablaInfoClassResolver;
 use src\dossiers\application\PermDossiersListaData;
 use src\dossiers\application\PermisoDossier;
@@ -109,6 +110,13 @@ final class DossiersPermisosYResolutorTest extends myTest
     public function test_los_tipos_de_profesor_tienen_su_propia_clase_aunque_compartan_class(): void
     {
         $this->assertSame(InfoProfesorStgr::class, DossierVerDatosTablaInfoClassResolver::tryResolveFullyQualifiedClassName($this->tipoConApp(1018, 'profesores', 'Profesor')));
+    }
+
+    /** El dossier 3010 no tiene `app` ni `class` en `d_tipos_dossiers`: se resuelve por su id. */
+    public function test_los_centros_encargados_de_una_actividad_se_resuelven_por_el_id(): void
+    {
+        $this->assertSame(Info3010::class, DossierVerDatosTablaInfoClassResolver::tryResolveFullyQualifiedClassName($this->tipoConApp(3010, null, null)));
+        $this->assertSame(Info3010::class, DossierVerDatosTablaInfoClassResolver::tryResolveFullyQualifiedClassName($this->tipoConApp(3010, '', '')));
     }
 
     public function test_el_resto_se_deduce_de_app_y_clase_y_solo_si_existe(): void

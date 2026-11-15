@@ -3,8 +3,10 @@
 namespace src\actividadescentro\domain;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\criteria\CentroEncargadoField;
 use src\actividadescentro\domain\entity\CentroEncargado;
 use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -35,6 +37,12 @@ class Info3010 extends DatosInfoRepo
      */
     public function getColeccion(): array
     {
-        return $this->centroEncargadoRepository->matching(Criteria::create());
+        // Dentro del dossier de una actividad (`id_pau`), solo sus centros, por orden.
+        $criteria = Criteria::create();
+        if (!empty($this->id_pau)) {
+            $criteria = $criteria->where(Filter::eq(CentroEncargadoField::IdActiv, (int) $this->id_pau));
+        }
+
+        return $this->centroEncargadoRepository->matching($criteria->orderBy(CentroEncargadoField::NumOrden));
     }
 }

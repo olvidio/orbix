@@ -151,6 +151,12 @@ class DossiersVerPantallaData
                 $Qpermiso = '3';
                 $Qid_dossier = '3102';
                 break;
+            case 'ctrs':
+                // «ctrs org» de la lista de actividades sg: centros encargados de la actividad.
+                $pau = 'a';
+                $Qpermiso = '3';
+                $Qid_dossier = '3010';
+                break;
             default:
                 break;
         }
