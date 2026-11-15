@@ -65,7 +65,9 @@ if ($Qguardar !== '') {
     $certificado_base64 = base64_encode($certificado);
 
     require_once __DIR__ . '/certificado_emitido_aviso_html.php';
+    // La cápsula llega en el enlace (la firmó `certificado_emitido_guardar` al crear el certificado); aquí solo se reenvía.
     $data = CertificadosPayload::postData(PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_guardar_pdf', [
+        'ctx_guardar_pdf' => PayloadCoercion::string($_GET['ctx_guardar_pdf'] ?? ''),
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado_base64,

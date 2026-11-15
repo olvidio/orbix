@@ -100,6 +100,7 @@ class CertificadoEmitidoSelect
 
             $a_valores[$i]['sel'] = $id_item;
             $a_valores[$i]['ctx_eliminar'] = HashB::sign('certificado_emitido_delete', ['id_item' => (int) $id_item]);
+            $a_valores[$i]['ctx_enviar'] = HashB::sign('certificado_emitido_enviar', ['id_item' => (int) $id_item]);
             $a_valores[$i][1] = $certificadoTxt;
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = $nom_alumno;

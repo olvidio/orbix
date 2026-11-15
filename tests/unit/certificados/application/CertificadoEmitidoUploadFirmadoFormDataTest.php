@@ -31,6 +31,8 @@ final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
         $data = $useCase->execute(3);
         $this->assertSame(9, $data['id_nom']);
         $this->assertSame('Nombre en cert', $data['nom']);
+        // El formulario de subir el PDF firmado lleva la cápsula de ese certificado (fase 6.5).
+        $this->assertSame(['nuevo' => 0, 'id_item' => 3, 'id_nom' => 9], \src\shared\security\HashB::open($data['ctx_guardar'] ?? '', 'certificado_emitido_guardar'));
         $this->assertSame('Apellido, Nombre', $data['apellidos_nombre']);
     }
 

@@ -294,6 +294,7 @@ final class CertificadosPayload
      *     id_nom: int,
      *     nom: string,
      *     apellidos_nombre: string,
+     *     ctx_guardar: string,
      * }
      */
     public static function uploadFirmadoFromPayload(array $payload): array
@@ -303,6 +304,7 @@ final class CertificadosPayload
             'id_nom' => \frontend\shared\helpers\PayloadCoercion::int($payload['id_nom'] ?? 0),
             'nom' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom'] ?? ''),
             'apellidos_nombre' => \frontend\shared\helpers\PayloadCoercion::string($payload['apellidos_nombre'] ?? ''),
+            'ctx_guardar' => \frontend\shared\helpers\PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
         ];
     }
 

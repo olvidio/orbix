@@ -4,6 +4,9 @@ use src\certificados\domain\CertificadoEmitidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
+use src\shared\web\ContestarJson;
 
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -11,6 +14,18 @@ header('Content-Type: application/json; charset=UTF-8');
 /** @var CertificadoEmitidoUpload $certificadoUpload */
 $certificadoUpload = DependencyResolver::get(CertificadoEmitidoUpload::class);
 
+// Solo con la cápsula del formulario (la misma que guarda el certificado): fija el certificado y la persona.
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'certificado_emitido_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+$idItemCtx = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
+$idNomCtx = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
 $uploaded = MultipartUploadGuard::requireUploadedFileOrExit('certificado_pdf');
 $tmpFilePath = $uploaded['tmp_name'];
 $fileName = $uploaded['name'];
@@ -34,8 +49,10 @@ if ($tmpFilePath === '') {
             // Se guarda y se descarga como PDF: no aceptar otros ficheros.
             $error_txt = sprintf(_("El archivo %s no es un PDF"), $fileName);
         } else {
-            if (\src\shared\domain\helpers\FuncTablasSupport::isTrue(\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'solo_pdf'))) {
-                $rta = $certificadoUpload->uploadTxtFirmado(\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'), (string) $contenido_doc);
+            // `solo_pdf`: PDF firmado de un certificado que ya existe (el de la cápsula). Antes se leía como
+            // entero y se pasaba a `isTrue()`, que solo entiende textos: nunca entraba aquí y creaba otro certificado.
+            if (\src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'solo_pdf') === 1 && $idItemCtx > 0) {
+                $rta = $certificadoUpload->uploadTxtFirmado($idItemCtx, (string) $contenido_doc);
                 if (!is_object($rta)) {
                     $error_txt = (string) $rta;
                 }
@@ -43,7 +60,7 @@ if ($tmpFilePath === '') {
                 $oF_certificado = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_certificado'));
                 $oF_enviado = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_enviado'));
                 $rta = $certificadoUpload->uploadNew(
-                    \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
+                    $idNomCtx,
                     (string) $contenido_doc,
                     \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'idioma'),
                     \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado'),

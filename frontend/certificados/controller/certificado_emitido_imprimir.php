@@ -67,7 +67,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
 $pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
 $oHash = new HashF();
 $oHash->setUrl($pag_certificado_2_pdf);
-$oHash->setCamposForm('id_item!guardar');
+$oHash->setCamposForm('id_item!guardar!ctx_guardar_pdf');
 $h = $oHash->linkSinValParams();
 
 $pag_certificado_eliminar = AppUrlConfig::srcBrowserUrl('/src/certificados/certificado_emitido_delete');

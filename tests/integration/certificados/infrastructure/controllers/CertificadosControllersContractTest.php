@@ -8,7 +8,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use src\certificados\domain\CertificadoEmitidoDelete;
 use src\certificados\domain\CertificadoEmitidoEnviar;
 use src\certificados\domain\CertificadoEmitidoSelect;
+use src\certificados\domain\CertificadoEmitidoUpload;
 use src\certificados\domain\CertificadoRecibidoDelete;
+use src\certificados\domain\CertificadoRecibidoUpload;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
@@ -144,7 +146,11 @@ final class CertificadosControllersContractTest extends myTest
         ] + self::formulario());
 
         $this->assertTrue($json['success']);
-        $this->assertSame(['mensaje' => 'ok', 'item' => 55], json_decode($json['data'], true));
+        $datos = json_decode($json['data'], true);
+        // Con el certificado guardado se firma la cápsula para guardar el PDF que se genera a continuación.
+        $this->assertSame(['id_item' => 55, 'id_nom' => 10011], HashB::open($datos['ctx_guardar_pdf'] ?? '', 'certificado_emitido_guardar_pdf'));
+        unset($datos['ctx_guardar_pdf']);
+        $this->assertSame(['mensaje' => 'ok', 'item' => 55], $datos);
         $this->assertSame([55, 10011, 'Joan Pla', 'ca_ES.UTF-8', 'crGalbel', 'H 12/26', true], [
             $guardado->getId_item(), $guardado->getId_nom(), $guardado->getNom(), $guardado->getIdiomaVo()?->value(),
             $guardado->getDestino(), $guardado->getCertificado(), $guardado->isFirmado(),
@@ -303,16 +309,116 @@ final class CertificadosControllersContractTest extends myTest
         }
     }
 
-    public function test_enviar_toma_el_id_de_la_seleccion_o_del_formulario(): void
+    /** El certificado que se envía sale de la cápsula de la fila marcada, no de la selección (fase 6.5). */
+    public function test_enviar_toma_el_id_de_la_capsula_de_la_fila(): void
     {
         $doble = $this->doble('Hay que enviar manualmente');
         $this->sustituirServicio(CertificadoEmitidoEnviar::class, $doble);
 
-        $json = $this->ejecutar('certificado_emitido_enviar.php', ['sel' => ['7#x']]);
-        $this->ejecutar('certificado_emitido_enviar.php', ['id_item' => '8']);
+        $json = $this->ejecutar('certificado_emitido_enviar.php', ['ctx_enviar' => HashB::sign('certificado_emitido_enviar', ['id_item' => 7]), 'sel' => ['99#x'], 'id_item' => '98']);
 
         $this->assertSame(['success' => false, 'mensaje' => 'Hay que enviar manualmente', 'data' => 'ok'], $json);
-        $this->assertSame([['execute', 7], ['execute', 8]], $doble->llamadas);
+        $this->assertSame([['execute', 7]], $doble->llamadas);
+    }
+
+    public function test_enviar_sin_la_capsula_de_la_fila_no_envia(): void
+    {
+        $doble = $this->doble('');
+        $this->sustituirServicio(CertificadoEmitidoEnviar::class, $doble);
+
+        foreach (['sin cápsula' => [], 'falsa' => ['ctx_enviar' => 'x'], 'de otra acción' => ['ctx_enviar' => HashB::sign('certificado_emitido_delete', ['id_item' => 7])]] as $txt => $post) {
+            $json = $this->ejecutar('certificado_emitido_enviar.php', $post + ['sel' => ['7#x'], 'id_item' => '7']);
+            $this->assertFalse($json['success'], $txt);
+            $this->assertSame(_("Operación no autorizada"), $json['mensaje'], $txt);
+        }
+        $this->assertSame([], $doble->llamadas);
+    }
+
+    // ------------------------------------------------------------------ subir un pdf (fase 6.5)
+
+    /**
+     * Ejecuta un controlador de subida con un PDF de prueba en `$_FILES['certificado_pdf']`.
+     *
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
+     */
+    private function subir(string $controlador, array $post): array
+    {
+        $tmp = (string) tempnam(sys_get_temp_dir(), 'cert');
+        file_put_contents($tmp, "%PDF-1.4\nprueba");
+        $filesAnterior = $_FILES;
+        $_FILES = ['certificado_pdf' => ['name' => 'c.pdf', 'tmp_name' => $tmp, 'error' => UPLOAD_ERR_OK, 'size' => 15]];
+        try {
+            return $this->ejecutar($controlador, $post);
+        } finally {
+            $_FILES = $filesAnterior;
+            @unlink($tmp);
+        }
+    }
+
+    /** @return iterable<string, array{string, class-string, string}> controlador, clase que guarda y acción de la cápsula del formulario */
+    public static function subidasProvider(): iterable
+    {
+        yield 'emitido' => ['certificado_emitido_pdf_upload.php', CertificadoEmitidoUpload::class, 'certificado_emitido_guardar'];
+        yield 'recibido' => ['certificado_recibido_pdf_upload.php', CertificadoRecibidoUpload::class, 'certificado_recibido_guardar'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('subidasProvider')]
+    public function test_subir_un_pdf_sin_la_capsula_del_formulario_no_guarda_nada(string $controlador, string $clase, string $accion): void
+    {
+        $doble = $this->doble(new \stdClass());
+        $this->sustituirServicio($clase, $doble);
+
+        $otra = $accion === 'certificado_emitido_guardar' ? 'certificado_recibido_guardar' : 'certificado_emitido_guardar';
+        foreach (['sin cápsula' => [], 'falsa' => ['ctx_guardar' => 'x'], 'de otra acción' => ['ctx_guardar' => HashB::sign($otra, ['nuevo' => 1, 'id_item' => 0, 'id_nom' => 10011])]] as $txt => $post) {
+            $json = $this->subir($controlador, $post + ['id_nom' => '10011', 'certificado' => 'H 12/26', 'idioma' => 'ca_ES.UTF-8']);
+            $this->assertFalse($json['success'], $txt);
+            $this->assertSame(_("Operación no autorizada"), $json['mensaje'], $txt);
+        }
+        $this->assertSame([], $doble->llamadas, 'no se ha guardado ningún PDF');
+    }
+
+    public function test_subir_un_emitido_nuevo_usa_la_persona_de_la_capsula(): void
+    {
+        $doble = $this->doble(new \stdClass());
+        $this->sustituirServicio(CertificadoEmitidoUpload::class, $doble);
+
+        $json = $this->subir('certificado_emitido_pdf_upload.php', [
+            'ctx_guardar' => HashB::sign('certificado_emitido_guardar', ['nuevo' => 1, 'id_item' => 0, 'id_nom' => 10011]),
+            'id_nom' => '99', 'certificado' => 'H 12/26', 'idioma' => 'ca_ES.UTF-8',
+        ]);
+
+        $this->assertTrue($json['success'], (string) ($json['mensaje'] ?? ''));
+        $this->assertSame(['uploadNew', 10011], array_slice($doble->llamadas[0], 0, 2));
+        $this->assertStringStartsWith('%PDF-', $doble->llamadas[0][2]);
+    }
+
+    public function test_subir_el_pdf_firmado_de_un_emitido_usa_el_certificado_de_la_capsula(): void
+    {
+        $doble = $this->doble(new \stdClass());
+        $this->sustituirServicio(CertificadoEmitidoUpload::class, $doble);
+
+        $json = $this->subir('certificado_emitido_pdf_upload.php', [
+            'ctx_guardar' => HashB::sign('certificado_emitido_guardar', ['nuevo' => 0, 'id_item' => 7, 'id_nom' => 10011]),
+            'solo_pdf' => '1', 'id_item' => '99',
+        ]);
+
+        $this->assertTrue($json['success'], (string) ($json['mensaje'] ?? ''));
+        $this->assertSame(['uploadTxtFirmado', 7], array_slice($doble->llamadas[0], 0, 2));
+    }
+
+    public function test_subir_un_recibido_usa_el_certificado_y_la_persona_de_la_capsula(): void
+    {
+        $doble = $this->doble(new \stdClass());
+        $this->sustituirServicio(CertificadoRecibidoUpload::class, $doble);
+
+        $json = $this->subir('certificado_recibido_pdf_upload.php', [
+            'ctx_guardar' => HashB::sign('certificado_recibido_guardar', ['nuevo' => 0, 'id_item' => 7, 'id_nom' => 10011]),
+            'id_item' => '99', 'id_nom' => '98', 'certificado' => 'H 12/26', 'idioma' => 'ca_ES.UTF-8',
+        ]);
+
+        $this->assertTrue($json['success'], (string) ($json['mensaje'] ?? ''));
+        $this->assertSame(['uploadNew', 7, 10011], array_slice($doble->llamadas[0], 0, 3));
     }
 
     public function test_el_listado_pasa_el_numero_y_el_curso(): void
@@ -375,13 +481,31 @@ final class CertificadosControllersContractTest extends myTest
         $notas->expects($this->once())->method('addCertificado')->with(10011, 'H 12/26', $this->callback(static fn ($f): bool => $f?->getIso() === '2026-07-24'));
         $this->sustituirDefinicion(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class, $notas);
 
-        $json = $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '7', 'id_nom' => '10011', 'certificado' => base64_encode('H 12/26'), 'pdf' => base64_encode('%PDF-1.4')]);
+        // El certificado y la persona salen de la cápsula que devolvió `certificado_emitido_guardar`, no del POST.
+        $json = $this->ejecutar('certificado_emitido_guardar_pdf.php', ['ctx_guardar_pdf' => self::ctxPdf(7), 'id_item' => '99', 'id_nom' => '98', 'certificado' => base64_encode('H 12/26'), 'pdf' => base64_encode('%PDF-1.4')]);
 
         $this->assertTrue($json['success']);
         $this->assertSame(['mensaje' => 'ok', 'item' => 7], json_decode($json['data'], true));
         $this->assertSame([10011, '%PDF-1.4'], [$c->getId_nom(), $c->getDocumento()]);
 
-        $this->assertStringContainsString('8', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '8'])['mensaje']);
+        $this->assertStringContainsString('8', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['ctx_guardar_pdf' => self::ctxPdf(8)])['mensaje']);
+    }
+
+    private static function ctxPdf(int $idItem): string
+    {
+        return HashB::sign('certificado_emitido_guardar_pdf', ['id_item' => $idItem, 'id_nom' => 10011]);
+    }
+
+    public function test_guardar_pdf_sin_la_capsula_no_toca_el_certificado(): void
+    {
+        $this->emitidos->expects($this->never())->method('findById');
+        $this->emitidos->expects($this->never())->method('Guardar');
+
+        foreach (['sin cápsula' => [], 'falsa' => ['ctx_guardar_pdf' => 'x'], 'de otra acción' => ['ctx_guardar_pdf' => HashB::sign('certificado_emitido_guardar', ['nuevo' => 0, 'id_item' => 7, 'id_nom' => 10011])]] as $txt => $post) {
+            $json = $this->ejecutar('certificado_emitido_guardar_pdf.php', $post + ['id_item' => '7', 'id_nom' => '10011', 'pdf' => base64_encode('%PDF-1.4')]);
+            $this->assertFalse($json['success'], $txt);
+            $this->assertSame(_("Operación no autorizada"), $json['mensaje'], $txt);
+        }
     }
 
     public function test_guardar_pdf_si_falla_el_guardado_no_apunta_el_certificado(): void
@@ -395,7 +519,7 @@ final class CertificadosControllersContractTest extends myTest
         $notas->expects($this->never())->method('addCertificado');
         $this->sustituirDefinicion(\src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface::class, $notas);
 
-        $this->assertSame('fallo de conexión', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['id_item' => '7', 'id_nom' => '10011', 'pdf' => 'no es base64 !!'])['mensaje']);
+        $this->assertSame('fallo de conexión', $this->ejecutar('certificado_emitido_guardar_pdf.php', ['ctx_guardar_pdf' => self::ctxPdf(7), 'pdf' => 'no es base64 !!'])['mensaje']);
         $this->assertNull($c->getDocumento(), 'un pdf que no es base64 deja el documento vacío');
     }
 

@@ -6,12 +6,24 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 
 /** @var CertificadoEmitidoRepositoryInterface $certificadoEmitidoRepository */
 $certificadoEmitidoRepository = DependencyResolver::get(CertificadoEmitidoRepositoryInterface::class);
 
-$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item');
-$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom');
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar_pdf'),
+        'certificado_emitido_guardar_pdf'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+// El certificado y la persona son los de la cápsula que firmó `certificado_emitido_guardar`.
+$Qid_item = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
+$Qid_nom = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
 $Qcertificado = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado');
 $Qpdf = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'pdf');
 

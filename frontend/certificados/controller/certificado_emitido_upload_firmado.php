@@ -32,6 +32,8 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'id_item' => $form['id_item'],
     'id_nom' => $form['id_nom'],
     'solo_pdf' => 1,
+    // Cápsula del certificado: `certificado_emitido_pdf_upload` toma de ella el `id_item`.
+    'ctx_guardar' => $form['ctx_guardar'],
 ]);
 
 $a_campos = [

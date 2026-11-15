@@ -78,7 +78,8 @@
             } else {
                 let data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 let item = data.item;
-                let url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
+                // La cápsula que devuelve el guardado autoriza a guardar el PDF de ese certificado.
+                let url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '&ctx_guardar_pdf=' + encodeURIComponent(data.ctx_guardar_pdf || '') + '{{ h|raw }}';
 
                 // Interceptar errores al abrir la ventana
                 let ventana = null;

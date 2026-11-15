@@ -4,6 +4,7 @@ namespace src\certificados\application;
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\application\services\PersonaFinderService;
+use src\shared\security\HashB;
 
 final class CertificadoEmitidoUploadFirmadoFormData
 {
@@ -14,7 +15,7 @@ final class CertificadoEmitidoUploadFirmadoFormData
     }
 
     /**
-     * @return array{id_nom: int, nom: string, apellidos_nombre: string}
+     * @return array{id_nom: int, nom: string, apellidos_nombre: string, ctx_guardar: string}
      */
     public function execute(int $id_item): array
     {
@@ -34,6 +35,8 @@ final class CertificadoEmitidoUploadFirmadoFormData
             'id_nom' => $id_nom,
             'nom' => $nom_final,
             'apellidos_nombre' => $apellidos_nombre,
+            // Subir el PDF firmado de este certificado: `certificado_emitido_pdf_upload` con `solo_pdf`.
+            'ctx_guardar' => HashB::sign('certificado_emitido_guardar', ['nuevo' => 0, 'id_item' => $id_item, 'id_nom' => $id_nom]),
         ];
     }
 }

@@ -28,7 +28,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_enviar`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php`
-- Entrada: `post.id_item:integer`, `post.sel:string`
+- Entrada: `post.ctx_enviar:string` (cápsula `HashB` de la fila de la lista de emitidos; el certificado sale de ella)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_emitido_guardar`
@@ -42,7 +42,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_guardar_pdf`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php`
-- Entrada: `post.certificado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.pdf:string`
+- Entrada: `post.ctx_guardar_pdf:string` (cápsula `HashB` que devuelve `certificado_emitido_guardar`; fija el certificado y la persona), `post.certificado:string` (base64), `post.pdf:string` (base64)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/certificados/certificado_emitido_imprimir_datos`
@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_emitido_pdf_upload`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php`
-- Entrada: `post.certificado:string`, `post.destino:string`, `post.f_certificado:string`, `post.f_enviado:string`, `post.firmado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.idioma:string`, `post.solo_pdf:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` del formulario, acción `certificado_emitido_guardar`; fija el certificado y la persona), `files.certificado_pdf`, `post.solo_pdf:integer` (1 = PDF firmado del certificado de la cápsula) y los campos del formulario (`certificado`, `idioma`, `firmado`, `f_certificado`, `f_enviado`, `destino`)
 - Respuesta: `json_direct`
 
 ## `/src/certificados/certificado_emitido_upload_firmado_data`
@@ -133,7 +133,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `certificados.certificado_recibido_pdf_upload`
 - Controller: `src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php`
-- Entrada: `post.certificado:string`, `post.destino:string`, `post.f_certificado:string`, `post.f_recibido:string`, `post.firmado:string`, `post.id_item:integer`, `post.id_nom:integer`, `post.idioma:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` del formulario, acción `certificado_recibido_guardar`; fija el certificado y la persona), `files.certificado_pdf` y los campos del formulario (`certificado`, `idioma`, `firmado`, `f_certificado`, `f_recibido`, `destino`)
 - Respuesta: `json_direct`
 
 ## `/src/certificados/certificados_locales_data`

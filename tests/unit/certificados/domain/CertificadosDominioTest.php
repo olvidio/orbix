@@ -281,6 +281,7 @@ final class CertificadosDominioTest extends myTest
         $fila = $r['a_valores'][1];
         $this->assertSame([7, 'H 12/26', '24/7/2026', 'Joan Pla', 'Sí', 'Sí', 'català', 'crGalbel', '30/7/2026'], [$fila['sel'], $fila[1], $fila[2], $fila[3], $fila[4], $fila[5], $fila[6], $fila[7], $fila[8]]);
         $this->assertSame(['id_item' => 7], HashB::open($fila['ctx_eliminar'], 'certificado_emitido_delete'));
+        $this->assertSame(['id_item' => 7], HashB::open($fila['ctx_enviar'] ?? '', 'certificado_emitido_enviar'), 'cada fila lleva la cápsula para enviar ese certificado');
         $this->assertSame(['Nombre a mano', 'No', ''], [$r['a_valores'][2][3], $r['a_valores'][2][4], $r['a_valores'][2][5]]);
     }
 

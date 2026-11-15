@@ -100,5 +100,10 @@ if ($guardado && $Qcertificado_old !== '') {
     }
 }
 
-$data = ['mensaje' => 'ok', 'item' => $Qid_item];
+// Para guardar a continuación el PDF que genera `certificado_emitido_2_mpdf.php` de este certificado.
+$data = [
+    'mensaje' => 'ok',
+    'item' => $Qid_item,
+    'ctx_guardar_pdf' => HashB::sign('certificado_emitido_guardar_pdf', ['id_item' => (int) $Qid_item, 'id_nom' => (int) $Qid_nom]),
+];
 ContestarJson::enviar($error_txt, $data);

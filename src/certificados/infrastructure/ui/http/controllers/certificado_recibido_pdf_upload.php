@@ -4,6 +4,9 @@ use src\certificados\domain\CertificadoRecibidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
+use src\shared\web\ContestarJson;
 
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -11,6 +14,18 @@ header('Content-Type: application/json; charset=UTF-8');
 /** @var CertificadoRecibidoUpload $certificadoUpload */
 $certificadoUpload = DependencyResolver::get(CertificadoRecibidoUpload::class);
 
+// Solo con la cápsula del formulario (la misma que guarda el certificado): fija el certificado y la persona.
+try {
+    $ctx = HashB::open(
+        \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_guardar'),
+        'certificado_recibido_guardar'
+    );
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+$idItemCtx = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
+$idNomCtx = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_nom');
 $uploaded = MultipartUploadGuard::requireUploadedFileOrExit('certificado_pdf');
 $tmpFilePath = $uploaded['tmp_name'];
 $fileName = $uploaded['name'];
@@ -37,8 +52,8 @@ if ($tmpFilePath === '') {
             $oF_certificado = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_certificado'));
             $oF_recibido = DateTimeLocal::createFromLocal(\src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'f_recibido'));
             $oCertificadoRecibido = $certificadoUpload->uploadNew(
-                \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_item'),
-                \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_nom'),
+                $idItemCtx,
+                $idNomCtx,
                 (string) $contenido_doc,
                 \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'idioma'),
                 \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'certificado'),
