@@ -9,6 +9,7 @@ use src\devel_db_admin\domain\contracts\MigracionAplicadaRepositoryInterface;
 use src\devel_db_admin\domain\entity\MigracionAplicada;
 use src\devel_db_admin\domain\value_objects\MigracionDatabase;
 use src\devel_db_admin\domain\value_objects\MigracionTipo;
+use src\shared\config\ReplicaSelectPolicy;
 
 final class MigracionesEscanear
 {
@@ -138,9 +139,15 @@ final class MigracionesEscanear
     /**
      * @return list<string>
      */
-    public static function destinosPara(string $databaseArchivo, string $tipo): array
+    public static function destinosPara(string $databaseArchivo, string $tipo, ?bool $incluirReplica = null): array
     {
         if ($tipo === MigracionTipo::DATOS) {
+            return [$databaseArchivo];
+        }
+        // Donde no hay réplica de lectura (Docker: `*_select` es la misma BD) la migración solo va a la
+        // principal; si no, se aplicaba dos veces a la misma BD y la segunda fallaba. Mismo criterio que
+        // el resto de herramientas de esquemas ({@see ReplicaSelectPolicy}).
+        if (!($incluirReplica ?? ReplicaSelectPolicy::incluirSelect())) {
             return [$databaseArchivo];
         }
 

@@ -60,6 +60,9 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'misa_iniciales_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'misa_rel_encargo_ctr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
             ['tabla' => 'pasarela_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            // Solo en las dl con el módulo de habitaciones.
+            ['tabla' => 'du_habitaciones_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
+            ['tabla' => 'du_camas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquema'::text)"],
         ];
     }
 
@@ -123,6 +126,9 @@ final class RenombrarEsquemaDefaultsCatalog
             ['tabla' => 'i_tipo_documento_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'i_ubis_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
             ['tabla' => 'i_whereis_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            // Solo en los esquemas de región del stgr.
+            ['tabla' => 'e_certificados_rstgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
+            ['tabla' => 'e_notas_otra_region_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ];
     }
 

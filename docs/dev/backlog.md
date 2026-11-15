@@ -52,7 +52,7 @@ Formato sugerido por ítem:
 
 Con las BD de pruebas (2026-11-15) ya hay un test de las operaciones reales: `tests/integration/devel_db_admin/application/EsquemaCicloDeVidaTest.php` (crear usuarios y esquema, copiar datos, renombrar, verificar y corregir un renombre a medias, eliminar, absorber una dl en otra y mover una tabla de sv a sv-e), que solo corre con `WEBDIR=pruebas` y sobre una copia temporal de los ficheros de contraseñas.
 
-- **Sin test todavía:** la ejecución real de `MigracionesEjecutar`, `configuracion/ModuloInstaladoTablesService`, `utils_database/DBAbstract` y la ejecución real de `zonassacd/ZonasAComun` (su simulación sí tiene test).
+- **Sin test real:** `zonassacd/ZonasAComun` (migración de un solo uso, ya aplicada; su simulación sí tiene test). El resto está cubierto: `MigracionesEjecutarTest`, `ModuloInstaladoTablesServiceTest` (que ejercita `AppDB` y `DBAbstract`) y `RenombrarEsquemaDefaultsCatalogTest`.
 - **Ojo al escribirlos:** los roles de PostgreSQL y los ficheros `*.roles.inc` son comunes a desarrollo y pruebas (usar nombres de esquema propios y `ConfigDB::$dirPwdOverride`); `EliminarEsquemaDl` no quita las filas del esquema del registro `db_idschema` de sv y sv-e.
 - **Notas:** pasos 1.7, 2.9 y 2.10 de [`revision_tests_plan.md`](revision_tests_plan.md).
 

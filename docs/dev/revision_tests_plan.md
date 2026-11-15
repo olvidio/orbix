@@ -1292,7 +1292,12 @@ Con los clones ya se pueden ejecutar de verdad las operaciones de `devel_db_admi
   - `DBTrasvase::actividades('resto2dl')`: las actividades que la dl nueva tenía en «resto» se guardaban en el esquema de quien ejecuta la herramienta, no en el de la dl. Faltaba poner al repositorio la conexión del esquema destino, como ya hacían `cdc()` y `ctr()`.
   - `RenombrarEsquemaDefaultsCatalog` (la lista fija de columnas cuyo default lleva el nombre del esquema) no tenía 15 tablas añadidas después: encargos y misas en comun, pasarela, certificados e inventario. Tras un renombre, esas tablas seguían con `idschema('nombre-antiguo')`. Completado, con el test-guardia `RenombrarEsquemaDefaultsCatalogTest`, que compara el catálogo con los defaults reales y fallará cuando se añada una tabla sin apuntarla.
   - `DBTrasvase` cambiaba la conexión de los repositorios del contenedor (actividades, casas, centros) a la del esquema destino y no la reponía: tras eliminar una dl, el repositorio de actividades se quedaba apuntando a un esquema que ya no existía. Ahora repone las conexiones al acabar cada traslado (lo comprueba el `tearDown` de `EsquemaCicloDeVidaTest`).
-- **Queda sin test** (en `backlog.md`): la ejecución real de migraciones, `ModuloInstaladoTablesService`, `DBAbstract` y la ejecución real de `ZonasAComun`.
+- **Tercera tanda (2026-11-15):**
+  - `MigracionesEjecutarTest`: ejecución real con una carpeta temporal de migraciones de prueba (estructura y datos en comun, el comodín `*.` sobre todos los esquemas de sv, una migración que falla y detiene las siguientes, y el modo «hasta», que no repite las ya aplicadas).
+  - `ModuloInstaladoTablesServiceTest`: instalar el módulo de habitaciones en una dl que no lo tiene crea sus tablas (heredadas de las globales, con su `id_schema` y del rol de la dl) y desinstalarlo las quita. Ejercita `AppDB`, `src/ubiscamas/db/DBEsquema` y `DBAbstract`.
+  - **Fallo corregido:** en Docker, donde la «réplica de lectura» es la misma BD, el ejecutor de migraciones aplicaba cada migración de estructura dos veces (en `comun` y en `comun_select`) y la segunda fallaba («ya existe»). Ahora sigue el criterio del resto de herramientas (`ReplicaSelectPolicy`): la réplica solo es destino donde existe.
+  - El test-guardia del catálogo de defaults revisa ahora **todos** los esquemas de delegación, no solo el de la sesión, y encontró cuatro tablas más (habitaciones, que solo tiene alguna dl, y dos de las regiones del stgr). Añadidas.
+- **Queda sin test real:** `ZonasAComun` (migración de un solo uso, ya aplicada; su simulación sí tiene test).
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

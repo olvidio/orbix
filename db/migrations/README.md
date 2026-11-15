@@ -53,6 +53,8 @@ El runner clasifica automaticamente cada fichero:
 Regla de ejecucion:
 
 - `__comun.sql` de estructura: primero `comun` (publicador), despues `comun_select` (suscriptor).
+  Donde no hay réplica de lectura (Docker: `comun_select` y `sv-e_select` son la misma BD que la
+  principal) las migraciones de estructura se aplican solo a la principal (`ReplicaSelectPolicy`).
 - `__comun.sql` de datos: solo `comun`.
 - `__sv-e.sql` de estructura: primero `sv-e` (publicador), despues `sv-e_select` (suscriptor).
 - `__sv-e.sql` de datos: solo `sv-e`.

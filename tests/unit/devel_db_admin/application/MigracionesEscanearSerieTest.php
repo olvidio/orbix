@@ -115,4 +115,24 @@ final class MigracionesEscanearSerieTest extends myTest
             }
         };
     }
+
+    /**
+     * Las migraciones de estructura de comun y de sv-e van también a su réplica de lectura, salvo
+     * donde no la hay (Docker: la «réplica» es la misma BD y la migración se aplicaría dos veces).
+     */
+    public function test_la_replica_de_lectura_solo_es_destino_donde_existe(): void
+    {
+        $this->assertSame(
+            [MigracionDatabase::COMUN_SELECT, MigracionDatabase::COMUN],
+            MigracionesEscanear::destinosPara(MigracionDatabase::COMUN, 'estructura', true),
+        );
+        $this->assertSame([MigracionDatabase::COMUN], MigracionesEscanear::destinosPara(MigracionDatabase::COMUN, 'estructura', false));
+        $this->assertSame([MigracionDatabase::SV_E], MigracionesEscanear::destinosPara(MigracionDatabase::SV_E, 'estructura', false));
+        $this->assertSame([MigracionDatabase::COMUN], MigracionesEscanear::destinosPara(MigracionDatabase::COMUN, 'datos', true));
+        // Sin indicarlo, decide el entorno (ReplicaSelectPolicy), como en el resto de herramientas de esquemas.
+        $this->assertSame(
+            MigracionesEscanear::destinosPara(MigracionDatabase::COMUN, 'estructura', \src\shared\config\ReplicaSelectPolicy::incluirSelect()),
+            MigracionesEscanear::destinosPara(MigracionDatabase::COMUN, 'estructura'),
+        );
+    }
 }
