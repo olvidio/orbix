@@ -41,6 +41,10 @@ final class MigracionesEjecutarTest extends myTest
                 $this->fail("La conexión «{$g}» va a «{$bd}», no a una BD de pruebas: no se ejecutan migraciones.");
             }
         }
+        foreach (glob(sys_get_temp_dir() . '/orbix_migraciones_test_*') ?: [] as $resto) {
+            array_map('unlink', glob($resto . '/*') ?: []);
+            @rmdir($resto);
+        }
         $this->dir = sys_get_temp_dir() . '/orbix_migraciones_test_' . getmypid();
         @mkdir($this->dir, 0700, true);
         $this->limpiar();

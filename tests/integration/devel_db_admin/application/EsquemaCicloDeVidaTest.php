@@ -64,6 +64,11 @@ final class EsquemaCicloDeVidaTest extends myTest
             return;
         }
         // Copia del directorio de configuración: lo que se escriba en los ficheros de contraseñas va a la copia.
+        // Copias que dejara una ejecución anterior que acabó con un error fatal (llevan contraseñas).
+        foreach (glob(sys_get_temp_dir() . '/orbix_conf_test_*') ?: [] as $resto) {
+            array_map('unlink', glob($resto . '/*') ?: []);
+            @rmdir($resto);
+        }
         self::$dirConf = sys_get_temp_dir() . '/orbix_conf_test_' . getmypid();
         @mkdir(self::$dirConf, 0700, true);
         ConfigDB::$dirPwdOverride = self::$dirConf;
