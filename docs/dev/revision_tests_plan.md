@@ -269,7 +269,7 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 22. **(6.4) Botón «ctrs org» de la lista de actividades sg.** `ListaActividadesSgListado` pinta un botón «ctrs org» (`jsForm.mandar("#seleccionados","ctrs")`) que `actividades.js` no trata: no tiene destino desde que se añadió en 2019. ¿Se quita, o debe abrir el dossier 3010 «ctr encargados de la actividad»? **Resuelta (15-nov-2026): abre el dossier.** `actividades.js` y `DossiersVerPantallaData` tratan `ctrs`; el dossier 3010 no tenía `app` ni `class` en `d_tipos_dossiers`, así que `DossierVerDatosTablaInfoClassResolver` lo resuelve por su id, e `Info3010::getColeccion()` filtra por la actividad (antes listaba los centros de todas). Spec `actividades-sg-botones.spec.ts`.
 
-23. **(6.5) Entrada de menú que regenera los textos de los menús.** `/src/menus/menus_generar_txt` cuelga directamente del menú: al pulsarla reescribe `frontend/menus/view/traducir_menu.phtml` (nombres de menús para gettext). No toca datos y es idempotente, pero es una acción sin pantalla ni cápsula. ¿Se deja así, o se le pone una pantalla con un botón (habría que cambiar la entrada de menú en la BD)? También falta la pantalla de «exportar menús a ficheros» (`menus_ficheros.php` no existe); su endpoint queda cerrado hasta que se haga. (Sin tocar.)
+23. **(6.5) Entrada de menú que regenera los textos de los menús.** `/src/menus/menus_generar_txt` cuelga directamente del menú: al pulsarla reescribe `frontend/menus/view/traducir_menu.phtml` (nombres de menús para gettext). No toca datos y es idempotente, pero es una acción sin pantalla ni cápsula. **Resuelta (15-nov-2026): se deja así.** La pantalla de «exportar menús a ficheros» sigue pendiente en `backlog.md`.
 
 ## 7. Presupuesto y ritmo
 
@@ -1277,6 +1277,18 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - `menus_exportar_ref_a_ficheros` vacía y recarga con `psql` las tablas de referencia de los menús (`accion=importar`) o las vuelca a ficheros; ninguna pantalla lo llama (las entradas de menú apuntan a `menus_ficheros.php`, que no existe). Ahora exige una cápsula que nadie firma: queda cerrado hasta que se haga la pantalla (`backlog.md`).
 - `menus_generar_txt` se deja como está (duda 23).
 - Tests: `CertificadosControllersContractTest` (subidas con un PDF de prueba en `$_FILES`), `ActividadProcesoGenerarControllerTest`, `MenusExportarControllersTest`, `CertificadosPayloadCapsulasTest` y los unitarios de los builders. Specs: `procesos-fases` (ahora también «regenerar»), `menus-exportar.spec.ts` (nuevo) y `certificados-subida` (recibido). Los flujos de certificados **emitidos** no tienen spec: solo existen en una región del stgr y el usuario de E2E es de una dl.
+
+### DDL de esquemas con las BD de pruebas (2026-11-15)
+
+Con los clones ya se pueden ejecutar de verdad las operaciones de `devel_db_admin`. `EsquemaCicloDeVidaTest` crea esquemas de prueba (`Zz-dlzzt`, `Zz-dlzzu`) a partir de `H-dlb` y los borra al acabar; solo corre con `WEBDIR=pruebas`, comprueba antes que las conexiones de mantenimiento van a `pruebas-*` y trabaja sobre una copia temporal de los ficheros de contraseñas (`ConfigDB::$dirPwdOverride`), porque los roles y esos ficheros son comunes a desarrollo y pruebas.
+
+- **Ciclo de vida:** `CrearUsuarios` → `CrearEsquema` (las mismas tablas que el de referencia en comun, sv y sv-e) → `RenombrarEsquema` (esquemas, roles y ficheros) → `EliminarEsquemaDl`. Pasó a la primera.
+- **`AbsorberEsquema`:** una actividad y un numerario de la dl absorbida pasan a la que absorbe, la delegación queda inactiva y el esquema absorbido se renombra a «zz…» sin herencias.
+- **Fallos de la aplicación que salieron (test primero, luego el arreglo):**
+  - `AbsorberEsquema` con una delegación que no está en `xu_dl`: copiaba los datos y después moría con un error fatal. Ahora lo comprueba antes de empezar y no hace nada.
+  - `MoverTabla` (una tabla de sv a sv-e) no funcionaba: el volcado se escribía con el nombre de la BD de origen y se leía con el de la de destino; y, superado eso, el borrado de la tabla de origen no tenía conexión y borraba por el nombre sin esquema (con `CASCADE` en modo debug). Ahora fija el nombre del volcado y borra `"esquema".tabla` con `RESTRICT`.
+  - `PgDbSchemaRepository` cambiaba su conexión a sv o sv-e y se quedaba ahí: un segundo alta «en comun» en el mismo proceso iba al registro de sv-e (ids distintos en cada BD), y cualquier `Guardar` posterior, a la BD equivocada. En una petición web no se notaba (una operación por proceso). Ahora el alta en comun usa siempre la conexión de comun y el repositorio vuelve a ella al acabar.
+- **Queda sin test** (en `backlog.md`): `CopiarEsquema`, verificar/corregir renombre, la ejecución real de migraciones, `ModuloInstaladoTablesService`, `DBAbstract` y la ejecución real de `ZonasAComun`.
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

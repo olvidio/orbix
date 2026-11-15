@@ -47,6 +47,22 @@ final class AbsorberEsquema
 
         [$region_new, $dl_new] = $this->parseRegionDl($esquemaMatriz);
 
+        // Las dos delegaciones tienen que estar en la tabla de delegaciones: más abajo hacen falta sus ids
+        // y, si faltaba alguna, el proceso fallaba a medias, con los datos ya copiados.
+        foreach ([$esquemaMatriz, $esquemaDel] as $esquemaComprobado) {
+            [$regionComprobada, $dlComprobada] = $this->parseRegionDl($esquemaComprobado);
+            $encontradas = $this->delegacionRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(DelegacionField::Dl, $dlComprobada))
+                    ->andWhere(Filter::eq(DelegacionField::Region, $regionComprobada))
+            );
+            if ($encontradas === []) {
+                return new AbsorberEsquemaResult([], [
+                    sprintf(_("La delegación «%s» de la región «%s» no está en la tabla de delegaciones. No se ha absorbido nada."), $dlComprobada, $regionComprobada),
+                ]);
+            }
+        }
+
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getEsquema('public');
 

@@ -35,9 +35,13 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     /** Campo (valor del enum) => columna, solo si difieren: aquí coinciden todos. */
     private const COLUMNAS = [];
 
+    /** Conexión a la BD comun: `connectar()` cambia la conexión en uso a sv, sv-e o sf. */
+    private \PDO $oDblComun;
+
     public function __construct()
     {
         $oDbl = GlobalPdo::get('oDBPC');
+        $this->oDblComun = $oDbl;
         $this->setoDbl($oDbl);
         $oDbl_Select = GlobalPdo::get('oDBPC_Select');
         $this->setoDbl_select($oDbl_Select);
@@ -53,9 +57,14 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      */
     public function cambiarNombre(string $old, string $new, string $database): void
     {
-        $this->DBCambiarNombre($old, $new, $database);
-        $this->DBCambiarNombre($old . 'f', $new . 'f', $database);
-        $this->DBCambiarNombre($old . 'v', $new . 'v', $database);
+        try {
+            $this->DBCambiarNombre($old, $new, $database);
+            $this->DBCambiarNombre($old . 'f', $new . 'f', $database);
+            $this->DBCambiarNombre($old . 'v', $new . 'v', $database);
+        } finally {
+            // El repositorio queda otra vez sobre comun para lo que venga después.
+            $this->setoDbl($this->oDblComun);
+        }
     }
 
     /**
@@ -63,6 +72,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      */
     public function llenarNuevo(string $schema, string $database): void
     {
+        // El id se decide siempre con el registro de comun.
+        $this->setoDbl($this->oDblComun);
         $Id = $this->getNext($schema);
         $newId = new DbSchemaId($Id);
         $newIdSf = new DbSchemaId($Id - 1000);
@@ -74,23 +85,28 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $oDbl = $this->connectar($database);
         $this->setoDbl($oDbl);
 
-        // comun
-        $oDbSchema = new DbSchema();
-        $oDbSchema->setIdVo($newId);
-        $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema));
-        $this->Guardar($oDbSchema);
+        try {
+            // comun
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setIdVo($newId);
+            $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema));
+            $this->Guardar($oDbSchema);
 
-        // sf
-        $oDbSchema = new DbSchema();
-        $oDbSchema->setIdVo($newIdSf);
-        $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema . 'f'));
-        $this->Guardar($oDbSchema);
+            // sf
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setIdVo($newIdSf);
+            $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema . 'f'));
+            $this->Guardar($oDbSchema);
 
-        // sv
-        $oDbSchema = new DbSchema();
-        $oDbSchema->setIdVo($newIdSv);
-        $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema . 'v'));
-        $this->Guardar($oDbSchema);
+            // sv
+            $oDbSchema = new DbSchema();
+            $oDbSchema->setIdVo($newIdSv);
+            $oDbSchema->setSchemaVo(DbSchemaCode::fromString($schema . 'v'));
+            $this->Guardar($oDbSchema);
+        } finally {
+            // El repositorio queda otra vez sobre comun para lo que venga después.
+            $this->setoDbl($this->oDblComun);
+        }
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -235,7 +251,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $oDB = null;
         switch ($database) {
             case 'comun':
-                $oDB = $this->getoDbl();
+                // La de comun, no «la que haya»: tras un alta en sv o sv-e la conexión en uso es esa.
+                $oDB = $this->oDblComun;
                 break;
             case 'sv':
                 $oConfigDB = new ConfigDB('sv');

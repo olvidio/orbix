@@ -48,10 +48,12 @@ Formato sugerido por ítem:
 - **Por qué no ahora:** se aplica por analogía la decisión del 12-11-2026 sobre el de cargos; pendiente de confirmar (plan, «Dudas pendientes para el usuario»).
 - **Notas:** detectado en el paso 2.5 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 21).
 
-### Tests del DDL de esquemas con una BD aislada
+### Tests del DDL de esquemas: lo que queda
 
-- **Qué:** las operaciones que crean, renombran, absorben o eliminan esquemas y tablas no tienen tests: `devel_db_admin` (`AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla`, `RenombrarEsquema`, `MigracionesEjecutar`, `DBAlterSchema`…; 22 % de cobertura), `configuracion/ModuloInstaladoTablesService`, `utils_database/DBAbstract` y el script de migración `zonassacd/ZonasAComun`.
-- **Por qué no ahora:** ejecutarlas contra la BD de desarrollo compartida es destructivo; hace falta una BD (o un contenedor) desechable que se cree y se tire en cada ejecución.
+Con las BD de pruebas (2026-11-15) ya hay un test de las operaciones reales: `tests/integration/devel_db_admin/application/EsquemaCicloDeVidaTest.php` (crear usuarios y esquema, renombrar, eliminar, absorber una dl en otra y mover una tabla de sv a sv-e), que solo corre con `WEBDIR=pruebas` y sobre una copia temporal de los ficheros de contraseñas.
+
+- **Sin test todavía:** `CopiarEsquema`, `VerificarEstadoRenombrarEsquema` / `CorregirEstadoRenombrarEsquema`, la ejecución real de `MigracionesEjecutar`, `configuracion/ModuloInstaladoTablesService`, `utils_database/DBAbstract` y la ejecución real de `zonassacd/ZonasAComun` (su simulación sí tiene test).
+- **Ojo al escribirlos:** los roles de PostgreSQL y los ficheros `*.roles.inc` son comunes a desarrollo y pruebas (usar nombres de esquema propios y `ConfigDB::$dirPwdOverride`); `EliminarEsquemaDl` no quita las filas del esquema del registro `db_idschema` de sv y sv-e.
 - **Notas:** pasos 1.7, 2.9 y 2.10 de [`revision_tests_plan.md`](revision_tests_plan.md).
 
 ### Piloto de Infection (tests de mutación) en `permisos`
@@ -93,7 +95,7 @@ Controladores de `src/` que escriben y no abren ninguna cápsula (fase 6.5 del p
 ### Menús: pantalla de ficheros que falta y entrada que ejecuta al pulsarla
 
 - Las entradas de menú «exportar / importar menús a ficheros» apuntan a `frontend/menus/controller/menus_ficheros.php?accion=…`, que no existe. Importar tiene pantalla nueva (`menus_importar_de_ficheros_a_ref.php`); **exportar a ficheros no tiene ninguna**. El endpoint `menus_exportar_ref_a_ficheros` exige desde el 2026-11-15 una cápsula que nadie firma, así que no se puede ejecutar desde la web. Hacer la pantalla (con confirmación, que firme `ctx_ficheros`) y corregir las entradas de menú.
-- `/src/menus/menus_generar_txt` es una entrada de menú que apunta directamente al endpoint: al pulsarla regenera `frontend/menus/view/traducir_menu.phtml` (la lista de nombres de menús para gettext). No toca datos y es idempotente, pero es una acción sin pantalla ni cápsula (duda 23 del plan de tests).
+- `/src/menus/menus_generar_txt` es una entrada de menú que apunta directamente al endpoint: al pulsarla regenera `frontend/menus/view/traducir_menu.phtml` (la lista de nombres de menús para gettext). No toca datos y es idempotente; el usuario decidió el 2026-11-15 dejarla así (duda 23 del plan de tests).
 
 ### Certificados emitidos sin prueba en el navegador
 

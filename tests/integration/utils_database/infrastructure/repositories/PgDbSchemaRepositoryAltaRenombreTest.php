@@ -38,6 +38,24 @@ final class PgDbSchemaRepositoryAltaRenombreTest extends myTest
     private function borrar(): void
     {
         $GLOBALS['oDBPC']->exec("DELETE FROM public.db_idschema WHERE schema LIKE 'Zzt-%'");
+        // El registro de sv (lo usa `test_tras_registrar_en_sv_el_alta_en_comun_va_a_comun`).
+        $GLOBALS['oDBP']->exec("DELETE FROM public.db_idschema WHERE schema LIKE 'Zzt-%'");
+    }
+
+    /**
+     * El registro de un esquema se lleva en comun, sv y sv-e con la misma instancia del repositorio.
+     * Tras un alta en sv la conexión se quedaba en sv, y el siguiente alta «en comun» iba a parar al
+     * registro de sv (dos altas de esquema en el mismo proceso).
+     */
+    public function test_tras_registrar_en_sv_el_alta_en_comun_va_a_comun(): void
+    {
+        $this->repo->llenarNuevo(self::VIEJO, 'comun');
+        $this->repo->llenarNuevo(self::VIEJO, 'sv');
+        $this->repo->llenarNuevo(self::NUEVO, 'comun');
+
+        $this->assertArrayHasKey(self::NUEVO, $this->filas(), 'el segundo esquema está en el registro de comun');
+        $enSv = (int) $GLOBALS['oDBP']->query("SELECT count(*) FROM public.db_idschema WHERE schema LIKE '" . self::NUEVO . "%'")->fetchColumn();
+        $this->assertSame(0, $enSv, 'y no en el de sv');
     }
 
     /** @return array<string, int> schema => id */
@@ -49,6 +67,24 @@ final class PgDbSchemaRepositoryAltaRenombreTest extends myTest
             $out[$f['schema']] = (int) $f['id'];
         }
         return $out;
+    }
+
+    /**
+     * Después de un alta o de un cambio de nombre en sv, el repositorio vuelve a trabajar con comun:
+     * si se quedaba en sv, cualquier `Guardar` posterior del mismo proceso iba al registro de sv.
+     */
+    public function test_tras_un_alta_en_sv_el_repositorio_vuelve_a_comun(): void
+    {
+        $this->repo->llenarNuevo(self::VIEJO, 'comun');
+        $this->repo->llenarNuevo(self::VIEJO, 'sv');
+        $this->repo->cambiarNombre(self::VIEJO, self::NUEVO, 'sv');
+
+        $directo = new \src\utils_database\domain\entity\DbSchema();
+        $directo->setIdVo(new \src\utils_database\domain\value_objects\DbSchemaId(3999));
+        $directo->setSchemaVo(\src\utils_database\domain\value_objects\DbSchemaCode::fromString('Zzt-directo'));
+        $this->repo->Guardar($directo);
+
+        $this->assertSame(3999, $this->filas()['Zzt-directo'] ?? null, 'el guardado va al registro de comun');
     }
 
     private function ultimoDelRango(): int

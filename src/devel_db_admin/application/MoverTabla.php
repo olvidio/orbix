@@ -8,6 +8,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\postgresql\DBTabla;
+use src\shared\infrastructure\persistence\DBConnection;
 
 /**
  * Mueve una tabla de sv a sv-e por esquema y, en desarrollo local, ajusta referencias a oDBE en PHP.
@@ -40,7 +41,19 @@ final class MoverTabla
             $oDBTabla->setNew($esquemaNewv);
 
             if ($oDBTabla->mover($configRef, $configNew)) {
-                $oDBTabla->eliminarTabla($tabla);
+                // Quitar la tabla de la BD de origen, con su esquema y sin CASCADE. Antes se llamaba a
+                // `DBTabla::eliminarTabla()`, que no tiene conexión (lanzaba una excepción con la tabla ya
+                // copiada) y borra por el nombre sin esquema.
+                if (preg_match('/^[a-z_][a-z0-9_]*$/', $tabla) !== 1) {
+                    $msg .= '<br>' . sprintf(_("Nombre de tabla no válido: %s"), $tabla);
+                    continue;
+                }
+                try {
+                    $pdoRef = (new DBConnection($configRef))->getPDO();
+                    $pdoRef->exec(sprintf('DROP TABLE IF EXISTS "%s".%s RESTRICT', str_replace('"', '', $esquemaRefv), $tabla));
+                } catch (\Throwable $e) {
+                    $msg .= '<br>' . sprintf(_("La tabla se ha copiado a sv-e, pero no se ha podido quitar de sv (%s): %s"), $esquema, $e->getMessage());
+                }
             } else {
                 $msg .= '<br>' . sprintf(_("Error para %s"), $esquema);
             }

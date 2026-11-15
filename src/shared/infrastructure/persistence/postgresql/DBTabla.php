@@ -219,6 +219,9 @@ class DBTabla extends DBAbstract
         $this->leer_local(FALSE);
 
         $this->cambiar_nombre_fichero();
+        // El nombre del volcado lleva la BD: se fija antes de cambiar a la de destino. Si no, se
+        // escribía como «….sv.sql» y se buscaba como «….sv-e.sql», y mover una tabla fallaba siempre.
+        $this->sfileNew = $this->getFileNew();
         // Para crear tablas, permiso de superusuario...
         $this->setConfig($configNew);
 
