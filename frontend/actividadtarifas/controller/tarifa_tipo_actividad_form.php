@@ -60,6 +60,10 @@ $oHash = new HashF();
         $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
         $oHash->setCamposForm('id_tarifa!id_tipo_activ!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
         $a_camposHidden['id_tipo_activ'] = '';
+        // `extendida` viaja con el bloque de desplegables del tipo de actividad y el oculto
+        // `id_tipo_activ` lo rellena `fnjs_guardar` antes de enviar: fuera del hash. Si no, guardar
+        // un alta se rechazaba siempre (302 al inicio y sesión cerrada).
+        $oHash->setCamposNo('id_tipo_activ!extendida');
     } else {
         $oHash->setUrl(AppUrlConfig::srcBrowserUrl('/src/actividadtarifas/relacion_tarifa_update'));
         $oHash->setCamposForm('id_tarifa!id_tipo_activ');

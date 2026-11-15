@@ -222,7 +222,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [ ] 6.1 BD de tests aislada.
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
-- [ ] 6.4 Hashes de formulario con `getCamposHtml()`: pantallas del menú hechas (sección 31); quedan las pantallas que no cuelgan del menú.
+- [x] 6.4 Hashes de formulario con `getCamposHtml()` (sección 31): pantallas del menú y formularios de alta que se abren en una ventana.
 - [ ] 6.5 Resto del backlog.
 - [x] 6.6 Fallos intermitentes de E2E (sección 31).
 
@@ -1208,7 +1208,15 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - **`waitForLoadState('networkidle')` no esperaba nada:** es un estado de la carga de la página; alcanzado una vez tras abrir `index.php`, vuelve al instante aunque la pantalla cargada después en `#main` siga pidiendo desplegables. La primera pasada daba 24 falsos avisos por eso. Nueva ayuda `redEnCalma()` (espera a que jQuery no tenga peticiones en curso), que sustituye a todas las esperas `networkidle` de los specs.
 - `pantallas-sin-parametros.spec.ts` cuenta también los formularios (118; 23 no coinciden), pero solo como información: sin parámetros la pantalla no está en un estado real.
 
-**Pendiente del 6.4:** las pantallas que no cuelgan del menú (se abren desde una lista o un formulario). De la pasada sin parámetros salen para revisar: alta de relación tarifa–tipo de actividad (`extendida` enviado y no firmado), `pasarela/nombre_form`, `encargossacd/encargo_ver`, `asistentes/que_ctr_lista`, `inventario/doc_asignado` y `doc_no_asignado`, `actividades/actividad_select_ubi`. Tampoco se comprueban los hidden que el JavaScript cambia antes de enviar (los valida `hh`). Botón «ctrs org» sin destino: duda 22.
+**Formularios que no cuelgan del menú (2026-11-15).** Revisados los que la pasada sin parámetros daba como dudosos:
+
+- **Tres fallos reales más, el mismo patrón:** el formulario de alta incrusta los desplegables del tipo de actividad, que llevan un campo oculto `extendida` que no estaba firmado ni en `camposNo`; guardar se rechazaba siempre (302). Corregidos: «nueva relación tarifa–tipo de actividad» (`tarifa_tipo_actividad_form.php`, donde además el oculto `id_tipo_activ` que rellena el JavaScript rompía el hash de los hidden) y el alta de las contribuciones «no duerme» y «reserva» de la pasarela.
+- Spec `tarifas-tipo-actividad.spec.ts`: alta y borrado de una relación por la interfaz (con el código anterior, 302). Spec `formularios-de-alta.spec.ts` (solo lectura): abre siete formularios de alta o de valor por defecto de tarifas y pasarela y comprueba su hash; comprobado que falla con el código anterior en los tres.
+- `esperarSrc()` dice ahora «petición rechazada con un 302» y los campos enviados, en vez de un error al leer la respuesta.
+- **No eran fallos:** `encargossacd/encargo_ver`, `asistentes/que_ctr_lista`, `actividades/actividad_select_ubi` y `actividad_que` (sus desplegables los rellena el JavaScript o dependen de los parámetros; los cubren sus specs o la pasada del menú), `inventario/doc_asignado` y `doc_no_asignado` (igual), `usuarios/usuario_form` (sin `quien` no pinta `nom_usuario`), `pasarela/nombre_lista` (el alta no envía el formulario entero).
+- `frontend/pasarela/controller/nombre_form.php` no se usa desde ningún sitio (la pantalla usa `nombre_ajax.php`) y firma campos de tarifas; anotado en `backlog.md` como código muerto.
+
+**Límites:** un formulario que solo se pinta tras varios pasos y no está en `formularios-de-alta.spec.ts` no se comprueba (si un spec de flujo lo envía, `esperarSrc()` avisa del 302). Tampoco se comprueban los hidden que el JavaScript cambia antes de enviar (los valida `hh`). Botón «ctrs org» sin destino: duda 22.
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

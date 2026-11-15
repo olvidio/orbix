@@ -134,7 +134,9 @@ switch ($Qque) {
         $oHash = new HashF();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!contribucion');
-        $oHash->setCamposNo('id_tipo_activ!que');
+        // `extendida` viaja con el bloque de desplegables del tipo de actividad: fuera del hash. Si no,
+        // guardar un alta se rechazaba siempre (302 al inicio y sesión cerrada).
+        $oHash->setCamposNo('id_tipo_activ!que!extendida');
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => '',
             'que' => '',

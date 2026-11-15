@@ -88,6 +88,10 @@ Controladores de `src/` con nombre de acción que no abren ninguna cápsula (202
 
 `PeticionesActivData` ya no borra las peticiones de plazas que no salen en la lista pintada (duda 19 del plan de tests, resuelta), y el botón «petición ca / crt» no se ofrece a las personas de paso. `PgDelegacionRepository::Eliminar` y `PgRegionRepository::Eliminar` borran por el nombre, no por el id.
 
+### Código muerto en `frontend/pasarela`
+
+`frontend/pasarela/controller/nombre_form.php` no se referencia desde ninguna vista, menú ni spec (la pantalla de nombres usa `nombre_ajax.php`). Es una copia del formulario de tarifas: firma `id_item!id_tarifa!id_tipo_activ` y hace `new src\actividades\domain\entity\TiposActividades` desde `frontend/`. Borrarlo (con su vista `nombre_form.html.twig` si `nombre_ajax.php` deja de usarla).
+
 ### Restos que deja la suite de PHPUnit
 
 5 marcas de dossier 1303 de personas reales (`d_dossiers_abiertos`) y, de forma intermitente, una fila «test_nom_activ_vo» en `public.a_actividades_all` (tabla padre). Localizar el test y limpiar.

@@ -119,6 +119,12 @@ export async function esperarSrc(page: Page, ruta: string, accion: () => Promise
     }),
     accion(),
   ]);
+  if (resp.status() >= 300 && resp.status() < 400) {
+    // Hash del formulario o del enlace que no coincide con los campos enviados: `HashF::validatePost()`
+    // redirige al inicio y cierra la sesión, sin mensaje.
+    const campos = [...new URLSearchParams(resp.request().postData() ?? '').keys()].join(', ');
+    throw new Error(`/src/${ruta}: petición rechazada con un ${resp.status()} (hash que no coincide con los campos enviados: ${campos})`);
+  }
   const body = await resp.text();
   try {
     return JSON.parse(body);
