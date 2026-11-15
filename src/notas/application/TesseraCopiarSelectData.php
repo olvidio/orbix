@@ -8,6 +8,7 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\criteria\PersonaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
+use src\shared\security\HashB;
 
 /**
  * Prepara los datos para elegir a que persona (con el mismo primer
@@ -64,6 +65,7 @@ final class TesseraCopiarSelectData
         return [
             'nom' => $nom,
             'posibles_personas' => $posibles,
+            'ctx_copiar' => HashB::sign('tessera_copiar', ['id_nom_org' => $id_nom]),
         ];
     }
 }

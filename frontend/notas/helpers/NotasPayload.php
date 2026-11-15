@@ -135,6 +135,8 @@ final class NotasPayload
             'warn_no_id_activ' => !empty($payload['warn_no_id_activ']),
             'ctx_nuevo' => PayloadCoercion::string($payload['ctx_nuevo'] ?? ''),
             'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
+            'ctx_pdf_subir' => PayloadCoercion::string($payload['ctx_pdf_subir'] ?? ''),
+            'ctx_pdf_eliminar' => PayloadCoercion::string($payload['ctx_pdf_eliminar'] ?? ''),
         ];
     }
 
@@ -219,6 +221,7 @@ final class NotasPayload
             'detalle' => PayloadCoercion::string($payload['detalle'] ?? ''),
             'epoca' => NotasFormSupport::formScalar($payload['epoca'] ?? ''),
             'id_activ' => NotasFormSupport::formScalar($payload['id_activ'] ?? ''),
+            'ctx_guardar' => PayloadCoercion::string($payload['ctx_guardar'] ?? ''),
             'nom_activ' => PayloadCoercion::string($payload['nom_activ'] ?? ''),
             'profesores' => NotasFormSupport::desplegableOpciones($payload['profesores'] ?? []),
             'asignaturas_faltan' => NotasFormSupport::desplegableOpciones($payload['asignaturas_faltan'] ?? []),

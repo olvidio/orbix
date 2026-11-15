@@ -142,6 +142,7 @@ $a_camposHidden = [
     'obj_pau' => $Qobj_pau,
     'permiso' => $Qpermiso,
     'id_activ' => $datos['id_activ'],
+    'ctx_guardar' => PayloadCoercion::string($datos['ctx_guardar'] ?? ''),
 ];
 if ($id_asignatura_real !== '') {
     $a_camposHidden['id_asignatura_real'] = $id_asignatura_real;

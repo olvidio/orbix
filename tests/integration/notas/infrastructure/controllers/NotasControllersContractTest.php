@@ -266,7 +266,74 @@ final class NotasControllersContractTest extends myTest
         $this->assertSame([], $input['sel']);
     }
 
-    // ------------------------------------------------------------------ mutaciones sin token propio
+    // ------------------------------------------------------------------ mutaciones con la cápsula de su pantalla (fase 6.5)
+
+    /**
+     * Controlador, campo de la cápsula, acción y lo que la cápsula fija (clave del input => valor).
+     *
+     * @return iterable<string, array{string, string, string, array<string, mixed>, array<string, mixed>}>
+     */
+    public static function capsulasProvider(): iterable
+    {
+        $acta = ['acta' => 'dlb 1/26'];
+        yield 'nota nueva' => ['persona_nota_nueva.php', 'ctx_guardar', 'persona_nota_guardar', ['id_pau' => 10011], ['id_pau' => 10011]];
+        yield 'nota editada' => ['persona_nota_editar.php', 'ctx_guardar', 'persona_nota_guardar', ['id_pau' => 10011], ['id_pau' => 10011]];
+        yield 'borrar pdf del acta' => ['acta_pdf_eliminar.php', 'ctx_pdf_eliminar', 'acta_pdf_eliminar', $acta, ['acta_num' => 'dlb 1/26']];
+        yield 'subir pdf del acta' => ['acta_pdf_subir.php', 'ctx_pdf_subir', 'acta_pdf_subir', $acta, ['acta_num' => 'dlb 1/26']];
+        yield 'añadir persona al acta' => ['acta_ver_add_persona.php', 'ctx_add_persona', 'acta_ver_add_persona', $acta, ['acta' => 'dlb 1/26']];
+        yield 'copiar tessera' => ['tessera_copiar.php', 'ctx_copiar', 'tessera_copiar', ['id_nom_org' => 10011], ['id_nom_org' => 10011]];
+    }
+
+    /** Clase del caso de uso de cada controlador y una respuesta suya sin error. */
+    private const CASOS = [
+        'persona_nota_nueva.php' => [PersonaNotaNueva::class, ['error' => '', 'mensaje' => 'ok', 'esquema' => 'H-dlbv']],
+        'persona_nota_editar.php' => [PersonaNotaEditar::class, ['error' => '', 'mensaje' => 'ok', 'esquema' => 'H-dlbv']],
+        'acta_pdf_eliminar.php' => [ActaPdfEliminar::class, ''],
+        'acta_pdf_subir.php' => [ActaPdfSubir::class, ['error' => '', 'http_status' => 200]],
+        'acta_ver_add_persona.php' => [ActaVerAddPersona::class, ['success' => true, 'mensaje' => 'añadida']],
+        'tessera_copiar.php' => [TesseraCopiar::class, ''],
+    ];
+
+    /**
+     * @param array<string, mixed> $payload
+     * @param array<string, mixed> $fijado
+     */
+    #[DataProvider('capsulasProvider')]
+    public function test_sin_la_capsula_de_su_pantalla_no_se_ejecuta(string $controlador, string $campo, string $accion, array $payload, array $fijado): void
+    {
+        [$clase, $respuesta] = self::CASOS[$controlador];
+        $caso = $this->doble($clase, ['execute' => $respuesta]);
+
+        foreach (['sin cápsula' => [], 'cápsula falsa' => [$campo => 'x'], 'cápsula de otra acción' => [$campo => HashB::sign('otra_accion', $payload)]] as $txt => $post) {
+            $json = $this->ejecutar($controlador, $post + $fijado);
+            $this->assertFalse($json['success'], $txt);
+            $this->assertSame(_("Operación no autorizada"), $json['mensaje'], $txt);
+        }
+        $this->assertSame([], $caso->llamadas, 'el caso de uso no se ha llamado');
+    }
+
+    /**
+     * La persona o el acta sobre la que se actúa sale de la cápsula, no del POST.
+     *
+     * @param array<string, mixed> $payload
+     * @param array<string, mixed> $fijado
+     */
+    #[DataProvider('capsulasProvider')]
+    public function test_con_la_capsula_actua_sobre_lo_que_ella_fija(string $controlador, string $campo, string $accion, array $payload, array $fijado): void
+    {
+        [$clase, $respuesta] = self::CASOS[$controlador];
+        $caso = $this->doble($clase, ['execute' => $respuesta]);
+        $manipulado = array_map(static fn (mixed $v): string => is_int($v) ? '99999' : 'otra 9/99', $fijado);
+
+        $json = $this->ejecutar($controlador, [$campo => HashB::sign($accion, $payload), 'id_asignatura' => '1101'] + $manipulado);
+
+        $this->assertTrue($json['success'], (string) ($json['mensaje'] ?? ''));
+        $input = $caso->args('execute')[0];
+        foreach ($fijado as $clave => $valor) {
+            $this->assertSame($valor, $input[$clave], "«{$clave}» sale de la cápsula");
+        }
+        $this->assertSame('1101', $input['id_asignatura'], 'el resto del POST llega tal cual');
+    }
 
     /**
      * @return iterable<string, array{string, class-string}>
@@ -277,16 +344,21 @@ final class NotasControllersContractTest extends myTest
         yield 'editar' => ['persona_nota_editar.php', PersonaNotaEditar::class];
     }
 
+    /** @return array<string, string> */
+    private static function ctxNota(): array
+    {
+        return ['ctx_guardar' => HashB::sign('persona_nota_guardar', ['id_pau' => 10011])];
+    }
+
     #[DataProvider('notaNuevaEditarProvider')]
     public function test_nota_nueva_o_editada_devuelve_mensaje_y_esquema(string $controlador, string $clase): void
     {
-        $caso = $this->doble($clase, ['execute' => ['error' => '', 'mensaje' => 'guardado en H-dlbv', 'esquema' => 'H-dlbv']]);
+        $this->doble($clase, ['execute' => ['error' => '', 'mensaje' => 'guardado en H-dlbv', 'esquema' => 'H-dlbv']]);
 
-        $json = $this->ejecutar($controlador, ['id_pau' => '10011', 'id_asignatura' => '1101']);
+        $json = $this->ejecutar($controlador, self::ctxNota() + ['id_asignatura' => '1101']);
 
         $this->assertTrue($json['success']);
         $this->assertSame(['mensaje' => 'guardado en H-dlbv', 'esquema' => 'H-dlbv'], self::data($json));
-        $this->assertSame('1101', $caso->args('execute')[0]['id_asignatura']);
     }
 
     #[DataProvider('notaNuevaEditarProvider')]
@@ -294,32 +366,32 @@ final class NotasControllersContractTest extends myTest
     {
         $this->doble($clase, ['execute' => ['error' => 'Ya existe esta nota', 'mensaje' => '', 'esquema' => '']]);
 
-        $json = $this->ejecutar($controlador, []);
+        $json = $this->ejecutar($controlador, self::ctxNota());
 
         $this->assertFalse($json['success']);
         $this->assertSame('Ya existe esta nota', $json['mensaje']);
     }
 
     /**
-     * @return iterable<string, array{string, class-string}>
+     * @return iterable<string, array{string, class-string, array<string, string>}>
      */
     public static function mutacionesSimplesProvider(): iterable
     {
-        yield 'borrar pdf del acta' => ['acta_pdf_eliminar.php', ActaPdfEliminar::class];
-        yield 'copiar tessera' => ['tessera_copiar.php', TesseraCopiar::class];
+        yield 'borrar pdf del acta' => ['acta_pdf_eliminar.php', ActaPdfEliminar::class, ['ctx_pdf_eliminar' => HashB::sign('acta_pdf_eliminar', ['acta' => 'dlb 1/26'])]];
+        yield 'copiar tessera' => ['tessera_copiar.php', TesseraCopiar::class, ['ctx_copiar' => HashB::sign('tessera_copiar', ['id_nom_org' => 10011])]];
     }
 
+    /** @param array<string, string> $ctx */
     #[DataProvider('mutacionesSimplesProvider')]
-    public function test_mutacion_simple_responde_ok_o_el_error(string $controlador, string $clase): void
+    public function test_mutacion_simple_responde_ok_o_el_error(string $controlador, string $clase, array $ctx): void
     {
-        $caso = $this->doble($clase, ['execute' => '']);
-        $json = $this->ejecutar($controlador, ['acta' => 'dlb 1/26']);
+        $this->doble($clase, ['execute' => '']);
+        $json = $this->ejecutar($controlador, $ctx);
         $this->assertTrue($json['success']);
         $this->assertSame('ok', $json['data']);
-        $this->assertSame('dlb 1/26', $caso->args('execute')[0]['acta']);
 
         $this->doble($clase, ['execute' => 'fallo']);
-        $json = $this->ejecutar($controlador, []);
+        $json = $this->ejecutar($controlador, $ctx);
         $this->assertFalse($json['success']);
         $this->assertSame('fallo', $json['mensaje']);
     }
@@ -330,14 +402,14 @@ final class NotasControllersContractTest extends myTest
         $_FILES = ['acta_pdf' => ['name' => 'a.pdf', 'tmp_name' => '/tmp/x', 'error' => UPLOAD_ERR_OK, 'size' => 3], 7 => 'basura'];
         try {
             $caso = $this->doble(ActaPdfSubir::class, ['execute' => ['error' => '', 'http_status' => 200]]);
-            $json = $this->ejecutar('acta_pdf_subir.php', ['acta' => 'dlb 1/26']);
+            $json = $this->ejecutar('acta_pdf_subir.php', ['ctx_pdf_subir' => HashB::sign('acta_pdf_subir', ['acta' => 'dlb 1/26'])]);
         } finally {
             $_FILES = $filesAnterior;
         }
 
         $this->assertTrue($json['success']);
         [$post, $files] = $caso->args('execute');
-        $this->assertSame('dlb 1/26', $post['acta']);
+        $this->assertSame('dlb 1/26', $post['acta_num']);
         $this->assertSame(['acta_pdf'], array_keys($files), 'solo entradas de fichero con nombre');
     }
 
@@ -345,7 +417,7 @@ final class NotasControllersContractTest extends myTest
     {
         $this->doble(ActaPdfSubir::class, ['execute' => ['error' => 'demasiado grande', 'http_status' => 413]]);
 
-        $json = $this->ejecutar('acta_pdf_subir.php', []);
+        $json = $this->ejecutar('acta_pdf_subir.php', ['ctx_pdf_subir' => HashB::sign('acta_pdf_subir', ['acta' => 'dlb 1/26'])]);
 
         $this->assertFalse($json['success']);
         $this->assertSame('demasiado grande', $json['mensaje']);
@@ -353,18 +425,19 @@ final class NotasControllersContractTest extends myTest
 
     public function test_anadir_persona_al_acta(): void
     {
+        $ctx = ['ctx_add_persona' => HashB::sign('acta_ver_add_persona', ['acta' => 'dlb 1/26'])];
         $this->doble(ActaVerAddPersona::class, ['execute' => ['success' => true, 'mensaje' => 'añadida']]);
-        $json = $this->ejecutar('acta_ver_add_persona.php', []);
+        $json = $this->ejecutar('acta_ver_add_persona.php', $ctx);
         $this->assertTrue($json['success']);
         $this->assertSame(['mensaje' => 'añadida'], self::data($json));
 
         $this->doble(ActaVerAddPersona::class, ['execute' => ['success' => false, 'mensaje' => 'ya está en el acta']]);
-        $json = $this->ejecutar('acta_ver_add_persona.php', []);
+        $json = $this->ejecutar('acta_ver_add_persona.php', $ctx);
         $this->assertFalse($json['success']);
         $this->assertSame('ya está en el acta', $json['mensaje']);
 
         $this->doble(ActaVerAddPersona::class, ['execute' => []]);
-        $json = $this->ejecutar('acta_ver_add_persona.php', []);
+        $json = $this->ejecutar('acta_ver_add_persona.php', $ctx);
         $this->assertFalse($json['success'], 'sin «success» cuenta como error');
         $this->assertSame('error', $json['mensaje']);
     }

@@ -223,7 +223,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 6.2 Auditoría de los ids nuevos (sección 30, «Auditoría de los ids nuevos»).
 - [x] 6.3 Pantallas que ejecutan una acción al abrirse y lecturas que escriben (sección 31).
 - [x] 6.4 Hashes de formulario con `getCamposHtml()` (sección 31): pantallas del menú y formularios de alta que se abren en una ventana.
-- [ ] 6.5 Resto del backlog.
+- [ ] 6.5 Resto del backlog: cápsulas de `notas` hechas (sección 31); quedan `asistentes`, `certificados`, `procesos` y `menus`.
 - [x] 6.6 Fallos intermitentes de E2E (sección 31).
 
 ---
@@ -265,7 +265,7 @@ Decisiones que son del usuario, apuntadas mientras se avanza sin su atención (d
 
 20. **(6.3) Estado de las marcas de dossier en producción.** Por el fallo de `PgDossierRepository::Guardar` (sección 31), en la copia de producción todas las marcas de persona de `H-dlbv` tienen el mismo estado y fecha (3 912 abiertas con fecha 2026-11-09; las 1 296 de actividad, abiertas con tres fechas). El dato «abierto/cerrado» de cada dossier se ha perdido. ¿Hace falta recalcularlo (abierto si el dossier tiene datos) con una herramienta, o basta con que a partir de ahora se guarde bien? (Corregido el fallo; los datos, sin tocar.)
 
-21. **(6.3) Endpoints que escriben sin cápsula.** Quedan 20 controladores de `src/` con nombre de acción que no abren ninguna cápsula `HashB` (lista en `docs/dev/backlog.md`); entre ellos `certificado_emitido_guardar_pdf` (sobrescribe el PDF de un certificado con el `id_item` que llegue) y los dos de resincronización de la duda 2. ¿Se les pone cápsula a todos como paso 6.5? (Sin tocar.)
+21. **(6.3) Endpoints que escriben sin cápsula.** Quedan 20 controladores de `src/` con nombre de acción que no abren ninguna cápsula `HashB` (lista en `docs/dev/backlog.md`); entre ellos `certificado_emitido_guardar_pdf` (sobrescribe el PDF de un certificado con el `id_item` que llegue) y los dos de resincronización de la duda 2. ¿Se les pone cápsula a todos como paso 6.5? **Revisada la lista (15-nov-2026):** tres son lecturas (`actividades/tipo_activ_form_nuevo`, `inventario/lista_docs_asignar_ctr` y `_dlb`: pintan un formulario y firman ellos la cápsula) y `usuarios/restablecer_password_guardar` va con su enlace firmado; quedan 14 que escriben: 5 de `notas`, 4 de `certificados`, 3 de `asistentes`, `procesos/actividad_proceso_generar` y `menus/menus_generar_txt`, más los dos de resincronización (duda 2). Se hacen en el paso 6.5, módulo a módulo.
 
 22. **(6.4) Botón «ctrs org» de la lista de actividades sg.** `ListaActividadesSgListado` pinta un botón «ctrs org» (`jsForm.mandar("#seleccionados","ctrs")`) que `actividades.js` no trata: no tiene destino desde que se añadió en 2019. ¿Se quita, o debe abrir el dossier 3010 «ctr encargados de la actividad»? (Sin tocar.)
 
@@ -1217,6 +1217,23 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - `frontend/pasarela/controller/nombre_form.php` no se usa desde ningún sitio (la pantalla usa `nombre_ajax.php`) y firma campos de tarifas; anotado en `backlog.md` como código muerto.
 
 **Límites:** un formulario que solo se pinta tras varios pasos y no está en `formularios-de-alta.spec.ts` no se comprueba (si un spec de flujo lo envía, `esperarSrc()` avisa del 302). Tampoco se comprueban los hidden que el JavaScript cambia antes de enviar (los valida `hh`). Botón «ctrs org» sin destino: duda 22.
+
+### Paso 6.5: endpoints que escriben sin cápsula (empezado el 2026-11-15)
+
+**`notas` (seis endpoints).** Escribían con cualquier petición; ahora cada uno abre la cápsula que firma su pantalla, y el acta o la persona sobre la que actúa sale de la cápsula, no del POST:
+
+| Endpoint | Cápsula (campo · acción) | La firma | Fija |
+|---|---|---|---|
+| `acta_pdf_subir` | `ctx_pdf_subir` · `acta_pdf_subir` | `ActaVerFormData` | acta |
+| `acta_pdf_eliminar` | `ctx_pdf_eliminar` · `acta_pdf_eliminar` | `ActaVerFormData`, solo si el ámbito es la región del stgr | acta |
+| `acta_ver_add_persona` | `ctx_add_persona` · `acta_ver_add_persona` | `ActaVerAddPersonaFormData` | acta |
+| `persona_nota_nueva`, `persona_nota_editar` | `ctx_guardar` · `persona_nota_guardar` | `NotaPersonaFormData` | `id_pau` |
+| `tessera_copiar` | `ctx_copiar` · `tessera_copiar` | `TesseraCopiarSelectData` | `id_nom_org` |
+
+- Quitar el PDF firmado de un acta solo lo ofrecía la vista a la región del stgr; el endpoint no lo comprobaba. Ahora la cápsula solo se firma para ese ámbito.
+- `persona_nota_editar` no estaba en la lista de la duda 21 (el filtro era por nombre de acción): al hacer cada módulo se revisan todos sus controladores.
+- Tests: `NotasControllersContractTest` (sin cápsula, con una falsa o con la de otra acción no se llama al caso de uso; con la buena, el dato fijado sale de ella aunque el POST traiga otro). Spec `notas-capsulas.spec.ts` (solo lectura): las pantallas de acta y de copiar tessera pintan su cápsula. `notas-alta-baja` detectó que la cápsula de la nota se perdía en `NotasPayload::personaFormFromPayload()`.
+- **Sin probar en el navegador:** subir y quitar de verdad un PDF, añadir una persona a un acta, editar una nota y copiar una tessera (solo se ha comprobado que la cápsula llega al formulario y que el endpoint la exige).
 
 ### Paso 6.6: fallos intermitentes de E2E (2026-11-14)
 

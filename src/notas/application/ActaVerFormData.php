@@ -261,6 +261,11 @@ final class ActaVerFormData
         } elseif ($acta_actual !== '') {
             $ctxGuardar = HashB::sign('acta_modificar', ['acta' => $acta_actual]);
         }
+        // PDF firmado del acta: subirlo, quien puede modificar el acta; quitarlo, solo la región del stgr.
+        $ctxPdfSubir = $acta_actual !== '' ? HashB::sign('acta_pdf_subir', ['acta' => $acta_actual]) : '';
+        $ctxPdfEliminar = ($acta_actual !== '' && in_array(ConfigGlobal::mi_ambito(), ['rstgr', 'r'], true))
+            ? HashB::sign('acta_pdf_eliminar', ['acta' => $acta_actual])
+            : '';
 
         return [
             'notas' => $notas,
@@ -291,6 +296,8 @@ final class ActaVerFormData
             'warn_no_id_activ' => $warn_no_id_activ,
             'ctx_nuevo' => $ctxNuevo,
             'ctx_guardar' => $ctxGuardar,
+            'ctx_pdf_subir' => $ctxPdfSubir,
+            'ctx_pdf_eliminar' => $ctxPdfEliminar,
         ];
     }
 }

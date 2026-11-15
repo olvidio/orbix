@@ -80,9 +80,12 @@ Formato sugerido por ítem:
 
 ### Endpoints que escriben sin cápsula `HashB`
 
-Controladores de `src/` con nombre de acción que no abren ninguna cápsula (2026-11-14, fase 6.3 del plan de tests; duda 21). Revisar uno a uno (alguno es un formulario o va protegido de otra forma) y ponerles cápsula:
+Controladores de `src/` que escriben y no abren ninguna cápsula (fase 6.5 del plan de tests; duda 21). La lista inicial salía de un filtro por el nombre de la acción y no veía, por ejemplo, `persona_nota_editar`; al hacer cada módulo se revisan todos sus controladores.
 
-`actividadcargos/cargos_activ_resincronizar`, `personas/sacd_resincronizar` (ya anotados arriba), `actividades/tipo_activ_form_nuevo`, `asistentes/asistente_eliminar`, `asistentes/asistente_guardar`, `asistentes/asistente_plaza_asignar`, `certificados/certificado_emitido_enviar`, `certificados/certificado_emitido_guardar_pdf`, `certificados/certificado_emitido_pdf_upload`, `certificados/certificado_recibido_pdf_upload`, `inventario/lista_docs_asignar_ctr`, `inventario/lista_docs_asignar_dlb`, `menus/menus_generar_txt`, `notas/acta_pdf_eliminar`, `notas/acta_pdf_subir`, `notas/acta_ver_add_persona`, `notas/persona_nota_nueva`, `notas/tessera_copiar`, `procesos/actividad_proceso_generar`, `usuarios/restablecer_password_guardar` (este va con su propio enlace firmado).
+- **Hecho (2026-11-15), `notas`:** `acta_pdf_subir`, `acta_pdf_eliminar`, `acta_ver_add_persona`, `persona_nota_nueva`, `persona_nota_editar`, `tessera_copiar`.
+- **Pendiente:** `asistentes/asistente_guardar`, `asistente_eliminar`, `asistente_plaza_asignar` (los usan cinco pantallas); `certificados/certificado_emitido_guardar_pdf`, `certificado_emitido_enviar`, `certificado_emitido_pdf_upload`, `certificado_recibido_pdf_upload`; `procesos/actividad_proceso_generar`; `menus/menus_generar_txt`, `menus_exportar`, `menus_exportar_ref_a_ficheros`; y los dos de resincronización (anotados arriba).
+- **No lo necesitan:** `actividades/tipo_activ_form_nuevo`, `inventario/lista_docs_asignar_ctr` y `_dlb` (pintan un formulario y firman ellos la cápsula), `usuarios/restablecer_password_guardar` y `recuperar_2fa_mail` (flujo anónimo con enlace firmado).
+- `notas/acta_imprimir_presentacion_data` marca el acta como impresa al pedir los datos para imprimirla: es una lectura que escribe, a propósito; no entra en el test-guardia porque sin acta no hace nada.
 
 ### Lecturas que borran según los filtros de la pantalla
 

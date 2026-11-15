@@ -56,14 +56,14 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.acta_pdf_eliminar`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_pdf_eliminar.php`
-- Entrada: `post.acta_num:string`
+- Entrada: `post.ctx_pdf_eliminar:string` (cápsula `HashB` de `acta_ver_form_data`, solo región del stgr; fija el acta)
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_pdf_subir`
 
 - Id: `notas.acta_pdf_subir`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_pdf_subir.php`
-- Entrada: `post.acta_num:string`
+- Entrada: `post.ctx_pdf_subir:string` (cápsula `HashB` de `acta_ver_form_data`; fija el acta), `files.acta_pdf`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_select_data`
@@ -77,7 +77,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.acta_ver_add_persona`
 - Controller: `src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php`
-- Entrada: `post.acta:string`, `post.id_nom:integer`, `post.nota_num:number`, `post.nota_max:integer`
+- Entrada: `post.ctx_add_persona:string` (cápsula `HashB` de `acta_ver_add_persona_form_data`; fija el acta), `post.id_nom:integer`, `post.nota_num:number`, `post.nota_max:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/acta_ver_add_persona_form_data`
@@ -203,7 +203,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.persona_nota_editar`
 - Controller: `src/notas/infrastructure/ui/http/controllers/persona_nota_editar.php`
-- Entrada: `post.id_asignatura_real:integer`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` de `nota_persona_form_data`; fija `id_pau`), `post.id_asignatura_real:integer` y los campos del formulario de la nota
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/persona_nota_eliminar`
@@ -217,7 +217,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.persona_nota_nueva`
 - Controller: `src/notas/infrastructure/ui/http/controllers/persona_nota_nueva.php`
-- Entrada: ninguna detectada.
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` de `nota_persona_form_data`; fija `id_pau`) y los campos del formulario de la nota
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/posibles_opcionales_data`
@@ -238,7 +238,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `notas.tessera_copiar`
 - Controller: `src/notas/infrastructure/ui/http/controllers/tessera_copiar.php`
-- Entrada: `post.id_nom_dst:integer`, `post.id_nom_org:integer`
+- Entrada: `post.ctx_copiar:string` (cápsula `HashB` de `tessera_copiar_select_data`; fija `id_nom_org`), `post.id_nom_dst:integer`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/notas/tessera_copiar_select_data`

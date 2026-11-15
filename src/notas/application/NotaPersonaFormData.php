@@ -21,6 +21,7 @@ use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\security\HashB;
 
 /**
  * Prepara los datos que necesita `form_notas_de_una_persona.phtml` para pintar el form
@@ -55,11 +56,13 @@ final class NotaPersonaFormData
         $id_pau = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_pau');
         $id_asignatura_real = $this->resolveAsignaturaReal($input);
 
-        if ($id_asignatura_real !== '') {
-            return $this->prepareEditar($id_pau, (int) $id_asignatura_real);
-        }
+        $datos = $id_asignatura_real !== ''
+            ? $this->prepareEditar($id_pau, (int) $id_asignatura_real)
+            : $this->prepareNuevo($id_pau);
+        // Guardar la nota (nueva o editada) de esta persona: `persona_nota_nueva` / `persona_nota_editar`.
+        $datos['ctx_guardar'] = HashB::sign('persona_nota_guardar', ['id_pau' => $id_pau]);
 
-        return $this->prepareNuevo($id_pau);
+        return $datos;
     }
 
     /**

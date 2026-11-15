@@ -213,6 +213,8 @@ final class ActaVerFormDataTest extends myTest
 
         $this->assertSame(['acta' => "{$this->miDl} 12/24"], HashB::open($out['ctx_guardar'], 'acta_modificar'));
         $this->assertSame('', $out['ctx_nuevo']);
+        $this->assertSame(['acta' => "{$this->miDl} 12/24"], HashB::open($out['ctx_pdf_subir'], 'acta_pdf_subir'));
+        $this->assertSame('', $out['ctx_pdf_eliminar'], 'quitar el PDF firmado es solo de la región del stgr');
     }
 
     // ---- tribunal --------------------------------------------------------------------------------------------
@@ -447,7 +449,7 @@ final class ActaVerFormDataTest extends myTest
         $this->assertSame([
             'notas', 'permiso', 'mod', 'acta_actual', 'acta_new', 'acta_sigla', 'acta_new_num', 'ult_acta', 'f_acta', 'libro', 'ult_lib',
             'pagina', 'ult_pag', 'linea', 'ult_lin', 'lugar', 'observ', 'id_activ', 'id_schema', 'id_asignatura_actual', 'nombre_asignatura',
-            'examinadores', 'a_actas', 'has_pdf', 'pendiente_imprimir', 'warn_no_id_activ', 'ctx_nuevo', 'ctx_guardar',
+            'examinadores', 'a_actas', 'has_pdf', 'pendiente_imprimir', 'warn_no_id_activ', 'ctx_nuevo', 'ctx_guardar', 'ctx_pdf_subir', 'ctx_pdf_eliminar',
         ], array_keys($out));
     }
 }

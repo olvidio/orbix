@@ -19,6 +19,7 @@ use src\personas\domain\criteria\PersonaField;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 
 /**
  * Datos para el formulario de añadir alumno+nota en `acta_ver` (caso B).
@@ -92,6 +93,7 @@ final class ActaVerAddPersonaFormData
             'id_activ' => $id_activ,
             'nota_max_default' => $nota_max_default,
             'opciones_personas' => $this->opcionesPersonasAlumnos($id_asignatura),
+            'ctx_add_persona' => HashB::sign('acta_ver_add_persona', ['acta' => $acta]),
         ];
     }
 

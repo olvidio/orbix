@@ -192,7 +192,7 @@ $oHashActa->setArrayCamposHidden($a_camposHidden);
 $oHashActaPdf = new HashF();
 $oHashActaPdf->setCamposForm('acta_pdf');
 $oHashActaPdf->setCamposNo('acta_pdf');
-$oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
+$oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual, 'ctx_pdf_subir' => $form['ctx_pdf_subir']]);
 
 $titulo = strtoupper(_("datos del acta"));
 
@@ -224,7 +224,7 @@ if (!$has_pdf) {
     $url_delete = $base . '/frontend/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new HashF();
-$oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
+$oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual, 'ctx_pdf_eliminar' => $form['ctx_pdf_eliminar']]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
 $soy_rstgr = OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r';
@@ -294,6 +294,7 @@ if (
             $oHashAddPersona->setCamposForm('id_nom!nota_num!nota_max');
             $oHashAddPersona->setArrayCamposHidden([
                 'acta' => $acta_actual,
+                'ctx_add_persona' => PayloadCoercion::string($addData['ctx_add_persona'] ?? ''),
             ]);
         }
     }

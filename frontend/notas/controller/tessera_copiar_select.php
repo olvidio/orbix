@@ -53,7 +53,10 @@ $oDesplPersonas->setOpciones($aPosibles);
 
 $oHash = new HashF();
 $oHash->setCamposForm('id_nom_dst');
-$oHash->setArraycamposHidden(['id_nom_org' => $id_nom]);
+$oHash->setArraycamposHidden([
+    'id_nom_org' => $id_nom,
+    'ctx_copiar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_copiar'] ?? ''),
+]);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
