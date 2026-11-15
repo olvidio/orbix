@@ -373,18 +373,22 @@ final class NotasControllersContractTest extends myTest
     }
 
     /**
-     * @return iterable<string, array{string, class-string, array<string, string>}>
+     * Controlador, caso de uso, campo de la cápsula, acción y lo que fija. La cápsula se firma dentro del
+     * test: va ligada a la sesión, y la del momento en que se evalúa el proveedor no vale después.
+     *
+     * @return iterable<string, array{string, class-string, string, string, array<string, mixed>}>
      */
     public static function mutacionesSimplesProvider(): iterable
     {
-        yield 'borrar pdf del acta' => ['acta_pdf_eliminar.php', ActaPdfEliminar::class, ['ctx_pdf_eliminar' => HashB::sign('acta_pdf_eliminar', ['acta' => 'dlb 1/26'])]];
-        yield 'copiar tessera' => ['tessera_copiar.php', TesseraCopiar::class, ['ctx_copiar' => HashB::sign('tessera_copiar', ['id_nom_org' => 10011])]];
+        yield 'borrar pdf del acta' => ['acta_pdf_eliminar.php', ActaPdfEliminar::class, 'ctx_pdf_eliminar', 'acta_pdf_eliminar', ['acta' => 'dlb 1/26']];
+        yield 'copiar tessera' => ['tessera_copiar.php', TesseraCopiar::class, 'ctx_copiar', 'tessera_copiar', ['id_nom_org' => 10011]];
     }
 
-    /** @param array<string, string> $ctx */
+    /** @param array<string, mixed> $payload */
     #[DataProvider('mutacionesSimplesProvider')]
-    public function test_mutacion_simple_responde_ok_o_el_error(string $controlador, string $clase, array $ctx): void
+    public function test_mutacion_simple_responde_ok_o_el_error(string $controlador, string $clase, string $campo, string $accion, array $payload): void
     {
+        $ctx = [$campo => HashB::sign($accion, $payload)];
         $this->doble($clase, ['execute' => '']);
         $json = $this->ejecutar($controlador, $ctx);
         $this->assertTrue($json['success']);

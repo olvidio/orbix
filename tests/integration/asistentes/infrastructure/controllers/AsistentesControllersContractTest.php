@@ -178,18 +178,31 @@ final class AsistentesControllersContractTest extends myTest
     }
 
     /**
-     * @return iterable<string, array{string, class-string, string, string}> controlador, caso de uso, campo y cápsula
+     * Controlador, caso de uso y campo de su cápsula. La cápsula se firma dentro del test
+     * ({@see capsulaDe}): va ligada a la sesión, y la del momento en que se evalúa el proveedor no vale después.
+     *
+     * @return iterable<string, array{string, class-string, string}>
      */
     public static function mutacionesProvider(): iterable
     {
-        yield 'asistente_guardar' => ['asistente_guardar.php', AsistenteGuardar::class, 'ctx_guardar', AsistenteMutationCtx::guardar(3001, 10011)];
-        yield 'asistente_eliminar' => ['asistente_eliminar.php', AsistenteEliminar::class, 'ctx_eliminar_asistente', AsistenteMutationCtx::eliminar(3001, 10011)];
-        yield 'asistente_plaza_asignar' => ['asistente_plaza_asignar.php', AsistentePlazaAsignar::class, 'ctx_plaza', AsistenteMutationCtx::plazaAsignar(3001)];
+        yield 'asistente_guardar' => ['asistente_guardar.php', AsistenteGuardar::class, 'ctx_guardar'];
+        yield 'asistente_eliminar' => ['asistente_eliminar.php', AsistenteEliminar::class, 'ctx_eliminar_asistente'];
+        yield 'asistente_plaza_asignar' => ['asistente_plaza_asignar.php', AsistentePlazaAsignar::class, 'ctx_plaza'];
+    }
+
+    private static function capsulaDe(string $campo): string
+    {
+        return match ($campo) {
+            'ctx_guardar' => AsistenteMutationCtx::guardar(3001, 10011),
+            'ctx_eliminar_asistente' => AsistenteMutationCtx::eliminar(3001, 10011),
+            default => AsistenteMutationCtx::plazaAsignar(3001),
+        };
     }
 
     #[DataProvider('mutacionesProvider')]
-    public function test_las_mutaciones_responden_ok_o_el_mensaje_de_error(string $controlador, string $caso, string $campo, string $capsula): void
+    public function test_las_mutaciones_responden_ok_o_el_mensaje_de_error(string $controlador, string $caso, string $campo): void
     {
+        $capsula = self::capsulaDe($campo);
         $this->sustituirServicio($caso, $this->doble(''));
         $ok = $this->ejecutar($controlador, [$campo => $capsula]);
         $this->assertSame(['success' => true, 'data' => 'ok'], $ok);
@@ -201,7 +214,7 @@ final class AsistentesControllersContractTest extends myTest
 
     /** Sin la cápsula de su pantalla (o con la de otra acción) no se llama al caso de uso (fase 6.5). */
     #[DataProvider('mutacionesProvider')]
-    public function test_las_mutaciones_exigen_la_capsula_de_su_pantalla(string $controlador, string $caso, string $campo, string $capsula): void
+    public function test_las_mutaciones_exigen_la_capsula_de_su_pantalla(string $controlador, string $caso, string $campo): void
     {
         $doble = $this->doble('');
         $this->sustituirServicio($caso, $doble);
