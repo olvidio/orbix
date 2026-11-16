@@ -100,12 +100,12 @@
             });
     }
     fnjs_nom_tipo = function () {
-        var url = '{{ url }}';
-        var extendida = $('#extendida').val();
+        // Tabla de los tipos que ya existen para el prefijo: la monta el frontend.
+        var url = '{{ url_nom_tipo_tabla }}';
         var isfsv = $('#isfsv_val').val();
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();
-        var parametros = 'extendida='+extendida+'&modo=buscar&salida=nom_tipo_tabla&entrada=' + isfsv + iasistentes + iactividad + '{{ h|raw }}';
+        var parametros = 'entrada=' + isfsv + iasistentes + iactividad + '{{ h_nom_tipo_tabla|raw }}';
         $.ajax({
             url: url,
             type: 'post',

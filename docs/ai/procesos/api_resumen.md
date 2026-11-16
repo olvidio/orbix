@@ -59,12 +59,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Entrada: `post.accion:string`, `post.dl_propia:string`, `post.empiezamax:string`, `post.empiezamin:string`, `post.id_fase_nueva:string`, `post.id_tipo_activ:string`, `post.periodo:string`, `post.year:string`
 - Respuesta: `standard_envelope_string_data`
 
-## `/src/procesos/fases_activ_cambio_tipo_html`
+## `/src/procesos/fases_activ_cambio_tipo_data`
 
-- Id: `procesos.fases_activ_cambio_tipo_html`
-- Controller: `src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php`
+- Id: `procesos.fases_activ_cambio_tipo_data`
+- Controller: `src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_data.php`
 - Entrada: `post.id_tipo_activ:string`, `post.sactividad:string`, `post.sactividad2:string`, `post.sasistentes:string`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (`actividad_tipo`: configuración del selector de tipo, que pinta el frontend con `ActividadTipo::htmlDesdeConfig()`)
 
 ## `/src/procesos/fases_activ_cambio_update`
 
@@ -169,4 +169,4 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `procesos.usuario_perm_activ_data`
 - Controller: `src/procesos/infrastructure/ui/http/controllers/usuario_perm_activ_data.php`
 - Entrada: `post.dl_propia:mixed`, `post.id_tipo_activ_txt:string`, `post.id_usuario:integer`
-- Respuesta: `standard_envelope_string_data`
+- Respuesta: `standard_envelope_string_data` (incluye `actividad_tipo`: configuración del selector de tipo, que pinta el frontend)

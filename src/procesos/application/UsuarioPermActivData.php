@@ -2,7 +2,6 @@
 
 namespace src\procesos\application;
 
-use frontend\actividades\helpers\ActividadTipo;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\XPermisos;
@@ -105,23 +104,25 @@ class UsuarioPermActivData
             ];
         }
 
-        $oAt = new ActividadTipo();
+        $actividad_tipo = [];
         if ($id_tipo_activ !== '' && $id_tipo_activ !== '0') {
-            $oAt->setId_tipo_activ($id_tipo_activ);
+            $actividad_tipo['id_tipo_activ'] = $id_tipo_activ;
         }
-        $oAt->setAsistentes($oTipoActiv->getAsistentesText());
-        $oAt->setActividad($oTipoActiv->getActividadText());
-        $oAt->setNom_tipo($oTipoActiv->getNom_tipoText());
-        $oAt->setPara('procesos');
-        $oAt->setQue('buscar');
-        $oAt->setPerm_jefe($perm_jefe);
-        $tipo_actividad_html = $oAt->captureHtml(true);
+        $actividad_tipo += [
+            'asistentes' => $oTipoActiv->getAsistentesText(),
+            'actividad' => $oTipoActiv->getActividadText(),
+            'nom_tipo' => $oTipoActiv->getNom_tipoText(),
+            'para' => 'procesos',
+            'que' => 'buscar',
+            'perm_jefe' => $perm_jefe,
+            'extendida' => true,
+        ];
 
         return [
             'nombre' => $nombre,
             'dl_propia' => $Qdl_propia,
             'perm_jefe' => $perm_jefe,
-            'tipo_actividad_html' => $tipo_actividad_html,
+            'actividad_tipo' => $actividad_tipo,
             'a_fases' => $a_fases,
             'a_acciones' => $a_acciones,
             'a_afecta_a' => $a_afecta_a,

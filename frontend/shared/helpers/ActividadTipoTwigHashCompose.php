@@ -8,7 +8,8 @@ use frontend\shared\security\HashF;
 
 /**
  * Tokens `h` / `h_act` para los Twig de {@see \frontend\actividades\helpers\ActividadTipo}
- * (`linkSinValParams` sobre el POST AJAX a `actividad_tipo_get` y sobre `actividad_ver.php`).
+ * (`linkSinValParams` sobre el POST AJAX a `actividad_tipo_get`, a `actividad_tipo_nom_tipo_tabla.php` y sobre
+ * `actividad_ver.php`).
  */
 final class ActividadTipoTwigHashCompose
 {
@@ -25,6 +26,14 @@ final class ActividadTipoTwigHashCompose
         $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $a_campos['h'] = $oHashTipo->linkSinValParams();
+
+        $urlNomTipoTablaRaw = $a_campos['url_nom_tipo_tabla'] ?? null;
+        if (is_string($urlNomTipoTablaRaw) && $urlNomTipoTablaRaw !== '') {
+            $oHashNomTipo = new HashF();
+            $oHashNomTipo->setUrl($urlNomTipoTablaRaw);
+            $oHashNomTipo->setCamposForm('entrada');
+            $a_campos['h_nom_tipo_tabla'] = $oHashNomTipo->linkSinValParams();
+        }
 
         $oHashAct = new HashF();
         $oHashAct->setUrl('frontend/actividades/controller/actividad_ver.php');

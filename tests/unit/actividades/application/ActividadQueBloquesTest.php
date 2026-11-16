@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\unit\actividades\application;
 
 use src\actividades\application\ActividadLugar;
-use src\actividades\application\ActividadQueDatos;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\actividades\application\TipoActivFormNuevoData;
 use src\ubis\application\services\DelegacionDropdown;
@@ -127,33 +126,6 @@ final class ActividadQueBloquesTest extends myTest
         $r = $this->bloque()->ejecutar(2, 'publicar', '', '', 0, 0, false);
 
         $this->assertSame([['dlbf', 'dlbf']], $r['dl_org']['opciones']);
-    }
-
-    // ---- HTML de tipo (usa el helper de frontend) ----------------------------------------------------------------------
-
-    public function test_el_selector_de_tipo_devuelve_html_y_el_extendido_difiere(): void
-    {
-        $uc = new ActividadQueDatos();
-
-        $normal = $uc->execute(['id_tipo_activ' => '131001', 'sactividad' => 'crt']);
-        $ext = $uc->execute(['id_tipo_activ' => '131001', 'extendida' => true, 'sactividad2' => '01']);
-        $vacio = $uc->execute([]);
-
-        $this->assertSame(['actividad_tipo_html'], array_keys($normal));
-        $this->assertNotSame('', $normal['actividad_tipo_html']);
-        $this->assertNotSame($normal['actividad_tipo_html'], $ext['actividad_tipo_html']);
-        $this->assertIsString($vacio['actividad_tipo_html']);
-    }
-
-    public function test_los_parametros_que_y_para_cambian_el_selector(): void
-    {
-        $uc = new ActividadQueDatos();
-
-        $a = $uc->execute(['id_tipo_activ' => '131001', 'perm_jefe' => true])['actividad_tipo_html'];
-        $b = $uc->execute(['id_tipo_activ' => '131001', 'perm_jefe' => true, 'sfsv_all' => false, 'evitar_procesos' => true])['actividad_tipo_html'];
-
-        $this->assertNotSame('', $a);
-        $this->assertNotSame('', $b);
     }
 
     public function test_el_formulario_de_tipo_nuevo_trae_su_capsula(): void

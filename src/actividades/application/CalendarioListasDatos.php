@@ -20,7 +20,6 @@ use src\ubis\domain\criteria\CasaField;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\application\services\CentroNombreResolver;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use frontend\shared\web\Lista;
 use src\shared\domain\Periodo;
 use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -30,12 +29,11 @@ use src\procesos\domain\PermAccionBits;
  * Caso de uso para la pantalla `calendario_listas`.
  *
  * Aglutina los accesos a repositorios y servicios necesarios para componer el
- * calendario de actividades de casas o de oficinas, en un periodo dado, y
- * devuelve el HTML listo para inyectar en el DOM.
+ * calendario de actividades de casas o de oficinas, en un periodo dado.
  *
- * Devuelve:
- *   - html (string)  Lista paginada con el calendario, precedida de las
- *                    advertencias de actividades sin lugar asignado.
+ * Devuelve los datos de la lista agrupada (`grupos`, `cabeceras`, `datos`) y los avisos de actividades sin lugar
+ * asignado (`avisos`, texto plano); con una opción desconocida, solo `mensaje`. La lista paginada la monta
+ * `frontend\actividades\helpers\CalendarioListasRender`.
  */
 final class CalendarioListasDatos
 {
@@ -129,7 +127,7 @@ final class CalendarioListasDatos
                 break;
             default:
                 return [
-                    'html' => sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__),
+                    'mensaje' => sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__),
                 ];
         }
 
@@ -181,7 +179,7 @@ final class CalendarioListasDatos
                 break;
         }
 
-        $warnings = '';
+        $avisos = [];
         $a_ubi_activ = [];
         $TipoTarifaRepository = $this->tipoTarifaRepository;
         $ActividadRepository = $this->actividadRepository;
@@ -247,7 +245,7 @@ final class CalendarioListasDatos
                 $nombre_ubi = '';
                 if (empty($lugar_esp)) {
                     if (empty($id_ubi)) {
-                        $warnings .= sprintf(_("La actividad: %s  No tiene lugar asignado"), $nom_activ) . '<br>';
+                        $avisos[] = sprintf(_("La actividad: %s  No tiene lugar asignado"), $nom_activ);
                     } else {
                         $nombre_ubi = $CasaRepository->findById($id_ubi)?->getNombre_ubi();
                         if (empty($nombre_ubi)) {
@@ -366,14 +364,11 @@ final class CalendarioListasDatos
                 $aCabeceras = [];
         }
 
-        $oTabla = new Lista();
-        $oTabla->setGrupos($aGrupos);
-        $oTabla->setCabeceras($aCabeceras);
-        $oTabla->setDatos($a_ubi_activ);
-        $html = $warnings . $oTabla->listaPaginada();
-
         return [
-            'html' => $html,
+            'avisos' => $avisos,
+            'grupos' => $aGrupos,
+            'cabeceras' => $aCabeceras,
+            'datos' => $a_ubi_activ,
         ];
     }
 }

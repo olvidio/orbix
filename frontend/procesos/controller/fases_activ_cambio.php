@@ -1,5 +1,7 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
+
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
@@ -65,13 +67,13 @@ if (!empty($Qsactividad2)) {
     $extendida = true;
 }
 
-$dataTipo = PostRequest::getDataFromUrl(AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_tipo_html'), [
+$dataTipo = PostRequest::getDataFromUrl(AppUrlConfig::srcBrowserUrl('/src/procesos/fases_activ_cambio_tipo_data'), [
     'id_tipo_activ' => $Qid_tipo_activ,
     'sasistentes' => $Qsasistentes,
     'sactividad' => $Qsactividad,
     'sactividad2' => $Qsactividad2,
 ]);
-$tipo_actividad_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipo['tipo_actividad_html'] ?? '');
+$tipo_actividad_html = ActividadTipo::htmlDesdeConfig(is_array($dataTipo['actividad_tipo'] ?? null) ? $dataTipo['actividad_tipo'] : []);
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

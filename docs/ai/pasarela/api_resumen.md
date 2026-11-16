@@ -122,12 +122,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Entrada: ``
 - Respuesta: `standard_envelope_string_data`
 
-## `/src/pasarela/exportar_que_actividad_tipo_html`
+## `/src/pasarela/exportar_que_actividad_tipo_data`
 
-- Id: `pasarela.exportar_que_actividad_tipo_html`
-- Controller: `src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_html.php`
-- Entrada: ``
-- Respuesta: `standard_envelope_string_data`
+- Id: `pasarela.exportar_que_actividad_tipo_data`
+- Controller: `src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_data.php`
+- Entrada: `post.id_tipo_activ:string`, `post.sasistentes:string`, `post.sactividad:string`, `post.snom_tipo:string`
+- Respuesta: `standard_envelope_string_data` (`actividad_tipo`: configuración del selector de tipo, que pinta el frontend con `ActividadTipo::htmlDesdeConfig()`)
 
 ## `/src/pasarela/nombre_excepcion_eliminar`
 

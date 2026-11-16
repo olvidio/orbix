@@ -85,8 +85,8 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_get.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_tipo_html', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php';
+    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_tipo_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_tipo_data.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/procesos/usuario_perm_activ_data', function () {

@@ -205,6 +205,7 @@ class ActividadTipo
         $a_campos = [
             'url' => $url,
             'url_act' => $url_act,
+            'url_nom_tipo_tabla' => OrbixRuntime::getWeb() . '/frontend/actividades/controller/actividad_tipo_nom_tipo_tabla.php',
             'perm_jefe' => $this->bperm_jefe,
             'isfsv' => $isfsvId,
             'oDesplSfsv' => $oDesplSfsv,
@@ -257,6 +258,82 @@ class ActividadTipo
         }
 
         return ob_get_clean() ?: '';
+    }
+
+    /**
+     * Widget configurado con un array (el que devuelven los endpoints de `src/` que deciden permisos o el tipo):
+     * `perm_jefe`, `sfsv_all`, `sfsv`, `id_tipo_activ`, `asistentes`, `actividad`, `nom_tipo`, `status`, `que`,
+     * `para`, `evitar_procesos`. Solo se aplican las claves presentes. `extendida` la usa {@see self::htmlDesdeConfig()}.
+     *
+     * @param array<string, mixed> $config
+     */
+    public static function desdeConfig(array $config): self
+    {
+        $o = new self();
+        $setters = [
+            'perm_jefe' => 'setPerm_jefe',
+            'sfsv_all' => 'setSfsvAll',
+            'sfsv' => 'setSfsv',
+            'id_tipo_activ' => 'setId_tipo_activ',
+            'asistentes' => 'setAsistentes',
+            'actividad' => 'setActividad',
+            'nom_tipo' => 'setNom_tipo',
+            'status' => 'setStatus',
+            'que' => 'setQue',
+            'para' => 'setPara',
+            'evitar_procesos' => 'setEvitarProcesos',
+        ];
+        foreach ($setters as $clave => $setter) {
+            if (array_key_exists($clave, $config)) {
+                $o->$setter($config[$clave]);
+            }
+        }
+
+        return $o;
+    }
+
+    /**
+     * @param array<string, mixed> $config ver {@see self::desdeConfig()}; `extendida` (bool) para la actividad de dos cifras.
+     */
+    public static function htmlDesdeConfig(array $config): string
+    {
+        return self::desdeConfig($config)->captureHtml(!empty($config['extendida']));
+    }
+
+    /**
+     * Configuración a partir de los parámetros de formulario que usaba el antiguo endpoint
+     * `/src/actividades/actividad_que_datos` (`perm_jefe`/`extendida`/`sfsv_all` como `'t'`, `sasistentes`,
+     * `sactividad`, `sactividad2`, `snom_tipo`…), con las mismas reglas.
+     *
+     * Ese endpoint no leía `evitar_procesos` (los formularios de planning lo envían): se mantiene igual.
+     *
+     * @param array<string, mixed> $p
+     * @return array<string, mixed>
+     */
+    public static function configDesdeParametros(array $p): array
+    {
+        $texto = static fn(string $clave): string => is_scalar($p[$clave] ?? null) ? (string) $p[$clave] : '';
+        $extendida = $texto('extendida') === 't';
+
+        $idTipo = $texto('id_tipo_activ');
+        $config = [
+            'perm_jefe' => $texto('perm_jefe') === 't',
+            'id_tipo_activ' => $idTipo === '' ? 0 : (is_numeric($idTipo) ? (int) $idTipo : $idTipo),
+        ];
+        if ($texto('que') !== '') {
+            $config['que'] = $texto('que');
+        }
+        if ($texto('para') !== '') {
+            $config['para'] = $texto('para');
+        }
+        $config['sfsv'] = $texto('sfsv');
+        $config['asistentes'] = $texto('sasistentes');
+        $config['actividad'] = $extendida ? $texto('sactividad2') : $texto('sactividad');
+        $config['nom_tipo'] = $texto('snom_tipo');
+        $config['sfsv_all'] = $texto('sfsv_all') === '' ? true : $texto('sfsv_all') === 't';
+        $config['extendida'] = $extendida;
+
+        return $config;
     }
 
     public function setPerm_jefe(mixed $perm_jefe): void

@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "actividades"
-endpoints: 33
+endpoints: 32
 estado_revision: "generado"
 ---
 
@@ -99,13 +99,6 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `actividades.actividad_publicar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_publicar.php`
 - Entrada: `post.sel:array` (cápsulas HashB `actividad_publicar` `{id_activ}` por fila)
-- Respuesta: `standard_envelope_string_data`
-
-## `/src/actividades/actividad_que_datos`
-
-- Id: `actividades.actividad_que_datos`
-- Controller: `src/actividades/infrastructure/ui/http/controllers/actividad_que_datos.php`
-- Entrada: `post.extendida:mixed`, `post.id_tipo_activ:mixed`, `post.para:string`, `post.perm_jefe:mixed`, `post.que:string`, `post.sactividad:string`, `post.sactividad2:string`, `post.sasistentes:string`, `post.sfsv:string`, `post.sfsv_all:mixed`, `post.snom_tipo:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/actividad_que_filtros`

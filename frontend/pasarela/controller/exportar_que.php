@@ -1,5 +1,7 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
+
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
@@ -62,13 +64,13 @@ $Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
 $Qid_cdc_mas = (string)filter_input(INPUT_POST, 'id_cdc_mas');
 $Qid_cdc_num = (string)filter_input(INPUT_POST, 'id_cdc_num');
 
-$dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_actividad_tipo_html', [
+$dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_actividad_tipo_data', [
     'id_tipo_activ' => $Qid_tipo_activ,
     'sasistentes' => $Qsasistentes,
     'sactividad' => $Qsactividad,
     'snom_tipo' => $Qsnom_tipo,
 ]);
-$html_actividad_tipo = \frontend\shared\helpers\PayloadCoercion::string($dataTipoHtml['html'] ?? '');
+$html_actividad_tipo = ActividadTipo::htmlDesdeConfig(is_array($dataTipoHtml['actividad_tipo'] ?? null) ? $dataTipoHtml['actividad_tipo'] : []);
 
 $aOpciones = [
     'tot_any' => _("todo el año"),

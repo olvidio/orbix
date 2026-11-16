@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\actividadtarifas\helpers\ActividadtarifasPayload;
 
@@ -10,7 +11,7 @@ use frontend\actividadtarifas\helpers\ActividadtarifasPayload;
  * Obtiene los datos de `/src/actividadtarifas/relacion_tarifa_form_data`
  * y renderiza `tarifa_tipo_actividad_form.html.twig` (modificar) o
  * `tarifa_tipo_actividad_form_nuevo.html.twig` (nuevo). El bloque de
- * desplegables del modo «nuevo» viene de `/src/actividades/actividad_que_datos`
+ * desplegables del modo «nuevo» viene de el widget `ActividadTipo`
  * (PostRequest). Sin `use src\...` en el controlador frontend.
  *
  * Sucesor de
@@ -92,7 +93,7 @@ if (!$es_nuevo) {
     if ($isfsv === 2) {
         $ssfsv = 'sf';
     }
-    $dataTipo = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+    $actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
         'perm_jefe' => 'f',
         'id_tipo_activ' => '',
         'que' => '',
@@ -104,8 +105,7 @@ if (!$es_nuevo) {
         'snom_tipo' => '',
         'extendida' => '',
         'sfsv_all' => 'f',
-    ]);
-    $actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($dataTipo['actividad_tipo_html'] ?? '');
+    ]));
 
     $a_campos = [
         'oPosicion' => $oPosicion,

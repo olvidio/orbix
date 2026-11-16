@@ -13,7 +13,6 @@ use src\actividades\application\ActividadNuevoCurso;
 use src\actividades\application\ActividadNuevoCursoEjecutar;
 use src\actividades\application\ActividadNuevoCursoFormData;
 use src\actividades\application\ActividadPublicar;
-use src\actividades\application\ActividadQueDatos;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use src\actividades\application\ActividadSelectListado;
 use src\actividades\application\ActividadSelectUbiData;
@@ -26,7 +25,7 @@ use src\actividades\application\ActividadTipoGetIdTarifa;
 use src\actividades\application\ActividadTipoGetLugar;
 use src\actividades\application\ActividadTipoGetTarifas;
 use src\actividades\application\ActividadTipoGetNomTipo;
-use src\actividades\application\ActividadTipoGetNomTipoTabla;
+use src\actividades\application\ActividadTipoGetNomTipoPosibles;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
 use src\actividades\application\ActividadVerDatos;
 use src\actividades\application\BorrarActividad;
@@ -87,7 +86,6 @@ return [
     ActividadNuevoCursoEjecutar::class => autowire(ActividadNuevoCursoEjecutar::class),
     ActividadNuevoCursoFormData::class => autowire(ActividadNuevoCursoFormData::class),
     ActividadPublicar::class => autowire(ActividadPublicar::class),
-    ActividadQueDatos::class => autowire(ActividadQueDatos::class),
     ActividadQueFiltrosBloque::class => autowire(ActividadQueFiltrosBloque::class),
     ActividadSelectListado::class => autowire(ActividadSelectListado::class),
     ActividadSelectUbiData::class => autowire(ActividadSelectUbiData::class),
@@ -100,7 +98,7 @@ return [
     ActividadTipoGetLugar::class => autowire(ActividadTipoGetLugar::class),
     ActividadTipoGetTarifas::class => autowire(ActividadTipoGetTarifas::class),
     ActividadTipoGetNomTipo::class => autowire(ActividadTipoGetNomTipo::class),
-    ActividadTipoGetNomTipoTabla::class => autowire(ActividadTipoGetNomTipoTabla::class),
+    ActividadTipoGetNomTipoPosibles::class => autowire(ActividadTipoGetNomTipoPosibles::class),
     ActividadTipoGetNivelStgrDefecto::class => autowire(ActividadTipoGetNivelStgrDefecto::class),
     ActividadVerDatos::class => autowire(ActividadVerDatos::class),
     BorrarActividad::class => autowire(BorrarActividad::class),

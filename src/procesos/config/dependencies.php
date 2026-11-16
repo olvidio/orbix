@@ -5,10 +5,9 @@ use src\procesos\application\ActividadProcesoGenerar;
 use src\procesos\application\ActividadProcesoGet;
 use src\procesos\application\ActividadProcesoUpdate;
 use src\procesos\application\ActividadQueFasesCuadro;
-use src\procesos\application\FasesActivCambioActividadTipoHtml;
 use src\procesos\application\FasesActivCambioGet;
 use src\procesos\application\FasesActivCambioLista;
-use src\procesos\application\FasesActivCambioTipoActividadHtmlData;
+use src\procesos\application\FasesActivCambioTipoActividadData;
 use src\procesos\application\FasesActivCambioUpdate;
 use src\procesos\application\ProcesoActividadService;
 use src\procesos\application\ProcesosClonar;
@@ -58,7 +57,6 @@ return [
 
     // Servicios / helpers application
     ProcesoActividadService::class => autowire(ProcesoActividadService::class),
-    FasesActivCambioActividadTipoHtml::class => autowire(FasesActivCambioActividadTipoHtml::class),
 
     // Casos de uso / Application
     ActividadProcesoData::class => autowire(ActividadProcesoData::class),
@@ -68,7 +66,7 @@ return [
     ActividadQueFasesCuadro::class => autowire(ActividadQueFasesCuadro::class),
     FasesActivCambioGet::class => autowire(FasesActivCambioGet::class),
     FasesActivCambioLista::class => autowire(FasesActivCambioLista::class),
-    FasesActivCambioTipoActividadHtmlData::class => autowire(FasesActivCambioTipoActividadHtmlData::class),
+    FasesActivCambioTipoActividadData::class => autowire(FasesActivCambioTipoActividadData::class),
     FasesActivCambioUpdate::class => autowire(FasesActivCambioUpdate::class),
     ProcesosClonar::class => autowire(ProcesosClonar::class),
     ProcesosDepende::class => autowire(ProcesosDepende::class),

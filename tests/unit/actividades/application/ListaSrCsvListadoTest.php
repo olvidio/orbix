@@ -187,7 +187,6 @@ final class ListaSrCsvListadoTest extends myTest
         $this->assertSame(2, $fila[1]);
         $this->assertSame((new DateTimeLocal('2027-03-05'))->getFromLocal(), $fila[2]);
         $this->assertSame(['crt sr 10', 'sr', 'crt', '(sin especificar)', 'Casa Uno', 'Ctr A, Ctr B'], [$fila[7], $fila[8], $fila[9], $fila[10], $fila[11], $fila[12]]);
-        $this->assertStringContainsString('crt sr 10', $out['html_tabla']);
         $this->assertSame('Listado de actividades', $out['titulo']);
     }
 

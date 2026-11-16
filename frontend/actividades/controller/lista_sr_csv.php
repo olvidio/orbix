@@ -97,10 +97,15 @@ if ($Qque === 'lista') {
         ]),
     );
 
+    $oTabla = new Lista();
+    $oTabla->setId_tabla('lista_activ');
+    $oTabla->setCabeceras(ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []));
+    $oTabla->setDatos(ActividadesPayload::listaValoresFromPayload($data['a_valores'] ?? []));
+
     $a_campos = [
         'oPosicion' => $oPosicion,
         'titulo' => PayloadCoercion::string($data['titulo'] ?? ''),
-        'html_tabla' => PayloadCoercion::string($data['html_tabla'] ?? ''),
+        'html_tabla' => $oTabla->mostrar_tabla(),
     ];
 
     $oView = new ViewNewPhtml('frontend\actividades\controller');

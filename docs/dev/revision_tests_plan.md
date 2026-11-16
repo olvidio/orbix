@@ -493,9 +493,11 @@ Hechos en esta pasada (además de las secciones anteriores): `cambios` (preferen
 7. Respuestas incoherentes: hash vacío en BD lanza `InvalidArgumentException` al hidratar; «Rol no encontrado» en la app confirma que la contraseña era buena; `AppMobileLogin` escribe `$_SESSION['sfsv']` y `['private']` aunque rechace el login; el web no recorta el usuario y la app sí.
 8. **Capas:** las dos clases ejecutan SQL, abren conexiones y (la de la app) usan `$_SESSION`, `setcookie()` y `getenv()` dentro de `application`; son casi idénticas (~400 líneas duplicadas) y abren varias conexiones por login (0,2–0,4 s).
 
-**Hallazgos (sin corregir) de `personas`, `actividadplazas` y `configuracion`:** `GestionPlazasData` instancia `frontend\shared\web\Periodo` dentro de `src/` (rompe la separación de capas); `PeticionesActivData`: con una sola dl en el grupo de estudios compara `dl_org` con `'dl'` entrecomillado (nunca coincide; ya comentado en el código) y el separador entre propias y publicadas usa la clave 1 del desplegable; `GestionPlazasUpdate` calcula la dl de una columna con `substr($col, 0, -2)` sin comprobar el sufijo (`-c`/`-p`).
+**Hallazgos (sin corregir) de `personas`, `actividadplazas` y `configuracion`:** `PeticionesActivData`: con una sola dl en el grupo de estudios compara `dl_org` con `'dl'` entrecomillado (nunca coincide; ya comentado en el código) y el separador entre propias y publicadas usa la clave 1 del desplegable; `GestionPlazasUpdate` calcula la dl de una columna con `substr($col, 0, -2)` sin comprobar el sufijo (`-c`/`-p`).
 
 **Hallazgos (sin corregir):** `PeticionesIncorporar` usa `setPlazaComprobando`, marcado `@deprecated`. Anteriores: `CasaEcGastosGuardar` dice «borra los existentes y reinserta» pero no borra nada: cada guardado duplica los 36 apuntes del año, y lee «1.234,5» como 1,234; `CasasResumenOcupacion` arrastra la hora actual del reloj en los límites de periodo (`createFromFormat` sin `!`) y compara cadenas de formatos distintos, de modo que una actividad de febrero del periodo sv se atribuye a sf; `TarifaUbiUpdateInc` redondea las cantidades a entero (una tarifa de 12,50 se guarda como 13: se pierden los céntimos); `TarifaUbiCopiar` es un esqueleto («pendiente de reimplementar») y no copia nada; `TarifaUbiFormData` devuelve siempre la serie «general» al editar; `DocenciaActualizar` ignora el resultado de `Guardar` y el mensaje final siempre dice que se actualizó; `AnuncioDelete` lanza excepción con un id que no es UUID; `MenuGuardar` guarda un orden vacío como `[0]`; `CartasPresentacionBuscarOpcionesData` fija las delegaciones a la región `H`; `CertificadoEmitidoGuardarMessages` mezcla `||` y `&&` sin paréntesis en `isDuplicatePersonaFecha`.
+
+**Capas de `procesos`, `pasarela`, `actividades` y `casas` (noviembre de 2026):** ninguna clase de esos módulos usa ya `frontend\`. `Periodo` pasa a `src/shared/domain` (también para `asistentes`, `actividadplazas` e `inventario`); el selector de tipo de actividad lo pinta siempre el frontend; las tablas de `lista_sr_csv`, `calendario_listas` y `nom_tipo_tabla` se montan en `frontend/`; la caché de tipos (`TipoActivMetadataLoader`) la vacía el frontend. Hallazgos nuevos, sin corregir: los formularios de planning envían `evitar_procesos` al widget pero el antiguo `actividad_que_datos` no lo leía (se mantiene así); `TipoActivNuevo` guarda aunque el id no tenga 6 cifras (solo añade el mensaje «Id incorrecto»).
 
 **Corregidos (noviembre de 2026), con un test visto fallar antes en cada caso:**
 - `TrasladoFormData`: el formulario ofrece los centros activos que no son cgi ni iglesias (`active = 't' AND (tipo_ctr IS NULL OR tipo_ctr !~ '^(cgi|igl)')`). Antes la clase de caracteres quitaba también los `cp` y dejaba los centros inactivos (17 en la BD de pruebas). Test: `TrasladoFormDataCentrosTest` (integración) y `TrasladoPersonaTest::test_el_filtro_de_centros_excluye_inactivos_cgi_e_iglesias`.
@@ -649,7 +651,7 @@ Unit (≈ 85 casos, 5 ficheros + `tests/unit/ubis/support/UbiResolverFactory` pa
 Unit con mocks (2 ficheros, ≈ 34 casos): `ActividadProcesoGet`/`Update`, `FasesActivCambioUpdate` (marcar/desmarcar en bloque con permiso de la oficina responsable), `FasesActivCambioGet`, `ActividadQueFasesCuadro`, `UsuarioPermActivFases`, `ProcesosVerData`, `TipoActivProcesoLista`, `UsuarioPermActivData` (jefe por permisos/sfsv/configuración) y los dos envoltorios del selector de tipo de actividad.
 
 **Hallazgos (sin corregir):**
-1. **Capas:** `UsuarioPermActivData` y `FasesActivCambioActividadTipoHtml` (en `src/procesos/application/`) importan `frontend\actividades\helpers\ActividadTipo` y devuelven HTML: incumple la regla «nada de UI/HTML en `src/`». Los endpoints deberían devolver los datos (tipo, asistentes, actividad) y el selector pintarse en `frontend/`.
+1. **Capas:** `UsuarioPermActivData` y `FasesActivCambioActividadTipoHtml` (en `src/procesos/application/`) importan `frontend\actividades\helpers\ActividadTipo` y devuelven HTML: incumple la regla «nada de UI/HTML en `src/`». Los endpoints deberían devolver los datos (tipo, asistentes, actividad) y el selector pintarse en `frontend/`. **Resuelto (noviembre de 2026):** `src/` devuelve la configuración del selector (`actividad_tipo`) y el frontend lo pinta con `ActividadTipo::htmlDesdeConfig()`; `fases_activ_cambio_tipo_html` pasa a `fases_activ_cambio_tipo_data`.
 2. `FasesActivCambioUpdate` y `ActividadProcesoGet` construyen `Filter::eq` con `getId_fase()`/`getId_tarea()`, que son nulables en `ActividadProcesoTarea`: una tarea de proceso sin fase o sin tarea lanza `InvalidArgumentException` («El valor no puede ser null») en lugar de saltarse la fila (`ActividadProcesoGet` sí las salta antes; `FasesActivCambioUpdate` no).
 3. `FasesActivCambioUpdate` devuelve el texto de error de la **primera** fase sin definición y deja sin procesar el resto de actividades seleccionadas (los errores de guardado sí se acumulan): criterio distinto para fallos equivalentes.
 
@@ -658,7 +660,7 @@ Unit con mocks (2 ficheros, ≈ 34 casos): `ActividadProcesoGet`/`Update`, `Fase
 Unit con mocks (3 ficheros, ≈ 30 casos): los ocho casos de uso gemelos `ContribucionNoDuerme*`/`ContribucionReserva*` (mismos casos para ambos, rangos 0–100), `Conversiones` (defaults + excepciones por tipo de actividad, perfil, nombre, caché del catálogo), `ExportarActividadesData` (filtro, activación numérica / `upload` / inválida, resolución de tarifa por actividad, por tipo o ausente, contribuciones, organizadores sin `sg`/`agd`) y `ExportarQueActividadTipoHtml`.
 
 **Hallazgos (sin corregir):**
-1. **Capas:** `ExportarQueActividadTipoHtml` (en `src/pasarela/application/`) importa `frontend\actividades\helpers\ActividadTipo` y devuelve HTML (mismo problema que en `procesos`).
+1. **Capas:** `ExportarQueActividadTipoHtml` (en `src/pasarela/application/`) importa `frontend\actividades\helpers\ActividadTipo` y devuelve HTML (mismo problema que en `procesos`). **Resuelto (noviembre de 2026):** `ExportarQueActividadTipoData` / `exportar_que_actividad_tipo_data`, mismo patrón.
 2. `Conversiones` solo cachea el catálogo de tipos si no está vacío (`=== []`): con el catálogo vacío cada llamada vuelve a consultar.
 3. `ExportarActividadesData` recorre `$n < 4` sobre un array de 3 organizadores (el cuarto se descarta sin aviso); y `Ubi::NewUbi` (estático, acceso a BD) se llama dentro del bucle cuando la actividad no tiene plazas, sin test por ello.
 4. La columna «texto aviso» se exporta siempre vacía.
@@ -674,7 +676,7 @@ Unit con mocks (3 ficheros, ≈ 45 casos): `ActividadPublicar`, `ActividadImport
 2. `ActividadEditar`: `$plazas_dl !== $plazas_old` compara `?string` (`ActividadPlazas::getPlazas`) con `?int`; con `!==` siempre es verdadero, así que si la dl ya tiene fila de plazas **nunca se actualiza** (un test lo fija).
 3. `ActividadImportar` regenera el proceso aunque `Guardar` de la importación haya fallado.
 4. `ActividadDuplicar` no copia el proceso ni las asignaciones; el duplicado queda sin tareas hasta regenerarlo, y carga la actividad dos veces con `findById`.
-5. **Capas:** `ActividadQueDatos` y `TipoActivFormNuevo` (en `src/`) instancian `frontend\actividades\helpers\ActividadTipo`, capturan su salida con `ob_*` y construyen HTML a mano (mismo patrón que `procesos` y `pasarela`).
+5. **Capas:** `ActividadQueDatos` y `TipoActivFormNuevo` (en `src/`) instancian `frontend\actividades\helpers\ActividadTipo`, capturan su salida con `ob_*` y construyen HTML a mano (mismo patrón que `procesos` y `pasarela`). **Resuelto (noviembre de 2026):** `actividad_que_datos` desaparece (los cinco controladores pintan el widget con `ActividadTipo::configDesdeParametros()`, mismo HTML comprobado); la gestión de tipos (`tipo_activ_*`) monta su lista y sus formularios en `frontend/`. Al hacerlo se vio que el alta de un tipo se rechazaba (302) porque `extendida` no estaba firmado; corregido y cubierto por `tipos-actividad.spec.ts`.
 6. `ActividadSelectUbiData` ejecuta SQL directo con `GlobalPdo` (`oDBC`/`oDBPC`) en un caso de uso de `application`.
 
 ### `asistentes` (10 clases sin test al empezar; módulo cerrado: 0/21)
@@ -747,7 +749,7 @@ Unit con mocks (5 ficheros, 96 casos): `PrevisionAsistentesData` (qué tipos ve 
 4. `CalendarioUbiResumenData`: la respuesta `sin_gastos_anterior` se monta con `empty() + [...]` y la unión conserva los valores vacíos de la izquierda (se pierden nombre, plazas, tarifas y días; el frontend no los usa). Todas las actividades se valoran con la última tarifa del listado (ya comentado en el código).
 5. `CasasResumenData`: el gasto propio de una casa hija no entra en el superávit conjunto (se suman sus ingresos a la madre, pero solo se resta el gasto de la madre); si la madre no tiene periodos, su superávit no cambia pero el de la hija se vacía igualmente.
 6. `PrevisionAsistentesData`: una casa sin plazas definidas deja `null` en la celda (la casa inexistente deja 0).
-7. **Capas:** `CasaActividadesListaData`, `CasaIngresosListaData` y `CasasResumenData` instancian `frontend\shared\web\Periodo` dentro de `src/`.
+7. **Capas:** `CasaActividadesListaData`, `CasaIngresosListaData` y `CasasResumenData` instancian `frontend\shared\web\Periodo` dentro de `src/`. **Resuelto (noviembre de 2026):** usan `src\shared\domain\Periodo` con el calendario por `CalendarioEscolarInterface`.
 
 ### `actividadestudios` (10 clases sin test al empezar; módulo cerrado: 0/34)
 
@@ -916,7 +918,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 2. **Aplazado (decisión del 12-11-2026: se deja como está de momento).** `/src/actividadcargos/cargos_activ_resincronizar` (GET o POST) ejecuta el script CLI de resincronización de `cd_cargos_activ_dl`: con `aplicar=1` escribe en los esquemas de todas las dl, sin token ni comprobación de rol (solo exige estar en el interior sv). Además devuelve HTML desde `src/`.
 
 **Hallazgos (segunda parte, sin corregir):**
-1. `ActividadSelectListado`: las filas «ocupado» tienen menos celdas que las visibles (falta la de idioma; con rol ctr, la última); `Lista` simplemente pinta menos celdas. Usa `frontend\shared\web\Periodo` desde `src/` (como `casas`).
+1. `ActividadSelectListado`: las filas «ocupado» tienen menos celdas que las visibles (falta la de idioma; con rol ctr, la última); `Lista` simplemente pinta menos celdas. Usa `frontend\shared\web\Periodo` desde `src/` (como `casas`). (**Resuelto (noviembre de 2026):** el `Periodo` ya es el de `src/shared/domain`.)
 2. `PgCargoOAsistente::getSolapes()`: acabar y empezar el mismo día cuenta como solape (rangos cerrados `[]`).
 
 **Tercera parte (listados pendientes, hecha):** cobertura final `actividades` 93 % (domain 93 %, application 97 %), `actividadcargos` 85 % (lo que falta es sobre todo el script CLI de resincronización), `actividadescentro` 74 % y `actividadessacd` 81 % (el resto es `db/`, DDL), `actividadplazas` 93 %, `actividadtarifas` 87 %. Suite completa: 9830 tests en verde.
@@ -937,7 +939,7 @@ Revisado y **no explotable**: el filtro de dl del informe stgr de la región (`d
 
 **Hallazgos (tercera parte, sin corregir):**
 1. `ListaActividadesSgListado`: con `procesos` y sin permisos en la sesión, las actividades se saltan sin contarlas (la búsqueda general las muestra todas); el texto «ocupado» va en la columna de inicio.
-2. `CalendarioListasDatos` construye la tabla con `frontend\shared\web\Lista` y devuelve HTML desde `src/`; usa `PermisoDossier` dentro del caso de uso.
+2. `CalendarioListasDatos` construye la tabla con `frontend\shared\web\Lista` y devuelve HTML desde `src/`; usa `PermisoDossier` dentro del caso de uso. **Resuelto (noviembre de 2026):** devuelve grupos, cabeceras, datos y avisos; la lista la monta `frontend\actividades\helpers\CalendarioListasRender`.
 3. `ActividadVerDatos`: el desplegable de dl organizadora devuelve un mapa, no pares ordenados (regla de `AGENTS.md`).
 4. `SolapesSacdData`: dos actividades sin casa seguidas se marcan como «tachado» (misma casa).
 5. `PgCentroEncargadoRepository::getActividadesDeCentros()` sigue recibiendo la condición como SQL en texto: los dos llamadores la montan ya con fechas validadas, pero convendría pasar las fechas como parámetros.

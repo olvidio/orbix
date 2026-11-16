@@ -1,6 +1,7 @@
 <?php
 
-use frontend\shared\helpers\PayloadCoercion;
+use frontend\actividades\helpers\CalendarioListasRender;
+
 
 /**
  * Fragmento HTML con el calendario de actividades de casas / oficinas en un
@@ -42,4 +43,4 @@ $data = PostRequest::getDataFromUrl('/src/actividades/calendario_listas_datos', 
     'id_cdc' => $Qaid_cdc,
 ]);
 
-echo PayloadCoercion::string($data['html'] ?? '');
+echo CalendarioListasRender::html($data);

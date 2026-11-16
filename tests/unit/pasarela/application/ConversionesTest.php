@@ -8,7 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
 use src\pasarela\application\Conversiones;
-use src\pasarela\application\ExportarQueActividadTipoHtml;
+use src\pasarela\application\ExportarQueActividadTipoData;
 use src\pasarela\domain\Activacion;
 use src\pasarela\domain\ContribucionNoDuerme;
 use src\pasarela\domain\ContribucionReserva;
@@ -151,25 +151,25 @@ final class ConversionesTest extends myTest
         $this->assertSame([131001], array_keys($c->getArrayTipo()));
     }
 
-    // ---- ExportarQueActividadTipoHtml ----------------------------------------------------------------------
+    // ---- ExportarQueActividadTipoData ----------------------------------------------------------------------
 
-    public function test_el_selector_de_exportar_devuelve_html_y_con_permiso_de_calendario_ofrece_mas(): void
+    public function test_el_selector_de_exportar_es_de_su_seccion_y_con_permiso_de_calendario_de_todas(): void
     {
-        $uc = new ExportarQueActividadTipoHtml();
+        $uc = new ExportarQueActividadTipoData();
 
-        $normal = $uc->execute(['id_tipo_activ' => '131001']);
+        $normal = $uc->execute(['id_tipo_activ' => '131001', 'sasistentes' => 'n', 'sactividad' => 'crt', 'snom_tipo' => 'x'])['actividad_tipo'];
         $p = $this->createMock(XPermisos::class);
         $p->method('have_perm_oficina')->willReturnCallback(fn (string $o): bool => $o === MenuDlPermissionBits::CALENDARIO);
         $_SESSION['oPerm'] = $p;
-        $jefe = $uc->execute(['id_tipo_activ' => '131001']);
+        $jefe = $uc->execute(['id_tipo_activ' => '131001'])['actividad_tipo'];
 
-        $this->assertSame(['html'], array_keys($normal));
-        $this->assertNotSame('', $normal['html']);
-        $this->assertIsString($jefe['html']);
+        $this->assertSame(['131001', 'n', 'crt', 'x', true, true], [$normal['id_tipo_activ'], $normal['asistentes'], $normal['actividad'], $normal['nom_tipo'], $normal['evitar_procesos'], $normal['sfsv_all']]);
+        $this->assertNotSame('', $normal['sfsv'], 'sin permiso, su sección');
+        $this->assertSame('', $jefe['sfsv'], 'con calendario, todas');
     }
 
     public function test_el_selector_tolera_una_entrada_vacia(): void
     {
-        $this->assertNotSame('', (new ExportarQueActividadTipoHtml())->execute([])['html']);
+        $this->assertSame('', (new ExportarQueActividadTipoData())->execute([])['actividad_tipo']['id_tipo_activ']);
     }
 }

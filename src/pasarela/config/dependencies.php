@@ -17,7 +17,7 @@ use src\pasarela\application\ContribucionReservaExcepcionGuardar;
 use src\pasarela\application\ContribucionReservaLista;
 use src\pasarela\application\Conversiones;
 use src\pasarela\application\ExportarActividadesData;
-use src\pasarela\application\ExportarQueActividadTipoHtml;
+use src\pasarela\application\ExportarQueActividadTipoData;
 use src\pasarela\application\NombreExcepcionEliminar;
 use src\pasarela\application\NombreExcepcionGuardar;
 use src\pasarela\application\NombreLista;
@@ -63,6 +63,6 @@ return [
     ContribucionNoDuermeExcepcionEliminar::class => autowire(ContribucionNoDuermeExcepcionEliminar::class),
 
     ExportarActividadesData::class => autowire(ExportarActividadesData::class),
-    ExportarQueActividadTipoHtml::class => autowire(ExportarQueActividadTipoHtml::class),
+    ExportarQueActividadTipoData::class => autowire(ExportarQueActividadTipoData::class),
     TipoActivTxtData::class => autowire(TipoActivTxtData::class),
 ];

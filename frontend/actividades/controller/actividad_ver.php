@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\actividades\helpers\ActividadesPostInput;
 use frontend\actividades\helpers\ActividadesPayload;
@@ -18,7 +19,7 @@ use frontend\shared\helpers\FuncTablasSupport;
  * nivel STGR por defecto, HTML del bloque tipo, permiso crear en flujo nuevo)
  * se obtienen via PostRequest a `/src/actividades/actividad_ver_datos`,
  * `actividad_status_labels_datos`, `actividad_nivel_stgr_default_datos`,
- * `actividad_permiso_crear_datos` y `actividad_que_datos`. El controlador
+ * `actividad_permiso_crear_datos` y el widget `ActividadTipo`. El controlador
  * frontend no hace `use src\...`.
  *
  * @package    delegacion
@@ -361,7 +362,7 @@ $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
 $extendida = ($Qmod !== 'cambiar_tipo') && (strlen(PayloadCoercion::string($id_tipo_activ)) > 3);
-$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
     'perm_jefe' => $permiso_des ? 't' : 'f',
     'id_tipo_activ' => PayloadCoercion::string($id_tipo_activ),
     'que' => 'buscar',
@@ -372,7 +373,6 @@ $dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl(
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida ? 't' : '',
 ]));
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

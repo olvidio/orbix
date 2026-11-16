@@ -58,8 +58,8 @@ final class CalendarioListasDatosTest extends TestCase
             $this->createMock(AsistenteActividadService::class),
             new \Tests\support\CalendarioEscolarFijo(),
         ))->ejecutar(['que' => '__no_existe__']);
-        $this->assertArrayHasKey('html', $out);
-        $this->assertStringContainsString('opción no definida', $out['html']);
+        $this->assertSame(['mensaje'], array_keys($out));
+        $this->assertStringContainsString('opción no definida', $out['mensaje']);
     }
 
     /**

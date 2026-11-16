@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\actividades\helpers\ActividadesPostInput;
 use frontend\actividades\helpers\ActividadesMutacionSupport;
@@ -11,7 +12,7 @@ use frontend\shared\helpers\PayloadCoercion;
  *
  * La carga de la actividad y los desplegables viene de
  * `/src/actividades/actividad_ver_datos`; textos del tipo y HTML del bloque tipo
- * desde ese payload y `/src/actividades/actividad_que_datos`; etiquetas de status
+ * desde ese payload y el widget `ActividadTipo`; etiquetas de status
  * desde `/src/actividades/actividad_status_labels_datos`. Sin `use src\...`.
  *
  * Migrado desde frontend/actividades/controller/planning_casa_modificar.php.
@@ -102,7 +103,7 @@ $labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src
 ]));
 $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
-$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
@@ -114,7 +115,6 @@ $dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl(
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]));
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $urlMutacionAjax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_mutacion_ajax.php';
 

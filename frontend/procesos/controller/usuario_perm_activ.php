@@ -1,5 +1,7 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
+
 use frontend\notas\helpers\NotasFormSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
@@ -44,7 +46,7 @@ $data = PostRequest::getDataFromUrl(AppUrlConfig::srcBrowserUrl('/src/procesos/u
 
 $nombre = \frontend\shared\helpers\PayloadCoercion::string($data['nombre'] ?? '');
 $Qdl_propia = \frontend\shared\helpers\PayloadCoercion::string($data['dl_propia'] ?? 't');
-$tipo_actividad_html = \frontend\shared\helpers\PayloadCoercion::string($data['tipo_actividad_html'] ?? '');
+$tipo_actividad_html = ActividadTipo::htmlDesdeConfig(is_array($data['actividad_tipo'] ?? null) ? $data['actividad_tipo'] : []);
 $a_fases = NotasFormSupport::desplegableOpciones($data['a_fases'] ?? []);
 $a_acciones = NotasFormSupport::desplegableOpciones($data['a_acciones'] ?? []);
 $aPermData = ProcesosPayload::usuarioPermRows($data['aPerm'] ?? null);

@@ -13,7 +13,6 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
-use frontend\shared\web\Lista;
 use src\shared\domain\Periodo;
 use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -26,9 +25,8 @@ use src\permisos\domain\XPermisos;
  * - Guarda la preferencia de busqueda del usuario.
  * - Ejecuta los filtros contra `ActividadRepository` y construye el conjunto
  *   final (tipos + ubis compartidas, deduplicando por id_activ).
- * - Devuelve la tabla ya formateada (html_tabla) y los datos crudos
- *   (a_cabeceras + a_valores) para que el frontend pueda exportarlos a CSV
- *   sin tocar `src/`.
+ * - Devuelve los datos (a_cabeceras + a_valores): el frontend monta la tabla
+ *   o el CSV (`frontend/actividades/controller/lista_sr_csv.php`).
  */
 final class ListaSrCsvListado
 {
@@ -219,14 +217,7 @@ final class ListaSrCsvListado
             $a_valores[$i][12] = $ctrs;
         }
 
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('lista_activ');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setDatos($a_valores);
-        $html_tabla = $oTabla->mostrar_tabla();
-
         return [
-            'html_tabla' => $html_tabla,
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
             'titulo' => ucfirst(_("listado de actividades")),

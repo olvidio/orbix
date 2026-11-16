@@ -24,6 +24,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
+use frontend\actividades\helpers\CalendarioListasRender;
 use Tests\myTest;
 
 /**
@@ -96,7 +97,7 @@ final class CalendarioListasDatosDmzTest extends myTest
             'year' => '2026',
         ]);
 
-        return $out['html'];
+        return CalendarioListasRender::html($out);
     }
 
     public function test_dmz_centros_encargados_sv_se_leen_de_centro_ellos_y_no_de_u_centros_dl(): void

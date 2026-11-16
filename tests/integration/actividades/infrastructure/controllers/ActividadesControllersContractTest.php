@@ -16,7 +16,6 @@ use src\actividades\application\ActividadNueva;
 use src\actividades\application\ActividadNuevoCursoEjecutar;
 use src\actividades\application\ActividadNuevoCursoFormData;
 use src\actividades\application\ActividadPublicar;
-use src\actividades\application\ActividadQueDatos;
 use src\actividades\application\ActividadSelectListado;
 use src\actividades\application\ActividadSelectUbiData;
 use src\actividades\application\ActividadStatusLabelsDatos;
@@ -380,16 +379,6 @@ final class ActividadesControllersContractTest extends myTest
         $input = $caso->args('ejecutar')[0];
         $this->assertSame('5', $caso->llamadas[1][1][0]['nivel_stgr']);
         $this->assertSame('f', $caso->llamadas[1][1][0]['Bdl']);
-    }
-
-    public function test_que_datos_pasa_los_flags_como_booleanos(): void
-    {
-        $caso = $this->doble(ActividadQueDatos::class, ['execute' => []]);
-        $this->ejecutar('actividad_que_datos.php', ['perm_jefe' => 't', 'extendida' => 'f', 'sfsv_all' => 't', 'que' => 'x']);
-        $in = $caso->args('execute')[0];
-        $this->assertSame([true, false, true, 'x'], [$in['perm_jefe'], $in['extendida'], $in['sfsv_all'], $in['que']]);
-        $this->ejecutar('actividad_que_datos.php', []);
-        $this->assertArrayNotHasKey('sfsv_all', $caso->llamadas[1][1][0]);
     }
 
     public function test_lecturas_simples_devuelven_el_payload(): void

@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\helpers\ListNavSupport;
@@ -196,7 +197,7 @@ switch ($Qque) {
         break;
 }
 
-$data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $Qid_tipo_activ,
     // Widget de tipo en modo búsqueda: onchange final = fnjs_id_activ (fases),
@@ -208,9 +209,7 @@ $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', 
     'sactividad2' => $Qsactividad2,
     'snom_tipo' => $Qsnom_tipo,
     'extendida' => $extendida ? 't' : '',
-]);
-
-$actividad_tipo_html = \frontend\shared\helpers\PayloadCoercion::string($data_que['actividad_tipo_html'] ?? '');
+]));
 
 $chk_status_1 = ($Qstatus === ActividadStatusId::PROYECTO) ? "checked='true'" : '';
 $chk_status_2 = ($Qstatus === ActividadStatusId::ACTUAL) ? "checked='true'" : '';

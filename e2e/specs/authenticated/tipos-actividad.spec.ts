@@ -48,6 +48,11 @@ test('tipos de actividad: lista, alta, cambio de nombre y borrado', async ({ pag
     return v;
   };
   const prefijo = (await primera('#isfsv_val')) + (await primera('#iasistentes_val')) + (await primera('#iactividad_val'));
+  // Al elegir la actividad sale la tabla de los tipos que ya existen con ese prefijo (código y nombre).
+  const existentes = Number(sqlDev('comun', `SELECT count(*) FROM ${T} WHERE id_tipo_activ::text LIKE '${prefijo}%'`));
+  const tabla = main.locator('#div_modificar #lst_nom_tipo table.sortable');
+  await expect(tabla).toBeVisible({ timeout: 20_000 });
+  await expect(tabla.locator('tbody tr')).toHaveCount(existentes);
   // Con los desplegables extendidos la actividad tiene dos cifras y el código del tipo, dos.
   expect(prefijo).toMatch(/^\d{3,4}$/);
   const resto = 6 - prefijo.length;
@@ -65,6 +70,8 @@ test('tipos de actividad: lista, alta, cambio de nombre y borrado', async ({ pag
 
   // Cambio de nombre desde «modificar».
   const enlace = main.locator(`#div_tabla #mod_${idTipo}`);
+  // Tras guardar, la lista se recarga y su respuesta cierra la ventana: esperar a que termine antes de abrir otra.
+  await redEnCalma(page);
   await expect(enlace).toBeVisible({ timeout: 20_000 });
   await enlace.click();
   await expect(form.locator('#nom_tipo_activ')).toHaveValue(`e2e ${marca}`, { timeout: 20_000 });
@@ -73,6 +80,8 @@ test('tipos de actividad: lista, alta, cambio de nombre y borrado', async ({ pag
   await expect.poll(() => nombre(idTipo), { timeout: 20_000 }).toBe(`e2e ${marca} bis`);
 
   // Borrado.
+  // Tras guardar, la lista se recarga y su respuesta cierra la ventana: esperar a que termine antes de abrir otra.
+  await redEnCalma(page);
   await expect(enlace).toBeVisible({ timeout: 20_000 });
   await enlace.click();
   await expect(form.locator('#nom_tipo_activ')).toHaveValue(`e2e ${marca} bis`, { timeout: 20_000 });

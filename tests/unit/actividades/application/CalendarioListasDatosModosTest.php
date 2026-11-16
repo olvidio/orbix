@@ -26,6 +26,7 @@ use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
+use frontend\actividades\helpers\CalendarioListasRender;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 use Tests\support\SustituyeServiciosDelContenedor;
@@ -143,7 +144,7 @@ final class CalendarioListasDatosModosTest extends myTest
         $this->tarifas->method('findById')->with(4)->willReturn($t);
         $this->asistentes->method('getAsistentesDeActividad')->willReturn([1, 2, 3]);
 
-        $html = $this->uc()->ejecutar(['que' => 'lista_cdc', 'id_cdc' => ['10200', '10201'], 'periodo' => 'otro', 'empiezamin' => '1/3/2027', 'empiezamax' => '31/3/2027'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'lista_cdc', 'id_cdc' => ['10200', '10201'], 'periodo' => 'otro', 'empiezamin' => '1/3/2027', 'empiezamax' => '31/3/2027']));
 
         $this->assertSame(['f_ini between [2027-03-01,2027-03-31]', 'status lt 4', 'id_ubi eq 10200'], $this->consultas[0]);
         $this->assertStringContainsString('Casa Uno', $html);
@@ -184,7 +185,7 @@ final class CalendarioListasDatosModosTest extends myTest
         $ctr->setNombre_ubi('Ctr Encargado');
         $this->centrosDl->method('findById')->with(300)->willReturn($ctr);
 
-        $html = $this->uc()->ejecutar(['que' => 'c_todas', 'ver_ctr' => 'si'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'c_todas', 'ver_ctr' => 'si']));
 
         $this->assertStringContainsString('La actividad: act 11  No tiene lugar asignado', $html);
         $this->assertStringContainsString('Ctr Encargado', $html);
@@ -210,7 +211,7 @@ final class CalendarioListasDatosModosTest extends myTest
         $this->casasDl->method('matching')->willReturn([$this->casa(10200, 'Casa Uno')]);
         $this->actividadesPor(fn (): array => [$this->actividad(10), $this->actividad(11, 133000)]);
 
-        $html = $this->uc()->ejecutar(['que' => 'c_todas'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'c_todas']));
 
         $this->assertStringContainsString('ocupado', $html);
         $this->assertStringNotContainsString('n ca', $html);
@@ -222,7 +223,7 @@ final class CalendarioListasDatosModosTest extends myTest
     public function test_todas_las_oficinas_un_grupo_por_tipo_de_asistentes(): void
     {
         $this->actividadesPor(fn (array $f): array => in_array('id_tipo_activ matches ^13', $f, true) ? [$this->actividad(10, 133000)] : []);
-        $html = $this->uc()->ejecutar(['que' => 'o_todas'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'o_todas']));
         $this->assertCount(4, $this->consultas);
         $this->assertSame(['id_tipo_activ matches ^11', 'id_tipo_activ matches ^12', 'id_tipo_activ matches ^13', 'id_tipo_activ matches ^16'], array_map(fn ($f) => end($f), $this->consultas));
         $this->assertStringContainsString('agd cv', $html);
@@ -248,7 +249,7 @@ final class CalendarioListasDatosModosTest extends myTest
     {
         $this->oficina('sg', 1 << 6);
         $this->actividadesPor(fn (): array => [$this->actividad(10, 141000)]);
-        $html = $this->uc()->ejecutar(['que' => 'o_actual'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'o_actual']));
         $this->assertSame(['id_tipo_activ matches ^1[45]'], array_map(fn ($f) => end($f), $this->consultas));
         $this->assertStringContainsString('s y sg', $html);
     }
@@ -257,7 +258,7 @@ final class CalendarioListasDatosModosTest extends myTest
     {
         $this->oficina('des', 1 << 3);
         $this->actividadesPor(fn (array $f): array => end($f) === 'id_tipo_activ matches ^16' ? [$this->actividad(10, 161000)] : [$this->actividad(11, 141000)]);
-        $html = $this->uc()->ejecutar(['que' => 'o_actual'])['html'];
+        $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'o_actual']));
         $this->assertSame(['id_tipo_activ matches ^16', 'id_tipo_activ matches ^1(124)|^1(.41)'], array_map(fn ($f) => end($f), $this->consultas));
         $this->assertSame(1, substr_count($html, '<h2>'), 'un solo grupo');
         $this->assertSame(1, substr_count($html, '<td>sssc crt ?</td>'), 'cada actividad sale una sola vez');

@@ -101,7 +101,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
             }
         }
 
-        $this->assertArrayHasKey('html_tabla', $out);
+        $this->assertArrayNotHasKey('html_tabla', $out, 'la tabla la monta el frontend');
         $this->assertArrayHasKey('a_cabeceras', $out);
         $this->assertArrayHasKey('a_valores', $out);
         $this->assertArrayHasKey('titulo', $out);

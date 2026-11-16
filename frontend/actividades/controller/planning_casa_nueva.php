@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\actividades\helpers\ActividadesPermSupport;
 use frontend\actividades\helpers\ActividadesMutacionSupport;
 use frontend\actividades\helpers\ActividadesPayload;
@@ -10,7 +11,7 @@ use frontend\shared\helpers\PayloadCoercion;
  *
  * Desplegables desde `/src/actividades/actividad_ver_datos`; etiquetas de status
  * desde `actividad_status_labels_datos`; HTML del bloque tipo desde
- * `actividad_que_datos`. Sin `use src\...`.
+ * el widget `ActividadTipo`. Sin `use src\...`.
  *
  * Migrado desde frontend/actividades/controller/planning_casa_nueva.php.
  *
@@ -98,7 +99,7 @@ $labelsRow = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src
 ]));
 $a_status = ActividadesPayload::statusLabelsFromPayload($labelsRow);
 
-$dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+$actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
     'perm_jefe' => ActividadesPermSupport::permJefeTipoActiv() ? 't' : 'f',
     'id_tipo_activ' => $id_tipo_activ,
     'que' => '',
@@ -110,7 +111,6 @@ $dataTipoBloque = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl(
     'snom_tipo' => $snom_tipo,
     'extendida' => '',
 ]));
-$actividad_tipo_html = PayloadCoercion::string($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 

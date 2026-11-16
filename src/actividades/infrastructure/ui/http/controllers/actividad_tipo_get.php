@@ -10,9 +10,10 @@ use src\shared\domain\helpers\FilterPostGet;
  * Responde siempre JSON via src\shared\web\ContestarJson. Las salidas de tipo desplegable
  * (asistentes, actividad, nom_tipo, dl_org, filtro_lugar, lugar, tarifa) devuelven
  * bajo `data` el payload {id, opciones, selected, blanco, val_blanco, action}
- * y el frontend construye el `<select>`. Las salidas nom_tipo_tabla e
+ * y el frontend construye el `<select>`. `nom_tipo_posibles` devuelve los pares
+ * código-nombre (la tabla la monta `frontend/actividades/controller/actividad_tipo_nom_tipo_tabla.php`).
  * id_tarifa y nivel_stgr_defecto mantienen la forma legacy {content: string}
- * con HTML o valor escalar.
+ * con un valor escalar.
  */
 
 use src\actividades\application\ActividadTipoGetActividad;
@@ -23,7 +24,7 @@ use src\actividades\application\ActividadTipoGetIdTarifa;
 use src\actividades\application\ActividadTipoGetLugar;
 use src\actividades\application\ActividadTipoGetTarifas;
 use src\actividades\application\ActividadTipoGetNomTipo;
-use src\actividades\application\ActividadTipoGetNomTipoTabla;
+use src\actividades\application\ActividadTipoGetNomTipoPosibles;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
@@ -69,15 +70,15 @@ switch ($Qsalida) {
         $useCase = DependencyResolver::get(ActividadTipoGetTarifas::class);
         ContestarJson::enviar('', $useCase->execute($_POST));
         return;
+    case 'nom_tipo_posibles':
+        /** @var ActividadTipoGetNomTipoPosibles $useCase */
+        $useCase = DependencyResolver::get(ActividadTipoGetNomTipoPosibles::class);
+        ContestarJson::enviar('', $useCase->execute($_POST));
+        return;
 }
 
 // Salidas que devuelven HTML/valor escalar (bajo `content`).
 switch ($Qsalida) {
-    case 'nom_tipo_tabla':
-        /** @var ActividadTipoGetNomTipoTabla $useCase */
-        $useCase = DependencyResolver::get(ActividadTipoGetNomTipoTabla::class);
-        $content = $useCase->execute($_POST);
-        break;
     case 'id_tarifa':
         /** @var ActividadTipoGetIdTarifa $useCase */
         $useCase = DependencyResolver::get(ActividadTipoGetIdTarifa::class);

@@ -6,18 +6,16 @@ use src\permisos\domain\XPermisos;
 use src\permisos\domain\MenuDlPermissionBits;
 
 /**
- * Payload para fases_activ_cambio: HTML del selector tipo actividad.
+ * Configuración del selector de tipo de actividad de fases_activ_cambio: con permiso de des, vcsd o calendario,
+ * modo jefe y todas las secciones; si no, la sección propia (sv/sf). El widget lo pinta
+ * `frontend/procesos/controller/fases_activ_cambio.php` con `ActividadTipo::htmlDesdeConfig()`.
  */
-final class FasesActivCambioTipoActividadHtmlData
+final class FasesActivCambioTipoActividadData
 {
-    public function __construct(
-        private readonly FasesActivCambioActividadTipoHtml $actividadTipoHtml,
-    ) {
-    }
 
     /**
      * @param array<string, mixed> $input
-     * @return array{tipo_actividad_html: string}
+     * @return array{actividad_tipo: array<string, mixed>}
      */
     public function execute(array $input): array
     {
@@ -47,16 +45,15 @@ final class FasesActivCambioTipoActividadHtmlData
             }
         }
 
-        $html = $this->actividadTipoHtml->render(
-            $permiso_des,
-            $ssfsv,
-            $extendida,
-            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ'),
-            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes'),
-            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad'),
-            \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad2'),
-        );
-
-        return ['tipo_actividad_html' => $html];
+        return ['actividad_tipo' => [
+            'perm_jefe' => $permiso_des,
+            'sfsv' => $ssfsv,
+            'id_tipo_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ'),
+            'asistentes' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes'),
+            'actividad' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, $extendida ? 'sactividad2' : 'sactividad'),
+            'para' => 'procesos',
+            'que' => 'buscar',
+            'extendida' => $extendida,
+        ]];
     }
 }

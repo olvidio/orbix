@@ -9,8 +9,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\XPermisos;
-use src\procesos\application\FasesActivCambioActividadTipoHtml;
-use src\procesos\application\FasesActivCambioTipoActividadHtmlData;
+use src\procesos\application\FasesActivCambioTipoActividadData;
 use src\procesos\application\UsuarioPermActivData;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
@@ -178,30 +177,40 @@ final class UsuarioPermActivDataTest extends myTest
 
     public function test_el_selector_extendido_o_no_se_decide_por_sactividad2(): void
     {
-        $render = new FasesActivCambioActividadTipoHtml();
-        $uc = new FasesActivCambioTipoActividadHtmlData($render);
+        $uc = new FasesActivCambioTipoActividadData();
 
-        $normal = $uc->execute(['id_tipo_activ' => '131001', 'sasistentes' => 'n', 'sactividad' => 'crt']);
-        $ext = $uc->execute(['id_tipo_activ' => '131001', 'sasistentes' => 'n', 'sactividad2' => '01']);
+        $normal = $uc->execute(['id_tipo_activ' => '131001', 'sasistentes' => 'n', 'sactividad' => 'crt'])['actividad_tipo'];
+        $ext = $uc->execute(['id_tipo_activ' => '131001', 'sasistentes' => 'n', 'sactividad2' => '01'])['actividad_tipo'];
 
-        $this->assertIsString($normal['tipo_actividad_html']);
-        $this->assertNotSame('', $normal['tipo_actividad_html']);
-        $this->assertNotSame($normal['tipo_actividad_html'], $ext['tipo_actividad_html']);
+        $this->assertSame([false, 'crt', 'procesos', 'buscar', '131001', 'n'], [$normal['extendida'], $normal['actividad'], $normal['para'], $normal['que'], $normal['id_tipo_activ'], $normal['asistentes']]);
+        $this->assertSame([true, '01'], [$ext['extendida'], $ext['actividad']]);
     }
 
-    public function test_con_permiso_de_calendario_el_selector_ofrece_todas_las_opciones(): void
+    public function test_con_permiso_de_calendario_el_selector_es_de_jefe_y_de_todas_las_secciones(): void
     {
-        $uc = new FasesActivCambioTipoActividadHtmlData(new FasesActivCambioActividadTipoHtml());
+        $uc = new FasesActivCambioTipoActividadData();
 
-        $normal = $uc->execute(['id_tipo_activ' => '131001'])['tipo_actividad_html'];
+        $normal = $uc->execute(['id_tipo_activ' => '131001'])['actividad_tipo'];
         $_SESSION['session_auth'] = ['sfsv' => 2];
-        $otroSfsv = $uc->execute(['id_tipo_activ' => '131001'])['tipo_actividad_html'];
+        $otroSfsv = $uc->execute(['id_tipo_activ' => '131001'])['actividad_tipo'];
         $this->permiso([MenuDlPermissionBits::CALENDARIO]);
-        $jefe = $uc->execute(['id_tipo_activ' => '131001'])['tipo_actividad_html'];
+        $jefe = $uc->execute(['id_tipo_activ' => '131001'])['actividad_tipo'];
 
-        // Con un id de tipo ya elegido, sv/sf no cambian lo que se pinta; el modo «jefe» sí añade opciones.
-        $this->assertSame($normal, $otroSfsv);
-        $this->assertNotSame($normal, $jefe);
-        $this->assertGreaterThan(strlen($normal), strlen($jefe));
+        $this->assertSame([false, 'sv'], [$normal['perm_jefe'], $normal['sfsv']]);
+        $this->assertSame('sf', $otroSfsv['sfsv']);
+        $this->assertSame([true, ''], [$jefe['perm_jefe'], $jefe['sfsv']]);
+    }
+
+    public function test_la_configuracion_del_selector_de_permisos_lleva_el_tipo_de_la_persona(): void
+    {
+        $this->perms->method('matching')->willReturn([]);
+        $this->tipos->method('getTiposDeProcesos')->willReturn([]);
+
+        $sin = $this->uc()->execute(['id_usuario' => '55', 'id_tipo_activ_txt' => '', 'dl_propia' => 't'])['actividad_tipo'];
+        $con = $this->uc()->execute(['id_usuario' => '55', 'id_tipo_activ_txt' => '112021', 'dl_propia' => 't'])['actividad_tipo'];
+
+        $this->assertArrayNotHasKey('id_tipo_activ', $sin);
+        $this->assertSame(['procesos', 'buscar', true], [$sin['para'], $sin['que'], $sin['extendida']]);
+        $this->assertSame('112021', (string) $con['id_tipo_activ']);
     }
 }
