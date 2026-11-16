@@ -177,7 +177,11 @@ public static function nombresListaFromPayload(array $data): array
             if (!is_array($aCama)) {
                 continue;
             }
-            $idCama = \frontend\shared\helpers\PayloadCoercion::int($aCama['id_cama'] ?? 0);
+            // id_cama es un UUID (CamaId): leerlo como int lo dejaba en 0 y no emparejaba ninguna cama.
+            $idCama = \frontend\shared\helpers\PayloadCoercion::string($aCama['id_cama'] ?? '');
+            if ($idCama === '') {
+                continue;
+            }
             $nombrePersona = '';
             $asistenteRaw = $camasAsistentes[$idCama] ?? null;
             if (is_array($asistenteRaw)) {
