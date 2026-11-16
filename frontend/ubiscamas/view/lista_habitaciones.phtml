@@ -137,7 +137,7 @@ endforeach; ?>
         });
 
         function updateSoloVip(solo_vip) {
-            let url = '<?= htmlspecialchars($update_solo_vip_full_url, ENT_QUOTES) ?>';
+            let url = <?= json_encode((string)$update_solo_vip_full_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
             let parameters = {
                 solo_vip: solo_vip ? 'true' : 'false',
                 ctx: <?= json_encode($ctx_update_solo_vip, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
@@ -231,19 +231,19 @@ endforeach; ?>
         });
 
         window.fnjs_lista_distribucion = function () {
-            window.open('<?= htmlspecialchars($distribucion_open_url, ENT_QUOTES) ?>', 'reporte');
+            window.open(<?= json_encode((string)$distribucion_open_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>, 'reporte');
         }
 
         window.fnjs_lista_nombres = function () {
-            window.open('<?= htmlspecialchars($nombres_open_url, ENT_QUOTES) ?>', 'reporte_nombres');
+            window.open(<?= json_encode((string)$nombres_open_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>, 'reporte_nombres');
         }
 
         function fnjs_actualizar() {
-            fnjs_update_div('#main', '<?= htmlspecialchars($reload_main_url, ENT_QUOTES) ?>');
+            fnjs_update_div('#main', <?= json_encode((string)$reload_main_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
         }
 
         function asignarCamaBD(id_cama, ctx_update_cama, callback) {
-            let url = '<?= htmlspecialchars($url_update_cama_full, ENT_QUOTES) ?>';
+            let url = <?= json_encode((string)$url_update_cama_full, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
             let parameters = {
                 id_cama: id_cama,
                 ctx: ctx_update_cama

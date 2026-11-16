@@ -311,7 +311,7 @@
         let observ = $('#observ').val();
         let status = $('#status').val();
         if (status === undefined || status === null || status === '') {
-            status = '<?= htmlspecialchars((string)($status_propuesta ?? '1'), ENT_QUOTES, 'UTF-8') ?>';
+            status = <?= json_encode((string)($status_propuesta ?? '1'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
         }
         let uuid_item = $('#uuid_selected').val();
         let id_enc = $('#id_enc_selected').val();
@@ -358,7 +358,7 @@
             + '<?= $h_cuadricula_update ?>';
 
         $.ajax({
-            url: '<?= htmlspecialchars($url_cuadricula_update, ENT_QUOTES, 'UTF-8') ?>',
+            url: <?= json_encode((string)$url_cuadricula_update, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>,
             type: 'post',
             data: parametros_update,
             dataType: 'json'
@@ -408,7 +408,7 @@
         $('#tstart').val('');
         $('#tend').val('');
         $('#observ').val('');
-        $('#status').val('<?= htmlspecialchars((string)($status_propuesta ?? '1'), ENT_QUOTES, 'UTF-8') ?>');
+        $('#status').val(<?= json_encode((string)($status_propuesta ?? '1'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>);
         $('#id_enc').val('');
     }
 
@@ -429,7 +429,7 @@
         }
 	    var ii2=$('#id_sacd_inicial').val();
 
-        let url_desplegable_sacd = '<?= htmlspecialchars($url_desplegable_sacd, ENT_QUOTES, 'UTF-8') ?>';
+        let url_desplegable_sacd = <?= json_encode((string)$url_desplegable_sacd, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
 	    let id_zona = '<?= (int)($id_zona ?? 0) ?>';
 	    var parametros = 'id_zona=' + encodeURIComponent(id_zona)
             + '&id_sacd=' + encodeURIComponent(ii2)
@@ -511,7 +511,7 @@
         let observ = meta.observ;
         let status = meta.status;
         if (status === undefined || status === null || status === '') {
-            status = '<?= htmlspecialchars((string)($status_propuesta ?? '1'), ENT_QUOTES, 'UTF-8') ?>';
+            status = <?= json_encode((string)($status_propuesta ?? '1'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
         }
         let id_enc = meta.id_enc;
         let dia = meta.dia;
@@ -653,7 +653,7 @@ var meta;
     }
 
 //    var columns_sacd = {{ columns_sacd|raw }};
-    var tipo_plantilla = '<?= htmlspecialchars((string)($tipo_plantilla ?? ''), ENT_QUOTES, 'UTF-8') ?>';
+    var tipo_plantilla = <?= json_encode((string)($tipo_plantilla ?? ''), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
 
       var options2 = {
     editable: true,

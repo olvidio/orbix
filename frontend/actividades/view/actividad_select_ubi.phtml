@@ -144,7 +144,7 @@ use frontend\shared\config\OrbixRuntime;
     var extendida=$('#extendida').val();
     var isfsv = <?= $isfsv ?>;
     var filtro_lugar = $('#filtro_lugar').val();
-    var url = '<?= htmlspecialchars(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>';
+    var url = <?= json_encode((string)(AppUrlConfig::srcBrowserUrl('/src/actividades/actividad_tipo_get')), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
     var parametros = 'extendida=' + extendida + '&modo=buscar&salida=lugar&entrada=' + filtro_lugar + '&isfsv=' + isfsv + '<?= $h ?>';
     $.ajax({
     url: url,

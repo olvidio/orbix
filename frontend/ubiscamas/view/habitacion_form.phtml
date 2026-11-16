@@ -29,7 +29,7 @@
             alert(<?= json_encode(_("Debe guardar primero la habitación antes de añadir camas")) ?>);
             return;
         }
-        let url = '<?= htmlspecialchars($url_cama_form, ENT_QUOTES) ?>';
+        let url = <?= json_encode((string)$url_cama_form, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
         let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
@@ -48,7 +48,7 @@
 
     fnjs_editar_cama = function (id_cama) {
         let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
-        let url = '<?= htmlspecialchars($url_cama_form, ENT_QUOTES) ?>';
+        let url = <?= json_encode((string)$url_cama_form, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE) ?>;
         let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '&id_cama=' + encodeURIComponent(id_cama) + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
