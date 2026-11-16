@@ -26,7 +26,7 @@ final class ListaAsisConjuntoActivData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{content_html: string}
+     * @return array{bloques: list<array{titulo: string, lista: array<string, mixed>}>}
      */
     public function build(array $input): array
     {
@@ -160,18 +160,14 @@ final class ListaAsisConjuntoActivData
             $oListaPlazasOtras->setId_tipo_activ($Qid_tipo_activ);
         }
 
-        $html = '';
+        $bloques = [];
         if ($oListaPlazasDl !== null) {
-            $html .= '<h3>' . ucfirst(_("actividades de la dl/r")) . '</h3>';
-            $oListaDl = $oListaPlazasDl->getLista();
-            $html .= $oListaDl->listaPaginada();
+            $bloques[] = ['titulo' => ucfirst(_("actividades de la dl/r")), 'lista' => $oListaPlazasDl->getLista()];
         }
         if ($oListaPlazasOtras !== null) {
-            $html .= '<h3>' . ucfirst(_("actividades de otras dl/r")) . '</h3>';
-            $oListaOtras = $oListaPlazasOtras->getLista();
-            $html .= $oListaOtras->listaPaginada();
+            $bloques[] = ['titulo' => ucfirst(_("actividades de otras dl/r")), 'lista' => $oListaPlazasOtras->getLista()];
         }
 
-        return ['content_html' => $html];
+        return ['bloques' => $bloques];
     }
 }

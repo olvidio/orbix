@@ -23,6 +23,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
+use frontend\shared\helpers\ListaDesdeDatos;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 
@@ -161,12 +162,13 @@ final class ListaEstCtrDataTest extends myTest
         $this->assertContains('id_ctr eq 1004', $consultas[1]);
     }
 
-    public function test_sin_centros_se_devuelve_html_de_lista_vacio_con_pie(): void
+    public function test_sin_centros_se_devuelven_datos_de_lista_vacios_con_pie(): void
     {
         $r = $this->uc()->build(self::PERIODO);
 
-        $this->assertSame(['lista_html'], array_keys($r));
-        $this->assertIsString($r['lista_html']);
+        $this->assertSame(['grupos', 'cabeceras', 'datos', 'pie'], array_keys($r));
+        $this->assertSame([], $r['datos']);
+        $this->assertSame(_("(*) El preceptor no asiste al ca"), $r['pie']);
     }
 
     private function conPersonaYActividad(int $nivel, string $inicio): void
@@ -182,7 +184,7 @@ final class ListaEstCtrDataTest extends myTest
         $this->conPersonaYActividad(1, '2001-01-10');
         $this->matriculas->expects($this->never())->method('matching');
 
-        $html = $this->uc()->build(self::PERIODO)['lista_html'];
+        $html = $this->html($this->uc()->build(self::PERIODO));
 
         $this->assertStringContainsString(_("ya lo ha hecho"), $html);
         $this->assertStringNotContainsString('ca invierno', $html);
@@ -196,7 +198,7 @@ final class ListaEstCtrDataTest extends myTest
         $this->conPersonaYActividad($nivel, '2999-01-10');
         $this->matriculas->expects($this->never())->method('matching');
 
-        $html = $this->uc()->build(self::PERIODO)['lista_html'];
+        $html = $this->html($this->uc()->build(self::PERIODO));
 
         $this->assertStringContainsString('ca invierno', $html);
         $this->assertStringContainsString($texto, $html);
@@ -223,7 +225,7 @@ final class ListaEstCtrDataTest extends myTest
         $a->method('getCreditos')->willReturn(4.5);
         $this->asignaturas->method('findById')->with(1101)->willReturn($a);
 
-        $html = $this->uc()->build(self::PERIODO)['lista_html'];
+        $html = $this->html($this->uc()->build(self::PERIODO));
 
         $this->assertStringContainsString('Fil (4.5', $html);
     }
@@ -253,7 +255,7 @@ final class ListaEstCtrDataTest extends myTest
         $a->method('getCreditos')->willReturn(4.0);
         $this->asignaturas->method('findById')->willReturn($a);
 
-        $this->assertStringContainsString('(p)', $this->uc()->build(self::PERIODO)['lista_html']);
+        $this->assertStringContainsString('(p)', $this->html($this->uc()->build(self::PERIODO)));
     }
 
     public function test_si_la_actividad_no_existe_la_persona_solo_lleva_numero_y_nombre(): void
@@ -263,8 +265,16 @@ final class ListaEstCtrDataTest extends myTest
         $this->asistencias->method('getActividadesDeAsistente')->willReturn([$this->asistente(3001)]);
         $this->actividades->method('findById')->willReturn(null);
 
-        $html = $this->uc()->build(self::PERIODO)['lista_html'];
+        $html = $this->html($this->uc()->build(self::PERIODO));
 
         $this->assertStringContainsString('Gil, Ana', $html);
+    }
+
+    /** Lo que pinta `frontend/asistentes/controller/lista_est_ctr.php` con los datos. */
+    private function html(array $data): string
+    {
+        $json = json_decode((string) json_encode($data), true);
+
+        return ListaDesdeDatos::lista(is_array($json) ? $json : [])->listaPaginada();
     }
 }

@@ -19,7 +19,6 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function DI\get;
 
@@ -83,7 +82,12 @@ class ListaPlazasConjuntoActividades
     private ?Criteria $criteria = null;
     private string $iid_tipo_activ = '';
 
-    public function getLista(): Lista
+    /**
+     * Datos de la lista agrupada por actividad; la monta el frontend con `ListaDesdeDatos`.
+     *
+     * @return array{grupos: array<int|string, string>, cabeceras: list<mixed>, datos: array<int|string, mixed>}
+     */
+    public function getLista(): array
     {
         $oTipoActiv = new TiposActividades($this->iid_tipo_activ);
         $sasistentes = $oTipoActiv->getAsistentesText();
@@ -94,11 +98,7 @@ class ListaPlazasConjuntoActividades
         if (count($cActividades) < 1) {
             // No hacer echo: esta clase participa en endpoints JSON (lista_asis_conjunto_activ_data).
             // Lista vacía bajo cada bloque de sección es el comportamiento esperado.
-            $oLista = new Lista();
-            $oLista->setGrupos([]);
-            $oLista->setCabeceras([]);
-            $oLista->setDatos([]);
-            return $oLista;
+            return ['grupos' => [], 'cabeceras' => [], 'datos' => []];
         }
 
         if (($sasistentes === "s") and ($sactividad === "cv")) {
@@ -340,11 +340,6 @@ class ListaPlazasConjuntoActividades
             error_log($msg_err);
         }
 
-        $oLista = new Lista();
-        $oLista->setGrupos($aGrupos);
-        $oLista->setCabeceras($a_cabeceras);
-        $oLista->setDatos($a_activ);
-
-        return $oLista;
+        return ['grupos' => $aGrupos, 'cabeceras' => $a_cabeceras, 'datos' => $a_activ];
     }
 }

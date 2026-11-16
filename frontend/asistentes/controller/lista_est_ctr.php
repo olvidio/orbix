@@ -4,7 +4,7 @@ use frontend\asistentes\helpers\AsistentesPayload;
 use frontend\shared\PostRequest;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\helpers\ListNavSupport;
-use frontend\shared\helpers\FuncTablasSupport;
+use frontend\shared\helpers\ListaDesdeDatos;
 use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
@@ -45,4 +45,4 @@ $campos = array_merge($_GET, $_POST);
 $payload = AsistentesPayload::postData(PostRequest::getDataFromUrl('/src/asistentes/lista_est_ctr_data', $campos));
 
 echo $oPosicion->mostrarNavAtras(1);
-echo FuncTablasSupport::payloadString($payload, 'lista_html');
+echo ListaDesdeDatos::lista($payload)->listaPaginada();

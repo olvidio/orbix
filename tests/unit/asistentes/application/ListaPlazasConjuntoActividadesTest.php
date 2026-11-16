@@ -16,7 +16,6 @@ use src\shared\domain\criteria\Criteria;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use frontend\shared\web\Lista;
 
 /**
  * {@see ListaPlazasConjuntoActividades}: el listado debe tolerar una actividad con
@@ -81,10 +80,6 @@ final class ListaPlazasConjuntoActividadesTest extends TestCase
         $lista->setCriteria(Criteria::create());
         $lista->setId_tipo_activ($idTipoParaSssCv);
 
-        $oLista = $lista->getLista();
-        $this->assertInstanceOf(Lista::class, $oLista);
-        $ref = new \ReflectionProperty(Lista::class, 'aGrupos');
-        $grupos = $ref->getValue($oLista);
-        $this->assertArrayHasKey(9001, $grupos);
+        $this->assertArrayHasKey(9001, $lista->getLista()['grupos']);
     }
 }

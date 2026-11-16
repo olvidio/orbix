@@ -2,7 +2,6 @@
 
 namespace src\tablonanuncios\domain;
 
-use frontend\shared\web\Lista;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\criteria\Criteria;
@@ -60,23 +59,22 @@ class TablonAnunciosParaGM
         return $a_valores;
     }
 
-    public function getTabla(string $tablon): Lista
+    /**
+     * Datos de la tabla del tablón; la monta `public/portada.php` con `ListaDesdeDatos`.
+     *
+     * @return array{id_tabla: string, cabeceras: list<mixed>, botones: list<array{txt: string, click: string}>, datos: array<int, array<int|string, mixed>>}
+     */
+    public function getTabla(string $tablon): array
     {
-        $a_botones[] = ['txt' => _("borrar"), 'click' => 'fnjs_borrar("#seleccionados")'];
-
-        $a_cabeceras = [
-            _("origen"),
-            ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
-            _("aviso"),
+        return [
+            'id_tabla' => 'tablon_anuncios',
+            'cabeceras' => [
+                _("origen"),
+                ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
+                _("aviso"),
+            ],
+            'botones' => [['txt' => _("borrar"), 'click' => 'fnjs_borrar("#seleccionados")']],
+            'datos' => $this->getArray($tablon),
         ];
-        $a_valores = $this->getArray($tablon);
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('tablon_anuncios');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setBotones($a_botones);
-        $oTabla->setDatos($a_valores);
-
-        return $oTabla;
     }
 }

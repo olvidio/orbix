@@ -3,7 +3,6 @@
 namespace src\asistentes\application;
 
 use DateInterval;
-use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -38,7 +37,7 @@ final class ListaUltimaActivData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{alert_html: string, titulo: string, stats_html: string, tabla_html: string}|array{error: string}
+     * @return array{alerta: string, titulo: string, resumen: string, cabeceras: list<string>, datos: array<int, array<int|string, string>>}|array{error: string}
      */
     public function build(array $input): array
     {
@@ -270,17 +269,12 @@ final class ListaUltimaActivData
             ucfirst(_("tipo actividad")),
         ];
 
-        $oTabla = new Lista();
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setDatos($a_valores);
-
-        $stats_html = sprintf(_("número de personas: %s de %s"), $falta, $i);
-
         return [
-            'alert_html' => $alert,
+            'alerta' => $alert,
             'titulo' => $titulo,
-            'stats_html' => $stats_html,
-            'tabla_html' => $oTabla->lista(),
+            'resumen' => sprintf(_("número de personas: %s de %s"), $falta, $i),
+            'cabeceras' => $a_cabeceras,
+            'datos' => $a_valores,
         ];
     }
 }

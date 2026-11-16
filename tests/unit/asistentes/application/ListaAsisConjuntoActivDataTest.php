@@ -79,30 +79,19 @@ final class ListaAsisConjuntoActivDataTest extends TestCase
             {
             }
 
-            public function getLista(): object
+            /** @return array<string, mixed> */
+            public function getLista(): array
             {
-                $criteria = $this->criteria;
-
-                return new class($criteria) {
-                    public function __construct(
-                        private ?Criteria $criteria,
-                    ) {
+                $dl = '';
+                $op = Operator::Eq;
+                foreach ($this->criteria?->filters() ?? [] as $filter) {
+                    if ($filter instanceof Filter && $filter->field === ActividadAllField::DlOrg) {
+                        $dl = (string) $filter->value;
+                        $op = $filter->operator;
                     }
+                }
 
-                    public function listaPaginada(): string
-                    {
-                        $dl = '';
-                        $op = Operator::Eq;
-                        foreach ($this->criteria?->filters() ?? [] as $filter) {
-                            if ($filter instanceof Filter && $filter->field === ActividadAllField::DlOrg) {
-                                $dl = (string) $filter->value;
-                                $op = $filter->operator;
-                            }
-                        }
-
-                        return $op === Operator::Neq ? '[OTRAS:' . $dl . ']' : '[PROPIA:' . $dl . ']';
-                    }
-                };
+                return ['marca' => $op === Operator::Neq ? '[OTRAS:' . $dl . ']' : '[PROPIA:' . $dl . ']'];
             }
         };
 
@@ -123,14 +112,18 @@ final class ListaAsisConjuntoActivDataTest extends TestCase
         };
 
         $data = new ListaAsisConjuntoActivData($container, new \Tests\support\CalendarioEscolarFijo());
-        $html = $data->build([
+        $bloques = $data->build([
             'id_tipo_activ' => '......',
             'periodo' => 'actual',
             'year' => 2026,
-        ])['content_html'];
+        ])['bloques'];
 
-        $this->assertStringContainsString('dl/r', $html);
-        $this->assertStringContainsString('[PROPIA:dlb]', $html);
-        $this->assertStringContainsString('[OTRAS:dlb]', $html);
+        $this->assertSame(
+            [
+                [ucfirst(_("actividades de la dl/r")), '[PROPIA:dlb]'],
+                [ucfirst(_("actividades de otras dl/r")), '[OTRAS:dlb]'],
+            ],
+            array_map(static fn (array $b): array => [$b['titulo'], $b['lista']['marca']], $bloques)
+        );
     }
 }

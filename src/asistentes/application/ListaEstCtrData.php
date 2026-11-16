@@ -5,7 +5,6 @@ namespace src\asistentes\application;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
-use frontend\shared\web\Lista;
 use src\shared\domain\Periodo;
 use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -41,7 +40,7 @@ final class ListaEstCtrData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{lista_html: string}
+     * @return array{grupos: array<int|string, string>, cabeceras: list<string>, datos: array<int|string, mixed>, pie: string}
      */
     public function build(array $input): array
     {
@@ -208,12 +207,11 @@ final class ListaEstCtrData
 
         asort($aGrupos);
 
-        $oLista = new Lista();
-        $oLista->setGrupos($aGrupos);
-        $oLista->setCabeceras($a_cabeceras);
-        $oLista->setDatos($a_valores);
-        $oLista->setPie(_("(*) El preceptor no asiste al ca"));
-
-        return ['lista_html' => $oLista->listaPaginada()];
+        return [
+            'grupos' => $aGrupos,
+            'cabeceras' => $a_cabeceras,
+            'datos' => $a_valores,
+            'pie' => _("(*) El preceptor no asiste al ca"),
+        ];
     }
 }

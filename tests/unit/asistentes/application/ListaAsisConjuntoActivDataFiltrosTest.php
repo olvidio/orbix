@@ -44,8 +44,11 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
         parent::tearDown();
     }
 
-    /** @param array<string, mixed> $entrada */
-    private function construir(array $entrada): string
+    /**
+     * @param array<string, mixed> $entrada
+     * @return list<array{titulo: string, lista: array<string, mixed>}>
+     */
+    private function construir(array $entrada): array
     {
         $listas = $this->listas;
         $falsa = new class($listas) {
@@ -76,7 +79,8 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
                 $this->sacd = $sacd;
             }
 
-            public function getLista(): object
+            /** @return array<string, mixed> */
+            public function getLista(): array
             {
                 $this->listas[] = [
                     'filtros' => DescribeCriteria::filtros($this->criteria),
@@ -85,12 +89,7 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
                     'tipo' => $this->tipo,
                 ];
 
-                return new class {
-                    public function listaPaginada(): string
-                    {
-                        return '[lista]';
-                    }
-                };
+                return ['marca' => '[lista]'];
             }
         };
         $container = new class($falsa) implements ContainerInterface {
@@ -109,17 +108,16 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
             }
         };
 
-        return (new ListaAsisConjuntoActivData($container, new \Tests\support\CalendarioEscolarFijo()))->build($entrada)['content_html'];
+        return (new ListaAsisConjuntoActivData($container, new \Tests\support\CalendarioEscolarFijo()))->build($entrada)['bloques'];
     }
 
     private const PERIODO = ['periodo' => 'otro', 'empiezamin' => '1/1/2026', 'empiezamax' => '31/12/2026'];
 
     public function test_por_defecto_actividades_actuales_del_tipo_en_el_periodo_de_mi_dl_y_de_otras(): void
     {
-        $html = $this->construir(['id_tipo_activ' => '112025'] + self::PERIODO);
+        $bloques = $this->construir(['id_tipo_activ' => '112025'] + self::PERIODO);
 
-        $this->assertSame(2, substr_count($html, '[lista]'));
-        $this->assertSame(2, substr_count($html, '<h3>'));
+        $this->assertSame(['[lista]', '[lista]'], array_map(static fn (array $b): string => $b['lista']['marca'], $bloques));
         [$dl, $otras] = [$this->listas[0], $this->listas[1]];
         $comunes = ['status eq ' . StatusId::ACTUAL, 'id_tipo_activ matches ^112025', 'f_ini between [2026-01-01,2026-12-31]'];
         $this->assertSame(array_merge($comunes, ['dl_org eq dlb']), $dl['filtros']);
@@ -180,10 +178,10 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
 
     public function test_con_mi_dl_como_organizadora_solo_sale_el_bloque_de_la_dl(): void
     {
-        $html = $this->construir(['id_tipo_activ' => '......', 'dl_org' => 'dlb'] + self::PERIODO);
+        $bloques = $this->construir(['id_tipo_activ' => '......', 'dl_org' => 'dlb'] + self::PERIODO);
 
         $this->assertCount(1, $this->listas);
-        $this->assertSame(1, substr_count($html, '<h3>'));
+        $this->assertCount(1, $bloques);
         $this->assertContains('dl_org eq dlb', $this->listas[0]['filtros']);
     }
 

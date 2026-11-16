@@ -9,7 +9,7 @@ controller: "src/asistentes/infrastructure/ui/http/controllers/lista_ultima_acti
 entrada: ["post.curso:string", "post.id_ubi:string", "post.que:string"]
 entrada_obligatoria: ["que"]
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["alert_html:string", "titulo:string", "stats_html:string", "tabla_html:string"]
+respuesta_data: ["alerta:string", "titulo:string", "resumen:string", "cabeceras:array", "datos:array"]
 requiere_hashb: false
 errores: ["No sé en que tipo de actividad hay que mirar las asistencias"]
 frontend_referencias: ["frontend/asistentes/controller/lista_ultima_activ.php"]
@@ -49,7 +49,7 @@ en el rango de curso calculado. Opcionalmente filtra por `id_ubi` (centro; `999`
 
 - Helper: `ContestarJson::enviar` (doble `JSON.parse`).
 - Payload en `data`:
-  - `alert_html`, `titulo`, `stats_html`, `tabla_html`
+  - `alerta`, `titulo`, `resumen` (texto plano) y `cabeceras` / `datos` de la tabla; la monta `frontend/asistentes/controller/lista_ultima_activ.php` con `ListaDesdeDatos`
 
 ## Errores conocidos
 

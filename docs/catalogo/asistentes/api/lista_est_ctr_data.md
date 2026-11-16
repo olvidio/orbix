@@ -9,7 +9,7 @@ controller: "src/asistentes/infrastructure/ui/http/controllers/lista_est_ctr_dat
 entrada: ["post.empiezamax:string", "post.empiezamin:string", "post.id_ubi:integer", "post.n_agd:string", "post.periodo:string", "post.year:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
-respuesta_data: ["lista_html:string"]
+respuesta_data: ["grupos:object", "cabeceras:array", "datos:object", "pie:string"]
 requiere_hashb: false
 frontend_referencias: ["frontend/asistentes/controller/lista_est_ctr.php"]
 casos_uso: ["src\\asistentes\\application\\ListaEstCtrData"]
@@ -48,7 +48,7 @@ iniciadas muestran «ya lo ha hecho».
 
 - Helper: `ContestarJson::enviar` (doble `JSON.parse`).
 - Payload en `data`:
-  - `lista_html` (`string`): tabla paginada generada por `Lista::listaPaginada()`
+  - `grupos`, `cabeceras`, `datos` y `pie`: la lista paginada por centro la monta `frontend/asistentes/controller/lista_est_ctr.php` con `ListaDesdeDatos`
 
 ## Errores conocidos
 

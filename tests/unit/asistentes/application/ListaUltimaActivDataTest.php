@@ -19,6 +19,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
+use frontend\shared\helpers\ListaDesdeDatos;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 
@@ -170,15 +171,15 @@ final class ListaUltimaActivDataTest extends myTest
 
     public function test_los_avisos_de_celadores_y_de_ultima_cv_solo_salen_en_su_lista(): void
     {
-        $this->assertStringContainsString('Eap', $this->uc()->build(['que' => 'crt_cel'])['alert_html']);
-        $this->assertSame('', $this->uc()->build(['que' => 'cv_s'])['alert_html']);
+        $this->assertStringContainsString('Eap', $this->uc()->build(['que' => 'crt_cel'])['alerta']);
+        $this->assertSame('', $this->uc()->build(['que' => 'cv_s'])['alerta']);
 
         $a = $this->createMock(ActividadAll::class);
         $a->method('getNom_activ')->willReturn('cv admisión');
         $a->method('getF_fin')->willReturn(new DateTimeLocal('2026-03-01'));
         $this->actividadesDl->method('matching')->willReturn([$a]);
 
-        $this->assertStringContainsString('cv admisión', $this->uc()->build(['que' => 'cv_s_ad'])['alert_html']);
+        $this->assertStringContainsString('cv admisión', $this->uc()->build(['que' => 'cv_s_ad'])['alerta']);
     }
 
     // ---- filas ----------------------------------------------------------------------
@@ -208,9 +209,9 @@ final class ListaUltimaActivDataTest extends myTest
 
         $r = $this->uc()->build(['que' => 'cv_s']);
 
-        $this->assertStringContainsString('2', $r['stats_html']);
-        $this->assertStringContainsString('Gil, Ana', $r['tabla_html']);
-        $this->assertStringContainsString('tono2', $r['tabla_html']);
+        $this->assertStringContainsString('2', $r['resumen']);
+        $this->assertStringContainsString('Gil, Ana', $this->tabla($r));
+        $this->assertStringContainsString('tono2', $this->tabla($r));
     }
 
     public function test_quien_asistio_dentro_del_periodo_se_omite_y_fuera_se_lista_con_su_ultima_fecha(): void
@@ -227,9 +228,9 @@ final class ListaUltimaActivDataTest extends myTest
 
         $r = $this->uc()->build(['que' => 'cv_s', 'curso' => 'actual']);
 
-        $this->assertStringNotContainsString('Dentro, A', $r['tabla_html']);
-        $this->assertStringContainsString('Fuera, B', $r['tabla_html']);
-        $this->assertStringContainsString('4/5/2001', $r['tabla_html']);
+        $this->assertStringNotContainsString('Dentro, A', $this->tabla($r));
+        $this->assertStringContainsString('Fuera, B', $this->tabla($r));
+        $this->assertStringContainsString('4/5/2001', $this->tabla($r));
     }
 
     public function test_una_asistencia_con_actividad_o_fecha_inexistente_se_lista_como_sin_datos(): void
@@ -243,9 +244,9 @@ final class ListaUltimaActivDataTest extends myTest
 
         $r = $this->uc()->build(['que' => 'cv_s']);
 
-        $this->assertGreaterThanOrEqual(2, substr_count($r['tabla_html'], _("No consta")));
-        $this->assertStringContainsString('Uno, A', $r['tabla_html']);
-        $this->assertStringContainsString('Dos, B', $r['tabla_html']);
+        $this->assertGreaterThanOrEqual(2, substr_count($this->tabla($r), _("No consta")));
+        $this->assertStringContainsString('Uno, A', $this->tabla($r));
+        $this->assertStringContainsString('Dos, B', $this->tabla($r));
     }
 
     public function test_sin_centro_elegido_cada_fila_muestra_el_nombre_del_centro_de_la_persona(): void
@@ -256,6 +257,14 @@ final class ListaUltimaActivDataTest extends myTest
         $c->method('getNombre_ubi')->willReturn('Centro Z');
         $this->centros->method('matching')->willReturn([$c]);
 
-        $this->assertStringContainsString('Centro Z', $this->uc()->build(['que' => 'cv_s'])['tabla_html']);
+        $this->assertStringContainsString('Centro Z', $this->tabla($this->uc()->build(['que' => 'cv_s'])));
+    }
+
+    /** La tabla que pinta `frontend/asistentes/controller/lista_ultima_activ.php` con los datos. */
+    private function tabla(array $data): string
+    {
+        $json = json_decode((string) json_encode($data), true);
+
+        return ListaDesdeDatos::lista(is_array($json) ? $json : [])->lista();
     }
 }

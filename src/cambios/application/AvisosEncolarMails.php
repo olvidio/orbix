@@ -4,7 +4,7 @@ namespace src\cambios\application;
 
 use DateInvalidTimeZoneException;
 use DateTimeZone;
-use frontend\shared\web\Lista;
+use src\cambios\domain\contracts\AvisosCambiosMailCuerpoInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\criteria\CambioUsuarioField;
 use src\shared\domain\criteria\Criteria;
@@ -34,9 +34,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
  *   3. Para cada usuario construye una tabla HTML con sus cambios y encola
  *      un unico mail. Elimina los `CambioUsuario` despues de encolar.
  *
- * Deuda conocida:
- *   - La construccion del HTML del body usa `frontend\shared\web\Lista`;
- *     deberia moverse a una vista/template.
+ * El HTML del correo lo monta {@see AvisosCambiosMailCuerpoInterface} (infraestructura).
  */
 class AvisosEncolarMails
 {
@@ -49,6 +47,7 @@ class AvisosEncolarMails
         private CambioParaAvisoLookup $cambioParaAvisoLookup,
         private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
         private ColaMailRepositoryInterface $colaMailRepository,
+        private AvisosCambiosMailCuerpoInterface $mailCuerpo,
     ) {
     }
 
@@ -195,14 +194,9 @@ class AvisosEncolarMails
             ucfirst(_("quien")),
             ucfirst(_("cambio")),
         ];
-        $oTabla = new Lista();
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setDatos($a_datos);
 
         $asunto = _("Avisos de cambios en actividades");
-        $cuerpo = '<html><head><title>' . _("Tabla de cambios en actividades") . '</title></head><body>';
-        $cuerpo .= $oTabla->lista();
-        $cuerpo .= '</body></html>';
+        $cuerpo = $this->mailCuerpo->cuerpo(_("Tabla de cambios en actividades"), $a_cabeceras, $a_datos);
 
         $headers = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=utf-8\r\n";

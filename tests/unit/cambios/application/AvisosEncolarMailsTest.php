@@ -12,6 +12,7 @@ use src\actividades\domain\entity\ActividadAll;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\application\ActividadParaAvisoLookup;
 use src\cambios\application\AvisosEncolarMails;
+use src\cambios\infrastructure\mail\AvisosCambiosMailHtml;
 use src\cambios\application\CambioAvisoTxtBuilder;
 use src\cambios\application\CambioParaAvisoLookup;
 use src\cambios\application\PersonaNombreParaAvisoInterface;
@@ -127,6 +128,7 @@ final class AvisosEncolarMailsTest extends TestCase
             $cambioLookup,
             $txtBuilder,
             $colaRepo,
+            new AvisosCambiosMailHtml(),
         );
 
         $resumen = $useCase->execute(dispararGenerarTabla: false);
@@ -185,6 +187,7 @@ final class AvisosEncolarMailsTest extends TestCase
                 $this->createMock(ActividadFaseRepositoryInterface::class),
             ),
             $colaRepo,
+            new AvisosCambiosMailHtml(),
         );
 
         $resumen = $useCase->execute(dispararGenerarTabla: false);

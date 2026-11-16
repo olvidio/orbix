@@ -8,6 +8,7 @@ use src\shared\domain\criteria\Filter;
 use src\shared\infrastructure\DependencyResolver;
 use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use frontend\shared\web\Lista;
+use frontend\shared\helpers\ListaDesdeDatos;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("src/shared/global_header.inc");
@@ -47,7 +48,7 @@ if (!empty($id_grupmenu)) {
 
     /** @var TablonAnunciosParaGM $tablonAnuncios */
     $tablonAnuncios = DependencyResolver::get(TablonAnunciosParaGM::class);
-    $oTabla = $tablonAnuncios->getTabla($grup_menu);
+    $oTabla = ListaDesdeDatos::lista($tablonAnuncios->getTabla($grup_menu));
 } else {
     $oTabla = new Lista();
 }

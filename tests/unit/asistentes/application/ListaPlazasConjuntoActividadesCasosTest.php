@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\unit\asistentes\application;
 
-use frontend\shared\web\Lista;
 use PHPUnit\Framework\MockObject\MockObject;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -196,12 +195,10 @@ final class ListaPlazasConjuntoActividadesCasosTest extends myTest
     }
 
     /** @return array{array<int, string>, array<int, array<int, array<string, mixed>>>} grupos y datos */
-    private static function contenido(Lista $l): array
+    /** @param array<string, mixed> $l */
+    private static function contenido(array $l): array
     {
-        return [
-            (new \ReflectionProperty(Lista::class, 'aGrupos'))->getValue($l),
-            (new \ReflectionProperty(Lista::class, 'aDatos'))->getValue($l),
-        ];
+        return [$l['grupos'], $l['datos']];
     }
 
     public function test_sin_actividades_la_lista_esta_vacia(): void
