@@ -139,35 +139,37 @@ Reglas: no tocar código de producción para hacerlo testeable salvo cambio mín
 
 ## 5. Seguimiento por módulo
 
-Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fase 0.
+Estados: `—` sin empezar · `parcial` · `ok`. E2E: `flujos` = spec con guardado real; `carga` = solo «carga sin error» (`menu-links`, `pantallas-sin-parametros`, formularios del menú y de alta), que pasa por todos los módulos con pantalla.
+
+**Actualizada el 2026-11-16.** Estructural `ok` en todos: `composer qa:huecos` no da entidades, VO ni repositorios sin test. Los porcentajes son los del informe del 2026-11-13 (`docs/dev/reports/cobertura_por_modulo.md`, sección 30); `devel_db_admin` subió después con las BD de pruebas (sección 31) y no se ha vuelto a medir. Controladores: además de los tests de contrato de cada módulo, todos pasan por los tests-guardia globales (cápsula `HashB`, sin `exit`, lectura sin parámetros que no escribe en la BD).
 
 | Módulo | Estructural | Unit (calidad) | Integración (calidad) | Controladores | E2E | Notas |
 |--------|:-----------:|:--------------:|:---------------------:|:-------------:|:---:|-------|
-| permisos | — | — | — | — | — | unit=1, integ=0 |
-| planning | — | — | — | — | — | integ=0 |
-| dbextern | ok | ok | parcial | parcial | — | 2.9: 67 %; falta `OdbcDlListasRepository` (necesita la BD de Listas) |
-| devel_db_admin | ok | parcial | — | — | — | 2.9: 19 %; DDL sobre esquemas, pendiente de BD aislada |
-| pasarela | ok | ok | parcial | parcial | — | 2.9: 65 % |
-| devel_codegen | — | — | — | — | — | decidir alcance |
-| asistentes | — | — | — | — | — | |
-| certificados | — | — | — | — | — | |
-| notas | — | — | — | — | — | |
-| actividades | — | — | — | — | — | |
-| actividadestudios | — | — | — | — | — | |
-| encargossacd | ok | ok | parcial | parcial | — | 2.7: 69 %; el resto es sobre todo `db/` (DDL) |
-| misas | ok | parcial | parcial | parcial | — | 2.7: 58 %; faltan los `*_data_build` procedurales de lectura |
-| personas | ok | ok | ok | ok | — | 2.5: 73 %; falta `Trasladar` (61 %) y el CLI de resincronización de sacd |
-| usuarios | ok | ok | parcial | parcial | — | 2.6: 52 %; dudas de seguridad 3 y 4 (6b) |
-| procesos | ok | ok | parcial | parcial | — | 2.6: 53 % (el resto es sobre todo `db/`, DDL) |
-| dossiers | ok | ok | ok | parcial | — | 2.8: 62 %; `PermDossier` caracterizado |
-| ubis | ok | parcial | parcial | parcial | — | 2.8: 62 % |
-| ubiscamas | ok | ok | parcial | parcial | — | 2.8: 65 % |
-| casas | ok | ok | parcial | parcial | — | 2.8: 74 % |
-| actividadcargos / actividadescentro / actividadessacd / actividadplazas / actividadtarifas | — | — | — | — | — | agrupables en un paso |
-| asignaturas / profesores | — | — | — | — | — | `PlanEstudios` sin test |
-| cambios / configuracion / menus / inventario | — | — | — | — | — | `EgmItemId` sin test |
-| cartaspresentacion / tablonanuncios / zonassacd | — | — | — | — | — | |
-| shared / utils_database | — | — | — | — | — | `SfsvId`, `ValueObjectMessages` sin test |
+| permisos | ok | ok | ok | — | flujos | 1.5: 97 %; sin controladores propios; spec de rol restringido. Infection en `backlog.md` (duda 8) |
+| planning | ok | ok | ok | parcial | carga | 2.11: 80 % |
+| dbextern | ok | ok | parcial | parcial | carga | 73 %; falta `OdbcDlListasRepository` (necesita la BD de Listas) |
+| devel_db_admin | ok | ok | ok | parcial | — | 23 % el 13-nov; después, ciclo de vida de esquemas, absorber, mover tabla, copiar y migraciones con las BD de pruebas (sección 31) |
+| pasarela | ok | ok | parcial | parcial | flujos | 74 % |
+| devel_codegen | — | — | — | — | — | generador de código; fuera del alcance (3 líneas en `src/`) |
+| asistentes | ok | ok | ok | ok | flujos | 2.2: 92 % |
+| certificados | ok | ok | parcial | ok | flujos | 66 %; los emitidos sin spec (solo en una región del stgr; el usuario E2E es de una dl) |
+| notas | ok | ok | ok | ok | flujos | 2.3: 86 %; quitar el PDF firmado de un acta sin spec (región del stgr) |
+| actividades | ok | ok | ok | ok | flujos | 2.4: 94 % |
+| actividadestudios | ok | ok | parcial | parcial | carga | 80 % (infrastructure 59 %) |
+| encargossacd | ok | ok | parcial | parcial | flujos | 2.7: 75 %; el resto es sobre todo `db/` (DDL) |
+| misas | ok | ok | parcial | parcial | flujos | 5.2: 75 % |
+| personas | ok | ok | ok | ok | flujos | 2.5: 78 %; resincronización de sacd en `backlog.md` (duda 2) |
+| usuarios | ok | ok | parcial | parcial | flujos | 2.6: 61 % (infrastructure 55 %) |
+| procesos | ok | ok | parcial | parcial | flujos | 2.6: 61 % (el resto es sobre todo `db/`, DDL) |
+| dossiers | ok | ok | ok | parcial | flujos | 2.8: 71 %; tablas genéricas y dossier 3010 con spec |
+| ubis | ok | ok | parcial | parcial | flujos | 2.8: 71 %; la subida del plano (`plano_bytea.php`) sin spec |
+| ubiscamas | ok | ok | parcial | parcial | carga | 2.8: 69 % (infrastructure 50 %) |
+| casas | ok | ok | parcial | parcial | carga | 2.8: 80 % |
+| actividadcargos / actividadescentro / actividadessacd / actividadplazas / actividadtarifas | ok | ok | ok | parcial | flujos | 2.4: 75–95 %; spec de tarifas; resincronización de cargos en `backlog.md` |
+| asignaturas / profesores | ok | ok | ok | parcial | flujos | 77 % / 81 %; dossiers de profesor con spec (tablas genéricas) |
+| cambios / configuracion / menus / inventario | ok | parcial | parcial | parcial | flujos | 63 / 75 / 63 / 61 %; pasada de cobertura pendiente (2.10) |
+| cartaspresentacion / tablonanuncios / zonassacd | ok | parcial | parcial | parcial | carga | 76 / 70 / 50 %; `zonassacd` pendiente (2.10); `ZonasAComun` sin test real (`backlog.md`) |
+| shared / utils_database | ok | parcial | parcial | parcial | — | 39 % / 58 %; pendiente (2.10) |
 
 ---
 
@@ -190,7 +192,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 1.7 Casos de uso sin test, módulo por módulo (desglose en la sección 17). Quedan a propósito `AbsorberEsquema`, `EliminarEsquemaDl`, `MoverTabla` y `ModuloInstaladoTablesService` (DDL: necesitan una BD aislada).
 
 **Fase 2** (orden por riesgo: lo que escribe datos o decide permisos primero)
-- [ ] 2.1 `permisos` (la revisión de calidad básica ya se hizo en 1.5: pendiente solo el piloto de Infection)
+- [x] 2.1 `permisos`: la revisión de calidad se hizo en 1.5; el piloto de Infection queda en `backlog.md` por decisión del usuario (duda 8)
 - [x] 2.2 `asistentes` (sección 18): cobertura del módulo 60 % → 92 %, 13 bugs corregidos
 - [x] 2.3 `notas` + `certificados` (sección 19): cobertura `notas` 69 % → 85 %, `certificados` 24 % → 75 %; 5 inyecciones SQL y 4 bugs corregidos
 - [x] 2.4 `actividades` (+ los cinco `actividad*` satélite) (sección 20): cobertura `actividades` 59 % → 93 %, `actividadcargos` 68 → 85 %, `actividadescentro` 62 → 74 %, `actividadessacd` 52 → 81 %, `actividadplazas` 66 → 93 %, `actividadtarifas` 69 → 87 %; 2 inyecciones SQL y unos 20 bugs corregidos, más los tokens HashB de cargos y centros encargados
@@ -200,11 +202,11 @@ Estados: `—` sin empezar · `parcial` · `ok`. Columnas rellenables tras la fa
 - [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
 - [x] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (sección 25): `dbextern` 59 % → 67 %, `pasarela` 61 % → 65 %; `devel_db_admin` sin cambios (DDL, necesita BD aislada); fecha de nacimiento de la BDU corregida (el `f_inc` de la sección 11 ya estaba arreglado y probado)
 - [x] 2.11 `planning` (sección 26): 62 % → 71 % (application 70 → 82 %): `ActividadesDePersonaService` 35 → ~90 %, `ActividadesPorCasasService` 58 → ~85 %; `ActividadesPorZonasService` sigue en 64 % (ya tenía 10 casos).
-- [~] 2.10 resto (sección 27): repaso por riesgo; corregidos 3 casos de HTML sin escapar (cartas de presentación, propuestas de encargos, correo a los sacd). Cobertura apenas cambia (`cartaspresentacion` 34 → 40 %); queda una pasada de cobertura módulo a módulo
+- [~] 2.10 resto (sección 27): repaso por riesgo; corregidos 3 casos de HTML sin escapar (cartas de presentación, propuestas de encargos, correo a los sacd). Cobertura apenas cambia (`cartaspresentacion` 34 → 40 %). `inventario`, `cartaspresentacion`, `misas`, `zonassacd` y `utils_database` se subieron en 5.2. **Único paso pendiente del plan:** la pasada de cobertura de los módulos que siguen más bajos (informe del 2026-11-13): `shared` 39 %, `zonassacd` 50 %, `utils_database` 58 %, `inventario` 61 %, `menus` 63 %, `cambios` 63 %
 
 **Fase 3**
 - [x] 3.1 Inventario de pantallas y matriz en `e2e/README.md` (sección 28).
-- [~] 3.2 Specs «carga sin error» para todos los módulos con pantalla (lote). El spec existente `menu-links` recorre los enlaces del menú (2026-11-12, 52 min): solo falla `dbextern/sincro_index.php`, que se cuelga sin BD de Listas (caso previsto en `test:e2e:docker-skip-bdu-menu`). Además, en 2.10 se recorrieron en proceso los 310 controladores de lectura de `src/` (sección 27). Falta cubrir las pantallas que no salen como enlace directo del menú (formularios por POST).
+- [x] 3.2 Specs «carga sin error» para todos los módulos con pantalla (lote). **Cerrado en 5.3:** `pantallas-sin-parametros.spec.ts` abre las 298 pantallas de `frontend/` que no son una acción, también las que se llegan por formulario; además, `formularios-del-menu` y `formularios-de-alta` (6.4). El spec existente `menu-links` recorre los enlaces del menú (2026-11-12, 52 min): solo falla `dbextern/sincro_index.php`, que se cuelga sin BD de Listas (caso previsto en `test:e2e:docker-skip-bdu-menu`). Además, en 2.10 se recorrieron en proceso los 310 controladores de lectura de `src/` (sección 27). Falta cubrir las pantallas que no salen como enlace directo del menú (formularios por POST).
 - [x] 3.3 Flujos de escritura: personas, actividades, asistentes (sección 28).
 - [x] 3.4 Flujos de escritura: notas/certificados, usuarios, subidas (sección 28).
 - [x] 3.5 Spec de rol restringido (sección 28).
@@ -1354,3 +1356,11 @@ Spec `dossier-tabla-generica.spec.ts`, con el dossier 1024 «congresos» de una 
 
 - **«Eliminar» no funcionaba en ninguno de esos dossiers.** Las filas de la tabla no llevaban la cápsula `ctx_eliminar` que exige `tablaDB_update` (solo la firmaba la lista genérica de fuera de los dossiers), así que respondía «Operación no autorizada»; y con la cápsula, el hash del formulario del dossier no la admitía y la petición se rechazaba con un 302. `DossiersVerPantallaData` firma ahora la cápsula de cada fila y el formulario la declara. El spec fallaba antes en el borrado, primero con «Operación no autorizada» y después con el 302.
 
+
+### Lo que queda de la fase 7 (2026-11-16)
+
+Los flujos que la fase 6 solo comprobó «hasta la cápsula» ya se recorren guardando. Quedan sin spec de navegador:
+
+- Quitar el PDF firmado de un acta y los certificados emitidos: solo los hace una región del stgr, y el usuario de E2E es de una dl. Haría falta un segundo usuario E2E de región.
+- La subida del plano de una dirección (`plano_bytea.php`, en ventana aparte). El repositorio sí tiene test con un fichero binario.
+- Anotado, sin tocar: los dos textos sin gettext de `tabla_peticiones.html.twig`.
