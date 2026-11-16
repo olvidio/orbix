@@ -12,12 +12,16 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 use src\shared\security\HashB;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use Tests\myTest;
+use Tests\support\SustituyeServiciosDelContenedor;
 
 /** Preferencias de aviso por objeto: guardado de la preferencia y listado de campos configurables. */
 final class CambioUsuarioObjetoPrefTest extends myTest
 {
+    use SustituyeServiciosDelContenedor;
+
     private mixed $sesionAnterior;
 
     public function setUp(): void
@@ -34,6 +38,7 @@ final class CambioUsuarioObjetoPrefTest extends myTest
         } else {
             $_SESSION['session_auth'] = $this->sesionAnterior;
         }
+        $this->reponerServicios();
         parent::tearDown();
     }
 
@@ -57,17 +62,16 @@ final class CambioUsuarioObjetoPrefTest extends myTest
         $this->assertNotSame('', $uc->execute(['id_usuario' => '0'])['error']);
     }
 
-    /**
-     * Hallazgo: `aviso_tipo` ausente (0) no es un tipo válido y el value object lanza `InvalidArgumentException`
-     * en lugar de devolver `['error' => …]`.
-     */
-    public function test_sin_tipo_de_aviso_se_lanza_una_excepcion(): void
+    /** Sin tipo de aviso no se guarda y se avisa (antes el value object lanzaba `InvalidArgumentException`). */
+    public function test_sin_tipo_de_aviso_devuelve_error_y_no_guarda(): void
     {
         $uc = $this->guardar();
         $this->repo->method('getNewId')->willReturn(1);
+        $this->repo->expects($this->never())->method('Guardar');
 
-        $this->expectException(\InvalidArgumentException::class);
-        $uc->execute(['id_usuario' => '55', 'id_tipo_activ' => '112001', 'objeto' => 'Actividad']);
+        $r = $uc->execute(['id_usuario' => '55', 'id_tipo_activ' => '112001', 'objeto' => 'Actividad']);
+
+        $this->assertSame(['error' => _("debe indicar por dónde avisar"), 'id_item_usuario_objeto' => 0], $r);
     }
 
     public function test_una_preferencia_nueva_toma_id_nuevo_y_guarda_todos_los_campos(): void
@@ -145,7 +149,7 @@ final class CambioUsuarioObjetoPrefTest extends myTest
         yield 'seis dígitos' => ['112001', '112001', true];
         yield 'tres dígitos' => ['112', '112...', true];
         yield 'uno' => ['1', '1.....', true];
-        yield 'vacío (el relleno máximo es de 5 puntos)' => ['', '', false];
+        yield 'vacío: cualquier tipo, como manda el formulario sin nada elegido' => ['', '......', true];
         yield 'siete dígitos' => ['1120012', '', false];
     }
 
@@ -247,5 +251,20 @@ final class CambioUsuarioObjetoPrefTest extends myTest
         $this->assertSame(['checked', '42'], [$marcada['chk_prop'], $marcada['id_item']]);
         $this->assertSame(['iid_item' => 42, 'spropiedad' => $primera, 'soperador' => '=', 'svalor' => 'ca', 'bvalor_old' => 'f', 'bvalor_new' => 'f'], json_decode($marcada['cambio_prop'], true));
         $this->assertSame(['id_item_usuario_objeto' => 5], HashB::open($r['ctx_guardar_propiedades'], 'cambio_usuario_propiedad_pref_guardar_todas'));
+    }
+
+    /** Un usuario con rol de casa (cdc) tiene `id_ubi` marcado: solo ve los cambios de sus casas. */
+    public function test_con_rol_de_casa_la_ubicacion_sale_marcada_y_limitada_a_sus_casas(): void
+    {
+        $roles = $this->createMock(RoleRepositoryInterface::class);
+        $roles->method('getArrayRolesPau')->willReturn([7 => 'cdc']);
+        $this->sustituirServicio(RoleRepositoryInterface::class, $roles);
+        $this->conUsuario(7);
+
+        $r = $this->propiedades()->execute(['objeto' => 'Actividad']);
+
+        $ubi = array_values(array_filter($r['propiedades'], static fn(array $p): bool => $p['nom_prop'] === 'id_ubi'));
+        $this->assertCount(1, $ubi, 'Actividad avisa de id_ubi');
+        $this->assertSame(['checked', _("ver cambios sólo de las casas")], [$ubi[0]['chk_prop'], $ubi[0]['condicion']]);
     }
 }

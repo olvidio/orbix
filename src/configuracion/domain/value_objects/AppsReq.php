@@ -2,9 +2,10 @@
 
 namespace src\configuracion\domain\value_objects;
 
+/** Aplicaciones requeridas por un módulo: ids de aplicación (la columna `apps_req` es `integer[]`). */
 final class AppsReq
 {
-    /** @var string[] */
+    /** @var int[] */
     private array $values;
 
     /**
@@ -15,34 +16,23 @@ final class AppsReq
         $normalized = [];
         foreach ($apps as $a) {
             if (is_string($a)) {
-                $v = trim($a);
-                if ($v === '') { continue; }
-                $normalized[] = $v;
-            } elseif (is_int($a)) {
-                $normalized[] = (string)$a;
+                $a = trim($a);
+                if ($a === '') { continue; }
+                if (!preg_match('/^-?\d+$/', $a)) {
+                    throw new \InvalidArgumentException('App requerida inválida');
+                }
+                $a = (int)$a;
             }
+            if (!is_int($a) || $a <= 0) {
+                throw new \InvalidArgumentException('App requerida inválida');
+            }
+            $normalized[] = $a;
         }
-        $this->validate($normalized);
         $this->values = array_values(array_unique($normalized));
     }
 
     /**
-     * @param string[] $values
-     */
-    private function validate(array $values): void
-    {
-        foreach ($values as $v) {
-            if (mb_strlen($v) > 50) {
-                throw new \InvalidArgumentException('App requerida demasiado larga');
-            }
-            if (!preg_match("/^[\p{L}0-9_.\-]+$/u", $v)) {
-                throw new \InvalidArgumentException('Nombre de app requerida con caracteres inválidos');
-            }
-        }
-    }
-
-    /**
-     * @return string[]
+     * @return int[]
      */
     public function toArray(): array
     {

@@ -154,7 +154,7 @@ class Modulo
 
     // Legacy scalar API
     /**
-     * @return array<int|string>|null
+     * @return array<int>|null
      */
     public function getApps_req(): ?array
     {

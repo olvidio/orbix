@@ -87,24 +87,24 @@ final class TrasladoUpdate
             $oCentro = $this->centroRepository->findById($id_new_ctr);
             $nom_new_ctr = $oCentro?->getNombre_ubi() ?? '';
 
+            // Una persona de otra dl (`PersonaEx`) no tiene centro de la dl: no hay traslado de centro que apuntar.
             if ($oPersona instanceof PersonaDl) {
                 $oPersona->setId_ctr($id_new_ctr);
                 if ($this->guardarPersona($repoPersona, $obj_pau, $oPersona) === false) {
                     $error .= "\n" . _("hay un error, no se ha guardado");
                 }
-            }
-
-            $oTraslado = new Traslado();
-            $oTraslado->setId_item($this->trasladoRepository->getNewId());
-            $oTraslado->setId_nom($id_pau);
-            $oTraslado->setF_traslado($oF_ctr);
-            $oTraslado->setTipo_cmb('sede');
-            $oTraslado->setId_ctr_origen($id_ctr_o === '' ? null : (int)$id_ctr_o);
-            $oTraslado->setCtr_origen($ctr_o);
-            $oTraslado->setId_ctr_destino($id_new_ctr);
-            $oTraslado->setCtr_destino($nom_new_ctr);
-            if ($this->trasladoRepository->Guardar($oTraslado) === false) {
-                $error .= "\n" . _("hay un error, no se ha guardado");
+                $oTraslado = new Traslado();
+                $oTraslado->setId_item($this->trasladoRepository->getNewId());
+                $oTraslado->setId_nom($id_pau);
+                $oTraslado->setF_traslado($oF_ctr);
+                $oTraslado->setTipo_cmb('sede');
+                $oTraslado->setId_ctr_origen($id_ctr_o === '' ? null : (int)$id_ctr_o);
+                $oTraslado->setCtr_origen($ctr_o);
+                $oTraslado->setId_ctr_destino($id_new_ctr);
+                $oTraslado->setCtr_destino($nom_new_ctr);
+                if ($this->trasladoRepository->Guardar($oTraslado) === false) {
+                    $error .= "\n" . _("hay un error, no se ha guardado");
+                }
             }
         }
 
@@ -134,9 +134,13 @@ final class TrasladoUpdate
             $rawF_dl = DateTimeLocal::createFromLocal($f_dl);
             $oTrasladoDl->setF_traslado($rawF_dl instanceof DateTimeLocal ? $rawF_dl : null);
             $oTrasladoDl->setSituacionVo($situacion);
-            $oTrasladoDl->trasladar();
-            $err_dl = $oTrasladoDl->getError();
-            if (!empty($err_dl)) {
+            $rta = $oTrasladoDl->trasladar();
+            // Si falla, el mensaje de `trasladar()` dice en qué paso; si va bien, `getError()` puede traer un
+            // aviso (p. ej. que le faltan notas).
+            $err_dl = ($rta['success'] ?? false) === true
+                ? $oTrasladoDl->getError()
+                : (string)($rta['mensaje'] ?? $oTrasladoDl->getError());
+            if ($err_dl !== '') {
                 $error .= "\n" . $err_dl;
             }
         }
@@ -148,7 +152,9 @@ final class TrasladoUpdate
             $oDossier = $this->dossierRepository->crearDossier($pk);
         }
         $oDossier->abrir();
-        $this->dossierRepository->Guardar($oDossier);
+        if ($this->dossierRepository->Guardar($oDossier) === false) {
+            $error .= "\n" . _("hay un error, no se ha guardado");
+        }
 
         return ltrim($error, "\n");
     }

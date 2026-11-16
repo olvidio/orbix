@@ -118,8 +118,9 @@ final class CambioUsuarioObjetoPrefPropiedadesData
                 $id_item = (string)$a_item_sel[$key];
                 $cambio_prop = (string)$a_cambio_propiedad_sel[$key];
             } elseif ($nom_prop === 'id_ubi' && $oRole->isRolePau(PauType::PAU_CDC)) {
+                // Un usuario de una casa solo ve los cambios de las casas que ha elegido en la preferencia.
                 $chk_prop = 'checked';
-                $condicion = (string)_("ja veurem");
+                $condicion = (string)_("ver cambios sólo de las casas");
             }
 
             $propiedades[] = [

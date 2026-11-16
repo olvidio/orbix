@@ -4,6 +4,7 @@ namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
+use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
 
 /**
@@ -14,7 +15,8 @@ use src\shared\config\ConfigGlobal;
  */
 final class CambioUsuarioObjetoPrefGuardar
 {
-    private const PAD_MAP = [1 => '.', 2 => '..', 3 => '...', 4 => '....', 5 => '.....'];
+    /** Relleno hasta 6 caracteres; vacío es «cualquier tipo» (`......`), como lo manda el formulario sin nada elegido. */
+    private const PAD_MAP = [1 => '.', 2 => '..', 3 => '...', 4 => '....', 5 => '.....', 6 => '......'];
 
     public function __construct(
         private CambioUsuarioObjetoPrefRepositoryInterface $cambioUsuarioObjetoPrefRepository,
@@ -52,6 +54,13 @@ final class CambioUsuarioObjetoPrefGuardar
         if ($id_usuario <= 0) {
             return [
                 'error' => (string)_("falta id_usuario"),
+                'id_item_usuario_objeto' => 0,
+            ];
+        }
+
+        if (!array_key_exists($aviso_tipo, AvisoTipoId::getArrayAvisoTipo())) {
+            return [
+                'error' => (string)_("debe indicar por dónde avisar"),
                 'id_item_usuario_objeto' => 0,
             ];
         }

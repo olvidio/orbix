@@ -121,7 +121,7 @@ final class ModulosCasosDeUsoTest extends myTest
 
         $r = $this->form()->execute(['sel' => ['2#'], 'mod' => '']);
 
-        $this->assertEquals([2, 'notas', 'las notas', [1, 2], [10]], [$r['id_mod'], $r['nom'], $r['descripcion'], $r['a_mods_req'], $r['a_apps_req']]);
+        $this->assertSame([2, 'notas', 'las notas', [1, 2], [10]], [$r['id_mod'], $r['nom'], $r['descripcion'], $r['a_mods_req'], $r['a_apps_req']]);
         $this->assertSame([10, 11, 12], $r['a_apps_mod']);
         $this->assertSame(['id_mod' => 2, 'mod' => ''], HashB::open($r['hash_main']['campos_hidden']['ctx_guardar'], 'modulos_guardar'));
     }

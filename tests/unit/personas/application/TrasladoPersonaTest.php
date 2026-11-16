@@ -136,7 +136,7 @@ final class TrasladoPersonaTest extends myTest
         $this->trasladar->expects($this->never())->method('trasladar');
         $d = $this->dossierAbierto();
         $this->dossiers->method('findByPk')->willReturn($d);
-        $this->dossiers->expects($this->once())->method('Guardar')->with($d);
+        $this->dossiers->expects($this->once())->method('Guardar')->with($d)->willReturn(true);
 
         $this->assertSame('', $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN']));
     }
@@ -168,6 +168,7 @@ final class TrasladoPersonaTest extends myTest
             return true;
         });
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
 
         $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_ctr' => '1004#x', 'f_ctr' => '5/3/2026', 'id_ctr_o' => '1003', 'ctr_o' => 'Centro Viejo']);
 
@@ -192,6 +193,7 @@ final class TrasladoPersonaTest extends myTest
             return false;
         });
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
 
         $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_ctr' => '1004', 'f_ctr' => '5/3/2026']);
 
@@ -199,19 +201,57 @@ final class TrasladoPersonaTest extends myTest
         $this->assertSame(2, substr_count($r, _("hay un error, no se ha guardado")), 'persona y traslado');
     }
 
-    /**
-     * Hallazgo: una persona de paso (`PersonaEx`, no es `PersonaDl`) no cambia de centro, pero igualmente se
-     * registra el traslado de centro en su historial.
-     */
-    public function test_una_persona_de_paso_registra_el_traslado_de_centro_sin_cambiar_su_centro(): void
+    /** Una persona de otra dl (`PersonaEx`) no tiene centro de la dl: no se le apunta un traslado de centro. */
+    public function test_a_una_persona_de_otra_dl_no_se_le_registra_un_traslado_de_centro(): void
     {
         $uc = $this->update();
         $this->repoEx->method('findById')->willReturn(new PersonaEx());
         $this->repoEx->expects($this->never())->method('Guardar');
-        $this->traslados->expects($this->once())->method('Guardar')->willReturn(true);
+        $this->traslados->expects($this->never())->method('Guardar');
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
 
-        $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaEx', 'new_ctr' => '1004', 'f_ctr' => '5/3/2026']);
+        $this->assertSame('', $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaEx', 'new_ctr' => '1004', 'f_ctr' => '5/3/2026']));
+    }
+
+    public function test_si_no_se_puede_guardar_el_dossier_de_traslados_avisa(): void
+    {
+        $uc = $this->update();
+        $this->repoN->method('findById')->willReturn(new PersonaN());
+        $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(false);
+
+        $this->assertSame(_("hay un error, no se ha guardado"), $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN']));
+    }
+
+    /** El mensaje de `trasladar()` dice en qué paso ha fallado; `getError()` puede venir vacío. */
+    public function test_un_traslado_de_dl_fallido_devuelve_el_mensaje_de_trasladar(): void
+    {
+        $uc = $this->update();
+        $this->repoN->method('findById')->willReturn(new PersonaN());
+        $this->trasladar->method('trasladar')->willReturn(['success' => false, 'mensaje' => 'copiar persona. sin conexión']);
+        $this->trasladar->method('getError')->willReturn('');
+        $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
+
+        $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlp', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']);
+
+        $this->assertSame('copiar persona. sin conexión', $r);
+    }
+
+    /** Un traslado hecho con aviso (p. ej. le faltan notas) devuelve el aviso. */
+    public function test_un_traslado_de_dl_hecho_con_aviso_devuelve_el_aviso(): void
+    {
+        $uc = $this->update();
+        $this->repoN->method('findById')->willReturn(new PersonaN());
+        $this->trasladar->method('trasladar')->willReturn(['success' => true]);
+        $this->trasladar->method('getError')->willReturn('le faltan notas');
+        $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
+
+        $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlp', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']);
+
+        $this->assertSame('le faltan notas', $r);
     }
 
     public function test_el_cambio_de_dl_exige_una_situacion_valida_y_corta_antes_del_dossier(): void
@@ -236,6 +276,7 @@ final class TrasladoPersonaTest extends myTest
         $this->trasladar->expects($this->once())->method('trasladar')->willReturn(['success' => false]);
         $this->trasladar->method('getError')->willReturn('sin esquema');
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
 
         // El desplegable manda región y dl («H-dlp», DelegacionDropdown::listaRegDele).
         $r = $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlp', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']);
@@ -254,6 +295,7 @@ final class TrasladoPersonaTest extends myTest
         $this->trasladar->method('trasladar')->willReturn(['success' => true]);
         $this->trasladar->method('getError')->willReturn('');
         $this->dossiers->method('findByPk')->willReturn($this->dossierAbierto());
+        $this->dossiers->method('Guardar')->willReturn(true);
 
         $this->assertSame('', $uc->execute(['id_pau' => '10011', 'obj_pau' => 'PersonaN', 'new_dl' => 'H-dlpf', 'f_dl' => '5/3/2026', 'situacion' => 'L', 'dl' => 'dlb']));
     }
@@ -320,16 +362,13 @@ final class TrasladoPersonaTest extends myTest
         $this->assertSame([0, '', 10012], [$r['id_ctr'], $r['nombre_ctr'], $r['id_pau']]);
     }
 
-    /**
-     * Hallazgo: el filtro de centros usa `tipo_ctr !~ '^[(cgi)|(igl)]'`, una clase de caracteres y no una
-     * alternancia: excluye cualquier tipo que empiece por `c`, `g`, `i`, `l`, `(`, `)` o `|`, no solo `cgi`/`igl`.
-     */
-    public function test_el_filtro_de_centros_es_una_clase_de_caracteres_y_no_una_alternancia(): void
+    /** Solo centros activos y que no son cgi ni iglesias (el detalle se prueba en `TrasladoFormDataCentrosTest`). */
+    public function test_el_filtro_de_centros_excluye_inactivos_cgi_e_iglesias(): void
     {
         $uc = $this->form();
         $p = $this->createMock(\src\personas\domain\entity\PersonaDl::class);
         $this->finder->method('findPersonaEnGlobal')->willReturn($p);
-        $this->centrosDl->expects($this->once())->method('getArrayCentros')->with("WHERE tipo_ctr !~ '^[(cgi)|(igl)]'")->willReturn([]);
+        $this->centrosDl->expects($this->once())->method('getArrayCentros')->with("WHERE active = 't' AND (tipo_ctr IS NULL OR tipo_ctr !~ '^(cgi|igl)')")->willReturn([]);
 
         $uc->execute(['id_pau' => '10011']);
     }

@@ -44,7 +44,9 @@ final class TrasladoFormData
             return ['error' => _("con las personas de paso no tiene sentido.")];
         }
 
-        $opciones_centros = $this->centroDlRepository->getArrayCentros("WHERE tipo_ctr !~ '^[(cgi)|(igl)]'");
+        // Centros activos, salvo los cgi y las iglesias (antes `^[(cgi)|(igl)]`, una clase de caracteres que
+        // quitaba cualquier tipo que empezara por c, g, i o l, y dejaba los inactivos).
+        $opciones_centros = $this->centroDlRepository->getArrayCentros("WHERE active = 't' AND (tipo_ctr IS NULL OR tipo_ctr !~ '^(cgi|igl)')");
         $opciones_dl = $this->delegacionDropdown->listaRegDele(false);
         $opciones_situacion = $this->situacionRepository->getArraySituaciones(traslado: true);
 
