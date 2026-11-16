@@ -3,6 +3,7 @@
 namespace src\notas\application;
 
 
+use src\shared\domain\helpers\DocumentoPdf;
 use src\notas\application\support\ActaContenidoImpreso;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
@@ -92,6 +93,14 @@ final class ActaPdfSubir
         if (!is_string($contenido_doc)) {
             return [
                 'error' => sprintf(_("No se puede leer el archivo %s"), $fileName),
+                'http_status' => 200,
+            ];
+        }
+
+        // Solo PDF, como en los certificados: la pantalla lo llama «acta firmada» y lo sirve como PDF.
+        if (!DocumentoPdf::esPdf($contenido_doc)) {
+            return [
+                'error' => sprintf(_("El archivo %s no es un PDF"), $fileName),
                 'http_status' => 200,
             ];
         }

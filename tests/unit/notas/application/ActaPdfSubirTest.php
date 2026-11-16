@@ -139,6 +139,21 @@ final class ActaPdfSubirTest extends TestCase
         $this->assertSame('No se puede leer el archivo vacio.pdf', $r['error']);
     }
 
+    /** Solo se admite un PDF, como en los certificados (duda 25 del plan de revisión de tests). */
+    public function test_un_fichero_que_no_es_pdf_se_rechaza_y_no_se_guarda(): void
+    {
+        $tmp = tempnam(sys_get_temp_dir(), 'acta');
+        $this->assertIsString($tmp);
+        file_put_contents($tmp, 'no soy un pdf');
+        try {
+            $r = $this->subir(['acta_pdf' => ['error' => UPLOAD_ERR_OK, 'tmp_name' => $tmp, 'name' => 'falso.pdf']]);
+        } finally {
+            @unlink($tmp);
+        }
+
+        $this->assertSame('El archivo falso.pdf no es un PDF', $r['error']);
+    }
+
     public function test_error_al_guardar_devuelve_el_del_repositorio(): void
     {
         $tmp = tempnam(sys_get_temp_dir(), 'acta');

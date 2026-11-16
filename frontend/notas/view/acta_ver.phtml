@@ -306,7 +306,7 @@
             <?= $oHashActaPdf->getCamposHtml(); ?>
             <?= ucfirst(_("buscar el acta firmada")); ?>:
             <br>
-            <input type="file" name="acta_pdf" id="fileToUpload" <?= !empty($pendiente_imprimir) ? 'disabled' : '' ?>>
+            <input type="file" name="acta_pdf" id="fileToUpload" accept=".pdf,application/pdf" <?= !empty($pendiente_imprimir) ? 'disabled' : '' ?>>
             <br>
             <input type="button" onclick="fnjs_upload_pdf();" value="<?= ucfirst(_("subir pdf")); ?>"
                 <?= !empty($pendiente_imprimir) ? 'disabled' : '' ?>>

@@ -59,7 +59,7 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
         $this->assertNotEmpty($r['error'] ?? '');
     }
 
-    public function test_lista_excluye_repaso_y_quien_ya_tiene_nota(): void
+    public function test_lista_excluye_repaso_sin_nivel_y_quien_ya_tiene_nota(): void
     {
         $_SESSION['oConfig'] = new class {
             public function getNotaMax(): int
@@ -96,6 +96,13 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
         $yaNota->method('getPrefApellidosNombre')->willReturn('ConNota, Luis');
         $yaNota->method('getNivel_stgr')->willReturn(NivelStgrId::N);
 
+        // Sin nivel de estudios no se ofrece (duda 24 del plan de revisión de tests): en la BD ya lo
+        // descarta la comparación «distinto de repaso»; aquí se fija también en el código.
+        $sinNivel = $this->createMock(PersonaDl::class);
+        $sinNivel->method('getId_nom')->willReturn(10);
+        $sinNivel->method('getPrefApellidosNombre')->willReturn('SinNivel, Pau');
+        $sinNivel->method('getNivel_stgr')->willReturn(null);
+
         $dlRepo = $this->createMock(PersonaDlRepositoryInterface::class);
         $dlRepo->expects($this->once())
             ->method('matching')
@@ -107,7 +114,7 @@ final class ActaVerAddPersonaFormDataTest extends TestCase
                     ->addOrderBy(PersonaField::Apellido2)
                     ->addOrderBy(PersonaField::Nom)
             ))
-            ->willReturn([$ok, $repaso, $yaNota]);
+            ->willReturn([$ok, $repaso, $yaNota, $sinNivel]);
 
         $pubRepo = $this->createMock(PersonaPubRepositoryInterface::class);
         $pubRepo->method('matching')->willReturn([]);

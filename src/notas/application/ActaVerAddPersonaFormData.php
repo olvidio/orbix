@@ -173,8 +173,10 @@ final class ActaVerAddPersonaFormData
         if (isset($excluidosPorNota[$id_nom])) {
             return true;
         }
+        // Sin nivel de estudios no se ofrece: hay que ponérselo antes en su ficha. (En la BD ya lo
+        // descarta el filtro «distinto de repaso», que no devuelve las filas con el nivel vacío.)
         if ($nivel_stgr === null || $nivel_stgr === '') {
-            return false;
+            return true;
         }
 
         return (int) $nivel_stgr === NivelStgrId::R;

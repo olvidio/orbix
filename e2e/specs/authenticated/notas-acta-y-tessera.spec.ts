@@ -151,6 +151,12 @@ test('acta: crearla, añadir un alumno con nota, imprimirla y subir el PDF firma
   await abrirPantalla(page, verActa, 'form#frm_upload');
   const subir = page.locator('#main form#frm_upload');
   await expect(subir.locator('#fileToUpload'), 'una vez impresa, se puede subir').toBeEnabled();
+  // Un fichero que no es PDF se rechaza (duda 25 del plan) y el acta sigue sin PDF.
+  await subir.locator('#fileToUpload').setInputFiles({ name: 'falso.pdf', mimeType: 'application/pdf', buffer: Buffer.from('no soy un pdf') });
+  const falso = await esperarSrc(page, 'acta_pdf_upload', () => subir.locator('input[onclick*="fnjs_upload_pdf"]').click());
+  expect(falso.success, 'rechaza lo que no es PDF').toBe(false);
+  expect(falso.mensaje).toContain('falso.pdf');
+  expect(acta('pdf IS NULL OR length(pdf) = 0'), 'no se ha guardado nada').toBe('t');
   await subir.locator('#fileToUpload').setInputFiles({ name: 'acta.pdf', mimeType: 'application/pdf', buffer: PDF });
   const subida = await esperarSrc(page, 'acta_pdf_upload', () => subir.locator('input[onclick*="fnjs_upload_pdf"]').click());
   expect(subida.success, subida.mensaje).toBe(true);
