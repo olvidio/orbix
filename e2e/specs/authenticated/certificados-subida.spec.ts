@@ -55,5 +55,10 @@ test('certificado recibido: subir el PDF a una persona', async ({ page }) => {
   expect(certificados(`certificado || '|' || f_certificado || '|' || f_recibido`)).toBe('E2E 1/31|2031-03-01|2031-03-05');
   expect(certificados('md5(documento)'), 'guarda el mismo fichero').toBe(require('node:crypto').createHash('md5').update(PDF).digest('hex'));
 
+  // «modificar certificado» desde el dossier: el certificado marcado llega en `sel[]`, no en `id_item`.
+  const idItem = certificados('id_item');
+  await abrirPantalla(page, `frontend/certificados/controller/certificado_recibido_modificar.php?sel[]=${idItem}`, 'form#frm_upload');
+  await expect(page.locator('#main form#frm_upload [name="certificado"]'), 'abre el certificado marcado').toHaveValue('E2E 1/31');
+
   expect(inc.erroresJs, inc.erroresJs.join('\n')).toEqual([]);
 });

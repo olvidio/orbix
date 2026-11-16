@@ -7,14 +7,18 @@ use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
+use frontend\certificados\helpers\CertificadosPostInput;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
+// Desde el dossier llega el certificado marcado en `sel[]`, no `id_item`.
 $form = CertificadosPayload::recibidoFormFromPayload(CertificadosPayload::postData(
-    PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', $_POST)
+    PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', [
+        'id_item' => CertificadosPostInput::idItemFromSelPost(),
+    ])
 ));
 
 $idItem = $form['id_item'];
