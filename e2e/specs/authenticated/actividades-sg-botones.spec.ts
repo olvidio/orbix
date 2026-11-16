@@ -36,6 +36,12 @@ for (const [boton, destino] of BOTONES) {
     if (boton === 'ctrs') {
       await expect(main).toContainText(/centr/i);
     }
+    if (boton === 'carg') {
+      // Dossier 3102: lo pinta el frontend con los datos de Select_cargos_de_actividad::getSegmentData().
+      await expect(main.locator('#frm_cargos_de_actividad')).toHaveCount(1);
+      await expect(main.locator('#frm_cargos_de_actividad input[name="id_dossier"]')).toHaveValue('3102');
+      await expect(main.locator('#frm_cargos_de_actividad input[name="hh"]')).toHaveCount(1);
+    }
     expect(inc.erroresJs, inc.erroresJs.join('\n')).toEqual([]);
   });
 }

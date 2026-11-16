@@ -4,22 +4,19 @@ namespace src\actividadcargos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
-use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
-use frontend\shared\web\BotonesCurso;
-use frontend\shared\web\Lista;
+use src\actividades\domain\value_objects\StatusId;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\permisos\domain\XPermisos;
 use src\permisos\domain\MenuDlPermissionBits;
 
@@ -30,7 +27,7 @@ use src\permisos\domain\MenuDlPermissionBits;
  *
  * Sucesor de `apps/actividadcargos/model/Select1302.php` + shim
  * `Select_cargos_personas_en_actividad.php`. El control de curso
- * (actuales/curso/todos) se delega en {@see BotonesCurso}.
+ * (actuales/curso/todos) lo calcula {@see criterioActividadDeCurso()}.
  */
 class Select_cargos_personas_en_actividad
 {
@@ -39,6 +36,7 @@ class Select_cargos_personas_en_actividad
         private CargoRepositoryInterface $cargoRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private PersonaFinderService $personaFinderService,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -74,7 +72,6 @@ class Select_cargos_personas_en_actividad
     /** @var int|string|null */
     private $Qscroll_id;
 
-    private BotonesCurso $oBotonesCurso;
 
     /** @var array<string, array{path: string, query: array<string, mixed>}> */
     private array $aLinks_dl = [];
@@ -104,25 +101,24 @@ class Select_cargos_personas_en_actividad
     }
 
     /**
-     * Traduce el filtro de {@see BotonesCurso} (`status` y `f_ini` BETWEEN `'ini','fin'`) a `Criteria`.
-     *
-     * @param array<string, mixed> $aWhere
+     * Filtro de los botones de curso: 1 actuales del curso, 2 todas las del curso, 3 todos los cursos.
+     * El curso es el de estudios (stgr) que contiene la fecha de hoy.
      */
-    private function criterioActividadDeCurso(array $aWhere): Criteria
+    private function criterioActividadDeCurso(): Criteria
     {
         $criteria = Criteria::create();
-        if (isset($aWhere['status'])) {
-            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, (int) $aWhere['status']));
+        if ($this->modo_curso === 3) {
+            return $criteria;
         }
-        if (isset($aWhere['f_ini'])) {
-            [$ini, $fin] = array_map(
-                static fn(string $f): string => trim($f, "' "),
-                explode(',', (string) $aWhere['f_ini'])
-            );
-            $criteria = $criteria->andWhere(Filter::between(ActividadAllField::FIni, $ini, $fin));
+        $calendario = $this->calendarioEscolar->calendario();
+        $any = ((int) date('m') > (int) ($calendario['mes_fin_stgr'] ?? 0)) ? (int) date('Y') + 1 : (int) date('Y');
+        $ini = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est', $calendario)->format('Y-m-d');
+        $fin = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est', $calendario)->format('Y-m-d');
+        if ($this->modo_curso !== 2) {
+            $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL));
         }
 
-        return $criteria;
+        return $criteria->andWhere(Filter::between(ActividadAllField::FIni, $ini, $fin));
     }
 
     private function loadValores(): void
@@ -132,8 +128,6 @@ class Select_cargos_personas_en_actividad
         }
 
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $this->oBotonesCurso = new BotonesCurso($this->modo_curso);
-        $aWhere = $this->oBotonesCurso->getWhere();
 
         $oPersona = $this->resolvePersona();
         if ($oPersona === null) {
@@ -167,7 +161,7 @@ class Select_cargos_personas_en_actividad
 
         $cCargosEnActividad = $this->actividadCargoRepository->getActividadCargosDeAsistente(
             $this->id_pau,
-            $this->criterioActividadDeCurso($aWhere)
+            $this->criterioActividadDeCurso()
         );
 
         $this->a_valores = SelectCargosPersonasEnActividadTableData::buildValorRows(
@@ -182,48 +176,44 @@ class Select_cargos_personas_en_actividad
         );
     }
 
-    public function getHtml(): string
+    /**
+     * Datos puros para {@see \frontend\actividadcargos\helpers\SelectCargosPersonasEnActividadRender}.
+     *
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
         $this->loadValores();
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select_cargos_personas_en_actividad');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->a_valores);
-
         $this->setLinksInsert();
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_cargo_eliminar = $web . '/src/actividadcargos/cargo_eliminar';
-
-        $hash_select_config = [
-            'campos_form' => 'modo_curso',
-            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_cargo',
-            'campos_hidden' => [
-                'pau' => $this->pau,
-                'id_pau' => $this->id_pau,
-                'obj_pau' => $this->obj_pau,
-                'queSel' => $this->queSel,
-                'id_dossier' => $this->id_dossier,
-                'permiso' => 3,
+        return [
+            'segment_tipo' => 'select_cargos_personas_en_actividad',
+            'hash' => [
+                'campos_form' => 'modo_curso',
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_cargo',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => 3,
+                ],
             ],
-        ];
-
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oBotonesCurso' => $this->oBotonesCurso,
-            'hash_select_html' => FormCargosDeActividadHashCompose::selectListaHiddenHtml($hash_select_config),
-            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
-            'aLinks_otros' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_otros),
+            'tabla' => [
+                'id_tabla' => 'select_cargos_personas_en_actividad',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'datos' => $this->a_valores,
+            ],
+            'modo_curso' => $this->modo_curso,
+            'links_dl' => $this->aLinks_dl,
+            'links_otros' => $this->aLinks_otros,
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
-            'url_cargo_eliminar' => $url_cargo_eliminar,
+            'url_cargo_eliminar' => rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividadcargos/cargo_eliminar',
         ];
-
-        return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))
-            ->renderizar('select_cargos_personas_en_actividad.phtml', $a_campos, false);
     }
 
     /**

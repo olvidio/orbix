@@ -1,5 +1,7 @@
 <?php
 
+use frontend\actividadcargos\helpers\SelectCargosDeActividadRender;
+use frontend\actividadcargos\helpers\SelectCargosPersonasEnActividadRender;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
@@ -119,6 +121,10 @@ if (PayloadCoercion::string($data['modo'] ?? '') === 'lista') {
             echo SelectCertificadosDeUnaPersonaRender::render($seg);
         } elseif ($tipo === 'select_notas_de_una_persona') {
             echo SelectNotasDeUnaPersonaRender::render($seg);
+        } elseif ($tipo === 'select_cargos_de_actividad') {
+            echo SelectCargosDeActividadRender::render($seg);
+        } elseif ($tipo === 'select_cargos_personas_en_actividad') {
+            echo SelectCargosPersonasEnActividadRender::render($seg);
         } elseif ($tipo === 'datos_tabla') {
             echo DossiersVerFichaDatosTabla::render($seg);
         }

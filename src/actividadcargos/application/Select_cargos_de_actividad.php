@@ -4,21 +4,17 @@ namespace src\actividadcargos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
-use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
-use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\XPermisos;
 use src\permisos\domain\MenuDlPermissionBits;
@@ -174,47 +170,43 @@ class Select_cargos_de_actividad
         return $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
     }
 
-    public function getHtml(): string
+    /**
+     * Datos puros para {@see \frontend\actividadcargos\helpers\SelectCargosDeActividadRender}.
+     *
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
         $this->loadValores();
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select_cargos_de_actividad');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->a_valores);
-
         $this->setLinksInsert();
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_cargo_eliminar = $web . '/src/actividadcargos/cargo_eliminar';
-
-        $hash_select_config = [
-            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_cargo',
-            'campos_hidden' => [
-                'pau' => $this->pau,
-                'id_pau' => $this->id_pau,
-                'obj_pau' => $this->obj_pau,
-                'queSel' => $this->queSel,
-                'id_dossier' => $this->id_dossier,
-                'permiso' => 3,
+        return [
+            'segment_tipo' => 'select_cargos_de_actividad',
+            'hash' => [
+                'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar_cargo',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => 3,
+                ],
             ],
-        ];
-
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'hash_select_html' => FormCargosDeActividadHashCompose::selectListaHiddenHtml($hash_select_config),
-            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
+            'tabla' => [
+                'id_tabla' => 'select_cargos_de_actividad',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'datos' => $this->a_valores,
+            ],
+            'links_dl' => $this->aLinks_dl,
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
-            'url_cargo_eliminar' => $url_cargo_eliminar,
+            'url_cargo_eliminar' => rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividadcargos/cargo_eliminar',
             'id_sel_value' => (string) ($this->Qid_sel ?? ''),
             'msg_err' => $this->msg_err,
         ];
-
-        return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))
-            ->renderizar('select_cargos_de_actividad.phtml', $a_campos, false);
     }
 
     private function setLinksInsert(): void

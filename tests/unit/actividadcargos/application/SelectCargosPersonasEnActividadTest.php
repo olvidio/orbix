@@ -18,6 +18,7 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use frontend\shared\config\OrbixRuntime;
+use frontend\actividadcargos\helpers\SelectCargosPersonasEnActividadRender;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 
@@ -89,7 +90,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
 
     private function widget(int|string|null $modoCurso = null): Select_cargos_personas_en_actividad
     {
-        $w = new Select_cargos_personas_en_actividad($this->cargosActiv, $this->cargos, $this->actividades, $this->finder);
+        $w = new Select_cargos_personas_en_actividad($this->cargosActiv, $this->cargos, $this->actividades, $this->finder, new \Tests\support\CalendarioEscolarFijo());
         $w->setPau('p');
         $w->setObj_pau('PersonaN');
         $w->setId_pau(self::ID_NOM);
@@ -165,7 +166,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
                 return [];
             });
 
-        $html = $this->widget($modo)->getHtml();
+        $html = $this->html($this->widget($modo));
 
         $this->assertCount(count($prefijos), $filtros);
         foreach ($prefijos as $i => $prefijo) {
@@ -196,7 +197,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
             return [];
         });
 
-        $this->widget(2)->getHtml();
+        $this->html($this->widget(2));
 
         $this->assertSame(1, preg_match('/^f_ini between \[(\d{4})-(\d\d-\d\d),(\d{4})-(\d\d-\d\d)\]$/', $filtros[0], $m), $filtros[0]);
         $this->assertSame((int) $m[1] + 1, (int) $m[3], 'las fechas llegan sin las comillas del WHERE antiguo y abarcan un curso');
@@ -209,7 +210,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona();
         $this->cargosActiv->method('getActividadCargosDeAsistente')->willReturn([]);
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertSame([], $this->filas($html));
         $this->assertStringContainsString('<h2 class="titulo">Relación de cargos</h2>', $html);
@@ -221,7 +222,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona();
         $this->hayUnCargo();
 
-        $filas = $this->filas($this->widget()->getHtml());
+        $filas = $this->filas($this->html($this->widget()));
 
         $this->assertCount(1, $filas);
         $this->assertSame('director', $filas[0]['cargo']);
@@ -237,7 +238,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayUnCargo(self::TIPO_N);
 
         // "id_item#elim_asis": el formato que espera ActividadCargoEliminar para esta lista
-        $this->assertStringEndsWith('#77#1', $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringEndsWith('#77#1', $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     public function test_sin_permiso_sobre_el_tipo_de_actividad_la_fila_no_se_puede_seleccionar(): void
@@ -246,7 +247,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona('n');
         $this->hayUnCargo(161001); // crt sss+: sm no lo gestiona
 
-        $this->assertStringNotContainsString('77', (string) $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringNotContainsString('77', (string) $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     public function test_sin_ninguna_oficina_no_hay_filas_seleccionables_ni_enlaces(): void
@@ -254,7 +255,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona();
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertStringNotContainsString('77', (string) $this->filas($html)[0]['sel']);
         $this->assertStringNotContainsString('links-insert-bar', $html);
@@ -275,7 +276,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona();
         $this->cargosActiv->method('getActividadCargosDeAsistente')->willReturn([]);
 
-        $confirmar = $this->textoConfirmar($this->widget()->getHtml());
+        $confirmar = $this->textoConfirmar($this->html($this->widget()));
 
         $this->assertSame(
             '¿Está seguro que desea quitar este cargo a esta persona?' . ($avisa ? "\nesto también borrará a esta persona de la lista de asistentes" : ''),
@@ -295,7 +296,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona('n');
         $this->hayUnCargo(self::TIPO_N);
 
-        $this->assertStringEndsWith('#77#2', $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringEndsWith('#77#2', $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     // ---- enlaces de alta ---------------------------------------------------------------------------------
@@ -306,7 +307,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona('n');
         $this->cargosActiv->method('getActividadCargosDeAsistente')->willReturn([]);
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertSame(2, substr_count($html, 'links-insert-bar'));
         $this->assertStringContainsString('Añadir cargo de la dl', $html);
@@ -332,7 +333,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->hayPersona();
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertStringContainsString("value=\"modificar cargo\" onClick='fnjs_mod_cargo(this.form)'", $html);
         $this->assertStringContainsString("value=\"quitar cargo\" onClick='fnjs_borrar_cargo(this.form)'", $html);
@@ -358,5 +359,13 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $this->assertSame(['', '', 0, 2, 1302, 1], [$w->getPau(), $w->getObj_pau(), $w->getId_pau(), $w->getPermiso(), $w->getId_dossier(), $w->getModo_curso()]);
         $w->setModo_curso('3');
         $this->assertSame(3, $w->getModo_curso());
+    }
+
+    /** Lo que pinta `dossiers_ver.php`: los datos del widget pasan por JSON y los monta el frontend. */
+    private function html(object $widget): string
+    {
+        $seg = json_decode((string) json_encode($widget->getSegmentData()), true);
+
+        return SelectCargosPersonasEnActividadRender::render(is_array($seg) ? $seg : []);
     }
 }

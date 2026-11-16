@@ -18,6 +18,7 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\PersonaDl;
 use src\shared\domain\criteria\Criteria;
 use frontend\shared\config\OrbixRuntime;
+use frontend\actividadcargos\helpers\SelectCargosDeActividadRender;
 use Tests\myTest;
 use Tests\support\DescribeCriteria;
 
@@ -155,7 +156,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->actividades->method('findById')->willReturn(null);
         $this->cargosActiv->expects($this->never())->method('matching');
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertSame([], $this->filas($html));
         $this->assertStringNotContainsString('links-insert-bar', $html);
@@ -168,7 +169,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->cargosActiv->method('matching')->willReturn([]);
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertSame([], $this->filas($html));
         $this->assertStringContainsString('añadir n</span>', $html);
@@ -186,7 +187,7 @@ final class SelectCargosDeActividadTest extends myTest
             return [];
         });
 
-        $this->widget()->getHtml();
+        $this->html($this->widget());
 
         $this->assertSame(['id_activ eq ' . self::ID_ACTIV], $filtros);
     }
@@ -197,7 +198,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
         $filas = $this->filas($html);
 
         $this->assertCount(1, $filas);
@@ -215,7 +216,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayUnCargo('n');
 
         // id_nom#id_item#elim_asis#id_schema (elim_asis 1 = solo el cargo)
-        $this->assertStringContainsString('10011#77#1#', $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringContainsString('10011#77#1#', $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     public function test_sin_permiso_sobre_el_tipo_de_persona_la_fila_no_se_puede_seleccionar(): void
@@ -224,7 +225,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->hayUnCargo('a'); // sm no gestiona agd en actividades de n
 
-        $this->assertStringNotContainsString('10011', (string) $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringNotContainsString('10011', (string) $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     public function test_sin_ninguna_oficina_no_hay_filas_seleccionables_ni_enlaces(): void
@@ -232,7 +233,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertStringNotContainsString('10011', (string) $this->filas($html)[0]['sel']);
         $this->assertStringNotContainsString('links-insert-bar', $html);
@@ -247,7 +248,7 @@ final class SelectCargosDeActividadTest extends myTest
         $w->setQid_sel('10011#77');
         $w->setQscroll_id(4);
 
-        $html = $w->getHtml();
+        $html = $this->html($w);
 
         $this->assertStringContainsString('name="id_sel" value="10011#77"', $html);
         $this->assertStringContainsString('name="scroll_id_select_cargos_de_actividad" data-tabla="select_cargos_de_actividad" value="4"', $html);
@@ -265,7 +266,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad($tipo);
         $this->hayUnCargo('n');
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
         $confirmar = $this->textoConfirmar($html);
 
         $this->assertStringStartsWith('¿Está seguro que desea quitar este cargo a esta persona?', $confirmar);
@@ -301,7 +302,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->cargosActiv->method('matching')->willReturn([]);
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertSame(2, substr_count($html, 'links-insert-btn'), 'sm en actividad de n: n y n de paso');
         $this->assertMatchesRegularExpression(
@@ -318,7 +319,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_S);
         $this->hayUnCargo('n');
 
-        $this->assertStringContainsString('10011#77#2#', $this->filas($this->widget()->getHtml())[0]['sel']);
+        $this->assertStringContainsString('10011#77#2#', $this->filas($this->html($this->widget()))[0]['sel']);
     }
 
     public function test_en_una_actividad_de_otra_dl_no_se_pueden_añadir_personas_de_paso(): void
@@ -327,7 +328,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N, 'otra');
         $this->cargosActiv->method('matching')->willReturn([]);
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertStringContainsString('añadir n</span>', $html);
         $this->assertStringNotContainsString('de paso', $html);
@@ -340,7 +341,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertCount(1, $this->filas($html), 'la relación se sigue viendo');
         $this->assertStringNotContainsString("onClick='fnjs_mod_cargo(this.form)'", $html);
@@ -356,7 +357,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->hayActividad(self::TIPO_N);
         $this->hayUnCargo();
 
-        $html = $this->widget()->getHtml();
+        $html = $this->html($this->widget());
 
         $this->assertStringContainsString("value=\"modificar cargo\" onClick='fnjs_mod_cargo(this.form)'", $html);
         $this->assertStringContainsString("value=\"quitar cargo\" onClick='fnjs_borrar_cargo(this.form)'", $html);
@@ -385,8 +386,8 @@ final class SelectCargosDeActividadTest extends myTest
         $this->finder->method('findPersonaEnGlobalODePaso')->willReturn($p);
 
         $w = $this->widget();
-        $w->getHtml();
-        $w->getHtml();
+        $this->html($w);
+        $this->html($w);
     }
 
     public function test_los_setters_normalizan_nulos(): void
@@ -398,5 +399,13 @@ final class SelectCargosDeActividadTest extends myTest
         $w->setPermiso('2');
 
         $this->assertSame(['', '', 0, 2, 3102], [$w->getPau(), $w->getObj_pau(), $w->getId_pau(), $w->getPermiso(), $w->getId_dossier()]);
+    }
+
+    /** Lo que pinta `dossiers_ver.php`: los datos del widget pasan por JSON y los monta el frontend. */
+    private function html(object $widget): string
+    {
+        $seg = json_decode((string) json_encode($widget->getSegmentData()), true);
+
+        return SelectCargosDeActividadRender::render(is_array($seg) ? $seg : []);
     }
 }
