@@ -17,7 +17,8 @@ use src\notas\domain\criteria\ActaField;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\criteria\ProfesorDocenciaStgrField;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada
@@ -35,6 +36,7 @@ final class DocenciaActualizar
         private ProfesorDocenciaStgrRepositoryInterface $profesorDocenciaStgrRepository,
         private ActaRepositoryInterface $actaRepository,
         private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -52,7 +54,7 @@ final class DocenciaActualizar
             $Qperiodo = 'curso_ca';
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);
         $oPeriodo->setEmpiezaMax($Qempiezamax);

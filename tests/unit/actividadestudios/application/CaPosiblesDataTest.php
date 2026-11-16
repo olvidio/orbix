@@ -148,6 +148,7 @@ final class CaPosiblesDataTest extends myTest
             $this->actividadesDl,
             $this->asignaturasCa,
             $this->centros,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 
@@ -234,6 +235,7 @@ final class CaPosiblesDataTest extends myTest
             $this->actividadesDl,
             $this->asignaturasCa,
             $this->centros,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
 
         $r = $uc->execute(['id_ctr_n' => '1', 'grupo_estudios' => 'todos'] + self::PERIODO);

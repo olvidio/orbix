@@ -15,7 +15,8 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\security\HashB;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Data builder para la pantalla "comunicacion de actividades a los sacd".
@@ -29,6 +30,7 @@ final class ComunicacionActividadesSacdData
         private PersonaExRepositoryInterface $personaExRepository,
         private ComunicarActividadesSacdService $comunicarActividadesSacdService,
         private ActividadesSacdHelper $actividadesSacdHelper,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -170,7 +172,7 @@ final class ComunicacionActividadesSacdData
             $que = 'nagd';
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

@@ -51,7 +51,7 @@ final class ListaActividadesSacdDataTest extends TestCase
         $activCargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $centroRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
 
-        $out = (new \src\actividadessacd\application\ListaActividadesSacdData($actRepo, $cargoRepo, $activCargoRepo, $centroRepo, $this->createMock(\src\procesos\domain\contracts\ActividadFaseRepositoryInterface::class), $this->createMock(\src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface::class)))->execute([
+        $out = (new \src\actividadessacd\application\ListaActividadesSacdData($actRepo, $cargoRepo, $activCargoRepo, $centroRepo, $this->createMock(\src\procesos\domain\contracts\ActividadFaseRepositoryInterface::class), $this->createMock(\src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface::class), new \Tests\support\CalendarioEscolarFijo()))->execute([
             'tipo' => 'sv',
             'year' => '2030',
             'periodo' => 'tot_any',

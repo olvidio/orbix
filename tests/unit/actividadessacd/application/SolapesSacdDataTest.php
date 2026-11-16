@@ -62,7 +62,7 @@ final class SolapesSacdDataTest extends TestCase
         $tareaRepo = $this->createMock(ActividadProcesoTareaRepositoryInterface::class);
         $tareaRepo->expects($this->never())->method('getSacdAprobado');
 
-        $out = (new \src\actividadessacd\application\SolapesSacdData($faseRepo, $actDlRepo, $personaSacdRepo, $cargoOAsis, $actAllRepo, $tareaRepo))->execute([
+        $out = (new \src\actividadessacd\application\SolapesSacdData($faseRepo, $actDlRepo, $personaSacdRepo, $cargoOAsis, $actAllRepo, $tareaRepo, new \Tests\support\CalendarioEscolarFijo()))->execute([
             'year' => '2030',
             'periodo' => 'tot_any',
             'empiezamin' => '',

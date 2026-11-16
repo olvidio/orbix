@@ -215,7 +215,7 @@ final class EdicionesActividadEstudiosTest extends myTest
         $this->actas = $this->createMock(ActaRepositoryInterface::class);
         $this->asignaturas = $this->createMock(ActividadAsignaturaRepositoryInterface::class);
 
-        return new DocenciaActualizar($this->actividades, $this->docencias, $this->actas, $this->asignaturas);
+        return new DocenciaActualizar($this->actividades, $this->docencias, $this->actas, $this->asignaturas, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function actividadTerminada(string $ini = '2026-02-10', int $tipo = 112001): ActividadAll

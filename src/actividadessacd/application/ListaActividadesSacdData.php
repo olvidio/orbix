@@ -22,7 +22,8 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use src\shared\security\HashB;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\procesos\domain\PermAccionBits;
 use src\permisos\domain\MenuDlPermissionBits;
 
@@ -38,6 +39,7 @@ final class ListaActividadesSacdData
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private ActividadFaseRepositoryInterface $actividadFaseRepository,
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -53,7 +55,7 @@ final class ListaActividadesSacdData
         $empiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
         $empiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

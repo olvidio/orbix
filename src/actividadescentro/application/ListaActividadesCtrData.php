@@ -13,7 +13,8 @@ use src\shared\domain\criteria\Filter;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\procesos\domain\PermAccionBits;
 
 /**
@@ -35,6 +36,7 @@ final class ListaActividadesCtrData
         private ActividadDlRepositoryInterface $actividadDlRepository,
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private CasaRepositoryInterface $casaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -61,7 +63,7 @@ final class ListaActividadesCtrData
             $periodo = 'actual';
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

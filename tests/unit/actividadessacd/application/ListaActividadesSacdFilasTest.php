@@ -104,7 +104,7 @@ final class ListaActividadesSacdFilasTest extends myTest
     {
         $cargosSacd = $this->createMock(CargoRepositoryInterface::class);
         $cargosSacd->method('getArrayCargos')->with('sacd')->willReturn([35 => 'sacd', 36 => 'sacd2']);
-        return new ListaActividadesSacdData($this->actividades, $cargosSacd, $this->cargos, $this->encargados, $this->fases, $this->procesos);
+        return new ListaActividadesSacdData($this->actividades, $cargosSacd, $this->cargos, $this->encargados, $this->fases, $this->procesos, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function actividad(int $id, int $status = 2): ActividadAll

@@ -19,7 +19,8 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\criteria\DelegacionField;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
@@ -42,6 +43,7 @@ final class CaPosiblesData
         private ActividadDlRepositoryInterface $actividadDlRepository,
         private ActividadAsignaturaRepositoryInterface $actividadAsignaturaRepository,
         private CentroDlRepositoryInterface $centroDlRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -112,7 +114,7 @@ final class CaPosiblesData
             if ($Qperiodo === '') {
                 $Qperiodo = 'curso_ca';
             }
-            $oPeriodo = Periodo::conCalendarioDesdeBackend();
+            $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
             $oPeriodo->setDefaultAny('next');
             $oPeriodo->setAny($Qyear);
             $oPeriodo->setEmpiezaMin($Qempiezamin);

@@ -16,7 +16,8 @@ use src\personas\domain\entity\Persona;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\value_objects\FaseId;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Caso de uso: construye el listado de sacd con actividades incompatibles (solapes).
@@ -30,6 +31,7 @@ final class SolapesSacdData
         private CargoOAsistenteInterface $cargoOAsistenteRepository,
         private ActividadAllRepositoryInterface $actividadAllRepository,
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -49,7 +51,7 @@ final class SolapesSacdData
             ? (string)$oActividadFase->getDesc_fase()
             : '';
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

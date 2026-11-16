@@ -66,7 +66,7 @@ final class SolapesSacdFilasTest extends myTest
         $f = new ActividadFase();
         $f->setDesc_fase('ok sacd');
         $fases->method('findById')->willReturn($f);
-        return new SolapesSacdData($fases, $this->actividadesDl, $this->sacds, $this->solapes, $this->actividades, $this->procesos);
+        return new SolapesSacdData($fases, $this->actividadesDl, $this->sacds, $this->solapes, $this->actividades, $this->procesos, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function actividad(int $id, ?int $ubi, int $status = 2): ActividadAll

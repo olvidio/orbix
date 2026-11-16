@@ -55,7 +55,7 @@ final class ListaActividadesCtrDataTest extends TestCase
         $casa = $this->createStub(CasaRepositoryInterface::class);
         $casa->method('getArrayCasas')->willReturn([]);
 
-        $useCase = new ListaActividadesCtrData($act, $ce, $casa);
+        $useCase = new ListaActividadesCtrData($act, $ce, $casa, new \Tests\support\CalendarioEscolarFijo());
         $out = $useCase->execute([
             'tipo' => 'sg',
             'year' => '',
@@ -129,7 +129,7 @@ final class ListaActividadesCtrDataTest extends TestCase
         $casa = $this->createStub(CasaRepositoryInterface::class);
         $casa->method('getArrayCasas')->willReturn([2 => 'Casa dos']);
 
-        $useCase = new ListaActividadesCtrData($act, $ce, $casa);
+        $useCase = new ListaActividadesCtrData($act, $ce, $casa, new \Tests\support\CalendarioEscolarFijo());
         $out = $useCase->execute([
             'tipo' => 'sg',
             'periodo' => 'actual',

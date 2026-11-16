@@ -202,6 +202,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
             $personaExRepo,
             $service,
             $helper,
+            new \Tests\support\CalendarioEscolarFijo(),
         ))->execute([
             'que' => 'nagd',
             'id_nom' => 0,
@@ -248,6 +249,7 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
             $this->createMock(PersonaExRepositoryInterface::class),
             $service,
             $helper,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 }

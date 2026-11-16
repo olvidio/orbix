@@ -1,6 +1,7 @@
 <?php
 
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\planning\application\PlanningCtrSelectData;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
@@ -15,7 +16,7 @@ try {
     $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
     $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
-    $oPeriodo = Periodo::conCalendarioDesdeBackend();
+    $oPeriodo = new Periodo(DependencyResolver::get(CalendarioEscolarInterface::class)->calendario());
     $oPeriodo->setDefaultAny('next');
     $oPeriodo->setAny($Qyear);
     $oPeriodo->setEmpiezaMin($Qempiezamin);
