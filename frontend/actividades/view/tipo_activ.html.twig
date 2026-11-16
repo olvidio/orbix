@@ -32,7 +32,7 @@ p.tres:hover {
 }
 </style>
 <script>
-// Gestiona la respuesta JSON de los endpoints /src/actividades/tipo_activ_*.
+// Gestiona la respuesta JSON de los controladores tipo_activ_* (frontend) y de los endpoints /src/actividades/tipo_activ_*.
 // Devuelve el `data` ya decodificado (objeto) o null si hubo error de backend.
 fnjs_tipo_activ_parseRta=function(json){
 	if (!json || json.success !== true) {

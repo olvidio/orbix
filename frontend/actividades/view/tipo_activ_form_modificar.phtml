@@ -1,0 +1,14 @@
+<?php
+/** @var \frontend\shared\security\HashF $oHash */
+/** @var string $nom_actividad */
+/** @var string $nom_tipo */
+?>
+<form id='frm_tipo_activ'>
+    <?= $oHash->getCamposHtml() ?>
+    <h3><?= htmlspecialchars($nom_actividad, ENT_QUOTES) ?></h3>
+    <?= _("nombre") ?>: <input type=text size=25 id=nom_tipo_activ name=nom_tipo_activ value="<?= htmlspecialchars($nom_tipo, ENT_QUOTES) ?>">
+    <br><br>
+    <input type='button' value='<?= htmlspecialchars(_("guardar"), ENT_QUOTES) ?>' onclick="fnjs_guardar('#frm_tipo_activ','update');">
+    <input type='button' value='<?= htmlspecialchars(_("eliminar"), ENT_QUOTES) ?>' onclick="fnjs_guardar('#frm_tipo_activ','eliminar');">
+    <input type='button' value='<?= htmlspecialchars(_("cancel"), ENT_QUOTES) ?>' onclick="fnjs_cerrar();">
+</form>

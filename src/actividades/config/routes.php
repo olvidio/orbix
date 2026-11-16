@@ -5,20 +5,20 @@
 // Permitimos GET y POST para máxima compatibilidad durante la migración.
 
 return static function ($r) {
-    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_lista', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_lista.php';
+    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_lista_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_lista_data.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_metadata', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_metadata.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_form_nuevo', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_form_nuevo.php';
+    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_form_nuevo_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_form_nuevo_data.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_form_modificar', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_form_modificar.php';
+    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_form_modificar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_form_modificar_data.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_nuevo', function () {

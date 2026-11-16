@@ -4,7 +4,7 @@ namespace Tests\unit\actividades\application;
 
 use PHPUnit\Framework\TestCase;
 use src\actividades\application\TipoActivEliminar;
-use src\actividades\application\TipoActivLista;
+use src\actividades\application\TipoActivListaData;
 use src\actividades\application\TipoActivNuevo;
 use src\actividades\application\TipoActivUpdate;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
@@ -101,12 +101,11 @@ final class TipoActivCrudApplicationTest extends TestCase
         $this->assertSame('', (new TipoActivEliminar($repo))->execute(['id_tipo_activ' => 123456]));
     }
 
-    public function test_tipo_activ_lista_html_con_repositorio_vacio(): void
+    public function test_tipo_activ_lista_con_repositorio_vacio_no_trae_tipos(): void
     {
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
         $repo->method('matching')->willReturn([]);
 
-        $html = (new TipoActivLista($repo))->execute();
-        $this->assertNotSame('', $html);
+        $this->assertSame(['tipos' => []], (new TipoActivListaData($repo))->execute());
     }
 }

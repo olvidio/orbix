@@ -37,9 +37,9 @@ use src\actividades\application\ListaCentrosActivDatos;
 use src\actividades\application\ListaSrCsvListado;
 use src\actividades\application\ListaSrCsvQueDatos;
 use src\actividades\application\TipoActivEliminar;
-use src\actividades\application\TipoActivFormModificar;
-use src\actividades\application\TipoActivFormNuevo;
-use src\actividades\application\TipoActivLista;
+use src\actividades\application\TipoActivFormModificarData;
+use src\actividades\application\TipoActivFormNuevoData;
+use src\actividades\application\TipoActivListaData;
 use src\actividades\application\TipoActivMetadata;
 use src\actividades\application\TipoActivNuevo;
 use src\actividades\application\TipoActivUpdate;
@@ -111,9 +111,9 @@ return [
     ListaSrCsvListado::class => autowire(ListaSrCsvListado::class),
     ListaSrCsvQueDatos::class => autowire(ListaSrCsvQueDatos::class),
     TipoActivEliminar::class => autowire(TipoActivEliminar::class),
-    TipoActivFormModificar::class => autowire(TipoActivFormModificar::class),
-    TipoActivFormNuevo::class => autowire(TipoActivFormNuevo::class),
-    TipoActivLista::class => autowire(TipoActivLista::class),
+    TipoActivFormModificarData::class => autowire(TipoActivFormModificarData::class),
+    TipoActivFormNuevoData::class => autowire(TipoActivFormNuevoData::class),
+    TipoActivListaData::class => autowire(TipoActivListaData::class),
     TipoActivMetadata::class => autowire(TipoActivMetadata::class),
     TipoActivNuevo::class => autowire(TipoActivNuevo::class),
     TipoActivUpdate::class => autowire(TipoActivUpdate::class),

@@ -2,7 +2,6 @@
 
 namespace src\actividades\application;
 
-use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 
 /**
@@ -34,9 +33,6 @@ class TipoActivUpdate
             return _("hay un error, no se ha guardado");
         }
 
-        // El nombre cacheado en sesión por TipoActivMetadataLoader queda
-        // obsoleto al editar el tipo: forzar refetch en la próxima lectura.
-        TipoActivMetadataLoader::forget();
 
         return '';
     }

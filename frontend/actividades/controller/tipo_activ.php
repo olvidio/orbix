@@ -9,9 +9,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $webBase = AppUrlConfig::getPublicAppBaseUrl();
-$url_lista = $webBase . '/src/actividades/tipo_activ_lista';
-$url_form_nuevo = $webBase . '/src/actividades/tipo_activ_form_nuevo';
-$url_form_modificar = $webBase . '/src/actividades/tipo_activ_form_modificar';
+$url_lista = $webBase . '/frontend/actividades/controller/tipo_activ_lista.php';
+$url_form_nuevo = $webBase . '/frontend/actividades/controller/tipo_activ_form_nuevo.php';
+$url_form_modificar = $webBase . '/frontend/actividades/controller/tipo_activ_form_modificar.php';
 $url_nuevo = $webBase . '/src/actividades/tipo_activ_nuevo';
 $url_update = $webBase . '/src/actividades/tipo_activ_update';
 $url_eliminar = $webBase . '/src/actividades/tipo_activ_eliminar';

@@ -196,29 +196,29 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.tipo_activ_eliminar`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_eliminar.php`
-- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `tipo_activ_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_form_modificar`)
+- Entrada: `post.ctx_eliminar:string` (cápsula `HashB` acción `tipo_activ_eliminar`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_form_modificar_data`)
 - Respuesta: `standard_envelope_string_data`
 
-## `/src/actividades/tipo_activ_form_modificar`
+## `/src/actividades/tipo_activ_form_modificar_data`
 
-- Id: `actividades.tipo_activ_form_modificar`
-- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_modificar.php`
+- Id: `actividades.tipo_activ_form_modificar_data`
+- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_modificar_data.php`
 - Entrada: `post.id_tipo_activ:integer`
-- Respuesta: `standard_envelope_string_data` (HTML del form con hidden `ctx_guardar` / `ctx_eliminar`)
+- Respuesta: `standard_envelope_string_data` (`id_tipo_activ`, `nom_actividad`, `nom_tipo`, `ctx_guardar`, `ctx_eliminar`); sin `id_tipo_activ`, error «Tipo no válido». El formulario lo monta `frontend/actividades/controller/tipo_activ_form_modificar.php`.
 
-## `/src/actividades/tipo_activ_form_nuevo`
+## `/src/actividades/tipo_activ_form_nuevo_data`
 
-- Id: `actividades.tipo_activ_form_nuevo`
-- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_nuevo.php`
-- Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data` (HTML del form con hidden `ctx_nuevo`)
+- Id: `actividades.tipo_activ_form_nuevo_data`
+- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_form_nuevo_data.php`
+- Entrada: ninguna.
+- Respuesta: `standard_envelope_string_data` (`ctx_nuevo`). El formulario lo monta `frontend/actividades/controller/tipo_activ_form_nuevo.php`.
 
-## `/src/actividades/tipo_activ_lista`
+## `/src/actividades/tipo_activ_lista_data`
 
-- Id: `actividades.tipo_activ_lista`
-- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_lista.php`
-- Entrada: ninguna detectada.
-- Respuesta: `standard_envelope_string_data`
+- Id: `actividades.tipo_activ_lista_data`
+- Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_lista_data.php`
+- Entrada: ninguna.
+- Respuesta: `standard_envelope_string_data` (`tipos`: lista de `{id_tipo_activ, nom}` por id). La tabla la monta `frontend/actividades/controller/tipo_activ_lista.php`.
 
 ## `/src/actividades/tipo_activ_metadata`
 
@@ -231,12 +231,12 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 
 - Id: `actividades.tipo_activ_nuevo`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_nuevo.php`
-- Entrada: `post.ctx_nuevo:string` (cápsula `HashB` acción `tipo_activ_nuevo`, sin contexto de identidad; emitida por `tipo_activ_form_nuevo`), `post.isfsv_val:string`, `post.iasistentes_val:string`, `post.iactividad_val:string`, `post.id_nom_tipo_activ:string`, `post.nom_tipo_activ:string`
+- Entrada: `post.ctx_nuevo:string` (cápsula `HashB` acción `tipo_activ_nuevo`, sin contexto de identidad; emitida por `tipo_activ_form_nuevo_data`), `post.isfsv_val:string`, `post.iasistentes_val:string`, `post.iactividad_val:string`, `post.id_nom_tipo_activ:string`, `post.nom_tipo_activ:string`
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/actividades/tipo_activ_update`
 
 - Id: `actividades.tipo_activ_update`
 - Controller: `src/actividades/infrastructure/ui/http/controllers/tipo_activ_update.php`
-- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `tipo_activ_update`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_form_modificar`), `post.nom_tipo_activ:string`
+- Entrada: `post.ctx_guardar:string` (cápsula `HashB` acción `tipo_activ_update`, contexto `{id_tipo_activ}`; emitida por `tipo_activ_form_modificar_data`), `post.nom_tipo_activ:string`
 - Respuesta: `standard_envelope_string_data`

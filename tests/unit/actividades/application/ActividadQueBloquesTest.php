@@ -7,7 +7,7 @@ namespace Tests\unit\actividades\application;
 use src\actividades\application\ActividadLugar;
 use src\actividades\application\ActividadQueDatos;
 use src\actividades\application\ActividadQueFiltrosBloque;
-use src\actividades\application\TipoActivFormNuevo;
+use src\actividades\application\TipoActivFormNuevoData;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -156,14 +156,8 @@ final class ActividadQueBloquesTest extends myTest
         $this->assertNotSame('', $b);
     }
 
-    public function test_el_formulario_de_tipo_nuevo_trae_campos_firma_y_botones(): void
+    public function test_el_formulario_de_tipo_nuevo_trae_su_capsula(): void
     {
-        $html = (new TipoActivFormNuevo())->execute();
-
-        $this->assertStringStartsWith("<form id='frm_tipo_activ'>", $html);
-        $this->assertStringContainsString('id_nom_tipo_activ', $html);
-        $this->assertStringContainsString('nom_tipo_activ', $html);
-        $this->assertStringContainsString("fnjs_guardar_nuevo('#frm_tipo_activ')", $html);
-        $this->assertStringEndsWith('</form> ', $html);
+        $this->assertSame([], \src\shared\security\HashB::open((new TipoActivFormNuevoData())->execute()['ctx_nuevo'], 'tipo_activ_nuevo'));
     }
 }

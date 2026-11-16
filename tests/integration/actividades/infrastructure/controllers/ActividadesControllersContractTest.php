@@ -30,9 +30,9 @@ use src\actividades\application\ListaCentrosActivDatos;
 use src\actividades\application\ListaSrCsvListado;
 use src\actividades\application\ListaSrCsvQueDatos;
 use src\actividades\application\TipoActivEliminar;
-use src\actividades\application\TipoActivFormModificar;
-use src\actividades\application\TipoActivFormNuevo;
-use src\actividades\application\TipoActivLista;
+use src\actividades\application\TipoActivFormModificarData;
+use src\actividades\application\TipoActivFormNuevoData;
+use src\actividades\application\TipoActivListaData;
 use src\actividades\application\TipoActivMetadata;
 use src\actividades\application\TipoActivNuevo;
 use src\actividades\application\TipoActivUpdate;
@@ -399,16 +399,18 @@ final class ActividadesControllersContractTest extends myTest
             ['actividad_status_labels_datos.php', ActividadStatusLabelsDatos::class, 'execute'],
             ['lista_sr_csv_que_datos.php', ListaSrCsvQueDatos::class, 'ejecutar'],
             ['tipo_activ_metadata.php', TipoActivMetadata::class, 'execute'],
+            ['tipo_activ_lista_data.php', TipoActivListaData::class, 'execute'],
+            ['tipo_activ_form_nuevo_data.php', TipoActivFormNuevoData::class, 'execute'],
+            ['tipo_activ_form_modificar_data.php', TipoActivFormModificarData::class, 'execute'],
         ] as [$ctrl, $clase, $metodo]) {
             $this->doble($clase, [$metodo => ['k' => 'v']]);
             $json = $this->ejecutar($ctrl, ['with_all' => 't']);
             $this->assertTrue($json['success'], $ctrl);
             $this->assertSame(['k' => 'v'], self::data($json), $ctrl);
         }
-        foreach ([['tipo_activ_lista.php', TipoActivLista::class], ['tipo_activ_form_nuevo.php', TipoActivFormNuevo::class], ['tipo_activ_form_modificar.php', TipoActivFormModificar::class]] as [$ctrl, $clase]) {
-            $this->doble($clase, ['execute' => '<table></table>']);
-            $this->assertSame(['html' => '<table></table>'], self::data($this->ejecutar($ctrl)), $ctrl);
-        }
+        $this->doble(TipoActivFormModificarData::class, ['execute' => ['error' => 'Tipo no válido']]);
+        $json = $this->ejecutar('tipo_activ_form_modificar_data.php');
+        $this->assertSame([false, 'Tipo no válido'], [$json['success'], $json['mensaje']]);
     }
 
     public function test_nivel_stgr_por_defecto(): void
