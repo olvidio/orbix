@@ -7,7 +7,8 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\criteria\CentroDlField;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Lista centros encargados de actividades en un periodo dado y, para cada
@@ -24,6 +25,7 @@ final class ListaCentrosActivDatos
     public function __construct(
         private CentroDlRepositoryInterface $centroDlRepository,
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -44,7 +46,7 @@ final class ListaCentrosActivDatos
             $Qperiodo = 'actual';
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

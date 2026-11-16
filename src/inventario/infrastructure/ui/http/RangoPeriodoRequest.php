@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace src\inventario\infrastructure\ui\http;
 
-use frontend\shared\web\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
+use src\shared\domain\Periodo;
 use src\shared\domain\helpers\FuncTablasSupport;
+use src\shared\infrastructure\DependencyResolver;
 
 /**
  * Rango de fechas (ISO) del formulario de periodo de «hacer equipajes»: `periodo` + `year`, o
@@ -18,13 +20,15 @@ final class RangoPeriodoRequest
 {
     /**
      * @param array<mixed> $post
+     * @param array<string, int>|null $calendarioEscolar si no se pasa, el de {@see CalendarioEscolarInterface}.
      * @return array{inicio: string, fin: string}|string el rango, o el texto de error
      */
-    public static function resolver(array $post): array|string
+    public static function resolver(array $post, ?array $calendarioEscolar = null): array|string
     {
         $periodo = FuncTablasSupport::inputString($post, 'periodo');
         $year = FuncTablasSupport::inputInt($post, 'year');
-        $oPeriodo = new Periodo();
+        $calendarioEscolar ??= DependencyResolver::get(CalendarioEscolarInterface::class)->calendario();
+        $oPeriodo = new Periodo($calendarioEscolar);
         $oPeriodo->setAny($year === 0 ? (int) date('Y') + 1 : $year);
         if ($periodo === '' || $periodo === 'otro') {
             $min = FuncTablasSupport::inputString($post, 'inicio');

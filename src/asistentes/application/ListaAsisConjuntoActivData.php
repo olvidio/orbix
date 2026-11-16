@@ -2,7 +2,8 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use Psr\Container\ContainerInterface;
 use src\actividades\domain\criteria\ActividadAllField;
 use src\actividades\domain\entity\TiposActividades;
@@ -19,6 +20,7 @@ final class ListaAsisConjuntoActivData
 {
     public function __construct(
         private ContainerInterface $container,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -92,7 +94,7 @@ final class ListaAsisConjuntoActivData
             $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
 
-        $oPeriodo = Periodo::conCalendarioDesdeBackend();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

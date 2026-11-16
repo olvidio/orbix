@@ -80,7 +80,7 @@ final class ListaSrCsvListadoTest extends myTest
 
     private function uc(): ListaSrCsvListado
     {
-        return new ListaSrCsvListado($this->prefs, $this->actividades, $this->encargados, $this->casas);
+        return new ListaSrCsvListado($this->prefs, $this->actividades, $this->encargados, $this->casas, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function actividad(int $id, int $tipo = 171000, ?int $ubi = 10200): ActividadAll
@@ -204,7 +204,7 @@ final class ListaSrCsvListadoTest extends myTest
     public function test_la_consulta_con_regex_sobre_el_estado_funciona_contra_el_repositorio_real(): void
     {
         $real = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $uc = new ListaSrCsvListado($this->prefs, $real, $this->encargados, $this->casas);
+        $uc = new ListaSrCsvListado($this->prefs, $real, $this->encargados, $this->casas, new \Tests\support\CalendarioEscolarFijo());
         $out = $uc->ejecutar(['status' => ['2', '3'], 'periodo' => 'otro', 'empiezamin' => '1/1/2091', 'empiezamax' => '2/1/2091']);
         $this->assertSame([], $out['a_valores']);
     }

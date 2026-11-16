@@ -24,7 +24,8 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\PermAccionBits;
@@ -63,6 +64,7 @@ final class ActividadSelectListado
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -158,7 +160,7 @@ final class ActividadSelectListado
             ));
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('actual');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

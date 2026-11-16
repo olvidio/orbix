@@ -146,6 +146,7 @@ final class ActividadSelectListadoTest extends myTest
         return new ActividadSelectListado(
             $this->roles, $this->pub, $this->actividades, $this->casas, $this->centros, $this->prefs,
             $this->tarifas, $this->importadas, $this->encargados, $this->procesos, $this->cargos,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 

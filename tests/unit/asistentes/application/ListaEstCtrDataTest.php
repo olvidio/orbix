@@ -76,7 +76,7 @@ final class ListaEstCtrDataTest extends myTest
 
     private function uc(): ListaEstCtrData
     {
-        return new ListaEstCtrData($this->centros, $this->personas, $this->actividades, $this->matriculas, $this->asistencias, $this->asistentes, $this->asignaturas);
+        return new ListaEstCtrData($this->centros, $this->personas, $this->actividades, $this->matriculas, $this->asistencias, $this->asistentes, $this->asignaturas, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function centro(int $id, string $nombre, string $tipo = 'ndl'): CentroDl&MockObject

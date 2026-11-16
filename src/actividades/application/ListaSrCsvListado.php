@@ -14,7 +14,8 @@ use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\XPermisos;
@@ -36,6 +37,7 @@ final class ListaSrCsvListado
         private ActividadRepositoryInterface $actividadRepository,
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private CasaRepositoryInterface $casaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -114,7 +116,7 @@ final class ListaSrCsvListado
         } else {
             $condicion = '^2[789]' . $cond_act;
         }
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

@@ -16,7 +16,7 @@ final class ListaCentrosActivDatosTest extends TestCase
 
         $encRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
 
-        $out = (new ListaCentrosActivDatos($centroDl, $encRepo))->ejecutar([
+        $out = (new ListaCentrosActivDatos($centroDl, $encRepo, new \Tests\support\CalendarioEscolarFijo()))->ejecutar([
             'id_ctr_num' => 0,
             'id_ctr' => [],
             'periodo' => 'actual',

@@ -6,7 +6,8 @@ use src\asistentes\domain\criteria\AsistenteField;
 use src\shared\domain\criteria\Filter;
 use src\shared\domain\criteria\Criteria;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
@@ -34,6 +35,7 @@ final class ListaEstCtrData
         private AsistenteActividadService $asistenteActividadService,
         private AsistenteRepositoryInterface $asistenteRepository,
         private AsignaturaRepositoryInterface $asignaturaRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -52,7 +54,7 @@ final class ListaEstCtrData
         $Qempiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
         $Qempiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
 
-        $oPeriodo = Periodo::conCalendarioDesdeBackend();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

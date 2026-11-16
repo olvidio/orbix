@@ -122,7 +122,7 @@ final class ListaAsisConjuntoActivDataTest extends TestCase
             }
         };
 
-        $data = new ListaAsisConjuntoActivData($container);
+        $data = new ListaAsisConjuntoActivData($container, new \Tests\support\CalendarioEscolarFijo());
         $html = $data->build([
             'id_tipo_activ' => '......',
             'periodo' => 'actual',

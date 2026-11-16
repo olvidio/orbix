@@ -84,7 +84,7 @@ final class ListaActivCtrDataTest extends myTest
 
     private function uc(): ListaActivCtrData
     {
-        return new ListaActivCtrData($this->centros, $this->actividades, $this->sssc, $this->personasDl, $this->asistencias);
+        return new ListaActivCtrData($this->centros, $this->actividades, $this->sssc, $this->personasDl, $this->asistencias, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function centro(int $id, string $nombre): CentroDl&MockObject

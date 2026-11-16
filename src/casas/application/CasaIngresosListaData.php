@@ -15,7 +15,8 @@ use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\PermisosActividades;
 use src\procesos\domain\PermAccionBits;
@@ -36,6 +37,7 @@ final class CasaIngresosListaData
         private ActividadRepositoryInterface $actividadRepository,
         private IngresoRepositoryInterface $ingresoRepository,
         private TarifaUbiRepositoryInterface $tarifaUbiRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -92,7 +94,7 @@ final class CasaIngresosListaData
             ];
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

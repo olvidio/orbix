@@ -47,6 +47,7 @@ final class ListaActivTablaApplicationTest extends TestCase
             $this->emptyTarifaRepo(),
             $this->emptyCentroEncRepo(),
             $this->emptyCargoRepo(),
+            new \Tests\support\CalendarioEscolarFijo(),
         ))->execute(
             [
                 'que' => 'list_activ',
@@ -134,7 +135,7 @@ final class ListaActivTablaApplicationTest extends TestCase
         $cargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
         $cargoRepo->method('getActividadSacds')->willReturn([]);
 
-        $out = (new ListaActivTabla($actRepo, $casaRepo, $tarifaRepo, $centroEncRepo, $cargoRepo))->execute(
+        $out = (new ListaActivTabla($actRepo, $casaRepo, $tarifaRepo, $centroEncRepo, $cargoRepo, new \Tests\support\CalendarioEscolarFijo()))->execute(
             [
                 'que' => 'list_activ_compl',
                 'periodo' => 'actual',
@@ -182,6 +183,7 @@ final class ListaActivTablaApplicationTest extends TestCase
             $this->emptyTarifaRepo(),
             $this->emptyCentroEncRepo(),
             $this->emptyCargoRepo(),
+            new \Tests\support\CalendarioEscolarFijo(),
         ))->execute(
             [
                 'que' => 'list_activ',

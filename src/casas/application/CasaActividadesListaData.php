@@ -16,7 +16,8 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\application\services\CentroNombreResolver;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaGlobal;
@@ -41,6 +42,7 @@ final class CasaActividadesListaData
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
         private CentroNombreResolver $centroNombreResolver,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -87,7 +89,7 @@ final class CasaActividadesListaData
             $aGrupos[$id_ubi] = $oCasa->getNombreUbiVo()->value();
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($year);
         $oPeriodo->setEmpiezaMin($empiezamin);

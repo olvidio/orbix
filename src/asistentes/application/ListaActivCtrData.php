@@ -2,7 +2,8 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -33,6 +34,7 @@ final class ListaActivCtrData
         private PersonaSSSCRepositoryInterface $personaSSSCRepository,
         private PersonaDlRepositoryInterface $personaDlRepository,
         private AsistenteActividadService $asistenteActividadService,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -120,7 +122,7 @@ final class ListaActivCtrData
         $condicion .= $condta_sr === '' ? '' : '|^' . $condta_sr;
 
 
-        $oPeriodo = Periodo::conCalendarioDesdeBackend();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

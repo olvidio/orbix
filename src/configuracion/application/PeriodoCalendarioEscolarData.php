@@ -3,12 +3,13 @@
 namespace src\configuracion\application;
 
 use src\configuracion\domain\value_objects\ConfigSnapshot;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Fechas y metadatos del curso (STGR / CRT) que antes solo estaban en
- * `$_SESSION['oConfig']`, para inyectar en `Periodo` del frontend.
+ * `$_SESSION['oConfig']`, para inyectar en `Periodo` (el del frontend y `src\shared\domain\Periodo`).
  */
-final class PeriodoCalendarioEscolarData
+final class PeriodoCalendarioEscolarData implements CalendarioEscolarInterface
 {
     public function __construct(
         private ObtenerConfigSnapshot $obtenerConfigSnapshot,
@@ -48,5 +49,10 @@ final class PeriodoCalendarioEscolarData
             'any_final_est' => $oConfig->any_final_curs('est'),
             'any_final_crt' => $oConfig->any_final_curs('crt'),
         ];
+    }
+
+    public function calendario(): array
+    {
+        return $this->execute();
     }
 }

@@ -92,6 +92,7 @@ final class CalendarioListasDatosModosTest extends myTest
             $this->casasDl, $this->tarifas, $this->actividades, $this->encargados, $this->casas, $this->centros,
             new CentroNombreResolver($this->centrosDl, $this->createMock(CentroEllosRepositoryInterface::class), $this->createMock(CentroEllasRepositoryInterface::class)),
             $this->asistentes,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 

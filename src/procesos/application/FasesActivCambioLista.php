@@ -13,7 +13,8 @@ use src\actividades\domain\criteria\ActividadAllField;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\shared\security\HashB;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Caso de uso: datos estructurados para tabla de actividades candidatas a cambiar de fase.
@@ -27,6 +28,7 @@ class FasesActivCambioLista
         private readonly TareaProcesoRepositoryInterface $tareaProcesoRepository,
         private readonly ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
         private readonly ProcesoActividadService $procesoActividadService,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -80,7 +82,7 @@ class FasesActivCambioLista
         }
         $criteria = $criteria->andWhere(Filter::lt(ActividadAllField::Status, 4));
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

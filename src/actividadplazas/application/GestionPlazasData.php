@@ -13,7 +13,8 @@ use src\shared\domain\criteria\Filter;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\criteria\DelegacionField;
 use src\ubis\domain\entity\Ubi;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\shared\security\HashB;
 
@@ -32,6 +33,7 @@ final class GestionPlazasData
         private DelegacionRepositoryInterface $delegacionRepository,
         private ActividadRepositoryInterface $actividadRepository,
         private ActividadPlazasRepositoryInterface $actividadPlazasRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -101,7 +103,7 @@ final class GestionPlazasData
             }
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setAny((string)$Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);
         $oPeriodo->setEmpiezaMax($Qempiezamax);

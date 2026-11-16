@@ -16,7 +16,8 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\procesos\domain\PermAccionBits;
 use src\permisos\domain\MenuDlPermissionBits;
@@ -41,6 +42,7 @@ final class ListaActividadesSgListado
         private PreferenciaRepositoryInterface $preferenciaRepository,
         private CentroEncargadoRepositoryInterface $centroEncargadoRepository,
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -91,7 +93,7 @@ final class ListaActividadesSgListado
             $criteria = $criteria->andWhere(Filter::eq(ActividadAllField::IdUbi, $Qid_ubi));
         }
 
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny('next');
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

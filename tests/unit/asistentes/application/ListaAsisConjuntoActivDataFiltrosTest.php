@@ -109,7 +109,7 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
             }
         };
 
-        return (new ListaAsisConjuntoActivData($container))->build($entrada)['content_html'];
+        return (new ListaAsisConjuntoActivData($container, new \Tests\support\CalendarioEscolarFijo()))->build($entrada)['content_html'];
     }
 
     private const PERIODO = ['periodo' => 'otro', 'empiezamin' => '1/1/2026', 'empiezamax' => '31/12/2026'];

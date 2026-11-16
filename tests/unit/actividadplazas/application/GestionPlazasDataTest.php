@@ -37,7 +37,7 @@ final class GestionPlazasDataTest extends myTest
         $this->delegaciones = $this->createMock(DelegacionRepositoryInterface::class);
         $this->actividades = $this->createMock(ActividadRepositoryInterface::class);
         $this->plazas = $this->createMock(ActividadPlazasRepositoryInterface::class);
-        $this->uc = new GestionPlazasData($this->delegaciones, $this->actividades, $this->plazas);
+        $this->uc = new GestionPlazasData($this->delegaciones, $this->actividades, $this->plazas, new \Tests\support\CalendarioEscolarFijo());
     }
 
     public function tearDown(): void

@@ -19,7 +19,8 @@ use src\ubis\domain\criteria\CasaField;
 use src\ubis\domain\criteria\CentroEllasField;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroEllas;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 
 /**
  * Use case: resumen económico de casas (dias ocupados, asistentes
@@ -40,6 +41,7 @@ final class CasasResumenData
         private CasaPeriodoRepositoryInterface $casaPeriodoRepository,
         private IngresoRepositoryInterface $ingresoRepository,
         private UbiGastoRepositoryInterface $ubiGastoRepository,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -65,7 +67,7 @@ final class CasasResumenData
 
         $avisos = [];
         if ($Qque === '') {
-            $oPeriodo = new Periodo();
+            $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
             $oPeriodo->setDefaultAny('next');
             $oPeriodo->setAny($input['year'] ?? '');
             $oPeriodo->setEmpiezaMin($input['empiezamin'] ?? '');

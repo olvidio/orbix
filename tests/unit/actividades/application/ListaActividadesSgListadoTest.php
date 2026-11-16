@@ -81,7 +81,7 @@ final class ListaActividadesSgListadoTest extends myTest
 
     private function uc(): ListaActividadesSgListado
     {
-        return new ListaActividadesSgListado($this->actividades, $this->createMock(PreferenciaRepositoryInterface::class), $this->encargados, $this->cargos);
+        return new ListaActividadesSgListado($this->actividades, $this->createMock(PreferenciaRepositoryInterface::class), $this->encargados, $this->cargos, new \Tests\support\CalendarioEscolarFijo());
     }
 
     /** @param list<ActividadAll> $lista */

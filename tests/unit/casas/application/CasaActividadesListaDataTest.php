@@ -151,6 +151,7 @@ final class CasaActividadesListaDataTest extends myTest
                 $this->createMock(CentroEllasRepositoryInterface::class),
             ),
             $this->cargos,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 

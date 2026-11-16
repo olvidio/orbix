@@ -115,6 +115,7 @@ final class CasasResumenDataTest extends TestCase
             $this->periodos,
             $this->ingresos,
             $this->gastos,
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 

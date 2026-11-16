@@ -65,7 +65,7 @@ final class ListaCentrosActivDatosCentrosTest extends myTest
 
     private function uc(): ListaCentrosActivDatos
     {
-        return new ListaCentrosActivDatos($this->centros, $this->encargados);
+        return new ListaCentrosActivDatos($this->centros, $this->encargados, new \Tests\support\CalendarioEscolarFijo());
     }
 
     public function test_por_defecto_todos_los_centros_sin_sss_y_sus_actividades(): void

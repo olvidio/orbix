@@ -62,7 +62,7 @@ final class ListaActivTablaFilasTest extends myTest
 
     private function uc(): ListaActivTabla
     {
-        return new ListaActivTabla($this->actividades, $this->casas, $this->tarifas, $this->encargados, $this->cargos);
+        return new ListaActivTabla($this->actividades, $this->casas, $this->tarifas, $this->encargados, $this->cargos, new \Tests\support\CalendarioEscolarFijo());
     }
 
     /** @param list<ActividadAll> $lista */

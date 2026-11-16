@@ -31,6 +31,7 @@ final class FasesActivCambioListaTest extends TestCase
             $this->createMock(TareaProcesoRepositoryInterface::class),
             $this->createMock(ActividadProcesoTareaRepositoryInterface::class),
             $this->createMock(ProcesoActividadService::class),
+            new \Tests\support\CalendarioEscolarFijo(),
         );
     }
 
@@ -97,7 +98,7 @@ final class FasesActivCambioListaTest extends TestCase
         $apt->method('getFasesCompletadas')->willReturnCallback(fn (int $id): array => $this->procesos[$id]['completadas'] ?? []);
         $svc = $this->createMock(ProcesoActividadService::class);
         $svc->method('getMensaje')->willReturnCallback(fn (string $ft): string => 'falta ' . strtok($ft, '#') . '. ');
-        return new FasesActivCambioLista($dl, $this->createMock(ActividadRepositoryInterface::class), $tipos, $tareas, $apt, $svc);
+        return new FasesActivCambioLista($dl, $this->createMock(ActividadRepositoryInterface::class), $tipos, $tareas, $apt, $svc, new \Tests\support\CalendarioEscolarFijo());
     }
 
     /** @param list<int> $completadas */

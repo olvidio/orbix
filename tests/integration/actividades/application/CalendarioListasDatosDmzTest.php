@@ -88,6 +88,7 @@ final class CalendarioListasDatosDmzTest extends myTest
             $this->createMock(CentroRepositoryInterface::class),
             new CentroNombreResolver($centroDl, $centroEllos, $centroEllas),
             $this->createMock(AsistenteActividadService::class),
+            new \Tests\support\CalendarioEscolarFijo(),
         ))->ejecutar([
             'que' => 'lista_cdc',
             'ver_ctr' => 'si',

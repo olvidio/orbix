@@ -21,7 +21,8 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\application\services\CentroNombreResolver;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Periodo;
+use src\shared\domain\Periodo;
+use src\shared\domain\contracts\CalendarioEscolarInterface;
 use src\actividades\domain\entity\TiposActividades;
 use src\procesos\domain\PermAccionBits;
 
@@ -47,6 +48,7 @@ final class CalendarioListasDatos
         private CentroRepositoryInterface $centroRepository,
         private CentroNombreResolver $centroNombreResolver,
         private AsistenteActividadService $asistenteActividadService,
+        private CalendarioEscolarInterface $calendarioEscolar,
     ) {
     }
 
@@ -132,7 +134,7 @@ final class CalendarioListasDatos
         }
 
         $Qyeardefault = empty($Qyeardefault) ? 'next' : $Qyeardefault;
-        $oPeriodo = new Periodo();
+        $oPeriodo = new Periodo($this->calendarioEscolar->calendario());
         $oPeriodo->setDefaultAny($Qyeardefault);
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);

@@ -18,6 +18,7 @@ use src\configuracion\infrastructure\persistence\postgresql\PgConfigSchemaReposi
 use src\configuracion\infrastructure\persistence\postgresql\PgModuloInstaladoRepository;
 use src\configuracion\infrastructure\persistence\postgresql\PgModuloRepository;
 use function DI\autowire;
+use function DI\get;
 
 return [
     AppRepositoryInterface::class => autowire(PgAppRepository::class),
@@ -35,4 +36,5 @@ return [
     ModulosUpdateAction::class => autowire(ModulosUpdateAction::class),
     ObtenerConfigSnapshot::class => autowire(ObtenerConfigSnapshot::class),
     PeriodoCalendarioEscolarData::class => autowire(PeriodoCalendarioEscolarData::class),
+    \src\shared\domain\contracts\CalendarioEscolarInterface::class => get(PeriodoCalendarioEscolarData::class),
 ];

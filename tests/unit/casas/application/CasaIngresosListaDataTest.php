@@ -104,7 +104,7 @@ final class CasaIngresosListaDataTest extends myTest
 
     private function uc(): CasaIngresosListaData
     {
-        return new CasaIngresosListaData($this->casas, $this->tiposTarifa, $this->actividades, $this->ingresos, $this->tarifasUbi);
+        return new CasaIngresosListaData($this->casas, $this->tiposTarifa, $this->actividades, $this->ingresos, $this->tarifasUbi, new \Tests\support\CalendarioEscolarFijo());
     }
 
     private function actividad(
