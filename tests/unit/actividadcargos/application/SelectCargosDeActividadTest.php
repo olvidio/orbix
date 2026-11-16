@@ -364,8 +364,9 @@ final class SelectCargosDeActividadTest extends myTest
             $this->assertStringContainsString(sprintf('<input type="hidden" id="%1$s" name="%1$s" value="%2$s">', $campo, $valor), $html);
         }
         $this->assertMatchesRegularExpression('/name="hh" value="[0-9a-f]{32}"/', $html, 'firma de los campos ocultos');
-        $this->assertStringContainsString('attr(\'action\', "frontend/actividadcargos/controller/form_cargos_de_actividad.php")', $html);
-        $this->assertMatchesRegularExpression("~url: '[^']*/src/actividadcargos/cargo_eliminar'~", $html);
+        // Las URL van con json_encode dentro del <script> (barras escapadas).
+        $this->assertStringContainsString('attr(\'action\', "frontend\\/actividadcargos\\/controller\\/form_cargos_de_actividad.php")', $html);
+        $this->assertMatchesRegularExpression('~url: "[^"]*\\\\/src\\\\/actividadcargos\\\\/cargo_eliminar"~', $html);
         $this->assertStringContainsString("fnjs_enviar_formulario(formulario, '#ficha_activ')", $html);
     }
 
