@@ -2,27 +2,23 @@
 
 namespace src\ubis\domain\value_objects;
 
-use src\shared\domain\value_objects\ValueObjectMessages;
-
+/**
+ * Contenido del plano de una dirección: el fichero que se sube (una foto, un jpg, un pdf…).
+ *
+ * Es binario y de cualquier tamaño: se guarda byte a byte, sin recortar espacios, saltos de línea ni
+ * bytes nulos de los extremos y sin límite de longitud (con el límite de 255 caracteres que tenía,
+ * una dirección con un plano de verdad no se podía ni leer).
+ */
 final class PlanoDocText
 {
     private string $value;
 
     public function __construct(string $value)
     {
-        $value = trim($value);
-        $this->validate($value);
-        $this->value = $value;
-    }
-
-    private function validate(string $value): void
-    {
         if ($value === '') {
             throw new \InvalidArgumentException('PlanoDocText cannot be empty');
         }
-        if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('PlanoDocText must be at most 255 characters', $value));
-        }
+        $this->value = $value;
     }
 
     public function value(): string
@@ -32,9 +28,10 @@ final class PlanoDocText
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        $value = trim($value);
-        if ($value === '') { return null; }
+        if ($value === null || $value === '') {
+            return null;
+        }
+
         return new self($value);
     }
 }

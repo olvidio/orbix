@@ -112,7 +112,3 @@ Los flujos de certificados emitidos (imprimir y guardar el PDF, subir el PDF fir
 ### Restos que deja la suite de PHPUnit
 
 De forma intermitente, una fila «test_nom_activ_vo» en `public.a_actividades_all` (tabla padre). Localizar el test y limpiar. (Las 5 marcas de dossier 1303 que dejaban los tests de `tests/unit/notas` ya se limpian: `BuscaPersonaNotasTrait`, 2026-11-15.)
-
-### El plano de una dirección no admite un fichero real
-
-`PlanoDocText` (plano de una dirección de casa o de centro, columna `bytea`) recorta el contenido con `trim()` y lo limita a 255 caracteres: subir un plano real fallaría con «must be at most 255 characters», y al leer una dirección con plano fallaría la hidratación. En la copia de producción no hay ningún plano guardado y el flujo (`frontend/ubis/controller/plano_bytea.php`) no tiene test. Tratarlo como contenido binario (como `Pdf` de las actas desde el 2026-11-15), con un test de subida y descarga.
