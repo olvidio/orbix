@@ -73,11 +73,9 @@
                 alert(TXT_DEBE_TIPO_ACTIV);
                 err = 1;
             }
-            if (!inom_tipo && !err) {
-                id_tipo_activ = fnjs_canonicalize_id_tipo_activ_txt(isfsv + iasistentes + iactividad + "000");
-            } else {
-                id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
-            }
+            // Sin tipo concreto («...») sale un id no numérico y el servidor lo rechaza:
+            // no hay tarifas genéricas para «asistentes + actividad».
+            id_tipo_activ = fnjs_id_tipo_activ_from_parts(isfsv, iasistentes, iactividad, inom_tipo, $('#extendida').val());
         }
         if (!tar) {
             alert(TXT_DEBE_TARIFA);

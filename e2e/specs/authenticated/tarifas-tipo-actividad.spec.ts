@@ -72,7 +72,16 @@ test('relación tarifa–tipo de actividad: alta y borrado', async ({ page }) =>
   expect(tarifa, 'hay alguna tarifa').toBeTruthy();
   await alta.locator('#id_tarifa').selectOption(tarifa);
 
-  const guardado = await esperarSrc(page, 'relacion_tarifa_update', () => alta.locator('input[onclick*="fnjs_guardar"]').click());
+  // Sin tipo concreto («...» en el tercer desplegable) no se guarda: no hay tarifas genéricas para
+  // «asistentes + actividad».
+  await alta.locator('#inom_tipo_val').selectOption('...');
+  const sinTipo = await esperarSrc(page, 'relacion_tarifa_update', () => alta.locator('input[onclick*="fnjs_guardar"]').click());
+  expect(sinTipo.success, 'con «...» no se guarda').toBe(false);
+  expect(sinTipo.mensaje, 'explica por qué').toBeTruthy();
+  expect(sqlDev('comun', `SELECT count(*) FROM ${T} WHERE id_item > ${maxAntes}`), 'no se ha creado ninguna relación').toBe('0');
+  await alta.locator('#inom_tipo_val').selectOption(elegido[2]);
+
+  const guardado =await esperarSrc(page, 'relacion_tarifa_update', () => alta.locator('input[onclick*="fnjs_guardar"]').click());
   expect(guardado.success, guardado.mensaje).toBe(true);
   const idItem = sqlDev('comun', `SELECT id_item FROM ${T} WHERE id_tipo_activ = ${idTipoActiv} AND id_item > ${maxAntes}`);
   expect(idItem, 'la relación está en la BD').toMatch(/^\d+$/);
