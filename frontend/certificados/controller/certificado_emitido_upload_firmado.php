@@ -5,14 +5,18 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\FrontBootstrap;
 use frontend\certificados\helpers\CertificadosPayload;
+use frontend\certificados\helpers\CertificadosPostInput;
 use frontend\shared\helpers\ListNavSupport;
 use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
+// Desde la lista llega el certificado marcado en `sel[]` (`id_item#...`), no `id_item`.
 $form = CertificadosPayload::uploadFirmadoFromPayload(CertificadosPayload::postData(
-    PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST)
+    PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', [
+        'id_item' => CertificadosPostInput::idItemFromSelPost(),
+    ])
 ));
 
 $idItem = $form['id_item'];

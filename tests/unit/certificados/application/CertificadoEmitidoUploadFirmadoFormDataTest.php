@@ -29,6 +29,8 @@ final class CertificadoEmitidoUploadFirmadoFormDataTest extends TestCase
 
         $useCase = new CertificadoEmitidoUploadFirmadoFormData($certRepo, $finder);
         $data = $useCase->execute(3);
+        // El formulario oculto `id_item` sale de aquí: sin él viajaba 0.
+        $this->assertSame(3, $data['id_item'] ?? null);
         $this->assertSame(9, $data['id_nom']);
         $this->assertSame('Nombre en cert', $data['nom']);
         // El formulario de subir el PDF firmado lleva la cápsula de ese certificado (fase 6.5).

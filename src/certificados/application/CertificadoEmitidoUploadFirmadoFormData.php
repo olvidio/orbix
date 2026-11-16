@@ -15,7 +15,7 @@ final class CertificadoEmitidoUploadFirmadoFormData
     }
 
     /**
-     * @return array{id_nom: int, nom: string, apellidos_nombre: string, ctx_guardar: string}
+     * @return array{id_item: int, id_nom: int, nom: string, apellidos_nombre: string, ctx_guardar: string}
      */
     public function execute(int $id_item): array
     {
@@ -32,6 +32,7 @@ final class CertificadoEmitidoUploadFirmadoFormData
         $nom_final = $nom === '' ? $apellidos_nombre : $nom;
 
         return [
+            'id_item' => $id_item,
             'id_nom' => $id_nom,
             'nom' => $nom_final,
             'apellidos_nombre' => $apellidos_nombre,
