@@ -2,9 +2,11 @@
 
 namespace src\actividadescentro\domain\entity;
 
+use src\actividadescentro\domain\contracts\CentroDeEncargoLookupInterface;
 use src\actividadescentro\domain\value_objects\CentroEncargadoOrden;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 use src\actividadescentro\domain\value_objects\CentroEncargadoTexto;
+use src\shared\domain\DatosCampo;
 use src\shared\domain\traits\Hydratable;
 
 class CentroEncargado
@@ -108,5 +110,42 @@ class CentroEncargado
         $this->encargo = $texto instanceof CentroEncargadoTexto
             ? $texto
             : CentroEncargadoTexto::fromNullableString($texto);
+    }
+
+    /* MÉTODOS PARA LA LISTA GENÉRICA (dossier 3010, solo consulta) ------------------*/
+
+    /**
+     * @return array<string, string>
+     */
+    public function getPrimary_key(): array
+    {
+        return ['id_activ' => 'id_activ', 'id_ubi' => 'id_ubi'];
+    }
+
+    /**
+     * Columnas de la lista del dossier 3010: el centro (por su nombre) y el orden.
+     *
+     * @return list<DatosCampo>
+     */
+    public function getDatosCampos(): array
+    {
+        $centro = new DatosCampo();
+        $centro->setNom_camp('id_ubi');
+        $centro->setMetodoGet('getId_ubi');
+        $centro->setMetodoSet('setId_ubi');
+        $centro->setEtiqueta(_("centro"));
+        $centro->setTipo('opciones');
+        $centro->setArgument(CentroDeEncargoLookupInterface::class);
+        $centro->setArgument2('getNombre_ubi');
+
+        $orden = new DatosCampo();
+        $orden->setNom_camp('num_orden');
+        $orden->setMetodoGet('getNum_orden');
+        $orden->setMetodoSet('setNum_orden');
+        $orden->setEtiqueta(_("orden"));
+        $orden->setTipo('texto');
+        $orden->setArgument('5');
+
+        return [$centro, $orden];
     }
 }

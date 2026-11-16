@@ -344,10 +344,11 @@ class DossiersVerPantallaData
                     'tabla' => [
                         'id_tabla' => 'datos_sql' . $id_dossier,
                         'cabeceras' => $oDatosTabla->getCabeceras(),
-                        'botones' => $oDatosTabla->getBotones(),
+                        'botones' => $oInfoClase->isSoloLectura() ? [] : $oDatosTabla->getBotones(),
                         'valores' => $oDatosTabla->getValores(),
                     ],
-                    'permiso' => (int) $Qpermiso,
+                    // De solo consulta: sin «modificar» / «eliminar» ni «nuevo» (permiso de lectura).
+                    'permiso' => $oInfoClase->isSoloLectura() ? 1 : (int) $Qpermiso,
                     'ins_traslado_link_spec' => $insTrasladoLinkSpec,
                 ];
             }

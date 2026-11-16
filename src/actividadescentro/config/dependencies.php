@@ -7,13 +7,16 @@ use src\actividadescentro\application\CentroEncargadoReordenar;
 use src\actividadescentro\application\CentrosDisponiblesData;
 use src\actividadescentro\application\CentrosEncargadosData;
 use src\actividadescentro\application\ListaActividadesCtrData;
+use src\actividadescentro\application\services\CentroDeEncargoLookup;
 use src\actividadescentro\domain\Info3010;
+use src\actividadescentro\domain\contracts\CentroDeEncargoLookupInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\infrastructure\persistence\postgresql\PgCentroEncargadoRepository;
 use function DI\autowire;
 
 return [
     CentroEncargadoRepositoryInterface::class => autowire(PgCentroEncargadoRepository::class),
+    CentroDeEncargoLookupInterface::class => autowire(CentroDeEncargoLookup::class),
 
     ActivCtrShellData::class => autowire(ActivCtrShellData::class),
     CentroEncargadoAsignar::class => autowire(CentroEncargadoAsignar::class),

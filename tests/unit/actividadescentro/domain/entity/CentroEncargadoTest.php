@@ -80,4 +80,16 @@ class CentroEncargadoTest extends myTest
         $this->assertEquals(1, $centroEncargado->getNumOrdenVo()->value());
         $this->assertEquals('Test', $centroEncargado->getEncargoVo()->value());
     }
+
+    /** Lo que necesita la lista genérica del dossier 3010: la clave y las columnas (centro por su nombre y orden). */
+    public function test_clave_y_columnas_para_la_lista_del_dossier(): void
+    {
+        $this->assertSame(['id_activ' => 'id_activ', 'id_ubi' => 'id_ubi'], $this->CentroEncargado->getPrimary_key());
+
+        $campos = $this->CentroEncargado->getDatosCampos();
+        $this->assertSame(['id_ubi', 'num_orden'], array_map(static fn ($c) => $c->getNom_camp(), $campos));
+        $this->assertSame('opciones', $campos[0]->getTipo());
+        $this->assertSame(\src\actividadescentro\domain\contracts\CentroDeEncargoLookupInterface::class, $campos[0]->getArgument());
+        $this->assertSame('getNombre_ubi', $campos[0]->getArgument2());
+    }
 }

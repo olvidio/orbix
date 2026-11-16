@@ -25,6 +25,9 @@ class Info3010 extends DatosInfoRepo
         $this->setMetodoGestor('getCentrosEncargados');
         $this->setRepositoryInterface(CentroEncargadoRepositoryInterface::class);
         $this->setPau('a');
+        // Solo consulta: los centros se asignan, quitan y ordenan en su pantalla (`CentrosEncargadosData`).
+        // La edición genérica de tablas no vale aquí: la clave son dos ids ajenos (actividad y centro).
+        $this->setSoloLectura(true);
     }
 
     public function getId_dossier(): int

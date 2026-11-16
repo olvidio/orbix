@@ -46,4 +46,10 @@ final class Info3010Test extends myTest
         $this->assertInstanceOf(Criteria::class, $criterio);
         $this->assertSame([], DescribeCriteria::filtros($criterio));
     }
+
+    /** Los centros se asignan en su pantalla propia: el dossier solo los lista (duda 26 del plan de revisión de tests). */
+    public function test_es_de_solo_consulta(): void
+    {
+        $this->assertTrue((new Info3010($this->createMock(CentroEncargadoRepositoryInterface::class)))->isSoloLectura());
+    }
 }

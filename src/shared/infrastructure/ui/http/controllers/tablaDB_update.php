@@ -38,6 +38,11 @@ $a_pkey = $pkeyJson !== '' ? json_decode($pkeyJson, true) : null;
 
 $obj = urldecode($Qclase_info_encoded);
 $oInfoClase = DatosInfoRepoResolver::resolve($obj);
+if ($oInfoClase->isSoloLectura()) {
+    // Tabla de solo consulta: no se da de alta, modifica ni borra con la pantalla genérica.
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey);
 $oInfoClase->setId_pau($Qid_pau);

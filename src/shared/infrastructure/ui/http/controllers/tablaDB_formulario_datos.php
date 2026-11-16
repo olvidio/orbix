@@ -26,6 +26,11 @@ $mod = is_string($Qmod) ? $Qmod : '';
 // Tiene que ser en dos pasos.
 $obj = urldecode((string) $Qclase_info_encoded);
 $oInfoClase = DatosInfoRepoResolver::resolve($obj);
+if ($oInfoClase->isSoloLectura()) {
+    // Tabla de solo consulta: no hay formulario de alta ni de modificación.
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }

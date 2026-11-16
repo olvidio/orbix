@@ -29,6 +29,8 @@ abstract class DatosInfoRepo
     protected bool $exacto = false;
 
     protected ?string $pau = null;
+    /** Tabla de solo consulta: la pantalla genérica la lista, pero no ofrece ni admite alta, modificación ni borrado. */
+    protected bool $soloLectura = false;
     /** @var class-string|null */
     protected ?string $repoInterface = null;
 
@@ -58,6 +60,16 @@ abstract class DatosInfoRepo
     public function addCampos(array $a_campos = []): array
     {
         return $a_campos;
+    }
+
+    public function setSoloLectura(bool $soloLectura): void
+    {
+        $this->soloLectura = $soloLectura;
+    }
+
+    public function isSoloLectura(): bool
+    {
+        return $this->soloLectura;
     }
 
     public function getMetodoGestor(): ?string
