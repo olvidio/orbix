@@ -167,9 +167,9 @@ Estados: `—` sin empezar · `parcial` · `ok`. E2E: `flujos` = spec con guarda
 | casas | ok | ok | parcial | parcial | carga | 2.8: 80 % |
 | actividadcargos / actividadescentro / actividadessacd / actividadplazas / actividadtarifas | ok | ok | ok | parcial | flujos | 2.4: 75–95 %; spec de tarifas; resincronización de cargos en `backlog.md` |
 | asignaturas / profesores | ok | ok | ok | parcial | flujos | 77 % / 81 %; dossiers de profesor con spec (tablas genéricas) |
-| cambios / configuracion / menus / inventario | ok | parcial | parcial | parcial | flujos | 63 / 75 / 63 / 61 %; pasada de cobertura pendiente (2.10) |
-| cartaspresentacion / tablonanuncios / zonassacd | ok | parcial | parcial | parcial | carga | 76 / 70 / 50 %; `zonassacd` pendiente (2.10); `ZonasAComun` sin test real (`backlog.md`) |
-| shared / utils_database | ok | parcial | parcial | parcial | — | 39 % / 58 %; pendiente (2.10) |
+| cambios / configuracion / menus / inventario | ok | ok | ok | ok | flujos | 2.10 (solo con los tests del módulo): `cambios` 63 %, `configuracion` 75 %, `menus` 57 %, `inventario` 56 %; el resto es DDL, `psql` y `getDatosCampos()` |
+| cartaspresentacion / tablonanuncios / zonassacd | ok | ok | ok | ok | carga | 76 / 70 / 51 %; en `zonassacd` lo que falta es `ZonasAComun` (`backlog.md`) y DDL |
+| shared / utils_database | ok | ok | parcial | parcial | — | 2.10: 34 % / 58 %; lo que falta es sobre todo DDL (`DBTrasvase`, `DBAbstract`…), que ejercen los tests de `devel_db_admin` |
 
 ---
 
@@ -202,7 +202,7 @@ Estados: `—` sin empezar · `parcial` · `ok`. E2E: `flujos` = spec con guarda
 - [x] 2.8 `dossiers` + `ubis` + `ubiscamas` + `casas` (sección 24): `dossiers` 50 % → 62 %, `ubiscamas` 60 % → 65 %, `ubis` 61 % → 62 %, `casas` 74 %; una inyección SQL y 2 bugs corregidos
 - [x] 2.9 `dbextern` + `devel_db_admin` + `pasarela` (sección 25): `dbextern` 59 % → 67 %, `pasarela` 61 % → 65 %; `devel_db_admin` sin cambios (DDL, necesita BD aislada); fecha de nacimiento de la BDU corregida (el `f_inc` de la sección 11 ya estaba arreglado y probado)
 - [x] 2.11 `planning` (sección 26): 62 % → 71 % (application 70 → 82 %): `ActividadesDePersonaService` 35 → ~90 %, `ActividadesPorCasasService` 58 → ~85 %; `ActividadesPorZonasService` sigue en 64 % (ya tenía 10 casos).
-- [~] 2.10 resto (sección 27): repaso por riesgo; corregidos 3 casos de HTML sin escapar (cartas de presentación, propuestas de encargos, correo a los sacd). Cobertura apenas cambia (`cartaspresentacion` 34 → 40 %). `inventario`, `cartaspresentacion`, `misas`, `zonassacd` y `utils_database` se subieron en 5.2. **Único paso pendiente del plan:** la pasada de cobertura de los módulos que siguen más bajos (informe del 2026-11-13): `shared` 39 %, `zonassacd` 50 %, `utils_database` 58 %, `inventario` 61 %, `menus` 63 %, `cambios` 63 %
+- [x] 2.10 resto (sección 27): repaso por riesgo (3 casos de HTML sin escapar) y pasada de cobertura de los módulos más bajos (sección 33): `zonassacd`, `utils_database`, `inventario`, `menus`, `cambios` y `shared`; tres arreglos y la duda 27
 
 **Fase 3**
 - [x] 3.1 Inventario de pantallas y matriz en `e2e/README.md` (sección 28).
@@ -1383,4 +1383,4 @@ Medido con los tests de cada módulo (unit ∪ integración), con Xdebug y contr
   - **Avisos de huecos y solapes entre los periodos de una casa** (`comprobarSolapes`, calendario de periodos de `ubis`): miraba solo los días sueltos del intervalo (`%d`, sin los meses), así que un hueco de un mes y un día pasaba por periodos seguidos y un hueco de un mes justo salía como «solape»; y comparaba las fechas con `===` (mismo objeto), por lo que nunca avisaba de un periodo con fecha fin igual a la de inicio. La copia de `DateTimeLocal` en `frontend/shared/` tiene el mismo código, pero nadie la llama; no se ha tocado.
   - Anotado, sin tocar: en `PgTimestamp`, la rama que acepta una hora en texto «HH:MM» no funciona (acaba en excepción); ningún caso llega ahí (las entidades guardan `TimeLocal`).
 
-**Cierre de la pasada (2026-11-16):** cinco fallos de la aplicación corregidos (aviso de una fase borrada, propiedades de avisos de otro usuario, periodos de una casa) y una duda nueva (27). Lo que queda por debajo en cada módulo es DDL, migraciones de un solo uso, importar/exportar con `psql` o los `getDatosCampos()` que cubre el test-guardia global.
+**Cierre de la pasada (2026-11-16):** tres arreglos en la aplicación (aviso de una fase borrada, propiedades de avisos de otro usuario, huecos y solapes entre periodos de una casa) y una duda nueva (27). Lo que queda por debajo en cada módulo es DDL, migraciones de un solo uso, importar/exportar con `psql` o los `getDatosCampos()` que cubre el test-guardia global.
