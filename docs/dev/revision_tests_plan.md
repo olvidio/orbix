@@ -1348,3 +1348,9 @@ Spec `pasarela-contribuciones.spec.ts`: alta, modificación y borrado de una exc
 - **Modificar, eliminar y cambiar el valor por defecto de la contribución de quien no duerme avisaban «Error en la conexión con el servidor»** aunque el cambio se guardaba: el controlador frontend respondía con el cuerpo vacío y la vista espera JSON, así que tampoco se refrescaba la lista ni se cerraba la ventana. Responde JSON como los demás parámetros de la pasarela (`AjaxJsonSupport::proxyPostRequest`).
 - La dl de los tests no tiene parámetros de pasarela guardados (la lista muestra los valores de ejemplo del código: 85 y dos excepciones); el spec repone lo que había al terminar.
 
+### Tablas genéricas dentro de un dossier (2026-11-16)
+
+Spec `dossier-tabla-generica.spec.ts`, con el dossier 1024 «congresos» de una persona del propio test: alta, modificación y borrado. Los dossiers que usan la pantalla genérica de tablas son los de profesor (1012, 1017 a 1022, 1024 y 1025). Un fallo de la aplicación corregido:
+
+- **«Eliminar» no funcionaba en ninguno de esos dossiers.** Las filas de la tabla no llevaban la cápsula `ctx_eliminar` que exige `tablaDB_update` (solo la firmaba la lista genérica de fuera de los dossiers), así que respondía «Operación no autorizada»; y con la cápsula, el hash del formulario del dossier no la admitía y la petición se rechazaba con un 302. `DossiersVerPantallaData` firma ahora la cápsula de cada fila y el formulario la declara. El spec fallaba antes en el borrado, primero con «Operación no autorizada» y después con el 302.
+

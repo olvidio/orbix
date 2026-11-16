@@ -11,6 +11,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\domain\DatosInfoRepo;
 use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\DatosInfoRepoResolver;
+use src\shared\security\HashB;
 use src\ubis\application\services\UbiRepositoryResolver;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
@@ -325,6 +326,7 @@ class DossiersVerPantallaData
                     ];
                 }
 
+                $soloLectura = $oInfoClase->isSoloLectura();
                 $fichaSegmentos[] = [
                     'tipo' => 'datos_tabla',
                     'id' => $nom_bloque,
@@ -338,17 +340,17 @@ class DossiersVerPantallaData
                     'action_tabla_link_spec' => $actionTablaLinkSpec,
                     'hash' => [
                         'campos_form' => 'mod',
-                        'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+                        'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',
                         'campos_hidden' => $a_camposHidden,
                     ],
                     'tabla' => [
                         'id_tabla' => 'datos_sql' . $id_dossier,
                         'cabeceras' => $oDatosTabla->getCabeceras(),
-                        'botones' => $oInfoClase->isSoloLectura() ? [] : $oDatosTabla->getBotones(),
-                        'valores' => $oDatosTabla->getValores(),
+                        'botones' => $soloLectura ? [] : $oDatosTabla->getBotones(),
+                        'valores' => $soloLectura ? $oDatosTabla->getValores() : $this->conCapsulaDeBorrado($oDatosTabla->getValores(), $Qclase_info_enc, (string) $id_pau, $Qobj_pau),
                     ],
                     // De solo consulta: sin «modificar» / «eliminar» ni «nuevo» (permiso de lectura).
-                    'permiso' => $oInfoClase->isSoloLectura() ? 1 : (int) $Qpermiso,
+                    'permiso' => $soloLectura ? 1 : (int) $Qpermiso,
                     'ins_traslado_link_spec' => $insTrasladoLinkSpec,
                 ];
             }
@@ -472,5 +474,31 @@ class DossiersVerPantallaData
             'lista_a_filas' => [],
             'ficha_segmentos' => [],
         ];
+    }
+
+    /**
+     * Añade a cada fila de la tabla la cápsula que exige `tablaDB_update` para borrarla (la misma que
+     * firma `tablaDB_lista_datos` en la pantalla genérica fuera de los dossiers). Sin ella, «eliminar»
+     * respondía siempre «Operación no autorizada».
+     *
+     * @param array<int|string, mixed> $valores
+     * @return array<int|string, mixed>
+     */
+    private function conCapsulaDeBorrado(array $valores, string $claseInfoCodificada, string $idPau, string $objPau): array
+    {
+        foreach ($valores as $k => $fila) {
+            if (!is_array($fila) || !isset($fila['sel']) || !is_scalar($fila['sel'])) {
+                continue;
+            }
+            $valores[$k]['ctx_eliminar'] = HashB::sign('tablaDB_update', [
+                'clase_info' => $claseInfoCodificada,
+                'mod' => 'eliminar',
+                's_pkey' => (string) $fila['sel'],
+                'id_pau' => $idPau,
+                'obj_pau' => $objPau,
+            ]);
+        }
+
+        return $valores;
     }
 }

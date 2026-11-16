@@ -142,6 +142,7 @@ npx playwright test --config=e2e/playwright.config.ts e2e/specs/authenticated/ -
 | personas | `personas-botones-peticion.spec.ts` | solo lectura: «petición ca / crt» sale en la lista de numerarios y no en la de personas de paso |
 | actividades | `actividades-alta-baja.spec.ts` | ficha nueva (tipo con desplegables encadenados) → crear → modificar → borrar desde el listado |
 | asistentes | `asistentes-alta-baja.spec.ts` | apuntar a un numerario desde la actividad → modificar la asistencia → asignar plaza → borrarla desde el dossier de la persona; los formularios de «cambiar actividad» y de modificar desde la persona llevan su cápsula |
+| dossiers, profesores | `dossier-tabla-generica.spec.ts` | tabla genérica dentro de un dossier (1024, congresos de una persona): «nuevo» → guardar → «modificar» → guardar → «eliminar» con confirmación |
 | actividadescentro, dossiers | `dossier-centros-encargados.spec.ts` | solo lectura: el dossier 3010 de una actividad con centros los lista por su nombre y no ofrece «nuevo», «modificar» ni «eliminar» |
 | asistentes, actividadplazas | `asistentes-persona-y-cambio.spec.ts` | apuntar a una persona desde su dossier de actividades → «cambiar actividad» desde la lista de asistentes → petición de plaza de la persona → pasarla a la actividad pedida desde la tabla de peticiones |
 | notas | `notas-alta-baja.spec.ts` | dossier 1011 → añadir nota con acta → borrar |

@@ -531,12 +531,27 @@ PHP);
         ], $s['action_tabla_link_spec']);
         $this->assertSame([
             'campos_form' => 'mod',
-            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel',
+            'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',
             'campos_hidden' => ['clase_info' => $claseCodificada, 'pau' => 'p', 'id_pau' => self::ID_NOM, 'obj_pau' => 'PersonaN', 'permiso' => '3', 'bloque' => '#ficha1022'],
         ], $s['hash']);
         $this->assertSame('datos_sql1022', $s['tabla']['id_tabla']);
         $this->assertCount(2, $s['tabla']['botones']);
         $this->assertSame(['select' => 'abc', 'scroll_id' => 2], $s['tabla']['valores'], 'sin filas: solo la selección y el scroll');
+    }
+
+    /** Una tabla de solo consulta (p. ej. el dossier 3010) se lista sin «modificar» / «eliminar» ni «nuevo». */
+    public function test_un_dossier_de_datos_de_solo_consulta_no_ofrece_botones_ni_alta(): void
+    {
+        $this->hayPersonaN();
+        $this->hayTipos();
+        $this->info->method('isSoloLectura')->willReturn(true);
+
+        $data = $this->sut()->build(self::personaPost() + ['id_dossier' => '1022', 'permiso' => '3']);
+
+        $s = $data['ficha_segmentos'][0];
+        $this->assertSame('datos_tabla', $s['tipo']);
+        $this->assertSame([], $s['tabla']['botones']);
+        $this->assertSame(1, $s['permiso'], 'permiso de lectura: la vista no pinta «nuevo»');
     }
 
     public function test_el_dossier_de_traslados_1004_añade_el_enlace_al_formulario_de_traslado(): void
