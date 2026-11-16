@@ -239,14 +239,6 @@ Pantallas directas:
 Pantallas via capacidad:
 - Ninguna adicional.
 
-### `/src/menus/menus_generar_txt`
-
-Pantallas directas:
-- Ninguna detectada.
-
-Pantallas via capacidad:
-- Ninguna adicional.
-
 ### `/src/menus/menus_get_page_data`
 
 Pantallas directas:
@@ -290,7 +282,6 @@ Endpoints sin pantalla directa detectada:
 - `/src/menus/menu_mover`
 - `/src/menus/menus_burger_layout_data`
 - `/src/menus/menus_exportar_ref_a_ficheros`
-- `/src/menus/menus_generar_txt`
 - `/src/menus/menus_importar_de_ficheros_a_ref`
 - `/src/menus/menus_legacy_layout_items_data`
 

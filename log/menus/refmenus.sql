@@ -357,7 +357,6 @@
 845	{10,10}	buscar	simple=1&tipo=ctr&loc=dl	133	32768	20	t
 1197	{70}	Configuración	\N	182	35651584	13	t
 1095	{50}	procesos activ.	\N	188	35651584	13	t
-1369	{990,10}	menus a texto	\N	142	33554432	13	t
 1371	{990,20}	posibles idiomas	clase_info=usuarios\\model\\InfoLocales	160	33554432	13	t
 1323	{100,10}	persona r/dl	tabla=p_de_casa&tipo=planning	61	2	3	t
 1060	{40,10}	persona r/dl	obj_pau=PersonaDl&tipo=planning	61	8	8	t

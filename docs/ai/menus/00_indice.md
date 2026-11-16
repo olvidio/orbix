@@ -31,7 +31,6 @@ Indice para una IA local. Estos documentos estan pensados para busqueda semantic
 - Ver el menú Burger o Pills -> `flujos/menus_burger_layout.md`
 - Exportar los menús -> `flujos/menus_exportar.md`
 - Menús a/desde ficheros SQL -> `flujos/menus_exportar_ref_a_ficheros.md`
-- Regenerar los textos de los menús -> `flujos/menus_generar_txt.md`
 - Ver el listado y la ficha de un menú -> `flujos/menus_get_page.md`
 - Importar una plantilla de menús -> `flujos/menus_importar.md`
 - Restaurar menús ref→DL -> `flujos/menus_importar_de_ficheros_a_ref.md`

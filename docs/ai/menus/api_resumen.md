@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "menus"
-endpoints: 19
+endpoints: 18
 estado_revision: "generado"
 ---
 
@@ -106,13 +106,6 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Id: `menus.menus_exportar_ref_a_ficheros`
 - Controller: `src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php`
 - Entrada: `post.ctx_ficheros:string` (cápsula `HashB`, acción `menus_exportar_ref_a_ficheros`; hoy ninguna pantalla la firma), `post.accion:string` (`exportar` | `importar`)
-- Respuesta: `raw_response`
-
-## `/src/menus/menus_generar_txt`
-
-- Id: `menus.menus_generar_txt`
-- Controller: `src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php`
-- Entrada: ninguna detectada.
 - Respuesta: `raw_response`
 
 ## `/src/menus/menus_get_page_data`

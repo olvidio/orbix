@@ -88,14 +88,13 @@ Controladores de `src/` que escriben y no abren ninguna cápsula (fase 6.5 del p
 - **Hecho (2026-11-15), `asistentes`:** `asistente_guardar`, `asistente_eliminar`, `asistente_plaza_asignar` (`AsistenteMutationCtx`).
 - **Hecho (2026-11-15), `certificados`:** `certificado_emitido_pdf_upload`, `certificado_recibido_pdf_upload` (la cápsula del formulario que guarda el certificado), `certificado_emitido_enviar` (cápsula de la fila), `certificado_emitido_guardar_pdf` (cápsula que devuelve `certificado_emitido_guardar`).
 - **Hecho (2026-11-15), `procesos` y `menus`:** `actividad_proceso_generar`, `menus_exportar`, `menus_exportar_ref_a_ficheros`.
-- **Pendiente:** los dos de resincronización (anotados arriba) y `menus/menus_generar_txt` (abajo).
+- **Pendiente:** los dos de resincronización (anotados arriba). `menus/menus_generar_txt` se retiró el 2026-11-16.
 - **No lo necesitan:** `actividades/tipo_activ_form_nuevo`, `inventario/lista_docs_asignar_ctr` y `_dlb` (pintan un formulario y firman ellos la cápsula), `usuarios/restablecer_password_guardar` y `recuperar_2fa_mail` (flujo anónimo con enlace firmado).
 - `notas/acta_imprimir_presentacion_data` marca el acta como impresa al pedir los datos para imprimirla: es una lectura que escribe, a propósito; no entra en el test-guardia porque sin acta no hace nada.
 
-### Menús: pantalla de ficheros que falta y entrada que ejecuta al pulsarla
+### Menús: pantalla de ficheros que falta
 
 - Las entradas de menú «exportar / importar menús a ficheros» apuntan a `frontend/menus/controller/menus_ficheros.php?accion=…`, que no existe. Importar tiene pantalla nueva (`menus_importar_de_ficheros_a_ref.php`); **exportar a ficheros no tiene ninguna**. El endpoint `menus_exportar_ref_a_ficheros` exige desde el 2026-11-15 una cápsula que nadie firma, así que no se puede ejecutar desde la web. Hacer la pantalla (con confirmación, que firme `ctx_ficheros`) y corregir las entradas de menú.
-- `/src/menus/menus_generar_txt` es una entrada de menú que apunta directamente al endpoint: al pulsarla regenera `frontend/menus/view/traducir_menu.phtml` (la lista de nombres de menús para gettext). No toca datos y es idempotente; el usuario decidió el 2026-11-15 dejarla así (duda 23 del plan de tests).
 
 ### Certificados emitidos sin prueba en el navegador
 

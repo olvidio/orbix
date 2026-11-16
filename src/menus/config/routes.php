@@ -47,9 +47,6 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/menus/menus_exportar_ref_a_ficheros', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php';
     });
-    $r->addRoute(['GET','POST'], '/src/menus/menus_generar_txt', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/menus_generar_txt.php';
-    });
     $r->addRoute(['GET','POST'], '/src/menus/menus_importar_de_ficheros_a_ref', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php';
     });

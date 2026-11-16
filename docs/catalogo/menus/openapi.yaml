@@ -536,41 +536,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/menus/menus_generar_txt":
-    post:
-      operationId: "post_menus_menus_generar_txt"
-      summary: "Generar fichero de textos para gettext"
-      description: |
-        Regenera `frontend/menus/view/traducir_menu.phtml` con llamadas `_()` por cada etiqueta de menú activo y tipos de repetición de actividades.
-        
-        Operacion: `mutacion`.
-        
-        Fuente catalogo: `docs/catalogo/menus/api/menus_generar_txt.md`
-      tags:
-        - "menus"
-      requestBody:
-        required: false
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                _sin_parametros_detectados:
-                  type: string
-                  description: "No se han inferido campos desde el catalogo."
-      responses:
-        "200":
-          description: "Respuesta generada por Orbix."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
-        "400":
-          description: "Peticion no valida o error de validacion."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrbixStandardResponseStringData"
   "/src/menus/menus_get_page_data":
     post:
       operationId: "post_menus_menus_get_page_data"

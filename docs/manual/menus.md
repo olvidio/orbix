@@ -339,38 +339,6 @@ Respaldar o restaurar la referencia de menús vía ficheros SQL en disco.
 - Flujo: `menus.menus_exportar_ref_a_ficheros.gestionar.flujo`
 - Fichero catalogo: `docs/catalogo/menus/flujos/menus_exportar_ref_a_ficheros.md`
 
-## Regenerar los textos de los menús
-
-### Para Que Sirve
-
-Regenerar el fichero de textos traducibles de las etiquetas de menú.
-
-### Donde Entrar
-
-- Acceso vía fragmento, dossier o pantalla relacionada (sin pantalla principal propia).
-- **Legacy:** sistema > traducciones > menus a texto
-- **Pills2:** sistema > traducciones > menus a texto
-
-### Tareas Habituales
-
-#### Regenerar los textos de los menús
-
-1. Ejecutar la opción de generar textos.
-2. Se actualiza el fichero que se usa para traducir los nombres de los menús.
-
-### Errores O Avisos Frecuentes
-
-- No hay errores documentados en el catalogo para este flujo.
-
-### Permisos
-
-- Menú `sistema > traducciones > menus a texto` (`_referencia_menus.md`).
-
-### Referencias Internas
-
-- Flujo: `menus.menus_generar_txt.gestionar.flujo`
-- Fichero catalogo: `docs/catalogo/menus/flujos/menus_generar_txt.md`
-
 ## Ver el listado y la ficha de un menú
 
 ### Para Que Sirve

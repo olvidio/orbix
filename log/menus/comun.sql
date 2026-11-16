@@ -131,7 +131,6 @@
 174	4	frontend/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
 175	4	frontend/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
 178	4	frontend/notas/controller/acta_listado_anual.php	\N	listado anual actas
-142	1	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
 148	1	apps/menus/controller/menus_que.php	\N	gestor de menus
 160	1	apps/core/mod_tabla_sql.php	\N	modificar los datos de una tabla
 131	1	apps/usuarios/controller/usuario_lista.php	\N	lista usuarios
