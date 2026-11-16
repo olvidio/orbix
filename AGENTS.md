@@ -139,6 +139,8 @@ Al crear o modificar un fichero con textos que ve el usuario, cerrar gettext en 
 
 ### Tras el cambio de código
 
+**Todo en un paso:** `php tools/i18n/actualizar.php` regenera los textos de menús de la BD (`frontend/menus/view/traducir_menu.phtml`), la plantilla, hace `msgmerge`, traduce lo nuevo con Groq, compila los `.mo` y escribe un informe de las cadenas nuevas que **hay que revisar** (el modelo no conoce el vocabulario de la casa). Lo que sigue son los pasos sueltos.
+
 Poedit, al actualizar desde el código fuente, no extrae `{{ "..."|trans }}` ni los `.php` de `scripts/`. Regenerar la plantilla con el script del repo:
 
 ```bash

@@ -70,7 +70,41 @@ Si aparece `ModuleNotFoundError: polib`, ejecuta `deactivate` y activa de nuevo 
 
 ---
 
-## Flujo completo
+## Todo en un paso: `tools/i18n/actualizar.php`
+
+```bash
+php tools/i18n/actualizar.php            # pasada completa
+php tools/i18n/actualizar.php --sin-menus --sin-traducir   # sin BD ni Groq (solo pot + msgmerge + mo)
+```
+
+Hace, por orden, lo que describen los apartados siguientes:
+
+1. **Textos de menús de la BD** → `frontend/menus/view/traducir_menu.phtml` (`php tools/i18n/generar_textos_menus.php`).
+   La aplicación traduce en tiempo de ejecución los nombres de grupo de menú, los menús y los tipos de
+   repetición (`_($menu)`, `_($nombreGrupo)`): xgettext no los ve en el código, así que se vuelcan a ese
+   fichero desde **todas** las BD (aux_grupmenu / aux_menus de todos los esquemas de sv-e y sf, plantillas
+   ref_* de comun, xa_tipo_repeticion). Necesita Docker con el contenedor `orbix-db-1` (`--contenedor=`).
+   Con `--comprobar` solo dice si el fichero está al día.
+2. `languages/es_ES.pot` (`actualizar_es_pot.php`).
+3. `msgmerge` sobre ca/en/de/it.
+4. `traduir_groq.py` en cada idioma: primero las fuzzy (`--fuzzy`) y después las vacías. Tras `msgmerge`
+   solo son fuzzy o vacías las cadenas nuevas.
+5. `msgcat` (deja el `.po` en el formato de gettext: polib corta las líneas de otra forma y, sin esto, cada
+   pasada reescribiría medio fichero) y `msgfmt --check`.
+6. **Revisión:** `informe_revision.py` escribe una tabla con cada cadena nueva y su traducción en los cuatro
+   idiomas, con avisos (vacía, fuzzy, placeholders distintos, igual al español salvo siglas), y
+   `audit_po_cobertura.php`. Sale con código 1 si queda alguna cadena nueva vacía o fuzzy.
+
+**La revisión del informe es manual y obligatoria:** el modelo no conoce el vocabulario de la casa. En la
+primera pasada (16-nov-2026) tradujo «Numerarios» por *Enrolled Students*, «Agregados» por *Aggregierte
+Daten*, «ATENCIÓN SACD» por *ACHTUNG SACD* y «n de paso» por *Kursnummer*. Términos de referencia:
+numerarios = numeraris / numeraries / Numerarier / numerari; agregados = agregats / associates /
+Assoziierte / aggregati; supernumerarios = supernumeraris / supernumeraries / Supernumerarier /
+soprannumerari; «de paso» = de pas / visiting / durchreisend / di passaggio; las siglas (n, agd, s, sg, sr,
+ca, cv, crt, ctr, r/dl, sacd, sss+…) no se traducen. Las correcciones se hacen en el `.po` (Poedit o a mano)
+y se vuelve a compilar el `.mo`.
+
+## Flujo completo (paso a paso)
 
 ### 1. Actualizar la plantilla maestra (`es_ES.pot`)
 

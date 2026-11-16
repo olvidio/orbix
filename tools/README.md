@@ -26,6 +26,12 @@ Guía para agentes: [`AGENTS.md`](../AGENTS.md) (sección «Scripts y herramient
 
 **Guía completa:** [`docs/dev/traducciones_gettext.md`](../docs/dev/traducciones_gettext.md) (Poedit + plantilla + script + repaso manual).
 
+Pasada completa en un comando (menús de la BD → `.pot` → `msgmerge` → Groq → `.mo` → informe de revisión):
+
+```bash
+php tools/i18n/actualizar.php
+```
+
 ```bash
 cd tools/i18n
 python3 -m venv .venv
