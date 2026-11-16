@@ -314,7 +314,7 @@ class DateTimeLocal extends DateTime
             $oF_fin = $aPeriodo['fin'];
 
             //Fecha fin periodo debe ser posterior a fecha inicio
-            if ($oF_fin === $oF_ini) {
+            if ($oF_fin == $oF_ini) {
                 $fecha = $oF_fin->getFromLocal();
                 $error_txt .= empty($error_txt) ? '' : '<br>';
                 $error_txt .= sprintf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"), $i, $fecha);
@@ -328,13 +328,14 @@ class DateTimeLocal extends DateTime
             // Siguiente
             if ($aPeriodoNext = next($cPeriodos)) {
                 $oF_ini_next = $aPeriodoNext['inicio'];
-                $interval = $oF_fin->diff($oF_ini_next);
-                if ($interval->format('%r%d') > 1) {
+                // Días totales con signo (`%a`), no los días sueltos del intervalo (`%d`, sin los meses).
+                $dias = (int) $oF_fin->diff($oF_ini_next)->format('%r%a');
+                if ($dias > 1) {
                     $fecha = $oF_fin->getFromLocal();
                     $error_txt .= empty($error_txt) ? '' : '<br>';
                     $error_txt .= sprintf(_("dias libres cerca de %s"), $fecha);
                 }
-                if ($interval->format('%r%d') < 1) {
+                if ($dias < 1) {
                     $fecha = $oF_fin->getFromLocal();
                     $error_txt .= empty($error_txt) ? '' : '<br>';
                     $error_txt .= sprintf(_("hay un solape cerca de %s"), $fecha);

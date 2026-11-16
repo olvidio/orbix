@@ -73,4 +73,84 @@ final class DateTimeLocalTest extends myTest
         yield 'inglés con día y mes al revés' => ['en_US.UTF-8', '15/6/2031', false];
         yield 'texto' => ['es_ES.UTF-8', 'mañana', false];
     }
+
+    // ---- comprobarSolapes (periodos de una casa) ------------------------------------------------
+
+    /** @return array{inicio: DateTimeLocal, fin: DateTimeLocal} */
+    private function periodo(string $inicio, string $fin): array
+    {
+        return ['inicio' => new DateTimeLocal($inicio), 'fin' => new DateTimeLocal($fin)];
+    }
+
+    private function local(string $iso): string
+    {
+        return (new DateTimeLocal($iso))->getFromLocal();
+    }
+
+    public function test_periodos_seguidos_no_dan_aviso(): void
+    {
+        $this->assertFalse((new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-31'),
+            $this->periodo('2026-02-01', '2026-06-30'),
+            $this->periodo('2026-07-01', '2026-12-31'),
+        ]));
+        $this->assertFalse((new DateTimeLocal())->comprobarSolapes([]));
+    }
+
+    public function test_dias_libres_y_solapes_entre_periodos(): void
+    {
+        $this->assertSame(sprintf('dias libres cerca de %s', $this->local('2026-01-10')), (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-10'),
+            $this->periodo('2026-01-15', '2026-01-31'),
+        ]));
+        $this->assertSame(sprintf('hay un solape cerca de %s', $this->local('2026-01-10')), (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-10'),
+            $this->periodo('2026-01-10', '2026-01-31'),
+        ]));
+    }
+
+    /** Un hueco o un solape de más de un mes también cuenta (antes solo se miraban los días sueltos del intervalo). */
+    public function test_dias_libres_y_solapes_de_mas_de_un_mes(): void
+    {
+        // Intervalo de «1 mes y 1 día»: los días sueltos (1) parecen periodos seguidos.
+        $this->assertSame(sprintf('dias libres cerca de %s', $this->local('2026-01-15')), (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-15'),
+            $this->periodo('2026-02-16', '2026-03-31'),
+        ]));
+        // Intervalo de «1 mes y 0 días»: los días sueltos (0) parecían un solape.
+        $this->assertSame(sprintf('dias libres cerca de %s', $this->local('2026-01-10')), (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-10'),
+            $this->periodo('2026-02-10', '2026-03-31'),
+        ]));
+        $this->assertSame(sprintf('hay un solape cerca de %s', $this->local('2026-03-15')), (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-03-15'),
+            $this->periodo('2026-02-14', '2026-04-30'),
+        ]));
+    }
+
+    public function test_fecha_fin_igual_o_anterior_a_la_de_inicio(): void
+    {
+        $this->assertSame(sprintf('la fecha fin es igual a la fecha inicio en el periodo 1: %s', $this->local('2026-01-05')),
+            (new DateTimeLocal())->comprobarSolapes([$this->periodo('2026-01-05', '2026-01-05')]));
+        $this->assertSame(sprintf('la fecha fin es menor que la fecha inicio en el periodo 1: %s', $this->local('2026-01-05')),
+            (new DateTimeLocal())->comprobarSolapes([$this->periodo('2026-01-05', '2026-01-02')]));
+    }
+
+    public function test_varios_avisos_se_separan_con_br(): void
+    {
+        $txt = (new DateTimeLocal())->comprobarSolapes([
+            $this->periodo('2026-01-01', '2026-01-10'),
+            $this->periodo('2026-01-20', '2026-01-15'),
+        ]);
+
+        $this->assertSame(sprintf('dias libres cerca de %s<br>la fecha fin es menor que la fecha inicio en el periodo 2: %s',
+            $this->local('2026-01-10'), $this->local('2026-01-20')), $txt);
+    }
+
+    public function test_fecha_en_latin(): void
+    {
+        $this->assertSame('die 16 mense  novembri  anno  2026', (new DateTimeLocal('2026-11-16'))->getFechaLatin());
+        $this->assertSame('die 1 mense  ianuario  anno  2027', (new DateTimeLocal('2027-01-01'))->getFechaLatin());
+    }
 }
+
