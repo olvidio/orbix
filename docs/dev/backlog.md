@@ -111,4 +111,4 @@ Los flujos de certificados emitidos (imprimir y guardar el PDF, subir el PDF fir
 
 ### Restos que deja la suite de PHPUnit
 
-De forma intermitente, una fila «test_nom_activ_vo» en `public.a_actividades_all` (tabla padre). Localizar el test y limpiar. (Las 5 marcas de dossier 1303 que dejaban los tests de `tests/unit/notas` ya se limpian: `BuscaPersonaNotasTrait`, 2026-11-15.)
+De forma intermitente, una fila «test_nom_activ_vo» en `public.a_actividades_all` (tabla padre). Localizar el test y limpiar. (Las 5 marcas de dossier 1303 que dejaban los tests de `tests/unit/notas` ya se limpian: `BuscaPersonaNotasTrait`, 2026-11-15.) (La dirección de casa -10019001 «test_poblacion_vo» que dejaba `PgCartaPresentacionRepositoryTest`, que no tenía `tearDown()`, también: 2026-11-16.)

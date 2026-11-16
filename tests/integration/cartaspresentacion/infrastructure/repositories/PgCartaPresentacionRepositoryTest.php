@@ -51,6 +51,29 @@ class PgCartaPresentacionRepositoryTest extends myTest
         $this->direccionesCreadas[] = $dir1;
     }
 
+    /**
+     * Borra la dirección y la casa que crea `setUp()`: sin esto, cada pasada dejaba la dirección
+     * -10019001 («test_poblacion_vo») en las direcciones de casas de la dl.
+     */
+    public function tearDown(): void
+    {
+        foreach ($this->direccionesCreadas as $direccion) {
+            $guardada = $this->direccionRepository->findById($direccion->getId_direccion());
+            if ($guardada !== null) {
+                $this->direccionRepository->Eliminar($guardada);
+            }
+        }
+        foreach ($this->casasCreadas as $casa) {
+            $guardada = $this->casaRepository->findById($casa->getId_ubi());
+            if ($guardada !== null) {
+                $this->casaRepository->Eliminar($guardada);
+            }
+        }
+        $this->direccionesCreadas = [];
+        $this->casasCreadas = [];
+        parent::tearDown();
+    }
+
     public function test_guardar_nuevo_cartaPresentacion()
     {
         // Crear instancia usando factory
