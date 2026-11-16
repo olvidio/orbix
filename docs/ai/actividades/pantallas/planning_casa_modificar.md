@@ -6,7 +6,7 @@ titulo: "Editar actividad desde planning"
 pantalla: "actividades.pantalla.planning_casa_modificar"
 preguntas: ["Que se puede hacer en Editar actividad desde planning?", "Que campos tiene Editar actividad desde planning?", "Que acciones hay en Editar actividad desde planning?"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_ver.gestionar"]
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
+endpoints: ["/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
 source: "docs/catalogo/actividades/pantallas/planning_casa_modificar.md"
 estado_revision: "generado"
 ---
@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Fragmento con el **formulario de edición** de una actividad existente, incrustado en el planning de casas (`planning_casa_que`). Recibe `id_activ`, carga entidad y desplegables con `actividad_ver_datos`, bloque tipo con `actividad_que_datos` y etiquetas de status con `actividad_status_labels_datos`. Reutiliza las plantillas `_actividad_form_*` en modo `editar`; guardar llama a `actividad_editar` (JS compartido).
+Fragmento con el **formulario de edición** de una actividad existente, incrustado en el planning de casas (`planning_casa_que`). Recibe `id_activ`, carga entidad y desplegables con `actividad_ver_datos`, bloque tipo con el widget `ActividadTipo` (frontend) y etiquetas de status con `actividad_status_labels_datos`. Reutiliza las plantillas `_actividad_form_*` en modo `editar`; guardar llama a `actividad_editar` (JS compartido).
 
 ## Uso En Ayuda
 
@@ -40,7 +40,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_status_labels_datos`
 - `/src/actividades/actividad_ver_datos`
 

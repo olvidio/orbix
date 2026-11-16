@@ -7,7 +7,7 @@ flujo: "actividades.tipo_activ.gestionar.flujo"
 preguntas: ["Como ver los tipos de actividad en Ver los tipos de actividad?", "Como crear o modificar un tipo de actividad en Ver los tipos de actividad?", "Como eliminar un tipo de actividad en Ver los tipos de actividad?"]
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
-endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
+endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista_data", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
 source: "docs/catalogo/actividades/flujos/tipo_activ.md"
 estado_revision: "generado"
 ---
@@ -37,7 +37,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
@@ -48,7 +48,7 @@ Referencias tecnicas para verificar la respuesta:
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
@@ -59,7 +59,7 @@ Referencias tecnicas para verificar la respuesta:
 
 Referencias tecnicas para verificar la respuesta:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 

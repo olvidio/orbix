@@ -5,7 +5,7 @@ modulo: "actividades"
 nombre: "Gestionar Tipo Activ"
 entidades: ["TipoActiv", "TipoActivLista"]
 acciones: ["crear", "crear_actualizar", "eliminar", "listar"]
-endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
+endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista_data", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
 pantallas: ["frontend/actividades/controller/tipo_activ.php"]
 casos_uso: ["src\\actividades\\application\\TipoActivEliminar", "src\\actividades\\application\\TipoActivLista", "src\\actividades\\application\\TipoActivNuevo", "src\\actividades\\application\\TipoActivUpdate"]
 tags: ["activ", "actividades", "eliminar", "lista", "nuevo", "tipo", "tipo_activ", "update"]
@@ -30,7 +30,7 @@ Gestiona TipoActiv, TipoActivLista. Actualiza el nombre de un tipo de actividad.
 ## Endpoints
 
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 

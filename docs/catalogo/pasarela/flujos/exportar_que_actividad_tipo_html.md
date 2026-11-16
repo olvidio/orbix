@@ -32,11 +32,11 @@ Pasos propuestos:
 2. Usar los desplegables de **seleccionar un tipo de actividad**; el selector se actualiza solo según lo elegido.
 
 Endpoints asociados:
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 
 ## Endpoints Del Flujo
 
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 
 ## Errores Conocidos
 

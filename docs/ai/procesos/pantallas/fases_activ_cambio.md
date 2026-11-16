@@ -6,7 +6,7 @@ titulo: "Fases Activ Cambio"
 pantalla: "procesos.pantalla.fases_activ_cambio"
 preguntas: ["Que se puede hacer en Fases Activ Cambio?", "Que campos tiene Fases Activ Cambio?", "Que acciones hay en Fases Activ Cambio?"]
 capacidades: ["procesos.fases_activ_cambio.gestionar", "procesos.fases_activ_cambio_tipo_html.gestionar"]
-endpoints: ["/src/actividades/actividad_tipo_get", "/src/procesos/fases_activ_cambio_get", "/src/procesos/fases_activ_cambio_tipo_html", "/src/procesos/fases_activ_cambio_update"]
+endpoints: ["/src/actividades/actividad_tipo_get", "/src/procesos/fases_activ_cambio_get", "/src/procesos/fases_activ_cambio_tipo_data", "/src/procesos/fases_activ_cambio_update"]
 source: "docs/catalogo/procesos/pantallas/fases_activ_cambio.md"
 estado_revision: "generado"
 ---
@@ -63,7 +63,7 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 - `/src/actividades/actividad_tipo_get`
 - `/src/procesos/fases_activ_cambio_get`
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 - `/src/procesos/fases_activ_cambio_update`
 
 ## Precauciones

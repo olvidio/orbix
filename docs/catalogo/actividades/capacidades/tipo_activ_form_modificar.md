@@ -5,7 +5,7 @@ modulo: "actividades"
 nombre: "Gestionar Tipo Activ Form Modificar"
 entidades: ["TipoActivFormModificar"]
 acciones: ["ejecutar"]
-endpoints: ["/src/actividades/tipo_activ_form_modificar"]
+endpoints: ["/src/actividades/tipo_activ_form_modificar_data"]
 pantallas: ["frontend/actividades/controller/tipo_activ.php"]
 casos_uso: ["src\\actividades\\application\\TipoActivFormModificar"]
 tags: ["activ", "actividades", "form", "modificar", "tipo", "tipo_activ_form_modificar"]
@@ -26,7 +26,7 @@ Gestiona TipoActivFormModificar. Devuelve el HTML del formulario para modificar/
 
 ## Endpoints
 
-- `/src/actividades/tipo_activ_form_modificar`
+- `/src/actividades/tipo_activ_form_modificar_data`
 
 ## Pantallas Relacionadas
 

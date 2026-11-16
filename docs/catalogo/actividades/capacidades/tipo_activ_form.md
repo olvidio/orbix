@@ -5,7 +5,7 @@ modulo: "actividades"
 nombre: "Gestionar Tipo Activ Form"
 entidades: ["TipoActivForm"]
 acciones: ["crear"]
-endpoints: ["/src/actividades/tipo_activ_form_nuevo"]
+endpoints: ["/src/actividades/tipo_activ_form_nuevo_data"]
 pantallas: ["frontend/actividades/controller/tipo_activ.php"]
 casos_uso: ["src\\actividades\\application\\TipoActivFormNuevo"]
 tags: ["activ", "actividades", "form", "nuevo", "tipo", "tipo_activ_form"]
@@ -26,7 +26,7 @@ Gestiona TipoActivForm. Devuelve el HTML del formulario para crear un nuevo tipo
 
 ## Endpoints
 
-- `/src/actividades/tipo_activ_form_nuevo`
+- `/src/actividades/tipo_activ_form_nuevo_data`
 
 ## Pantallas Relacionadas
 

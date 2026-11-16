@@ -5,9 +5,9 @@ modulo: "procesos"
 nombre: "Gestionar Fases Activ Cambio Tipo Html"
 entidades: ["FasesActivCambioTipoActividadHtml"]
 acciones: ["ejecutar"]
-endpoints: ["/src/procesos/fases_activ_cambio_tipo_html"]
+endpoints: ["/src/procesos/fases_activ_cambio_tipo_data"]
 pantallas: ["frontend/procesos/controller/fases_activ_cambio.php"]
-casos_uso: ["src\\procesos\\application\\FasesActivCambioTipoActividadHtmlData"]
+casos_uso: ["src\\procesos\\application\\FasesActivCambioTipoActividadData"]
 tags: ["activ", "cambio", "fases", "fases_activ_cambio_tipo_html", "html", "procesos", "tipo"]
 estado_revision: "generado"
 ---
@@ -26,7 +26,7 @@ Gestiona FasesActivCambioTipoActividadHtml. Payload para {.
 
 ## Endpoints
 
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 
 ## Pantallas Relacionadas
 
@@ -34,7 +34,7 @@ Gestiona FasesActivCambioTipoActividadHtml. Payload para {.
 
 ## Casos De Uso Detectados
 
-- `src\procesos\application\FasesActivCambioTipoActividadHtmlData`
+- `src\procesos\application\FasesActivCambioTipoActividadData`
 
 ## Pistas Desde Endpoints
 

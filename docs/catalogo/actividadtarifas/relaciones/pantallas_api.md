@@ -83,7 +83,6 @@ Endpoints aportados por capacidades:
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:
-- `/src/actividades/actividad_que_datos`
 - `/src/actividadtarifas/relacion_tarifa_form_data`
 - `/src/actividadtarifas/relacion_tarifa_update`
 

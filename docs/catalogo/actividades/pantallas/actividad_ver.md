@@ -7,7 +7,7 @@ nombre: "Ficha de actividad (ver/editar/nueva/cambiar tipo)"
 controller: "frontend/actividades/controller/actividad_ver.php"
 vistas: ["frontend/actividades/view/actividad_form.html.twig", "frontend/actividades/view/_actividad_form_head.html.twig", "frontend/actividades/view/_actividad_form_body.html.twig", "frontend/actividades/view/_actividad_form_botones.html.twig", "frontend/actividades/view/_actividad_form.js.html.twig"]
 fragmentos_frontend: ["frontend/actividades/controller/actividad_select_ubi.php", "frontend/dossiers/controller/dossiers_ver.php"]
-endpoints: ["/src/actividades/actividad_ver_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_nivel_stgr_default_datos", "/src/actividades/actividad_permiso_crear_datos", "/src/actividades/actividad_que_datos", "/src/actividades/actividad_fases_completadas_datos", "/src/actividades/actividad_nuevo", "/src/actividades/actividad_editar", "/src/actividades/actividad_cambiar_tipo", "/src/actividades/actividad_tipo_get"]
+endpoints: ["/src/actividades/actividad_ver_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_nivel_stgr_default_datos", "/src/actividades/actividad_permiso_crear_datos", "/src/actividades/actividad_fases_completadas_datos", "/src/actividades/actividad_nuevo", "/src/actividades/actividad_editar", "/src/actividades/actividad_cambiar_tipo", "/src/actividades/actividad_tipo_get"]
 capacidades: ["actividades.actividad_ver.gestionar", "actividades.actividad_permiso_crear.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_nivel_stgr_default.gestionar", "actividades.actividad_que.gestionar"]
 campos: ["post.id_activ", "post.mod", "post.obj_pau", "post.refresh", "post.id_tipo_activ", "post.sasistentes", "post.sactividad", "post.sel", "form.nom_activ", "form.f_ini", "form.h_ini", "form.f_fin", "form.h_fin", "form.dl_org", "form.plazas", "form.id_ubi", "form.lugar_esp", "form.id_tarifa", "form.precio", "form.observ", "form.id_repeticion", "form.nivel_stgr", "form.publicado", "form.idioma", "form.status"]
 acciones: ["fnjs_guardar", "fnjs_cambiar_ubi", "fnjs_generarNomActiv", "fnjs_asistentes", "fnjs_actividad", "fnjs_nom_tipo", "fnjs_act_id_activ", "fnjs_actualizar_nivel_stgr"]
@@ -31,7 +31,7 @@ El controller frontend no usa `src\` directamente: pide entidad y desplegables a
 `actividad_ver_datos`, etiquetas de status a `actividad_status_labels_datos`,
 nivel STGR por defecto a `actividad_nivel_stgr_default_datos`, permisos de
 crear a `actividad_permiso_crear_datos`, el bloque de tipo a
-`actividad_que_datos` y prefilla fases con `actividad_fases_completadas_datos`
+el widget `ActividadTipo` (frontend) y prefilla fases con `actividad_fases_completadas_datos`
 (helper `PrefillPermActividadesFases`).
 
 ## Tipo

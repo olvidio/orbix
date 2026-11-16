@@ -7,7 +7,7 @@ flujo: "actividades.tipo_activ_form_modificar.gestionar.flujo"
 preguntas: ["Como modificar un tipo de actividad en Modificar un tipo de actividad?"]
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
-endpoints: ["/src/actividades/tipo_activ_form_modificar"]
+endpoints: ["/src/actividades/tipo_activ_form_modificar_data"]
 source: "docs/catalogo/actividades/flujos/tipo_activ_form_modificar.md"
 estado_revision: "generado"
 ---
@@ -36,7 +36,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 3. Cambiarlo y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- `/src/actividades/tipo_activ_form_modificar`
+- `/src/actividades/tipo_activ_form_modificar_data`
 
 ## Pantallas Y Fragmentos Relacionados
 

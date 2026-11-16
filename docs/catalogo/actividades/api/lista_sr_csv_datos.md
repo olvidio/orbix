@@ -55,8 +55,8 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
 - Forma: `standard_envelope_string_data`.
-- `data` con claves: `html_tabla` (tabla renderizada), `a_cabeceras` y `a_valores` (datos crudos para
-  CSV), `titulo` y `pref_error` (texto de error si falló al guardar la preferencia; vacío si todo bien).
+- `data` con claves: `a_cabeceras` y `a_valores` (filas de la tabla y del CSV; la tabla la monta
+  `frontend/actividades/controller/lista_sr_csv.php`), `titulo` y `pref_error` (texto de error si falló al guardar la preferencia; vacío si todo bien).
 
 ## Errores conocidos
 

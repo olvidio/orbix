@@ -31,7 +31,7 @@ Según `que`, agrupa por casas (`lista_cdc`, `c_comunes*`, `c_todas*`) o por ofi
 resuelve lugar, tipo, nº de asistentes previstos, tarifa y (si `ver_ctr=si`) los centros encargados,
 aplicando los permisos por actividad (`$_SESSION['oPermActividades']` con `procesos`, o permisivo). Las
 actividades sin lugar generan avisos que preceden a la tabla paginada. Con un `que` desconocido devuelve
-un mensaje de error dentro de `data.html`.
+un mensaje de error en `data.mensaje`.
 
 ## Endpoint
 
@@ -56,13 +56,14 @@ un mensaje de error dentro de `data.html`.
 
 - Helper: `ContestarJson::enviar` (data serializada como string JSON; el front hace segundo `JSON.parse`).
 - Forma: `standard_envelope_string_data`.
-- `data` es un objeto con una única clave `html` (avisos de actividades sin lugar + tabla paginada, o
-  el mensaje de error si `que` no es válido).
+- `data` es un objeto con `avisos` (actividades sin lugar), `grupos`, `cabeceras` y `datos`, o solo
+  `mensaje` si `que` no es válido. El HTML (avisos + tabla paginada) lo monta
+  `frontend/actividades/helpers/CalendarioListasRender::html()`.
 
 ## Errores conocidos
 
 - `opción no definida en switch en <file>, linea <n>` (cuando `que` no coincide con ningún modo;
-  devuelto dentro de `data.html`)
+  devuelto en `data.mensaje`)
 
 ## Permisos
 

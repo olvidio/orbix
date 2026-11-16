@@ -9,4 +9,4 @@ actividadplazas, actividadcargos, actividadtarifas, actividadessacd, actividades
 
 Huérfanos API → forms JS (`_actividad_form.js`, `actividad_select.phtml`, calendario): `actividad_nuevo`, `actividad_editar`, `actividad_eliminar`, `actividad_duplicar`, `actividad_importar`, `actividad_publicar`, `actividad_cambiar_tipo`, fases completadas.
 
-Consumidores externos: `actividades/actividad_que_datos` ← actividadtarifas (relacion tarifa).
+Consumidores externos: `actividades/actividad_tipo_get` ← actividadtarifas (relación tarifa, vía widget `ActividadTipo`).

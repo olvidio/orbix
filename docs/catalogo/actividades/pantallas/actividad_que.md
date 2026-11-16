@@ -7,7 +7,7 @@ nombre: "Buscar actividad (filtros)"
 controller: "frontend/actividades/controller/actividad_que.php"
 vistas: ["frontend/actividades/view/actividad_que.html.twig"]
 fragmentos_frontend: ["frontend/actividades/controller/actividad_select.php", "frontend/actividades/controller/lista_activ.php", "frontend/asistentes/controller/lista_asis_conjunto_activ.php"]
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_que_filtros", "/src/actividades/actividad_tipo_get", "/src/procesos/actividad_que_fases_ajax"]
+endpoints: ["/src/actividades/actividad_que_filtros", "/src/actividades/actividad_tipo_get", "/src/procesos/actividad_que_fases_ajax"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_que_filtros.gestionar", "actividades.actividad_tipo.gestionar"]
 campos: ["post.modo", "post.que", "post.status", "post.id_tipo_activ", "post.filtro_lugar", "post.id_ubi", "post.nom_activ", "post.periodo", "post.year", "post.dl_org", "post.empiezamin", "post.empiezamax", "post.fases_on", "post.fases_off", "post.listar_asistentes", "post.publicado", "post.sasistentes", "post.sactividad", "post.sactividad2", "post.snom_tipo", "post.extendida", "post.stack"]
 acciones: ["fnjs_buscar", "fnjs_cargar_filtros_extra", "fnjs_actualizar_fases", "fnjs_lugar", "fnjs_asistentes", "fnjs_actividad", "fnjs_nom_tipo", "fnjs_id_activ", "fnjs_comprobar_fase_no_duplicadas"]
@@ -45,7 +45,7 @@ importar / buscar actividades de mi dl para publicar.
 
 | Bloque | Endpoint | Cuando |
 |--------|----------|--------|
-| Selector de tipo de actividad | `/src/actividades/actividad_que_datos` | En servidor (PostRequest) al renderizar. |
+| Selector de tipo de actividad | — | Lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()` (sin llamada a `src/`). |
 | Filtros extra (lugar/organiza/publicada) | `/src/actividades/actividad_que_filtros` | Al cargar (`fnjs_cargar_filtros_extra`); vacio para roles de centro. |
 | Cuadros de fases on/off | `/src/procesos/actividad_que_fases_ajax` | Al cargar y al cambiar tipo u organiza (`fnjs_actualizar_fases`); solo con `procesos`. |
 | Desplegables de la cascada y lugar | `/src/actividades/actividad_tipo_get` | onchange de cada nivel (`fnjs_asistentes`, `fnjs_actividad`, `fnjs_nom_tipo`, `fnjs_id_activ`, `fnjs_lugar`). |

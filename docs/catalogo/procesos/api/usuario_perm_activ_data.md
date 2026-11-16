@@ -55,7 +55,7 @@ El controller pasa `$_POST` completo al caso de uso.
   - `nombre` (`string`): etiqueta del usuario
   - `dl_propia` (`string`): `t` o `f`
   - `perm_jefe` (`bool`): habilita selector extendido de tipos
-  - `tipo_actividad_html` (`string`): widget `ActividadTipo`
+  - `actividad_tipo` (`object`): configuración del widget `ActividadTipo`; lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()`
   - `a_fases` (`array`): fases del proceso del tipo
   - `a_acciones` (`array`): etiquetas de `PermAccionBits`
   - `a_afecta_a` (`array`): ámbitos de permiso

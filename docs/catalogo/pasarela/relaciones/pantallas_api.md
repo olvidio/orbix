@@ -130,7 +130,7 @@ Endpoints aportados por capacidades:
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 
 Capacidades:
 - `pasarela.exportar_que_actividad_tipo_html.gestionar`
@@ -349,7 +349,7 @@ Pantallas directas:
 Pantallas via capacidad:
 - Ninguna adicional.
 
-### `/src/pasarela/exportar_que_actividad_tipo_html`
+### `/src/pasarela/exportar_que_actividad_tipo_data`
 
 Pantallas directas:
 - `pasarela.pantalla.exportar_que`

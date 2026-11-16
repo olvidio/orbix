@@ -7,7 +7,7 @@ capacidad: "actividades.actividad_que.gestionar"
 pantallas_principales: ["actividades.pantalla.actividad_que"]
 fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
 acciones: ["obtener_datos"]
-endpoints: ["/src/actividades/actividad_que_datos"]
+endpoints: []
 estado_revision: "revisado"
 ---
 
@@ -39,11 +39,10 @@ Pasos propuestos:
 9. Pulsar **buscar**; se abre la lista de actividades que cumplen todo.
 
 Endpoints asociados:
-- `/src/actividades/actividad_que_datos`
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/actividad_que_datos`
+- Ninguno en `src/`: el selector de tipo lo pinta el frontend (`ActividadTipo`), que consulta `/src/actividades/actividad_tipo_get` por AJAX.
 
 ## Ruta de menú
 

@@ -10,7 +10,7 @@ vistas:
 fragmentos_frontend:
   - "frontend\/pasarela\/controller\/exportar_select.php"
 endpoints:
-  - "\/src\/pasarela\/exportar_que_actividad_tipo_html"
+  - "\/src\/pasarela\/exportar_que_actividad_tipo_data"
   - "\/src\/pasarela\/exportar_actividades_data"
 capacidades:
   - "pasarela.exportar_actividades.gestionar"
@@ -34,7 +34,7 @@ Filtros (tipo, periodo, casas) y lanzamiento de la exportación de actividades h
 
 ## Endpoints Usados
 
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 - `/src/pasarela/exportar_actividades_data`
 
 ## Manual De Usuario

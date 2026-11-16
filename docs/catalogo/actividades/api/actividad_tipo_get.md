@@ -44,7 +44,7 @@ construye el `<select>` con `fnjs_construir_desplegable`.
 
 | `salida` | `entrada` | `content` |
 |----------|-----------|-----------|
-| `nom_tipo_tabla` | prefijo 4 digitos | tabla HTML (id, nombre) de los tipos posibles. |
+| `nom_tipo_posibles` | prefijo 4 digitos | pares `[id, nombre]` de los tipos posibles; la tabla la monta `frontend/actividades/controller/actividad_tipo_nom_tipo_tabla.php`. |
 | `id_tarifa` | `id_tipo_activ` completo | id de la primera tarifa asociada al tipo (orden `id_serie`) o `''`. |
 | `nivel_stgr_defecto` | `id_tipo_activ` completo | nivel STGR por defecto (misma regla que `actividad_nivel_stgr_default_datos`). |
 

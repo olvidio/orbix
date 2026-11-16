@@ -7,7 +7,7 @@ flujo: "procesos.fases_activ_cambio_tipo_html.gestionar.flujo"
 preguntas: ["Como elegir el tipo de actividad para cambiar de fase en Elegir el tipo de actividad para cambiar de fase?"]
 pantallas_principales: ["procesos.pantalla.fases_activ_cambio"]
 fragmentos: ["procesos.pantalla.fases_activ_cambio"]
-endpoints: ["/src/procesos/fases_activ_cambio_tipo_html"]
+endpoints: ["/src/procesos/fases_activ_cambio_tipo_data"]
 source: "docs/catalogo/procesos/flujos/fases_activ_cambio_tipo_html.md"
 estado_revision: "generado"
 ---
@@ -35,7 +35,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 2. Elegir el tipo de actividad; el resto de opciones de la pantalla se adaptan a él.
 
 Referencias tecnicas para verificar la respuesta:
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 
 ## Pantallas Y Fragmentos Relacionados
 

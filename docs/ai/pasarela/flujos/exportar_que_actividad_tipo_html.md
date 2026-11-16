@@ -35,7 +35,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 2. Usar los desplegables de **seleccionar un tipo de actividad**; el selector se actualiza solo según lo elegido.
 
 Referencias tecnicas para verificar la respuesta:
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 
 ## Pantallas Y Fragmentos Relacionados
 

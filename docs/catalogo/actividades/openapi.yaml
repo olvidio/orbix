@@ -578,60 +578,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/actividades/actividad_que_datos":
-    post:
-      operationId: "post_actividades_actividad_que_datos"
-      summary: "Actividad Que Datos"
-      description: |
-        Endpoint backend: HTML del bloque tipo de actividad (desplegables) para actividad_que.
-        
-        Operacion: `mutacion`.
-        
-        Fuente catalogo: `docs/catalogo/actividades/api/actividad_que_datos.md`
-      tags:
-        - "actividades"
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                extendida:
-                  type: "string"
-                id_tipo_activ:
-                  type: "string"
-                para:
-                  type: "string"
-                perm_jefe:
-                  type: "string"
-                que:
-                  type: "string"
-                sactividad:
-                  type: "string"
-                sactividad2:
-                  type: "string"
-                sasistentes:
-                  type: "string"
-                sfsv:
-                  type: "string"
-                sfsv_all:
-                  type: "string"
-                snom_tipo:
-                  type: "string"
-      responses:
-        "200":
-          description: "Respuesta generada por Orbix."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/actividades_ActividadQueDatosDataResponse"
-        "400":
-          description: "Peticion no valida o error de validacion."
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/actividades_ActividadQueDatosDataResponse"
+
   "/src/actividades/actividad_que_filtros":
     post:
       operationId: "post_actividades_actividad_que_filtros"
@@ -835,7 +782,7 @@ paths:
       operationId: "post_actividades_actividad_tipo_get"
       summary: "Actividad Tipo Get"
       description: |
-        Endpoint backend que devuelve el payload necesario (datos de desplegable, tabla HTML o valor escalar) segun el parametro POST `salida`.
+        Endpoint backend que devuelve el payload necesario (datos de desplegable, pares código-nombre o valor escalar) segun el parametro POST `salida`.
         
         Operacion: `mutacion`.
         
@@ -1283,16 +1230,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/actividades/tipo_activ_form_modificar":
+  "/src/actividades/tipo_activ_form_modificar_data":
     post:
-      operationId: "post_actividades_tipo_activ_form_modificar"
-      summary: "Tipo Activ Form Modificar"
+      operationId: "post_actividades_tipo_activ_form_modificar_data"
+      summary: "Tipo Activ Form Modificar Data"
       description: |
-        Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad existente. Portado del case `form_modificar` del dispatcher legacy.
+        Datos del formulario para modificar o eliminar un tipo de actividad (`id_tipo_activ`, `nom_actividad`, `nom_tipo`, `ctx_guardar`, `ctx_eliminar`). El HTML lo monta el frontend.
         
         Operacion: `mutacion`.
         
-        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_modificar.md`
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_modificar_data.md`
       tags:
         - "actividades"
       requestBody:
@@ -1317,16 +1264,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/actividades/tipo_activ_form_nuevo":
+  "/src/actividades/tipo_activ_form_nuevo_data":
     post:
-      operationId: "post_actividades_tipo_activ_form_nuevo"
-      summary: "Tipo Activ Form Nuevo"
+      operationId: "post_actividades_tipo_activ_form_nuevo_data"
+      summary: "Tipo Activ Form Nuevo Data"
       description: |
-        Devuelve el HTML del formulario para crear un nuevo tipo de actividad. Portado del case `form_nuevo` del dispatcher legacy.
+        Datos del formulario de alta de un tipo de actividad (`ctx_nuevo`). El HTML lo monta el frontend.
         
         Operacion: `mutacion`.
         
-        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_nuevo.md`
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_form_nuevo_data.md`
       tags:
         - "actividades"
       requestBody:
@@ -1352,16 +1299,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/actividades/tipo_activ_lista":
+  "/src/actividades/tipo_activ_lista_data":
     post:
-      operationId: "post_actividades_tipo_activ_lista"
-      summary: "Tipo Activ Lista"
+      operationId: "post_actividades_tipo_activ_lista_data"
+      summary: "Tipo Activ Lista Data"
       description: |
-        Devuelve la tabla HTML con los tipos de actividad existentes. Portado desde el case `lista` del dispatcher legacy frontend/actividades/controller/tipo_activ_ajax.php.
+        Devuelve los tipos de actividad (`tipos`: `id_tipo_activ`, `nom`). La tabla la monta el frontend.
         
         Operacion: `mutacion`.
         
-        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_lista.md`
+        Fuente catalogo: `docs/catalogo/actividades/api/tipo_activ_lista_data.md`
       tags:
         - "actividades"
       requestBody:
@@ -1609,21 +1556,8 @@ components:
                 - type: string
                   description: "JSON codificado como string (compatibilidad legacy)."
                 - $ref: "#/components/schemas/actividades_ActividadNuevoCursoEjecutarData"
-    actividades_ActividadQueDatosData:
-      type: object
-      properties:
-        actividad_tipo_html:
-          type: "string"
-    actividades_ActividadQueDatosDataResponse:
-      allOf:
-        - $ref: "#/components/schemas/OrbixStandardResponseEnvelope"
-        - type: object
-          properties:
-            data:
-              oneOf:
-                - type: string
-                  description: "JSON codificado como string (compatibilidad legacy)."
-                - $ref: "#/components/schemas/actividades_ActividadQueDatosData"
+
+
     actividades_ActividadSelectUbiDataData:
       type: object
       properties:

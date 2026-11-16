@@ -290,16 +290,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/procesos/fases_activ_cambio_tipo_html":
+  "/src/procesos/fases_activ_cambio_tipo_data":
     post:
-      operationId: "post_procesos_fases_activ_cambio_tipo_html"
+      operationId: "post_procesos_fases_activ_cambio_tipo_data"
       summary: "Fases Activ Cambio Tipo Html"
       description: |
-        Fragmento HTML del selector de tipo de actividad en `fases_activ_cambio`.
+        Configuración del selector de tipo de actividad en `fases_activ_cambio` (`actividad_tipo`); lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()`.
         
         Operacion: `form_data`.
         
-        Fuente catalogo: `docs/catalogo/procesos/api/fases_activ_cambio_tipo_html.md`
+        Fuente catalogo: `docs/catalogo/procesos/api/fases_activ_cambio_tipo_data.md`
       tags:
         - "procesos"
       requestBody:

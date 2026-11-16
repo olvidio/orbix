@@ -7,7 +7,7 @@ flujo: "actividades.actividad_que.gestionar.flujo"
 preguntas: ["Como elegir el tipo de actividad al buscar en Elegir el tipo de actividad al buscar?"]
 pantallas_principales: ["actividades.pantalla.actividad_que"]
 fragmentos: ["actividades.pantalla.planning_casa_modificar", "actividades.pantalla.planning_casa_nueva"]
-endpoints: ["/src/actividades/actividad_que_datos"]
+endpoints: []
 source: "docs/catalogo/actividades/flujos/actividad_que.md"
 estado_revision: "generado"
 ---
@@ -42,7 +42,6 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 9. Pulsar **buscar**; se abre la lista de actividades que cumplen todo.
 
 Referencias tecnicas para verificar la respuesta:
-- `/src/actividades/actividad_que_datos`
 
 ## Pantallas Y Fragmentos Relacionados
 

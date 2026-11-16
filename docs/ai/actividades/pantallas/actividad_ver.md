@@ -6,7 +6,7 @@ titulo: "Ficha de actividad (ver/editar/nueva/cambiar tipo)"
 pantalla: "actividades.pantalla.actividad_ver"
 preguntas: ["Que se puede hacer en Ficha de actividad (ver/editar/nueva/cambiar tipo)?", "Que campos tiene Ficha de actividad (ver/editar/nueva/cambiar tipo)?", "Que acciones hay en Ficha de actividad (ver/editar/nueva/cambiar tipo)?"]
 capacidades: ["actividades.actividad_ver.gestionar", "actividades.actividad_permiso_crear.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_nivel_stgr_default.gestionar", "actividades.actividad_que.gestionar"]
-endpoints: ["/src/actividades/actividad_ver_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_nivel_stgr_default_datos", "/src/actividades/actividad_permiso_crear_datos", "/src/actividades/actividad_que_datos", "/src/actividades/actividad_fases_completadas_datos", "/src/actividades/actividad_nuevo", "/src/actividades/actividad_editar", "/src/actividades/actividad_cambiar_tipo", "/src/actividades/actividad_tipo_get"]
+endpoints: ["/src/actividades/actividad_ver_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_nivel_stgr_default_datos", "/src/actividades/actividad_permiso_crear_datos", "/src/actividades/actividad_fases_completadas_datos", "/src/actividades/actividad_nuevo", "/src/actividades/actividad_editar", "/src/actividades/actividad_cambiar_tipo", "/src/actividades/actividad_tipo_get"]
 source: "docs/catalogo/actividades/pantallas/actividad_ver.md"
 estado_revision: "generado"
 ---
@@ -74,7 +74,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 - `/src/actividades/actividad_status_labels_datos`
 - `/src/actividades/actividad_nivel_stgr_default_datos`
 - `/src/actividades/actividad_permiso_crear_datos`
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_fases_completadas_datos`
 - `/src/actividades/actividad_nuevo`
 - `/src/actividades/actividad_editar`

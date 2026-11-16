@@ -33,7 +33,6 @@ Endpoints aportados por capacidades:
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_que_filtros`
 - `/src/actividades/actividad_tipo_get`
 - `/src/procesos/actividad_que_fases_ajax`
@@ -84,7 +83,6 @@ Endpoints aportados por capacidades:
 Endpoints directos:
 - `/src/actividades/actividad_nivel_stgr_default_datos`
 - `/src/actividades/actividad_permiso_crear_datos`
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_status_labels_datos`
 - `/src/actividades/actividad_ver_datos`
 
@@ -216,7 +214,6 @@ Endpoints aportados por capacidades:
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_status_labels_datos`
 - `/src/actividades/actividad_ver_datos`
 
@@ -234,7 +231,6 @@ Endpoints aportados por capacidades:
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_status_labels_datos`
 - `/src/actividades/actividad_ver_datos`
 
@@ -253,9 +249,9 @@ Endpoints aportados por capacidades:
 
 Endpoints directos:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_form_modificar`
-- `/src/actividades/tipo_activ_form_nuevo`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_form_modificar_data`
+- `/src/actividades/tipo_activ_form_nuevo_data`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
@@ -361,17 +357,6 @@ Pantallas via capacidad:
 
 Pantallas directas:
 - Ninguna detectada.
-
-Pantallas via capacidad:
-- Ninguna adicional.
-
-### `/src/actividades/actividad_que_datos`
-
-Pantallas directas:
-- `actividades.pantalla.actividad_que`
-- `actividades.pantalla.actividad_ver`
-- `actividades.pantalla.planning_casa_modificar`
-- `actividades.pantalla.planning_casa_nueva`
 
 Pantallas via capacidad:
 - Ninguna adicional.
@@ -486,7 +471,7 @@ Pantallas directas:
 Pantallas via capacidad:
 - Ninguna adicional.
 
-### `/src/actividades/tipo_activ_form_modificar`
+### `/src/actividades/tipo_activ_form_modificar_data`
 
 Pantallas directas:
 - `actividades.pantalla.tipo_activ`
@@ -494,7 +479,7 @@ Pantallas directas:
 Pantallas via capacidad:
 - Ninguna adicional.
 
-### `/src/actividades/tipo_activ_form_nuevo`
+### `/src/actividades/tipo_activ_form_nuevo_data`
 
 Pantallas directas:
 - `actividades.pantalla.tipo_activ`
@@ -502,7 +487,7 @@ Pantallas directas:
 Pantallas via capacidad:
 - Ninguna adicional.
 
-### `/src/actividades/tipo_activ_lista`
+### `/src/actividades/tipo_activ_lista_data`
 
 Pantallas directas:
 - `actividades.pantalla.tipo_activ`

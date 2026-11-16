@@ -7,7 +7,7 @@ capacidad: "actividades.tipo_activ.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["crear", "crear_actualizar", "eliminar", "listar"]
-endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
+endpoints: ["/src/actividades/tipo_activ_eliminar", "/src/actividades/tipo_activ_lista_data", "/src/actividades/tipo_activ_nuevo", "/src/actividades/tipo_activ_update"]
 estado_revision: "revisado"
 ---
 
@@ -32,7 +32,7 @@ Pasos propuestos:
 
 Endpoints asociados:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
@@ -44,7 +44,7 @@ Pasos propuestos:
 
 Endpoints asociados:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
@@ -56,13 +56,13 @@ Pasos propuestos:
 
 Endpoints asociados:
 - `/src/actividades/tipo_activ_eliminar`
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/tipo_activ_lista`
+- `/src/actividades/tipo_activ_lista_data`
 - `/src/actividades/tipo_activ_nuevo`
 - `/src/actividades/tipo_activ_update`
 - `/src/actividades/tipo_activ_eliminar`

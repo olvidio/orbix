@@ -1,40 +1,40 @@
 ---
-id: "procesos.fases_activ_cambio_tipo_html"
+id: "procesos.fases_activ_cambio_tipo_data"
 tipo: "endpoint"
 modulo: "procesos"
-url: "/src/procesos/fases_activ_cambio_tipo_html"
+url: "/src/procesos/fases_activ_cambio_tipo_data"
 metodos: ["GET", "POST"]
 operacion: "form_data"
-controller: "src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php"
+controller: "src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_data.php"
 entrada: ["post.id_tipo_activ:string", "post.sactividad:string", "post.sactividad2:string", "post.sasistentes:string"]
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 requiere_hashb: false
 errores: []
 frontend_referencias: ["frontend/procesos/controller/fases_activ_cambio.php"]
-casos_uso: ["src\\procesos\\application\\FasesActivCambioTipoActividadHtmlData"]
-tags: ["procesos", "fases", "activ", "cambio", "tipo", "html"]
+casos_uso: ["src\\procesos\\application\\FasesActivCambioTipoActividadData"]
+tags: ["procesos", "fases", "activ", "cambio", "tipo", "data"]
 estado_revision: "revisado"
 ---
 
 # Fases Activ Cambio Tipo Html
 
-Fragmento HTML del selector de tipo de actividad en `fases_activ_cambio`.
+Configuración del selector de tipo de actividad en `fases_activ_cambio` (`actividad_tipo`); lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Renderiza el widget de búsqueda de tipo de actividad (`ActividadTipo`) para la pantalla de cambio
+Prepara la configuración del widget de búsqueda de tipo de actividad (`ActividadTipo`) para la pantalla de cambio
 masivo de fases. El modo extendido se activa si `sactividad2` no viene vacío. El alcance de tipos
 visibles depende de permisos de oficina (`vcsd`, `des`, `calendario`) o del SFSV de sesión.
 
 ## Endpoint
 
-- URL: `/src/procesos/fases_activ_cambio_tipo_html`
+- URL: `/src/procesos/fases_activ_cambio_tipo_data`
 - Metodos registrados: `GET, POST`
 - Operacion: `form_data`
-- Controller: `src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_html.php`
+- Controller: `src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_tipo_data.php`
 
 ## Entrada
 
@@ -52,7 +52,7 @@ El controller pasa `$_POST` completo al caso de uso.
 - Helper: `ContestarJson::enviar`
 - Forma: `standard_envelope_string_data`
 - Claves en `data` (doble `JSON.parse`):
-  - `tipo_actividad_html` (`string`): HTML del selector
+  - `actividad_tipo` (`object`): configuración del widget (`perm_jefe`, `sfsv`, `id_tipo_activ`, `asistentes`, `actividad`, `para`, `que`, `extendida`)
 
 ## Errores conocidos
 
@@ -65,7 +65,7 @@ El controller pasa `$_POST` completo al caso de uso.
 
 ## Casos De Uso
 
-- `src\procesos\application\FasesActivCambioTipoActividadHtmlData`
+- `src\procesos\application\FasesActivCambioTipoActividadData`
 
 ## Frontend Relacionado
 

@@ -3,11 +3,11 @@ id: "pasarela.exportar_que_actividad_tipo_html.gestionar"
 tipo: "capacidad"
 modulo: "pasarela"
 nombre: "Gestionar Exportar Que Actividad Tipo Html"
-entidades: ["ExportarQueActividadTipoHtml"]
+entidades: ["ExportarQueActividadTipoData"]
 acciones: ["ejecutar"]
-endpoints: ["/src/pasarela/exportar_que_actividad_tipo_html"]
+endpoints: ["/src/pasarela/exportar_que_actividad_tipo_data"]
 pantallas: ["frontend/pasarela/controller/exportar_que.php"]
-casos_uso: ["src\\pasarela\\application\\ExportarQueActividadTipoHtml"]
+casos_uso: ["src\\pasarela\\application\\ExportarQueActividadTipoData"]
 tags: ["actividad", "exportar", "exportar_que_actividad_tipo_html", "html", "pasarela", "que", "tipo"]
 estado_revision: "generado"
 ---
@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `expo
 
 ## Objetivo Funcional
 
-Gestiona ExportarQueActividadTipoHtml. HTML del selector de tipo de actividad para la pantalla «exportar qué». Replica la configuración que antes hacía {.
+Gestiona ExportarQueActividadTipoData. HTML del selector de tipo de actividad para la pantalla «exportar qué». Replica la configuración que antes hacía {.
 
 ## Acciones Detectadas
 
@@ -26,7 +26,7 @@ Gestiona ExportarQueActividadTipoHtml. HTML del selector de tipo de actividad pa
 
 ## Endpoints
 
-- `/src/pasarela/exportar_que_actividad_tipo_html`
+- `/src/pasarela/exportar_que_actividad_tipo_data`
 
 ## Pantallas Relacionadas
 
@@ -34,7 +34,7 @@ Gestiona ExportarQueActividadTipoHtml. HTML del selector de tipo de actividad pa
 
 ## Casos De Uso Detectados
 
-- `src\pasarela\application\ExportarQueActividadTipoHtml`
+- `src\pasarela\application\ExportarQueActividadTipoData`
 
 ## Pistas Desde Endpoints
 

@@ -7,7 +7,7 @@ nombre: "Tarifa Tipo Actividad Form"
 controller: "frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php"
 vistas: ["frontend/actividadtarifas/view/tarifa_tipo_actividad_form.html.twig", "frontend/actividadtarifas/view/tarifa_tipo_actividad_form_nuevo.html.twig"]
 fragmentos_frontend: []
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_update"]
+endpoints: ["/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_update"]
 capacidades: ["actividadtarifas.relacion_tarifa.gestionar"]
 campos: ["form.iactividad_val", "form.iasistentes_val", "form.id_item", "form.id_tarifa", "form.id_tipo_activ", "form.inom_tipo_val", "form.isfsv_val", "post.id_item"]
 acciones: []
@@ -34,7 +34,6 @@ No se han detectado controladores frontend relacionados.
 
 ## Endpoints Usados
 
-- `/src/actividades/actividad_que_datos`
 - `/src/actividadtarifas/relacion_tarifa_form_data`
 - `/src/actividadtarifas/relacion_tarifa_update`
 
@@ -59,7 +58,7 @@ No se han detectado acciones.
 
 ## Manual De Usuario
 
-Alta: bloque de búsqueda de tipo de actividad (`actividad_que_datos`) + desplegable de tarifa.
+Alta: bloque de búsqueda de tipo de actividad (el widget `ActividadTipo` (frontend)) + desplegable de tarifa.
 Edición: muestra nombre del tipo y desplegable de tarifa. Submit firmado con `HashF`.
 
 ## Ruta de menú

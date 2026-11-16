@@ -7,7 +7,7 @@ nombre: "Nueva actividad desde planning"
 controller: "frontend/actividades/controller/planning_casa_nueva.php"
 vistas: ["frontend/actividades/view/actividad_form.html.twig", "frontend/actividades/view/_actividad_form_head.html.twig", "frontend/actividades/view/_actividad_form_body.html.twig", "frontend/actividades/view/_actividad_form_botones.html.twig"]
 fragmentos_frontend: ["frontend/actividades/controller/actividad_select_ubi.php"]
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
+endpoints: ["/src/actividades/actividad_status_labels_datos", "/src/actividades/actividad_ver_datos"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_status_labels.gestionar", "actividades.actividad_ver.gestionar"]
 campos: ["form.dl_org", "form.isfsv", "form.ssfsv", "post.id_ubi"]
 acciones: ["fnjs_guardar"]
@@ -19,7 +19,7 @@ estado_revision: "revisado"
 Fragmento para **alta de actividad** en el planning de casas. Recibe `id_ubi` (casa
 del calendario), precarga delegación y sf/sv del usuario, status inicial *proyecto*
 y formulario vacío vía `actividad_ver_datos` (`id_activ=0`). Cascada de tipo con
-`actividad_que_datos`. Guardar usa `actividad_nuevo` (JS compartido con ficha).
+el widget `ActividadTipo` (frontend). Guardar usa `actividad_nuevo` (JS compartido con ficha).
 
 ## Tipo
 

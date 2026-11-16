@@ -572,16 +572,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrbixStandardResponseStringData"
-  "/src/pasarela/exportar_que_actividad_tipo_html":
+  "/src/pasarela/exportar_que_actividad_tipo_data":
     post:
-      operationId: "post_pasarela_exportar_que_actividad_tipo_html"
+      operationId: "post_pasarela_exportar_que_actividad_tipo_data"
       summary: "Exportar Que Actividad Tipo Html"
       description: |
-        HTML del widget selector de tipo de actividad en «exportar actividades».
+        Configuración del widget selector de tipo de actividad en «exportar actividades» (`actividad_tipo`); lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()`.
         
         Operacion: `form_data`.
         
-        Fuente catalogo: `docs/catalogo/pasarela/api/exportar_que_actividad_tipo_html.md`
+        Fuente catalogo: `docs/catalogo/pasarela/api/exportar_que_actividad_tipo_data.md`
       tags:
         - "pasarela"
       requestBody:

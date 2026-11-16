@@ -28,7 +28,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 Builder del popup tarifa↔tipo actividad. Alta: `id_item` vacío/`nuevo`, `isfsv = mi_sfsv`,
 opciones de tarifa filtradas por sección. Edición: carga tipo de actividad, nombre y tarifa
-seleccionada. En alta el selector de tipo de actividad viene de `actividad_que_datos` (otro módulo).
+seleccionada. En alta el selector de tipo de actividad viene de el widget `ActividadTipo` (frontend) (otro módulo).
 
 ## Endpoint
 
@@ -59,5 +59,5 @@ seleccionada. En alta el selector de tipo de actividad viene de `actividad_que_d
 
 ## Frontend Relacionado
 
-- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`: en alta combina con
-  `/src/actividades/actividad_que_datos` (`para=tipoactiv-tarifas`).
+- `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`: en alta pinta además
+  el widget `ActividadTipo` (frontend, `para=tipoactiv-tarifas`).

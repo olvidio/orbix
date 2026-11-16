@@ -7,7 +7,7 @@ capacidad: "actividades.tipo_activ_form.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["crear"]
-endpoints: ["/src/actividades/tipo_activ_form_nuevo"]
+endpoints: ["/src/actividades/tipo_activ_form_nuevo_data"]
 estado_revision: "revisado"
 ---
 
@@ -33,11 +33,11 @@ Pasos propuestos:
 3. Rellenar el nombre y los niveles y guardar.
 
 Endpoints asociados:
-- `/src/actividades/tipo_activ_form_nuevo`
+- `/src/actividades/tipo_activ_form_nuevo_data`
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/tipo_activ_form_nuevo`
+- `/src/actividades/tipo_activ_form_nuevo_data`
 
 ## Ruta de menú
 

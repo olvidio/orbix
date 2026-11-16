@@ -5,7 +5,7 @@ use src\shared\domain\helpers\FilterPostGet;
 /**
  * Endpoint backend para `lista_sr_csv` (listado SR + exportacion).
  * Recibe los filtros via POST y delega en ListaSrCsvListado. Devuelve JSON
- * con html_tabla y los datos crudos para poder exportar a CSV desde frontend.
+ * con cabeceras y filas; el frontend monta la tabla y exporta a CSV.
  */
 
 use src\actividades\application\ListaSrCsvListado;

@@ -54,7 +54,7 @@ Endpoints aportados por capacidades:
 Endpoints directos:
 - `/src/actividades/actividad_tipo_get`
 - `/src/procesos/fases_activ_cambio_get`
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 - `/src/procesos/fases_activ_cambio_update`
 
 Capacidades:
@@ -269,7 +269,7 @@ Pantallas directas:
 Pantallas via capacidad:
 - `procesos.pantalla.fases_activ_cambio`
 
-### `/src/procesos/fases_activ_cambio_tipo_html`
+### `/src/procesos/fases_activ_cambio_tipo_data`
 
 Pantallas directas:
 - `procesos.pantalla.fases_activ_cambio`

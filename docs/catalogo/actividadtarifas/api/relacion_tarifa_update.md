@@ -43,7 +43,7 @@ Exige `id_tarifa` e `id_tipo_activ` > 0.
 | `id_tarifa` | `integer` | application | Si | Tipo de tarifa del catálogo |
 | `id_tipo_activ` | `integer` | application | Si | Tipo de actividad |
 
-En alta el formulario nuevo también envía campos del bloque `actividad_que_datos`
+En alta el formulario nuevo también envía campos del bloque el widget `ActividadTipo` (frontend)
 (`iactividad_val`, `iasistentes_val`, etc.) firmados con `HashF`; el caso de uso solo lee los tres anteriores.
 
 ## Salida

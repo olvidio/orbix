@@ -5,7 +5,7 @@ modulo: "actividades"
 nombre: "Gestionar Actividad Que"
 entidades: ["ActividadQueDatos"]
 acciones: ["obtener_datos"]
-endpoints: ["/src/actividades/actividad_que_datos"]
+endpoints: []
 pantallas: ["frontend/actividades/controller/actividad_que.php", "frontend/actividades/controller/actividad_ver.php", "frontend/actividades/controller/planning_casa_modificar.php", "frontend/actividades/controller/planning_casa_nueva.php", "frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php"]
 casos_uso: ["src\\actividades\\application\\ActividadQueDatos"]
 tags: ["actividad", "actividad_que", "actividades", "datos", "que"]
@@ -26,7 +26,7 @@ Gestiona ActividadQueDatos. HTML del bloque tipo de actividad (desplegables) par
 
 ## Endpoints
 
-- `/src/actividades/actividad_que_datos`
+- Ninguno en `src/`: el selector de tipo lo pinta el frontend (`ActividadTipo`), que consulta `/src/actividades/actividad_tipo_get` por AJAX.
 
 ## Pantallas Relacionadas
 

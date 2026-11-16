@@ -7,7 +7,7 @@ capacidad: "procesos.fases_activ_cambio_tipo_html.gestionar"
 pantallas_principales: ["procesos.pantalla.fases_activ_cambio"]
 fragmentos: ["procesos.pantalla.fases_activ_cambio"]
 acciones: ["ejecutar"]
-endpoints: ["/src/procesos/fases_activ_cambio_tipo_html"]
+endpoints: ["/src/procesos/fases_activ_cambio_tipo_data"]
 estado_revision: "revisado"
 ---
 
@@ -34,7 +34,7 @@ Pasos propuestos:
 2. Elegir el tipo de actividad; el resto de opciones de la pantalla se adaptan a él.
 
 Endpoints asociados:
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 
 ## Campos Y Acciones Detectadas En Pantalla
 
@@ -71,7 +71,7 @@ Acciones JavaScript:
 
 ## Endpoints Del Flujo
 
-- `/src/procesos/fases_activ_cambio_tipo_html`
+- `/src/procesos/fases_activ_cambio_tipo_data`
 
 ## Errores Conocidos
 

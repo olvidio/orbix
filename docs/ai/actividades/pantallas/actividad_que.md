@@ -6,7 +6,7 @@ titulo: "Buscar actividad (filtros)"
 pantalla: "actividades.pantalla.actividad_que"
 preguntas: ["Que se puede hacer en Buscar actividad (filtros)?", "Que campos tiene Buscar actividad (filtros)?", "Que acciones hay en Buscar actividad (filtros)?"]
 capacidades: ["actividades.actividad_que.gestionar", "actividades.actividad_que_filtros.gestionar", "actividades.actividad_tipo.gestionar"]
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividades/actividad_que_filtros", "/src/actividades/actividad_tipo_get", "/src/procesos/actividad_que_fases_ajax"]
+endpoints: ["/src/actividades/actividad_que_filtros", "/src/actividades/actividad_tipo_get", "/src/procesos/actividad_que_fases_ajax"]
 source: "docs/catalogo/actividades/pantallas/actividad_que.md"
 estado_revision: "generado"
 ---
@@ -66,7 +66,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- `/src/actividades/actividad_que_datos`
 - `/src/actividades/actividad_que_filtros`
 - `/src/actividades/actividad_tipo_get`
 - `/src/procesos/actividad_que_fases_ajax`

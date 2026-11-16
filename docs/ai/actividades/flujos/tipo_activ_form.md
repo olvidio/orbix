@@ -7,7 +7,7 @@ flujo: "actividades.tipo_activ_form.gestionar.flujo"
 preguntas: ["Como crear un tipo de actividad en Crear un tipo de actividad?"]
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
-endpoints: ["/src/actividades/tipo_activ_form_nuevo"]
+endpoints: ["/src/actividades/tipo_activ_form_nuevo_data"]
 source: "docs/catalogo/actividades/flujos/tipo_activ_form.md"
 estado_revision: "generado"
 ---
@@ -36,7 +36,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 3. Rellenar el nombre y los niveles y guardar.
 
 Referencias tecnicas para verificar la respuesta:
-- `/src/actividades/tipo_activ_form_nuevo`
+- `/src/actividades/tipo_activ_form_nuevo_data`
 
 ## Pantallas Y Fragmentos Relacionados
 

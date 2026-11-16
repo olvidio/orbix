@@ -7,7 +7,7 @@ capacidad: "actividades.tipo_activ_form_modificar.gestionar"
 pantallas_principales: ["actividades.pantalla.tipo_activ"]
 fragmentos: []
 acciones: ["ejecutar"]
-endpoints: ["/src/actividades/tipo_activ_form_modificar"]
+endpoints: ["/src/actividades/tipo_activ_form_modificar_data"]
 estado_revision: "revisado"
 ---
 
@@ -33,11 +33,11 @@ Pasos propuestos:
 3. Cambiarlo y guardar.
 
 Endpoints asociados:
-- `/src/actividades/tipo_activ_form_modificar`
+- `/src/actividades/tipo_activ_form_modificar_data`
 
 ## Endpoints Del Flujo
 
-- `/src/actividades/tipo_activ_form_modificar`
+- `/src/actividades/tipo_activ_form_modificar_data`
 
 ## Ruta de menú
 

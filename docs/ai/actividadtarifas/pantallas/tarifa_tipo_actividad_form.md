@@ -6,7 +6,7 @@ titulo: "Tarifa Tipo Actividad Form"
 pantalla: "actividadtarifas.pantalla.tarifa_tipo_actividad_form"
 preguntas: ["Que se puede hacer en Tarifa Tipo Actividad Form?", "Que campos tiene Tarifa Tipo Actividad Form?", "Que acciones hay en Tarifa Tipo Actividad Form?"]
 capacidades: ["actividadtarifas.relacion_tarifa.gestionar"]
-endpoints: ["/src/actividades/actividad_que_datos", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_update"]
+endpoints: ["/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_update"]
 source: "docs/catalogo/actividadtarifas/pantallas/tarifa_tipo_actividad_form.md"
 estado_revision: "generado"
 ---
@@ -42,7 +42,6 @@ Usar esta ficha cuando el usuario pregunte por una pantalla concreta, sus campos
 
 ## Endpoints Relacionados
 
-- `/src/actividades/actividad_que_datos`
 - `/src/actividadtarifas/relacion_tarifa_form_data`
 - `/src/actividadtarifas/relacion_tarifa_update`
 

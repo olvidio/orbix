@@ -10,7 +10,7 @@ estado_revision: revisado
 
 | Modulo | Enlace | Uso |
 |--------|--------|-----|
-| actividades | `/src/actividades/actividad_que_datos` | Desplegables de tipo de actividad en alta de relación tarifa (`tarifa_tipo_actividad_form`) |
+| actividades | `/src/actividades/actividad_tipo_get` (vía widget `ActividadTipo`) | Desplegables de tipo de actividad en alta de relación tarifa (`tarifa_tipo_actividad_form`) |
 | actividades | Tipos de actividad (dominio) | La relación tarifa ↔ tipo actividad referencia `id_tipo_activ` |
 | ubis / casas | Casas en tarifa_ubi | Desplegable de casa y año en tarifas por ubi |
 | casas | `frontend/casas/controller/calendario_ubi_resumen.php` | Llama `/src/actividadtarifas/tarifa_ubi_update_inc` (incremento masivo) |

@@ -1,11 +1,11 @@
 ---
-id: "pasarela.exportar_que_actividad_tipo_html"
+id: "pasarela.exportar_que_actividad_tipo_data"
 tipo: "endpoint"
 modulo: "pasarela"
-url: "/src/pasarela/exportar_que_actividad_tipo_html"
+url: "/src/pasarela/exportar_que_actividad_tipo_data"
 metodos: ["GET", "POST"]
 operacion: "form_data"
-controller: "src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_html.php"
+controller: "src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_data.php"
 entrada:
   - "post.id_tipo_activ:string"
   - "post.sasistentes:string"
@@ -17,14 +17,14 @@ requiere_hashb: false
 errores:[]
 frontend_referencias:
   - "frontend\/pasarela\/controller\/exportar_que.php"
-casos_uso: ["src\pasarela\application\ExportarQueActividadTipoHtml"]
+casos_uso: ["src\pasarela\application\ExportarQueActividadTipoData"]
 tags: ["pasarela"]
 estado_revision: "revisado"
 ---
 
 # Exportar Que Actividad Tipo Html
 
-HTML del widget selector de tipo de actividad en «exportar actividades».
+Configuración del widget selector de tipo de actividad en «exportar actividades» (`actividad_tipo`); lo pinta el frontend con `ActividadTipo::htmlDesdeConfig()`.
 
 Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
@@ -34,10 +34,10 @@ Monta `ActividadTipo` con permisos `des`/`vcsd`/`calendario` o jefe calendario s
 
 ## Endpoint
 
-- URL: `/src/pasarela/exportar_que_actividad_tipo_html`
+- URL: `/src/pasarela/exportar_que_actividad_tipo_data`
 - Metodos registrados: `GET, POST`
 - Operacion: `form_data`
-- Controller: `src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_html.php`
+- Controller: `src/pasarela/infrastructure/ui/http/controllers/exportar_que_actividad_tipo_data.php`
 
 ## Entrada
 
@@ -51,7 +51,7 @@ Monta `ActividadTipo` con permisos `des`/`vcsd`/`calendario` o jefe calendario s
 
 ## Salida
 
-- Payload: `{html: string}`.
+- Payload: `{actividad_tipo: object}` (`perm_jefe`, `id_tipo_activ`, `sfsv`, `asistentes`, `actividad`, `nom_tipo`, `evitar_procesos`, `sfsv_all`, …).
 
 ## Errores conocidos
 
@@ -63,7 +63,7 @@ Resuelve permisos en el caso de uso vía `$_SESSION['oPerm']` y `ConfigGlobal::m
 
 ## Casos De Uso
 
-- `src\pasarela\application\ExportarQueActividadTipoHtml`
+- `src\pasarela\application\ExportarQueActividadTipoData`
 
 ## Frontend Relacionado
 
