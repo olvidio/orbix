@@ -13,10 +13,10 @@ use src\actividades\domain\value_objects\TipoActivNombre;
 
 final class TipoActivCrudApplicationTest extends TestCase
 {
-    public function test_tipo_activ_nuevo_id_incorrecto_anexa_mensaje(): void
+    public function test_tipo_activ_nuevo_id_incorrecto_no_guarda(): void
     {
         $repo = $this->createMock(TipoDeActividadRepositoryInterface::class);
-        $repo->expects($this->once())->method('Guardar')->willReturn(true);
+        $repo->expects($this->never())->method('Guardar');
 
         $out = (new TipoActivNuevo($repo))->execute([
             'isfsv_val' => '1',
@@ -25,7 +25,7 @@ final class TipoActivCrudApplicationTest extends TestCase
             'id_nom_tipo_activ' => '1',
             'nom_tipo_activ' => 'x',
         ]);
-        $this->assertStringContainsString('Id incorrecto', $out);
+        $this->assertSame('Id incorrecto', $out);
     }
 
     public function test_tipo_activ_nuevo_guardar_falso_anexa_error(): void
@@ -37,7 +37,7 @@ final class TipoActivCrudApplicationTest extends TestCase
             'isfsv_val' => '1',
             'iasistentes_val' => '1',
             'iactividad_val' => '1',
-            'id_nom_tipo_activ' => '23',
+            'id_nom_tipo_activ' => '234',
             'nom_tipo_activ' => 'Nombre',
         ]);
         $this->assertStringContainsString('no se ha guardado', $out);

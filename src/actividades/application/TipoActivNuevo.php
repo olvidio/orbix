@@ -30,11 +30,11 @@ class TipoActivNuevo
 
         $id_tipo_activ = "$Qsfsv$Qasistentes$Qactividad$Qid_nom_tipo_activ";
 
-        $mensajes = '';
-        if (strlen($id_tipo_activ) !== 6) {
-            $mensajes .= _("Id incorrecto");
+        if (preg_match('/^\d{6}$/', $id_tipo_activ) !== 1) {
+            return _("Id incorrecto");
         }
 
+        $mensajes = '';
         $TipoDeActividadRepository = $this->tipoDeActividadRepository;
         $oTipoDeActividad = new TipoDeActividad();
         $oTipoDeActividad->setId_tipo_activ((int) $id_tipo_activ);
