@@ -214,7 +214,8 @@ final class CambioAvisoTxtBuilder
                 if (!$bEliminada) {
                     if ($sPropiedad !== '-') {
                         $cFases = $this->actividadFaseRepository->matching(Criteria::create()->where(Filter::eq(ActividadFaseField::IdFase, $id_fase)));
-                        $sFase = $cFases[0]->getDesc_fase();
+                        // Si la fase ya no está en el catálogo, el aviso sale con su id.
+                        $sFase = ($cFases[0] ?? null)?->getDesc_fase() ?? $id_fase;
 
                         if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($sValor_new)) {
                             $sformat = _("Fase \"%2\$s\" marcada en la actividad \"%1\$s\"");
