@@ -25,7 +25,7 @@
 258	{40,10}	personas	tipo=p	121	33554432	13	t
 260	{40,30}	actividades	tipo=a	121	33554432	13	t
 137	{35,10}	buscar ca	sasistentes=n&sactividad=ca&que=ver	119	2064	12	t
-255	{30}	historicos	\N	\N	\N	\N	t
+255	{30}	históricos	\N	\N	\N	\N	t
 115	{10}	agenda vcdl		72	0	5	t
 836	{20,10}	actas	\N	60	16	12	t
 239	{140}	buscar n o agd	\N	\N	64	10	t
@@ -173,12 +173,12 @@
 865	{50,15}	importar activ	que=ver&modo=importar	119	32768	20	t
 867	{50,20}	nueva activ	\N	136	32768	20	t
 801	{60,25}	grup menu	clase_info=menus\\model\\infogrupmenus	160	35651584	13	t
-956	{10,20}	n de paso 	tabla=p_de_paso&na=n&tipo=persona	76	512	15	t
+956	{10,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	512	15	t
 938	{10,70}	ayuda	\N	177	35651584	13	t
 923	{15,40}	Actualizar datos desde BDU	tipo=n	176	128	2	t
 414	{16,40}	Actualizar datos desde BDU	tipo=a	176	2	3	t
 415	{91,20}	Actualizar datos desde BDU	tipo=s	176	64	10	t
-373	{50,10,10}	sv  n	id_tipo_activ=11&status=2&periodo=desdeHoy	71	1032	8	t
+373	{50,10,10}	sv n	id_tipo_activ=11&status=2&periodo=desdeHoy	71	1032	8	t
 945	{10}	buscar personas	\N	0	512	15	t
 954	{10,10}	n r/dl	tabla=p_numerarios&tipo=persona	76	512	15	t
 943	{5,86}	crt pendientes	sactividad=crt&tipo_personas=sacd	140	8	8	t
@@ -188,19 +188,19 @@
 977	{10,50,30}	lista dl	que=lista_dl	98	34078719	4	t
 978	{10,50,40}	buscar	\N	3	34078719	4	t
 984	{20}	zonas	\N	179	2056	8	t
-972	{10,50}	cartas presentacion	\N	191	34078719	4	t
+972	{10,50}	cartas presentación	\N	191	34078719	4	t
 960	{10,20}	atención actividades	\N	28	262144	9	t
 961	{10,10}	planning zonas	\N	139	262144	9	t
-950	{91,30}	lista ctr i nº s	\N	152	2112	10	t
+950	{91,30}	lista ctr y nº s	\N	152	2112	10	t
 987	{20}	Nuevo Calendario	\N	0	37748735	7	t
 990	{20,10}	Definir periodos	\N	7	9	7	t
-998	{20,20}	nuevo planing	\N	141	37748735	7	t
+998	{20,20}	nuevo planning	\N	141	37748735	7	t
 1004	{20,30}	listados	\N	0	37748735	7	t
-1005	{20,30,10}	Cases comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
+1005	{20,30,10}	Casas comunes	que=c_comunes&ver_ctr=si	21	37748735	7	t
 1385	{20}	actas	\N	0	16	21	t
 1006	{20,30,20}	listados de todas las casas	que=c_todas&ver_ctr=si	21	1	7	t
 941	{5,80}	lista varias activ	ssfsv=sv&sasistentes=n&que=list_cjto_sacd	119	8	8	t
-1029	{30}	historicos	\N	\N	\N	\N	t
+1029	{30}	históricos	\N	\N	\N	\N	t
 1290	{90,90}	Tarifas	\N	0	32768	20	t
 970	{10,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona	76	512	15	t
 1000	{20,20}	buscar cv	sasistentes=sr&sactividad=cv	71	2560	15	t
@@ -209,7 +209,7 @@
 966	{10,40}	Gestión económica	\N	45	2049	7	t
 973	{10,50}	gastos casas	tipo_lista=datosEcGastos	45	2049	7	t
 1003	{20,30}	zonas	clase_info=zonassacd\\model\\infozona	160	1032	8	t
-979	{10,60}	estadística  por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
+979	{10,60}	estadística por casas	tipo=planning_cdc&ssfsv=sf	89	1	7	t
 374	{50,10,20}	sv agd	id_tipo_activ=13&status=2&periodo=desdeHoy	71	1032	8	t
 964	{10,30}	agd r/dl	tabla=p_agregados&tipo=persona	76	512	15	t
 982	{20}	cv sr	\N	0	2560	15	t
@@ -270,7 +270,7 @@
 1140	{60,90,60}	activ sf sr	tipo=sf_sr	39	8	8	t
 1141	{60,90,70}	activ sf n,nax y agd	tipo=sf_na	39	8	8	t
 1142	{60,90,90}	activ sss+	tipo=sssc	39	8	8	t
-1182	{60,10}	planing zonas	propuesta=true	139	8	8	t
+1182	{60,10}	planning zonas	propuesta=true	139	8	8	t
 1128	{50,70}	listas sg	que=list_activ_inv_sg	143	1032	8	t
 1150	{50,100,20}	activ sr	tipo=sr	43	8	8	t
 1153	{50,100,30}	sv n y agd	tipo=nagd	43	8	8	t
@@ -289,7 +289,7 @@
 1271	{90,40,11}	casas comunes sf	que=c_comunes_sf	21	8	8	t
 1275	{90,40,20}	todas casas (des)	que=c_todas&ver_ctr=si	21	8	8	t
 1277	{90,40,21}	todas casas sf	que=c_todas_sf&ver_ctr=si	21	8	8	t
-1264	{90,30}	nuevo planing	\N	141	32768	20	t
+1264	{90,30}	nuevo planning	\N	141	32768	20	t
 1278	{90,40,21}	todas casas sf	que=c_todas_sf&ver_ctr=si	21	32768	20	t
 1272	{90,40,11}	casas comunes sf	que=c_comunes_sf	21	32776	20	t
 1284	{90,40,40}	listado oficina propia	que=o_actual&ver_ctr=si	21	32768	20	t
@@ -325,8 +325,8 @@
 1250	{85,10}	persona r/dl	obj_pau=PersonaN&tipo=planning	61	2176	2	t
 1230	{110,50,20}	el curso pasado	que=cv_s&curso=anterior	79	64	10	t
 1231	{110,60}	corresponde ir a cv ad	que=cv_s_ad	79	64	10	t
-1232	{110,70}	corresponde ir a cv joves	que=cv_jovenes	79	64	10	t
-1321	{100}	planning 	\N	183	2	3	t
+1232	{110,70}	corresponde ir a cv jóvenes	que=cv_jovenes	79	64	10	t
+1321	{100}	planning	\N	183	2	3	t
 1326	{100,30}	por centro	tipo=planning_ctr	61	2	3	t
 1374	{20,10}	actas	\N	60	16	21	t
 1375	{20,20}	tabla alumnos-asignaturas	\N	88	16	21	t
@@ -340,7 +340,7 @@
 1386	{38}	sem inv.	\N	183	16	12	t
 1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1258	{90,10}	Definir periodos	\N	7	8	8	t
-1263	{90,30}	nuevo planing	\N	141	34078719	8	t
+1263	{90,30}	nuevo planning	\N	141	34078719	8	t
 1292	{90,90,10}	definir id_tarifa	\N	100	8	8	t
 143	{40}	planning	\N	183	2064	12	t
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
@@ -431,9 +431,9 @@
 1085	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	512	15	t
 147	{40,50}	por casas	tipo=planning_cdc&ssfsv=sv	194	2064	12	t
 329	{85,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2176	2	t
-951	{10,10}	Planing Casas	tipo=planning_cdc	194	1	7	t
+951	{10,10}	Planning Casas	tipo=planning_cdc	194	1	7	t
 1329	{100,40}	por casas	tipo=planning_cdc&ssfsv=sv	194	2	3	t
 37	{60,90,100}	falta sacd	tipo=falta_sacd	39	8	8	t
 39	{5,90}	Actualizar datos desde BDU	tipo=sssc	176	8	8	t
 40	{20,80}	ver docencia	\N	15	16	12	t
-41	{20,90}	asitencia a congresos	\N	196	16	12	t
+41	{20,90}	asistencia a congresos	\N	196	16	12	t
