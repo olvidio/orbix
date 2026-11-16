@@ -86,4 +86,11 @@ class ZonaTest extends myTest
         $this->assertEquals(1, $zona->getId_grupo());
         $this->assertEquals(1, $zona->getId_nom());
     }
+
+    public function test_clave_y_campos_de_la_tabla_generica()
+    {
+        $this->assertSame('id_zona', $this->Zona->getPrimary_key());
+        $campos = array_map(static fn($c) => $c->getNom_camp(), $this->Zona->getDatosCampos());
+        $this->assertSame(['nombre_zona', 'orden', 'id_grupo', 'id_nom'], $campos);
+    }
 }

@@ -1364,3 +1364,9 @@ Los flujos que la fase 6 solo comprobó «hasta la cápsula» ya se recorren gua
 - Quitar el PDF firmado de un acta y los certificados emitidos: solo los hace una región del stgr, y el usuario de E2E es de una dl. Haría falta un segundo usuario E2E de región.
 - La subida del plano de una dirección (`plano_bytea.php`, en ventana aparte). El repositorio sí tiene test con un fichero binario.
 - Anotado, sin tocar: los dos textos sin gettext de `tabla_peticiones.html.twig`.
+
+## 33. Paso 2.10: pasada de cobertura de los módulos más bajos (2026-11-16)
+
+Medido con los tests de cada módulo (unit ∪ integración), con Xdebug y contra las BD de pruebas. Entre paréntesis, sin `db/` ni `config/` (DDL y rutas).
+
+- **`zonassacd`: 50 % → 52 % (68 % → 70 %).** Lo que queda sin cubrir es casi todo `ZonasAComun` (migración de un solo uso, ya aplicada; en `backlog.md`) y el DDL. Tests nuevos: contrato de los dos controladores que escriben (`ZonassacdControllersContractTest`: con la cápsula de su lista los ids y la zona de origen salen de la cápsula; falsa, de otra acción o sin centro → «Operación no autorizada» sin llamar al caso de uso; un error del caso de uso llega como `success = false`), `isJefeZona`, `eliminarPorZona` (solo quita los centros de esa zona), `InfoZonaGrupo` y la clave y los campos de `Zona` y `ZonaGrupo` para la tabla genérica. Sin fallos de la aplicación.

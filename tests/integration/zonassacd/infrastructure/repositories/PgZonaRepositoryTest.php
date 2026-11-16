@@ -156,4 +156,18 @@ class PgZonaRepositoryTest extends myTest
         $this->assertIsNumeric($newId);
     }
 
+    public function test_is_jefe_zona(): void
+    {
+        $oZona = $this->factory->createSimple();
+        $idJefe = 9900000 + random_int(1000, 9999);
+        $oZona->setId_nom($idJefe);
+        $this->assertTrue($this->repository->Guardar($oZona));
+        try {
+            $this->assertTrue($this->repository->isJefeZona($idJefe));
+            $this->assertFalse($this->repository->isJefeZona($idJefe + 1));
+        } finally {
+            $this->repository->Eliminar($oZona);
+        }
+        $this->assertFalse($this->repository->isJefeZona($idJefe));
+    }
 }
