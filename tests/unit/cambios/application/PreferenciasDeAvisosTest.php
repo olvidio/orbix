@@ -145,6 +145,92 @@ final class PreferenciasDeAvisosTest extends myTest
         $this->assertSame([7, 901], $ids, 'una con id conocido pero no encontrada conserva ese id; la otra toma uno nuevo');
     }
 
+    private function propiedadDeOtroObjeto(int $id): CambioUsuarioPropiedadPref
+    {
+        $p = new CambioUsuarioPropiedadPref();
+        $p->setId_item($id);
+        $p->setId_item_usuario_objeto(99);
+        $p->setPropiedad('ajena');
+
+        return $p;
+    }
+
+    /** El objeto sale de la cápsula; una propiedad de otro objeto (de otro usuario) no se puede pasar a este. */
+    public function test_sin_payload_una_propiedad_de_otro_objeto_no_se_reutiliza(): void
+    {
+        $uc = $this->guardar();
+        $ajena = $this->propiedadDeOtroObjeto(7);
+        $this->repo->method('getNewId')->willReturn(901);
+        $this->repo->method('findById')->willReturnMap([[7, $ajena]]);
+        $guardadas = [];
+        $this->repo->method('Guardar')->willReturnCallback(function (CambioUsuarioPropiedadPref $p) use (&$guardadas): bool {
+            $guardadas[] = $p;
+
+            return true;
+        });
+        $this->repo->method('matching')->willReturn([]);
+
+        $uc->execute([
+            'id_item_usuario_objeto_prop' => '5', 'objeto_prop' => 'Actividad',
+            'Actividad' => ['Actividad_a_cond'],
+            'Actividad_a_item' => '7',
+        ]);
+
+        $this->assertCount(1, $guardadas);
+        $this->assertNotSame($ajena, $guardadas[0], 'no se guarda la propiedad ajena');
+        $this->assertSame([901, 5, 'a'], [$guardadas[0]->getId_item(), $guardadas[0]->getId_item_usuario_objeto(), $guardadas[0]->getPropiedad()]);
+        $this->assertSame([99, 'ajena'], [$ajena->getId_item_usuario_objeto(), $ajena->getPropiedad()], 'la ajena sigue igual');
+    }
+
+    /** Con payload, un `iid_item` de otro objeto tampoco puede sobrescribir esa propiedad. */
+    public function test_con_payload_un_id_de_otro_objeto_no_sobrescribe_esa_propiedad(): void
+    {
+        $uc = $this->guardar();
+        $this->repo->method('getNewId')->willReturn(902);
+        $this->repo->method('findById')->willReturnMap([[8, $this->propiedadDeOtroObjeto(8)]]);
+        $ids = [];
+        $this->repo->method('Guardar')->willReturnCallback(function (CambioUsuarioPropiedadPref $p) use (&$ids): bool {
+            $ids[] = $p->getId_item();
+
+            return true;
+        });
+        $this->repo->method('matching')->willReturn([]);
+
+        $uc->execute([
+            'id_item_usuario_objeto_prop' => '5', 'objeto_prop' => 'Actividad',
+            'Actividad' => ['Actividad_nom_activ_cond'],
+            'Actividad_nom_activ_cond' => json_encode(['iid_item' => 8, 'spropiedad' => 'nom_activ', 'soperador' => '=', 'svalor' => 'x']),
+        ]);
+
+        $this->assertSame([902], $ids);
+    }
+
+    public function test_con_payload_un_id_propio_actualiza_esa_propiedad(): void
+    {
+        $uc = $this->guardar();
+        $propia = new CambioUsuarioPropiedadPref();
+        $propia->setId_item(8);
+        $propia->setId_item_usuario_objeto(5);
+        $propia->setPropiedad('nom_activ');
+        $this->repo->expects($this->never())->method('getNewId');
+        $this->repo->method('findById')->willReturnMap([[8, $propia]]);
+        $ids = [];
+        $this->repo->method('Guardar')->willReturnCallback(function (CambioUsuarioPropiedadPref $p) use (&$ids): bool {
+            $ids[] = $p->getId_item();
+
+            return true;
+        });
+        $this->repo->method('matching')->willReturn([]);
+
+        $uc->execute([
+            'id_item_usuario_objeto_prop' => '5', 'objeto_prop' => 'Actividad',
+            'Actividad' => ['Actividad_nom_activ_cond'],
+            'Actividad_nom_activ_cond' => json_encode(['iid_item' => 8, 'spropiedad' => 'nom_activ', 'soperador' => '=', 'svalor' => 'x']),
+        ]);
+
+        $this->assertSame([8], $ids);
+    }
+
     public function test_un_fallo_de_guardado_corta_con_error(): void
     {
         $uc = $this->guardar();

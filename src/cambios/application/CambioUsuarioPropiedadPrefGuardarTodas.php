@@ -67,7 +67,7 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
                 $id_item = isset($aCambio['iid_item']) && is_numeric($aCambio['iid_item'])
                     ? (int) $aCambio['iid_item']
                     : 0;
-                if ($id_item <= 0) {
+                if ($id_item <= 0 || $this->esDeOtroObjeto($id_item, $id_item_usuario_objeto)) {
                     $id_item = $this->cambioUsuarioPropiedadPrefRepository->getNewId();
                 }
                 $oProp->setId_item($id_item);
@@ -95,8 +95,13 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
                 $existing_id = isset($input[$nom_item]) && is_numeric($input[$nom_item])
                     ? (int) $input[$nom_item]
                     : 0;
+                $oProp = $existing_id > 0 ? $this->cambioUsuarioPropiedadPrefRepository->findById($existing_id) : null;
+                if ($oProp !== null && $oProp->getId_item_usuario_objeto() !== $id_item_usuario_objeto) {
+                    // Propiedad de otro objeto (de otro usuario): no se reutiliza.
+                    $existing_id = 0;
+                    $oProp = null;
+                }
                 if ($existing_id > 0) {
-                    $oProp = $this->cambioUsuarioPropiedadPrefRepository->findById($existing_id);
                     if ($oProp === null) {
                         $oProp = new CambioUsuarioPropiedadPref();
                         $oProp->setId_item($existing_id);
@@ -136,5 +141,16 @@ final class CambioUsuarioPropiedadPrefGuardarTodas
         }
 
         return ['error' => ''];
+    }
+
+    /**
+     * Los ids de las propiedades llegan en el POST; el objeto, en la cápsula. Un id que ya es de otro objeto
+     * (de otro usuario) no se puede usar: `Guardar` sobrescribiría esa propiedad.
+     */
+    private function esDeOtroObjeto(int $id_item, int $id_item_usuario_objeto): bool
+    {
+        $oExistente = $this->cambioUsuarioPropiedadPrefRepository->findById($id_item);
+
+        return $oExistente !== null && $oExistente->getId_item_usuario_objeto() !== $id_item_usuario_objeto;
     }
 }
