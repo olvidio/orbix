@@ -4,6 +4,8 @@ namespace Tests\integration\inventario\infrastructure\persistence\postgresql;
 
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\entity\UbiInventario;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\entity\Lugar;
 use Tests\myTest;
 use Tests\factories\inventario\UbiInventarioFactory;
 
@@ -82,5 +84,38 @@ class PgUbiInventarioRepositoryTest extends myTest
 
         $oEliminado = $this->repository->findById($id);
         $this->assertNull($oEliminado);
+    }
+
+    public function test_centros_con_y_sin_lugares_y_lista_de_centros(): void
+    {
+        $lugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+        $conLugar = $this->factory->createSimple();
+        $this->assertTrue($this->repository->Guardar($conLugar));
+        $sinLugar = $this->factory->createSimple();
+        $this->assertTrue($this->repository->Guardar($sinLugar));
+        $oLugar = new Lugar();
+        $oLugar->setId_lugar($lugarRepository->getNewId());
+        $oLugar->setId_ubi($conLugar->getId_ubi());
+        $oLugar->setNom_lugar('armario test');
+        $this->assertTrue($lugarRepository->Guardar($oLugar));
+        try {
+            $ids = static fn(array $ubis): array => array_map(static fn($u) => $u->getId_ubi(), $ubis);
+            $conLugares = $ids($this->repository->getUbisInventarioLugar(true));
+            $sinLugares = $ids($this->repository->getUbisInventarioLugar(false));
+
+            $this->assertContains($conLugar->getId_ubi(), $conLugares);
+            $this->assertNotContains($sinLugar->getId_ubi(), $conLugares);
+            $this->assertContains($sinLugar->getId_ubi(), $sinLugares);
+            $this->assertNotContains($conLugar->getId_ubi(), $sinLugares);
+            $this->assertSame(count($conLugares), count(array_unique($conLugares)), 'cada centro una vez aunque tenga varios lugares');
+
+            $opciones = $this->repository->getArrayUbisInventario();
+            $this->assertSame($conLugar->getNom_ubi(), $opciones[$conLugar->getId_ubi()] ?? null);
+            $this->assertSame($sinLugar->getNom_ubi(), $opciones[$sinLugar->getId_ubi()] ?? null);
+        } finally {
+            $lugarRepository->Eliminar($oLugar);
+            $this->repository->Eliminar($conLugar);
+            $this->repository->Eliminar($sinLugar);
+        }
     }
 }

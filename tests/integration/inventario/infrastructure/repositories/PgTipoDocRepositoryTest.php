@@ -83,4 +83,28 @@ class PgTipoDocRepositoryTest extends myTest
         $oEliminado = $this->repository->findById($id);
         $this->assertNull($oEliminado);
     }
+
+    public function test_lista_de_tipos_vigentes_con_la_sigla_y_el_nombre_entre_parentesis(): void
+    {
+        $factory = new TipoDocFactory();
+        $conNombre = $factory->createSimple();
+        $sinNombre = $factory->createSimple();
+        $sinNombre->setNom_doc(null);
+        $noVigente = $factory->createSimple();
+        $noVigente->setVigente(false);
+        foreach ([$conNombre, $sinNombre, $noVigente] as $o) {
+            $this->assertTrue($this->repository->Guardar($o));
+        }
+        try {
+            $opciones = $this->repository->getArrayTipoDoc();
+
+            $this->assertSame('tst (test tipodoc ' . $conNombre->getId_tipo_doc() . ')', $opciones[$conNombre->getId_tipo_doc()] ?? null);
+            $this->assertSame('tst', $opciones[$sinNombre->getId_tipo_doc()] ?? null);
+            $this->assertArrayNotHasKey($noVigente->getId_tipo_doc(), $opciones);
+        } finally {
+            foreach ([$conNombre, $sinNombre, $noVigente] as $o) {
+                $this->repository->Eliminar($o);
+            }
+        }
+    }
 }
