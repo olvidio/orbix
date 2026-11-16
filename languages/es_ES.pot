@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-16 10:28+0100\n"
+"POT-Creation-Date: 2026-11-16 11:23+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -2447,7 +2447,7 @@ msgid "cancel"
 msgstr ""
 
 #: frontend/actividadtarifas/view/tarifa_tipo_actividad.phtml:25
-#: src/actividadtarifas/application/RelacionTarifaUpdate.php:32
+#: src/actividadtarifas/application/RelacionTarifaUpdate.php:35
 msgid "debe indicar el tipo de actividad"
 msgstr ""
 
@@ -9493,7 +9493,7 @@ msgstr ""
 #: src/actividadplazas/application/GestionPlazasUpdate.php:100
 #: src/actividadplazas/application/PeticionesIncorporar.php:170
 #: src/actividadplazas/application/PlazasCeder.php:86
-#: src/actividadtarifas/application/RelacionTarifaUpdate.php:51
+#: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
@@ -12625,12 +12625,16 @@ msgid "no sé cuál he de borrar"
 msgstr ""
 
 #: src/actividadtarifas/application/RelacionTarifaEliminar.php:29
-#: src/actividadtarifas/application/RelacionTarifaUpdate.php:42
+#: src/actividadtarifas/application/RelacionTarifaUpdate.php:45
 msgid "no se encuentra la relación"
 msgstr ""
 
-#: src/actividadtarifas/application/RelacionTarifaUpdate.php:29
+#: src/actividadtarifas/application/RelacionTarifaUpdate.php:32
 msgid "debe indicar la tarifa"
+msgstr ""
+
+#: src/actividadtarifas/application/RelacionTarifaUpdate.php:58
+msgid "este tipo de actividad ya tiene una tarifa"
 msgstr ""
 
 #: src/actividadtarifas/application/TarifaUbiCopiar.php:22

@@ -3,8 +3,11 @@
 namespace src\actividadtarifas\application;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\criteria\RelacionTarifaTipoActividadField as F;
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
 use src\actividadtarifas\domain\value_objects\SerieId;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 
 /**
  * Mutacion: crea o actualiza una `RelacionTarifaTipoActividad`.
@@ -43,13 +46,32 @@ final class RelacionTarifaUpdate
             }
         }
 
+        // (id_tipo_activ, id_serie) es UNIQUE en la tabla: sin esta comprobación el INSERT lanzaba una
+        // excepción y el endpoint no devolvía JSON («error de comunicación con el servidor»).
+        $cMismoTipo = $this->relacionTarifaRepository->matching(
+            Criteria::create()
+                ->where(Filter::eq(F::IdTipoActiv, $id_tipo_activ))
+                ->andWhere(Filter::eq(F::IdSerie, SerieId::GENERAL))
+        );
+        foreach ($cMismoTipo as $oOtra) {
+            if ($oOtra->getId_item() !== $oRelacion->getId_item()) {
+                return (string) _("este tipo de actividad ya tiene una tarifa");
+            }
+        }
+
         $oRelacion->setId_tarifa($id_tarifa);
         $oRelacion->setId_serie(SerieId::GENERAL);
         $oRelacion->setId_tipo_activ($id_tipo_activ);
 
-        if ($this->relacionTarifaRepository->Guardar($oRelacion) === false) {
-            return (string) _("hay un error, no se ha guardado")
-                . "\n" . $this->relacionTarifaRepository->getErrorTxt();
+        try {
+            $guardado = $this->relacionTarifaRepository->Guardar($oRelacion);
+            $errorTxt = $guardado ? '' : $this->relacionTarifaRepository->getErrorTxt();
+        } catch (\RuntimeException $e) {
+            $guardado = false;
+            $errorTxt = $e->getMessage();
+        }
+        if ($guardado === false) {
+            return (string) _("hay un error, no se ha guardado") . "\n" . $errorTxt;
         }
 
         return '';

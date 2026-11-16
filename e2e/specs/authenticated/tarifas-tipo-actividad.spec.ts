@@ -42,6 +42,7 @@ test('relación tarifa–tipo de actividad: alta y borrado', async ({ page }) =>
   // Los desplegables se cargan en cascada; «...» (cualquiera) no vale para guardar.
   const opciones = (sel: string) =>
     alta.locator(`${sel} option`).evaluateAll((os) => os.map((o) => (o as HTMLOptionElement).value).filter((v) => /^\d+$/.test(v)));
+  let elegido: string[] = [];
   buscar: for (const asistentes of await opciones('#iasistentes_val')) {
     await alta.locator('#iasistentes_val').selectOption(asistentes);
     await redEnCalma(page);
@@ -60,6 +61,7 @@ test('relación tarifa–tipo de actividad: alta y borrado', async ({ page }) =>
         if (/^\d+$/.test(id) && sqlDev('comun', `SELECT count(*) FROM ${T} WHERE id_tipo_activ = ${id}`) === '0') {
           await alta.locator('#inom_tipo_val').selectOption(tipo);
           idTipoActiv = id;
+          elegido = [asistentes, actividad, tipo];
           break buscar;
         }
       }
@@ -75,6 +77,25 @@ test('relación tarifa–tipo de actividad: alta y borrado', async ({ page }) =>
   const idItem = sqlDev('comun', `SELECT id_item FROM ${T} WHERE id_tipo_activ = ${idTipoActiv} AND id_item > ${maxAntes}`);
   expect(idItem, 'la relación está en la BD').toMatch(/^\d+$/);
   expect(sqlDev('comun', `SELECT id_tarifa FROM ${T} WHERE id_item = ${idItem}`)).toBe(tarifa);
+
+  // Otra alta con el mismo tipo de actividad: (id_tipo_activ, id_serie) es UNIQUE. Tiene que responder
+  // JSON con un aviso (antes el INSERT lanzaba una excepción y el JS decía «error de comunicación»).
+  await redEnCalma(page);
+  await main.locator('#ficha span.link[onclick*="nuevo"]').click();
+  await expect(alta).toBeVisible({ timeout: 20_000 });
+  await redEnCalma(page);
+  for (const [sel, valor] of [['#iasistentes_val', elegido[0]], ['#iactividad_val', elegido[1]], ['#inom_tipo_val', elegido[2]]]) {
+    await alta.locator(sel).selectOption(valor);
+    await redEnCalma(page);
+  }
+  await alta.locator('#id_tarifa').selectOption(tarifa);
+  const avisosAntes = dialogos.length;
+  const repetido = await esperarSrc(page, 'relacion_tarifa_update', () => alta.locator('input[onclick*="fnjs_guardar"]').click());
+  expect(repetido.success, 'no deja dos tarifas para el mismo tipo').toBe(false);
+  expect(repetido.mensaje, 'explica por qué').toBeTruthy();
+  await expect.poll(() => dialogos.slice(avisosAntes).join(' / ')).toContain(String(repetido.mensaje));
+  expect(sqlDev('comun', `SELECT count(*) FROM ${T} WHERE id_tipo_activ = ${idTipoActiv}`)).toBe('1');
+  await main.locator('#div_modificar input[onclick*="fnjs_cerrar"]').click();
 
   // Borrarla desde su ficha (la lista se recarga tras guardar).
   await redEnCalma(page);
