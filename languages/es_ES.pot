@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 23:40+0100\n"
+"POT-Creation-Date: 2026-11-16 10:28+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -36,11 +36,11 @@ msgstr ""
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:58
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:23
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:65
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:26
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:32
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:20
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:49
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:139
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:175
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:145
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:181
 msgid "error desconocido"
 msgstr ""
 
@@ -76,16 +76,16 @@ msgstr ""
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:59
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:24
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:66
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:27
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:33
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:21
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:50
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:140
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:176
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:146
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:182
 #: frontend/cambios/view/avisos_generar.phtml:41
 #: frontend/cambios/view/usuario_form_avisos.phtml:16
-#: frontend/certificados/view/certificado_emitido_lista.phtml:19
-#: frontend/certificados/view/certificado_emitido_lista.phtml:70
-#: frontend/certificados/view/certificado_emitido_lista.phtml:81
+#: frontend/certificados/view/certificado_emitido_lista.phtml:25
+#: frontend/certificados/view/certificado_emitido_lista.phtml:76
+#: frontend/certificados/view/certificado_emitido_lista.phtml:87
 #: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:20
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:13
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:24
@@ -205,11 +205,11 @@ msgstr ""
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:31
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:34
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:69
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:30
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:36
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:24
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:53
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:143
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:179
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:149
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:185
 #: frontend/casas/view/grupo.phtml:23
 msgid "error de comunicación con el servidor"
 msgstr ""
@@ -331,14 +331,17 @@ msgstr ""
 #: frontend/actividadcargos/view/select_cargos_de_actividad.phtml:30
 #: frontend/actividadcargos/view/select_cargos_personas_en_actividad.phtml:22
 #: frontend/actividades/view/actividad_select.phtml:15
-#: frontend/actividades/view/lista_actividades_sg.phtml:32
+#: frontend/actividades/view/lista_actividades_sg.phtml:35
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:87
 #: frontend/actividadestudios/view/select_asignaturas_de_una_actividad.phtml:45
 #: frontend/actividadestudios/view/select_matriculas_de_una_actividad.phtml:17
 #: frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml:47
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:163
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:18
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:131
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:169
 #: frontend/cambios/view/usuario_form_avisos.phtml:16
-#: frontend/certificados/view/certificado_emitido_lista.phtml:70
+#: frontend/certificados/view/certificado_emitido_lista.phtml:14
+#: frontend/certificados/view/certificado_emitido_lista.phtml:76
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:13
 #: frontend/configuracion/view/modulos_select.phtml:13
 #: frontend/encargossacd/view/encargo_horario_select.phtml:17
@@ -407,6 +410,10 @@ msgstr ""
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update_inc.php:16
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php:20
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php:20
+#: src/asistentes/application/AsistenteGuardar.php:92
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php:17
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php:17
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php:17
 #: src/cambios/infrastructure/ui/http/controllers/avisos_generar_tabla.php:21
 #: src/cambios/infrastructure/ui/http/controllers/cambio_usuario_eliminar_hasta_fecha.php:23
 #: src/cambios/infrastructure/ui/http/controllers/cambio_usuario_objeto_pref_eliminar.php:20
@@ -421,9 +428,13 @@ msgstr ""
 #: src/casas/infrastructure/ui/http/controllers/grupo_update.php:20
 #: src/casas/infrastructure/ui/http/controllers/ingreso_plazas_previstas_update.php:22
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php:15
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php:18
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:25
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:21
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:24
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_delete.php:15
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:23
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:24
 #: src/configuracion/infrastructure/ui/http/controllers/modulos_update.php:25
 #: src/configuracion/infrastructure/ui/http/controllers/parametros_update.php:18
 #: src/dbextern/infrastructure/ui/http/controllers/refrescar_bdu.php:15
@@ -480,7 +491,9 @@ msgstr ""
 #: src/menus/infrastructure/ui/http/controllers/menu_eliminar.php:15
 #: src/menus/infrastructure/ui/http/controllers/menu_guardar.php:16
 #: src/menus/infrastructure/ui/http/controllers/menu_mover.php:15
-#: src/menus/infrastructure/ui/http/controllers/menus_importar.php:15
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar.php:22
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:29
+#: src/menus/infrastructure/ui/http/controllers/menus_importar.php:19
 #: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:51
 #: src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php:17
 #: src/misas/infrastructure/ui/http/controllers/cuadricula_update.php:16
@@ -497,9 +510,15 @@ msgstr ""
 #: src/notas/infrastructure/ui/http/controllers/acta_eliminar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_modificar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_nueva.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_pdf_eliminar.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_pdf_subir.php:17
+#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:21
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:93
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:96
+#: src/notas/infrastructure/ui/http/controllers/persona_nota_editar.php:19
 #: src/notas/infrastructure/ui/http/controllers/persona_nota_eliminar.php:18
+#: src/notas/infrastructure/ui/http/controllers/persona_nota_nueva.php:19
+#: src/notas/infrastructure/ui/http/controllers/tessera_copiar.php:15
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_default_guardar.php:16
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_eliminar.php:16
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_guardar.php:16
@@ -516,6 +535,7 @@ msgstr ""
 #: src/personas/infrastructure/ui/http/controllers/persona_update.php:19
 #: src/personas/infrastructure/ui/http/controllers/stgr_update.php:20
 #: src/personas/infrastructure/ui/http/controllers/traslado_update.php:19
+#: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_generar.php:19
 #: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:18
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:26
@@ -525,7 +545,9 @@ msgstr ""
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/shared/domain/DatosTablaRepo.php:84
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:31
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:26
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:43
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:14
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:21
 #: src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php:15
@@ -847,8 +869,8 @@ msgstr ""
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:38
 #: frontend/ubis/controller/home_ubis.php:65
-#: src/dossiers/application/DossiersVerPantallaData.php:222
-#: src/dossiers/application/DossiersVerPantallaData.php:456
+#: src/dossiers/application/DossiersVerPantallaData.php:229
+#: src/dossiers/application/DossiersVerPantallaData.php:465
 msgid "ver dossiers"
 msgstr ""
 
@@ -858,8 +880,8 @@ msgstr ""
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:39
 #: frontend/ubis/controller/home_ubis.php:66
-#: src/dossiers/application/DossiersVerPantallaData.php:223
-#: src/dossiers/application/DossiersVerPantallaData.php:457
+#: src/dossiers/application/DossiersVerPantallaData.php:230
+#: src/dossiers/application/DossiersVerPantallaData.php:466
 msgid "dossiers"
 msgstr ""
 
@@ -897,7 +919,7 @@ msgstr ""
 #: frontend/casas/controller/casa_ec.php:61
 #: frontend/casas/controller/casas_resumen.php:79
 #: frontend/casas/controller/prevision_asistentes.php:87
-#: frontend/certificados/view/certificado_emitido_lista.phtml:126
+#: frontend/certificados/view/certificado_emitido_lista.phtml:132
 #: frontend/encargossacd/view/encargo_select.phtml:82
 #: frontend/inventario/view/traslado_doc_que.phtml:157
 #: frontend/menus/view/traducir_menu.phtml:79
@@ -1054,7 +1076,7 @@ msgid "generar nuevo curso"
 msgstr ""
 
 #: frontend/actividades/view/actividad_select.phtml:12
-#: frontend/actividades/view/lista_actividades_sg.phtml:29
+#: frontend/actividades/view/lista_actividades_sg.phtml:32
 msgid "¿Está seguro que desea borrar esta actividad?"
 msgstr ""
 
@@ -1207,7 +1229,7 @@ msgstr ""
 #: frontend/misas/view/buscar_plan_ctr.phtml:15
 #: frontend/notas/controller/asig_faltan_personas_select.php:69
 #: frontend/notas/controller/asig_faltan_select.php:87
-#: frontend/personas/controller/personas_select.php:214
+#: frontend/personas/controller/personas_select.php:216
 #: frontend/personas/view/personas_que.phtml:51
 #: frontend/personas/view/traslado_form.phtml:75
 #: frontend/planning/controller/planning_persona_select.php:139
@@ -1221,6 +1243,7 @@ msgstr ""
 #: src/actividades/application/ActividadSelectListado.php:262
 #: src/actividades/application/ListaActivTabla.php:214
 #: src/actividades/application/ListaSrCsvListado.php:170
+#: src/actividadescentro/domain/entity/CentroEncargado.php:136
 #: src/asistentes/application/ListaUltimaActivData.php:268
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:247
 #: src/casas/application/CasaActividadesListaData.php:76
@@ -1600,7 +1623,7 @@ msgstr ""
 #: frontend/actividadestudios/view/e43.phtml:35
 #: frontend/notas/controller/asig_faltan_personas_select.php:68
 #: frontend/notas/controller/asig_faltan_select.php:86
-#: frontend/personas/controller/personas_select.php:209
+#: frontend/personas/controller/personas_select.php:211
 #: frontend/planning/controller/planning_persona_select.php:138
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:99
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:259
@@ -1742,8 +1765,8 @@ msgid "Solamente lo pueden ver las regiones del stgr"
 msgstr ""
 
 #: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:47
-#: frontend/personas/controller/personas_select.php:173
-#: frontend/personas/controller/personas_select.php:184
+#: frontend/personas/controller/personas_select.php:175
+#: frontend/personas/controller/personas_select.php:186
 msgid "imprimir certificado"
 msgstr ""
 
@@ -2136,10 +2159,10 @@ msgstr ""
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:553
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:630
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:554
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:18
 #: src/notas/application/NotasDeUnaPersonaData.php:124
@@ -2169,9 +2192,9 @@ msgstr ""
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:630
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:213
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:17
@@ -2229,7 +2252,7 @@ msgid "incorporadas"
 msgstr ""
 
 #: frontend/actividadplazas/view/incorporar_peticion.phtml:22
-#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:28
 msgid "error"
 msgstr ""
 
@@ -2269,7 +2292,7 @@ msgid "plazas"
 msgstr ""
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:48
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:768
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:772
 msgid "ocupadas"
 msgstr ""
 
@@ -2284,7 +2307,7 @@ msgid "calendario"
 msgstr ""
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:54
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:766
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:770
 msgid "cedidas"
 msgstr ""
 
@@ -2586,7 +2609,7 @@ msgid "pendiente de solicitar"
 msgstr ""
 
 #: frontend/asistentes/view/lista_asistentes.phtml:6
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:194
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:200
 msgid "relación de asistentes"
 msgstr ""
 
@@ -2662,45 +2685,45 @@ msgstr ""
 msgid "otro..."
 msgstr ""
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:46
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:52
 msgid "relación de actividades a las que asiste"
 msgstr ""
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:67
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:73
 msgid "añadir actividad de la dl"
 msgstr ""
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:68
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:75
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:74
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:81
 #, php-format
 msgid "añadir actividad: %s"
 msgstr ""
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:74
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:80
 msgid "añadir actividad de otra dl"
 msgstr ""
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:157
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:163
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:132
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:157
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
 msgstr ""
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:183
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:189
 msgid "¿Está seguro que desea transferir todas las personas seleccionadas a históricos?"
 msgstr ""
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:218
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:224
 msgid "añadir asistente de la dl"
 msgstr ""
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:219
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:226
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:232
 #, php-format
 msgid "añadir asistente: %s"
 msgstr ""
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:231
 msgid "añadir asistente de otra dl"
 msgstr ""
 
@@ -2878,7 +2901,7 @@ msgstr ""
 #: frontend/cambios/view/usuario_avisos_pref.phtml:71
 #: frontend/cambios/view/usuario_avisos_pref.phtml:90
 #: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:113
-#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:113
+#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:118
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
@@ -3503,57 +3526,57 @@ msgstr ""
 msgid "¿Está seguro que quiere eliminar el certificado?"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:43
+#: frontend/certificados/view/certificado_emitido_lista.phtml:49
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:58
 msgid "No hay URL de descarga para el certificado seleccionado."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:102
+#: frontend/certificados/view/certificado_emitido_lista.phtml:108
 #: frontend/notas/view/acta_select.phtml:78
 msgid "<b>Ayuda para búsquedas</b>"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:104
+#: frontend/certificados/view/certificado_emitido_lista.phtml:110
 msgid "Si solo se utiliza el <b>formato nn/aa</b> (12/21, 7/19, etc.) buscará los certificados del ámbito con esa numeración."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:106
+#: frontend/certificados/view/certificado_emitido_lista.phtml:112
 msgid "Para buscar certificados se puede utilizar <b>comodines</b> de la siguiente forma:"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:107
+#: frontend/certificados/view/certificado_emitido_lista.phtml:113
 #: frontend/notas/view/acta_select.phtml:84
 msgid "Un <b>punto</b> (.) significa cualquier carácter en esa posición."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:108
+#: frontend/certificados/view/certificado_emitido_lista.phtml:114
 #: frontend/notas/view/acta_select.phtml:85
 msgid "Un <b>asterisco</b> (*) significa que el carácter precedente puede repetirse de forma indefinida en la cadena."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:110
+#: frontend/certificados/view/certificado_emitido_lista.phtml:116
 #: frontend/notas/view/acta_select.phtml:87
 msgid "Por lo tanto, punto y asterisco (.*) significa que puede haber un numero indeterminado de caracteres en esa posición."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:115
+#: frontend/certificados/view/certificado_emitido_lista.phtml:121
 msgid "buscar un certificado"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:118
+#: frontend/certificados/view/certificado_emitido_lista.phtml:124
 #: frontend/notas/view/acta_select.phtml:106
 msgid "ejemplos"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:119
+#: frontend/certificados/view/certificado_emitido_lista.phtml:125
 msgid "23/15 (sólo número) => busca en los certificados de la rstgr."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:120
+#: frontend/certificados/view/certificado_emitido_lista.phtml:126
 msgid "H .* | crEso .* => todos las certificados de H o Eso. Hay que dejar espacio"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:121
+#: frontend/certificados/view/certificado_emitido_lista.phtml:127
 msgid "H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15"
 msgstr ""
 
@@ -4276,7 +4299,7 @@ msgid "mover tabla al exterior (sv-e)"
 msgstr ""
 
 #: frontend/devel_db_admin/view/db_mover_que.phtml:18
-#: frontend/personas/controller/personas_select.php:208
+#: frontend/personas/controller/personas_select.php:210
 msgid "tabla"
 msgstr ""
 
@@ -5463,6 +5486,7 @@ msgstr ""
 #: frontend/menus/view/menus_get.phtml:31
 #: frontend/misas/controller/modificar_encargos.php:19
 #: src/actividades/domain/entity/NivelStgr.php:249
+#: src/actividadescentro/domain/entity/CentroEncargado.php:145
 #: src/menus/domain/entity/GrupMenu.php:125
 #: src/misas/application/ModificarEncargosData.php:47
 #: src/ubis/domain/entity/DescTeleco.php:375
@@ -6479,7 +6503,7 @@ msgid "Plan Misas"
 msgstr ""
 
 #: frontend/menus/view/traducir_menu.phtml:246
-#: frontend/personas/controller/personas_select.php:203
+#: frontend/personas/controller/personas_select.php:205
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:309
 msgid "atención actividades"
 msgstr ""
@@ -7329,8 +7353,8 @@ msgstr ""
 #: frontend/notas/controller/acta_select.php:98
 #: frontend/ubiscamas/view/habitacion_form.phtml:178
 #: frontend/ubiscamas/view/habitacion_form.phtml:179
-#: src/certificados/domain/CertificadoEmitidoSelect.php:106
 #: src/certificados/domain/CertificadoEmitidoSelect.php:107
+#: src/certificados/domain/CertificadoEmitidoSelect.php:108
 #: src/certificados/domain/Select_certificados_de_una_persona.php:112
 #: src/certificados/domain/Select_certificados_de_una_persona.php:113
 #: src/pasarela/application/ExportarActividadesData.php:277
@@ -7363,7 +7387,7 @@ msgstr ""
 
 #: frontend/notas/controller/asig_faltan_personas_select.php:70
 #: frontend/notas/controller/asig_faltan_select.php:88
-#: frontend/personas/controller/personas_select.php:216
+#: frontend/personas/controller/personas_select.php:218
 #: src/encargossacd/domain/entity/EncargoTipo.php:25
 msgid "stgr"
 msgstr ""
@@ -7451,7 +7475,7 @@ msgstr ""
 
 #: frontend/notas/helpers/NotasPayload.php:84
 #: frontend/personas/controller/personas_select.php:133
-#: frontend/personas/controller/personas_select.php:182
+#: frontend/personas/controller/personas_select.php:184
 msgid "ver tessera"
 msgstr ""
 
@@ -7603,7 +7627,7 @@ msgstr ""
 
 #: frontend/notas/view/acta_ver.phtml:231
 #: frontend/notas/view/form_notas_de_una_persona.phtml:412
-#: frontend/personas/controller/personas_select.php:220
+#: frontend/personas/controller/personas_select.php:222
 #: frontend/personas/view/traslado_form.phtml:91
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:263
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:317
@@ -7934,7 +7958,7 @@ msgid "ver actividades"
 msgstr ""
 
 #: frontend/personas/controller/personas_select.php:139
-#: frontend/personas/controller/personas_select.php:183
+#: frontend/personas/controller/personas_select.php:185
 msgid "imprimir tessera"
 msgstr ""
 
@@ -7942,54 +7966,54 @@ msgstr ""
 msgid "ver notas"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:155
+#: frontend/personas/controller/personas_select.php:157
 msgid "petición ca"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:156
+#: frontend/personas/controller/personas_select.php:158
 msgid "petición crt"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:162
+#: frontend/personas/controller/personas_select.php:164
 #: src/actividades/application/ActividadSelectListado.php:234
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:248
 msgid "plan estudios"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:166
-#: frontend/personas/controller/personas_select.php:186
+#: frontend/personas/controller/personas_select.php:168
+#: frontend/personas/controller/personas_select.php:188
 msgid "ficha profesor stgr"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:169
+#: frontend/personas/controller/personas_select.php:171
 msgid "copiar tessera"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:175
-#: frontend/personas/controller/personas_select.php:185
+#: frontend/personas/controller/personas_select.php:177
+#: frontend/personas/controller/personas_select.php:187
 msgid "adjuntar certificado"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:198
+#: frontend/personas/controller/personas_select.php:200
 #: frontend/personas/view/persona_publicar.phtml:39
 #: src/actividades/application/ActividadSelectListado.php:199
 msgid "publicar"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:212
+#: frontend/personas/controller/personas_select.php:214
 msgid "socio"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:218
+#: frontend/personas/controller/personas_select.php:220
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:221
 msgid "publicado"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:221
+#: frontend/personas/controller/personas_select.php:223
 msgid "fecha cambio situación"
 msgstr ""
 
-#: frontend/personas/controller/personas_select.php:294
+#: frontend/personas/controller/personas_select.php:296
 #: frontend/planning/view/planning_persona_select.phtml:52
 #, php-format
 msgid "%s personas encontradas"
@@ -8606,7 +8630,7 @@ msgstr ""
 msgid "sin actividades"
 msgstr ""
 
-#: frontend/procesos/controller/actividad_proceso.php:67
+#: frontend/procesos/controller/actividad_proceso.php:68
 msgid "¿Está seguro que desea crear el proceso de nuevo?"
 msgstr ""
 
@@ -8742,65 +8766,65 @@ msgstr ""
 msgid "No existe controlador para la ruta %s"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:521 frontend/shared/PostRequest.php:953
+#: frontend/shared/PostRequest.php:523 frontend/shared/PostRequest.php:955
 msgid "Procedencia"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:765
+#: frontend/shared/PostRequest.php:767
 #, php-format
 msgid "Sesión no autenticada en llamada interna a %s (status %d)."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:769
+#: frontend/shared/PostRequest.php:771
 msgid "El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a entrar en Orbix."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:774
+#: frontend/shared/PostRequest.php:776
 #, php-format
 msgid "Respuesta no-JSON de %s (status %d)."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:781
+#: frontend/shared/PostRequest.php:783
 #, php-format
 msgid "No se obtiene respuesta de: %s"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:829
+#: frontend/shared/PostRequest.php:831
 #, php-format
 msgid "No se pudo conectar en llamada interna a %s."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:833
+#: frontend/shared/PostRequest.php:835
 msgid "Comprueba que el servidor web escucha en localhost; si `web_server` usa la IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:843
+#: frontend/shared/PostRequest.php:845
 #, php-format
 msgid "Redirección inesperada en llamada interna a %s (status %d → %s)"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:846
+#: frontend/shared/PostRequest.php:848
 msgid "sin Location"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:848
+#: frontend/shared/PostRequest.php:850
 msgid "Probable causa: validación de hash/sesión. Revisa que el endpoint no requiera firma que no se está generando igual server-to-server."
 msgstr ""
 
-#: frontend/shared/PostRequest.php:853
+#: frontend/shared/PostRequest.php:855
 #, php-format
 msgid "Error HTTP %d en llamada interna a %s"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:935
+#: frontend/shared/PostRequest.php:937
 msgid "Endpoint"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:939
+#: frontend/shared/PostRequest.php:941
 msgid "Página"
 msgstr ""
 
-#: frontend/shared/PostRequest.php:955
+#: frontend/shared/PostRequest.php:957
 msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
 msgstr ""
 
@@ -8871,13 +8895,13 @@ msgid "la fecha fin es menor que la fecha inicio en el periodo %s: %s"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:321
-#: src/shared/domain/value_objects/DateTimeLocal.php:335
+#: src/shared/domain/value_objects/DateTimeLocal.php:336
 #, php-format
 msgid "dias libres cerca de %s"
 msgstr ""
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:326
-#: src/shared/domain/value_objects/DateTimeLocal.php:340
+#: src/shared/domain/value_objects/DateTimeLocal.php:341
 #, php-format
 msgid "hay un solape cerca de %s"
 msgstr ""
@@ -9473,13 +9497,13 @@ msgstr ""
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
-#: src/asistentes/application/AsistenteGuardar.php:171
+#: src/asistentes/application/AsistenteGuardar.php:180
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
 #: src/dbextern/domain/SincroDB.php:548
 #: src/dbextern/domain/VincularIdMatch.php:112
-#: src/devel_db_admin/application/AbsorberEsquema.php:304
+#: src/devel_db_admin/application/AbsorberEsquema.php:320
 #: src/encargossacd/application/CtrFichaUpdate.php:203
 #: src/encargossacd/application/CtrFichaUpdate.php:303
 #: src/encargossacd/application/CtrFichaUpdate.php:321
@@ -10223,7 +10247,7 @@ msgstr ""
 
 #: frontend/ubiscamas/view/habitacion_form.phtml:178
 #: frontend/ubiscamas/view/habitacion_form.phtml:179
-#: src/certificados/domain/CertificadoEmitidoSelect.php:106
+#: src/certificados/domain/CertificadoEmitidoSelect.php:107
 #: src/certificados/domain/Select_certificados_de_una_persona.php:112
 msgid "No"
 msgstr ""
@@ -11934,15 +11958,15 @@ msgstr ""
 msgid "listado de actividades %s"
 msgstr ""
 
-#: src/actividadescentro/domain/Info3010.php:17
+#: src/actividadescentro/domain/Info3010.php:19
 msgid "centros encargados de la actividad"
 msgstr ""
 
-#: src/actividadescentro/domain/Info3010.php:18
+#: src/actividadescentro/domain/Info3010.php:20
 msgid "¿Está seguro que desea eliminar este centro?"
 msgstr ""
 
-#: src/actividadescentro/domain/Info3010.php:19
+#: src/actividadescentro/domain/Info3010.php:21
 msgid "buscar un centro"
 msgstr ""
 
@@ -11959,7 +11983,7 @@ msgstr ""
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
 #: src/asistentes/application/AsistenteEliminar.php:52
-#: src/asistentes/application/AsistenteGuardar.php:84
+#: src/asistentes/application/AsistenteGuardar.php:86
 msgid "faltan parametros id_activ / id_nom"
 msgstr ""
 
@@ -12272,7 +12296,7 @@ msgstr ""
 #: src/notas/application/AsigFaltanPersonasSelectTablaData.php:93
 #: src/notas/application/BuscarActaData.php:110
 #: src/notas/application/ListadoAnualActasData.php:72
-#: src/notas/application/NotaPersonaFormData.php:111
+#: src/notas/application/NotaPersonaFormData.php:114
 #: src/notas/application/NotasDeUnaPersonaData.php:98
 #: src/personas/domain/Trasladar.php:384
 #: src/profesores/application/FichaProfesorStgr.php:190
@@ -12779,19 +12803,19 @@ msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr ""
 
 #: src/asistentes/application/AsistenteEliminar.php:62
-#: src/asistentes/application/AsistenteGuardar.php:120
-#: src/asistentes/application/AsistenteGuardar.php:128
+#: src/asistentes/application/AsistenteGuardar.php:129
+#: src/asistentes/application/AsistenteGuardar.php:137
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:55
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr ""
 
-#: src/asistentes/application/AsistenteGuardar.php:55
+#: src/asistentes/application/AsistenteGuardar.php:57
 #, php-format
 msgid "mod no soportado: %s"
 msgstr ""
 
-#: src/asistentes/application/AsistenteGuardar.php:93
+#: src/asistentes/application/AsistenteGuardar.php:102
 msgid "falta id_activ_old"
 msgstr ""
 
@@ -12866,7 +12890,7 @@ msgid "actividades de otras dl/r"
 msgstr ""
 
 #: src/asistentes/application/ListaAsistentesData.php:129
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:504
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
 msgid "no asiste"
 msgstr ""
 
@@ -13041,8 +13065,8 @@ msgstr ""
 msgid "observ."
 msgstr ""
 
-#: src/asistentes/application/Select_actividades_de_una_persona.php:235
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:922
+#: src/asistentes/application/Select_actividades_de_una_persona.php:238
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:926
 #: src/asistentes/domain/InfoAsistenteDl.php:31
 msgid "¿Está seguro que desea borrar a esta persona de esta actividad?"
 msgstr ""
@@ -13087,42 +13111,42 @@ msgstr ""
 msgid "En las tablas"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:580
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:581
 msgid "ALERTA: asistente sin propiedad en la plaza"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:664
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:668
 msgid "plaza que contabiliza pero que las otras delegaciones no ven. Podría explicarse como una plaza que se desea pero no se puede conceder porque no hay sitio"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:665
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:669
 msgid "como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto que vaya pero necesitamos confirmación de que hay sitio"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:666
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:670
 msgid "plaza ocupada en toda regla. Las delegaciones organizadoras ven a los nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de las previstas. Si son de otra delegación, no debería poder pasar a asignada si no hay plazas"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:667
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:671
 msgid "como la anterior pero con el plus de que se ha comunicado al interesado y no hay cambio"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:670
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:674
 msgid "para selección múltiple: 'Ctrl+Click' o bien 'Mays+Click'"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:757
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:826
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:761
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:830
 #, php-format
 msgid "(de las %s cedidas por %s)"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:830
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:834
 #, php-format
 msgid "(%s en espera)"
 msgstr ""
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:833
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:837
 #, php-format
 msgid "(%s por decidir)"
 msgstr ""
@@ -13154,7 +13178,7 @@ msgstr ""
 #: src/cambios/application/AvisosEncolarMails.php:251
 #: src/cambios/application/CambioUsuarioEliminar.php:60
 #: src/cambios/application/CambioUsuarioObjetoPrefEliminar.php:35
-#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:134
+#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:139
 #: src/casas/application/CasaIngresoEliminar.php:35
 msgid "Hay un error, no se ha eliminado"
 msgstr ""
@@ -13234,32 +13258,32 @@ msgstr ""
 msgid "Ctr: se ha quitado al ctr \"%3$s\" de la actividad \"%1$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:220
+#: src/cambios/application/CambioAvisoTxtBuilder.php:221
 #, php-format
 msgid "Fase \"%2$s\" marcada en la actividad \"%1$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:222
+#: src/cambios/application/CambioAvisoTxtBuilder.php:223
 #, php-format
 msgid "Fase \"%2$s\" desmarcada en la actividad \"%1$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:227
+#: src/cambios/application/CambioAvisoTxtBuilder.php:228
 #, php-format
 msgid "Fase cambiada en la actividad \"%1$s\". Status \"%3$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:229
+#: src/cambios/application/CambioAvisoTxtBuilder.php:230
 #, php-format
 msgid "Status \"%2$s\" completado en la actividad \"%1$s\". Status actual \"%3$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:232
+#: src/cambios/application/CambioAvisoTxtBuilder.php:233
 #, php-format
 msgid "Status \"%2$s\" eliminada en la actividad \"%1$s\". Status actual \"%3$s\""
 msgstr ""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:236
+#: src/cambios/application/CambioAvisoTxtBuilder.php:237
 #, php-format
 msgid "Fase cambiada en la actividad \"%1$s\""
 msgstr ""
@@ -13733,7 +13757,7 @@ msgstr ""
 msgid "Ya existe un certificado emitido para esta persona con la misma fecha de certificado. Cambie la fecha o consulte el listado de certificados ya emitidos."
 msgstr ""
 
-#: src/certificados/application/CertificadoEmitidoUploadFirmadoFormData.php:23
+#: src/certificados/application/CertificadoEmitidoUploadFirmadoFormData.php:24
 #: src/certificados/application/CertificadoRecibidoModificarFormData.php:25
 #: src/certificados/domain/CertificadoEmitidoDelete.php:35
 #: src/certificados/domain/CertificadoEmitidoDelete.php:41
@@ -13800,7 +13824,7 @@ msgstr ""
 msgid "fecha certificado"
 msgstr ""
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:24
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:36
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:22
 #, php-format
 msgid "No encuentro certificado emitido con id_item: %d"
@@ -13868,30 +13892,31 @@ msgstr ""
 msgid "No hay PDF asociado a este certificado."
 msgstr ""
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:22
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:22
-#: src/notas/application/ActaPdfSubir.php:70
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:37
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:37
+#: src/notas/application/ActaPdfSubir.php:71
 #, php-format
 msgid "No se puede subir el archivo %s"
 msgstr ""
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:26
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:26
-#: src/notas/application/ActaPdfSubir.php:86
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:41
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:41
+#: src/notas/application/ActaPdfSubir.php:87
 #, php-format
 msgid "No se puede abrir el archivo %s"
 msgstr ""
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:32
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:32
-#: src/notas/application/ActaPdfSubir.php:78
-#: src/notas/application/ActaPdfSubir.php:94
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:47
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:47
+#: src/notas/application/ActaPdfSubir.php:79
+#: src/notas/application/ActaPdfSubir.php:95
 #, php-format
 msgid "No se puede leer el archivo %s"
 msgstr ""
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:35
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:35
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:50
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:50
+#: src/notas/application/ActaPdfSubir.php:103
 #, php-format
 msgid "El archivo %s no es un PDF"
 msgstr ""
@@ -14140,11 +14165,16 @@ msgstr ""
 msgid "Error al trasladar"
 msgstr ""
 
-#: src/devel_db_admin/application/AbsorberEsquema.php:300
+#: src/devel_db_admin/application/AbsorberEsquema.php:61
+#, php-format
+msgid "La delegación «%s» de la región «%s» no está en la tabla de delegaciones. No se ha absorbido nada."
+msgstr ""
+
+#: src/devel_db_admin/application/AbsorberEsquema.php:316
 msgid "Delegación origen no encontrada."
 msgstr ""
 
-#: src/devel_db_admin/application/AbsorberEsquema.php:358
+#: src/devel_db_admin/application/AbsorberEsquema.php:374
 #, php-format
 msgid "se ha pasado la %s a %s"
 msgstr ""
@@ -14446,14 +14476,24 @@ msgstr ""
 msgid "estado"
 msgstr ""
 
-#: src/devel_db_admin/application/MoverTabla.php:45
+#: src/devel_db_admin/application/MoverTabla.php:48
+#, php-format
+msgid "Nombre de tabla no válido: %s"
+msgstr ""
+
+#: src/devel_db_admin/application/MoverTabla.php:55
+#, php-format
+msgid "La tabla se ha copiado a sv-e, pero no se ha podido quitar de sv (%s): %s"
+msgstr ""
+
+#: src/devel_db_admin/application/MoverTabla.php:58
 #, php-format
 msgid "Error para %s"
 msgstr ""
 
-#: src/devel_db_admin/application/MoverTabla.php:78
+#: src/devel_db_admin/application/MoverTabla.php:91
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:375
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:309
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:312
 #, php-format
 msgid "error al escribir el fichero"
 msgstr ""
@@ -15514,6 +15554,18 @@ msgstr ""
 msgid "nombre plantilla menú"
 msgstr ""
 
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:45
+msgid "No se ha podido leer la plantilla de menús: no se ha cambiado nada."
+msgstr ""
+
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:48
+msgid "La plantilla de menús no tiene menús: no se ha cambiado nada."
+msgstr ""
+
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:66
+msgid "Hay un error, no se han importado los menús: siguen los de antes."
+msgstr ""
+
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:27
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:32
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:34
@@ -15533,7 +15585,7 @@ msgstr ""
 msgid "hay un error. Debe indicar el destino"
 msgstr ""
 
-#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:87
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:104
 #, php-format
 msgid "PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"
 msgstr ""
@@ -15648,16 +15700,16 @@ msgstr ""
 #: src/notas/application/ActaModificar.php:51
 #: src/notas/application/ActaPdfEliminar.php:25
 #: src/notas/application/ActaPdfEliminar.php:31
-#: src/notas/application/ActaPdfSubir.php:31
-#: src/notas/application/ActaPdfSubir.php:36
+#: src/notas/application/ActaPdfSubir.php:32
+#: src/notas/application/ActaPdfSubir.php:37
 #: src/notas/application/ActaVerAddPersona.php:68
-#: src/notas/application/ActaVerAddPersonaFormData.php:65
+#: src/notas/application/ActaVerAddPersonaFormData.php:66
 msgid "No se encuentra el acta"
 msgstr ""
 
 #: src/notas/application/ActaImprimirPresentacionData.php:44
 #: src/notas/application/ActaMarcarImpresa.php:27
-#: src/notas/application/ActaVerAddPersonaFormData.php:60
+#: src/notas/application/ActaVerAddPersonaFormData.php:61
 msgid "Falta el acta"
 msgstr ""
 
@@ -15689,7 +15741,7 @@ msgstr ""
 msgid "no aparece en la lista"
 msgstr ""
 
-#: src/notas/application/ActaPdfSubir.php:40
+#: src/notas/application/ActaPdfSubir.php:41
 msgid "Debe imprimir el acta después del último cambio antes de subir el PDF firmado"
 msgstr ""
 
@@ -15708,7 +15760,7 @@ msgid "El acta está firmada y no se puede modificar"
 msgstr ""
 
 #: src/notas/application/ActaVerAddPersona.php:79
-#: src/notas/application/ActaVerAddPersonaFormData.php:73
+#: src/notas/application/ActaVerAddPersonaFormData.php:74
 msgid "El acta no tiene asignatura"
 msgstr ""
 
@@ -15724,7 +15776,7 @@ msgstr ""
 msgid "Nota guardada en el esquema %s"
 msgstr ""
 
-#: src/notas/application/ActaVerAddPersonaFormData.php:145
+#: src/notas/application/ActaVerAddPersonaFormData.php:147
 msgid "No se han podido cargar las personas publicadas"
 msgstr ""
 
@@ -15966,20 +16018,20 @@ msgstr ""
 msgid "nº de departamentos"
 msgstr ""
 
-#: src/notas/application/NotaPersonaFormData.php:100
+#: src/notas/application/NotaPersonaFormData.php:103
 msgid "No se encuentra la nota a editar"
 msgstr ""
 
-#: src/notas/application/NotaPersonaFormData.php:199
+#: src/notas/application/NotaPersonaFormData.php:202
 #: src/notas/application/NotasDeUnaPersonaData.php:110
 msgid "opcional de sobra"
 msgstr ""
 
-#: src/notas/application/NotaPersonaFormData.php:202
+#: src/notas/application/NotaPersonaFormData.php:205
 msgid "fin cuadrienio"
 msgstr ""
 
-#: src/notas/application/NotaPersonaFormData.php:203
+#: src/notas/application/NotaPersonaFormData.php:206
 msgid "fin bienio"
 msgstr ""
 
@@ -16118,7 +16170,7 @@ msgstr ""
 msgid "no se ha guardado la nota"
 msgstr ""
 
-#: src/notas/application/TesseraCopiarSelectData.php:42
+#: src/notas/application/TesseraCopiarSelectData.php:43
 #, php-format
 msgid "No existe una persona con id_nom: %s"
 msgstr ""
@@ -17485,7 +17537,7 @@ msgid "Faltan región y dl de referencia (setRegionRef / setDlRef)."
 msgstr ""
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:354
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:473
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:476
 #, php-format
 msgid "No se pudo leer %s"
 msgstr ""
@@ -17552,112 +17604,112 @@ msgstr ""
 msgid "El rol sigue en: %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:282
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:285
 msgid "Esquema ref o destino con formato región-dl no válido."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:289
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:292
 #, php-format
 msgid "No se pudo leer el volcado de referencia: %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:301
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:304
 #, php-format
 msgid "No se pudo escribir %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:421
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:424
 #, php-format
 msgid "PSQL ERROR IN COMMAND(2): %1$s<br><br> mirar en: %2$s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:422
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:425
 msgid "Si sólo salen números, son las filas que se ha insertado: Está bien."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:454
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:457
 #, php-format
 msgid "No existe el volcado para importar: %s (origen «%s» → destino «%s»)."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:465
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:468
 #, php-format
 msgid "El fichero %1$s no contiene el esquema destino «%2$s» (¿volcado antiguo dbNewEu-crEu u otro?). Regenerar el paso 3."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:477
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:480
 #, php-format
 msgid "No se pudo reescribir %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:669
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:672
 #, php-format
 msgid "Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». SQL: %5$s. Log: %6$s.%7$s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:119
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:122
 msgid "La operación continúa con el usuario de importar."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:189
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:192
 #, php-format
 msgid "El rol «%1$s» no existe; la operación continúa con el usuario de importar (esquema «%2$s»)."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:249
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:252
 #, php-format
 msgid "No existe «%1$s.%2$s»; se omite el traslado %3$s a resto."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:263
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:266
 #, php-format
 msgid "No existe el esquema «%1$s»; se omite el traslado %2$s a resto."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:337
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:344
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:340
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:347
 #, php-format
 msgid "Identificador de ubicación no válido%1$s: %2$s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:409
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:412
 #, php-format
 msgid "La tabla map_id no existe en el esquema «%s» y no hay plantilla en «resto». Vuelva a ejecutar «crear esquema» (comun) con un esquema de referencia que la incluya."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:443
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:446
 #, php-format
 msgid "No existe el esquema «%s»; se omiten operaciones con map_id."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:509
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:512
 #, php-format
 msgid "Aviso: no se pudo refrescar la suscripción tras crear map_id en réplica: %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:573
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:576
 #, php-format
 msgid "Tipo de permiso no válido: %s"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:677
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:701
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:692
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:716
 msgid "no se ha guardado la actividad"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:750
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:774
 msgid "no se ha guardado la casa"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:813
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:837
 msgid "no se ha guardado la teleco de la casa"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:899
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:932
 msgid "no se ha guardado el centro"
 msgstr ""
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:977
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:1010
 msgid "no se ha guardado la teleco el ctr"
 msgstr ""
 
@@ -17707,7 +17759,7 @@ msgstr ""
 msgid "No se ha recibido el archivo."
 msgstr ""
 
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:56
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:61
 msgid "no se ha ejecutado la acción"
 msgstr ""
 
@@ -18581,16 +18633,16 @@ msgstr ""
 msgid "infoTable no implementado para la tabla: %s"
 msgstr ""
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:220
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:236
 msgid "Error obteniendo nuevo id de db_idschema."
 msgstr ""
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:261
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:278
 #, php-format
 msgid "Base de datos no soportada: %s"
 msgstr ""
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:311
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:328
 msgid "No se encuentra ningún id_schema en el rango 3000-4000"
 msgstr ""
 
@@ -18852,7 +18904,7 @@ msgstr ""
 #: frontend/pasarela/view/activacion_lista.html.twig:75
 #: frontend/pasarela/view/activacion_lista.html.twig:97
 #: frontend/pasarela/view/contribucion_x_lista.html.twig:31
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:81
+#: frontend/pasarela/view/contribucion_x_lista.html.twig:83
 #: frontend/pasarela/view/nombre_lista.html.twig:23
 #: frontend/pasarela/view/nombre_lista.html.twig:55
 msgid "Tipo no válido"
@@ -18941,19 +18993,19 @@ msgstr ""
 msgid "No se ha podido guardar el certificado"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:89
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:90
 msgid "No se pudo abrir la ventana del PDF. Verifique que los popups estén permitidos."
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:110
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:111
 msgid "Error al abrir el PDF"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:119
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:120
 msgid "¿Es correcto?"
 msgstr ""
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:122
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:123
 msgid "'Cancel' para eliminar el certificado recién creado"
 msgstr ""
 
@@ -19156,7 +19208,7 @@ msgid "debe indicar un valor"
 msgstr ""
 
 #: frontend/pasarela/view/contribucion_x_lista.html.twig:35
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:85
+#: frontend/pasarela/view/contribucion_x_lista.html.twig:87
 msgid "debe indicar un tanto por ciento"
 msgstr ""
 

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-14 23:40+0100\n"
+"POT-Creation-Date: 2026-11-16 10:28+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -34,11 +34,11 @@ msgstr "required data missing: activity, assistant and type of charge."
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:58
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:23
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:65
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:26
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:32
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:20
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:49
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:139
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:175
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:145
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:181
 msgid "error desconocido"
 msgstr "Unknown error"
 
@@ -74,16 +74,16 @@ msgstr "Unknown error"
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:59
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:24
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:66
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:27
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:33
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:21
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:50
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:140
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:176
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:146
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:182
 #: frontend/cambios/view/avisos_generar.phtml:41
 #: frontend/cambios/view/usuario_form_avisos.phtml:16
-#: frontend/certificados/view/certificado_emitido_lista.phtml:19
-#: frontend/certificados/view/certificado_emitido_lista.phtml:70
-#: frontend/certificados/view/certificado_emitido_lista.phtml:81
+#: frontend/certificados/view/certificado_emitido_lista.phtml:25
+#: frontend/certificados/view/certificado_emitido_lista.phtml:76
+#: frontend/certificados/view/certificado_emitido_lista.phtml:87
 #: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:20
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:13
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:24
@@ -133,7 +133,8 @@ msgstr "Unknown error"
 #: frontend/misas/view/ver_iniciales_zona.phtml:346
 #: frontend/notas/view/acta_select.phtml:47
 #: frontend/notas/view/acta_select.phtml:58
-#: frontend/notas/view/acta_ver.phtml:66 frontend/notas/view/acta_ver.phtml:268
+#: frontend/notas/view/acta_ver.phtml:66
+#: frontend/notas/view/acta_ver.phtml:268
 #: frontend/notas/view/acta_ver.phtml:346
 #: frontend/notas/view/acta_ver.phtml:365
 #: frontend/notas/view/acta_ver.phtml:382
@@ -203,11 +204,11 @@ msgstr "answer"
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:31
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:34
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:69
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:30
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:36
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:24
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:53
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:143
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:179
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:149
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:185
 #: frontend/casas/view/grupo.phtml:23
 msgid "error de comunicación con el servidor"
 msgstr "Communication error with the server"
@@ -329,14 +330,17 @@ msgstr "activity"
 #: frontend/actividadcargos/view/select_cargos_de_actividad.phtml:30
 #: frontend/actividadcargos/view/select_cargos_personas_en_actividad.phtml:22
 #: frontend/actividades/view/actividad_select.phtml:15
-#: frontend/actividades/view/lista_actividades_sg.phtml:32
+#: frontend/actividades/view/lista_actividades_sg.phtml:35
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:87
 #: frontend/actividadestudios/view/select_asignaturas_de_una_actividad.phtml:45
 #: frontend/actividadestudios/view/select_matriculas_de_una_actividad.phtml:17
 #: frontend/actividadestudios/view/select_matriculas_de_una_persona.phtml:47
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:163
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:18
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:131
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:169
 #: frontend/cambios/view/usuario_form_avisos.phtml:16
-#: frontend/certificados/view/certificado_emitido_lista.phtml:70
+#: frontend/certificados/view/certificado_emitido_lista.phtml:14
+#: frontend/certificados/view/certificado_emitido_lista.phtml:76
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:13
 #: frontend/configuracion/view/modulos_select.phtml:13
 #: frontend/encargossacd/view/encargo_horario_select.phtml:17
@@ -405,6 +409,10 @@ msgstr "activity"
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update_inc.php:16
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php:20
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php:20
+#: src/asistentes/application/AsistenteGuardar.php:92
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php:17
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php:17
+#: src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php:17
 #: src/cambios/infrastructure/ui/http/controllers/avisos_generar_tabla.php:21
 #: src/cambios/infrastructure/ui/http/controllers/cambio_usuario_eliminar_hasta_fecha.php:23
 #: src/cambios/infrastructure/ui/http/controllers/cambio_usuario_objeto_pref_eliminar.php:20
@@ -419,9 +427,13 @@ msgstr "activity"
 #: src/casas/infrastructure/ui/http/controllers/grupo_update.php:20
 #: src/casas/infrastructure/ui/http/controllers/ingreso_plazas_previstas_update.php:22
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php:15
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php:18
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:25
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:21
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:24
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_delete.php:15
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:23
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:24
 #: src/configuracion/infrastructure/ui/http/controllers/modulos_update.php:25
 #: src/configuracion/infrastructure/ui/http/controllers/parametros_update.php:18
 #: src/dbextern/infrastructure/ui/http/controllers/refrescar_bdu.php:15
@@ -478,7 +490,9 @@ msgstr "activity"
 #: src/menus/infrastructure/ui/http/controllers/menu_eliminar.php:15
 #: src/menus/infrastructure/ui/http/controllers/menu_guardar.php:16
 #: src/menus/infrastructure/ui/http/controllers/menu_mover.php:15
-#: src/menus/infrastructure/ui/http/controllers/menus_importar.php:15
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar.php:22
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:29
+#: src/menus/infrastructure/ui/http/controllers/menus_importar.php:19
 #: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:51
 #: src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php:17
 #: src/misas/infrastructure/ui/http/controllers/cuadricula_update.php:16
@@ -495,9 +509,15 @@ msgstr "activity"
 #: src/notas/infrastructure/ui/http/controllers/acta_eliminar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_modificar.php:15
 #: src/notas/infrastructure/ui/http/controllers/acta_nueva.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_pdf_eliminar.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_pdf_subir.php:17
+#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:21
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:93
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:96
+#: src/notas/infrastructure/ui/http/controllers/persona_nota_editar.php:19
 #: src/notas/infrastructure/ui/http/controllers/persona_nota_eliminar.php:18
+#: src/notas/infrastructure/ui/http/controllers/persona_nota_nueva.php:19
+#: src/notas/infrastructure/ui/http/controllers/tessera_copiar.php:15
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_default_guardar.php:16
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_eliminar.php:16
 #: src/pasarela/infrastructure/ui/http/controllers/activacion_excepcion_guardar.php:16
@@ -514,6 +534,7 @@ msgstr "activity"
 #: src/personas/infrastructure/ui/http/controllers/persona_update.php:19
 #: src/personas/infrastructure/ui/http/controllers/stgr_update.php:20
 #: src/personas/infrastructure/ui/http/controllers/traslado_update.php:19
+#: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_generar.php:19
 #: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:18
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:26
@@ -523,7 +544,9 @@ msgstr "activity"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/shared/domain/DatosTablaRepo.php:84
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:31
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:26
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:43
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:14
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:21
 #: src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php:15
@@ -643,8 +666,8 @@ msgid ""
 "Según el número de actividades, puede tardar un rato (3 minutos). Tómate un "
 "café..."
 msgstr ""
-"Depending on the number of activities, it may take a while (3 minutes). Have "
-"a coffee..."
+"Depending on the number of activities, it may take a while (3 minutes). Have"
+" a coffee..."
 
 #: frontend/actividades/controller/actividad_nuevo_curso.php:52
 msgid "atención"
@@ -857,8 +880,8 @@ msgstr "do not forget to adjust the name of the activity"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:38
 #: frontend/ubis/controller/home_ubis.php:65
-#: src/dossiers/application/DossiersVerPantallaData.php:222
-#: src/dossiers/application/DossiersVerPantallaData.php:456
+#: src/dossiers/application/DossiersVerPantallaData.php:229
+#: src/dossiers/application/DossiersVerPantallaData.php:465
 msgid "ver dossiers"
 msgstr "see dossiers"
 
@@ -868,8 +891,8 @@ msgstr "see dossiers"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:39
 #: frontend/ubis/controller/home_ubis.php:66
-#: src/dossiers/application/DossiersVerPantallaData.php:223
-#: src/dossiers/application/DossiersVerPantallaData.php:457
+#: src/dossiers/application/DossiersVerPantallaData.php:230
+#: src/dossiers/application/DossiersVerPantallaData.php:466
 msgid "dossiers"
 msgstr "dossiers"
 
@@ -903,11 +926,12 @@ msgstr "Economic summary"
 #: frontend/cambios/view/avisos_generar.phtml:106
 #: frontend/cartaspresentacion/view/cartas_presentacion.phtml:149
 #: frontend/cartaspresentacion/view/cartas_presentacion_buscar.phtml:30
-#: frontend/casas/controller/casa.php:78 frontend/casas/controller/casa.php:101
+#: frontend/casas/controller/casa.php:78
+#: frontend/casas/controller/casa.php:101
 #: frontend/casas/controller/casa_ec.php:61
 #: frontend/casas/controller/casas_resumen.php:79
 #: frontend/casas/controller/prevision_asistentes.php:87
-#: frontend/certificados/view/certificado_emitido_lista.phtml:126
+#: frontend/certificados/view/certificado_emitido_lista.phtml:132
 #: frontend/encargossacd/view/encargo_select.phtml:82
 #: frontend/inventario/view/traslado_doc_que.phtml:157
 #: frontend/menus/view/traducir_menu.phtml:79
@@ -1064,7 +1088,7 @@ msgid "generar nuevo curso"
 msgstr "generate new course"
 
 #: frontend/actividades/view/actividad_select.phtml:12
-#: frontend/actividades/view/lista_actividades_sg.phtml:29
+#: frontend/actividades/view/lista_actividades_sg.phtml:32
 msgid "¿Está seguro que desea borrar esta actividad?"
 msgstr "Are you sure you want to delete this activity?"
 
@@ -1217,7 +1241,7 @@ msgstr "delete"
 #: frontend/misas/view/buscar_plan_ctr.phtml:15
 #: frontend/notas/controller/asig_faltan_personas_select.php:69
 #: frontend/notas/controller/asig_faltan_select.php:87
-#: frontend/personas/controller/personas_select.php:214
+#: frontend/personas/controller/personas_select.php:216
 #: frontend/personas/view/personas_que.phtml:51
 #: frontend/personas/view/traslado_form.phtml:75
 #: frontend/planning/controller/planning_persona_select.php:139
@@ -1231,6 +1255,7 @@ msgstr "delete"
 #: src/actividades/application/ActividadSelectListado.php:262
 #: src/actividades/application/ListaActivTabla.php:214
 #: src/actividades/application/ListaSrCsvListado.php:170
+#: src/actividadescentro/domain/entity/CentroEncargado.php:136
 #: src/asistentes/application/ListaUltimaActivData.php:268
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:247
 #: src/casas/application/CasaActividadesListaData.php:76
@@ -1408,7 +1433,8 @@ msgid "En el mismo lugar"
 msgstr "In the same location"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:42
-msgid "NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."
+msgid ""
+"NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."
 msgstr ""
 "NOTE: In sv, when assigning a sacd, attendance is added to the activity."
 
@@ -1475,7 +1501,8 @@ msgstr ""
 #: frontend/actividadessacd/view/asignar_sacd_auto.phtml:17
 #, php-format
 msgid ""
-"limitado a las actividades de sr y sg a partir de %s y marcadas como actuales"
+"limitado a las actividades de sr y sg a partir de %s y marcadas como "
+"actuales"
 msgstr "limited to SR and SG activities from %s and marked as current"
 
 #: frontend/actividadessacd/view/asignar_sacd_auto.phtml:18
@@ -1627,7 +1654,7 @@ msgstr "period of activities"
 #: frontend/actividadestudios/view/e43.phtml:35
 #: frontend/notas/controller/asig_faltan_personas_select.php:68
 #: frontend/notas/controller/asig_faltan_select.php:86
-#: frontend/personas/controller/personas_select.php:209
+#: frontend/personas/controller/personas_select.php:211
 #: frontend/planning/controller/planning_persona_select.php:138
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:99
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:259
@@ -1769,8 +1796,8 @@ msgid "Solamente lo pueden ver las regiones del stgr"
 msgstr "Only visible to stgr regions"
 
 #: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:47
-#: frontend/personas/controller/personas_select.php:173
-#: frontend/personas/controller/personas_select.php:184
+#: frontend/personas/controller/personas_select.php:175
+#: frontend/personas/controller/personas_select.php:186
 msgid "imprimir certificado"
 msgstr "print certificate"
 
@@ -2134,8 +2161,8 @@ msgid ""
 "Salen las personas de paso con notas en las delegaciones de esta región. "
 "Quien ya tiene ficha en un esquema de Aquinate no necesita este envío."
 msgstr ""
-"People passing through with grades appear in the delegations of this region. "
-"Anyone who already has a record in an Aquinate scheme does not need this "
+"People passing through with grades appear in the delegations of this region."
+" Anyone who already has a record in an Aquinate scheme does not need this "
 "submission."
 
 #: frontend/actividadestudios/view/matriculas_otras_r.phtml:52
@@ -2188,10 +2215,10 @@ msgstr "curriculum confirmed"
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:553
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:630
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:554
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:18
 #: src/notas/application/NotasDeUnaPersonaData.php:124
@@ -2221,9 +2248,9 @@ msgstr "yes"
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:630
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:213
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:17
@@ -2281,7 +2308,7 @@ msgid "incorporadas"
 msgstr "incorporated"
 
 #: frontend/actividadplazas/view/incorporar_peticion.phtml:22
-#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:15
+#: src/notas/infrastructure/ui/http/controllers/acta_ver_add_persona.php:28
 msgid "error"
 msgstr "error"
 
@@ -2292,8 +2319,8 @@ msgstr "Incorporate seat requests"
 #: frontend/actividadplazas/view/incorporar_peticion.phtml:31
 #, php-format
 msgid ""
-"Incorporar las primeras peticiones de %s como asistencia con plaza asignada/"
-"pedida."
+"Incorporar las primeras peticiones de %s como asistencia con plaza "
+"asignada/pedida."
 msgstr ""
 "Incorporate the first requests of %s as attendance with assigned/planned "
 "seat."
@@ -2316,7 +2343,8 @@ msgstr "EYE! This activity is not published"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:47
 #: frontend/ubis/controller/centros_form_plazas.php:34
-#: frontend/ubis/view/cdc_form.phtml:78 frontend/ubis/view/ctrdl_form.phtml:112
+#: frontend/ubis/view/cdc_form.phtml:78
+#: frontend/ubis/view/ctrdl_form.phtml:112
 #: src/actividades/application/ActividadSelectListado.php:224
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:213
 #: src/casas/application/PrevisionAsistentesData.php:64
@@ -2325,7 +2353,7 @@ msgid "plazas"
 msgstr "plazas"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:48
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:768
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:772
 msgid "ocupadas"
 msgstr "occupied"
 
@@ -2340,7 +2368,7 @@ msgid "calendario"
 msgstr "calendar"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:54
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:766
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:770
 msgid "cedidas"
 msgstr "ceded"
 
@@ -2408,8 +2436,8 @@ msgid ""
 "copiar las del año %1$d a este (%2$d). Esto borrará las tarifas actuales de "
 "%2$d"
 msgstr ""
-"Copy the rates of year %1$d to this one (%2$d). This will delete the current "
-"rates of %2$d"
+"Copy the rates of year %1$d to this one (%2$d). This will delete the current"
+" rates of %2$d"
 
 #: frontend/actividadtarifas/view/tarifa_form.phtml:27
 #: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:32
@@ -2646,7 +2674,7 @@ msgid "pendiente de solicitar"
 msgstr "pending request"
 
 #: frontend/asistentes/view/lista_asistentes.phtml:6
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:194
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:200
 msgid "relación de asistentes"
 msgstr "relation of assistants"
 
@@ -2722,48 +2750,48 @@ msgstr "all of nax"
 msgid "otro..."
 msgstr "other..."
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:46
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:52
 msgid "relación de actividades a las que asiste"
 msgstr "relationship of activities that he attends"
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:67
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:73
 msgid "añadir actividad de la dl"
 msgstr "Add dl activity"
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:68
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:75
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:74
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:81
 #, php-format
 msgid "añadir actividad: %s"
 msgstr "Add activity: %s"
 
-#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:74
+#: frontend/asistentes/view/select_actividades_de_una_persona.phtml:80
 msgid "añadir actividad de otra dl"
 msgstr "Add activity from another dl"
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:157
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:163
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:132
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:157
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
 msgstr "Are you sure you want to remove this charge from this person?"
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:183
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:189
 msgid ""
 "¿Está seguro que desea transferir todas las personas seleccionadas a "
 "históricos?"
 msgstr ""
 "Are you sure you want to transfer all selected people to historical ones?"
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:218
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:224
 msgid "añadir asistente de la dl"
 msgstr "Add dl assistant"
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:219
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:226
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:232
 #, php-format
 msgid "añadir asistente: %s"
 msgstr "Add assistant: %s"
 
-#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
+#: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:231
 msgid "añadir asistente de otra dl"
 msgstr "add assistant from another delegation"
 
@@ -2784,7 +2812,8 @@ msgstr "Change"
 
 #: frontend/cambios/controller/avisos_generar.php:130
 #: frontend/cambios/view/usuario_avisos_pref_propiedades.phtml:6
-#: frontend/casas/controller/casa.php:81 frontend/menus/view/menus_get.phtml:52
+#: frontend/casas/controller/casa.php:81
+#: frontend/menus/view/menus_get.phtml:52
 #: frontend/procesos/controller/fases_activ_cambio_lista.php:38
 msgid "ninguno"
 msgstr "any"
@@ -2908,8 +2937,8 @@ msgstr "It is a separate cron for each dl (sv and sf)."
 #: frontend/cambios/view/avisos_generar.phtml:86
 msgid ""
 "Sin el módulo de procesos, las preferencias de aviso se definen por el "
-"estado de la actividad (proyecto, actual, terminada, borrable), no por fases "
-"de proceso."
+"estado de la actividad (proyecto, actual, terminada, borrable), no por fases"
+" de proceso."
 msgstr ""
 "Without the process module, notification preferences are defined by the "
 "activity state (project, current, completed, deletable), not by process "
@@ -2917,10 +2946,10 @@ msgstr ""
 
 #: frontend/cambios/view/avisos_generar.phtml:89
 msgid ""
-"Si el cambio es en una actividad de otra dl, la tabla de avisos no se genera "
-"automáticamente (si se hace para la dl que ha hecho el cambio) Hay que "
-"hacerlo manual, o por cron, o esperar a que se genere por algún cambio de la "
-"propia dl."
+"Si el cambio es en una actividad de otra dl, la tabla de avisos no se genera"
+" automáticamente (si se hace para la dl que ha hecho el cambio) Hay que "
+"hacerlo manual, o por cron, o esperar a que se genere por algún cambio de la"
+" propia dl."
 msgstr ""
 "If the change is in an activity of another dl, the notices table is not "
 "generated automatically (if done for the dl that made the change). It must "
@@ -2969,7 +2998,7 @@ msgstr "You must specify how to send the notification"
 #: frontend/cambios/view/usuario_avisos_pref.phtml:71
 #: frontend/cambios/view/usuario_avisos_pref.phtml:90
 #: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:113
-#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:113
+#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:118
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
@@ -3017,8 +3046,7 @@ msgid ""
 "NOTA: Salen todas las fases posibles, aunque en algún proceso no existan.\n"
 "Para ver menos fases, debe limitar el tipo de actividad."
 msgstr ""
-"NOTE: All possible phases are displayed, even if they do not exist in a "
-"specific process.\n"
+"NOTE: All possible phases are displayed, even if they do not exist in a specific process.\n"
 "To view fewer phases, you must limit the activity type."
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:207
@@ -3051,7 +3079,8 @@ msgstr "Warn if marked (on)"
 msgid ""
 "avisar aunque la actividad haya finalizado (fecha cambio  > fecha fin "
 "actividad)"
-msgstr "Warn even if the activity has ended (date changed > activity end date)"
+msgstr ""
+"Warn even if the activity has ended (date changed > activity end date)"
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:229
 msgid "opciones"
@@ -3134,7 +3163,8 @@ msgstr "regions"
 #: frontend/cartaspresentacion/controller/cartas_presentacion.php:43
 msgid ""
 "¿Está seguro que quiere quitar los datos de presentación de este centro?"
-msgstr "Are you sure you want to remove the presentation data for this center?"
+msgstr ""
+"Are you sure you want to remove the presentation data for this center?"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion.phtml:140
 msgid "seleccionar centros con cartas de presentación"
@@ -3350,8 +3380,8 @@ msgid ""
 "las dl para equilibrar los gastos."
 msgstr ""
 "It is assumed that total expenditure = total revenue. This hypothesis is "
-"true if the income includes those from the assistants, the fines paid by the "
-"ctr and the amounts contributed directly by the dl to balance the expenses."
+"true if the income includes those from the assistants, the fines paid by the"
+" ctr and the amounts contributed directly by the dl to balance the expenses."
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:53
 #, php-format
@@ -3401,11 +3431,11 @@ msgstr "2-year expense increment"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:70
 msgid ""
-"id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/"
-"[p_ta]"
+"id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: "
+"[p_tia]/[p_ta]"
 msgstr ""
-"weighted average id_tarifa: prev. activity income / prev. attendees: [p_tia]/"
-"[p_ta]"
+"weighted average id_tarifa: prev. activity income / prev. attendees: "
+"[p_tia]/[p_ta]"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:74
 msgid "Actividades próximo año"
@@ -3622,17 +3652,17 @@ msgstr "List of certificates issued between %s and %s and not sent"
 msgid "¿Está seguro que quiere eliminar el certificado?"
 msgstr "Are you sure you want to delete the certificate?"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:43
+#: frontend/certificados/view/certificado_emitido_lista.phtml:49
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:58
 msgid "No hay URL de descarga para el certificado seleccionado."
 msgstr "No download URL available for the selected certificate."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:102
+#: frontend/certificados/view/certificado_emitido_lista.phtml:108
 #: frontend/notas/view/acta_select.phtml:78
 msgid "<b>Ayuda para búsquedas</b>"
 msgstr "<b>Search Help</b>"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:104
+#: frontend/certificados/view/certificado_emitido_lista.phtml:110
 msgid ""
 "Si solo se utiliza el <b>formato nn/aa</b> (12/21, 7/19, etc.) buscará los "
 "certificados del ámbito con esa numeración."
@@ -3640,27 +3670,27 @@ msgstr ""
 "If only the <b>nn/aa format</b> (12/21, 7/19, etc.) is used, it will look "
 "for certificates in that numbering."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:106
+#: frontend/certificados/view/certificado_emitido_lista.phtml:112
 msgid ""
 "Para buscar certificados se puede utilizar <b>comodines</b> de la siguiente "
 "forma:"
 msgstr "To search for certificates, you can use <b>wildcards</b> as follows:"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:107
+#: frontend/certificados/view/certificado_emitido_lista.phtml:113
 #: frontend/notas/view/acta_select.phtml:84
 msgid "Un <b>punto</b> (.) significa cualquier carácter en esa posición."
 msgstr "A <b>dot</b> (.) means any character at that position."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:108
+#: frontend/certificados/view/certificado_emitido_lista.phtml:114
 #: frontend/notas/view/acta_select.phtml:85
 msgid ""
-"Un <b>asterisco</b> (*) significa que el carácter precedente puede repetirse "
-"de forma indefinida en la cadena."
+"Un <b>asterisco</b> (*) significa que el carácter precedente puede repetirse"
+" de forma indefinida en la cadena."
 msgstr ""
 "An <b>asterisk</b> (*) means that the preceding character can be repeated "
 "indefinitely in the string."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:110
+#: frontend/certificados/view/certificado_emitido_lista.phtml:116
 #: frontend/notas/view/acta_select.phtml:87
 msgid ""
 "Por lo tanto, punto y asterisco (.*) significa que puede haber un numero "
@@ -3669,26 +3699,27 @@ msgstr ""
 "Therefore, dot and asterisk (.*), means that there can be an indeterminate "
 "number of characters at that position."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:115
+#: frontend/certificados/view/certificado_emitido_lista.phtml:121
 msgid "buscar un certificado"
 msgstr "search for a certificate"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:118
+#: frontend/certificados/view/certificado_emitido_lista.phtml:124
 #: frontend/notas/view/acta_select.phtml:106
 msgid "ejemplos"
 msgstr "examples"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:119
+#: frontend/certificados/view/certificado_emitido_lista.phtml:125
 msgid "23/15 (sólo número) => busca en los certificados de la rstgr."
 msgstr "23/15 (number only) => searches in the certificates of rstgr."
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:120
+#: frontend/certificados/view/certificado_emitido_lista.phtml:126
 msgid ""
 "H .* | crEso .* => todos las certificados de H o Eso. Hay que dejar espacio"
 msgstr "H .* | crEso .* => all certificates of H or Eso. A space must be left"
 
-#: frontend/certificados/view/certificado_emitido_lista.phtml:121
-msgid "H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15"
+#: frontend/certificados/view/certificado_emitido_lista.phtml:127
+msgid ""
+"H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15"
 msgstr "H .*/15 | crEso .*/15 => all H or crEso certificates from year 15"
 
 #: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:10
@@ -3990,8 +4021,8 @@ msgstr "Shared"
 #: frontend/dbextern/view/ver_orbix_otradl.phtml:9
 #: frontend/dbextern/view/ver_traslados.phtml:9
 msgid ""
-"se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a "
-"ficha de la persona y al dossier de traslados"
+"se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a"
+" ficha de la persona y al dossier de traslados"
 msgstr ""
 "Today's date will be set as the transfer date. To change it, go to the "
 "person's file and the transfer dossier"
@@ -4038,8 +4069,8 @@ msgid ""
 "esquema: %s. Se han pasado los datos que se tenían (según bloques "
 "aplicables)."
 msgstr ""
-"schema: %s. The available data has been transferred (according to applicable "
-"blocks)."
+"schema: %s. The available data has been transferred (according to applicable"
+" blocks)."
 
 #: frontend/devel_db_admin/controller/db_copiar.php:36
 #: frontend/devel_db_admin/controller/db_crear_esquema.php:32
@@ -4182,10 +4213,11 @@ msgstr "BEWARE"
 
 #: frontend/devel_db_admin/view/apptables.phtml:88
 msgid ""
-"Por cuestión de permisos, las tablas de un esquema hay que crearlas desde el "
-"propio esquema"
+"Por cuestión de permisos, las tablas de un esquema hay que crearlas desde el"
+" propio esquema"
 msgstr ""
-"Due to permissions, tables of a schema must be created from the schema itself"
+"Due to permissions, tables of a schema must be created from the schema "
+"itself"
 
 #: frontend/devel_db_admin/view/db_absorber_esquema_que.phtml:22
 msgid "Absorber un esquema (región–dl)"
@@ -4400,13 +4432,13 @@ msgstr "Change the schema name and associated default values."
 
 #: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:236
 msgid ""
-"Si tras el cambio algo no cuadra (esquemas, roles, db_idschema o "
-"ficheros .inc), puede comprobar el estado y, si procede, intentar las "
-"correcciones automáticas:"
+"Si tras el cambio algo no cuadra (esquemas, roles, db_idschema o ficheros "
+".inc), puede comprobar el estado y, si procede, intentar las correcciones "
+"automáticas:"
 msgstr ""
-"If something does not match after the change (schemas, roles, db_idschema "
-"or .inc files), you can check the status and, if necessary, try the "
-"automatic corrections:"
+"If something does not match after the change (schemas, roles, db_idschema or"
+" .inc files), you can check the status and, if necessary, try the automatic "
+"corrections:"
 
 #: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:242
 msgid "Comprobar estado del renombre"
@@ -4430,8 +4462,8 @@ msgstr "Try automatic corrections"
 msgid ""
 "Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. "
 "Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen "
-"y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve "
-"a comprobar al final."
+"y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve"
+" a comprobar al final."
 msgstr ""
 "Reapply ALTER COLUMN (defaults) according to the catalog in the destination "
 "name. Empty origin: only defaults (does not synchronize .inc or "
@@ -4497,11 +4529,11 @@ msgstr ""
 
 #: frontend/devel_db_admin/view/db_crear_esquema_que.phtml:116
 msgid ""
-"Si algo falla, revise permisos de /var/www/orbix/log/db (usuario y grupo www-"
-"data) y los ficheros .sql generados."
+"Si algo falla, revise permisos de /var/www/orbix/log/db (usuario y grupo "
+"www-data) y los ficheros .sql generados."
 msgstr ""
-"If something fails, check the permissions of /var/www/orbix/log/db (user and "
-"group www-data) and the generated .sql files."
+"If something fails, check the permissions of /var/www/orbix/log/db (user and"
+" group www-data) and the generated .sql files."
 
 #: frontend/devel_db_admin/view/db_eliminar_esquema_que.phtml:20
 msgid "Eliminar esquema (región–dl)"
@@ -4528,7 +4560,7 @@ msgid "mover tabla al exterior (sv-e)"
 msgstr "move table to external (sv-e)"
 
 #: frontend/devel_db_admin/view/db_mover_que.phtml:18
-#: frontend/personas/controller/personas_select.php:208
+#: frontend/personas/controller/personas_select.php:210
 msgid "tabla"
 msgstr "table"
 
@@ -4563,10 +4595,10 @@ msgid ""
 "lectura (*_select); durante ese proceso se pausan las suscripciones logicas "
 "y se reactivan al terminar."
 msgstr ""
-"Files are read from db/migrations. SQL structure files are executed first in "
-"the main database (comun, sv-e) and then in the read replica (*_select); "
-"during this process, logical subscriptions are paused and reactivated at the "
-"end."
+"Files are read from db/migrations. SQL structure files are executed first in"
+" the main database (comun, sv-e) and then in the read replica (*_select); "
+"during this process, logical subscriptions are paused and reactivated at the"
+" end."
 
 #: frontend/dossiers/view/lista_dossiers.phtml:11
 msgid "relación de dossiers"
@@ -4657,8 +4689,8 @@ msgstr "depend_modify"
 #: frontend/dossiers/view/perm_dossier_pres.phtml:82
 msgid ""
 "depende_modificar activo implica que sólo podrá modificar la oficina "
-"correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers "
-"que afectan a varios tipos de personas"
+"correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers"
+" que afectan a varios tipos de personas"
 msgstr ""
 "depend_modify active implies that you can only modify the corresponding "
 "office: agd for agd, sm for n, sg for s, in dossiers that affect various "
@@ -5736,6 +5768,7 @@ msgstr "groupMenu"
 #: frontend/menus/view/menus_get.phtml:31
 #: frontend/misas/controller/modificar_encargos.php:19
 #: src/actividades/domain/entity/NivelStgr.php:249
+#: src/actividadescentro/domain/entity/CentroEncargado.php:145
 #: src/menus/domain/entity/GrupMenu.php:125
 #: src/misas/application/ModificarEncargosData.php:47
 #: src/ubis/domain/entity/DescTeleco.php:375
@@ -5832,11 +5865,11 @@ msgstr "Put all the dl equal"
 
 #: frontend/menus/view/menus_importar_de_ficheros_a_ref.phtml:35
 msgid ""
-"Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver "
-"a poner lo que había."
+"Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver"
+" a poner lo que había."
 msgstr ""
-"For sf: the menu groups of the Roles (from sv) are also copied. The previous "
-"content must be restored."
+"For sf: the menu groups of the Roles (from sv) are also copied. The previous"
+" content must be restored."
 
 #: frontend/menus/view/menus_importar_de_ficheros_a_ref.phtml:36
 msgid "De momento se ha anulado la restauración. Se queda como está"
@@ -6756,7 +6789,7 @@ msgid "Plan Misas"
 msgstr "Masses plan"
 
 #: frontend/menus/view/traducir_menu.phtml:246
-#: frontend/personas/controller/personas_select.php:203
+#: frontend/personas/controller/personas_select.php:205
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:309
 msgid "atención actividades"
 msgstr "attention activities"
@@ -7606,8 +7639,8 @@ msgstr "Signed"
 #: frontend/notas/controller/acta_select.php:98
 #: frontend/ubiscamas/view/habitacion_form.phtml:178
 #: frontend/ubiscamas/view/habitacion_form.phtml:179
-#: src/certificados/domain/CertificadoEmitidoSelect.php:106
 #: src/certificados/domain/CertificadoEmitidoSelect.php:107
+#: src/certificados/domain/CertificadoEmitidoSelect.php:108
 #: src/certificados/domain/Select_certificados_de_una_persona.php:112
 #: src/certificados/domain/Select_certificados_de_una_persona.php:113
 #: src/pasarela/application/ExportarActividadesData.php:277
@@ -7644,7 +7677,7 @@ msgstr "You must select a group of people (n or agd)"
 
 #: frontend/notas/controller/asig_faltan_personas_select.php:70
 #: frontend/notas/controller/asig_faltan_select.php:88
-#: frontend/personas/controller/personas_select.php:216
+#: frontend/personas/controller/personas_select.php:218
 #: src/encargossacd/domain/entity/EncargoTipo.php:25
 msgid "stgr"
 msgstr "stgr"
@@ -7732,7 +7765,7 @@ msgstr "modify stgr"
 
 #: frontend/notas/helpers/NotasPayload.php:84
 #: frontend/personas/controller/personas_select.php:133
-#: frontend/personas/controller/personas_select.php:182
+#: frontend/personas/controller/personas_select.php:184
 msgid "ver tessera"
 msgstr "see tessera"
 
@@ -7753,8 +7786,8 @@ msgstr ""
 #: frontend/notas/view/acta_select.phtml:81
 msgid ""
 "Si solo se utiliza el <b>formato nn/aa</b> (12/21, 7/19, etc.) buscará las "
-"actas del ámbito con esa numeración. En el caso de regiones con delegaciones "
-"devolvera las de todas las delegaciones con ese número. En el caso de "
+"actas del ámbito con esa numeración. En el caso de regiones con delegaciones"
+" devolvera las de todas las delegaciones con ese número. En el caso de "
 "Delegaciones o regiones sin delegaciones, devolverá el acta de ese ámbito "
 "con esa numeración."
 msgstr ""
@@ -7813,12 +7846,13 @@ msgid ""
 "<b>dl.*/20</b>: devolverá las actas de la propia delegación (o de toda la "
 "Región si es una región con delegaciones). Puede ser útil para Delegaciones "
 "que han cambiado de nombre, porque buscará entre las actas a las que tiene "
-"acceso la delegación, incluyendo el nombre de la actual y el nombre antiguo. "
+"acceso la delegación, incluyendo el nombre de la actual y el nombre antiguo."
+" "
 msgstr ""
 "<b>dl.*/20</b>: return the minutes of the delegation itself (or of the "
 "entire Region if it is a region with delegations). It could be useful for "
-"delegations that had changed their name, because it would search through the "
-"minutes to which the delegation had access, including the name of the "
+"delegations that had changed their name, because it would search through the"
+" minutes to which the delegation had access, including the name of the "
 "current delegation and the old name. "
 
 #: frontend/notas/view/acta_select.phtml:103
@@ -7866,7 +7900,8 @@ msgstr "This act is already signed (has attached PDF) and cannot be modified."
 
 #: frontend/notas/view/acta_ver.phtml:99
 msgid ""
-"Para volver a editar los datos, elimine el PDF firmado con el botón inferior."
+"Para volver a editar los datos, elimine el PDF firmado con el botón "
+"inferior."
 msgstr "To edit data again, delete the signed PDF with the bottom button."
 
 #: frontend/notas/view/acta_ver.phtml:106
@@ -7935,7 +7970,7 @@ msgstr "There are no grades associated with this act yet."
 
 #: frontend/notas/view/acta_ver.phtml:231
 #: frontend/notas/view/form_notas_de_una_persona.phtml:412
-#: frontend/personas/controller/personas_select.php:220
+#: frontend/personas/controller/personas_select.php:222
 #: frontend/personas/view/traslado_form.phtml:91
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:263
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:317
@@ -8027,7 +8062,8 @@ msgstr "Year II-IV"
 msgid ""
 "número de asignaturas que faltan (no se incluyen las cusradas sin examinar)"
 msgstr ""
-"number of missing subjects (subjects taken but not examined are not included)"
+"number of missing subjects (subjects taken but not examined are not "
+"included)"
 
 #: frontend/notas/view/asig_faltan_que.phtml:39
 msgid "incluir lista de asignaturas"
@@ -8286,7 +8322,7 @@ msgid "ver actividades"
 msgstr "see activities"
 
 #: frontend/personas/controller/personas_select.php:139
-#: frontend/personas/controller/personas_select.php:183
+#: frontend/personas/controller/personas_select.php:185
 msgid "imprimir tessera"
 msgstr "print tessera"
 
@@ -8294,54 +8330,54 @@ msgstr "print tessera"
 msgid "ver notas"
 msgstr "view grades"
 
-#: frontend/personas/controller/personas_select.php:155
+#: frontend/personas/controller/personas_select.php:157
 msgid "petición ca"
 msgstr "request ca"
 
-#: frontend/personas/controller/personas_select.php:156
+#: frontend/personas/controller/personas_select.php:158
 msgid "petición crt"
 msgstr "crt request"
 
-#: frontend/personas/controller/personas_select.php:162
+#: frontend/personas/controller/personas_select.php:164
 #: src/actividades/application/ActividadSelectListado.php:234
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:248
 msgid "plan estudios"
 msgstr "plan studies"
 
-#: frontend/personas/controller/personas_select.php:166
-#: frontend/personas/controller/personas_select.php:186
+#: frontend/personas/controller/personas_select.php:168
+#: frontend/personas/controller/personas_select.php:188
 msgid "ficha profesor stgr"
 msgstr "teacher stgr"
 
-#: frontend/personas/controller/personas_select.php:169
+#: frontend/personas/controller/personas_select.php:171
 msgid "copiar tessera"
 msgstr "copy tessera"
 
-#: frontend/personas/controller/personas_select.php:175
-#: frontend/personas/controller/personas_select.php:185
+#: frontend/personas/controller/personas_select.php:177
+#: frontend/personas/controller/personas_select.php:187
 msgid "adjuntar certificado"
 msgstr "attach certificate"
 
-#: frontend/personas/controller/personas_select.php:198
+#: frontend/personas/controller/personas_select.php:200
 #: frontend/personas/view/persona_publicar.phtml:39
 #: src/actividades/application/ActividadSelectListado.php:199
 msgid "publicar"
 msgstr "to post"
 
-#: frontend/personas/controller/personas_select.php:212
+#: frontend/personas/controller/personas_select.php:214
 msgid "socio"
 msgstr "partner"
 
-#: frontend/personas/controller/personas_select.php:218
+#: frontend/personas/controller/personas_select.php:220
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:221
 msgid "publicado"
 msgstr "published"
 
-#: frontend/personas/controller/personas_select.php:221
+#: frontend/personas/controller/personas_select.php:223
 msgid "fecha cambio situación"
 msgstr "date change situation"
 
-#: frontend/personas/controller/personas_select.php:294
+#: frontend/personas/controller/personas_select.php:296
 #: frontend/planning/view/planning_persona_select.phtml:52
 #, php-format
 msgid "%s personas encontradas"
@@ -8513,7 +8549,8 @@ msgstr "publish person"
 
 #: frontend/personas/view/persona_publicar.phtml:27
 msgid ""
-"La persona quedará visible en el desplegable de la DL destino durante un mes."
+"La persona quedará visible en el desplegable de la DL destino durante un "
+"mes."
 msgstr ""
 "The person will remain visible in the destination delegation dropdown for "
 "one month."
@@ -8770,7 +8807,8 @@ msgstr "this row is so that it correctly represents the day divisions"
 
 #: frontend/planning/support/PlanningRenderer.php:191
 msgid "PREMIO: Ha conseguido crear una actividad sin fecha de inicio."
-msgstr "PRIZE: You have successfully created an activity without a start date."
+msgstr ""
+"PRIZE: You have successfully created an activity without a start date."
 
 #: frontend/planning/support/PlanningRenderer.php:192
 #: frontend/planning/support/PlanningRenderer.php:198
@@ -8964,7 +9002,7 @@ msgstr "With activities"
 msgid "sin actividades"
 msgstr "Without activities"
 
-#: frontend/procesos/controller/actividad_proceso.php:67
+#: frontend/procesos/controller/actividad_proceso.php:68
 msgid "¿Está seguro que desea crear el proceso de nuevo?"
 msgstr "Are you sure you want to create the process again?"
 
@@ -9100,16 +9138,16 @@ msgstr "Failed to resolve route /src in internal call: %s"
 msgid "No existe controlador para la ruta %s"
 msgstr "No controller exists for route %s"
 
-#: frontend/shared/PostRequest.php:521 frontend/shared/PostRequest.php:953
+#: frontend/shared/PostRequest.php:523 frontend/shared/PostRequest.php:955
 msgid "Procedencia"
 msgstr "Origin"
 
-#: frontend/shared/PostRequest.php:765
+#: frontend/shared/PostRequest.php:767
 #, php-format
 msgid "Sesión no autenticada en llamada interna a %s (status %d)."
 msgstr "Unauthenticated session in internal call to %s (status %d)."
 
-#: frontend/shared/PostRequest.php:769
+#: frontend/shared/PostRequest.php:771
 msgid ""
 "El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a "
 "entrar en Orbix."
@@ -9117,22 +9155,22 @@ msgstr ""
 "The backend returned the login form instead of JSON. Please log in again to "
 "Orbix."
 
-#: frontend/shared/PostRequest.php:774
+#: frontend/shared/PostRequest.php:776
 #, php-format
 msgid "Respuesta no-JSON de %s (status %d)."
 msgstr "Non-JSON response from %s (status %d)."
 
-#: frontend/shared/PostRequest.php:781
+#: frontend/shared/PostRequest.php:783
 #, php-format
 msgid "No se obtiene respuesta de: %s"
 msgstr "No response received from: %s"
 
-#: frontend/shared/PostRequest.php:829
+#: frontend/shared/PostRequest.php:831
 #, php-format
 msgid "No se pudo conectar en llamada interna a %s."
 msgstr "Could not connect in internal call to %s."
 
-#: frontend/shared/PostRequest.php:833
+#: frontend/shared/PostRequest.php:835
 msgid ""
 "Comprueba que el servidor web escucha en localhost; si `web_server` usa la "
 "IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1."
@@ -9141,16 +9179,16 @@ msgstr ""
 "the LAN IP of the local machine, the connection must be able to be made via "
 "127.0.0.1."
 
-#: frontend/shared/PostRequest.php:843
+#: frontend/shared/PostRequest.php:845
 #, php-format
 msgid "Redirección inesperada en llamada interna a %s (status %d → %s)"
 msgstr "Unexpected redirect in internal call to %s (status %d → %s)"
 
-#: frontend/shared/PostRequest.php:846
+#: frontend/shared/PostRequest.php:848
 msgid "sin Location"
 msgstr "no Location"
 
-#: frontend/shared/PostRequest.php:848
+#: frontend/shared/PostRequest.php:850
 msgid ""
 "Probable causa: validación de hash/sesión. Revisa que el endpoint no "
 "requiera firma que no se está generando igual server-to-server."
@@ -9158,20 +9196,20 @@ msgstr ""
 "Probable cause: hash/session validation. Check that the endpoint does not "
 "require a signature that is not being generated equally server-to-server."
 
-#: frontend/shared/PostRequest.php:853
+#: frontend/shared/PostRequest.php:855
 #, php-format
 msgid "Error HTTP %d en llamada interna a %s"
 msgstr "HTTP error %d in internal call to %s"
 
-#: frontend/shared/PostRequest.php:935
+#: frontend/shared/PostRequest.php:937
 msgid "Endpoint"
 msgstr "Endpoint"
 
-#: frontend/shared/PostRequest.php:939
+#: frontend/shared/PostRequest.php:941
 msgid "Página"
 msgstr "Page"
 
-#: frontend/shared/PostRequest.php:955
+#: frontend/shared/PostRequest.php:957
 msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
 msgstr "Internal signed POST (HashF) with PHPSESSID (cookie or session_id())."
 
@@ -9242,13 +9280,13 @@ msgid "la fecha fin es menor que la fecha inicio en el periodo %s: %s"
 msgstr "The end date is earlier than the start date in period %s: %s"
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:321
-#: src/shared/domain/value_objects/DateTimeLocal.php:335
+#: src/shared/domain/value_objects/DateTimeLocal.php:336
 #, php-format
 msgid "dias libres cerca de %s"
 msgstr "Free days near %s"
 
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:326
-#: src/shared/domain/value_objects/DateTimeLocal.php:340
+#: src/shared/domain/value_objects/DateTimeLocal.php:341
 #, php-format
 msgid "hay un solape cerca de %s"
 msgstr "There is an overlap near %s"
@@ -9271,10 +9309,11 @@ msgid "llegan campos hidden modificados"
 msgstr "modified modified fields arrive"
 
 #: frontend/shared/security/HashF.php:258
-msgid "llegan distinto número o nombre de los campos que se dice que se envían"
+msgid ""
+"llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr ""
-"The number or name of the fields received differs from the number or name of "
-"the fields stated to be sent"
+"The number or name of the fields received differs from the number or name of"
+" the fields stated to be sent"
 
 #: frontend/shared/security/HashF.php:272
 #: frontend/shared/security/HashF.php:313
@@ -9412,11 +9451,11 @@ msgstr "video"
 
 #: frontend/shared/view/ayuda_index.phtml:78
 msgid ""
-"Es la presentación de resultados por defecto. Se puede cambiar a la vista de "
-"tabla normal (html) en el menú de preferencias."
+"Es la presentación de resultados por defecto. Se puede cambiar a la vista de"
+" tabla normal (html) en el menú de preferencias."
 msgstr ""
-"This is the default presentation of results. It can be changed to the normal "
-"table view (html) in the preferences menu."
+"This is the default presentation of results. It can be changed to the normal"
+" table view (html) in the preferences menu."
 
 #: frontend/shared/view/ayuda_index.phtml:79
 msgid "Posibilidades:"
@@ -9483,12 +9522,13 @@ msgid ""
 "para exportar (y quizá alguna otra cosa), primero hay que visualizar todas "
 "las filas. Explicación: si la lista es larga, el navegador no tiene todas "
 "las filas, las va pidiendo conforme las necesita visualizar. Una vez se ha "
-"visualizado todas, ya están en la memoria del navegador y se pueden exportar."
+"visualizado todas, ya están en la memoria del navegador y se pueden "
+"exportar."
 msgstr ""
 "To export (and perhaps something else), all rows must be visualized first. "
-"Explanation: if the list is long, the browser does not have all the rows, it "
-"asks for them as it needs to visualize them. Once all have been visualized, "
-"they are in the browser's memory and can be exported."
+"Explanation: if the list is long, the browser does not have all the rows, it"
+" asks for them as it needs to visualize them. Once all have been visualized,"
+" they are in the browser's memory and can be exported."
 
 #: frontend/shared/view/ayuda_index.phtml:92
 msgid "al ordenar tiene algún problema con los acentos."
@@ -9515,8 +9555,8 @@ msgid ""
 "Para buscar en toda la página, Ctrl+f permite buscar una cadena, con Ctrl+g "
 "se busca la siguiente."
 msgstr ""
-"To search the entire page, Ctrl+f allows searching for a string, with Ctrl+g "
-"searching for the next."
+"To search the entire page, Ctrl+f allows searching for a string, with Ctrl+g"
+" searching for the next."
 
 #: frontend/shared/view/ayuda_index.phtml:98
 msgid ""
@@ -9558,8 +9598,8 @@ msgstr ""
 
 #: frontend/shared/view/ayuda_index.phtml:105
 msgid ""
-"En el caso de los procesos es más rígido. En las actividades, quien tiene el "
-"control es dre. Sólo entrando como dre se pueden borrar actividades."
+"En el caso de los procesos es más rígido. En las actividades, quien tiene el"
+" control es dre. Sólo entrando como dre se pueden borrar actividades."
 msgstr ""
 "In the case of processes, it is more rigid. In activities, who has control "
 "is dre. Only by entering as dre can activities be deleted."
@@ -9571,8 +9611,8 @@ msgstr "Exit"
 #: frontend/shared/view/ayuda_index.phtml:107
 msgid ""
 "Es importante usar el botón de \"Salir\" para cerrar la sesión. El servidor "
-"provoca un error cuando se excede un número determinado de sesiones abiertas "
-"y apagando el navegador no se cierra la sesión."
+"provoca un error cuando se excede un número determinado de sesiones abiertas"
+" y apagando el navegador no se cierra la sesión."
 msgstr ""
 "It is important to use the \"Exit\" button to close the session. The server "
 "causes an error when a certain number of sessions are exceeded and closing "
@@ -9839,19 +9879,23 @@ msgid "clic para seleccionar"
 msgstr "click to select"
 
 #: frontend/shared/web/Lista.php:456 frontend/shared/web/Lista.php:601
-#: frontend/shared/web/Lista.php:1464 frontend/shared/web/TablaEditable.php:112
+#: frontend/shared/web/Lista.php:1464
+#: frontend/shared/web/TablaEditable.php:112
 msgid "no hay ninguna fila"
 msgstr "there is no row"
 
-#: frontend/shared/web/Lista.php:1421 frontend/shared/web/TablaEditable.php:671
+#: frontend/shared/web/Lista.php:1421
+#: frontend/shared/web/TablaEditable.php:671
 msgid "guardar selección de columnas"
 msgstr "save column selection"
 
-#: frontend/shared/web/Lista.php:1426 frontend/shared/web/TablaEditable.php:676
+#: frontend/shared/web/Lista.php:1426
+#: frontend/shared/web/TablaEditable.php:676
 msgid "ver/ocultar panel de búsqueda"
 msgstr "see / hide search panel"
 
-#: frontend/shared/web/Lista.php:1441 frontend/shared/web/TablaEditable.php:691
+#: frontend/shared/web/Lista.php:1441
+#: frontend/shared/web/TablaEditable.php:691
 msgid "Buscar en todas las columnas"
 msgstr "Search in all columns"
 
@@ -9860,8 +9904,8 @@ msgid ""
 "Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión "
 "oConfig."
 msgstr ""
-"Missing school calendar: use Periodo::conCalendarioDesdeBackend() or session "
-"orConfig."
+"Missing school calendar: use Periodo::conCalendarioDesdeBackend() or session"
+" orConfig."
 
 #: frontend/shared/web/Periodo.php:212
 msgid "Fecha de inicio no establecida: llame a setPeriodo() antes."
@@ -9876,11 +9920,13 @@ msgstr "End date not set: call setPeriodo() before."
 msgid "Fecha inválida: %d-%02d-%02d"
 msgstr "Invalid date: %d-%02d-%02d"
 
-#: frontend/shared/web/PeriodoQue.php:61 frontend/shared/web/PeriodoQue.php:106
+#: frontend/shared/web/PeriodoQue.php:61
+#: frontend/shared/web/PeriodoQue.php:106
 msgid "entre"
 msgstr "between"
 
-#: frontend/shared/web/PeriodoQue.php:63 frontend/shared/web/PeriodoQue.php:108
+#: frontend/shared/web/PeriodoQue.php:63
+#: frontend/shared/web/PeriodoQue.php:108
 #: src/actividades/application/ActividadNuevoCurso.php:118
 #: src/encargossacd/domain/services/EncargoDominioService.php:170
 #: src/procesos/application/ProcesosGetListado.php:96
@@ -9921,13 +9967,13 @@ msgstr "Y"
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
-#: src/asistentes/application/AsistenteGuardar.php:171
+#: src/asistentes/application/AsistenteGuardar.php:180
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
 #: src/dbextern/domain/SincroDB.php:548
 #: src/dbextern/domain/VincularIdMatch.php:112
-#: src/devel_db_admin/application/AbsorberEsquema.php:304
+#: src/devel_db_admin/application/AbsorberEsquema.php:320
 #: src/encargossacd/application/CtrFichaUpdate.php:203
 #: src/encargossacd/application/CtrFichaUpdate.php:303
 #: src/encargossacd/application/CtrFichaUpdate.php:321
@@ -10559,14 +10605,15 @@ msgid "no existe este centro o casa"
 msgstr "this center or house does not exist"
 
 #: frontend/ubis/view/ubis_tabla.phtml:52
-msgid "OJO!: para crear un centro/casa debe especificar el tipo de centro/casa"
+msgid ""
+"OJO!: para crear un centro/casa debe especificar el tipo de centro/casa"
 msgstr ""
 "NOTE!: to create a center/house, the type of center/house must be specified"
 
 #: frontend/ubis/view/ubis_tabla.phtml:54
 msgid ""
-"Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la "
-"localización distinto a 'todos'."
+"Para ello debe buscar a través de 'ver más opciones' definiendo el tipo y la"
+" localización distinto a 'todos'."
 msgstr ""
 "To do so, you must search via 'view more options' by defining a type and "
 "location other than 'all'."
@@ -10676,7 +10723,7 @@ msgstr "Actions"
 
 #: frontend/ubiscamas/view/habitacion_form.phtml:178
 #: frontend/ubiscamas/view/habitacion_form.phtml:179
-#: src/certificados/domain/CertificadoEmitidoSelect.php:106
+#: src/certificados/domain/CertificadoEmitidoSelect.php:107
 #: src/certificados/domain/Select_certificados_de_una_persona.php:112
 msgid "No"
 msgstr "No"
@@ -10884,8 +10931,8 @@ msgstr "Did you already have the app and lost access?"
 
 #: frontend/usuarios/view/ayuda_2fa_reset.phtml:37
 msgid ""
-"Siempre guarda tu clave secreta de 2FA en un lugar seguro, como un gestor de "
-"contraseñas."
+"Siempre guarda tu clave secreta de 2FA en un lugar seguro, como un gestor de"
+" contraseñas."
 msgstr ""
 "Always save your 2FA secret key in a secure location, such as a password "
 "manager."
@@ -10942,8 +10989,8 @@ msgid ""
 "Si tiene problemas con la autenticación de doble factor, puede solicitar "
 "ayuda al administrador."
 msgstr ""
-"If you have issues with two-factor authentication, you can request help from "
-"the administrator."
+"If you have issues with two-factor authentication, you can request help from"
+" the administrator."
 
 #: frontend/usuarios/view/ayuda_acceso.phtml:83
 msgid "Solicitar ayuda con 2FA"
@@ -11239,7 +11286,8 @@ msgid ""
 "Inicie sesión con su contraseña y configure un doble factor nuevo en sus "
 "preferencias."
 msgstr ""
-"Log in with your password and set up a new second factor in your preferences."
+"Log in with your password and set up a new second factor in your "
+"preferences."
 
 #: frontend/usuarios/view/recovery.phtml:71
 #: src/usuarios/infrastructure/security/RecuperacionPassword.php:136
@@ -11303,10 +11351,11 @@ msgstr "Password recovery"
 #: frontend/usuarios/view/recuperar_password.phtml:55
 #, php-format
 msgid ""
-"Se enviará un enlace a la dirección de correo del usuario %s para elegir una "
-"contraseña nueva."
+"Se enviará un enlace a la dirección de correo del usuario %s para elegir una"
+" contraseña nueva."
 msgstr ""
-"A link to choose a new password will be sent to the email address of user %s."
+"A link to choose a new password will be sent to the email address of user "
+"%s."
 
 #: frontend/usuarios/view/recuperar_password.phtml:56
 msgid "Su contraseña actual no cambia hasta que use el enlace."
@@ -11392,8 +11441,8 @@ msgid ""
 "Los grupos de menus que se asignan a cada role son propios para cada dl (sv "
 "y sf distintos). Y los puede modificar el admin."
 msgstr ""
-"The menu groups assigned to each role are specific to each dl (sv and sf are "
-"different). They can be modified by the admin."
+"The menu groups assigned to each role are specific to each dl (sv and sf are"
+" different). They can be modified by the admin."
 
 #: frontend/usuarios/view/role_lista.phtml:67
 msgid "nuevo rol"
@@ -11472,7 +11521,8 @@ msgstr "Scan the QR code with the app or enter the secret key manually."
 msgid ""
 "Ingrese el código de verificación generado por la aplicación para confirmar "
 "la configuración."
-msgstr "Enter the verification code generated by the app to confirm the setup."
+msgstr ""
+"Enter the verification code generated by the app to confirm the setup."
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:178
 msgid "Guarde la configuración."
@@ -11491,8 +11541,8 @@ msgid ""
 "Si no puede escanear el código QR, ingrese esta clave secreta en su "
 "aplicación de autenticación:"
 msgstr ""
-"If you cannot scan the QR code, enter this secret key in your authentication "
-"app:"
+"If you cannot scan the QR code, enter this secret key in your authentication"
+" app:"
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:193
 msgid "Verificación"
@@ -11518,8 +11568,8 @@ msgid ""
 "borrado la aplicación o cambiado de dispositivo), puede restablecer su "
 "configuración de 2FA."
 msgstr ""
-"If you have lost access to your authentication app (e.g. if you have deleted "
-"the app or changed devices), you can reset your 2FA configuration."
+"If you have lost access to your authentication app (e.g. if you have deleted"
+" the app or changed devices), you can reset your 2FA configuration."
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:213
 msgid "Restablecer configuración 2FA"
@@ -11553,16 +11603,16 @@ msgstr ""
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:224
 msgid ""
-"Cada vez que inicie sesión, necesitará ingresar su contraseña y un código de "
-"verificación generado por su aplicación de autenticación."
+"Cada vez que inicie sesión, necesitará ingresar su contraseña y un código de"
+" verificación generado por su aplicación de autenticación."
 msgstr ""
 "Each time you log in, you will need to enter your password and a "
 "verification code generated by your authentication app."
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:225
 msgid ""
-"Guarde su clave secreta en un lugar seguro. La necesitará si pierde acceso a "
-"su dispositivo."
+"Guarde su clave secreta en un lugar seguro. La necesitará si pierde acceso a"
+" su dispositivo."
 msgstr ""
 "Save your secret key in a secure location. You will need it if you lose "
 "access to your device."
@@ -11614,7 +11664,8 @@ msgstr "The password must be more than 8 characters long"
 #: frontend/usuarios/view/usuario_form_pwd.phtml:126
 msgid ""
 "El password ha de tener como mínimo 3 de los sigientes grupos de caracteres"
-msgstr "The password must contain at least 3 of the following character groups"
+msgstr ""
+"The password must contain at least 3 of the following character groups"
 
 #: frontend/usuarios/view/usuario_form_pwd.phtml:128
 msgid "Mayúsculas ('A' a 'Z')"
@@ -11959,7 +12010,8 @@ msgstr ""
 #: src/personas/infrastructure/cli/sacd_resincronizar.php:123
 #: src/shared/infrastructure/cli/copias_resincronizar.php:98
 #: src/ubis/infrastructure/cli/centros_resincronizar.php:131
-msgid "Sólo se puede resincronizar desde el interior (esta instalación es DMZ)"
+msgid ""
+"Sólo se puede resincronizar desde el interior (esta instalación es DMZ)"
 msgstr ""
 "Resynchronization can only be performed from the internal network (this "
 "installation is DMZ)"
@@ -11985,8 +12037,7 @@ msgstr "report"
 #: src/ubis/infrastructure/cli/centros_resincronizar.php:220
 msgid ""
 "Informe sin cambios en la base de datos. Para aplicar, repita con «aplicar»."
-msgstr ""
-"Report with no changes in the database. To apply, repeat with \"apply\"."
+msgstr "Report with no changes in the database. To apply, repeat with \"apply\"."
 
 #: src/actividades/application/ActividadCambiarTipo.php:62
 #: src/actividades/application/ActividadEditar.php:83
@@ -12384,8 +12435,10 @@ msgstr "ActivityNomText contains invalid encoding (expected UTF-8): %s"
 #: src/actividades/domain/value_objects/ActividadNomText.php:34
 #, php-format
 msgid ""
-"ActividadNomText contiene un carácter de control no válido (código ASCII: %d)"
-msgstr "ActivityNomText contains an invalid control character (ASCII code: %d)"
+"ActividadNomText contiene un carácter de control no válido (código ASCII: "
+"%d)"
+msgstr ""
+"ActivityNomText contains an invalid control character (ASCII code: %d)"
 
 #: src/actividades/domain/value_objects/NivelStgrId.php:26
 #: src/actividades/domain/value_objects/NivelStgrId.php:40
@@ -12516,15 +12569,15 @@ msgstr "Invalid type"
 msgid "listado de actividades %s"
 msgstr "List of activities %s"
 
-#: src/actividadescentro/domain/Info3010.php:17
+#: src/actividadescentro/domain/Info3010.php:19
 msgid "centros encargados de la actividad"
 msgstr "Centers responsible for the activity"
 
-#: src/actividadescentro/domain/Info3010.php:18
+#: src/actividadescentro/domain/Info3010.php:20
 msgid "¿Está seguro que desea eliminar este centro?"
 msgstr "Are you sure you want to delete this center?"
 
-#: src/actividadescentro/domain/Info3010.php:19
+#: src/actividadescentro/domain/Info3010.php:21
 msgid "buscar un centro"
 msgstr "Search for a center"
 
@@ -12541,7 +12594,7 @@ msgstr "Note: activities for period %s"
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
 #: src/asistentes/application/AsistenteEliminar.php:52
-#: src/asistentes/application/AsistenteGuardar.php:84
+#: src/asistentes/application/AsistenteGuardar.php:86
 msgid "faltan parametros id_activ / id_nom"
 msgstr "missing id_activ / id_nom parameters"
 
@@ -12601,7 +12654,8 @@ msgstr "It is necessary to put the address to the dl"
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:199
 #, php-format
 msgid "La actividad «%s» (id %d%s) del sacd %s no tiene permiso: %s."
-msgstr "The activity %s (id %d%s) of the sacd %s does not have permission: %s."
+msgstr ""
+"The activity %s (id %d%s) of the sacd %s does not have permission: %s."
 
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:315
 msgid "falta el definir el jefe de calendario"
@@ -12610,8 +12664,8 @@ msgstr "The calendar manager is not defined."
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:322
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:327
 msgid ""
-"No hay un mail (jefe calendario) para enviar los errores. No se procesan los "
-"mails."
+"No hay un mail (jefe calendario) para enviar los errores. No se procesan los"
+" mails."
 msgstr ""
 "No email (calendar manager) available to send errors. Errors are not "
 "processed."
@@ -12633,8 +12687,8 @@ msgid "no existe el fichero: %s"
 msgstr "File does not exist: %s"
 
 #: src/actividadessacd/db/DBEsquema.php:182
-#: src/configuracion/db/DBEsquema.php:153 src/encargossacd/db/DBEsquema.php:937
-#: src/encargossacd/db/DBEsquema.php:975
+#: src/configuracion/db/DBEsquema.php:153
+#: src/encargossacd/db/DBEsquema.php:937 src/encargossacd/db/DBEsquema.php:975
 msgid "No hay conexión a la base de datos"
 msgstr "No database connection"
 
@@ -12713,8 +12767,8 @@ msgstr "Subject not found."
 msgid ""
 "Hay 1 alumno matriculado (%s). Si continúa se borrará también esa matrícula."
 msgstr ""
-"There is 1 enrolled student (%s). If you continue, that enrollment will also "
-"be deleted."
+"There is 1 enrolled student (%s). If you continue, that enrollment will also"
+" be deleted."
 
 #: src/actividadestudios/application/ActividadAsignaturaEliminar.php:49
 #, php-format
@@ -12722,8 +12776,8 @@ msgid ""
 "Hay %s alumnos matriculados (%s). Si continúa se borrarán también esas "
 "matrículas."
 msgstr ""
-"There are %s enrolled students (%s). If you continue, those enrollments will "
-"also be deleted."
+"There are %s enrolled students (%s). If you continue, those enrollments will"
+" also be deleted."
 
 #: src/actividadestudios/application/ActividadAsignaturaEliminar.php:75
 msgid "sólo se puede eliminar una asignatura desde el dossier de la actividad"
@@ -12797,8 +12851,8 @@ msgid ""
 "No hay numerarios activos en ese centro con nivel de estudios bienio o "
 "cuadrienio."
 msgstr ""
-"No active numeraries found in that center with bienio or cuadrienio level of "
-"studies."
+"No active numeraries found in that center with bienio or cuadrienio level of"
+" studies."
 
 #: src/actividadestudios/application/CaPosiblesData.php:554
 msgid "No hay agregados activos en ese centro."
@@ -12810,8 +12864,8 @@ msgid ""
 "No hay actividades de centro de estudios en el periodo %s — %s (compruebe "
 "fechas y tipo de CA)."
 msgstr ""
-"No center of studies activities found in the period %s — %s (check dates and "
-"type of CA)."
+"No center of studies activities found in the period %s — %s (check dates and"
+" type of CA)."
 
 #: src/actividadestudios/application/CaPosiblesData.php:565
 msgid "No hay datos para generar el cuadro."
@@ -12878,7 +12932,7 @@ msgstr "there is no registration of this person"
 #: src/notas/application/AsigFaltanPersonasSelectTablaData.php:93
 #: src/notas/application/BuscarActaData.php:110
 #: src/notas/application/ListadoAnualActasData.php:72
-#: src/notas/application/NotaPersonaFormData.php:111
+#: src/notas/application/NotaPersonaFormData.php:114
 #: src/notas/application/NotasDeUnaPersonaData.php:98
 #: src/personas/domain/Trasladar.php:384
 #: src/profesores/application/FichaProfesorStgr.php:190
@@ -12983,8 +13037,8 @@ msgid ""
 "La matrícula de la persona %1$s (asignatura %2$s, acta %3$s) no tiene nota "
 "guardada: no se borra"
 msgstr ""
-"The enrolment of person %1$s (subject %2$s, record %3$s) has no saved grade: "
-"it is not deleted"
+"The enrolment of person %1$s (subject %2$s, record %3$s) has no saved grade:"
+" it is not deleted"
 
 #: src/actividadestudios/application/PlanEstudiosCaData.php:172
 #: src/asistentes/application/ListaEstCtrData.php:151
@@ -13072,7 +13126,8 @@ msgstr "Winter term"
 
 #: src/actividadestudios/infrastructure/persistence/postgresql/PgActividadAsignaturaRepository.php:163
 msgid ""
-"Falta id_schema de sesión (mi_id_schema) para persistir actividad-asignatura."
+"Falta id_schema de sesión (mi_id_schema) para persistir actividad-"
+"asignatura."
 msgstr ""
 "Missing id_schema of session (mi_id_schema) to persist activity-subject."
 
@@ -13146,41 +13201,31 @@ msgstr "A dl cannot be compared with itself"
 msgid ""
 "No puede guardar estas plazas todavía.\n"
 "\n"
-"En Gestión de plazas se muestran datos del calendario común (todas las "
-"delegaciones), pero sus cambios se guardan en los datos de su delegación.\n"
+"En Gestión de plazas se muestran datos del calendario común (todas las delegaciones), pero sus cambios se guardan en los datos de su delegación.\n"
 "\n"
-"Antes de editar concedidas (-c), pedidas (-p) o ceder plazas, la actividad "
-"debe tener plazas en el calendario (resumen de la actividad → columna "
-"«calendario»).\n"
+"Antes de editar concedidas (-c), pedidas (-p) o ceder plazas, la actividad debe tener plazas en el calendario (resumen de la actividad → columna «calendario»).\n"
 "\n"
 "Qué hacer:\n"
 "1. Abra la actividad desde el listado o calendario de actividades.\n"
-"2. Si su delegación organiza la actividad: indique plazas totales, "
-"publíquela o impórtela (por ejemplo calendario CA).\n"
+"2. Si su delegación organiza la actividad: indique plazas totales, publíquela o impórtela (por ejemplo calendario CA).\n"
 "3. En la actividad, menú «Plazas»: compruebe que hay plazas en calendario.\n"
 "4. Vuelva a Gestión de plazas y edite de nuevo.\n"
 "\n"
-"Si la actividad es de otra delegación, espere a que la publique y asigne "
-"plazas en calendario."
+"Si la actividad es de otra delegación, espere a que la publique y asigne plazas en calendario."
 msgstr ""
 "You cannot save these seats yet.\n"
 "\n"
-"In Seat Management, you see data from the common calendar (all delegations), "
-"but changes are saved in your delegation's data.\n"
+"In Seat Management, you see data from the common calendar (all delegations), but changes are saved in your delegation's data.\n"
 "\n"
-"Before editing granted (-c), requested (-p) or ceded seats, the activity "
-"must have seats in the calendar (activity summary → calendar column).\n"
+"Before editing granted (-c), requested (-p) or ceded seats, the activity must have seats in the calendar (activity summary → calendar column).\n"
 "\n"
 "What to do:\n"
 "1. Open the activity from the activity list or calendar.\n"
-"2. If your delegation organizes the activity: indicate total seats, publish "
-"it or import it (e.g. CA calendar).\n"
-"3. In the activity, menu \"Seats\": check that there are seats in the "
-"calendar.\n"
+"2. If your delegation organizes the activity: indicate total seats, publish it or import it (e.g. CA calendar).\n"
+"3. In the activity, menu \"Seats\": check that there are seats in the calendar.\n"
 "4. Go back to Seat Management and edit again.\n"
 "\n"
-"If the activity is from another delegation, wait for it to be published and "
-"assign seats in the calendar."
+"If the activity is from another delegation, wait for it to be published and assign seats in the calendar."
 
 #: src/actividadplazas/application/PlazasCeder.php:41
 msgid "faltan parametros id_activ / region_dl"
@@ -13419,19 +13464,19 @@ msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "assistant not found (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/AsistenteEliminar.php:62
-#: src/asistentes/application/AsistenteGuardar.php:120
-#: src/asistentes/application/AsistenteGuardar.php:128
+#: src/asistentes/application/AsistenteGuardar.php:129
+#: src/asistentes/application/AsistenteGuardar.php:137
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:55
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "the assistance data is modified by the dl of the assistant"
 
-#: src/asistentes/application/AsistenteGuardar.php:55
+#: src/asistentes/application/AsistenteGuardar.php:57
 #, php-format
 msgid "mod no soportado: %s"
 msgstr "mod not supported: %s"
 
-#: src/asistentes/application/AsistenteGuardar.php:93
+#: src/asistentes/application/AsistenteGuardar.php:102
 msgid "falta id_activ_old"
 msgstr "missing id_activ_old"
 
@@ -13506,7 +13551,7 @@ msgid "actividades de otras dl/r"
 msgstr "other dl/r activities"
 
 #: src/asistentes/application/ListaAsistentesData.php:129
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:504
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
 msgid "no asiste"
 msgstr "does not attend"
 
@@ -13561,7 +13606,8 @@ msgstr "s non-guards who have NOT attended the internal crt"
 #: src/asistentes/application/ListaUltimaActivData.php:121
 #: src/asistentes/application/ListaUltimaActivData.php:131
 #, php-format
-msgid "para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"
+msgid ""
+"para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"
 msgstr ""
 "to indicate if you are a caretaker, the Eap field must contain something "
 "type: 'C12'"
@@ -13586,8 +13632,8 @@ msgid ""
 "s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión "
 "del año- que todavía no han asistido a cv de ad"
 msgstr ""
-"s with recent AD - between 6 and 18 months before the last CV date admission "
-"of the year - who have not yet attended AD CV"
+"s with recent AD - between 6 and 18 months before the last CV date admission"
+" of the year - who have not yet attended AD CV"
 
 #: src/asistentes/application/ListaUltimaActivData.php:165
 msgid "No hay"
@@ -13687,8 +13733,8 @@ msgstr "its T. okay"
 msgid "observ."
 msgstr "observed"
 
-#: src/asistentes/application/Select_actividades_de_una_persona.php:235
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:922
+#: src/asistentes/application/Select_actividades_de_una_persona.php:238
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:926
 #: src/asistentes/domain/InfoAsistenteDl.php:31
 msgid "¿Está seguro que desea borrar a esta persona de esta actividad?"
 msgstr "Are you sure you want to erase this person from this activity?"
@@ -13733,31 +13779,31 @@ msgstr "ERROR: More than one wizard with the same id_nom"
 msgid "En las tablas"
 msgstr "In the tables"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:580
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:581
 msgid "ALERTA: asistente sin propiedad en la plaza"
 msgstr "ALERT: Assistant without property in the square"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:664
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:668
 msgid ""
 "plaza que contabiliza pero que las otras delegaciones no ven. Podría "
 "explicarse como una plaza que se desea pero no se puede conceder porque no "
 "hay sitio"
 msgstr ""
 "plaza that counts but that the other delegations do not see. It could be "
-"explained as a place that is desired but can not be granted because there is "
-"no place"
+"explained as a place that is desired but can not be granted because there is"
+" no place"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:665
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:669
 msgid ""
 "como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación "
-"que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto "
-"que vaya pero necesitamos confirmación de que hay sitio"
+"que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto"
+" que vaya pero necesitamos confirmación de que hay sitio"
 msgstr ""
 "like the requested square, but when the other delegation has already been "
-"requested to grant us that place. It implies that on our part it seems right "
-"to us to go but we need confirmation that there is room"
+"requested to grant us that place. It implies that on our part it seems right"
+" to us to go but we need confirmation that there is room"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:666
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:670
 msgid ""
 "plaza ocupada en toda regla. Las delegaciones organizadoras ven a los "
 "nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de "
@@ -13768,30 +13814,30 @@ msgstr ""
 "organizers, we can occupy more seats than expected. If you are from another "
 "delegation, you should not be able to move to assigned if there are no seats"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:667
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:671
 msgid ""
-"como la anterior pero con el plus de que se ha comunicado al interesado y no "
-"hay cambio"
+"como la anterior pero con el plus de que se ha comunicado al interesado y no"
+" hay cambio"
 msgstr ""
 "like the previous one but with the plus that has been communicated to the "
 "interested party and there is no change"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:670
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:674
 msgid "para selección múltiple: 'Ctrl+Click' o bien 'Mays+Click'"
 msgstr "for multiple selection: 'Ctrl+Click' or 'Shift+Click'"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:757
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:826
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:761
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:830
 #, php-format
 msgid "(de las %s cedidas por %s)"
 msgstr "(of %s assigned by %s )"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:830
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:834
 #, php-format
 msgid "(%s en espera)"
 msgstr "( %s on hold)"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:833
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:837
 #, php-format
 msgid "(%s por decidir)"
 msgstr "( %s to be decided)"
@@ -13823,7 +13869,7 @@ msgstr "Table of changes in activities"
 #: src/cambios/application/AvisosEncolarMails.php:251
 #: src/cambios/application/CambioUsuarioEliminar.php:60
 #: src/cambios/application/CambioUsuarioObjetoPrefEliminar.php:35
-#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:134
+#: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:139
 #: src/casas/application/CasaIngresoEliminar.php:35
 msgid "Hay un error, no se ha eliminado"
 msgstr "There is an error, it has not been deleted"
@@ -13855,12 +13901,8 @@ msgstr "Ctr: the ctr \"%4$s\" has been assigned to the activity \"%1$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:161
 #, php-format
-msgid ""
-"Actividad: la actividad \"%1$s\" ha cambiado el campo \"%2$s\" de \"%3$s\" a "
-"\"%4$s\""
-msgstr ""
-"Activity: Activity \"%1$s\" has changed the \"%2$s\" field from \"%3$s\" to "
-"\"%4$s\""
+msgid "Actividad: la actividad \"%1$s\" ha cambiado el campo \"%2$s\" de \"%3$s\" a \"%4$s\""
+msgstr "Activity: Activity \"%1$s\" has changed the \"%2$s\" field from \"%3$s\" to \"%4$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:164
 #, php-format
@@ -13919,35 +13961,32 @@ msgstr "Attendance: \"%3$s\" has been deleted from activity \"%1$s\""
 msgid "Ctr: se ha quitado al ctr \"%3$s\" de la actividad \"%1$s\""
 msgstr "Ctr: ctr \"%3$s\" has been removed from activity \"%1$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:220
+#: src/cambios/application/CambioAvisoTxtBuilder.php:221
 #, php-format
 msgid "Fase \"%2$s\" marcada en la actividad \"%1$s\""
 msgstr "Phase \"%2$s\" marked in the activity \"%1$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:222
+#: src/cambios/application/CambioAvisoTxtBuilder.php:223
 #, php-format
 msgid "Fase \"%2$s\" desmarcada en la actividad \"%1$s\""
 msgstr "\"%2$s\" phase unchecked in activity \"%1$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:227
+#: src/cambios/application/CambioAvisoTxtBuilder.php:228
 #, php-format
 msgid "Fase cambiada en la actividad \"%1$s\". Status \"%3$s\""
 msgstr "Changed phase in the \"%1$s\" activity. Status \"%3$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:229
+#: src/cambios/application/CambioAvisoTxtBuilder.php:230
 #, php-format
-msgid ""
-"Status \"%2$s\" completado en la actividad \"%1$s\". Status actual \"%3$s\""
-msgstr ""
-"Status \"%2$s\" completed in the \"%1$s\" activity. Current status \"%3$s\""
+msgid "Status \"%2$s\" completado en la actividad \"%1$s\". Status actual \"%3$s\""
+msgstr "Status \"%2$s\" completed in the \"%1$s\" activity. Current status \"%3$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:232
+#: src/cambios/application/CambioAvisoTxtBuilder.php:233
 #, php-format
-msgid ""
-"Status \"%2$s\" eliminada en la actividad \"%1$s\". Status actual \"%3$s\""
+msgid "Status \"%2$s\" eliminada en la actividad \"%1$s\". Status actual \"%3$s\""
 msgstr "Status \"%2$s\" removed in activity \"%1$s\". Current status \"%3$s\""
 
-#: src/cambios/application/CambioAvisoTxtBuilder.php:236
+#: src/cambios/application/CambioAvisoTxtBuilder.php:237
 #, php-format
 msgid "Fase cambiada en la actividad \"%1$s\""
 msgstr "Changed phase in activity \"%1$s\""
@@ -14430,7 +14469,7 @@ msgstr ""
 "certificate date. Change the date or check the list of already issued "
 "certificates."
 
-#: src/certificados/application/CertificadoEmitidoUploadFirmadoFormData.php:23
+#: src/certificados/application/CertificadoEmitidoUploadFirmadoFormData.php:24
 #: src/certificados/application/CertificadoRecibidoModificarFormData.php:25
 #: src/certificados/domain/CertificadoEmitidoDelete.php:35
 #: src/certificados/domain/CertificadoEmitidoDelete.php:41
@@ -14498,7 +14537,7 @@ msgstr "modify certificate"
 msgid "fecha certificado"
 msgstr "certificate date"
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:24
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:36
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:22
 #, php-format
 msgid "No encuentro certificado emitido con id_item: %d"
@@ -14570,30 +14609,31 @@ msgstr "The certificate cannot be found."
 msgid "No hay PDF asociado a este certificado."
 msgstr "No PDF associated with this certificate."
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:22
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:22
-#: src/notas/application/ActaPdfSubir.php:70
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:37
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:37
+#: src/notas/application/ActaPdfSubir.php:71
 #, php-format
 msgid "No se puede subir el archivo %s"
 msgstr "The file %s cannot be uploaded"
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:26
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:26
-#: src/notas/application/ActaPdfSubir.php:86
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:41
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:41
+#: src/notas/application/ActaPdfSubir.php:87
 #, php-format
 msgid "No se puede abrir el archivo %s"
 msgstr "The file %s cannot be opened"
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:32
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:32
-#: src/notas/application/ActaPdfSubir.php:78
-#: src/notas/application/ActaPdfSubir.php:94
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:47
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:47
+#: src/notas/application/ActaPdfSubir.php:79
+#: src/notas/application/ActaPdfSubir.php:95
 #, php-format
 msgid "No se puede leer el archivo %s"
 msgstr "The file %s cannot be read"
 
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:35
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:35
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:50
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:50
+#: src/notas/application/ActaPdfSubir.php:103
 #, php-format
 msgid "El archivo %s no es un PDF"
 msgstr "The file %s is not a PDF"
@@ -14654,7 +14694,8 @@ msgstr "active"
 msgid ""
 "Debe configurar el esquema en Menu: Sistema > Configuración > config esquema"
 msgstr ""
-"You must configure the schema in Menu: System > Configuration > schema config"
+"You must configure the schema in Menu: System > Configuration > schema "
+"config"
 
 #: src/configuracion/domain/value_objects/ConfigSnapshot.php:57
 #: src/configuracion/domain/value_objects/ConfigSnapshot.php:70
@@ -14786,8 +14827,8 @@ msgid ""
 "sincronización interrumpida en %s (id listas %s, id orbix %s): %s. Esta "
 "ficha y las siguientes no se han guardado."
 msgstr ""
-"Synchronization interrupted at %s (list id %s, orbix id %s): %s. This record "
-"and the following ones were not saved."
+"Synchronization interrupted at %s (list id %s, orbix id %s): %s. This record"
+" and the following ones were not saved."
 
 #: src/dbextern/application/TrasladarPersonaUseCase.php:73
 msgid "No se encontró la delegación destino"
@@ -14830,8 +14871,8 @@ msgid ""
 "sincronización interrumpida en %s (id listas %s, id orbix %s): no se ha "
 "guardado. Esta ficha y las siguientes no se han guardado."
 msgstr ""
-"Synchronization interrupted at %s (list id %s, orbix id %s): not saved. This "
-"record and the following ones were not saved."
+"Synchronization interrupted at %s (list id %s, orbix id %s): not saved. This"
+" record and the following ones were not saved."
 
 #: src/dbextern/domain/VincularIdMatch.php:45
 #, php-format
@@ -14856,11 +14897,20 @@ msgstr "OK. %s people synchronized"
 msgid "Error al trasladar"
 msgstr "Error while transferring"
 
-#: src/devel_db_admin/application/AbsorberEsquema.php:300
+#: src/devel_db_admin/application/AbsorberEsquema.php:61
+#, php-format
+msgid ""
+"La delegación «%s» de la región «%s» no está en la tabla de delegaciones. No"
+" se ha absorbido nada."
+msgstr ""
+"The delegation '%s' of the region '%s' is not in the delegations table. "
+"Nothing has been absorbed."
+
+#: src/devel_db_admin/application/AbsorberEsquema.php:316
 msgid "Delegación origen no encontrada."
 msgstr "Origin delegation not found."
 
-#: src/devel_db_admin/application/AbsorberEsquema.php:358
+#: src/devel_db_admin/application/AbsorberEsquema.php:374
 #, php-format
 msgid "se ha pasado la %s a %s"
 msgstr "%s has been transferred to %s"
@@ -14954,8 +15004,8 @@ msgstr "sv-e (replica)"
 
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:136
 msgid ""
-"Aviso: no se pudo comprobar los roles (conexión a comun). Ejecute primero el "
-"paso «1º crear usuarios»."
+"Aviso: no se pudo comprobar los roles (conexión a comun). Ejecute primero el"
+" paso «1º crear usuarios»."
 msgstr ""
 "Warning: unable to check roles (comun connection). Run the step «1st create "
 "users» first."
@@ -14982,11 +15032,11 @@ msgid ""
 "con la misma región/dl y las mismas bases marcadas para borrar esquemas (y "
 "roles) antes de volver a crear."
 msgstr ""
-"Cannot create «%1$s»: the destination schema already exists in some database "
-"(previous attempt of step 2 or duplicate entry). User roles from the «create "
-"users» step do not prevent proceeding.%2$s%2$s%3$s%2$s%2$sUse «Delete "
-"schema» with the same region/dl and marked databases to delete schemas (and "
-"roles) before recreating."
+"Cannot create «%1$s»: the destination schema already exists in some database"
+" (previous attempt of step 2 or duplicate entry). User roles from the "
+"«create users» step do not prevent proceeding.%2$s%2$s%3$s%2$s%2$sUse "
+"«Delete schema» with the same region/dl and marked databases to delete "
+"schemas (and roles) before recreating."
 
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:228
 #, php-format
@@ -14999,8 +15049,8 @@ msgstr "Cannot create: missing reference schema «%1$s» in:%2$s%2$s%3$s"
 msgid ""
 "Aviso: no se puede crear la estructura de esquemas para «%1$s». Primero "
 "ejecute el paso «1º crear usuarios» (misma región y delegación) y, si hace "
-"falta, copie las entradas en los ficheros .inc que indica ese paso."
-"%2$s%2$sRoles que faltan en PostgreSQL:%2$s%3$s"
+"falta, copie las entradas en los ficheros .inc que indica ese "
+"paso.%2$s%2$sRoles que faltan en PostgreSQL:%2$s%3$s"
 msgstr ""
 "Warning: cannot create schema structure for «%1$s». First execute the «1st "
 "create users» step (same region and delegation) and, if necessary, copy "
@@ -15035,11 +15085,11 @@ msgstr "No corrections applied: invalid parameters."
 #: src/devel_db_admin/application/CorregirEstadoRenombrarEsquema.php:56
 msgid ""
 "Modo solo destino: se reaplican solo los defaults (ALTER COLUMN) en los "
-"esquemas del nombre región–delegación; no se sincronizan .inc ni db_idschema "
-"sin nombre de origen."
+"esquemas del nombre región–delegación; no se sincronizan .inc ni db_idschema"
+" sin nombre de origen."
 msgstr ""
-"Destination-only mode: only defaults (ALTER COLUMN) are reapplied in schemas "
-"of the region-delegation name; .inc and db_idschema are not synchronized "
+"Destination-only mode: only defaults (ALTER COLUMN) are reapplied in schemas"
+" of the region-delegation name; .inc and db_idschema are not synchronized "
 "without an origin name."
 
 #: src/devel_db_admin/application/CorregirEstadoRenombrarEsquema.php:64
@@ -15079,8 +15129,8 @@ msgstr "sv-e_select"
 #: src/devel_db_admin/application/CorregirEstadoRenombrarEsquema.php:204
 #, php-format
 msgid ""
-"Propietario (%s): no se repara «%s»: no existe un rol con ese nombre en esta "
-"BD."
+"Propietario (%s): no se repara «%s»: no existe un rol con ese nombre en esta"
+" BD."
 msgstr ""
 "Owner (%s): cannot repair «%s»: no role with that name exists in this "
 "database."
@@ -15200,14 +15250,27 @@ msgstr "databases"
 msgid "estado"
 msgstr "state"
 
-#: src/devel_db_admin/application/MoverTabla.php:45
+#: src/devel_db_admin/application/MoverTabla.php:48
+#, php-format
+msgid "Nombre de tabla no válido: %s"
+msgstr "Invalid table name: %s"
+
+#: src/devel_db_admin/application/MoverTabla.php:55
+#, php-format
+msgid ""
+"La tabla se ha copiado a sv-e, pero no se ha podido quitar de sv (%s): %s"
+msgstr ""
+"The table has been copied to sv-e, but it could not be removed from sv (%s):"
+" %s"
+
+#: src/devel_db_admin/application/MoverTabla.php:58
 #, php-format
 msgid "Error para %s"
 msgstr "Error for %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:78
+#: src/devel_db_admin/application/MoverTabla.php:91
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:375
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:309
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:312
 #, php-format
 msgid "error al escribir el fichero"
 msgstr "error when writing the file"
@@ -15220,8 +15283,8 @@ msgid ""
 "BD sf-e."
 msgstr ""
 "Warning: in sf only the role «%1$s»/«%2$s» existed, not the schema (sf was "
-"not marked at «create schema»). The role was renamed and .inc keys; the sf-e "
-"database was not touched."
+"not marked at «create schema»). The role was renamed and .inc keys; the sf-e"
+" database was not touched."
 
 #: src/devel_db_admin/application/RenombrarEsquema.php:336
 #, php-format
@@ -15229,8 +15292,8 @@ msgid ""
 "Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» "
 "en PostgreSQL; solo se actualizaron los .inc si existían."
 msgstr ""
-"Warning: sf marked in the form but no schema or role «%1$s»/«%2$s» exists in "
-"PostgreSQL; only .inc was updated if it existed."
+"Warning: sf marked in the form but no schema or role «%1$s»/«%2$s» exists in"
+" PostgreSQL; only .inc was updated if it existed."
 
 #: src/devel_db_admin/application/RenombrarEsquema.php:369
 #, php-format
@@ -15258,8 +15321,8 @@ msgid ""
 "Debe indicar región y delegación de destino (no se deducen del nombre de "
 "origen)."
 msgstr ""
-"Please indicate destination region and delegation (not deduced from original "
-"name)."
+"Please indicate destination region and delegation (not deduced from original"
+" name)."
 
 #: src/devel_db_admin/application/RenombrarEsquemaVerificacionContexto.php:145
 msgid ""
@@ -15349,17 +15412,16 @@ msgid ""
 "Hay pendientes o incoherencias en el esquema destino (defaults, .inc, "
 "db_idschema, etc.); no se ha contrastado un nombre antiguo concreto."
 msgstr ""
-"There are pending or inconsistencies in the destination schema "
-"(defaults, .inc, db_idschema, etc.); no specific old name has been "
-"contrasted."
+"There are pending or inconsistencies in the destination schema (defaults, "
+".inc, db_idschema, etc.); no specific old name has been contrasted."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:208
 msgid ""
 "Hay pendientes o incoherencias respecto al esquema actual (incluidos "
 "defaults ALTER COLUMN); revise la lista."
 msgstr ""
-"There are pending or inconsistencies regarding the current schema (including "
-"defaults ALTER COLUMN); review the list."
+"There are pending or inconsistencies regarding the current schema (including"
+" defaults ALTER COLUMN); review the list."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:210
 msgid ""
@@ -15377,22 +15439,22 @@ msgid ""
 "marcados)."
 msgstr ""
 "This check reviews schemas/roles, db_idschema, .inc files, and the ALTER "
-"COLUMN SET DEFAULT of renaming (replicas omitted in docker; common/sv blocks "
-"only if corresponding checkboxes are marked)."
+"COLUMN SET DEFAULT of renaming (replicas omitted in docker; common/sv blocks"
+" only if corresponding checkboxes are marked)."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:249
 msgid ""
 "Modo solo destino: no hay esquema de origen en el formulario; se comprueba "
 "únicamente la coherencia del nombre región–delegación elegido (no si un "
-"nombre antiguo sigue o ha desaparecido). «Corregir» sin origen solo reaplica "
-"defaults en ese nombre, no sincroniza .inc ni db_idschema. Para la "
-"transición origen→destino rellene el origen o use «Cambiar nombre» con ambos "
-"datos."
+"nombre antiguo sigue o ha desaparecido). «Corregir» sin origen solo reaplica"
+" defaults en ese nombre, no sincroniza .inc ni db_idschema. Para la "
+"transición origen→destino rellene el origen o use «Cambiar nombre» con ambos"
+" datos."
 msgstr ""
 "Mode only destination: no original schema in the form; only checks the "
 "consistency of the chosen name region-delegation (not if an old name still "
-"exists or has disappeared). «Correct» without origin only reapplies defaults "
-"in that name, does not synchronize .inc or db_idschema. To transition "
+"exists or has disappeared). «Correct» without origin only reapplies defaults"
+" in that name, does not synchronize .inc or db_idschema. To transition "
 "origin→destination, fill in the origin or use «Change name» with both data."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:254
@@ -15417,8 +15479,8 @@ msgid ""
 "Checkboxes actuales (solo afectan al paso ALTER de defaults al ejecutar el "
 "renombre): comun=%s, sv=%s, sf=%s"
 msgstr ""
-"Current checkboxes (only affects the step ALTER of defaults when running the "
-"renaming): common=%s, sv=%s, sf=%s"
+"Current checkboxes (only affects the step ALTER of defaults when running the"
+" renaming): common=%s, sv=%s, sf=%s"
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:274
 msgid "Alcance de la comprobación"
@@ -15432,8 +15494,8 @@ msgstr "Unable to connect to this database (review import.inc / red)."
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:311
 #, php-format
 msgid ""
-"Renombre a medias en esta instancia: sigue el esquema «%1$s» y aún no existe "
-"«%2$s». Suele ocurrir si «Cambiar nombre del esquema» se interrumpió antes "
+"Renombre a medias en esta instancia: sigue el esquema «%1$s» y aún no existe"
+" «%2$s». Suele ocurrir si «Cambiar nombre del esquema» se interrumpió antes "
 "de terminar en esta base (p. ej. comun vs sv)."
 msgstr ""
 "Renaming in progress in this instance: follows schema «%1$s» and still does "
@@ -15458,8 +15520,10 @@ msgid "Ya no existe en esta BD (correcto tras el renombre)."
 msgstr "No longer exists in this DB (correct after renaming)."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:333
-msgid "Sigue existiendo: falta completar el renombre o eliminarlo manualmente."
-msgstr "Still exists: missing completing the renaming or deleting it manually."
+msgid ""
+"Sigue existiendo: falta completar el renombre o eliminarlo manualmente."
+msgstr ""
+"Still exists: missing completing the renaming or deleting it manually."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:336
 #, php-format
@@ -15697,8 +15761,8 @@ msgid ""
 "Defaults ALTER: %d columnas coinciden con el objetivo; tablas omitidas (no "
 "existen en el esquema): %d."
 msgstr ""
-"Defaults ALTER: %d columns match the target; omitted tables (do not exist in "
-"the schema): %d."
+"Defaults ALTER: %d columns match the target; omitted tables (do not exist in"
+" the schema): %d."
 
 #: src/devel_db_admin/application/VerificarEstadoRenombrarEsquema.php:790
 #, php-format
@@ -16218,7 +16282,8 @@ msgstr "Print inventory"
 msgid ""
 "Falta definir el almacén de inventario en los parámetros de configuración."
 msgstr ""
-"The inventory warehouse has not been defined in the configuration parameters."
+"The inventory warehouse has not been defined in the configuration "
+"parameters."
 
 #: src/inventario/application/support/NombreDocumento.php:31
 msgid "Actual"
@@ -16407,6 +16472,20 @@ msgstr "url"
 msgid "nombre plantilla menú"
 msgstr "menu template name"
 
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:45
+msgid "No se ha podido leer la plantilla de menús: no se ha cambiado nada."
+msgstr "The menu template could not be read: nothing has been changed."
+
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:48
+msgid "La plantilla de menús no tiene menús: no se ha cambiado nada."
+msgstr "The menu template has no menus: nothing has been changed."
+
+#: src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php:66
+msgid "Hay un error, no se han importado los menús: siguen los de antes."
+msgstr ""
+"There is an error; the menus have not been imported: the previous ones "
+"remain."
+
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:27
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:32
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:34
@@ -16426,7 +16505,7 @@ msgstr "you must put a name"
 msgid "hay un error. Debe indicar el destino"
 msgstr "There is an error. You must specify the destination"
 
-#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:87
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:104
 #, php-format
 msgid "PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"
 msgstr "PSQL ERROR IN COMMAND: %s<br> check in: %s<br>"
@@ -16541,16 +16620,16 @@ msgstr "ctr visible"
 #: src/notas/application/ActaModificar.php:51
 #: src/notas/application/ActaPdfEliminar.php:25
 #: src/notas/application/ActaPdfEliminar.php:31
-#: src/notas/application/ActaPdfSubir.php:31
-#: src/notas/application/ActaPdfSubir.php:36
+#: src/notas/application/ActaPdfSubir.php:32
+#: src/notas/application/ActaPdfSubir.php:37
 #: src/notas/application/ActaVerAddPersona.php:68
-#: src/notas/application/ActaVerAddPersonaFormData.php:65
+#: src/notas/application/ActaVerAddPersonaFormData.php:66
 msgid "No se encuentra el acta"
 msgstr "Grade record not found"
 
 #: src/notas/application/ActaImprimirPresentacionData.php:44
 #: src/notas/application/ActaMarcarImpresa.php:27
-#: src/notas/application/ActaVerAddPersonaFormData.php:60
+#: src/notas/application/ActaVerAddPersonaFormData.php:61
 msgid "Falta el acta"
 msgstr "Grade record is missing"
 
@@ -16586,9 +16665,10 @@ msgstr ""
 msgid "no aparece en la lista"
 msgstr "does not appear in the list"
 
-#: src/notas/application/ActaPdfSubir.php:40
+#: src/notas/application/ActaPdfSubir.php:41
 msgid ""
-"Debe imprimir el acta después del último cambio antes de subir el PDF firmado"
+"Debe imprimir el acta después del último cambio antes de subir el PDF "
+"firmado"
 msgstr ""
 "You must print the record after the last change before uploading the signed "
 "PDF"
@@ -16608,7 +16688,7 @@ msgid "El acta está firmada y no se puede modificar"
 msgstr "The grade record is signed and cannot be modified"
 
 #: src/notas/application/ActaVerAddPersona.php:79
-#: src/notas/application/ActaVerAddPersonaFormData.php:73
+#: src/notas/application/ActaVerAddPersonaFormData.php:74
 msgid "El acta no tiene asignatura"
 msgstr "The record has no course"
 
@@ -16624,7 +16704,7 @@ msgstr "There is no free optional slot."
 msgid "Nota guardada en el esquema %s"
 msgstr "Note saved in schema %s"
 
-#: src/notas/application/ActaVerAddPersonaFormData.php:145
+#: src/notas/application/ActaVerAddPersonaFormData.php:147
 msgid "No se han podido cargar las personas publicadas"
 msgstr "Failed to load the published persons"
 
@@ -16779,7 +16859,8 @@ msgstr "average of subjects exceeded per student in CE (No. 1)"
 
 #: src/notas/application/InformeStgrNumerarios.php:68
 msgid "media de asignaturas superadas por alumno sin haber hecho el ce (n. 2)"
-msgstr "average of subjects passed by student without having done the ce (n.2)"
+msgstr ""
+"average of subjects passed by student without having done the ce (n.2)"
 
 #: src/notas/application/InformeStgrNumerarios.php:71
 msgid "nº de n en bienio que han superado asignaturas con preceptor"
@@ -16800,8 +16881,8 @@ msgstr "Number of numeraries in the quadriennium"
 #: src/notas/application/InformeStgrNumerarios.php:90
 #, php-format
 msgid ""
-"ERROR: hay %s numerarios que ya estaban en Repaso y han cursado asignaturas. "
-"Arreglarlo a mano"
+"ERROR: hay %s numerarios que ya estaban en Repaso y han cursado asignaturas."
+" Arreglarlo a mano"
 msgstr ""
 "ERROR: there are %s numeraries who were already in Review and have taken "
 "subjects. Fix manually"
@@ -16815,7 +16896,8 @@ msgid "número de numerarios de cuadrienio que han superado 1 semestre"
 msgstr "Number of quadrennial numbers that have exceeded 1 semester"
 
 #: src/notas/application/InformeStgrNumerarios.php:100
-msgid "número de numerarios de cuadrienio que han superado menos de 1 semestre"
+msgid ""
+"número de numerarios de cuadrienio que han superado menos de 1 semestre"
 msgstr "Number of quadrennial numbers that have exceeded less than 1 semester"
 
 #: src/notas/application/InformeStgrNumerarios.php:102
@@ -16887,20 +16969,20 @@ msgstr "number of teachers attending cve del stgr or other meetings"
 msgid "nº de departamentos"
 msgstr "No. of departments"
 
-#: src/notas/application/NotaPersonaFormData.php:100
+#: src/notas/application/NotaPersonaFormData.php:103
 msgid "No se encuentra la nota a editar"
 msgstr "The grade to be edited was not found."
 
-#: src/notas/application/NotaPersonaFormData.php:199
+#: src/notas/application/NotaPersonaFormData.php:202
 #: src/notas/application/NotasDeUnaPersonaData.php:110
 msgid "opcional de sobra"
 msgstr "optional to spare"
 
-#: src/notas/application/NotaPersonaFormData.php:202
+#: src/notas/application/NotaPersonaFormData.php:205
 msgid "fin cuadrienio"
 msgstr "end quadrennium"
 
-#: src/notas/application/NotaPersonaFormData.php:203
+#: src/notas/application/NotaPersonaFormData.php:206
 msgid "fin bienio"
 msgstr "end biennium"
 
@@ -16944,7 +17026,8 @@ msgstr "with json"
 
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:131
 msgid ""
-"Filas de e_notas_otra_region_stgr en los esquemas que esta sesión puede leer."
+"Filas de e_notas_otra_region_stgr en los esquemas que esta sesión puede "
+"leer."
 msgstr ""
 "Rows of e_notas_otra_region_stgr in the schemas that this session can read."
 
@@ -16978,8 +17061,8 @@ msgstr "Remainder that already has the subject in a record"
 
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:182
 msgid ""
-"Misma persona y misma asignatura en algún e_notas_dl. La fila del residuo no "
-"aporta la calificación."
+"Misma persona y misma asignatura en algún e_notas_dl. La fila del residuo no"
+" aporta la calificación."
 msgstr ""
 "Same person and same subject in some e_notas_dl. The remainder row does not "
 "provide the grade."
@@ -17014,8 +17097,8 @@ msgstr "json_certificates"
 
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:298
 msgid ""
-"Sello de envío en la fila. Si el número ya está en certificados emitidos, el "
-"json no aporta el documento."
+"Sello de envío en la fila. Si el número ya está en certificados emitidos, el"
+" json no aporta el documento."
 msgstr ""
 "Submission stamp on the row. If the number is already in issued "
 "certificates, the json does not provide the document."
@@ -17061,7 +17144,7 @@ msgstr "the note was not saved (schema not writable for level id %s)"
 msgid "no se ha guardado la nota"
 msgstr "the note has not been saved"
 
-#: src/notas/application/TesseraCopiarSelectData.php:42
+#: src/notas/application/TesseraCopiarSelectData.php:43
 #, php-format
 msgid "No existe una persona con id_nom: %s"
 msgstr "No person exists with id_nom: %s"
@@ -17246,7 +17329,8 @@ msgstr "Could not copy the notes of the transient person."
 
 #: src/notas/infrastructure/persistence/postgresql/PgPersonaNotaOtraRegionStgrRepository.php:139
 msgid "No se pudo anotar el certificado en las notas de la persona de paso."
-msgstr "Could not record the certificate in the notes of the transient person."
+msgstr ""
+"Could not record the certificate in the notes of the transient person."
 
 #: src/notas/infrastructure/persistence/postgresql/PgPersonaNotaRepository.php:92
 msgid "No se pudieron leer las notas de las personas de paso."
@@ -17314,8 +17398,8 @@ msgstr ""
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:519
 #, php-format
 msgid ""
-"2. %s con el cuadrienio terminado (plan %d) y sin poner que lo ha terminado: "
-"%d"
+"2. %s con el cuadrienio terminado (plan %d) y sin poner que lo ha terminado:"
+" %d"
 msgstr ""
 "2. %s with the quadrennium completed (plan %d) and without marking it as "
 "completed: %d"
@@ -17323,8 +17407,8 @@ msgstr ""
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:538
 #, php-format
 msgid ""
-"para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto "
-"pondrá la fecha de acta última."
+"para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto"
+" pondrá la fecha de acta última."
 msgstr ""
 "to put all the list on the list, make %s . This will set the last record "
 "date."
@@ -18155,8 +18239,8 @@ msgstr "PDO query failed for process %s"
 #: src/procesos/infrastructure/persistence/postgresql/PgTareaProcesoRepository.php:289
 #, php-format
 msgid ""
-"No se puede encontrar una fase independiente (que no tenga fase previa) para "
-"el proceso: %s"
+"No se puede encontrar una fase independiente (que no tenga fase previa) para"
+" el proceso: %s"
 msgstr ""
 "An independent phase (one with no previous phase) cannot be found for the "
 "process: %s."
@@ -18164,8 +18248,8 @@ msgstr ""
 #: src/procesos/infrastructure/persistence/postgresql/PgTareaProcesoRepository.php:294
 #, php-format
 msgid ""
-"No debería haber más de una fase independiente (que no tenga fase previa) en "
-"un proceso. Hay %s para el id_proceso: %s"
+"No debería haber más de una fase independiente (que no tenga fase previa) en"
+" un proceso. Hay %s para el id_proceso: %s"
 msgstr ""
 "There should not be more than one independent phase (one with no previous "
 "phase) in a process. There are %s for id_proceso: %s."
@@ -18498,7 +18582,7 @@ msgid "Faltan región y dl de referencia (setRegionRef / setDlRef)."
 msgstr "Missing region and dl for reference (setRegionRef / setDlRef)."
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:354
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:473
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:476
 #, php-format
 msgid "No se pudo leer %s"
 msgstr "Could not read %s"
@@ -18514,8 +18598,8 @@ msgid ""
 "Tras importar en réplica (%1$s / %2$s) el esquema «%3$s» no tiene tablas. "
 "Revise %4$s y pruebas-importar.conn.inc (dbname de public_select)."
 msgstr ""
-"After importing in replica (%1$s / %2$s) schema «%3$s» has no tables. Review "
-"%4$s and pruebas-importar.conn.inc (dbname of public_select)."
+"After importing in replica (%1$s / %2$s) schema «%3$s» has no tables. Review"
+" %4$s and pruebas-importar.conn.inc (dbname of public_select)."
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:905
 #, php-format
@@ -18533,7 +18617,8 @@ msgstr "Could not delete schema “%1$s”: %2$s"
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:958
 #, php-format
-msgid "Falta ssh_user para eliminar el esquema en el servidor interior («%s»)."
+msgid ""
+"Falta ssh_user para eliminar el esquema en el servidor interior («%s»)."
 msgstr "Missing ssh_user to delete schema on internal server («%s»)."
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:966
@@ -18553,12 +18638,12 @@ msgstr "Error pg_dump/psql (command %1$d). Log: %2$s.%3$s"
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:1142
 msgid ""
 "Suele deberse a pg_dump y psql de versiones distintas; tras desplegar, el "
-"cliente debe coincidir con la major del servidor (p. ej. /usr/lib/postgresql/"
-"15/bin/)."
+"cliente debe coincidir con la major del servidor (p. ej. "
+"/usr/lib/postgresql/15/bin/)."
 msgstr ""
-"Usually due to pg_dump and psql of different versions; after deployment, the "
-"client should match the major of the server (e.g. /usr/lib/postgresql/15/"
-"bin/)."
+"Usually due to pg_dump and psql of different versions; after deployment, the"
+" client should match the major of the server (e.g. "
+"/usr/lib/postgresql/15/bin/)."
 
 #: src/shared/infrastructure/persistence/postgresql/DBRefresh.php:80
 #, php-format
@@ -18587,37 +18672,37 @@ msgstr "Invalid role name."
 msgid "El rol sigue en: %s"
 msgstr "Role still exists: %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:282
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:285
 msgid "Esquema ref o destino con formato región-dl no válido."
 msgstr "Reference or destination schema with invalid region-dl format."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:289
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:292
 #, php-format
 msgid "No se pudo leer el volcado de referencia: %s"
 msgstr "Could not read reference dump: %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:301
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:304
 #, php-format
 msgid "No se pudo escribir %s"
 msgstr "Could not write %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:421
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:424
 #, php-format
 msgid "PSQL ERROR IN COMMAND(2): %1$s<br><br> mirar en: %2$s"
 msgstr "PSQL ERROR IN COMMAND(2): %1$s<br><br> check in: %2$s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:422
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:425
 msgid "Si sólo salen números, son las filas que se ha insertado: Está bien."
 msgstr ""
 "If only numbers are displayed, they are the rows that have been inserted: "
 "This is correct."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:454
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:457
 #, php-format
 msgid "No existe el volcado para importar: %s (origen «%s» → destino «%s»)."
 msgstr "No dump available to import: %s (origin «%s» → destination «%s»)."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:465
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:468
 #, php-format
 msgid ""
 "El fichero %1$s no contiene el esquema destino «%2$s» (¿volcado antiguo "
@@ -18626,12 +18711,12 @@ msgstr ""
 "File %1$s does not contain destination schema «%2$s» (old dump dbNewEu-crEu "
 "or other?). Regenerate step 3."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:477
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:480
 #, php-format
 msgid "No se pudo reescribir %s"
 msgstr "Could not rewrite %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:669
+#: src/shared/infrastructure/persistence/postgresql/DBTabla.php:672
 #, php-format
 msgid ""
 "Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». SQL: %5$s. Log: "
@@ -18640,11 +18725,11 @@ msgstr ""
 "Error %1$s (command %2$d). Source «%3$s» → destination «%4$s». SQL: %5$s. "
 "Log: %6$s.%7$s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:119
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:122
 msgid "La operación continúa con el usuario de importar."
 msgstr "The operation continues with the importing user."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:189
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:192
 #, php-format
 msgid ""
 "El rol «%1$s» no existe; la operación continúa con el usuario de importar "
@@ -18653,23 +18738,23 @@ msgstr ""
 "The role «%1$s» does not exist; the operation continues with the importing "
 "user (schema «%2$s»)."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:249
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:252
 #, php-format
 msgid "No existe «%1$s.%2$s»; se omite el traslado %3$s a resto."
 msgstr "No «%1$s.%2$s» exists; the transfer %3$s is omitted."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:263
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:266
 #, php-format
 msgid "No existe el esquema «%1$s»; se omite el traslado %2$s a resto."
 msgstr "Schema '%1$s' does not exist; transfer %2$s to 'other' is omitted."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:337
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:344
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:340
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:347
 #, php-format
 msgid "Identificador de ubicación no válido%1$s: %2$s"
 msgstr "Invalid location identifier%1$s: %2$s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:409
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:412
 #, php-format
 msgid ""
 "La tabla map_id no existe en el esquema «%s» y no hay plantilla en «resto». "
@@ -18677,15 +18762,15 @@ msgid ""
 "la incluya."
 msgstr ""
 "The map_id table does not exist in the schema «%s» and there is no template "
-"in «resto». Please run «create schema» (common) with a reference schema that "
-"includes it."
+"in «resto». Please run «create schema» (common) with a reference schema that"
+" includes it."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:443
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:446
 #, php-format
 msgid "No existe el esquema «%s»; se omiten operaciones con map_id."
 msgstr "The schema «%s» does not exist; operations with map_id are omitted."
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:509
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:512
 #, php-format
 msgid ""
 "Aviso: no se pudo refrescar la suscripción tras crear map_id en réplica: %s"
@@ -18693,29 +18778,29 @@ msgstr ""
 "Warning: the subscription could not be refreshed after creating map_id in "
 "replica: %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:573
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:576
 #, php-format
 msgid "Tipo de permiso no válido: %s"
 msgstr "Invalid permission type: %s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:677
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:701
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:692
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:716
 msgid "no se ha guardado la actividad"
 msgstr "the activity has not been saved"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:750
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:774
 msgid "no se ha guardado la casa"
 msgstr "the house has not been saved"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:813
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:837
 msgid "no se ha guardado la teleco de la casa"
 msgstr "the house's telecom details have not been saved"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:899
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:932
 msgid "no se ha guardado el centro"
 msgstr "the center has not been saved"
 
-#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:977
+#: src/shared/infrastructure/persistence/postgresql/DBTrasvase.php:1010
 msgid "no se ha guardado la teleco el ctr"
 msgstr "the center's telecom details have not been saved"
 
@@ -18772,7 +18857,7 @@ msgstr ""
 msgid "No se ha recibido el archivo."
 msgstr "File not received."
 
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:56
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:61
 msgid "no se ha ejecutado la acción"
 msgstr "the action has not been executed"
 
@@ -19081,16 +19166,16 @@ msgstr "search for a teleco type"
 
 #: src/ubis/domain/RegionStgrAviso.php:31
 msgid ""
-"No se ha podido identificar la persona seleccionada (falta id_nom o la dl no "
-"tiene esquema válido)."
+"No se ha podido identificar la persona seleccionada (falta id_nom o la dl no"
+" tiene esquema válido)."
 msgstr ""
 "The selected person could not be identified (missing id_nom or the dl does "
 "not have a valid schema)."
 
 #: src/ubis/domain/RegionStgrAviso.php:33
 msgid ""
-"Consecuencias: no se pueden abrir tessera, certificados ni otras operaciones "
-"entre regiones para esa fila."
+"Consecuencias: no se pueden abrir tessera, certificados ni otras operaciones"
+" entre regiones para esa fila."
 msgstr ""
 "Consequences: tessera, certificates, and other operations between regions "
 "cannot be opened for that row."
@@ -19128,8 +19213,8 @@ msgid ""
 "Sin id_schema no se pueden enlazar notas, certificados ni traslados entre "
 "regiones del stgr."
 msgstr ""
-"Without id_schema, notes, certificates, and transfers between regions of the "
-"stgr cannot be linked."
+"Without id_schema, notes, certificates, and transfers between regions of the"
+" stgr cannot be linked."
 
 #: src/ubis/domain/RegionStgrAviso.php:163
 msgid ""
@@ -19174,11 +19259,11 @@ msgstr ""
 
 #: src/ubis/domain/RegionStgrAviso.php:207
 msgid ""
-"Cómo corregirlo: en Ubis, dé de alta cada dl con región y región del stgr, y "
-"compruebe que el esquema exista en db_idschema."
+"Cómo corregirlo: en Ubis, dé de alta cada dl con región y región del stgr, y"
+" compruebe que el esquema exista en db_idschema."
 msgstr ""
-"How to fix it: in Ubis, register each dl with region and region of the stgr, "
-"and check that the schema exists in db_idschema."
+"How to fix it: in Ubis, register each dl with region and region of the stgr,"
+" and check that the schema exists in db_idschema."
 
 #: src/ubis/domain/RegionStgrAviso.php:219
 #, php-format
@@ -19235,8 +19320,8 @@ msgid ""
 "ámbito de sesión)."
 msgstr ""
 "How to fix it: check the Ubis region and stgr region of each dl, and make "
-"sure the schema is registered in db_idschema (suffix v or f depending on the "
-"session scope)."
+"sure the schema is registered in db_idschema (suffix v or f depending on the"
+" session scope)."
 
 #: src/ubis/domain/entity/Delegacion.php:428
 msgid "nombre de la delegación"
@@ -19540,8 +19625,7 @@ msgstr "No email associated with this user"
 msgid ""
 "Hola %s,\n"
 "\n"
-"Has solicitado recuperar tu contraseña. Para elegir una nueva, abre este "
-"enlace (caduca en 30 minutos):\n"
+"Has solicitado recuperar tu contraseña. Para elegir una nueva, abre este enlace (caduca en 30 minutos):\n"
 "%s\n"
 "\n"
 "Si no lo has pedido tú, ignora este correo: tu contraseña no ha cambiado.\n"
@@ -19551,12 +19635,10 @@ msgid ""
 msgstr ""
 "Hello %s,\n"
 "\n"
-"You have requested to recover your password. To choose a new one, open this "
-"link (it expires in 30 minutes):\n"
+"You have requested to recover your password. To choose a new one, open this link (it expires in 30 minutes):\n"
 "%s\n"
 "\n"
-"If you did not request this, ignore this email: your password has not "
-"changed.\n"
+"If you did not request this, ignore this email: your password has not changed.\n"
 "\n"
 "Regards,\n"
 "The administration team"
@@ -19633,16 +19715,14 @@ msgstr "Menu permission not found"
 msgid ""
 "Hola %s,\n"
 "\n"
-"Has solicitado recuperar tu sistema autentificación de 2 factores. Haz clik "
-"en el link: %s\n"
+"Has solicitado recuperar tu sistema autentificación de 2 factores. Haz clik en el link: %s\n"
 "\n"
 "Saludos,\n"
 "El equipo de administración"
 msgstr ""
 "Hello %s,\n"
 "\n"
-"You requested to recover your two-factor authentication system. Click on the "
-"link: %s\n"
+"You requested to recover your two-factor authentication system. Click on the link: %s\n"
 "\n"
 "Best regards,\n"
 "The administration team"
@@ -19652,16 +19732,14 @@ msgstr ""
 msgid ""
 "Hola %s,\n"
 "\n"
-"Has solicitado recuperar tu sistema autentificación de 2 factores. Tu código "
-"de seguridad para la aplicación es: %s\n"
+"Has solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n"
 "\n"
 "Saludos,\n"
 "El equipo de administración"
 msgstr ""
 "Hello %s,\n"
 "\n"
-"You requested to recover your two-factor authentication system. Your "
-"security code for the application is: %s\n"
+"You requested to recover your two-factor authentication system. Your security code for the application is: %s\n"
 "\n"
 "Best regards,\n"
 "The administration team"
@@ -19746,16 +19824,16 @@ msgstr "Could not resolve table name for: %s"
 msgid "infoTable no implementado para la tabla: %s"
 msgstr "infoTable not implemented for table: %s"
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:220
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:236
 msgid "Error obteniendo nuevo id de db_idschema."
 msgstr "Error obtaining new id from db_idschema."
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:261
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:278
 #, php-format
 msgid "Base de datos no soportada: %s"
 msgstr "Database not supported: %s"
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:311
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:328
 msgid "No se encuentra ningún id_schema en el rango 3000-4000"
 msgstr "No id_schema found in the range 3000-4000"
 
@@ -20025,7 +20103,7 @@ msgstr "download"
 #: frontend/pasarela/view/activacion_lista.html.twig:75
 #: frontend/pasarela/view/activacion_lista.html.twig:97
 #: frontend/pasarela/view/contribucion_x_lista.html.twig:31
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:81
+#: frontend/pasarela/view/contribucion_x_lista.html.twig:83
 #: frontend/pasarela/view/nombre_lista.html.twig:23
 #: frontend/pasarela/view/nombre_lista.html.twig:55
 msgid "Tipo no válido"
@@ -20114,21 +20192,21 @@ msgstr "Save and download PDF"
 msgid "No se ha podido guardar el certificado"
 msgstr "The certificate could not be saved"
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:89
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:90
 msgid ""
 "No se pudo abrir la ventana del PDF. Verifique que los popups estén "
 "permitidos."
 msgstr "Could not open the PDF window. Please ensure pop-ups are allowed."
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:110
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:111
 msgid "Error al abrir el PDF"
 msgstr "Error opening the PDF"
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:119
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:120
 msgid "¿Es correcto?"
 msgstr "Is this correct?"
 
-#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:122
+#: frontend/certificados/view/certificado_emitido_imprimir.html.twig:123
 msgid "'Cancel' para eliminar el certificado recién creado"
 msgstr "'Cancel' to delete the newly created certificate"
 
@@ -20190,7 +20268,8 @@ msgstr ""
 
 #: frontend/configuracion/view/parametros.html.twig:60
 msgid "Nombre del centro de estudios. Si son varios, separarlos por coma"
-msgstr "Name of the educational institution. If multiple, separate with commas"
+msgstr ""
+"Name of the educational institution. If multiple, separate with commas"
 
 #: frontend/configuracion/view/parametros.html.twig:61
 msgid ""
@@ -20312,8 +20391,8 @@ msgid ""
 "Pasa los cambios a real y elimina la tabla de propuestas actual. Tarda un "
 "poco (30 seg.)"
 msgstr ""
-"Apply changes to the live table and delete the current proposals table. This "
-"may take a moment (30 sec.)"
+"Apply changes to the live table and delete the current proposals table. This"
+" may take a moment (30 sec.)"
 
 #: frontend/encargossacd/view/propuestas_menu.html.twig:21
 msgid "Elimina la tabla de propuestas actual y crea una nueva"
@@ -20344,7 +20423,7 @@ msgid "debe indicar un valor"
 msgstr "A value must be specified"
 
 #: frontend/pasarela/view/contribucion_x_lista.html.twig:35
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:85
+#: frontend/pasarela/view/contribucion_x_lista.html.twig:87
 msgid "debe indicar un tanto por ciento"
 msgstr "must specify a percentage"
 
@@ -20465,8 +20544,8 @@ msgstr "permission on (checked)"
 #~ msgstr "The text cannot exceed 255 characters"
 
 #~ msgid ""
-#~ "Por razones de seguridad, debe configurar la autenticación de dos "
-#~ "factores (2FA)."
+#~ "Por razones de seguridad, debe configurar la autenticación de dos factores "
+#~ "(2FA)."
 #~ msgstr ""
 #~ "For security reasons, you must configure two-factor authentication (2FA)."
 
@@ -20483,23 +20562,23 @@ msgstr "permission on (checked)"
 #~ msgstr "An email has been sent to your address."
 
 #~ msgid ""
-#~ "Se ha generado una nueva contraseña y se ha enviado a su dirección de "
-#~ "correo electrónico."
+#~ "Se ha generado una nueva contraseña y se ha enviado a su dirección de correo"
+#~ " electrónico."
 #~ msgstr "A new password has been generated and sent to your email address."
 
 #~ msgid ""
 #~ "Por favor, revise su bandeja de entrada y siga las instrucciones para "
 #~ "acceder con su nueva contraseña."
 #~ msgstr ""
-#~ "Please check your inbox and follow the instructions to access with your "
-#~ "new password."
+#~ "Please check your inbox and follow the instructions to access with your new "
+#~ "password."
 
 #~ msgid ""
-#~ "Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal "
-#~ "la próxima vez que inicie sesión."
+#~ "Nota: Por razones de seguridad, deberá cambiar esta contraseña temporal la "
+#~ "próxima vez que inicie sesión."
 #~ msgstr ""
-#~ "Note: For security reasons, you will need to change this temporary "
-#~ "password the next time you log in."
+#~ "Note: For security reasons, you will need to change this temporary password "
+#~ "the next time you log in."
 
 #~ msgid "Error al preparar la consulta"
 #~ msgstr "Error preparing the query"
@@ -20522,8 +20601,8 @@ msgstr "permission on (checked)"
 #~ "No se tiene acceso al nombre de (es de otra dl o el sacd no está en DB-"
 #~ "comun) id_nom: %s"
 #~ msgstr ""
-#~ "You do not have access to the name of (it is from another dl or the sacd "
-#~ "is not in DB-comun) id_nom: %s"
+#~ "You do not have access to the name of (it is from another dl or the sacd is "
+#~ "not in DB-comun) id_nom: %s"
 
 #, php-format
 #~ msgid "afecta a la actividad: %s"
@@ -20568,16 +20647,14 @@ msgstr "permission on (checked)"
 #~ "Si es la primera vez que 'guarda las notas en tessera' sería conveniente\n"
 #~ "                            revisar con su r la situación de esta persona"
 #~ msgstr ""
-#~ "If it is the first time you 'save notes in tessera' it would be "
-#~ "convenient\n"
-#~ "                            to review with your r the situation of this "
-#~ "person"
+#~ "If it is the first time you 'save notes in tessera' it would be convenient\n"
+#~ "                            to review with your r the situation of this person"
 
 #, fuzzy, php-format
 #~ msgid "No se encuentra el nombre del esquema de la persona con id_nom: %s"
 #~ msgstr ""
-#~ "You do not have access to the name of (it is from another dl or the sacd "
-#~ "is not in DB-comun) id_nom: %s"
+#~ "You do not have access to the name of (it is from another dl or the sacd is "
+#~ "not in DB-comun) id_nom: %s"
 
 #~ msgid "No se pudo resolver el repositorio de notas de otra región."
 #~ msgstr "The repository of notes of another region could not be resolved."
@@ -20635,11 +20712,9 @@ msgstr "permission on (checked)"
 #~ msgid "encargo"
 #~ msgstr "charge"
 
-#~ msgid ""
-#~ "NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."
+#~ msgid "NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."
 #~ msgstr ""
-#~ "NOTE: If it ends and starts the same day in the same place it does not "
-#~ "set."
+#~ "NOTE: If it ends and starts the same day in the same place it does not set."
 
 #, php-format
 #~ msgid "No existe el idoma: %s. Debe corregirlo en la ficha del sacd"
@@ -20692,8 +20767,7 @@ msgstr "permission on (checked)"
 #~ "the assistant is from another dl. It must be modified in the source dl."
 
 #~ msgid "no debería pasar. No puede haber una plaza libre sin propietario"
-#~ msgstr ""
-#~ "It should not happen. There can not be a free place without an owner"
+#~ msgstr "It should not happen. There can not be a free place without an owner"
 
 #, fuzzy
 #~ msgid "id actividad"
@@ -20904,8 +20978,7 @@ msgstr "permission on (checked)"
 
 #, php-format
 #~ msgid "el campo \"%1$s\" debe ser un número real, y es: \"%2$s\""
-#~ msgstr ""
-#~ "the field \\ \" %1$s \" must be a real number, and is: \\ \" %2$s \""
+#~ msgstr "the field \\ \" %1$s \" must be a real number, and is: \\ \" %2$s \""
 
 #, php-format
 #~ msgid "el campo \"%1$s\" debe ser un número, y es: \"%2$s\""
@@ -20929,11 +21002,10 @@ msgstr "permission on (checked)"
 
 #, php-format
 #~ msgid ""
-#~ "el campo \"%1$s\" debe ser una hora. Debe tener el formato hh:mm:ss. "
-#~ "[%2$s]"
+#~ "el campo \"%1$s\" debe ser una hora. Debe tener el formato hh:mm:ss. [%2$s]"
 #~ msgstr ""
-#~ "the field \\ \" %1$s \" must be a time. It must have the format hh: mm: "
-#~ "ss. [ %2$s ]"
+#~ "the field \\ \" %1$s \" must be a time. It must have the format hh: mm: ss. "
+#~ "[ %2$s ]"
 
 #, php-format
 #~ msgid "el campo \"%1$s\" no puede estar vacío"
@@ -20992,17 +21064,15 @@ msgstr "permission on (checked)"
 
 #, fuzzy
 #~ msgid ""
-#~ "Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y "
-#~ "sf"
-#~ msgstr ""
-#~ "Only deletes the common schema and users if checked delete sv and sf"
+#~ "Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y sf"
+#~ msgstr "Only deletes the common schema and users if checked delete sv and sf"
 
 #~ msgid "'!' delante significa negado. ej: '!casa'."
 #~ msgstr "'!' front means denied. eg: 'home'."
 
 #~ msgid ""
-#~ "se compara con los valores (lista csv) del campo 'permiso por oficinas' "
-#~ "del usuario."
+#~ "se compara con los valores (lista csv) del campo 'permiso por oficinas' del "
+#~ "usuario."
 #~ msgstr ""
 #~ "it is compared with the values ​​(csv list) of the field 'permission by "
 #~ "offices' of the user."
@@ -21013,11 +21083,11 @@ msgstr "permission on (checked)"
 #~ "possible values: 'dtor', 'all' and the offices ('agd', 'sm', 'scl' ...)."
 
 #~ msgid ""
-#~ "se compara con el role del usuario. Si el role tiene activado 'permisos "
-#~ "menu por oficina', también se compara con las oficinas."
+#~ "se compara con el role del usuario. Si el role tiene activado 'permisos menu"
+#~ " por oficina', también se compara con las oficinas."
 #~ msgstr ""
-#~ "it is compared to the user's role. If the role has enabled 'permissions "
-#~ "menu per office', it is also compared with the offices."
+#~ "it is compared to the user's role. If the role has enabled 'permissions menu"
+#~ " per office', it is also compared with the offices."
 
 #~ msgid "valores posibles: 'todos' y los roles (y oficinas si es el caso)."
 #~ msgstr ""
@@ -21412,26 +21482,24 @@ msgstr "permission on (checked)"
 #~ msgstr "n step"
 
 #~ msgid ""
-#~ "¿Está seguro que desea borrar esta persona? Sólo puedes borrar a los de "
-#~ "tu dl."
+#~ "¿Está seguro que desea borrar esta persona? Sólo puedes borrar a los de tu "
+#~ "dl."
 #~ msgstr ""
 #~ "Are you sure you want to delete this person? You can only erase those in "
 #~ "your dl."
 
 #~ msgid ""
-#~ "(No pueden ser comillas dobles!!) Caracteres: ~!@#$%^&*_-+=`|(){}[]:;"
-#~ "<>,.?/"
+#~ "(No pueden ser comillas dobles!!) Caracteres: ~!@#$%^&*_-+=`|(){}[]:;<>,.?/"
 #~ msgstr ""
-#~ "(They can't be double quotes!!) Characters: ~!@#$%^&*_-+='| (){}[]:;"
-#~ "<>,.? /"
+#~ "(They can't be double quotes!!) Characters: ~!@#$%^&*_-+='| (){}[]:;<>,.? /"
 
 #, fuzzy
 #~ msgid ""
-#~ "Si no está instalado el módulo de procesos, las fases de los avisos son "
-#~ "los estados de la actividad."
+#~ "Si no está instalado el módulo de procesos, las fases de los avisos son los "
+#~ "estados de la actividad."
 #~ msgstr ""
-#~ "If the process module is not installed, the warning phases are the "
-#~ "activity statuses."
+#~ "If the process module is not installed, the warning phases are the activity "
+#~ "statuses."
 
 #, fuzzy
 #~ msgid "permiso tipo"
@@ -21577,8 +21645,8 @@ msgstr "permission on (checked)"
 #~ msgid ""
 #~ "numerarios que han terminado el ce este curso y con el bienio sin acabar"
 #~ msgstr ""
-#~ "numeraries that have finished the course this year and with the "
-#~ "unfinished biennium"
+#~ "numeraries that have finished the course this year and with the unfinished "
+#~ "biennium"
 
 #~ msgid "número de numerarios en stgr"
 #~ msgstr "number of numeraries in stgr"
