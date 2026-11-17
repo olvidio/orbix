@@ -1,0 +1,1289 @@
+{
+  "_descripcion": "Vocabulario de la casa para las traducciones de Orbix (ca, en, de, it). Cada término: formas en español (es) y formas aceptadas en cada idioma. El auditor marca las cadenas cuyo msgid contiene una forma de «es» y cuya traducción no contiene ninguna de las formas del idioma (sin distinguir mayúsculas; en alemán vale dentro de una palabra compuesta). Las siglas se dejan tal cual.",
+  "siglas": [
+    "n",
+    "agd",
+    "s",
+    "sg",
+    "sr",
+    "sss+",
+    "nax",
+    "ca",
+    "cv",
+    "crt",
+    "ctr",
+    "cdc",
+    "dl",
+    "r",
+    "cr",
+    "sv",
+    "sf",
+    "sacd",
+    "stgr",
+    "ubi",
+    "vsm",
+    "vsg",
+    "vsr",
+    "vest",
+    "vnax",
+    "vcsd",
+    "dagd",
+    "scdl",
+    "adl",
+    "aop",
+    "dre",
+    "BDU",
+    "ODF"
+  ],
+  "terminos": [
+    {
+      "es": [
+        "actividad",
+        "actividades"
+      ],
+      "ca": [
+        "activitat",
+        "activitats"
+      ],
+      "en": [
+        "activity",
+        "activities"
+      ],
+      "de": [
+        "Aktivität",
+        "Aktivitäten"
+      ],
+      "it": [
+        "attività"
+      ]
+    },
+    {
+      "es": [
+        "asistente",
+        "asistentes"
+      ],
+      "ca": [
+        "assistent",
+        "assistents"
+      ],
+      "en": [
+        "attendee",
+        "attendees"
+      ],
+      "de": [
+        "Teilnehmer"
+      ],
+      "it": [
+        "partecipante",
+        "partecipanti"
+      ],
+      "nota": "persona que asiste a una actividad; no es ayudante (assistant, assistente, Assistent)"
+    },
+    {
+      "es": [
+        "asistencia",
+        "asistencias"
+      ],
+      "ca": [
+        "assistència",
+        "assistències"
+      ],
+      "en": [
+        "attendance",
+        "attendances"
+      ],
+      "de": [
+        "Teilnahme"
+      ],
+      "it": [
+        "partecipazione",
+        "partecipazioni"
+      ],
+      "nota": "no es ayuda (assistance, assistenza)"
+    },
+    {
+      "es": [
+        "cargo",
+        "cargos"
+      ],
+      "ca": [
+        "càrrec",
+        "càrrecs"
+      ],
+      "en": [
+        "position",
+        "positions"
+      ],
+      "de": [
+        "Amt",
+        "Ämter"
+      ],
+      "it": [
+        "carica",
+        "cariche"
+      ],
+      "nota": "función en una actividad o centro; no es cobro (charge, onere)"
+    },
+    {
+      "es": [
+        "numerario",
+        "numerarios",
+        "numeraria",
+        "numerarias"
+      ],
+      "ca": [
+        "numerari",
+        "numeraris",
+        "numerària",
+        "numeràries"
+      ],
+      "en": [
+        "numerary",
+        "numeraries"
+      ],
+      "de": [
+        "Numerarier",
+        "Numerarierin"
+      ],
+      "it": [
+        "numerario",
+        "numerari",
+        "numeraria",
+        "numerarie"
+      ],
+      "nota": "no es dinero (cash) ni posesión"
+    },
+    {
+      "es": [
+        "agregado",
+        "agregados",
+        "agregada",
+        "agregadas"
+      ],
+      "ca": [
+        "agregat",
+        "agregats",
+        "agregada",
+        "agregades"
+      ],
+      "en": [
+        "associate",
+        "associates"
+      ],
+      "de": [
+        "Assoziierte"
+      ],
+      "it": [
+        "aggregato",
+        "aggregati",
+        "aggregata",
+        "aggregate"
+      ],
+      "nota": "no es aggregate"
+    },
+    {
+      "es": [
+        "supernumerario",
+        "supernumerarios",
+        "supernumeraria",
+        "supernumerarias"
+      ],
+      "ca": [
+        "supernumerari",
+        "supernumeraris",
+        "supernumerària",
+        "supernumeràries"
+      ],
+      "en": [
+        "supernumerary",
+        "supernumeraries"
+      ],
+      "de": [
+        "Supernumerarier"
+      ],
+      "it": [
+        "soprannumerario",
+        "soprannumerari",
+        "soprannumeraria",
+        "soprannumerarie"
+      ]
+    },
+    {
+      "es": [
+        "centro",
+        "centros"
+      ],
+      "ca": [
+        "centre",
+        "centres"
+      ],
+      "en": [
+        "center",
+        "centers"
+      ],
+      "de": [
+        "Zentrum",
+        "Zentren"
+      ],
+      "it": [
+        "centro",
+        "centri"
+      ],
+      "nota": "en: center (americano)"
+    },
+    {
+      "es": [
+        "delegación",
+        "delegaciones"
+      ],
+      "ca": [
+        "delegació",
+        "delegacions"
+      ],
+      "en": [
+        "delegation",
+        "delegations"
+      ],
+      "de": [
+        "Delegation",
+        "Delegationen"
+      ],
+      "it": [
+        "delegazione",
+        "delegazioni"
+      ],
+      "nota": "it: no es delega"
+    },
+    {
+      "es": [
+        "región",
+        "regiones"
+      ],
+      "ca": [
+        "regió",
+        "regions"
+      ],
+      "en": [
+        "region",
+        "regions"
+      ],
+      "de": [
+        "Region",
+        "Regionen"
+      ],
+      "it": [
+        "regione",
+        "regioni"
+      ]
+    },
+    {
+      "es": [
+        "casa",
+        "casas"
+      ],
+      "ca": [
+        "casa",
+        "cases"
+      ],
+      "en": [
+        "house",
+        "houses"
+      ],
+      "de": [
+        "Haus",
+        "Häuser"
+      ],
+      "it": [
+        "casa",
+        "case"
+      ],
+      "nota": "casa de actividades; en: no es home; it: no es alloggiamento"
+    },
+    {
+      "es": [
+        "acta",
+        "actas"
+      ],
+      "ca": [
+        "acta",
+        "actes"
+      ],
+      "en": [
+        "grade record",
+        "grade records"
+      ],
+      "de": [
+        "Notenprotokoll",
+        "Notenprotokolle"
+      ],
+      "it": [
+        "verbale d'esame",
+        "verbali d'esame",
+        "verbale",
+        "verbali"
+      ],
+      "nota": "acta de calificaciones; no es minutes, proceedings, Akte ni procedimento"
+    },
+    {
+      "es": [
+        "asignatura",
+        "asignaturas"
+      ],
+      "ca": [
+        "assignatura",
+        "assignatures"
+      ],
+      "en": [
+        "subject",
+        "subjects"
+      ],
+      "de": [
+        "Fach",
+        "Fächer"
+      ],
+      "it": [
+        "materia",
+        "materie"
+      ],
+      "nota": "no es Vorlesung, Modul, soggetto ni argomento"
+    },
+    {
+      "es": [
+        "matrícula",
+        "matrículas"
+      ],
+      "ca": [
+        "matrícula",
+        "matrícules"
+      ],
+      "en": [
+        "enrollment",
+        "enrollments"
+      ],
+      "de": [
+        "Einschreibung",
+        "Einschreibungen"
+      ],
+      "it": [
+        "iscrizione",
+        "iscrizioni"
+      ],
+      "nota": "no es matrícula de coche (license plate, targa)"
+    },
+    {
+      "es": [
+        "nota",
+        "notas"
+      ],
+      "ca": [
+        "nota",
+        "notes"
+      ],
+      "en": [
+        "grade",
+        "grades"
+      ],
+      "de": [
+        "Note",
+        "Noten"
+      ],
+      "it": [
+        "voto",
+        "voti"
+      ],
+      "nota": "calificación; en: no es note; it: voto"
+    },
+    {
+      "es": [
+        "tessera",
+        "tesseras"
+      ],
+      "ca": [
+        "tessera",
+        "tesseres"
+      ],
+      "en": [
+        "tessera",
+        "tesserae"
+      ],
+      "de": [
+        "Tessera"
+      ],
+      "it": [
+        "tessera",
+        "tessere"
+      ],
+      "nota": "término propio: se deja como en español"
+    },
+    {
+      "es": [
+        "plaza",
+        "plazas"
+      ],
+      "ca": [
+        "plaça",
+        "places"
+      ],
+      "en": [
+        "place",
+        "places"
+      ],
+      "de": [
+        "Platz",
+        "Plätze"
+      ],
+      "it": [
+        "posto",
+        "posti"
+      ],
+      "nota": "plaza en una actividad; no es plaza pública (square, piazza); it: no «posti a sedere»"
+    },
+    {
+      "es": [
+        "propietario",
+        "propietarios"
+      ],
+      "ca": [
+        "propietari",
+        "propietaris"
+      ],
+      "en": [
+        "owner",
+        "owners"
+      ],
+      "de": [
+        "Inhaber",
+        "Eigentümer"
+      ],
+      "it": [
+        "proprietario",
+        "proprietari"
+      ],
+      "nota": "dl a la que pertenece una plaza"
+    },
+    {
+      "es": [
+        "petición",
+        "peticiones"
+      ],
+      "ca": [
+        "petició",
+        "peticions"
+      ],
+      "en": [
+        "request",
+        "requests"
+      ],
+      "de": [
+        "Antrag",
+        "Anträge",
+        "Anfrage",
+        "Anfragen"
+      ],
+      "it": [
+        "richiesta",
+        "richieste"
+      ]
+    },
+    {
+      "es": [
+        "encargo",
+        "encargos"
+      ],
+      "ca": [
+        "encàrrec",
+        "encàrrecs"
+      ],
+      "en": [
+        "assignment",
+        "assignments"
+      ],
+      "de": [
+        "Auftrag",
+        "Aufträge"
+      ],
+      "it": [
+        "incarico",
+        "incarichi"
+      ],
+      "nota": "encargo pastoral de un sacd; it: no es commissione"
+    },
+    {
+      "es": [
+        "profesor",
+        "profesores"
+      ],
+      "ca": [
+        "professor",
+        "professors"
+      ],
+      "en": [
+        "professor",
+        "professors"
+      ],
+      "de": [
+        "Dozent",
+        "Dozenten"
+      ],
+      "it": [
+        "professore",
+        "professori",
+        "docente",
+        "docenti"
+      ],
+      "nota": "en: no teacher"
+    },
+    {
+      "es": [
+        "preceptor",
+        "preceptores"
+      ],
+      "ca": [
+        "preceptor",
+        "preceptors"
+      ],
+      "en": [
+        "preceptor",
+        "preceptors"
+      ],
+      "de": [
+        "Präzeptor",
+        "Präzeptoren"
+      ],
+      "it": [
+        "precettore",
+        "precettori"
+      ]
+    },
+    {
+      "es": [
+        "alumno",
+        "alumnos"
+      ],
+      "ca": [
+        "alumne",
+        "alumnes"
+      ],
+      "en": [
+        "student",
+        "students"
+      ],
+      "de": [
+        "Student",
+        "Studenten",
+        "Studierende"
+      ],
+      "it": [
+        "studente",
+        "studenti",
+        "alunno",
+        "alunni"
+      ]
+    },
+    {
+      "es": [
+        "bienio"
+      ],
+      "ca": [
+        "bienni"
+      ],
+      "en": [
+        "biennium"
+      ],
+      "de": [
+        "Biennium"
+      ],
+      "it": [
+        "biennio"
+      ]
+    },
+    {
+      "es": [
+        "cuadrienio"
+      ],
+      "ca": [
+        "quadrienni"
+      ],
+      "en": [
+        "quadrennium"
+      ],
+      "de": [
+        "Quadriennium",
+        "Quadrennium"
+      ],
+      "it": [
+        "quadriennio"
+      ]
+    },
+    {
+      "es": [
+        "tribunal",
+        "tribunales"
+      ],
+      "ca": [
+        "tribunal",
+        "tribunals"
+      ],
+      "en": [
+        "examining board",
+        "examining boards"
+      ],
+      "de": [
+        "Prüfungskommission",
+        "Prüfungskommissionen"
+      ],
+      "it": [
+        "commissione d'esame",
+        "commissioni d'esame",
+        "commissione"
+      ],
+      "nota": "tribunal de examen; no es court ni corte"
+    },
+    {
+      "es": [
+        "examinador",
+        "examinadores"
+      ],
+      "ca": [
+        "examinador",
+        "examinadors"
+      ],
+      "en": [
+        "examiner",
+        "examiners"
+      ],
+      "de": [
+        "Prüfer"
+      ],
+      "it": [
+        "esaminatore",
+        "esaminatori"
+      ]
+    },
+    {
+      "es": [
+        "certificado",
+        "certificados"
+      ],
+      "ca": [
+        "certificat",
+        "certificats"
+      ],
+      "en": [
+        "certificate",
+        "certificates"
+      ],
+      "de": [
+        "Zeugnis",
+        "Zeugnisse",
+        "Bescheinigung",
+        "Bescheinigungen"
+      ],
+      "it": [
+        "certificato",
+        "certificati"
+      ],
+      "nota": "de: Zeugnis o Bescheinigung, no Zertifikat"
+    },
+    {
+      "es": [
+        "convivencia",
+        "convivencias"
+      ],
+      "ca": [
+        "convivència",
+        "convivències"
+      ],
+      "en": [
+        "convivence",
+        "convivences"
+      ],
+      "de": [
+        "Convivenz"
+      ],
+      "it": [
+        "convivenza",
+        "convivenze"
+      ],
+      "nota": "actividad de formación (cv); no coesistenza ni Gemeinschaftsaktivitäten"
+    },
+    {
+      "es": [
+        "curso",
+        "cursos"
+      ],
+      "ca": [
+        "curs",
+        "cursos"
+      ],
+      "en": [
+        "course",
+        "courses",
+        "academic year",
+        "academic years"
+      ],
+      "de": [
+        "Kurs",
+        "Kurse",
+        "Studienjahr",
+        "Studienjahre"
+      ],
+      "it": [
+        "corso",
+        "corsi",
+        "anno accademico",
+        "anni accademici"
+      ],
+      "nota": "ambiguo: curso de actividad o curso académico; se aceptan los dos"
+    },
+    {
+      "es": [
+        "periodo",
+        "período",
+        "periodos"
+      ],
+      "ca": [
+        "període",
+        "períodes"
+      ],
+      "en": [
+        "period",
+        "periods"
+      ],
+      "de": [
+        "Zeitraum",
+        "Zeiträume"
+      ],
+      "it": [
+        "periodo",
+        "periodi"
+      ]
+    },
+    {
+      "es": [
+        "situación"
+      ],
+      "ca": [
+        "situació"
+      ],
+      "en": [
+        "status",
+        "situation"
+      ],
+      "de": [
+        "Status",
+        "Situation"
+      ],
+      "it": [
+        "situazione",
+        "stato"
+      ],
+      "nota": "situación de una persona (A, D…) o de una nota; de: no es Lage"
+    },
+    {
+      "es": [
+        "traslado",
+        "traslados"
+      ],
+      "ca": [
+        "trasllat",
+        "trasllats"
+      ],
+      "en": [
+        "transfer",
+        "transfers"
+      ],
+      "de": [
+        "Versetzung",
+        "Versetzungen"
+      ],
+      "it": [
+        "trasferimento",
+        "trasferimenti"
+      ]
+    },
+    {
+      "es": [
+        "de paso"
+      ],
+      "ca": [
+        "de pas"
+      ],
+      "en": [
+        "visiting",
+        "transient"
+      ],
+      "de": [
+        "auf der Durchreise",
+        "Gast"
+      ],
+      "it": [
+        "di passaggio"
+      ],
+      "nota": "persona de paso (de otra región o sin ficha completa)"
+    },
+    {
+      "es": [
+        "ficha",
+        "fichas"
+      ],
+      "ca": [
+        "fitxa",
+        "fitxes"
+      ],
+      "en": [
+        "record",
+        "records"
+      ],
+      "de": [
+        "Karteikarte",
+        "Karteikarten",
+        "Datenblatt"
+      ],
+      "it": [
+        "scheda",
+        "schede"
+      ],
+      "nota": "no es file ni Registerkarte (pestaña)"
+    },
+    {
+      "es": [
+        "tarifa",
+        "tarifas"
+      ],
+      "ca": [
+        "tarifa",
+        "tarifes"
+      ],
+      "en": [
+        "rate",
+        "rates"
+      ],
+      "de": [
+        "Tarif",
+        "Tarife"
+      ],
+      "it": [
+        "tariffa",
+        "tariffe"
+      ],
+      "nota": "it: no es tassa; de: no Preise"
+    },
+    {
+      "es": [
+        "gasto",
+        "gastos"
+      ],
+      "ca": [
+        "despesa",
+        "despeses"
+      ],
+      "en": [
+        "expense",
+        "expenses"
+      ],
+      "de": [
+        "Ausgabe",
+        "Ausgaben"
+      ],
+      "it": [
+        "spesa",
+        "spese"
+      ]
+    },
+    {
+      "es": [
+        "ingreso",
+        "ingresos"
+      ],
+      "ca": [
+        "ingrés",
+        "ingressos"
+      ],
+      "en": [
+        "income"
+      ],
+      "de": [
+        "Einnahme",
+        "Einnahmen"
+      ],
+      "it": [
+        "entrata",
+        "entrate"
+      ]
+    },
+    {
+      "es": [
+        "aportación",
+        "aportaciones"
+      ],
+      "ca": [
+        "aportació",
+        "aportacions"
+      ],
+      "en": [
+        "contribution",
+        "contributions"
+      ],
+      "de": [
+        "Beitrag",
+        "Beiträge"
+      ],
+      "it": [
+        "contributo",
+        "contributi"
+      ]
+    },
+    {
+      "es": [
+        "misa",
+        "misas"
+      ],
+      "ca": [
+        "missa",
+        "misses"
+      ],
+      "en": [
+        "Mass",
+        "Masses"
+      ],
+      "de": [
+        "Messe",
+        "Messen"
+      ],
+      "it": [
+        "messa",
+        "messe"
+      ],
+      "nota": "it: no es masse"
+    },
+    {
+      "es": [
+        "zona",
+        "zonas"
+      ],
+      "ca": [
+        "zona",
+        "zones"
+      ],
+      "en": [
+        "zone",
+        "zones"
+      ],
+      "de": [
+        "Zone",
+        "Zonen"
+      ],
+      "it": [
+        "zona",
+        "zone"
+      ],
+      "nota": "de: no es Bereich"
+    },
+    {
+      "es": [
+        "lugar",
+        "lugares"
+      ],
+      "ca": [
+        "lloc",
+        "llocs"
+      ],
+      "en": [
+        "place",
+        "places",
+        "location",
+        "locations"
+      ],
+      "de": [
+        "Ort",
+        "Orte"
+      ],
+      "it": [
+        "luogo",
+        "luoghi"
+      ],
+      "nota": "it: no es posto (eso es plaza)"
+    },
+    {
+      "es": [
+        "oficina",
+        "oficinas"
+      ],
+      "ca": [
+        "oficina",
+        "oficines"
+      ],
+      "en": [
+        "office",
+        "offices"
+      ],
+      "de": [
+        "Büro",
+        "Büros"
+      ],
+      "it": [
+        "ufficio",
+        "uffici"
+      ]
+    },
+    {
+      "es": [
+        "tablón"
+      ],
+      "ca": [
+        "tauler"
+      ],
+      "en": [
+        "notice board"
+      ],
+      "de": [
+        "Anschlagbrett",
+        "Pinnwand"
+      ],
+      "it": [
+        "bacheca"
+      ]
+    },
+    {
+      "es": [
+        "anuncio",
+        "anuncios"
+      ],
+      "ca": [
+        "anunci",
+        "anuncis"
+      ],
+      "en": [
+        "notice",
+        "notices",
+        "announcement",
+        "announcements"
+      ],
+      "de": [
+        "Mitteilung",
+        "Mitteilungen",
+        "Aushang"
+      ],
+      "it": [
+        "avviso",
+        "avvisi",
+        "annuncio",
+        "annunci"
+      ]
+    },
+    {
+      "es": [
+        "valija",
+        "valijas"
+      ],
+      "ca": [
+        "valija",
+        "valises"
+      ],
+      "en": [
+        "mailbag",
+        "mailbags"
+      ],
+      "de": [
+        "Kuriertasche",
+        "Kuriertaschen"
+      ],
+      "it": [
+        "valigia",
+        "valigie"
+      ],
+      "nota": "envío de documentos entre centros; no suitcase"
+    },
+    {
+      "es": [
+        "equipaje",
+        "equipajes"
+      ],
+      "ca": [
+        "equipatge",
+        "equipatges"
+      ],
+      "en": [
+        "luggage"
+      ],
+      "de": [
+        "Gepäck"
+      ],
+      "it": [
+        "bagaglio",
+        "bagagli"
+      ]
+    },
+    {
+      "es": [
+        "inventario"
+      ],
+      "ca": [
+        "inventari"
+      ],
+      "en": [
+        "inventory"
+      ],
+      "de": [
+        "Inventar"
+      ],
+      "it": [
+        "inventario"
+      ]
+    },
+    {
+      "es": [
+        "fase",
+        "fases"
+      ],
+      "ca": [
+        "fase",
+        "fases"
+      ],
+      "en": [
+        "phase",
+        "phases"
+      ],
+      "de": [
+        "Phase",
+        "Phasen"
+      ],
+      "it": [
+        "fase",
+        "fasi"
+      ]
+    },
+    {
+      "es": [
+        "proceso",
+        "procesos"
+      ],
+      "ca": [
+        "procés",
+        "processos"
+      ],
+      "en": [
+        "process",
+        "processes"
+      ],
+      "de": [
+        "Prozess",
+        "Prozesse",
+        "Vorgang",
+        "Vorgänge"
+      ],
+      "it": [
+        "processo",
+        "processi"
+      ]
+    },
+    {
+      "es": [
+        "proyecto"
+      ],
+      "ca": [
+        "projecte"
+      ],
+      "en": [
+        "draft"
+      ],
+      "de": [
+        "Entwurf"
+      ],
+      "it": [
+        "bozza"
+      ],
+      "nota": "status de actividad «proyecto» (aún no aprobada)"
+    },
+    {
+      "es": [
+        "borrable"
+      ],
+      "ca": [
+        "esborrable"
+      ],
+      "en": [
+        "deletable",
+        "erasable"
+      ],
+      "de": [
+        "löschbar"
+      ],
+      "it": [
+        "cancellabile",
+        "eliminabile"
+      ]
+    },
+    {
+      "es": [
+        "opcional",
+        "opcionales"
+      ],
+      "ca": [
+        "opcional",
+        "opcionals"
+      ],
+      "en": [
+        "optional",
+        "elective",
+        "electives"
+      ],
+      "de": [
+        "Wahlfach",
+        "Wahlfächer",
+        "optional"
+      ],
+      "it": [
+        "opzionale",
+        "opzionali"
+      ]
+    },
+    {
+      "es": [
+        "persona",
+        "personas"
+      ],
+      "ca": [
+        "persona",
+        "persones"
+      ],
+      "en": [
+        "person",
+        "people",
+        "persons"
+      ],
+      "de": [
+        "Person",
+        "Personen"
+      ],
+      "it": [
+        "persona",
+        "persone"
+      ]
+    },
+    {
+      "es": [
+        "sección",
+        "secciones"
+      ],
+      "ca": [
+        "secció",
+        "seccions"
+      ],
+      "en": [
+        "section",
+        "sections"
+      ],
+      "de": [
+        "Sektion",
+        "Sektionen"
+      ],
+      "it": [
+        "sezione",
+        "sezioni"
+      ],
+      "nota": "sección sv/sf; de: no Abschnitt"
+    }
+  ]
+}

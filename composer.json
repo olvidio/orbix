@@ -59,6 +59,7 @@
     "qa:criteria-legacy": "php tools/qa/check_criteria_legacy.php --strict",
     "qa:test-application": "php tools/qa/check_test_application.php --baseline",
     "qa:hash-campos": "php tools/audit/audit_hash_campos.php --strict",
+    "i18n:glosario": "tools/i18n/.venv/bin/python tools/i18n/auditar_glosario.py",
     "qa:huecos": [
       "STRICT=1 bash tools/qa/check_test_granular.sh",
       "@composer qa:test-application",

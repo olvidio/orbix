@@ -191,6 +191,7 @@ El script guarda el `.po` tras cada lote correcto; si un lote falla, se puede re
 2. Revisar traducciones dudosas, entradas **fuzzy** y cadenas con `%s`, `%d`, `%1$s`, etc.
 3. Buscar entradas aún vacías y completarlas a mano o relanzar el script.
 4. **Guardar** en Poedit: genera o actualiza `orbix.mo` automáticamente.
+5. **Vocabulario de la casa:** `composer i18n:glosario` lista las traducciones que no siguen `tools/i18n/glosario.json` (acta, asistente, cargo, numerario, siglas…). Se corrigen a mano o con `traduir_groq.py --glosario` (detalle en [`tools/README.md`](../../tools/README.md)). Un término nuevo o una decisión de vocabulario se añade al glosario, no al prompt.
 
 Repaso opcional con IA (revisor, hoy orientado a catalán; adaptar `IDIOMA_DESTI` en el script si se reutiliza):
 

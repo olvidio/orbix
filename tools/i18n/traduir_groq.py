@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Traduce entradas vacías o fuzzy de un catálogo .po usando la API de Groq."""
+"""Traduce entradas vacías o fuzzy de un catálogo .po usando la API de Groq.
+
+Con --glosario retraduce las entradas que no siguen el vocabulario de la casa (tools/i18n/glosario.json,
+las mismas que lista tools/i18n/auditar_glosario.py) y solo acepta la traducción nueva si lo sigue.
+"""
 
 import argparse
 import json
@@ -10,6 +14,7 @@ import time
 import polib
 from groq import Groq
 
+import glosario
 from orbix_env import load_repo_env
 
 load_repo_env()
@@ -44,10 +49,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Retraduce entradas fuzzy y les quita la marca al guardar",
     )
+    parser.add_argument(
+        "--glosario",
+        action="store_true",
+        help="Retraduce las entradas que no siguen tools/i18n/glosario.json",
+    )
     return parser.parse_args()
 
 
-def build_context_prompt(idioma_nom: str) -> str:
+def build_context_prompt(idioma_nom: str, idioma: str) -> str:
     return (
         "Actúa como un traductor experto de software académico. "
         "Orbix gestiona estudios (colegio y universidad), actas de notas, asignaturas, matrículas, "
@@ -55,19 +65,8 @@ def build_context_prompt(idioma_nom: str) -> str:
         f"Idioma de destino: {idioma_nom}. Origen: español. "
         "Tono formal, claro y propio de una secretaría académica.\n\n"
         "Traduce el texto español de nuevo. No arrastres una traducción vieja si no corresponde al original.\n"
-        "Glosario: asignatura = materia del plan de estudios "
-        "(en: subject; de: Fach; it: materia); "
-        "acta = acta de calificaciones, no un protocolo de reunión "
-        "(en: grade record; de: Notenprotokoll; it: verbale d'esame); "
-        "matrícula = inscripción "
-        "(en: enrollment; de: Einschreibung; it: iscrizione); "
-        "centro = sede o colegio; "
-        "delegación o dl = delegación (conserva «dl» si aparece como sigla); "
-        "sacd y stgr se dejan tal cual; convivencia = actividad de convivencia; "
-        "ficha = ficha de datos (en: record; de: Karteikarte; it: scheda).\n"
-        "Los menús usan siglas internas, casi siempre en minúscula, que se dejan tal cual: "
-        "n, agd, s, sg, sr, sss+, nax, ca, cv, crt, ctr, cdc, dl, r, r/dl, cr, sv, sf, sacd, stgr, "
-        "vsm, vsg, vsr, vest, vnax, vcsd, dagd, scdl, adl, aop, dre, BDU, ODF. "
+        + glosario.texto_para_prompt(glosario.cargar(), idioma)
+        + "\nLas siglas van casi siempre en minúscula y se dejan tal cual. "
         "Un texto que solo es una sigla se devuelve igual.\n\n"
         "Recibirás un JSON indexado por números. Devuelve solo un JSON con las mismas claves "
         "y la traducción de cada texto.\n\n"
@@ -75,11 +74,7 @@ def build_context_prompt(idioma_nom: str) -> str:
         "1. Conserva %s, %d, %1$s, %2$d y el resto de placeholders, en el mismo número y tipo.\n"
         "2. No añadas markdown ni explicaciones.\n"
         "3. Traduce también las frases cortas de botones y menús.\n"
-        "4. Errores que no debes repetir: "
-        "acta no es minutes, act, Protokoll, Akte, atto ni record suelto; "
-        "asignatura no es Vorlesung, Modul, soggetto, oggetto ni argomento; "
-        "en italiano delegación es delegazione, no delega; "
-        "ficha no es tab."
+        "4. Usa siempre los términos del glosario, aunque otra palabra parezca más natural."
     )
 
 
@@ -99,12 +94,20 @@ def placeholders(text: str) -> list[str]:
     return sorted(out)
 
 
-def aceptar_traduccion(entry: polib.POEntry, traduccion: str, quitar_fuzzy: bool) -> bool:
+def aceptar_traduccion(
+    entry: polib.POEntry, traduccion: str, quitar_fuzzy: bool, glosario_idioma: tuple[dict, str] | None = None
+) -> bool:
     texto = traduccion.strip()
     if texto == "":
         return False
     if placeholders(entry.msgid) != placeholders(texto):
         return False
+    if glosario_idioma is not None:
+        g, idioma = glosario_idioma
+        fallos = glosario.incumplimientos(g, entry.msgid, texto, idioma)
+        if fallos:
+            print(f"   ↳ sigue sin el glosario ({', '.join(f.termino for f in fallos)}): {entry.msgid[:50]!r} -> {texto[:50]!r}")
+            return False
     entry.msgstr = texto
     if quitar_fuzzy:
         entry.flags = [flag for flag in entry.flags if flag != "fuzzy"]
@@ -121,7 +124,9 @@ def espera_rate_limit(mensaje: str) -> float:
     return minutos * 60 + float(encontrado.group(2)) + 2.0
 
 
-def traduir_lot_ia(client: Groq, context_prompt: str, lot_entrades: list, quitar_fuzzy: bool) -> int:
+def traduir_lot_ia(
+    client: Groq, context_prompt: str, lot_entrades: list, quitar_fuzzy: bool, glosario_idioma: tuple[dict, str] | None = None
+) -> int:
     dades_enviar = {str(idx): entry.msgid for idx, entry in enumerate(lot_entrades)}
     text_json = json.dumps(dades_enviar, ensure_ascii=False)
     resposta_neta = ""
@@ -153,7 +158,7 @@ def traduir_lot_ia(client: Groq, context_prompt: str, lot_entrades: list, quitar
                 if placeholders(entry.msgid) != placeholders(valor):
                     print(f"   ↳ placeholders: {entry.msgid[:50]!r} -> {valor[:50]!r}")
                     continue
-                if aceptar_traduccion(entry, valor, quitar_fuzzy):
+                if aceptar_traduccion(entry, valor, quitar_fuzzy, glosario_idioma):
                     comptador_paquet += 1
             return comptador_paquet
         except json.JSONDecodeError as json_err:
@@ -178,6 +183,7 @@ def executar_tot(
     idioma_nom: str,
     mida_lot: int,
     solo_fuzzy: bool,
+    con_glosario: bool = False,
 ) -> None:
     ruta_po = os.path.join(LANG_DIR, idioma_desti, "LC_MESSAGES", "orbix.po")
 
@@ -192,7 +198,9 @@ def executar_tot(
         )
 
     client = Groq(api_key=api_key)
-    context_prompt = build_context_prompt(idioma_nom)
+    context_prompt = build_context_prompt(idioma_nom, idioma_desti)
+    g = glosario.cargar()
+    glosario_idioma = (g, idioma_desti) if con_glosario else None
 
     print(f"📖 Carregant el fitxer: {ruta_po}")
     po = polib.pofile(ruta_po)
@@ -201,7 +209,13 @@ def executar_tot(
         po.metadata["Content-Type"] = "text/plain; charset=UTF-8"
         po.metadata["Content-Transfer-Encoding"] = "8bit"
 
-    if solo_fuzzy:
+    if con_glosario:
+        entrades_per_traduir = [
+            entry for entry in po
+            if entry.msgid and entry.msgstr and not entry.obsolete
+            and glosario.incumplimientos(g, entry.msgid, entry.msgstr, idioma_desti)
+        ]
+    elif solo_fuzzy:
         entrades_per_traduir = [
             entry for entry in po if entry.msgid and not entry.obsolete and "fuzzy" in entry.flags
         ]
@@ -227,7 +241,7 @@ def executar_tot(
 
         print(f"🤖 [Lot #{num_lot}] Traduint línies del {i + 1} al {min(i + mida_lot, total_cadenes)}...")
 
-        modificats_en_lot = traduir_lot_ia(client, context_prompt, lot_actual, solo_fuzzy)
+        modificats_en_lot = traduir_lot_ia(client, context_prompt, lot_actual, solo_fuzzy, glosario_idioma)
         total_modificats += modificats_en_lot
 
         if modificats_en_lot > 0:
@@ -248,7 +262,7 @@ def executar_tot(
 def main() -> None:
     args = parse_args()
     idioma_nom = args.idioma_nom or args.idioma
-    executar_tot(args.idioma, idioma_nom, args.lot, args.fuzzy)
+    executar_tot(args.idioma, idioma_nom, args.lot, args.fuzzy, args.glosario)
 
 
 if __name__ == "__main__":

@@ -45,6 +45,19 @@ pip install -r requirements.txt
 python3 traduir_groq.py --idioma it_IT.UTF-8 --idioma-nom italiano
 ```
 
+### Vocabulario de la casa (`glosario.json`)
+
+`tools/i18n/glosario.json` fija cómo se traduce cada término propio (acta, asistente, cargo, numerario, ctr…) y qué siglas se dejan tal cual. `traduir_groq.py` lo manda siempre al modelo. Para revisarlo:
+
+```bash
+composer i18n:glosario                                    # resumen por idioma y término
+tools/i18n/.venv/bin/python tools/i18n/auditar_glosario.py --idioma en_US.UTF-8 --termino acta --detalle
+tools/i18n/.venv/bin/python tools/i18n/traduir_groq.py --idioma en_US.UTF-8 --idioma-nom inglés --glosario   # retraduce las que no lo siguen
+tools/i18n/.venv/bin/python -m unittest tools/i18n/test_glosario.py
+```
+
+Con `--glosario` solo se acepta la traducción nueva si sigue el glosario y conserva los placeholders; las que no, se quedan como estaban y salen en pantalla para corregirlas a mano. Después, `msgcat` + `msgfmt --check` como en `actualizar.php`.
+
 Si ves `ModuleNotFoundError: polib`, el venv activo no es el correcto: `deactivate` y vuelve a `source .venv/bin/activate` desde `tools/i18n/`.
 
 Los scripts leen y escriben en `../../languages/<idioma>/LC_MESSAGES/`.
