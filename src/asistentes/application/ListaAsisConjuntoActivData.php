@@ -150,11 +150,12 @@ final class ListaAsisConjuntoActivData
             if ($oListaPlazasDl !== null) {
                 // PHP-DI cachea get(): sin clonar, el filtro de otras dl/r pisa el de la propia.
                 $oListaPlazasOtras = clone $oListaPlazasDl;
-                $oListaPlazasOtras->setSacd(false);
             } else {
                 /** @var ListaPlazasConjuntoActividades $oListaPlazasOtras */
                 $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
             }
+            // «Solo sacd» (menú de dre) vale también para las actividades de otras dl.
+            $oListaPlazasOtras->setSacd($Qque === 'list_cjto_sacd');
             $oListaPlazasOtras->setMi_dele($mi_dele);
             $oListaPlazasOtras->setCriteria($criteriaOt);
             $oListaPlazasOtras->setId_tipo_activ($Qid_tipo_activ);

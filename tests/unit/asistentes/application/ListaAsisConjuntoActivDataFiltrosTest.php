@@ -194,13 +194,28 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
     }
 
     /**
-     * Hallazgo: con «solo sacd» (`list_cjto_sacd`) el bloque de otras dl muestra a todos los asistentes: al clonar
-     * la lista de la dl se pone `setSacd(false)` expresamente.
+     * Con «solo sacd» (`list_cjto_sacd`, menú de dre) se filtran los sacd en los dos bloques, también en el de
+     * otras dl (antes, al clonar la lista de la dl, se ponía `setSacd(false)` y salían todos).
      */
-    public function test_solo_sacd_filtra_el_bloque_de_la_dl_pero_no_el_de_otras(): void
+    public function test_solo_sacd_filtra_el_bloque_de_la_dl_y_el_de_otras(): void
     {
         $this->construir(['que' => 'list_cjto_sacd', 'id_tipo_activ' => '......'] + self::PERIODO);
 
-        $this->assertSame([true, false], [$this->listas[0]['sacd'], $this->listas[1]['sacd']]);
+        $this->assertSame([true, true], [$this->listas[0]['sacd'], $this->listas[1]['sacd']]);
+    }
+
+    public function test_solo_sacd_filtra_tambien_cuando_solo_se_piden_las_de_otra_dl(): void
+    {
+        $this->construir(['que' => 'list_cjto_sacd', 'id_tipo_activ' => '......', 'dl_org' => 'dlp'] + self::PERIODO);
+
+        $this->assertCount(1, $this->listas);
+        $this->assertTrue($this->listas[0]['sacd']);
+    }
+
+    public function test_sin_solo_sacd_no_se_filtra_ningun_bloque(): void
+    {
+        $this->construir(['que' => 'list_cjto', 'id_tipo_activ' => '......'] + self::PERIODO);
+
+        $this->assertSame([false, false], [$this->listas[0]['sacd'], $this->listas[1]['sacd']]);
     }
 }
