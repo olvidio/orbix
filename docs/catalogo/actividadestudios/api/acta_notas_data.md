@@ -75,7 +75,7 @@ El controller pasa `$_POST` completo al caso de uso.
 
 ## Permisos
 
-- El caso de uso calcula un flag `permiso` (3/1) comparando la DL de la sesión (`OrbixRuntime::miDelef`)
+- El caso de uso calcula un flag `permiso` (3/1) comparando la DL de la sesión (`ConfigGlobal::mi_delef()`)
   con la DL del esquema de la matrícula; determina si el acta es editable. La autorización de oficina
   se completa en el frontend (`acta_notas.php`) y en `$_SESSION['oPerm']`.
 

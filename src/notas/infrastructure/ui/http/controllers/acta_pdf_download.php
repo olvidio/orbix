@@ -1,7 +1,7 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
 
-use frontend\shared\helpers\SignedDownloadToken;
+use src\shared\security\SignedDownloadToken;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 
 

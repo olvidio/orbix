@@ -5,7 +5,7 @@ namespace src\actividadestudios\application;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -54,7 +54,7 @@ final class E43CertificadoData
                 'msg_err' => $msgErr,
                 'nom' => '',
                 'txt_nacimiento' => '',
-                'dl_origen' => OrbixRuntime::miDelef(),
+                'dl_origen' => ConfigGlobal::mi_delef(),
                 'dl_destino' => '',
                 'txt_actividad' => '',
                 'matriculas' => 0,
@@ -67,7 +67,7 @@ final class E43CertificadoData
         $fNacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
         $txtNacimiento = "$lugarNacimiento ($fNacimiento)";
 
-        $dlOrigen = OrbixRuntime::miDelef();
+        $dlOrigen = ConfigGlobal::mi_delef();
         $dlDestino = $oPersona->getDl();
 
         $oActividad = $this->actividadAllRepository->findById($idActiv);

@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\helpers\SignedDownloadToken;
+use src\shared\security\SignedDownloadToken;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\shared\infrastructure\DependencyResolver;
 

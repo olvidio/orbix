@@ -6,7 +6,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\actividadestudios\domain\criteria\MatriculaField as MatF;
 use src\actividadestudios\domain\criteria\ActividadAsignaturaField as AaF;
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\actividadcargos\domain\criteria\CargoField;
@@ -128,7 +128,7 @@ final class ListaClasesCaData
                 $idNom = $oMatricula->getId_nom();
                 $oPersona = Persona::findPersonaEnGlobal($idNom);
                 if ($oPersona === null) {
-                    if ($dlOrg == OrbixRuntime::miDelef()) {
+                    if ($dlOrg == ConfigGlobal::mi_delef()) {
                         $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
                     }
                     continue;

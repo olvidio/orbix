@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -34,7 +34,7 @@ $Qtodos = ($Qtodos === false || $Qtodos === null || $Qtodos === 0) ? 2 : $Qtodos
 if ($Qseguro === 2) {
     ContestarJson::enviar('', [
         'estado' => 'confirmacion',
-        'puede_importar_todas' => OrbixRuntime::miDele() === 'dlb',
+        'puede_importar_todas' => ConfigGlobal::mi_dele() === 'dlb',
         'ctx_importar' => HashB::sign('menus_importar_de_ficheros_a_ref'),
     ]);
     return;
@@ -56,7 +56,7 @@ if ($Qseguro === 1) {
         $oDBPropiedades = new DBPropiedades();
         $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
     } else { // solo un esquema
-        $mi_region_dl = OrbixRuntime::miRegionDl();
+        $mi_region_dl = ConfigGlobal::mi_region_dl();
         $aEsquemas[] = $mi_region_dl;
     }
     if (!is_array($aEsquemas)) {

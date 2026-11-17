@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Resuelve el grupo de estudios de la delegación de la sesión (`OrbixRuntime::miDelef`) y la lista de
+Resuelve el grupo de estudios de la delegación de la sesión (`ConfigGlobal::mi_delef()`) y la lista de
 DL del grupo (`mi_grupo`). Construye dos desplegables de centros ordenados (sin acentos), cada uno
 encabezado por `todos los ctr` + separador: uno con los centros de numerarios activos y otro con los
 de agregados.

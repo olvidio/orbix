@@ -1,6 +1,5 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
@@ -12,7 +11,6 @@ $habitacionCamaLista = DependencyResolver::get(HabitacionesCamaLista::class);
 $data = $habitacionCamaLista($Qid_activ);
 
 if (!empty($data['success'])) {
-    $web = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
     $id_activ = $Qid_activ;
 
     $data['reload_main_link_spec'] = [
@@ -23,9 +21,6 @@ if (!empty($data['success'])) {
         ],
     ];
 
-    $data['url_update_cama_full'] = $web . '/src/ubiscamas/update_cama_asistente';
-
-    $data['update_solo_vip_full_url'] = $web . '/src/ubiscamas/update_solo_vip';
     $data['ctx_update_solo_vip'] = HashB::sign('update_solo_vip', ['id_activ' => $id_activ]);
 
     $data['distribucion_open_link_spec'] = [

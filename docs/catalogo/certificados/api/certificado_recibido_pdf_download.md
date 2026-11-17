@@ -24,7 +24,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Valida `tk` (`SignedDownloadToken`, scope certificado recibido), devuelve el binario PDF como
+Valida `tk` (`src\shared\security\SignedDownloadToken::parse`, scope certificado recibido), devuelve el binario PDF como
 attachment.
 
 ## Endpoint

@@ -31,28 +31,13 @@ final class OrbixRuntime
     public const ENV_FRONT_DEBUG = 'ORBIX_FRONT_DEBUG';
 
     /**
-     * Digrafos latinos → entidades HTML para impresiones / PDF.
-     * Equivalente histórico a `Config::$replace` en `ConfigSnapshot::$replace` (ahora retirado).
+     * Digrafos latinos → entidades HTML. Equiv. {@see \src\shared\domain\helpers\LatinHtmlEntities::replaceMap()}.
      *
-     * @var array<string, string>
-     */
-    private const LATIN_HTML_ENTITY_REPLACE = [
-        'AE' => '&#0198;',
-        'Ae' => '&#0198;',
-        'ae' => '&#0230;',
-        'aE' => '&#0230;',
-        'OE' => '&#0338;',
-        'Oe' => '&#0338;',
-        'oe' => '&#0339;',
-        'oE' => '&#0339;',
-    ];
-
-    /**
      * @return array<string, string>
      */
     public static function latinHtmlEntityReplaceMap(): array
     {
-        return self::LATIN_HTML_ENTITY_REPLACE;
+        return \src\shared\domain\helpers\LatinHtmlEntities::replaceMap();
     }
 
     public static function gettextLanguagesDir(): string

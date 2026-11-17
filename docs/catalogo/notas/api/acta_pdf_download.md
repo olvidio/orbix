@@ -44,7 +44,7 @@ Nota: el controller tambien lee `$_GET` directamente.
 
 ## Objetivo funcional
 
-Descarga binaria (no JSON). Parámetro GET `tk` con `SignedDownloadToken` scope `SCOPE_NOTAS_ACTA`.
+Descarga binaria (no JSON). Parámetro GET `tk` validado con `src\shared\security\SignedDownloadToken::parse`, scope `SCOPE_NOTAS_ACTA`.
 
 ## Permisos
 

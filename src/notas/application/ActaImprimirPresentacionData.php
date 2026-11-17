@@ -10,7 +10,7 @@ use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
-use frontend\shared\config\OrbixRuntime;
+use src\shared\domain\helpers\LatinHtmlEntities;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
@@ -44,7 +44,7 @@ final class ActaImprimirPresentacionData
             throw new \InvalidArgumentException(_("Falta el acta"));
         }
 
-        $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
+        $replace = LatinHtmlEntities::replaceMap();
         $oConfig = $_SESSION['oConfig'] ?? null;
         $region_latin = is_object($oConfig) && method_exists($oConfig, 'getNomRegionLatin')
             ? (string) $oConfig->getNomRegionLatin()

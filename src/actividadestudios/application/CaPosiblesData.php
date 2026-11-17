@@ -2,7 +2,7 @@
 
 namespace src\actividadestudios\application;
 
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\criteria\ActividadAllField;
@@ -124,7 +124,7 @@ final class CaPosiblesData
             $finIso = $oPeriodo->getF_fin_iso() ?? '';
         }
 
-        $miSfsv = OrbixRuntime::miSfsv();
+        $miSfsv = ConfigGlobal::mi_sfsv();
         $patronTipoActiv = '';
         $idCtr = '';
         $idTablaPersona = '';

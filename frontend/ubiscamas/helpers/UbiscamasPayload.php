@@ -129,6 +129,8 @@ public static function habitacionesListaFromPayload(array $data): array
         'nombres_open_url' => HashFSignedLink::tryFromSpec($data['nombres_open_link_spec'] ?? null),
     ];
 
+    $web = rtrim(\frontend\shared\config\AppUrlConfig::getPublicAppBaseUrl(), '/');
+
     return [
         'cabeceras' => ActividadesListaSupport::cabeceras($data['a_cabeceras'] ?? []),
         'botones' => ActividadesListaSupport::botones($data['a_botones'] ?? []),
@@ -139,8 +141,8 @@ public static function habitacionesListaFromPayload(array $data): array
         'camas_con_asistentes' => ActividadesListaSupport::datos($data['camas_con_asistentes'] ?? []),
         'asistentes_sin_cama' => self::asistentesSinCamaList($data['asistentes_sin_cama'] ?? []),
         'solo_vip' => NotasFormSupport::formBoolOrString($data['solo_vip'] ?? ''),
-        'url_update_cama_full' => \frontend\shared\helpers\PayloadCoercion::string($data['url_update_cama_full'] ?? ''),
-        'update_solo_vip_full_url' => \frontend\shared\helpers\PayloadCoercion::string($data['update_solo_vip_full_url'] ?? ''),
+        'url_update_cama_full' => $web . '/src/ubiscamas/update_cama_asistente',
+        'update_solo_vip_full_url' => $web . '/src/ubiscamas/update_solo_vip',
         'ctx_update_solo_vip' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_update_solo_vip'] ?? ''),
         'reload_main_url' => $signed['reload_main_url'],
         'distribucion_open_url' => $signed['distribucion_open_url'],

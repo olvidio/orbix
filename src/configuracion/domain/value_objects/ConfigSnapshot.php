@@ -19,7 +19,7 @@ use src\shared\config\ConfigGlobal;
  * `src\configuracion\application\ObtenerConfigSnapshot`.
  *
  * El mapa histórico de digrafos Latin → entidades HTML para impresión/PDF ya no forma
- * parte de esta clase; está en {@see \frontend\shared\config\OrbixRuntime::latinHtmlEntityReplaceMap()}.
+ * parte de esta clase; está en {@see \src\shared\domain\helpers\LatinHtmlEntities::replaceMap()}.
  *
  * @package orbix
  */

@@ -2,7 +2,7 @@
 
 namespace src\actividadestudios\application;
 
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
@@ -42,7 +42,7 @@ final class CaPosiblesQueData
      */
     public function execute(array $input = []): array
     {
-        $miDele = OrbixRuntime::miDelef();
+        $miDele = ConfigGlobal::mi_delef();
         $cMiDl = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $miDele)));
         $grupoEstudios = null;
         $miGrupo = '';

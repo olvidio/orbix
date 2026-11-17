@@ -56,8 +56,7 @@ Construye el listado de habitaciones/camas de la ubi de una actividad con ocupac
   - `a_botones`: botones (vacío)
   - `a_valores`: filas con sel id_habitacion#id_cama y `ctx_update_cama` cuando hay ocupante
   - `reload_main_link_spec`: link_spec lista_habitaciones
-  - `url_update_cama_full`: URL update_cama_asistente
-  - `update_solo_vip_full_url`: URL update_solo_vip
+  - (las URL de `update_cama_asistente` y `update_solo_vip` las monta el frontend con `AppUrlConfig`)
   - `ctx_update_solo_vip`: HashB firmado
   - `distribucion_open_link_spec`: link_spec distribución
   - `nombres_open_link_spec`: link_spec nombres

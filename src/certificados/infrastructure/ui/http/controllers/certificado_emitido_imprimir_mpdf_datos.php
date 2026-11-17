@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\config\OrbixRuntime;
+use src\shared\domain\helpers\LatinHtmlEntities;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\criteria\AsignaturaField;
@@ -88,7 +88,7 @@ $lugar_firma = (string) $oConfig->lugarFirma;
 
 $oHoy = new DateTimeLocal();
 $lugar_fecha = $lugar_firma . ',  ' . $oHoy->getFechaLatin();
-$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
+$replace = LatinHtmlEntities::replaceMap();
 
 $txt_superavit_1 = $txt_superavit_2 = $curso_filosofia = $any_I = $ECTS = $iudicium = '';
 $curso_teologia = $pie_ects = $any_II = $any_III = $any_IV = $titulo_1 = $titulo_2 = $titulo_3 = '';
