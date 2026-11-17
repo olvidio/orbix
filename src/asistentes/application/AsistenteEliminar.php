@@ -7,6 +7,7 @@ use src\actividadestudios\domain\criteria\MatriculaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 
@@ -52,19 +53,39 @@ final class AsistenteEliminar
             return _("faltan parametros id_activ / id_nom");
         }
 
+        return $this->eliminarAsistente($id_activ, $id_nom)['mensaje'];
+    }
+
+    /**
+     * Comprueba, sin borrar nada, que la asistencia existe y la puede borrar esta dl.
+     *
+     * @return string mensaje de error, o '' si se puede eliminar
+     */
+    public function comprobarQueSePuedeEliminar(int $id_activ, int $id_nom): string
+    {
+        $oAsistente = $this->asistenteApplicationService->findById($id_activ, $id_nom);
+
+        return $this->motivoParaNoEliminar($oAsistente, $id_activ, $id_nom);
+    }
+
+    /**
+     * Elimina la asistencia, cierra el dossier 1301 y borra sus matrículas.
+     *
+     * @return array{eliminado: bool, mensaje: string} `eliminado` dice si se ha borrado la asistencia;
+     *         `mensaje` puede traer también errores al borrar las matrículas (con la asistencia ya borrada)
+     */
+    public function eliminarAsistente(int $id_activ, int $id_nom): array
+    {
         $asistenteAppService = $this->asistenteApplicationService;
         $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
-        if ($oAsistente === null) {
-            return sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $id_nom, $id_activ);
-        }
-
-        if ($oAsistente->perm_modificar() === false) {
-            return _("los datos de asistencia los modifica la dl del asistente");
+        $motivo = $this->motivoParaNoEliminar($oAsistente, $id_activ, $id_nom);
+        if ($motivo !== '' || $oAsistente === null) {
+            return ['eliminado' => false, 'mensaje' => $motivo];
         }
 
         $msg_err = '';
         if ($asistenteAppService->eliminar($oAsistente) === false) {
-            return _("hay un error, no se ha eliminado");
+            return ['eliminado' => false, 'mensaje' => _("hay un error, no se ha eliminado")];
         }
 
         $this->cerrarDossier1301($id_nom);
@@ -80,7 +101,19 @@ final class AsistenteEliminar
                 $msg_err .= _("hay un error, no se ha eliminado");
             }
         }
-        return $msg_err;
+        return ['eliminado' => true, 'mensaje' => $msg_err];
+    }
+
+    private function motivoParaNoEliminar(?Asistente $oAsistente, int $id_activ, int $id_nom): string
+    {
+        if ($oAsistente === null) {
+            return sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $id_nom, $id_activ);
+        }
+        if ($oAsistente->perm_modificar() === false) {
+            return _("los datos de asistencia los modifica la dl del asistente");
+        }
+
+        return '';
     }
 
     private function cerrarDossier1301(int $id_nom): void

@@ -19,8 +19,9 @@ use src\dossiers\domain\value_objects\DossierPk;
  *
  * - `mod === 'nuevo'`: abre el dossier 1301 y guarda el asistente.
  * - `mod === 'editar'`: guarda el asistente existente (valida `perm_modificar`).
- * - `mod === 'mover'`: guarda en `id_activ` (validando plazas, etc.) y solo si
- *   tiene éxito elimina el asistente origen (`id_activ_old`).
+ * - `mod === 'mover'`: comprueba que el origen (`id_activ_old`) se puede borrar,
+ *   guarda en `id_activ` (validando plazas, etc.) y solo si tiene éxito elimina el
+ *   origen; si ese borrado falla, deshace el destino recién creado.
  */
 final class AsistenteGuardar
 {
@@ -101,29 +102,56 @@ final class AsistenteGuardar
             if ($id_activ_old === 0) {
                 return _("falta id_activ_old");
             }
-            $err = $this->guardar($id_activ, $id_nom, $mod, $input);
-            if ($err !== '') {
-                return $err;
-            }
-
-            return $this->asistenteEliminar->execute([
-                'pau' => 'p',
-                'sel' => [],
-                'id_activ' => $id_activ_old,
-                'id_nom' => $id_nom,
-            ]);
+            return $this->mover($id_activ, $id_activ_old, $id_nom, $input);
         }
 
         return $this->guardar($id_activ, $id_nom, $mod, $input);
     }
 
     /**
+     * Apunta a la persona en `id_activ` y la quita de `id_activ_old`, sin dejarla en las dos.
+     *
+     * No hay transacción que abarque las dos tablas (y `application/` no maneja conexiones):
+     * se comprueba antes que el origen se puede borrar y, si aun así falla el borrado,
+     * se quita la asistencia del destino cuando la acabamos de crear.
+     *
      * @param array<string, mixed> $input
      */
-    private function guardar(int $id_activ, int $id_nom, string $mod, array $input): string
+    private function mover(int $id_activ, int $id_activ_old, int $id_nom, array $input): string
+    {
+        $err = $this->asistenteEliminar->comprobarQueSePuedeEliminar($id_activ_old, $id_nom);
+        if ($err !== '') {
+            return $err;
+        }
+
+        $oDestino = null;
+        $destinoNuevo = false;
+        $err = $this->guardar($id_activ, $id_nom, 'mover', $input, $oDestino, $destinoNuevo);
+        if ($err !== '') {
+            return $err;
+        }
+
+        $resultado = $this->asistenteEliminar->eliminarAsistente($id_activ_old, $id_nom);
+        if ($resultado['eliminado'] || $oDestino === null) {
+            return $resultado['mensaje'];
+        }
+        if ($destinoNuevo && $this->asistenteApplicationService->eliminar($oDestino)) {
+            return $resultado['mensaje'];
+        }
+
+        return $resultado['mensaje'] . ' ' . _("La persona sigue apuntada en las dos actividades.");
+    }
+
+    /**
+     * @param array<string, mixed> $input
+     * @param-out Asistente|null $oGuardado asistencia guardada (si se ha guardado)
+     * @param-out bool $esNuevo si la asistencia no existía antes
+     */
+    private function guardar(int $id_activ, int $id_nom, string $mod, array $input, ?Asistente &$oGuardado = null, bool &$esNuevo = false): string
     {
         $asistenteAppService = $this->asistenteApplicationService;
         $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
+        $esNuevo = $oAsistente === null;
         if ($oAsistente === null) {
             if ($mod === 'editar') {
                 return _("los datos de asistencia los modifica la dl del asistente");
@@ -179,6 +207,7 @@ final class AsistenteGuardar
         if ($asistenteAppService->guardar($oAsistente) === false) {
             return _("hay un error, no se ha guardado");
         }
+        $oGuardado = $oAsistente;
         return '';
     }
 

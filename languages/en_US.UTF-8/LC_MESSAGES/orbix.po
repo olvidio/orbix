@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 09:44+0100\n"
+"POT-Creation-Date: 2026-11-17 09:56+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -146,6 +146,7 @@ msgstr "Unknown error"
 #: frontend/personas/view/persona_publicar.phtml:17
 #: frontend/personas/view/stgr_cambio.phtml:13
 #: frontend/personas/view/traslado_form.phtml:32
+#: frontend/shared/helpers/DatosTablaScript.php:27
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
@@ -179,7 +180,6 @@ msgstr "Unknown error"
 #: frontend/zonassacd/view/zona_sacd.phtml:89
 #: frontend/zonassacd/view/zona_sacd.phtml:116
 #: frontend/zonassacd/view/zona_sacd.phtml:132 public/portada.php:76
-#: src/shared/domain/DatosTablaRepo.php:58
 msgid "respuesta"
 msgstr "answer"
 
@@ -347,6 +347,7 @@ msgstr "activity"
 #: frontend/notas/view/acta_select.phtml:47
 #: frontend/notas/view/select_notas_de_una_persona.phtml:16
 #: frontend/procesos/controller/fases_activ_cambio.php:137
+#: frontend/shared/helpers/DatosTablaScript.php:53
 #: frontend/ubis/view/list_ctr.phtml:30
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/ubis_tabla.phtml:6
@@ -407,7 +408,7 @@ msgstr "activity"
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update_inc.php:16
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php:20
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php:20
-#: src/asistentes/application/AsistenteGuardar.php:92
+#: src/asistentes/application/AsistenteGuardar.php:93
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php:17
@@ -541,7 +542,6 @@ msgstr "activity"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
-#: src/shared/domain/DatosTablaRepo.php:84
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:31
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:26
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:43
@@ -1062,7 +1062,7 @@ msgstr "Are you sure you want to delete this type of activity?"
 #: src/actividadtarifas/application/TipoTarifaListaData.php:59
 #: src/certificados/domain/CertificadoEmitidoSelect.php:58
 #: src/configuracion/application/ModulosSelectData.php:48
-#: src/shared/domain/DatosTablaRepo.php:126
+#: src/shared/domain/DatosTablaRepo.php:57
 #: src/ubis/application/ListCtrData.php:337
 #: src/ubis/application/TelecoTablaData.php:113
 #: src/ubis/application/UbisTablaData.php:109
@@ -1345,7 +1345,7 @@ msgstr "save"
 #: src/certificados/domain/CertificadoEmitidoSelect.php:57
 #: src/certificados/domain/Select_certificados_de_una_persona.php:52
 #: src/configuracion/application/ModulosSelectData.php:49
-#: src/shared/domain/DatosTablaRepo.php:127
+#: src/shared/domain/DatosTablaRepo.php:58
 #: src/ubis/application/TelecoTablaData.php:114
 #: src/ubis/application/UbisTablaData.php:112
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
@@ -2344,7 +2344,7 @@ msgstr "curriculum confirmed"
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:291
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:343
 #: src/notas/application/legacy/Resumen.php:349
-#: src/shared/domain/DatosTablaRepo.php:243
+#: src/shared/domain/DatosTablaRepo.php:174
 #: src/ubis/application/TelecoTablaData.php:96
 msgid "sí"
 msgstr "yes"
@@ -2377,7 +2377,7 @@ msgstr "yes"
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:291
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:343
 #: src/notas/application/legacy/Resumen.php:349
-#: src/shared/domain/DatosTablaRepo.php:245
+#: src/shared/domain/DatosTablaRepo.php:176
 #: src/shared/domain/helpers/FuncTablasSupport.php:106
 #: src/ubis/application/CentrosGetPlazasData.php:34
 #: src/ubis/application/TelecoTablaData.php:96
@@ -2528,7 +2528,6 @@ msgid "nueva tarifa"
 msgstr "new rate"
 
 #: frontend/actividadtarifas/controller/tarifa_tipo_actividad.php:53
-#: frontend/pasarela/controller/nombre_form.php:28
 msgid "¿Está seguro que desea quitar esta id_tarifa?"
 msgstr "Are you sure you want to remove this id_tarifa?"
 
@@ -4131,7 +4130,7 @@ msgstr ""
 msgid "debe poner la tabla"
 msgstr "You must specify the table"
 
-#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:32
+#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:31
 #, php-format
 msgid "se ha cambiado el nombre del esquema"
 msgstr "The schema name has been changed"
@@ -8773,10 +8772,6 @@ msgstr "Default value in €"
 msgid "Contribución en concepto de reserva"
 msgstr "Reserve contribution"
 
-#: frontend/pasarela/controller/nombre_form.php:64
-msgid "¿Está seguro que desea borrar este nombre?"
-msgstr "Are you sure you want to delete this name?"
-
 #: frontend/pasarela/helpers/PasarelaExcepcionRender.php:18
 msgid "por defecto"
 msgstr "default"
@@ -9777,6 +9772,11 @@ msgstr "Free days near %s"
 msgid "hay un solape cerca de %s"
 msgstr "There is an overlap near %s"
 
+#: frontend/shared/helpers/DatosTablaScript.php:47
+#: frontend/ubis/view/teleco_tabla.phtml:16
+msgid "¿Está seguro que desea eliminar este registro?"
+msgstr "Are you sure you want to delete this record?"
+
 #: frontend/shared/layouts/BurgerLayout.php:25
 msgid "Oficinas"
 msgstr "Offices"
@@ -10442,7 +10442,7 @@ msgstr "Y"
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
-#: src/asistentes/application/AsistenteGuardar.php:180
+#: src/asistentes/application/AsistenteGuardar.php:208
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
@@ -10931,11 +10931,6 @@ msgstr "location"
 #: src/ubis/domain/entity/TipoTeleco.php:368
 msgid "tipo teleco"
 msgstr "teleco type"
-
-#: frontend/ubis/view/teleco_tabla.phtml:16
-#: src/shared/domain/DatosTablaRepo.php:78
-msgid "¿Está seguro que desea eliminar este registro?"
-msgstr "Are you sure you want to delete this record?"
 
 #: frontend/ubis/view/ubis_buscar.phtml:50
 #: frontend/ubis/view/ubis_buscar.phtml:166
@@ -12375,8 +12370,8 @@ msgstr "id_item is missing"
 #: src/actividades/application/BorrarActividad.php:53
 #: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
-#: src/asistentes/application/AsistenteEliminar.php:67
-#: src/asistentes/application/AsistenteEliminar.php:80
+#: src/asistentes/application/AsistenteEliminar.php:88
+#: src/asistentes/application/AsistenteEliminar.php:101
 #: src/configuracion/application/ModulosUpdateAction.php:65
 #: src/dbextern/application/DesunirPersonaUseCase.php:25
 #: src/dbextern/domain/VincularIdMatch.php:101
@@ -13044,8 +13039,8 @@ msgstr "Note: activities for period %s"
 
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
-#: src/asistentes/application/AsistenteEliminar.php:52
-#: src/asistentes/application/AsistenteGuardar.php:86
+#: src/asistentes/application/AsistenteEliminar.php:53
+#: src/asistentes/application/AsistenteGuardar.php:87
 msgid "faltan parametros id_activ / id_nom"
 msgstr "missing id_activ / id_nom parameters"
 
@@ -13919,29 +13914,33 @@ msgstr "Name of individual"
 msgid "nivel stgr"
 msgstr "stgr level"
 
-#: src/asistentes/application/AsistenteEliminar.php:58
+#: src/asistentes/application/AsistenteEliminar.php:110
 #: src/asistentes/application/AsistenteMoverData.php:77
 #: src/asistentes/application/AsistentePlazaAsignar.php:51
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "assistant not found (id_nom: %s, id_activ: %s)"
 
-#: src/asistentes/application/AsistenteEliminar.php:62
-#: src/asistentes/application/AsistenteGuardar.php:129
-#: src/asistentes/application/AsistenteGuardar.php:137
+#: src/asistentes/application/AsistenteEliminar.php:113
+#: src/asistentes/application/AsistenteGuardar.php:157
+#: src/asistentes/application/AsistenteGuardar.php:165
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:55
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "the assistance data is modified by the dl of the assistant"
 
-#: src/asistentes/application/AsistenteGuardar.php:57
+#: src/asistentes/application/AsistenteGuardar.php:58
 #, php-format
 msgid "mod no soportado: %s"
 msgstr "mod not supported: %s"
 
-#: src/asistentes/application/AsistenteGuardar.php:102
+#: src/asistentes/application/AsistenteGuardar.php:103
 msgid "falta id_activ_old"
 msgstr "missing id_activ_old"
+
+#: src/asistentes/application/AsistenteGuardar.php:142
+msgid "La persona sigue apuntada en las dos actividades."
+msgstr "The person is still enrolled in both activities."
 
 #: src/asistentes/application/AsistenteMoverData.php:194
 #, php-format
@@ -14774,7 +14773,8 @@ msgstr "missing id_ubi or year."
 msgid ""
 "Los gastos se han guardado, pero no se han podido borrar los apuntes "
 "repetidos."
-msgstr "The expenses have been saved, but the duplicate entries could not be deleted."
+msgstr ""
+"The expenses have been saved, but the duplicate entries could not be deleted."
 
 #: src/casas/application/CasaIngresoEliminar.php:28
 #: src/procesos/application/ProcesosEliminar.php:24
@@ -20975,6 +20975,9 @@ msgstr "permission off (unchecked)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permission on (checked)"
+
+#~ msgid "¿Está seguro que desea borrar este nombre?"
+#~ msgstr "Are you sure you want to delete this name?"
 
 #~ msgid "ja veurem"
 #~ msgstr "ja veurem"

@@ -289,9 +289,11 @@ final class AsistenteGuardarTest extends TestCase
         $app->expects($this->never())->method('guardar');
 
         // AsistenteEliminar es final (no mockeable): usamos uno real cuyo colaborador
-        // demuestra que execute() NO se invoca (no llega a buscar ni eliminar nada).
+        // demuestra que el origen solo se consulta (comprobación previa) y no se elimina.
+        $oOrigen = $this->createMock(Asistente::class);
+        $oOrigen->method('perm_modificar')->willReturn(true);
         $elimApp = $this->createMock(AsistenteApplicationService::class);
-        $elimApp->expects($this->never())->method('findById');
+        $elimApp->method('findById')->with(5, 10)->willReturn($oOrigen);
         $elimApp->expects($this->never())->method('eliminar');
         $eliminar = new AsistenteEliminar(
             $elimApp,
@@ -689,26 +691,87 @@ final class AsistenteGuardarTest extends TestCase
         $this->assertNull($guardado->getPropietarioVo());
     }
 
-    /**
-     * Hallazgo: al mover, el destino se guarda antes de borrar el origen y sin transacción. Si el origen no se
-     * puede borrar (no se encuentra, es de otra dl o falla), se devuelve error pero la persona ya está en las dos
-     * actividades.
-     */
-    public function test_mover_si_no_se_puede_borrar_el_origen_devuelve_error_con_el_destino_ya_guardado(): void
+    private function eliminarCon(AsistenteApplicationService $elimApp): AsistenteEliminar
     {
-        $guardado = null;
-        $elimApp = $this->createMock(AsistenteApplicationService::class);
-        $elimApp->method('findById')->willReturn($this->asistenteDe('dlp'));
-        $elimApp->expects($this->never())->method('eliminar');
-        $eliminar = new AsistenteEliminar($elimApp, $this->createMock(MatriculaRepositoryInterface::class), $this->createMock(DossierRepositoryInterface::class));
+        $matRepo = $this->createMock(MatriculaRepositoryInterface::class);
+        $matRepo->method('matching')->willReturn([]);
 
-        $msg = $this->createSut($this->appQueGuarda($guardado), null, null, $eliminar)->execute([
+        return new AsistenteEliminar($elimApp, $matRepo, $this->createMock(DossierRepositoryInterface::class));
+    }
+
+    /** Si el origen es de otra dl no se puede borrar: no se toca el destino. */
+    public function test_mover_con_el_origen_de_otra_dl_no_guarda_el_destino(): void
+    {
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->willReturn(null);
+        $app->expects($this->never())->method('guardar');
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn($this->asistenteDe('dlp'));
+        $elimApp->expects($this->never())->method('eliminar');
+
+        $msg = $this->createSut($app, null, null, $this->eliminarCon($elimApp))->execute([
             'mod' => 'mover', 'id_activ' => 20, 'id_nom' => 10, 'id_activ_old' => 5,
         ]);
 
-        $this->assertNotSame('', $msg);
-        $this->assertInstanceOf(Asistente::class, $guardado);
-        $this->assertSame(20, $guardado->getId_activ());
+        $this->assertSame(_("los datos de asistencia los modifica la dl del asistente"), $msg);
+    }
+
+    public function test_mover_sin_asistencia_en_el_origen_no_guarda_el_destino(): void
+    {
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->willReturn(null);
+        $app->expects($this->never())->method('guardar');
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn(null);
+        $elimApp->expects($this->never())->method('eliminar');
+
+        $msg = $this->createSut($app, null, null, $this->eliminarCon($elimApp))->execute([
+            'mod' => 'mover', 'id_activ' => 20, 'id_nom' => 10, 'id_activ_old' => 5,
+        ]);
+
+        $this->assertSame(sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), 10, 5), $msg);
+    }
+
+    /** Si falla el borrado del origen y el destino es nuevo, se quita el destino: la persona sigue solo en el origen. */
+    public function test_mover_si_falla_el_borrado_del_origen_se_deshace_el_destino_nuevo(): void
+    {
+        $guardado = null;
+        $app = $this->appQueGuarda($guardado);
+        $deshecho = null;
+        $app->expects($this->once())->method('eliminar')->willReturnCallback(function (Asistente $a) use (&$deshecho): bool {
+            $deshecho = $a;
+
+            return true;
+        });
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn($this->asistenteDe('dl'));
+        $elimApp->method('eliminar')->willReturn(false);
+
+        $msg = $this->createSut($app, null, null, $this->eliminarCon($elimApp))->execute([
+            'mod' => 'mover', 'id_activ' => 20, 'id_nom' => 10, 'id_activ_old' => 5,
+        ]);
+
+        $this->assertSame(_("hay un error, no se ha eliminado"), $msg);
+        $this->assertSame($guardado, $deshecho);
+        $this->assertSame(20, $deshecho->getId_activ());
+    }
+
+    /** Si la persona ya estaba en el destino no se borra esa asistencia: se avisa de que queda en las dos. */
+    public function test_mover_si_falla_el_borrado_del_origen_y_ya_estaba_en_el_destino_se_avisa(): void
+    {
+        $guardado = null;
+        $app = $this->appQueGuarda($guardado, $this->asistenteDe('dl'));
+        $app->expects($this->never())->method('eliminar');
+        $elimApp = $this->createMock(AsistenteApplicationService::class);
+        $elimApp->method('findById')->with(5, 10)->willReturn($this->asistenteDe('dl'));
+        $elimApp->method('eliminar')->willReturn(false);
+
+        $msg = $this->createSut($app, null, null, $this->eliminarCon($elimApp))->execute([
+            'mod' => 'mover', 'id_activ' => 20, 'id_nom' => 10, 'id_activ_old' => 5,
+        ]);
+
+        $this->assertStringContainsString(_("hay un error, no se ha eliminado"), $msg);
+        $this->assertStringContainsString(_("La persona sigue apuntada en las dos actividades."), $msg);
     }
 
     public function test_sin_modulo_de_plazas_la_plaza_del_formulario_se_ignora(): void

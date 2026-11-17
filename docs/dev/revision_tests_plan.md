@@ -805,7 +805,7 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 3. Persona de otra dl en una actividad que no es de mi dl: el modelo antiguo la mandaba a `d_asistentes_out`; el actual la rechaza (se deja así salvo que se diga lo contrario).
 
 **Hallazgos (sin corregir):**
-1. `AsistenteGuardar`: un encargo de más de 255 caracteres lanza `InvalidArgumentException`, que `execute()` no captura (solo captura `RuntimeException`). Al mover, el destino se guarda antes de borrar el origen y sin transacción: si el origen no se puede borrar, se devuelve error con la persona ya en las dos actividades.
+1. `AsistenteGuardar`: un encargo de más de 255 caracteres lanza `InvalidArgumentException`, que `execute()` no captura (solo captura `RuntimeException`). ~~Al mover, el destino se guarda antes de borrar el origen y sin transacción: si el origen no se puede borrar, se devuelve error con la persona ya en las dos actividades.~~ **Corregido el 2026-11-17:** se comprueba antes que el origen existe y es de la dl (`AsistenteEliminar::comprobarQueSePuedeEliminar`) y, si aun así falla su borrado, se quita la asistencia del destino cuando se acababa de crear; si la persona ya estaba en el destino, se avisa de que sigue en las dos. No hay transacción: las asistencias y las matrículas pueden ir por conexiones distintas y `PdoUnitOfWork` no admite anidarse. Tests en `AsistenteGuardarTest` (`test_mover_*`).
 2. `AsistenteEliminar` cierra el dossier 1301 aunque la persona tenga otras actividades.
 3. `AsistentePlazaAsignar`: una plaza no numérica se guarda como 0 sin avisar.
 4. `PlazaPropietarioAsignacion`: «permitir sin plaza libre» solo vale si ya hay propietario.

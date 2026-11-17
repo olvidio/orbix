@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 09:44+0100\n"
+"POT-Creation-Date: 2026-11-17 09:56+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -148,6 +148,7 @@ msgstr ""
 #: frontend/personas/view/persona_publicar.phtml:17
 #: frontend/personas/view/stgr_cambio.phtml:13
 #: frontend/personas/view/traslado_form.phtml:32
+#: frontend/shared/helpers/DatosTablaScript.php:27
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
@@ -181,7 +182,6 @@ msgstr ""
 #: frontend/zonassacd/view/zona_sacd.phtml:89
 #: frontend/zonassacd/view/zona_sacd.phtml:116
 #: frontend/zonassacd/view/zona_sacd.phtml:132 public/portada.php:76
-#: src/shared/domain/DatosTablaRepo.php:58
 msgid "respuesta"
 msgstr ""
 
@@ -349,6 +349,7 @@ msgstr ""
 #: frontend/notas/view/acta_select.phtml:47
 #: frontend/notas/view/select_notas_de_una_persona.phtml:16
 #: frontend/procesos/controller/fases_activ_cambio.php:137
+#: frontend/shared/helpers/DatosTablaScript.php:53
 #: frontend/ubis/view/list_ctr.phtml:30
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/ubis_tabla.phtml:6
@@ -409,7 +410,7 @@ msgstr ""
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update_inc.php:16
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php:20
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php:20
-#: src/asistentes/application/AsistenteGuardar.php:92
+#: src/asistentes/application/AsistenteGuardar.php:93
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php:17
@@ -543,7 +544,6 @@ msgstr ""
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
-#: src/shared/domain/DatosTablaRepo.php:84
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:31
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:26
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:43
@@ -1052,7 +1052,7 @@ msgstr ""
 #: src/actividadtarifas/application/TipoTarifaListaData.php:59
 #: src/certificados/domain/CertificadoEmitidoSelect.php:58
 #: src/configuracion/application/ModulosSelectData.php:48
-#: src/shared/domain/DatosTablaRepo.php:126
+#: src/shared/domain/DatosTablaRepo.php:57
 #: src/ubis/application/ListCtrData.php:337
 #: src/ubis/application/TelecoTablaData.php:113
 #: src/ubis/application/UbisTablaData.php:109
@@ -1335,7 +1335,7 @@ msgstr ""
 #: src/certificados/domain/CertificadoEmitidoSelect.php:57
 #: src/certificados/domain/Select_certificados_de_una_persona.php:52
 #: src/configuracion/application/ModulosSelectData.php:49
-#: src/shared/domain/DatosTablaRepo.php:127
+#: src/shared/domain/DatosTablaRepo.php:58
 #: src/ubis/application/TelecoTablaData.php:114
 #: src/ubis/application/UbisTablaData.php:112
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
@@ -2292,7 +2292,7 @@ msgstr ""
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:291
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:343
 #: src/notas/application/legacy/Resumen.php:349
-#: src/shared/domain/DatosTablaRepo.php:243
+#: src/shared/domain/DatosTablaRepo.php:174
 #: src/ubis/application/TelecoTablaData.php:96
 msgid "sí"
 msgstr ""
@@ -2325,7 +2325,7 @@ msgstr ""
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:291
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:343
 #: src/notas/application/legacy/Resumen.php:349
-#: src/shared/domain/DatosTablaRepo.php:245
+#: src/shared/domain/DatosTablaRepo.php:176
 #: src/shared/domain/helpers/FuncTablasSupport.php:106
 #: src/ubis/application/CentrosGetPlazasData.php:34
 #: src/ubis/application/TelecoTablaData.php:96
@@ -2472,7 +2472,6 @@ msgid "nueva tarifa"
 msgstr ""
 
 #: frontend/actividadtarifas/controller/tarifa_tipo_actividad.php:53
-#: frontend/pasarela/controller/nombre_form.php:28
 msgid "¿Está seguro que desea quitar esta id_tarifa?"
 msgstr ""
 
@@ -3959,7 +3958,7 @@ msgstr ""
 msgid "debe poner la tabla"
 msgstr ""
 
-#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:32
+#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:31
 #, php-format
 msgid "se ha cambiado el nombre del esquema"
 msgstr ""
@@ -8421,10 +8420,6 @@ msgstr ""
 msgid "Contribución en concepto de reserva"
 msgstr ""
 
-#: frontend/pasarela/controller/nombre_form.php:64
-msgid "¿Está seguro que desea borrar este nombre?"
-msgstr ""
-
 #: frontend/pasarela/helpers/PasarelaExcepcionRender.php:18
 msgid "por defecto"
 msgstr ""
@@ -9406,6 +9401,11 @@ msgstr ""
 msgid "hay un solape cerca de %s"
 msgstr ""
 
+#: frontend/shared/helpers/DatosTablaScript.php:47
+#: frontend/ubis/view/teleco_tabla.phtml:16
+msgid "¿Está seguro que desea eliminar este registro?"
+msgstr ""
+
 #: frontend/shared/layouts/BurgerLayout.php:25
 msgid "Oficinas"
 msgstr ""
@@ -9994,7 +9994,7 @@ msgstr ""
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
-#: src/asistentes/application/AsistenteGuardar.php:180
+#: src/asistentes/application/AsistenteGuardar.php:208
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
@@ -10482,11 +10482,6 @@ msgstr ""
 #: frontend/ubis/view/teleco_form.phtml:22
 #: src/ubis/domain/entity/TipoTeleco.php:368
 msgid "tipo teleco"
-msgstr ""
-
-#: frontend/ubis/view/teleco_tabla.phtml:16
-#: src/shared/domain/DatosTablaRepo.php:78
-msgid "¿Está seguro que desea eliminar este registro?"
 msgstr ""
 
 #: frontend/ubis/view/ubis_buscar.phtml:50
@@ -11800,8 +11795,8 @@ msgstr ""
 #: src/actividades/application/BorrarActividad.php:53
 #: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
-#: src/asistentes/application/AsistenteEliminar.php:67
-#: src/asistentes/application/AsistenteEliminar.php:80
+#: src/asistentes/application/AsistenteEliminar.php:88
+#: src/asistentes/application/AsistenteEliminar.php:101
 #: src/configuracion/application/ModulosUpdateAction.php:65
 #: src/dbextern/application/DesunirPersonaUseCase.php:25
 #: src/dbextern/domain/VincularIdMatch.php:101
@@ -12462,8 +12457,8 @@ msgstr ""
 
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
-#: src/asistentes/application/AsistenteEliminar.php:52
-#: src/asistentes/application/AsistenteGuardar.php:86
+#: src/asistentes/application/AsistenteEliminar.php:53
+#: src/asistentes/application/AsistenteGuardar.php:87
 msgid "faltan parametros id_activ / id_nom"
 msgstr ""
 
@@ -13279,28 +13274,32 @@ msgstr ""
 msgid "nivel stgr"
 msgstr ""
 
-#: src/asistentes/application/AsistenteEliminar.php:58
+#: src/asistentes/application/AsistenteEliminar.php:110
 #: src/asistentes/application/AsistenteMoverData.php:77
 #: src/asistentes/application/AsistentePlazaAsignar.php:51
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr ""
 
-#: src/asistentes/application/AsistenteEliminar.php:62
-#: src/asistentes/application/AsistenteGuardar.php:129
-#: src/asistentes/application/AsistenteGuardar.php:137
+#: src/asistentes/application/AsistenteEliminar.php:113
+#: src/asistentes/application/AsistenteGuardar.php:157
+#: src/asistentes/application/AsistenteGuardar.php:165
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:55
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr ""
 
-#: src/asistentes/application/AsistenteGuardar.php:57
+#: src/asistentes/application/AsistenteGuardar.php:58
 #, php-format
 msgid "mod no soportado: %s"
 msgstr ""
 
-#: src/asistentes/application/AsistenteGuardar.php:102
+#: src/asistentes/application/AsistenteGuardar.php:103
 msgid "falta id_activ_old"
+msgstr ""
+
+#: src/asistentes/application/AsistenteGuardar.php:142
+msgid "La persona sigue apuntada en las dos actividades."
 msgstr ""
 
 #: src/asistentes/application/AsistenteMoverData.php:194
