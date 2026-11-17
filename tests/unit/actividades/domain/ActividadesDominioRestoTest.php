@@ -184,15 +184,23 @@ final class ActividadesDominioRestoTest extends TestCase
         $this->assertSame(45, $t->getNom_tipoId(), 'un texto que no está en la lista se toma como id');
     }
 
-    /**
-     * Hallazgo: setPosiblesAll(false) quita 'all' del mapa, pero el mapa invertido ya
-     * se calculó en el constructor y es el que se usa: no tiene efecto.
-     */
-    public function test_set_posibles_all_no_tiene_efecto_en_los_textos(): void
+    /** setPosiblesAll(false) quita «all» de las secciones posibles aunque el mapa ya se hubiera consultado. */
+    public function test_set_posibles_all_quita_all_de_las_secciones_posibles(): void
     {
-        $t = new TiposActividades('.');
+        $repo = $this->createMock(\src\actividades\domain\contracts\TipoDeActividadRepositoryInterface::class);
+        $recibido = null;
+        $repo->method('getSfsvPosibles')->willReturnCallback(function (array $aText) use (&$recibido): array {
+            $recibido = $aText;
+
+            return [];
+        });
+        $t = new TiposActividades('.', false, $repo);
+        $t->getSfsvText(); // calcula el mapa invertido antes de quitar «all»
         $t->setPosiblesAll(false);
-        $this->assertSame('all', $t->getSfsvText());
+
+        $t->getSfsvPosibles();
+
+        $this->assertNotContains('all', $recibido);
     }
 
     // --- NivelStgr / Repeticion / TipoDeActividad ---

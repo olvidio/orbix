@@ -104,10 +104,22 @@ final class ActividadEditarTest extends myTest
         $this->assertNotSame('', $this->uc()->execute(['id_activ' => '3001'])['error_txt']);
     }
 
-    /**
-     * Hallazgo: con permiso de crear y procesos instalados, el tipo se compone de cuatro trozos leídos con
-     * `inputInt`, que convierte el «.» (sin elegir) en 0: el aviso «debe seleccionar un tipo» es inalcanzable.
-     */
+    /** Con permiso de crear y procesos instalados, un trozo del tipo sin elegir («.») da el aviso y no se guarda. */
+    public function test_con_permiso_de_crear_un_tipo_sin_elegir_avisa(): void
+    {
+        $this->apps(['procesos']);
+        $this->permisos(true);
+        $a = $this->actividad();
+        $a->expects($this->never())->method('setId_tipo_activ');
+        $this->repo->method('findById')->willReturn($a);
+        $this->repo->expects($this->never())->method('Guardar');
+
+        $r = $this->uc()->execute(['id_activ' => '3001', 'isfsv_val' => '1', 'iasistentes_val' => '.', 'iactividad_val' => '1', 'inom_tipo_val' => '001']);
+
+        $this->assertSame(['error_txt' => _("debe seleccionar un tipo de actividad"), 'tipo_error' => 'tipo'], $r);
+    }
+
+    /** Con permiso de crear y procesos instalados, el tipo se compone de los cuatro trozos. */
     public function test_con_permiso_de_crear_el_tipo_se_compone_de_los_cuatro_trozos(): void
     {
         $this->apps(['procesos']);

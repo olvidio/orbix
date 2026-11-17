@@ -230,6 +230,7 @@ class TiposActividades
     {
         if ($bAll === false) {
             unset ($this->aSfsv['all']);
+            $this->afSfsv = []; // el mapa invertido se vuelve a calcular sin «all»
         }
     }
 

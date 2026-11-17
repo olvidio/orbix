@@ -29,9 +29,9 @@ final class ActividadCambiarTipo
     {
         $Qid_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_activ');
         $Qid_tipo_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'id_tipo_activ');
-        $Qisfsv_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'isfsv_val');
-        $Qiasistentes_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iasistentes_val');
-        $Qiactividad_val = \src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'iactividad_val');
+        $Qisfsv_val = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'isfsv_val');
+        $Qiasistentes_val = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'iasistentes_val');
+        $Qiactividad_val = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'iactividad_val');
         $Qinom_tipo_val = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'inom_tipo_val');
 
         $Qdl_org = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'dl_org');
@@ -55,6 +55,7 @@ final class ActividadCambiarTipo
         if ($Qid_tipo_activ !== 0 && strpos((string) $Qid_tipo_activ, '.') === false) {
             $valor_id_tipo_activ = $Qid_tipo_activ;
         } else {
+            // Trozos como texto: un «.» (sin elegir) tiene que llegar al strpos (con inputInt era 0).
             $condta = $Qisfsv_val . $Qiasistentes_val . $Qiactividad_val . $Qinom_tipo_val;
             if (strpos($condta, '.') === false) {
                 $valor_id_tipo_activ = (int) $condta;

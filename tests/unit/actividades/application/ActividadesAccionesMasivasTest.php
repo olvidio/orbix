@@ -285,21 +285,17 @@ final class ActividadesAccionesMasivasTest extends myTest
         return new ActividadCambiarTipo($repo, $procesos ?? $this->createMock(ActividadProcesoTareaRepositoryInterface::class));
     }
 
-    /**
-     * Hallazgo: los trozos del tipo se leen con `inputInt`, que convierte el «.» (sin elegir) en 0; el
-     * `strpos('.')` posterior nunca se cumple, así que «debe seleccionar un tipo» es inalcanzable y se
-     * compone un id incorrecto (aquí 1031).
-     */
-    public function test_un_tipo_sin_elegir_no_se_detecta_y_compone_un_id_erroneo(): void
+    /** Un trozo del tipo sin elegir («.») da el aviso «debe seleccionar un tipo» y no compone ningún id. */
+    public function test_un_tipo_sin_elegir_avisa_y_no_cambia_el_tipo(): void
     {
         $a = $this->createMock(ActividadAll::class);
-        $a->expects($this->once())->method('setId_tipo_activ')->with(1031);
+        $a->expects($this->never())->method('setId_tipo_activ');
         $uc = $this->cambiar($a, null, $repo);
-        $repo->method('Guardar')->willReturn(true);
+        $repo->expects($this->never())->method('Guardar');
 
         $r = $uc->execute(['id_activ' => '3001', 'isfsv_val' => '1', 'iasistentes_val' => '.', 'iactividad_val' => '3', 'inom_tipo_val' => '1']);
 
-        $this->assertArrayNotHasKey('tipo_error', $r);
+        $this->assertSame('tipo', $r['tipo_error'] ?? null);
     }
 
     public function test_cambiar_tipo_de_una_actividad_inexistente_avisa(): void
