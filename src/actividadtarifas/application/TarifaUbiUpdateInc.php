@@ -31,10 +31,11 @@ final class TarifaUbiUpdateInc
             $tarifa = strtok((string) $key, '#');
             $id_item = (int) strtok('#');
             $cantidadStr = is_scalar($cantidad) ? (string) $cantidad : '0';
-            $cantidadNum = (int) round((float) $cantidadStr);
+            // Importe con céntimos (columna numeric(…, 2)); se admite la coma decimal del formulario.
+            $cantidadNum = round((float) str_replace(',', '.', trim($cantidadStr)), 2);
             unset($tarifa);
 
-            if ($id_item === 0 && $cantidadNum === 0) {
+            if ($id_item === 0 && $cantidadNum === 0.0) {
                 continue;
             }
             if ($id_item === 0) {

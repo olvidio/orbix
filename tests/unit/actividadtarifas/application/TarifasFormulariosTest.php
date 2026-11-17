@@ -87,20 +87,26 @@ final class TarifasFormulariosTest extends myTest
         $this->assertSame('', $r);
     }
 
-    /**
-     * Hallazgo: la cantidad se redondea a entero (`(int) round(...)`) antes de guardarla en un campo `float`:
-     * una tarifa de 12,50 se guarda como 13 y se pierden los céntimos.
-     */
-    public function test_la_cantidad_se_redondea_a_entero_y_se_pierden_los_centimos(): void
+    /** La cantidad conserva los céntimos, escrita con punto o con coma decimal. */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cantidadConCentimosProvider')]
+    public function test_la_cantidad_conserva_los_centimos(string $escrita, float $guardada): void
     {
         $repo = $this->createMock(TarifaUbiRepositoryInterface::class);
         $t = $this->tarifaUbi();
         $repo->method('findById')->willReturn($t);
         $repo->method('Guardar')->willReturn(true);
 
-        (new TarifaUbiUpdateInc($repo))->execute(['inc_cantidad' => ['a#7' => '12.5']]);
+        (new TarifaUbiUpdateInc($repo))->execute(['inc_cantidad' => ['a#7' => $escrita]]);
 
-        $this->assertSame(13.0, $t->getCantidad());
+        $this->assertSame($guardada, $t->getCantidad());
+    }
+
+    /** @return iterable<string, array{string, float}> */
+    public static function cantidadConCentimosProvider(): iterable
+    {
+        yield 'con punto' => ['12.5', 12.5];
+        yield 'con coma' => ['12,50', 12.5];
+        yield 'entera' => ['40', 40.0];
     }
 
     public function test_los_errores_de_guardado_se_acumulan_por_tarifa(): void
