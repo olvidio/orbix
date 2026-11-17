@@ -7,16 +7,16 @@ nombre: "Plano Bytea"
 controller: "frontend/ubis/controller/plano_bytea.php"
 vistas: []
 fragmentos_frontend: ["frontend/ubis/controller/plano_bytea.php"]
-endpoints: []
+endpoints: ["/src/ubis/plano_existe", "/src/ubis/plano_subir", "/src/ubis/plano_download"]
 capacidades: []
-campos: ["form.act", "form.id_direccion", "form.obj_dir", "get.act", "get.id_direccion", "get.obj_dir", "html.name_file", "html.userfile", "post.act", "post.id_direccion", "post.obj_dir"]
-acciones: ["fnjs_buscar", "fnjs_introducir"]
+campos: ["get.act", "get.id_direccion", "get.obj_dir", "get.ctx_plano_subir", "html.userfile", "post.act", "post.id_direccion", "post.obj_dir"]
+acciones: ["fnjs_introducir", "fnjs_subir"]
 estado_revision: "revisado"
 ---
 
 # Plano Bytea
 
-Sube, descarga o elimina el plano (bytea) asociado a una dirección.
+Plano (bytea) de una dirección. `act=comprobar` pregunta a `/src/ubis/plano_existe` y devuelve la URL de descarga firmada (`/src/ubis/plano_download?tk=`); `act=adjuntar` abre la ventana que sube el fichero por AJAX a `/src/ubis/plano_subir` con la cápsula `ctx_plano_subir`. Quitar el plano lo hace la ficha `direcciones_editar` contra `/src/ubis/plano_borrar`.
 
 ## Tipo
 
@@ -35,7 +35,9 @@ No se han detectado vistas PHTML relacionadas.
 
 ## Endpoints Usados
 
-No se han detectado endpoints `/src/...`.
+- `/src/ubis/plano_existe`
+- `/src/ubis/plano_subir` (desde el navegador)
+- `/src/ubis/plano_download` (desde el navegador, con `tk`)
 
 ## Capacidades Relacionadas
 
@@ -43,13 +45,10 @@ No se han detectado capacidades relacionadas.
 
 ## Campos Detectados
 
-- `form.act`
-- `form.id_direccion`
-- `form.obj_dir`
 - `get.act`
 - `get.id_direccion`
 - `get.obj_dir`
-- `html.name_file`
+- `get.ctx_plano_subir`
 - `html.userfile`
 - `post.act`
 - `post.id_direccion`
@@ -57,8 +56,8 @@ No se han detectado capacidades relacionadas.
 
 ## Acciones Detectadas
 
-- `fnjs_buscar`
 - `fnjs_introducir`
+- `fnjs_subir`
 
 ## Ruta de menú
 

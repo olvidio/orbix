@@ -40,6 +40,18 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/direccion_update', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/direccion_update.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/plano_existe', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/plano_existe.php';
+    });
+    $r->addRoute(['POST'], '/src/ubis/plano_subir', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/plano_subir.php';
+    });
+    $r->addRoute(['POST'], '/src/ubis/plano_borrar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/plano_borrar.php';
+    });
+    $r->addRoute(['GET'], '/src/ubis/plano_download', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/plano_download.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/ubis/delegacion_que_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/delegacion_que_data.php';
     });

@@ -9,7 +9,6 @@ use frontend\actividades\helpers\ActividadesListaSupport;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashF;
-use InvalidArgumentException;
 
 final class UbisPayload
 {
@@ -409,77 +408,6 @@ public static function centrosLaborRows(mixed $rows, mixed $bitMap): array
     }
 
     return $out;
-}
-
-/**
- * @return array{plano_nom: string, plano_extension: string, plano_doc: mixed}
- */
-public static function planoDownload(string $obj_dir, int $id_direccion): array
-{
-    $raw = match ($obj_dir) {
-        'DireccionCentro' => UbisPlanoBridge::planoDownload('DireccionCentro', $id_direccion),
-        'DireccionCentroDl' => UbisPlanoBridge::planoDownload('DireccionCentroDl', $id_direccion),
-        'DireccionCentroEx' => UbisPlanoBridge::planoDownload('DireccionCentroEx', $id_direccion),
-        'DireccionCdc' => UbisPlanoBridge::planoDownload('DireccionCdc', $id_direccion),
-        'DireccionCdcDl' => UbisPlanoBridge::planoDownload('DireccionCdcDl', $id_direccion),
-        'DireccionCdcEx' => UbisPlanoBridge::planoDownload('DireccionCdcEx', $id_direccion),
-        default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
-    };
-
-    return [
-        'plano_nom' => \frontend\shared\helpers\PayloadCoercion::string($raw['plano_nom'] ?? ''),
-        'plano_extension' => \frontend\shared\helpers\PayloadCoercion::string($raw['plano_extension'] ?? ''),
-        'plano_doc' => $raw['plano_doc'] ?? null,
-    ];
-}
-
-public static function planoUpload(string $obj_dir, int $id_direccion, string $nom, string $extension, mixed $fichero): void
-{
-    $payload = is_string($fichero) || is_resource($fichero) ? $fichero : null;
-    match ($obj_dir) {
-        'DireccionCentro' => UbisPlanoBridge::planoUpload('DireccionCentro', $id_direccion, $nom, $extension, $payload),
-        'DireccionCentroDl' => UbisPlanoBridge::planoUpload('DireccionCentroDl', $id_direccion, $nom, $extension, $payload),
-        'DireccionCentroEx' => UbisPlanoBridge::planoUpload('DireccionCentroEx', $id_direccion, $nom, $extension, $payload),
-        'DireccionCdc' => UbisPlanoBridge::planoUpload('DireccionCdc', $id_direccion, $nom, $extension, $payload),
-        'DireccionCdcDl' => UbisPlanoBridge::planoUpload('DireccionCdcDl', $id_direccion, $nom, $extension, $payload),
-        'DireccionCdcEx' => UbisPlanoBridge::planoUpload('DireccionCdcEx', $id_direccion, $nom, $extension, $payload),
-        default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
-    };
-}
-
-public static function planoBorrar(string $obj_dir, int $id_direccion): void
-{
-    match ($obj_dir) {
-        'DireccionCentro' => UbisPlanoBridge::planoBorrar('DireccionCentro', $id_direccion),
-        'DireccionCentroDl' => UbisPlanoBridge::planoBorrar('DireccionCentroDl', $id_direccion),
-        'DireccionCentroEx' => UbisPlanoBridge::planoBorrar('DireccionCentroEx', $id_direccion),
-        'DireccionCdc' => UbisPlanoBridge::planoBorrar('DireccionCdc', $id_direccion),
-        'DireccionCdcDl' => UbisPlanoBridge::planoBorrar('DireccionCdcDl', $id_direccion),
-        'DireccionCdcEx' => UbisPlanoBridge::planoBorrar('DireccionCdcEx', $id_direccion),
-        default => throw new InvalidArgumentException("obj_dir desconocido: $obj_dir"),
-    };
-}
-
-/**
- * @return array{error: int, name: string, tmp_name: string, filename: string, extension: string}
- */
-public static function uploadFileFromPost(mixed $files): array
-{
-    if (!is_array($files)) {
-        return ['error' => UPLOAD_ERR_NO_FILE, 'name' => '', 'tmp_name' => '', 'filename' => '', 'extension' => ''];
-    }
-    $error = \frontend\shared\helpers\PayloadCoercion::int($files['error'] ?? UPLOAD_ERR_NO_FILE);
-    $name = \frontend\shared\helpers\PayloadCoercion::string($files['name'] ?? '');
-    $tmpName = \frontend\shared\helpers\PayloadCoercion::string($files['tmp_name'] ?? '');
-    $pathParts = pathinfo($name);
-
-    return [
-        'error' => $error,
-        'name' => $name,
-        'tmp_name' => $tmpName,
-        'filename' => \frontend\shared\helpers\PayloadCoercion::string($pathParts['filename']),
-        'extension' => \frontend\shared\helpers\PayloadCoercion::string($pathParts['extension'] ?? ''),
-    ];
 }
 
 /**

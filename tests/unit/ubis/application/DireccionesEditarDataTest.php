@@ -33,10 +33,77 @@ use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+use src\permisos\domain\MenuDlPermissionBits;
+use src\permisos\domain\XPermisos;
 use src\ubis\domain\entity\Centro;
+use src\ubis\domain\entity\CentroEx;
+use src\ubis\domain\entity\Direccion;
+use src\ubis\domain\entity\DireccionDetalle;
 
 final class DireccionesEditarDataTest extends TestCase
 {
+    private mixed $permAnterior = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->permAnterior = $_SESSION['oPerm'] ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->permAnterior === null) {
+            unset($_SESSION['oPerm']);
+        } else {
+            $_SESSION['oPerm'] = $this->permAnterior;
+        }
+        parent::tearDown();
+    }
+
+    public function test_quien_puede_modificar_recibe_las_capsulas_del_plano_de_la_direccion_que_ve(): void
+    {
+        $this->permisoScdl(true);
+
+        $data = $this->editarCentroEx();
+
+        $contexto = ['obj_dir' => 'DireccionCentroEx', 'id_direccion' => 345];
+        $this->assertSame($contexto, HashB::open($data['ctx_plano_subir'], 'plano_subir'));
+        $this->assertSame($contexto, HashB::open($data['ctx_plano_borrar'], 'plano_borrar'));
+    }
+
+    public function test_sin_permiso_para_modificar_no_hay_capsulas_del_plano(): void
+    {
+        $this->permisoScdl(false);
+
+        $data = $this->editarCentroEx();
+
+        $this->assertSame('', $data['ctx_plano_subir']);
+        $this->assertSame('', $data['ctx_plano_borrar']);
+    }
+
+    /** @return array<string, mixed> */
+    private function editarCentroEx(): array
+    {
+        $detalle = $this->createMock(DireccionDetalle::class);
+        $detalle->method('getDireccionVo')->willReturn($this->createMock(Direccion::class));
+        $centro = $this->createMock(CentroEx::class);
+        $centro->method('getDl')->willReturn('xyz');
+        $centro->method('getUnaDireccionDetallada')->with(345)->willReturn($detalle);
+        $centroExRepo = $this->createMock(CentroExRepositoryInterface::class);
+        $centroExRepo->method('findById')->with(77)->willReturn($centro);
+
+        $useCase = new DireccionesEditarData($this->resolver(null, $centroExRepo), $this->ubiRepositoryResolver());
+
+        return $useCase->execute(77, 'editar', 'DireccionCentroEx', '345', 0, '');
+    }
+
+    private function permisoScdl(bool $tiene): void
+    {
+        $perm = $this->createMock(XPermisos::class);
+        $perm->method('have_perm_oficina')->willReturnCallback(fn (string $o): bool => $tiene && $o === MenuDlPermissionBits::SCDL);
+        $_SESSION['oPerm'] = $perm;
+    }
+
     public function test_modo_nuevo_emite_ctx_guardar_y_ctx_quitar_atados_al_contexto(): void
     {
         $centro = $this->createMock(Centro::class);
@@ -76,7 +143,7 @@ final class DireccionesEditarDataTest extends TestCase
         $this->assertArrayNotHasKey('ctx_guardar', $data);
     }
 
-    private function resolver(?CentroRepositoryInterface $centroRepo = null): DireccionesResolver
+    private function resolver(?CentroRepositoryInterface $centroRepo = null, ?CentroExRepositoryInterface $centroExRepo = null): DireccionesResolver
     {
         return new DireccionesResolver(
             $this->createMock(DireccionCentroRepositoryInterface::class),
@@ -87,7 +154,7 @@ final class DireccionesEditarDataTest extends TestCase
             $this->createMock(DireccionCasaExRepositoryInterface::class),
             $centroRepo ?? $this->createMock(CentroRepositoryInterface::class),
             $this->createMock(CentroDlRepositoryInterface::class),
-            $this->createMock(CentroExRepositoryInterface::class),
+            $centroExRepo ?? $this->createMock(CentroExRepositoryInterface::class),
             $this->createMock(CasaRepositoryInterface::class),
             $this->createMock(CasaDlRepositoryInterface::class),
             $this->createMock(CasaExRepositoryInterface::class),

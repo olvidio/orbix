@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "ubis"
-endpoints: 41
+endpoints: 45
 estado_revision: "generado"
 ---
 
@@ -157,6 +157,7 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Controller: `src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php`
 - Entrada: `post.id_ubi:integer`, `post.mod:string`, `post.obj_dir:string`, `post.id_direccion:string`, `post.idx:integer`, `post.inc:string`
 - Respuesta: incluye `ctx_guardar` / `ctx_quitar`, cápsulas `HashB` para `direccion_update` / `direcciones_quitar` atadas a `{obj_dir, id_ubi, idx, id_direccion}` (ausentes si `sin_direccion` es `true`)
+- Respuesta: `ctx_plano_subir` / `ctx_plano_borrar`, cápsulas `HashB` para `plano_subir` / `plano_borrar` atadas a `{obj_dir, id_direccion}` de la dirección que se ve; vacías si el usuario no puede modificarla
 - Respuesta: `standard_envelope_string_data`
 
 ## `/src/ubis/direcciones_que`
@@ -201,6 +202,34 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Controller: `src/ubis/infrastructure/ui/http/controllers/lista_ctrs_data.php`
 - Entrada: ninguna detectada.
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/ubis/plano_borrar`
+
+- Id: `ubis.plano_borrar`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/plano_borrar.php`
+- Entrada: `post.ctx_plano_borrar:string` (cápsula `HashB` acción `plano_borrar`, contexto `{obj_dir, id_direccion}`; emitida por `direcciones_editar`)
+- Respuesta: `standard_envelope_string_data` (`"ok"`)
+
+## `/src/ubis/plano_download`
+
+- Id: `ubis.plano_download`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/plano_download.php`
+- Entrada: `get.tk:string` (`SignedDownloadToken`, alcance `ubis.plano`, con `id` y `o` = `obj_dir`; lo genera `frontend/ubis/controller/plano_bytea.php?act=comprobar`)
+- Respuesta: binario del plano (400 si el token no vale, 404 si no hay plano)
+
+## `/src/ubis/plano_existe`
+
+- Id: `ubis.plano_existe`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/plano_existe.php`
+- Entrada: `post.obj_dir:string`, `post.id_direccion:integer`
+- Respuesta: `standard_envelope_string_data` (`existe: bool`)
+
+## `/src/ubis/plano_subir`
+
+- Id: `ubis.plano_subir`
+- Controller: `src/ubis/infrastructure/ui/http/controllers/plano_subir.php`
+- Entrada: multipart `userfile` + `post.ctx_plano_subir:string` (cápsula `HashB` acción `plano_subir`, contexto `{obj_dir, id_direccion}`; emitida por `direcciones_editar`)
+- Respuesta: `standard_envelope_string_data` (`"ok"`); 413 si el fichero supera el límite
 
 ## `/src/ubis/teleco_desc_lista`
 

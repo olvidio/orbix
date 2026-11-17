@@ -17,7 +17,7 @@ use src\utils_database\domain\GenerateIdGlobal;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCentroDlRepository extends PgDireccionRepository implements DireccionCentroDlRepositoryInterface
+class PgDireccionCentroDlRepository extends PgDireccionRepository implements DireccionCentroDlRepositoryInterface, \src\ubis\domain\contracts\PlanoRepositoryInterface
 {
     use PlanoOperationsTrait;
 

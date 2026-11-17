@@ -114,6 +114,15 @@ final class DireccionesEditarData
         $data['ctx_guardar'] = HashB::sign('direccion_update', $contexto);
         $data['ctx_quitar'] = HashB::sign('direcciones_quitar', $contexto);
 
+        // Plano de la dirección que se ve: solo quien puede modificarla lo sube o lo quita.
+        $data['ctx_plano_subir'] = '';
+        $data['ctx_plano_borrar'] = '';
+        if ($data['botones'] !== '0' && (int) $data['id_direccion_actual'] > 0) {
+            $contextoPlano = ['obj_dir' => $obj_dir, 'id_direccion' => (int) $data['id_direccion_actual']];
+            $data['ctx_plano_subir'] = HashB::sign('plano_subir', $contextoPlano);
+            $data['ctx_plano_borrar'] = HashB::sign('plano_borrar', $contextoPlano);
+        }
+
         return $data;
     }
 }

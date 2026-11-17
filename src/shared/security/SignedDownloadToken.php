@@ -19,6 +19,8 @@ final class SignedDownloadToken
 
     public const SCOPE_CERT_RECIBIDO = 'cert.recibido';
 
+    public const SCOPE_UBIS_PLANO = 'ubis.plano';
+
     private const ENV_SECRET = 'ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET';
 
     private const TTL_SECONDS = 600;
@@ -87,10 +89,16 @@ final class SignedDownloadToken
         return self::mint(self::SCOPE_CERT_RECIBIDO, ['id' => $idItem]);
     }
 
+    /** Plano de una dirección: `o` es el tipo de dirección (`DireccionCentro`, `DireccionCdcDl`, …). */
+    public static function tokenPlanoDireccion(string $objDir, int $idDireccion): string
+    {
+        return self::mint(self::SCOPE_UBIS_PLANO, ['id' => $idDireccion, 'o' => $objDir]);
+    }
+
     /**
      * Parsea `tk`; devuelve `null` si no es válido. No consume en servidor (uso idempotente; caducidad `e`).
      *
-     * @return array{s: string, e: int, a?: string, id?: int}|null
+     * @return array{s: string, e: int, a?: string, id?: int, o?: string}|null
      */
     public static function parse(?string $tk): ?array
     {
@@ -149,6 +157,16 @@ final class SignedDownloadToken
             }
 
             return ['s' => $scope, 'e' => $exp, 'id' => $id];
+        }
+
+        if ($scope === self::SCOPE_UBIS_PLANO) {
+            $id = self::parseClaimInt($data['id'] ?? null);
+            $objDir = self::parseClaimString($data['o'] ?? null);
+            if ($id <= 0 || $objDir === '') {
+                return null;
+            }
+
+            return ['s' => $scope, 'e' => $exp, 'id' => $id, 'o' => $objDir];
         }
 
         return null;

@@ -19,6 +19,7 @@ final class ControladoresSinExitTest extends myTest
         'certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_download.php' => 'descarga de binario',
         'certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_download.php' => 'descarga de binario',
         'notas/infrastructure/ui/http/controllers/acta_pdf_download.php' => 'descarga de binario',
+        'ubis/infrastructure/ui/http/controllers/plano_download.php' => 'descarga de binario',
         'usuarios/infrastructure/ui/http/controllers/check_first_login_2fa.php' => 'endpoint de navegación (redirige con header)',
         'menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php' => 'cierre $fail(): never tras ContestarJson',
     ];

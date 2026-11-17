@@ -50,19 +50,33 @@ use frontend\shared\config\AppUrlConfig;
             url: url,
             data: parametros,
             onSuccess: function (data) {
-                if (data.exists === true || data.text === 'si') {
-                    var pagina = url + '?id_direccion=' + id_direccion + '&act=download&obj_dir=<?= $obj_dir ?><?= $h ?>';
-                    top.newWin = window.open(pagina, "abrir", ""); top.newWin.focus();
+                if ((data.exists === true || data.text === 'si') && data.url) {
+                    top.newWin = window.open(data.url, "abrir", ""); top.newWin.focus();
                 } else {
                     alert(<?= json_encode(_("No existe ningún plano")) ?>);
                 }
             }
         });
     }
-    fnjs_adjuntar = function (act, id_direccion) {
-        var pagina = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
+    fnjs_adjuntar = function (id_direccion) {
+        var pagina = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=adjuntar&obj_dir=<?= $obj_dir ?>&ctx_plano_subir=' + encodeURIComponent(<?= json_encode($ctx_plano_subir) ?>) + '<?= $h_adjuntar ?>';
         top.newWin = window.open(pagina, "files", "dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes");
         top.newWin.focus();
+    }
+    fnjs_eliminar_plano = function () {
+        if (!confirm(<?= json_encode(_("¿Está seguro que desea eliminar este registro?")) ?>)) {
+            return;
+        }
+        $.ajax({
+            url: <?= json_encode($url_plano_borrar) ?>,
+            method: 'POST',
+            data: {ctx_plano_borrar: <?= json_encode($ctx_plano_borrar) ?>},
+            dataType: 'json'
+        }).done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            }
+        });
     }
     fnjs_otro = function (n) { go_dir = '<?= $go_dir ?>'; if (n == 1) { go_dir += '&inc=menos'; } if (n == 2) { go_dir += '&inc=mas'; } fnjs_update_div('#ficha', go_dir); }
 </script>
@@ -89,7 +103,7 @@ use frontend\shared\config\AppUrlConfig;
 <?php if (!empty($botones)) { ?>
 <form id='frm1' name="frm1" action='frontend/ubis/controller/plano_bytea.php'>
     <input type=hidden name=sel value='dani'><input type=hidden id=que name=que value=''>
-    <table><tr><td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _("ver plano") ?></td><td class='link' onclick="fnjs_adjuntar('adjuntar',<?= $id_direccion_actual ?>)"><?= _("adjuntar plano") ?></td><td class='link' onclick="fnjs_adjuntar('eliminar',<?= $id_direccion_actual ?>)"><?= _("eliminar plano") ?></td></tr></table>
+    <table><tr><td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _("ver plano") ?></td><td class='link' onclick="fnjs_adjuntar(<?= $id_direccion_actual ?>)"><?= _("adjuntar plano") ?></td><td class='link' onclick="fnjs_eliminar_plano()"><?= _("eliminar plano") ?></td></tr></table>
 </form><br>
 <table><tr class=botones>
 <?php $b = strtok($botones, ","); while ($b) { if ($b == 1) { echo "<th class='link_inv' onclick=\"fnjs_guardar_dir('#frm2');\">" . ucwords(_("guardar cambios")) . "</th>"; } if ($b == 3) { echo "<th class='link_inv' onclick='fnjs_eliminar($idx)'>" . ucwords(_("eliminar dirección")) . "</th>"; } if ($b == 4) { echo "<th class='link_inv' onclick='fnjs_quitar_dir($idx)'>" . ucwords(_("quitar dirección")) . "</th>"; } if ($b == 5) { echo "<th class='link_inv' onclick='fnjs_add_dir()'>" . ucwords(_("añadir dirección")) . "</th>"; } $b = strtok(","); } ?>

@@ -15,7 +15,7 @@ use src\ubis\domain\contracts\PlanoOperationsTrait;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCentroRepository extends PgDireccionRepository implements DireccionCentroRepositoryInterface
+class PgDireccionCentroRepository extends PgDireccionRepository implements DireccionCentroRepositoryInterface, \src\ubis\domain\contracts\PlanoRepositoryInterface
 {
     use PlanoOperationsTrait;
 

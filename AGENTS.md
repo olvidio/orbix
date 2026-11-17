@@ -707,7 +707,7 @@ Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios d
 
 **UI (listas con checkbox `sel`):** en el controlador **frontend** que monta la tabla, generar un mapa **valor de `sel` → URL firmada** con los métodos estáticos del helper (`urlNotasActa`, `urlCertificadoEmitido`, `urlCertificadoRecibido`), serializarlo a JSON (`json_encode(..., JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP)`) y pasarlo a la vista; en JS, **`window.open(mapa[key])`** (patrón alineado con `frontend/notas/view/acta_select.phtml`, `frontend/certificados/view/certificado_emitido_lista.phtml`, bloque dossier renderizado por `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaRender.php`).
 
-**Alcances definidos (`s`):** `notas.acta`, `cert.emitido`, `cert.recibido`. Para otros recursos GET (p. ej. planos subidos desde **`frontend/ubis/controller/plano_bytea.php`**) el flujo puede seguir siendo **`HashF` + `plano_bytea.php`** hasta que exista alcance dedicado en `SignedDownloadToken` y endpoint en `src/`.
+**Alcances definidos (`s`):** `notas.acta`, `cert.emitido`, `cert.recibido`, `ubis.plano` (plano de una dirección: `/src/ubis/plano_download`, URL generada por `frontend/ubis/controller/plano_bytea.php?act=comprobar`).
 
 ---
 

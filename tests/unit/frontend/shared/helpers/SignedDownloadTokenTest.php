@@ -44,6 +44,19 @@ final class SignedDownloadTokenTest extends TestCase
         $this->assertSame(7, $recibido['id'] ?? null);
     }
 
+    public function test_url_plano_lleva_tipo_de_direccion_e_id(): void
+    {
+        $url = SignedDownloadToken::urlPlanoDireccion('DireccionCdcDl', 12);
+        $plano = Token::parse(self::tk($url));
+
+        $this->assertStringContainsString('/src/ubis/plano_download?tk=', $url);
+        $this->assertSame(SignedDownloadToken::SCOPE_UBIS_PLANO, $plano['s'] ?? null);
+        $this->assertSame(12, $plano['id'] ?? null);
+        $this->assertSame('DireccionCdcDl', $plano['o'] ?? null);
+        $this->assertSame('', SignedDownloadToken::urlPlanoDireccion('', 12));
+        $this->assertSame('', SignedDownloadToken::urlPlanoDireccion('DireccionCdcDl', 0));
+    }
+
     public function test_sin_identificador_no_hay_url(): void
     {
         $this->assertSame('', SignedDownloadToken::urlNotasActa(''));

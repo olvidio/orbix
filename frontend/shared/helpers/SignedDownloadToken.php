@@ -21,6 +21,8 @@ final class SignedDownloadToken
 
     public const SCOPE_CERT_RECIBIDO = Token::SCOPE_CERT_RECIBIDO;
 
+    public const SCOPE_UBIS_PLANO = Token::SCOPE_UBIS_PLANO;
+
     private static function buildUrl(string $pathSuffix, string $tk): string
     {
         $base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
@@ -53,5 +55,14 @@ final class SignedDownloadToken
         }
 
         return self::buildUrl('/src/certificados/certificado_recibido_pdf_download', Token::tokenCertificadoRecibido($idItem));
+    }
+
+    public static function urlPlanoDireccion(string $objDir, int $idDireccion): string
+    {
+        if ($objDir === '' || $idDireccion <= 0) {
+            return '';
+        }
+
+        return self::buildUrl('/src/ubis/plano_download', Token::tokenPlanoDireccion($objDir, $idDireccion));
     }
 }

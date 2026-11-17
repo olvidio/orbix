@@ -109,6 +109,11 @@ $oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
 $h = $oHashPlano2->linkSinValParams();
 
+$oHashPlanoAdjuntar = new HashF();
+$oHashPlanoAdjuntar->setUrl('frontend/ubis/controller/plano_bytea.php');
+$oHashPlanoAdjuntar->setCamposForm('obj_dir!act!id_direccion!ctx_plano_subir');
+$h_adjuntar = $oHashPlanoAdjuntar->linkSinValParams();
+
 $a_campos = UbisPayload::viewVars($data, [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -121,6 +126,10 @@ $a_campos = UbisPayload::viewVars($data, [
     'go_dir' => $go_dir,
     'h' => $h,
     'h_asignar' => $h_asignar,
+    'h_adjuntar' => $h_adjuntar,
+    'ctx_plano_subir' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_plano_subir'] ?? ''),
+    'ctx_plano_borrar' => \frontend\shared\helpers\PayloadCoercion::string($data['ctx_plano_borrar'] ?? ''),
+    'url_plano_borrar' => AppUrlConfig::srcBrowserUrl('/src/ubis/plano_borrar'),
     'goInfo' => $goInfo,
     'url_direccion_update' => 'frontend/ubis/controller/direccion_update.php',
     'url_direcciones_quitar' => 'frontend/ubis/controller/direcciones_quitar.php',
