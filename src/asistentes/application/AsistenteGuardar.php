@@ -42,7 +42,8 @@ final class AsistenteGuardar
     {
         try {
             return $this->executeInner($input, $fijado);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException|\InvalidArgumentException $e) {
+            // InvalidArgumentException: validación de un VO (p. ej. un campo demasiado largo).
             return $e->getMessage();
         }
     }
@@ -92,6 +93,10 @@ final class AsistenteGuardar
             if ($esperado !== 0 && $esperado !== $valor) {
                 return _("Operación no autorizada");
             }
+        }
+
+        if (mb_strlen(\src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'encargo')) > 255) {
+            return _("El encargo no puede tener más de 255 caracteres.");
         }
 
         if ($mod === 'nuevo') {

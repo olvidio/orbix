@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 13:44+0100\n"
+"POT-Creation-Date: 2026-11-17 14:09+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -410,7 +410,7 @@ msgstr "activity"
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tarifa_ubi_update_inc.php:16
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_eliminar.php:20
 #: src/actividadtarifas/infrastructure/ui/http/controllers/tipo_tarifa_update.php:20
-#: src/asistentes/application/AsistenteGuardar.php:93
+#: src/asistentes/application/AsistenteGuardar.php:94
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_eliminar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_guardar.php:17
 #: src/asistentes/infrastructure/ui/http/controllers/asistente_plaza_asignar.php:17
@@ -1106,17 +1106,17 @@ msgstr "Activity not found"
 #: frontend/planning/controller/planning_persona_que.php:90
 #: frontend/ubis/view/ubis_buscar.phtml:94
 #: frontend/ubis/view/ubis_buscar.phtml:292
-#: src/actividades/domain/entity/TiposActividades.php:275
+#: src/actividades/domain/entity/TiposActividades.php:276
 msgid "numerarios"
 msgstr "numeraries"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:233
-#: src/actividades/domain/entity/TiposActividades.php:275
+#: src/actividades/domain/entity/TiposActividades.php:276
 msgid "numerarias"
 msgstr "Numeraries"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:236
-#: src/actividades/domain/entity/TiposActividades.php:278
+#: src/actividades/domain/entity/TiposActividades.php:279
 msgid "numerarias auxiliares"
 msgstr "Auxiliary Numeraries"
 
@@ -1126,37 +1126,37 @@ msgstr "Auxiliary Numeraries"
 #: frontend/notas/view/asig_faltan_que.phtml:64
 #: frontend/notas/view/resumen_anual.phtml:21
 #: frontend/planning/controller/planning_persona_que.php:92
-#: src/actividades/domain/entity/TiposActividades.php:281
+#: src/actividades/domain/entity/TiposActividades.php:282
 msgid "agregados"
 msgstr "associates"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:239
-#: src/actividades/domain/entity/TiposActividades.php:281
+#: src/actividades/domain/entity/TiposActividades.php:282
 msgid "agregadas"
 msgstr "associates"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:242
-#: src/actividades/domain/entity/TiposActividades.php:284
+#: src/actividades/domain/entity/TiposActividades.php:285
 msgid "coperadores"
 msgstr "Cooperators"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:242
-#: src/actividades/domain/entity/TiposActividades.php:284
+#: src/actividades/domain/entity/TiposActividades.php:285
 msgid "coperadoras"
 msgstr "cooperating partners"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:247
-#: src/actividades/domain/entity/TiposActividades.php:289
+#: src/actividades/domain/entity/TiposActividades.php:290
 msgid "curso de retiro"
 msgstr "retreat course"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:250
-#: src/actividades/domain/entity/TiposActividades.php:292
+#: src/actividades/domain/entity/TiposActividades.php:293
 msgid "curso anual"
 msgstr "annual course"
 
 #: frontend/actividades/helpers/TiposDeActividades.php:253
-#: src/actividades/domain/entity/TiposActividades.php:295
+#: src/actividades/domain/entity/TiposActividades.php:296
 #: src/pasarela/application/Conversiones.php:210
 msgid "convivencia"
 msgstr "convivence"
@@ -10420,12 +10420,12 @@ msgid "y"
 msgstr "Y"
 
 #: frontend/shared/web/TablaEditable.php:873
-#: src/actividadcargos/application/ActividadCargoEditar.php:81
+#: src/actividadcargos/application/ActividadCargoEditar.php:84
 #: src/actividadcargos/application/ActividadCargoNuevo.php:69
-#: src/actividades/application/ActividadCambiarTipo.php:102
+#: src/actividades/application/ActividadCambiarTipo.php:103
 #: src/actividades/application/ActividadDuplicar.php:60
-#: src/actividades/application/ActividadEditar.php:141
-#: src/actividades/application/ActividadEditar.php:190
+#: src/actividades/application/ActividadEditar.php:142
+#: src/actividades/application/ActividadEditar.php:191
 #: src/actividades/application/ActividadNueva.php:166
 #: src/actividades/application/ActividadNueva.php:198
 #: src/actividades/application/ActividadNuevoCurso.php:293
@@ -10453,7 +10453,7 @@ msgstr "Y"
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
-#: src/asistentes/application/AsistenteGuardar.php:208
+#: src/asistentes/application/AsistenteGuardar.php:213
 #: src/asistentes/application/AsistentePlazaAsignar.php:79
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
@@ -10503,7 +10503,7 @@ msgstr "Y"
 #: src/inventario/application/EquipajeTextoGuardar.php:64
 #: src/inventario/application/EquipajeTextoGuardar.php:73
 #: src/menus/application/MenuCopiar.php:45
-#: src/menus/application/MenuGuardar.php:66
+#: src/menus/application/MenuGuardar.php:67
 #: src/menus/application/MenuMover.php:25
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:45
 #: src/misas/application/cuadricula_zona_grid_data_build.php:111
@@ -12338,38 +12338,38 @@ msgstr "Only the items that have been displayed are selected."
 msgid "Sólo puede seleccionar un elemento. Ha selecionado %s."
 msgstr "You can only select one item. You have selected %s."
 
-#: src/actividadcargos/application/ActividadCargoEditar.php:57
+#: src/actividadcargos/application/ActividadCargoEditar.php:60
 #: src/actividadcargos/application/ActividadCargoNuevo.php:53
 msgid "faltan parametros id_activ / id_nom / id_cargo"
 msgstr "missing id_activ / id_nom / id_cargo parameters"
 
-#: src/actividadcargos/application/ActividadCargoEditar.php:66
-#: src/actividadcargos/application/ActividadCargoEliminar.php:65
+#: src/actividadcargos/application/ActividadCargoEditar.php:69
+#: src/actividadcargos/application/ActividadCargoEliminar.php:68
 #: src/actividadcargos/application/FormCargosDeActividadData.php:88
 #: src/actividadcargos/application/FormCargosPersonasEnActividadData.php:82
 msgid "no encuentro el cargo"
 msgstr "position not found"
 
-#: src/actividadcargos/application/ActividadCargoEditar.php:79
+#: src/actividadcargos/application/ActividadCargoEditar.php:82
 #: src/actividadcargos/application/ActividadCargoNuevo.php:67
 msgid "ya existe este cargo para esta actividad"
 msgstr "this position already exists for this activity"
 
-#: src/actividadcargos/application/ActividadCargoEditar.php:102
+#: src/actividadcargos/application/ActividadCargoEditar.php:105
 #: src/actividadcargos/application/ActividadCargoNuevo.php:110
 msgid "hay un error, no se ha guardado el asistente"
 msgstr "there is an error, the attendee has not been saved"
 
-#: src/actividadcargos/application/ActividadCargoEditar.php:111
-#: src/actividadcargos/application/ActividadCargoEliminar.php:106
+#: src/actividadcargos/application/ActividadCargoEditar.php:114
+#: src/actividadcargos/application/ActividadCargoEliminar.php:109
 msgid "hay un error, no se ha eliminado el asistente"
 msgstr "there is an error, the attendee has not been deleted"
 
-#: src/actividadcargos/application/ActividadCargoEliminar.php:60
+#: src/actividadcargos/application/ActividadCargoEliminar.php:63
 msgid "falta id_item"
 msgstr "id_item is missing"
 
-#: src/actividadcargos/application/ActividadCargoEliminar.php:71
+#: src/actividadcargos/application/ActividadCargoEliminar.php:74
 #: src/actividades/application/BorrarActividad.php:53
 #: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
@@ -12414,10 +12414,10 @@ msgid "no encuentro a nadie con id_nom: %d"
 msgstr "no one found with id_nom: %d"
 
 #: src/actividadcargos/application/FormCargosPersonasEnActividadData.php:91
-#: src/actividades/application/ActividadCambiarTipo.php:68
+#: src/actividades/application/ActividadCambiarTipo.php:69
 #: src/actividades/application/ActividadDuplicar.php:36
 #: src/actividades/application/ActividadDuplicar.php:51
-#: src/actividades/application/ActividadEditar.php:91
+#: src/actividades/application/ActividadEditar.php:92
 #: src/actividades/application/ActividadEliminar.php:50
 #: src/actividades/application/BorrarActividad.php:38
 msgid "actividad no encontrada"
@@ -12508,8 +12508,8 @@ msgid ""
 msgstr ""
 "Report with no changes in the database. To apply, repeat with \"apply\"."
 
-#: src/actividades/application/ActividadCambiarTipo.php:62
-#: src/actividades/application/ActividadEditar.php:83
+#: src/actividades/application/ActividadCambiarTipo.php:63
+#: src/actividades/application/ActividadEditar.php:84
 #: src/actividades/infrastructure/ui/http/controllers/actividad_nuevo.php:35
 msgid "debe seleccionar un tipo de actividad"
 msgstr "you must select a type of activity"
@@ -13043,7 +13043,7 @@ msgstr "Note: activities for period %s"
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
 #: src/asistentes/application/AsistenteEliminar.php:54
-#: src/asistentes/application/AsistenteGuardar.php:87
+#: src/asistentes/application/AsistenteGuardar.php:88
 msgid "faltan parametros id_activ / id_nom"
 msgstr "missing id_activ / id_nom parameters"
 
@@ -13401,8 +13401,8 @@ msgstr "there is no enrollment for this person"
 #: src/notas/application/NotaPersonaFormData.php:114
 #: src/notas/application/NotasDeUnaPersonaData.php:98
 #: src/personas/domain/Trasladar.php:384
-#: src/profesores/application/FichaProfesorStgr.php:190
-#: src/profesores/application/FichaProfesorStgr.php:223
+#: src/profesores/application/FichaProfesorStgr.php:191
+#: src/profesores/application/FichaProfesorStgr.php:224
 #: src/profesores/domain/services/ProfesorAsignaturaService.php:33
 #: src/profesores/domain/services/ProfesorAsignaturaService.php:54
 #, php-format
@@ -13950,23 +13950,27 @@ msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "attendee not found (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/AsistenteEliminar.php:114
-#: src/asistentes/application/AsistenteGuardar.php:157
-#: src/asistentes/application/AsistenteGuardar.php:165
+#: src/asistentes/application/AsistenteGuardar.php:162
+#: src/asistentes/application/AsistenteGuardar.php:170
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:66
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "attendance data is modified by the attendee's dl"
 
-#: src/asistentes/application/AsistenteGuardar.php:58
+#: src/asistentes/application/AsistenteGuardar.php:59
 #, php-format
 msgid "mod no soportado: %s"
 msgstr "mod not supported: %s"
 
-#: src/asistentes/application/AsistenteGuardar.php:103
+#: src/asistentes/application/AsistenteGuardar.php:99
+msgid "El encargo no puede tener más de 255 caracteres."
+msgstr "The assignment cannot have more than 255 characters."
+
+#: src/asistentes/application/AsistenteGuardar.php:108
 msgid "falta id_activ_old"
 msgstr "missing id_activ_old"
 
-#: src/asistentes/application/AsistenteGuardar.php:142
+#: src/asistentes/application/AsistenteGuardar.php:147
 msgid "La persona sigue apuntada en las dos actividades."
 msgstr "The person is still enrolled in both activities."
 
@@ -16921,6 +16925,7 @@ msgstr "modify by blocks"
 #: src/menus/application/MenuGuardar.php:40
 #: src/menus/application/MenuMover.php:21
 #: src/menus/application/MenusGetPageData.php:87
+#: src/menus/application/MenusGetPageData.php:91
 msgid "No encuentro el menu"
 msgstr "Menu not found"
 
@@ -19350,11 +19355,12 @@ msgid "no se ha ejecutado la acción"
 msgstr "the action has not been executed"
 
 #: src/tablonanuncios/application/AnuncioDelete.php:22
-#: src/tablonanuncios/application/AnuncioDelete.php:28
+#: src/tablonanuncios/application/AnuncioDelete.php:29
+#: src/tablonanuncios/application/AnuncioDelete.php:33
 msgid "No se encuentra el anuncio"
 msgstr "Announcement not found."
 
-#: src/tablonanuncios/application/AnuncioDelete.php:33
+#: src/tablonanuncios/application/AnuncioDelete.php:38
 msgid "error al borrar el anuncio"
 msgstr "Error deleting announcement."
 

@@ -498,18 +498,17 @@ final class AsistenteGuardarTest extends TestCase
         $this->assertSame(PlazaId::PEDIDA, $guardado->getPlazaVo()?->value(), 'plaza 0 pasa a «pedida»');
     }
 
-    /**
-     * Hallazgo: un encargo de más de 255 caracteres lanza `InvalidArgumentException`, que no es
-     * `RuntimeException`: `execute()` no la captura y la petición acaba en error en lugar de devolver un mensaje.
-     */
-    public function test_un_encargo_demasiado_largo_lanza_una_excepcion_sin_capturar(): void
+    /** Un encargo de más de 255 caracteres se rechaza con un aviso, sin guardar ni abrir el dossier. */
+    public function test_un_encargo_demasiado_largo_se_rechaza_con_un_aviso(): void
     {
-        $guardado = null;
-        $sut = $this->createSut($this->appQueGuarda($guardado), null, $this->dossierRepo());
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->expects($this->never())->method('guardar');
+        $dos = $this->createMock(DossierRepositoryInterface::class);
+        $dos->expects($this->never())->method('Guardar');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $msg = $this->createSut($app, null, $dos)->execute(['mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 20, 'encargo' => str_repeat('x', 256)]);
 
-        $sut->execute(['mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 20, 'encargo' => str_repeat('x', 256)]);
+        $this->assertSame(_("El encargo no puede tener más de 255 caracteres."), $msg);
     }
 
     /**
