@@ -209,8 +209,8 @@ final class PosiblesAsignaturasCaDataTest extends myTest
     }
 
     /**
-     * Hallazgo: basta que exista una nota de la asignatura, sea cual sea su situación (aquí 2, «cursada» sin
-     * superar): la asignatura deja de ser posible para ese alumno.
+     * Basta que exista una nota de la asignatura, sea cual sea su situación (aquí 2, «cursada» sin superar, y
+     * también «prevista ca»): la asignatura deja de ser posible para ese alumno (confirmado el 2026-11-17, duda 32a).
      */
     public function test_cualquier_nota_de_la_asignatura_la_descarta_aunque_no_este_superada(): void
     {
