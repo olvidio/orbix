@@ -136,15 +136,12 @@ final class ActivPendientesSelectDataTest extends myTest
         $this->uc()->build(['tipo_personas' => 'n', 'sactividad' => 'otra']);
     }
 
-    /**
-     * Hallazgo: con una combinación sin patrón (p. ej. `sacd`/`stgr` en crt sin caso, o un tipo de personas
-     * desconocido) el patrón queda vacío y `matches ''` casa con todas las actividades del curso.
-     */
-    public function test_un_tipo_de_personas_sin_patron_busca_con_el_patron_vacio(): void
+    /** Una combinación sin patrón (p. ej. stgr en crt) no consulta actividades: un patrón vacío casaría con todas. */
+    public function test_un_tipo_de_personas_sin_patron_no_busca_actividades(): void
     {
         $this->uc()->build(['tipo_personas' => 'stgr', 'sactividad' => 'crt']);
 
-        $this->assertSame('id_tipo_activ matches ', $this->filtrosActividades[0]);
+        $this->assertSame([], $this->filtrosActividades);
     }
 
     public function test_los_selectores_marcan_el_curso_el_tipo_de_personas_y_la_actividad(): void

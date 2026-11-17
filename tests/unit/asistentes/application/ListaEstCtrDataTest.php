@@ -140,8 +140,7 @@ final class ListaEstCtrDataTest extends myTest
         yield 'nj' => ['nj', 'tipo_ctr matches ^nj(ce)*'];
         yield 'un centro' => ['c', 'id_ubi eq 1003'];
         yield 'sin grupo' => ['', ''];
-        // Hallazgo: `sssc` compara con `eq '^ss'` (igualdad literal): nunca devuelve centros.
-        yield 'sssc (igualdad literal)' => ['sssc', 'tipo_ctr eq ^ss'];
+        yield 'sssc' => ['sssc', 'tipo_ctr matches ^ss'];
     }
 
     public function test_los_centros_de_numerarios_excluyen_sacd_y_sin_estudios(): void

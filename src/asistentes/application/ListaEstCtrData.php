@@ -87,8 +87,7 @@ final class ListaEstCtrData
                 break;
             case 'sssc':
                 $tabla = 'p_n_agd';
-                // Igualdad literal con '^ss' (nunca coincide): se conserva el comportamiento previo.
-                $criterioCtr = $criterioCtr->where(Filter::eq(CentroDlField::TipoCtr, '^ss'));
+                $criterioCtr = $criterioCtr->where(Filter::matches(CentroDlField::TipoCtr, '^ss'));
                 break;
             case 'c':
                 $tabla = 'p_n_agd';

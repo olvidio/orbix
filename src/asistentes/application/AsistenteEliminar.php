@@ -7,6 +7,7 @@ use src\actividadestudios\domain\criteria\MatriculaField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
@@ -118,6 +119,13 @@ final class AsistenteEliminar
 
     private function cerrarDossier1301(int $id_nom): void
     {
+        // Si sigue apuntada a otras actividades, el dossier de actividades de la persona sigue abierto.
+        $otras = $this->asistenteApplicationService->matching(
+            Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom))->limit(1)
+        );
+        if ($otras !== []) {
+            return;
+        }
         $DossierRepository = $this->dossierRepository;
         $oDossier = $DossierRepository->findByPk(DossierPk::fromArray([
             'tabla' => 'p',

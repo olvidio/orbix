@@ -187,15 +187,35 @@ final class AsistenteEliminarTest extends TestCase
         $this->assertSame('', $this->createSut($app, null, $dosRepo)->execute(['id_activ' => 7, 'id_nom' => 3]));
     }
 
-    /**
-     * Hallazgo: el dossier 1301 se cierra aunque la persona siga teniendo otras actividades.
-     */
-    public function test_el_dossier_se_cierra_sin_mirar_si_quedan_otras_actividades(): void
+    /** Si la persona sigue apuntada a otras actividades, el dossier 1301 no se cierra. */
+    public function test_el_dossier_no_se_cierra_si_quedan_otras_actividades(): void
     {
         $app = $this->createMock(AsistenteApplicationService::class);
         $app->method('findById')->willReturn($this->asistenteDeMiDl(7, 3));
-        $app->expects($this->never())->method('matching');
         $app->method('eliminar')->willReturn(true);
+        $filtros = null;
+        $app->method('matching')->willReturnCallback(function (Criteria $c) use (&$filtros): array {
+            $filtros = \Tests\support\DescribeCriteria::filtros($c);
+
+            return [$this->asistenteDeMiDl(8, 3)];
+        });
+        $dossier = $this->createMock(\src\dossiers\domain\entity\Dossier::class);
+        $dossier->expects($this->never())->method('cerrar');
+        $dosRepo = $this->createMock(DossierRepositoryInterface::class);
+        $dosRepo->method('findByPk')->willReturn($dossier);
+
+        $this->createSut($app, null, $dosRepo)->execute(['id_activ' => 7, 'id_nom' => 3]);
+
+        $this->assertSame(['id_nom eq 3'], $filtros);
+    }
+
+    /** Si era su última actividad, el dossier 1301 se cierra. */
+    public function test_el_dossier_se_cierra_si_era_su_ultima_actividad(): void
+    {
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->willReturn($this->asistenteDeMiDl(7, 3));
+        $app->method('eliminar')->willReturn(true);
+        $app->method('matching')->willReturn([]);
         $dossier = $this->createMock(\src\dossiers\domain\entity\Dossier::class);
         $dossier->expects($this->once())->method('cerrar');
         $dosRepo = $this->createMock(DossierRepositoryInterface::class);

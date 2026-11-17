@@ -118,7 +118,8 @@ final class ActivPendientesSelectData
                 break;
         }
 
-        if ($Qsactividad !== 'ca' && $Qsactividad !== 'crt') {
+        if (($Qsactividad !== 'ca' && $Qsactividad !== 'crt') || $id_tipo_activ === '') {
+            // Sin patrón para esa combinación: un «matches ''» casaría con todas las actividades del curso.
             $cActividades = [];
         } else {
             $cActividades = $this->actividadRepository->matching(
