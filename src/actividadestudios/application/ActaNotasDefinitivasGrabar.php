@@ -266,6 +266,14 @@ final class ActaNotasDefinitivasGrabar
                     }
             }
 
+            // Una nota numérica tiene que llevar número: sin él se queda solo como matrícula.
+            if ($id_situacion === NotaSituacion::NUMERICA && !MatriculaNotaEstado::tieneNota($nota_num)) {
+                $oAlumno = Persona::findPersonaEnGlobal($id_nom);
+                $nombre = $oAlumno === null ? "id_nom=$id_nom" : $oAlumno->getNombreApellidos();
+                $error .= sprintf(_("%s no tiene la nota numérica: queda solo como matrícula"), $nombre) . "\n";
+                continue;
+            }
+
             if ($faltaActaDelCa) {
                 return ['success' => false, 'mensaje' => _("La asignatura no tiene acta en esta actividad. No se ha guardado nada.")];
             }

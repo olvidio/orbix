@@ -474,20 +474,39 @@ final class ActaNotasDefinitivasGrabarTest extends myTest
     }
 
     /**
-     * Hallazgo: una matrícula con situación «numérica» y acta pero sin nota se graba tal cual en el expediente
-     * (nota numérica sin número), también en un acta ya firmada, porque el bloqueo solo mira si hay nota.
+     * Una matrícula con acta y situación «numérica» sin nota no pasa al expediente: queda solo como matrícula,
+     * con un aviso. Los demás alumnos se graban.
      */
-    public function test_una_matricula_con_situacion_numerica_pero_sin_nota_se_graba_sin_numero_aunque_el_acta_este_firmada(): void
+    public function test_una_matricula_numerica_sin_nota_no_se_graba_como_nota_y_se_avisa(): void
     {
         $this->actividad();
-        $this->acta(self::ACTA, '2026-07-24', true);
+        $this->acta();
+        $this->matricula(10011, 8.0);
         $this->matricula(10012, null);
 
         $r = $this->grabar();
 
-        $this->assertTrue($r['success']);
-        $this->assertSame(NotaSituacion::NUMERICA, $this->guardadas[0]->getId_situacion());
-        $this->assertNull($this->guardadas[0]->getNotaNumVo());
+        $this->assertFalse($r['success']);
+        $this->assertSame(sprintf(_("%s no tiene la nota numérica: queda solo como matrícula"), 'Pau Bosch'), $r['mensaje']);
+        $this->assertSame([10011], array_map(fn (PersonaNota $n) => $n->getId_nom(), $this->guardadas));
+    }
+
+    /** Tampoco con preceptor, ni se toca la nota que ya tuviera en el expediente. */
+    public function test_con_preceptor_una_matricula_numerica_sin_nota_no_se_graba_ni_borra_la_anterior(): void
+    {
+        $this->actividad();
+        $this->acta();
+        $this->notaPrevia(10011, self::ID_ACTIV);
+        $this->matricula(10011, null, NotaSituacion::NUMERICA, self::ACTA, true);
+        $aa = new ActividadAsignatura();
+        $aa->setId_profesor(20001);
+        $this->actividadAsignaturas->method('findById')->willReturn($aa);
+
+        $r = $this->grabar();
+
+        $this->assertSame(sprintf(_("%s no tiene la nota numérica: queda solo como matrícula"), 'Joan Pla'), $r['mensaje']);
+        $this->assertSame([], $this->guardadas);
+        $this->assertSame([], $this->eliminadas);
     }
 
     public function test_una_situacion_que_exige_acta_sin_acta_corta_el_proceso(): void

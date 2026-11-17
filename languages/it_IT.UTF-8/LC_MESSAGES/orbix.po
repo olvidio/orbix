@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 10:03+0100\n"
+"POT-Creation-Date: 2026-11-17 10:21+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -151,6 +151,8 @@ msgstr "errore sconosciuto"
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
+#: frontend/ubis/controller/plano_bytea.php:76
+#: frontend/ubis/view/direccion_form.phtml:77
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/teleco_tabla.phtml:32
 #: frontend/ubiscamas/view/habitacion_form.phtml:12
@@ -556,6 +558,8 @@ msgstr "attività"
 #: src/ubis/infrastructure/ui/http/controllers/direccion_update.php:15
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php:15
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_quitar.php:15
+#: src/ubis/infrastructure/ui/http/controllers/plano_borrar.php:20
+#: src/ubis/infrastructure/ui/http/controllers/plano_subir.php:23
 #: src/ubis/infrastructure/ui/http/controllers/teleco_eliminar.php:15
 #: src/ubis/infrastructure/ui/http/controllers/teleco_guardar.php:15
 #: src/ubis/infrastructure/ui/http/controllers/trasladar_ubis.php:23
@@ -2740,11 +2744,11 @@ msgid "listar"
 msgstr "lista"
 
 #: frontend/asistentes/view/lista_ultim_que_ctr.phtml:24
-#: frontend/ubis/helpers/UbisPayload.php:657
-#: frontend/ubis/helpers/UbisPayload.php:659
-#: frontend/ubis/helpers/UbisPayload.php:662
-#: frontend/ubis/helpers/UbisPayload.php:663
-#: frontend/ubis/helpers/UbisPayload.php:664
+#: frontend/ubis/helpers/UbisPayload.php:585
+#: frontend/ubis/helpers/UbisPayload.php:587
+#: frontend/ubis/helpers/UbisPayload.php:590
+#: frontend/ubis/helpers/UbisPayload.php:591
+#: frontend/ubis/helpers/UbisPayload.php:592
 #: frontend/ubis/view/cdc_form.phtml:72 frontend/ubis/view/ctrdl_form.phtml:57
 #: frontend/ubis/view/ctrex_form.phtml:58
 #: src/asistentes/application/QueCtrListaData.php:53
@@ -3185,7 +3189,7 @@ msgstr "secondo il dl"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion.phtml:146
 #: frontend/cartaspresentacion/view/cartas_presentacion_buscar.phtml:36
-#: frontend/ubis/view/direccion_form.phtml:81
+#: frontend/ubis/view/direccion_form.phtml:95
 #: frontend/ubis/view/direcciones_que.phtml:11
 #: frontend/ubis/view/ubis_buscar.phtml:67
 #: frontend/ubis/view/ubis_buscar.phtml:239
@@ -3212,7 +3216,7 @@ msgid "región"
 msgstr "regione"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion_buscar.phtml:44
-#: frontend/ubis/view/direccion_form.phtml:83
+#: frontend/ubis/view/direccion_form.phtml:97
 #: frontend/ubis/view/direcciones_que.phtml:13
 #: frontend/ubis/view/ubis_buscar.phtml:75
 #: frontend/ubis/view/ubis_buscar.phtml:251
@@ -3766,7 +3770,7 @@ msgstr "app richieste"
 #: frontend/ubis/view/cdc_form.phtml:103
 #: frontend/ubis/view/ctrdl_form.phtml:124
 #: frontend/ubis/view/ctrex_form.phtml:92
-#: frontend/ubis/view/direccion_form.phtml:95
+#: frontend/ubis/view/direccion_form.phtml:109
 #: frontend/ubis/view/teleco_form.phtml:28
 msgid "guardar cambios"
 msgstr "salva le modifiche"
@@ -3909,13 +3913,13 @@ msgstr "automaticamente unito: %s"
 
 #: frontend/dbextern/view/ver_listas.phtml:103
 #: frontend/dbextern/view/ver_orbix.phtml:54
-#: frontend/ubis/view/direccion_form.phtml:71
+#: frontend/ubis/view/direccion_form.phtml:85
 msgid "anterior"
 msgstr "precedente"
 
 #: frontend/dbextern/view/ver_listas.phtml:105
 #: frontend/dbextern/view/ver_orbix.phtml:56
-#: frontend/ubis/view/direccion_form.phtml:72
+#: frontend/ubis/view/direccion_form.phtml:86
 msgid "siguiente"
 msgstr "seguente"
 
@@ -9804,6 +9808,7 @@ msgid "hay un solape cerca de %s"
 msgstr "c'è una sovrapposizione vicino a %s"
 
 #: frontend/shared/helpers/DatosTablaScript.php:47
+#: frontend/ubis/view/direccion_form.phtml:67
 #: frontend/ubis/view/teleco_tabla.phtml:16
 msgid "¿Está seguro que desea eliminar este registro?"
 msgstr "Sei sicuro di voler cancellare questo record?"
@@ -10671,31 +10676,23 @@ msgstr "assegnare un indirizzo"
 msgid "número total de s: %s"
 msgstr "numero totale di s: %s"
 
-#: frontend/ubis/controller/plano_bytea.php:43
-msgid "No se ha recibido ningún archivo."
-msgstr "Non è stato ricevuto alcun file."
-
-#: frontend/ubis/controller/plano_bytea.php:57
-msgid "No se ha podido leer el archivo."
-msgstr "Impossibile leggere il file."
-
-#: frontend/ubis/controller/plano_bytea.php:71
-msgid "no existe un plano"
-msgstr "non c'è un aereo"
-
-#: frontend/ubis/controller/plano_bytea.php:150
+#: frontend/ubis/controller/plano_bytea.php:58
 msgid "introducir documento"
 msgstr "inserisci il documento"
 
-#: frontend/ubis/controller/plano_bytea.php:151
+#: frontend/ubis/controller/plano_bytea.php:59
 msgid "introducir"
 msgstr "introdurre"
 
-#: frontend/ubis/controller/plano_bytea.php:169
+#: frontend/ubis/controller/plano_bytea.php:88
+msgid "No se ha recibido ningún archivo."
+msgstr "Non è stato ricevuto alcun file."
+
+#: frontend/ubis/controller/plano_bytea.php:101
 msgid "ya existe un escrito. ¿Desea reemplazarlo?"
 msgstr "C'è già una scrittura. Vuoi sostituirlo?"
 
-#: frontend/ubis/controller/plano_bytea.php:187
+#: frontend/ubis/controller/plano_bytea.php:112
 msgid "ubicación del fichero"
 msgstr "posizione del file"
 
@@ -10746,17 +10743,17 @@ msgstr "scegli un gruppo di centri"
 msgid "centros de la sf"
 msgstr "centri sf"
 
-#: frontend/ubis/helpers/UbisPayload.php:658
+#: frontend/ubis/helpers/UbisPayload.php:586
 msgid "nombre del centro o casa"
 msgstr "nome del centro o della casa"
 
-#: frontend/ubis/helpers/UbisPayload.php:660
-#: frontend/ubis/helpers/UbisPayload.php:661
-#: frontend/ubis/helpers/UbisPayload.php:665
+#: frontend/ubis/helpers/UbisPayload.php:588
+#: frontend/ubis/helpers/UbisPayload.php:589
+#: frontend/ubis/helpers/UbisPayload.php:593
 msgid "nombre de la casa"
 msgstr "nome della casa"
 
-#: frontend/ubis/helpers/UbisPayload.php:666
+#: frontend/ubis/helpers/UbisPayload.php:594
 msgid "nombre de la casa o centro"
 msgstr "nome della casa o del centro"
 
@@ -10839,27 +10836,27 @@ msgstr "Spostati in"
 msgid "Trasladar"
 msgstr "Mossa"
 
-#: frontend/ubis/view/direccion_form.phtml:57
+#: frontend/ubis/view/direccion_form.phtml:56
 msgid "No existe ningún plano"
 msgstr "Non esiste un piano"
 
-#: frontend/ubis/view/direccion_form.phtml:70
+#: frontend/ubis/view/direccion_form.phtml:84
 msgid "OJO Más de una dirección"
 msgstr "EYE Più di un indirizzo"
 
-#: frontend/ubis/view/direccion_form.phtml:77
+#: frontend/ubis/view/direccion_form.phtml:91
 msgid "nombre sede"
 msgstr "nome host"
 
-#: frontend/ubis/view/direccion_form.phtml:78
+#: frontend/ubis/view/direccion_form.phtml:92
 msgid "propietario"
 msgstr "proprietario"
 
-#: frontend/ubis/view/direccion_form.phtml:78
+#: frontend/ubis/view/direccion_form.phtml:92
 msgid "ayuda!"
 msgstr "aiuto!"
 
-#: frontend/ubis/view/direccion_form.phtml:79
+#: frontend/ubis/view/direccion_form.phtml:93
 #: frontend/ubis/view/home_ubis.phtml:39
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:249
 #: src/ubis/application/DireccionesTablaData.php:61
@@ -10869,69 +10866,69 @@ msgstr "aiuto!"
 msgid "dirección"
 msgstr "indirizzo"
 
-#: frontend/ubis/view/direccion_form.phtml:79
+#: frontend/ubis/view/direccion_form.phtml:93
 msgid "principal"
 msgstr "principale"
 
-#: frontend/ubis/view/direccion_form.phtml:80
+#: frontend/ubis/view/direccion_form.phtml:94
 msgid "dirección postal"
 msgstr "indirizzo postale"
 
-#: frontend/ubis/view/direccion_form.phtml:81
+#: frontend/ubis/view/direccion_form.phtml:95
 msgid "inv"
 msgstr "inv"
 
-#: frontend/ubis/view/direccion_form.phtml:81
+#: frontend/ubis/view/direccion_form.phtml:95
 #: frontend/ubis/view/direcciones_que.phtml:10
 msgid "código postal"
 msgstr "codice postale"
 
-#: frontend/ubis/view/direccion_form.phtml:82
+#: frontend/ubis/view/direccion_form.phtml:96
 #: src/ubis/application/DireccionesTablaData.php:64
 msgid "provincia"
 msgstr "provincia"
 
-#: frontend/ubis/view/direccion_form.phtml:84
+#: frontend/ubis/view/direccion_form.phtml:98
 msgid "comentarios dirección"
 msgstr "indirizzo commenti"
 
-#: frontend/ubis/view/direccion_form.phtml:85
+#: frontend/ubis/view/direccion_form.phtml:99
 msgid "fecha introducción de datos"
 msgstr "data data entry"
 
-#: frontend/ubis/view/direccion_form.phtml:85
+#: frontend/ubis/view/direccion_form.phtml:99
 msgid "ver ejemplo dirección"
 msgstr "vedi l'esempio di indirizzo"
 
-#: frontend/ubis/view/direccion_form.phtml:86
+#: frontend/ubis/view/direccion_form.phtml:100
 msgid "latitud"
 msgstr "latitudine"
 
-#: frontend/ubis/view/direccion_form.phtml:86
+#: frontend/ubis/view/direccion_form.phtml:100
 msgid "longitud"
 msgstr "lunghezza"
 
-#: frontend/ubis/view/direccion_form.phtml:92
+#: frontend/ubis/view/direccion_form.phtml:106
 msgid "ver plano"
 msgstr "vedi aereo"
 
-#: frontend/ubis/view/direccion_form.phtml:92
+#: frontend/ubis/view/direccion_form.phtml:106
 msgid "adjuntar plano"
 msgstr "attaccare aereo"
 
-#: frontend/ubis/view/direccion_form.phtml:92
+#: frontend/ubis/view/direccion_form.phtml:106
 msgid "eliminar plano"
 msgstr "rimuovere il piano"
 
-#: frontend/ubis/view/direccion_form.phtml:95
+#: frontend/ubis/view/direccion_form.phtml:109
 msgid "eliminar dirección"
 msgstr "cancella indirizzo"
 
-#: frontend/ubis/view/direccion_form.phtml:95
+#: frontend/ubis/view/direccion_form.phtml:109
 msgid "quitar dirección"
 msgstr "rimuovere l'indirizzo"
 
-#: frontend/ubis/view/direccion_form.phtml:95
+#: frontend/ubis/view/direccion_form.phtml:109
 msgid "añadir dirección"
 msgstr "aggiungi indirizzo"
 
@@ -13248,7 +13245,12 @@ msgstr "ha preso un opzionale che non era rilevante (id_nom=%s)"
 msgid "está intentando poner una nota que ya existe para: %s"
 msgstr "stai tentando di inserire una nota già esistente per: %s"
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:270
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:273
+#, php-format
+msgid "%s no tiene la nota numérica: queda solo como matrícula"
+msgstr "%s non ha la nota numerica: resta solo come iscrizione"
+
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:278
 msgid "La asignatura no tiene acta en esta actividad. No se ha guardado nada."
 msgstr ""
 "La materia non ha un verbale d'esame in questa attività. Non è stato salvato "
@@ -14065,6 +14067,7 @@ msgstr "Non è stato trovato l'assistente per questa attività."
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php:8
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php:8
 #: src/ubis/infrastructure/ui/http/controllers/list_ctr_data.php:10
+#: src/ubis/infrastructure/ui/http/controllers/plano_existe.php:14
 #: src/ubis/infrastructure/ui/http/controllers/teleco_editar.php:10
 #: src/ubis/infrastructure/ui/http/controllers/teleco_tabla.php:9
 #, php-format
@@ -15146,6 +15149,7 @@ msgstr ""
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_download.php:19
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_download.php:19
 #: src/notas/infrastructure/ui/http/controllers/acta_pdf_download.php:20
+#: src/ubis/infrastructure/ui/http/controllers/plano_download.php:17
 msgid "Enlace de descarga no válido o caducado."
 msgstr "Collegamento di download non valido o scaduto."
 
@@ -19958,6 +19962,14 @@ msgstr "È già in corso una resincronizzazione dei centri"
 #: src/ubis/infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php:12
 msgid "Se requiere region_stgr"
 msgstr "Si richiede region_stgr"
+
+#: src/ubis/infrastructure/ui/http/controllers/plano_download.php:29
+msgid "no existe un plano"
+msgstr "non c'è un aereo"
+
+#: src/ubis/infrastructure/ui/http/controllers/plano_subir.php:30
+msgid "No se ha podido leer el archivo."
+msgstr "Impossibile leggere il file."
 
 #: src/ubiscamas/application/HabitacionGuardar.php:58
 #: src/ubiscamas/application/HabitacionGuardar.php:87
