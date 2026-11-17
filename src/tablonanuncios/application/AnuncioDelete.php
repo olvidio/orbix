@@ -22,7 +22,12 @@ final class AnuncioDelete
             return (string) _("No se encuentra el anuncio");
         }
 
-        $id = new AnuncioId($uuid_item);
+        try {
+            $id = new AnuncioId($uuid_item);
+        } catch (\InvalidArgumentException) {
+            // Un id que no es UUID no puede ser de ningún anuncio.
+            return (string) _("No se encuentra el anuncio");
+        }
         $oAnuncio = $this->anuncioRepository->findById($id);
         if ($oAnuncio === null) {
             return (string) _("No se encuentra el anuncio");

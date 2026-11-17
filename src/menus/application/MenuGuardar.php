@@ -58,7 +58,8 @@ class MenuGuardar
             $oMenuDb->setMenu_perm(PermisoMenuBits::combineSelectedBits($perm_menu));
         }
         //cuando el campo es orden, se pasa csv que hay que convertirlo en un array.
-        $a_orden = array_map(static fn (string $v): int => (int) $v, explode(',', $orden));
+        // Un orden vacío es una lista vacía (explode('', …) daba [''] → [0]).
+        $a_orden = $orden === '' ? [] : array_map(static fn (string $v): int => (int) $v, explode(',', $orden));
         $oMenuDb->setOrden($a_orden);
 
         $error_txt = '';

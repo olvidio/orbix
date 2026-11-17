@@ -2,6 +2,7 @@
 
 namespace src\cartaspresentacion\application;
 
+use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
@@ -38,7 +39,7 @@ final class CartasPresentacionBuscarOpcionesData
         return [
             'opciones_region' => $this->regionDropdown->activasOrdenNombre(),
             'opciones_pais' => $this->stringKeyOptions((array) $this->direccionCentroRepository->getArrayPaises()),
-            'opciones_delegacion' => $this->stringKeyOptions($this->delegacionDropdown->byRegiones(['H'])),
+            'opciones_delegacion' => $this->stringKeyOptions($this->delegacionDropdown->byRegiones([ConfigGlobal::mi_region()])),
             'paths' => [
                 'lista' => 'frontend/cartaspresentacion/controller/cartas_presentacion_lista.php',
             ],

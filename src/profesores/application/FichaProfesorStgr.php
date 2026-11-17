@@ -164,7 +164,8 @@ final class FichaProfesorStgr
                 'f_cese' => $f_cese,
                 'escrito_cese' => $oProfesor->getEscrito_cese(),
             ];
-            if (empty($f_cese)) {
+            if (empty($f_cese) && $departamento !== '') {
+                // Un departamento que ya no existe (vacío) no deja un «; » colgando.
                 $dep .= empty($dep) ? '' : '; ';
                 $dep .= $departamento;
             }

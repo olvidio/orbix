@@ -362,8 +362,8 @@ final class FichaProfesorStgrTest extends myTest
         $this->assertSame(self::fecha('2022-06-30')->getFromLocal(), $data['a_nombramientos'][1]['f_cese']);
         $this->assertSame('', $data['a_nombramientos'][2]['tipo_profesor'], 'sin tipo de profesor');
         $this->assertSame('', $data['a_nombramientos'][3]['departamento'], 'departamento que ya no existe');
-        // Hallazgo: el departamento inexistente deja un separador colgando al final.
-        $this->assertSame('Departamento 3; Departamento 5; ', $data['dep'], 'solo los que no han cesado');
+        // El departamento que ya no existe no deja un separador colgando.
+        $this->assertSame('Departamento 3; Departamento 5', $data['dep'], 'solo los que no han cesado');
     }
 
     public function test_el_curriculum_lista_los_titulos(): void

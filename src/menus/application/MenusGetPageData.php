@@ -82,6 +82,10 @@ final class MenusGetPageData
         string $Qfiltro_grupo
     ): array {
         if (!empty($Qid_menu)) {
+            if (!ctype_digit($Qid_menu)) {
+                // Un id que no es un número no es ningún menú (antes se buscaba el menú 0).
+                throw new \RuntimeException(_("No encuentro el menu"));
+            }
             $oMenuDb = $this->menuDbRepository->findById((int) $Qid_menu);
             if ($oMenuDb === null) {
                 throw new \RuntimeException(_("No encuentro el menu"));

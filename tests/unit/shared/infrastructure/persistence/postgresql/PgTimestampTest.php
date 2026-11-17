@@ -65,15 +65,10 @@ final class PgTimestampTest extends TestCase
         (new PgTimestamp(['no', 'es', 'fecha']))->toPg('date');
     }
 
-    /**
-     * Hallazgo: la rama que acepta una hora en texto «HH:MM» no funciona: le añade los segundos y la pasa a
-     * `DateTimeLocal::createFromLocal()`, que espera una fecha en el formato del idioma, y acaba en excepción. No hay
-     * ningún caso que llegue aquí (las entidades guardan `TimeLocal`, que se acepta tal cual).
-     */
-    public function test_una_hora_en_texto_no_se_convierte(): void
+    /** Una hora en texto («HH:MM» o «HH:MM:SS») se convierte a hora de PostgreSQL. */
+    public function test_una_hora_en_texto_se_convierte(): void
     {
-        $this->expectException(\Exception::class);
-        (new PgTimestamp('10:30'))->toPg('time');
+        $this->assertSame('10:30:00', (new PgTimestamp('10:30'))->toPg('time'));
+        $this->assertSame('09:05:07', (new PgTimestamp('9:05:07'))->toPg('time'));
     }
 }
-

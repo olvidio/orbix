@@ -114,9 +114,9 @@ class PgTimestamp
 
         if (!$data instanceof \DateTimeInterface) {
             try {
-                // Si llega un string "HH:MM", añadimos los segundos antes de convertir
-                if (is_string($data) && preg_match('/^\d{1,2}:\d{2}$/', $data)) {
-                    $data .= ':00';
+                // Una hora en texto («HH:MM» o «HH:MM:SS») es un TimeLocal, no una fecha del idioma.
+                if (is_string($data) && preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $data)) {
+                    return TimeLocal::fromString($data);
                 }
 
                 $data = DateTimeLocal::createFromLocal($data);

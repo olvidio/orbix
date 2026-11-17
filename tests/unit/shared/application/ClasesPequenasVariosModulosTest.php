@@ -93,13 +93,13 @@ final class ClasesPequenasVariosModulosTest extends myTest
         $this->assertNotSame('', (new AnuncioDelete($repo))->execute(Uuid::uuid4()->toString()));
     }
 
-    /**
-     * Hallazgo: un id que no es UUID lanza una excepción del VO en lugar de devolver «no se encuentra el anuncio».
-     */
-    public function test_un_id_que_no_es_uuid_lanza_excepcion(): void
+    /** Un id que no es UUID se trata como «no se encuentra el anuncio», sin excepción. */
+    public function test_un_id_que_no_es_uuid_no_se_encuentra(): void
     {
-        $this->expectException(\Throwable::class);
-        (new AnuncioDelete($this->createMock(AnuncioRepositoryInterface::class)))->execute('no-es-uuid');
+        $repo = $this->createMock(AnuncioRepositoryInterface::class);
+        $repo->expects($this->never())->method('findById');
+
+        $this->assertSame(_("No se encuentra el anuncio"), (new AnuncioDelete($repo))->execute('no-es-uuid'));
     }
 
     // ---- certificados ----------------------------------------------------------------------
@@ -188,10 +188,8 @@ final class ClasesPequenasVariosModulosTest extends myTest
         $this->assertStringContainsString('sql', (new MenuGuardar($repo2))(3, 0, '', '1', 'x', '', 1, []));
     }
 
-    /**
-     * Hallazgo: un orden vacío se convierte en `[0]` (`explode(',', '')` da una cadena vacía → 0).
-     */
-    public function test_un_orden_vacio_se_guarda_como_cero(): void
+    /** Un orden vacío se guarda como lista vacía (antes `[0]`). */
+    public function test_un_orden_vacio_se_guarda_como_lista_vacia(): void
     {
         $m = new MenuDb();
         $repo = $this->createMock(MenuDbRepositoryInterface::class);
@@ -200,7 +198,7 @@ final class ClasesPequenasVariosModulosTest extends myTest
 
         (new MenuGuardar($repo))(3, 9, '', '', 'x', '', 1, []);
 
-        $this->assertSame([0], $m->getOrden());
+        $this->assertSame([], $m->getOrden());
     }
 
     // ---- ProfesorAsignaturaQueData ----------------------------------------------------------------------
@@ -313,28 +311,32 @@ final class ClasesPequenasVariosModulosTest extends myTest
 
     // ---- CartasPresentacionBuscarOpcionesData ----------------------------------------------------------------------
 
-    /**
-     * Hallazgo: las delegaciones ofrecidas están fijadas a la región `H` (`byRegiones(['H'])`).
-     */
-    public function test_las_delegaciones_del_buscador_estan_fijadas_a_la_region_h(): void
+    /** Las delegaciones del buscador son las de la región del usuario (antes, fijas a «H»). */
+    public function test_las_delegaciones_del_buscador_son_las_de_la_region_del_usuario(): void
     {
-        $dir = $this->createMock(DireccionCentroRepositoryInterface::class);
-        $dir->method('getArrayPaises')->willReturn([1 => 'España', 'IT' => 'Italia']);
-        $delRepo = $this->createMock(DelegacionRepositoryInterface::class);
-        $criterios = [];
-        $delRepo->method('matching')->willReturnCallback(function (\src\shared\domain\criteria\Criteria $c) use (&$criterios): array {
-            $criterios[] = \Tests\support\DescribeCriteria::filtros($c);
+        $sesion = $_SESSION['session_auth'] ?? null;
+        $_SESSION['session_auth'] = ['esquema' => 'M-dlmv', 'sfsv' => 1] + (is_array($sesion) ? $sesion : []);
+        try {
+            $dir = $this->createMock(DireccionCentroRepositoryInterface::class);
+            $dir->method('getArrayPaises')->willReturn([1 => 'España', 'IT' => 'Italia']);
+            $delRepo = $this->createMock(DelegacionRepositoryInterface::class);
+            $criterios = [];
+            $delRepo->method('matching')->willReturnCallback(function (\src\shared\domain\criteria\Criteria $c) use (&$criterios): array {
+                $criterios[] = \Tests\support\DescribeCriteria::filtros($c);
 
-            return [];
-        });
-        $uc = new CartasPresentacionBuscarOpcionesData($dir, new DelegacionDropdown($delRepo), new RegionDropdown($this->createMock(RegionRepositoryInterface::class)));
+                return [];
+            });
+            $uc = new CartasPresentacionBuscarOpcionesData($dir, new DelegacionDropdown($delRepo), new RegionDropdown($this->createMock(RegionRepositoryInterface::class)));
 
-        $r = $uc->execute();
+            $r = $uc->execute();
 
-        $this->assertSame(['1' => 'España', 'IT' => 'Italia'], $r['opciones_pais']);
-        $this->assertStringContainsString('region in [H]', implode('|', $criterios[0]));
-        $this->assertSame('frontend/cartaspresentacion/controller/cartas_presentacion_lista.php', $r['paths']['lista']);
-        $this->assertSame('que!poblacion!region!pais!dl', $r['hash_lista']['campos_form']);
+            $this->assertSame(['1' => 'España', 'IT' => 'Italia'], $r['opciones_pais']);
+            $this->assertStringContainsString('region in [M]', implode('|', $criterios[0]));
+            $this->assertSame('frontend/cartaspresentacion/controller/cartas_presentacion_lista.php', $r['paths']['lista']);
+            $this->assertSame('que!poblacion!region!pais!dl', $r['hash_lista']['campos_form']);
+        } finally {
+            $_SESSION['session_auth'] = $sesion;
+        }
     }
 
     // ---- usuarioEliminar ----------------------------------------------------------------------

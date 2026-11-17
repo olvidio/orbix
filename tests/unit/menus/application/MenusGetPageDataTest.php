@@ -221,12 +221,13 @@ final class MenusGetPageDataTest extends myTest
         $this->assertArrayHasKey('ctx_eliminar', $data);
     }
 
-    /** Hallazgo: un id no numérico se convierte en 0 y se busca el menú 0 en vez de rechazar la entrada. */
-    public function test_un_id_no_numerico_se_busca_como_menu_cero(): void
+    /** Un id no numérico se rechaza sin buscar ningún menú. */
+    public function test_un_id_no_numerico_se_rechaza_sin_buscar(): void
     {
-        $this->menus->expects($this->once())->method('findById')->with(0)->willReturn(null);
+        $this->menus->expects($this->never())->method('findById');
 
         $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(_("No encuentro el menu"));
         $this->sut()->execute(['id_menu' => 'abc']);
     }
 }
