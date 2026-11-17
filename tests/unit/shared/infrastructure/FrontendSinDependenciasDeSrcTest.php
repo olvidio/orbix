@@ -17,10 +17,8 @@ use Tests\myTest;
  */
 final class FrontendSinDependenciasDeSrcTest extends myTest
 {
-    /** fichero relativo a frontend/ => motivo */
-    private const EXCEPCIONES = [
-        'devel_codegen/controller/factory.php' => 'generador de código de desarrollo: lee la estructura de la BD con GlobalPdo; pendiente de decidir si pasa a tools/',
-    ];
+    /** @var array<string, string> fichero relativo a frontend/ => motivo (ahora ninguno) */
+    private const EXCEPCIONES = [];
 
     public function test_los_modulos_de_frontend_no_usan_clases_de_src(): void
     {
@@ -48,6 +46,7 @@ final class FrontendSinDependenciasDeSrcTest extends myTest
 
     public function test_las_excepciones_siguen_existiendo(): void
     {
+        $this->assertIsArray(self::EXCEPCIONES);
         foreach (array_keys(self::EXCEPCIONES) as $rel) {
             $this->assertFileExists(dirname(__DIR__, 4) . '/frontend/' . $rel, 'excepción de un fichero que ya no existe: quitarla de la lista');
         }

@@ -5,6 +5,8 @@ namespace frontend\devel_codegen\controller;
 use frontend\devel_codegen\helpers\DevelCodegenSupport;
 use frontend\shared\FrontBootstrap;
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\helpers\PayloadCoercion;
+use frontend\shared\PostRequest;
 use RuntimeException;
 use frontend\shared\helpers\FuncTablasSupport;
 
@@ -18,7 +20,6 @@ use frontend\shared\helpers\FuncTablasSupport;
 // INICIO Cabecera global de URL de controlador *********************************
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
-require_once __DIR__ . '/func_factory.php';
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Q_db = (string)filter_input(INPUT_POST, 'db');
@@ -42,17 +43,14 @@ if ($Q_db === '') {
 }
 switch ($Q_db) {
         case "tramity":
-            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBT');
             $oDB_txt = 'oDBT';
             $prefix = '';
             break;
         case "davical":
-            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBDavical');
             $oDB_txt = 'oDBDavical';
             $prefix = '';
             break;
         case "comun":
-            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBC');
             $oDB_txt = 'oDBC';
             $prefix = '';
             switch ($schema) {
@@ -69,7 +67,6 @@ switch ($Q_db) {
             break;
         case "sv":
         case "sf":
-            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDB');
             $oDB_txt = 'oDB';
             $prefix = '';
             switch ($schema) {
@@ -88,7 +85,6 @@ switch ($Q_db) {
             }
             break;
         case "sv-e":
-            $oDbl = \src\shared\infrastructure\GlobalPdo::get('oDBE');
             $oDB_txt = 'oDBE';
             $prefix = '';
             switch ($schema) {
@@ -183,30 +179,32 @@ if (file_exists($filename)) {
     }
 }
 
-//busco les claus primaries
-$aClaus = primaryKey($oDbl, $Q_tabla);
-
-$sql = "SELECT 
-				a.attnum,
-				a.attname AS field, 
-				t.typname AS type, 
-				a.attlen AS length,
-				a.atttypmod AS lengthvar,
-				a.attnotnull AS notnull
-			FROM 
-				pg_catalog.pg_class c,
-				pg_catalog.pg_attribute a,
-				pg_catalog.pg_type t,
-				pg_catalog.pg_namespace n
-			WHERE 
-				c.relname = '$tabla'
-				and a.attnum > 0
-				and a.attrelid = c.oid
-				and a.atttypid = t.oid
-				and n.oid = c.relnamespace
-				and n.nspname='$schema'
-			ORDER BY a.attnum
-";
+// Estructura de la tabla (clave primaria y columnas con su valor por defecto): la lee src/devel_codegen.
+// PostRequest corta con el mensaje si la tabla no existe o no tiene clave primaria.
+$estructura = PostRequest::getDataFromUrl('/src/devel_codegen/tabla_estructura_datos', [
+    'db' => $Q_db,
+    'tabla' => $Q_tabla,
+]);
+$aClaus = array_values(array_map(
+    static fn (mixed $c): string => PayloadCoercion::string($c),
+    is_array($estructura['primary_key'] ?? null) ? $estructura['primary_key'] : []
+));
+/** @var list<array{attnum: int, field: string, type: string, length: int, lengthvar: int, notnull: bool, default: string}> $columnas */
+$columnas = [];
+foreach (is_array($estructura['columnas'] ?? null) ? $estructura['columnas'] : [] as $col) {
+    if (!is_array($col)) {
+        continue;
+    }
+    $columnas[] = [
+        'attnum' => PayloadCoercion::int($col['attnum'] ?? 0),
+        'field' => PayloadCoercion::string($col['field'] ?? ''),
+        'type' => PayloadCoercion::string($col['type'] ?? ''),
+        'length' => PayloadCoercion::int($col['length'] ?? 0),
+        'lengthvar' => PayloadCoercion::int($col['lengthvar'] ?? 0),
+        'notnull' => ($col['notnull'] ?? false) === true,
+        'default' => PayloadCoercion::string($col['default'] ?? ''),
+    ];
+}
 
 
 $ATRIBUTOS = '';
@@ -242,7 +240,7 @@ $err_bool = "";
 $a_auto = [];
 $a_campos_criteria = [];
 // una primera vuelta para cargar excepciones...
-foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
+foreach ($columnas as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
@@ -291,7 +289,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     }
 }
 
-foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
+foreach ($columnas as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
         continue;
@@ -301,24 +299,12 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     if ($tipo !== 'bytea') {
         $a_campos_criteria[] = $nomcamp;
     }
-    $null =(\src\shared\domain\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
+    $null =(\frontend\shared\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
     $tip = 's';
     $tipo_db = 'string';
     $tip_val = '';
 
-    $sql_get_default = "SELECT pg_get_expr(adbin, adrelid) AS rowdefault
-				FROM pg_catalog.pg_attrdef d,
-					 pg_catalog.pg_class c,
-					 pg_catalog.pg_namespace n
-				WHERE 
-					c.relname = '$tabla'
-					and c.oid = d.adrelid
-					and n.oid = c.relnamespace
-					and n.nspname='$schema'
-					and d.adnum =" . $row['attnum'];
-
-    //echo "sql_def: $sql_get_default<br>";
-    $default = DevelCodegenSupport::fetchColumn($oDbl, $sql_get_default);
+    $default = $row['default'];
     $auto = 0;
     if (!empty($default)) { //nomes agafo un. li dono preferencia al id_local
         $matches = [];
@@ -707,8 +693,7 @@ foreach (DevelCodegenSupport::sqlRows($oDbl, $sql) as $row) {
     $valores .= ':' . $nomcamp;
     $c++;
 }
-$oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
-$hoy = $oHoy->getFromLocal();
+$hoy = PayloadCoercion::string($estructura['hoy'] ?? '');
 
 //------------------------------------ CLASE ENTIDAD -----------------------------------------------
 $txt_entidad = "<?php
