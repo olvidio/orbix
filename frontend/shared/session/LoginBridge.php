@@ -2,13 +2,19 @@
 
 declare(strict_types=1);
 
-namespace frontend\usuarios\helpers;
+namespace frontend\shared\session;
 
 /**
- * Bridge de login/recovery: concentra FQCN a `src\` para que los controllers
- * no tengan `use src\...`.
+ * Puente del login web con `src/`. `login.php` corre en cada petición antes de que haya sesión
+ * (lo incluyen `src/shared/global_object.inc` y `FrontBootstrap`), sin contenedor ni `PostRequest`,
+ * así que llama directamente a `LoginProcesar` y a la lista de esquemas. Único punto del frontend
+ * que lo hace (como `FrontBootstrap` con el arranque).
+ *
+ * Las apps (orbix-android…) no pasan por aquí: entran por `/src/usuarios/app_login`
+ * (`AppMobileLogin`); de `login.php` solo dependen de la respuesta JSON `auth_required` de las
+ * rutas `/src/...` sin sesión (`e2e/specs/authenticated/app-movil-contrato.spec.ts`).
  */
-final class UsuariosAuthBridge
+final class LoginBridge
 {
     /**
      * @return list<string>
@@ -67,47 +73,5 @@ final class UsuariosAuthBridge
     {
         \src\shared\web\ContestarJson::enviar($error, $data);
         exit;
-    }
-
-    /**
-     * PDO para recovery 2FA según esquema / ubicación.
-     *
-     * @return array{pdo: \PDO, esquema: string, sfsv: int}
-     */
-    public static function recoveryPdo(string $esquema, string $ubicacion, string $private): array
-    {
-        $sfsv = 0;
-        $oDB = null;
-        $useSfDb = ($ubicacion === 'sf' || $private === 'sf');
-        $esquemaActual = $esquema;
-
-        if (substr($esquemaActual, -1) === 'v') {
-            $sfsv = 1;
-            $oConfigDB = new \src\shared\infrastructure\persistence\ConfigDB('sv-e');
-            $config = $oConfigDB->getEsquema($esquemaActual);
-            $oDB = (new \src\shared\infrastructure\persistence\DBConnection($config))->getPDO();
-        } elseif (substr($esquemaActual, -1) === 'f') {
-            if ($useSfDb) {
-                try {
-                    $sfsv = 2;
-                    $oConfigDB = new \src\shared\infrastructure\persistence\ConfigDB('sf-e');
-                    $config = $oConfigDB->getEsquema($esquemaActual);
-                    $oDB = (new \src\shared\infrastructure\persistence\DBConnection($config))->getPDO();
-                } catch (\Throwable $e) {
-                    $esquemaActual = substr($esquemaActual, 0, -1);
-                    $sfsv = 0;
-                }
-            } else {
-                $esquemaActual = substr($esquemaActual, 0, -1);
-            }
-        }
-
-        if ($oDB === null) {
-            $oConfigDB = new \src\shared\infrastructure\persistence\ConfigDB('comun_select');
-            $config = $oConfigDB->getEsquema($esquemaActual);
-            $oDB = (new \src\shared\infrastructure\persistence\DBConnection($config))->getPDO();
-        }
-
-        return ['pdo' => $oDB, 'esquema' => $esquemaActual, 'sfsv' => $sfsv];
     }
 }

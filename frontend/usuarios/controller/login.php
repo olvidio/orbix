@@ -2,7 +2,7 @@
 
 namespace frontend\usuarios\controller;
 
-use frontend\usuarios\helpers\UsuariosAuthBridge;
+use frontend\shared\session\LoginBridge;
 use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\usuarios\helpers\UsuariosPostInput;
 use frontend\shared\config\AppUrlConfig;
@@ -22,7 +22,7 @@ function render_login_form(
     int $error,
     string $esquema_web = ''
 ): void {
-    $oDBPropiedades = UsuariosAuthBridge::desplegableEsquemas($esquema);
+    $oDBPropiedades = LoginBridge::desplegableEsquemas($esquema);
     $a_campos = [
         'error' => $error,
         'ubicacion' => $ubicacion,
@@ -73,7 +73,7 @@ function orbix_responder_login_api_sin_sesion(): void
 {
     header('Content-Type: application/json; charset=UTF-8');
     orbix_marcar_respuesta_ajax_sin_sesion();
-    UsuariosAuthBridge::contestarJson(_("Sesión no autenticada"), ['code' => 'auth_required']);
+    LoginBridge::contestarJson(_("Sesión no autenticada"), ['code' => 'auth_required']);
 }
 
 $esquema_web = getenv('ESQUEMA');
@@ -87,7 +87,7 @@ $ubicacion_str = is_string($ubicacion) ? $ubicacion : '';
 $private_str = is_string($private) ? $private : '';
 
 if ($esquema_web_str !== '') {
-    if (!in_array($esquema_web_str, UsuariosAuthBridge::posiblesEsquemasWeb(), true)) {
+    if (!in_array($esquema_web_str, LoginBridge::posiblesEsquemasWeb(), true)) {
         $msg = sprintf(_("No existe este equema: %s"), $esquema_web_str);
         die($msg);
     }
@@ -101,7 +101,7 @@ if (!isset($_SESSION['session_auth'])) {
         $_SESSION['private'] = $private_str;
 
         $loginInput = UsuariosPostInput::loginInputFromPost();
-        $result = UsuariosAuthBridge::loginProcesar(
+        $result = LoginBridge::loginProcesar(
             $loginInput,
             $esquema_web_str,
             $ubicacion_str
@@ -137,7 +137,7 @@ if (!isset($_SESSION['session_auth'])) {
             die();
         }
 
-        UsuariosAuthBridge::invalidatePermisosActividadesCache();
+        LoginBridge::invalidatePermisosActividadesCache();
         $_SESSION['session_auth'] = $loginSession['session_auth'];
         $_SESSION['config'] = $loginSession['session_config'];
 

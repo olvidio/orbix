@@ -31,8 +31,7 @@ Facades / bridges que concentran FQCN `\src\...` **sin** `use` (callers frontend
 | `frontend/shared/session/SessionConfig.php` | `$_SESSION['oConfig']` |
 | `frontend/shared/session/SessionPerm.php` | `$_SESSION['oPerm']` |
 | `frontend/shared/session/SessionPermActividades.php` | permisos de actividad |
-| `frontend/usuarios/helpers/UsuariosAuthBridge.php` | login / recovery |
-| `frontend/ubis/helpers/UbisPlanoBridge.php` | planos (repos Pg*) |
+| `frontend/shared/session/LoginBridge.php` | login web (`login.php`, antes de haber sesión); la recuperación de 2FA va por `/src/usuarios/recuperar_2fa_enlace_*` |
 | `frontend/shared/config/OrbixRuntime.php` | flags/rutas `ConfigGlobal` |
 
 ## Cómo regenerar el conteo

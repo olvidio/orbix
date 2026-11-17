@@ -19,7 +19,6 @@ final class FrontendSinDependenciasDeSrcTest extends myTest
 {
     /** fichero relativo a frontend/ => motivo */
     private const EXCEPCIONES = [
-        'usuarios/helpers/UsuariosAuthBridge.php' => 'login y recuperación de 2FA: corren antes de haber sesión (login.php lo incluye src/shared/global_object.inc en cada petición); pendiente de decidir dónde viven',
         'devel_codegen/controller/factory.php' => 'generador de código de desarrollo: lee la estructura de la BD con GlobalPdo; pendiente de decidir si pasa a tools/',
     ];
 

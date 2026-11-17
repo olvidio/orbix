@@ -2,7 +2,7 @@
 tipo: "ayuda_ia"
 subtipo: "api_resumen"
 modulo: "usuarios"
-endpoints: 49
+endpoints: 51
 estado_revision: "generado"
 ---
 
@@ -142,6 +142,20 @@ Este documento solo sirve como soporte tecnico para la IA local. Para responder 
 - Controller: `src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php`
 - Entrada: `post.que:string` (`'slickGrid'` o vacío/otro). Rama `que=''` (preferencias personales, `preferencias.phtml`): `post.ctx_guardar:string` (cápsula `HashB` acción `preferencias_guardar`, contexto `{id_usuario}` — siempre `ConfigGlobal::mi_id_usuario()`, nunca del POST — emitida por `usuario_preferencias`), `post.layout:string`, `post.oficina:string`, `post.inicio:string`, `post.tipo_tabla:string`, `post.ordenApellidos:string`, `post.idioma_nou:string`, `post.zona_horaria_nou:string`, `post.estilo_color:string`, `post.tipo_menu:string`. Rama `que='slickGrid'` (`post.tabla:string`, `post.sPrefs:string`): **pendiente de `HashB`** — la dispara `scripts/index.js.php` desde cualquier página con tabla SlickGrid, firmada con un `HashF` calculado una vez en `index.php`; no hay paso de lectura por página al que atar una cápsula sin añadir una llamada a `src/` en cada carga de página. `id_usuario` ya viene de la sesión en ambas ramas, no hay IDOR.
 - Respuesta: `standard_envelope_string_data`
+
+## `/src/usuarios/recuperar_2fa_enlace_confirmar`
+
+- Id: `usuarios.recuperar_2fa_enlace_confirmar`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_enlace_confirmar.php`
+- Entrada: `post.esquema:string`, `post.id_usuario:integer`, `post.token:string` (los del enlace del correo)
+- Respuesta: `standard_envelope_string_data` (`desactivado: bool`). Anónimo. Con un enlace válido quita el 2FA del usuario (en su esquema) y anula el enlace; no abre sesión. Lo llama `frontend/usuarios/controller/recovery.php` al confirmar (POST).
+
+## `/src/usuarios/recuperar_2fa_enlace_datos`
+
+- Id: `usuarios.recuperar_2fa_enlace_datos`
+- Controller: `src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_enlace_datos.php`
+- Entrada: `post.esquema:string`, `post.id_usuario:integer`, `post.token:string`
+- Respuesta: `standard_envelope_string_data` (`valido: bool`). Anónimo y sin cambios: comprueba que el token coincide y no ha caducado.
 
 ## `/src/usuarios/recuperar_2fa_mail`
 
