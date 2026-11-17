@@ -34,7 +34,7 @@ $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_profesores_data', 
 ]);
 
 $a_campos = [
-    'titulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("profesores stgr")),
+    'titulo' => \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("profesores stgr")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

@@ -148,7 +148,7 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
-$oFormP->setAntes(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo")));
+$oFormP->setAntes(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel(ActividadesPostInput::posicionString($Qperiodo));
 $oFormP->setDesplAnysOpcion_sel(ActividadesPostInput::posicionString($Qyear));

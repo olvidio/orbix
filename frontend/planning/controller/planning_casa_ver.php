@@ -43,7 +43,7 @@ try {
     $Qdd = 3;
     $mod = 0;
     $nueva = 0;
-    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
+    if (\frontend\shared\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
         $mod = 1;
         $nueva = 1;
     }

@@ -104,7 +104,7 @@ $aOpciones = [
     'separador1' => '---------',
     'otro' => _("otro"),
 ];
-$titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades"));
+$titulo = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades"));
 $titulo .= " (" . _("en estado actual") . ")";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');

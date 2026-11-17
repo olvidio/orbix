@@ -76,7 +76,7 @@ $aQuery = array(
     'id_pau' => $Qid_activ,
     'obj_pau' => $Qobj_pau,
 );
-array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $permiso_des = ActividadesPermSupport::permDes();
@@ -193,7 +193,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $isfsv = (integer)substr($id_tipo_activ, 0, 1);
         $calc_tarifa_inicial = true;
     }
-    if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($permiso_des)) {
+    if (\frontend\shared\helpers\FuncTablasSupport::isTrue($permiso_des)) {
         if (empty($id_tipo_activ)) {
             // valor por defecto. Si esta vacio dira que no tiene permiso.
             $id_tipo_activ = '1';

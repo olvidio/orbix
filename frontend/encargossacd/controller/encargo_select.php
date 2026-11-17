@@ -86,7 +86,7 @@ foreach ($filas as $fila) {
     $desc_enc = $row['desc_enc'];
 
     $aQuery = ['que' => 'editar', 'id_enc' => $id_enc];
-    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashF::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [];
@@ -103,7 +103,7 @@ foreach ($filas as $fila) {
 }
 
 $aQuery = ['que' => 'nuevo', 'id_tipo_enc' => $Qid_tipo_enc];
-array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $pagina_nuevo = HashF::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Esta Seguro que desea borrar este encargo?");

@@ -32,7 +32,7 @@ $aQuery = [
     'id_pau' => $Qid_activ,
     'obj_pau' => 'Actividad',
 ];
-array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");

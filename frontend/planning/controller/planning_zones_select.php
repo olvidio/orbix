@@ -88,7 +88,7 @@ $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 
 $msg_txt = '';
-if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
+if (\frontend\shared\helpers\FuncTablasSupport::isTrue($Qpropuesta)) {
     $msg_txt = _("Propuesta de calendario: actividades en cualquier estado (menos borrable)");
 }
 $a_campos = [

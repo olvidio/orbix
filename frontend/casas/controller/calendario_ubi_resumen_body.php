@@ -40,7 +40,7 @@ if (!$errorInfo['ok'] && $errorInfo['error'] === 'sin_gastos_anterior') {
         'periodo' => 'ninguno',
         'year' => $errorInfo['any_anterior'],
     ];
-    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $web = AppUrlConfig::getPublicAppBaseUrl();
     $pagina = HashF::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
     $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">{$errorInfo['any_anterior']}</span>";

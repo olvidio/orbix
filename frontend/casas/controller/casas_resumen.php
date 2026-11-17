@@ -37,7 +37,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("búsqueda de casas cuyo resumen económico interesa")));
+$oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb((string)_("búsqueda de casas cuyo resumen económico interesa")));
 $filtro = ['active' => true];
 $miSfsv = OrbixRuntime::miSfsv();
 $miRolePau = OrbixRuntime::miRolePau();
@@ -72,7 +72,7 @@ $aOpciones = [
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("periodo para el resumen económico")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb((string)_("periodo para el resumen económico")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel((int)date('Y')));
 $oFormP->setAntes($oSelects->ListaSelects());

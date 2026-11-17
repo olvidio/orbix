@@ -48,7 +48,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
-if ($Qyear === 0 && \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
+if ($Qyear === 0 && \frontend\shared\helpers\FuncTablasSupport::isTrue($Qpropuesta_calendario)) {
     $Qyear = (int) date('Y') + 1;
 }
 
@@ -78,7 +78,7 @@ $oHash->setArraycamposHidden([
 $oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("búsqueda de casas cuyo planning interesa")));
+$oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("búsqueda de casas cuyo planning interesa")));
 
 $oForm->setFiltroCasas($filtroCasasQue);
 $oForm->setCasas($modoCasasQue);

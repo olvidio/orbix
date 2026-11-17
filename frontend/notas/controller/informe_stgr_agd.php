@@ -37,7 +37,7 @@ $datos = PostRequest::getDataFromUrl('/src/notas/informe_stgr_agd_data', [
 ]);
 
 $a_campos = [
-    'titulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("alumnos agregados")),
+    'titulo' => \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("alumnos agregados")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

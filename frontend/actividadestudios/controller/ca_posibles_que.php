@@ -99,7 +99,7 @@ $aOpciones = array(
 );
 $oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de las actividades")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de las actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($any);
@@ -123,9 +123,9 @@ if ($Qgrupo_estudios === 'todos') {
     $chk_grupo = 'checked';
 }
 
-$chk_estudios = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';
-$chk_repaso = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_repaso) ? 'checked' : '';
-$chk_ca_todos = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qca_todos) ? 'checked' : '';
+$chk_estudios = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qca_estudios) ? 'checked' : '';
+$chk_repaso = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qca_repaso) ? 'checked' : '';
+$chk_ca_todos = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qca_todos) ? 'checked' : '';
 
 $a_campos = [
     'oPosicion' => $oPosicion,

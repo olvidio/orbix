@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Plantillas Twig de alta/edición de nombre; servidas por `nombre_ajax` (`form_modificar`/`form_nuevo`). El controller legacy `nombre_form.php` (actividadtarifas) no tiene callers vivos.
+Plantillas Twig de alta/edición de nombre; servidas por `nombre_ajax` (`form_modificar`/`form_nuevo`).
 
 ## Uso En Ayuda
 

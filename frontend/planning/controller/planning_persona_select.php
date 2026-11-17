@@ -68,10 +68,10 @@ if ($Qcentro !== '') {
 if ($Qna !== '') {
     $aWhere['id_tabla'] = 'p' . $Qna;
 }
-$QsaWhere = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-$QsaOperador = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
-$QsaWhereCtr = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
-$QsaOperadorCtr = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
+$QsaWhere = \frontend\shared\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
+$QsaOperador = \frontend\shared\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
+$QsaWhereCtr = \frontend\shared\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
+$QsaOperadorCtr = \frontend\shared\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
 
 $navState = ListNavSupport::mergeSelectionForRecordar([
     'obj_pau' => $Qobj_pau,
@@ -162,7 +162,7 @@ foreach ($cPersonas as $row) {
         'obj_pau' => $Qobj_pau,
         'id_tabla' => $id_tabla,
     ];
-    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashF::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [

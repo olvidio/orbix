@@ -83,7 +83,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("ocupación de casas compartidas")));
+$oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("ocupación de casas compartidas")));
 $oForm->setCasas('casa');
 $oForm->setFiltroCasas(['active' => true]);
 $oForm->setSeleccionados($sel_ubis);

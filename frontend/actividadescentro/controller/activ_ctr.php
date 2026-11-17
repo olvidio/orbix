@@ -50,7 +50,7 @@ $signShellEndpoint = static function (array $spec): string {
     return $url . $oHashEndpoint->linkSinVal();
 };
 
-$titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
+$titulo = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del listado del año próximo"));
 $aOpciones = [
     'tot_any' => _("todo el año"),
     'trimestre_1' => _("primer trimestre"),

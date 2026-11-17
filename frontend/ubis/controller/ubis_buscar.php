@@ -37,24 +37,24 @@ $nomUbi = UbisPayload::buscarNomUbi($tipo);
 
 switch ($tipo) {
     case "ctrdl" :
-        $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("centros de la delegación"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
+        $titulo = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("centros de la delegación"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     case "vu_ex" :
         $titulo = strtoupper(_("centros o casas de otras dl/r"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro o casa te interesa?"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro o casa te interesa?"));
         break;
     case "ctrex" :
         $titulo = strtoupper(_("centros de otras dl/r"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     case "cdcdl" :
-        $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("casas de la delegación"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
+        $titulo = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("casas de la delegación"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
         break;
     case "cdcex" :
         $titulo = strtoupper(_("casas de otras dl/r"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué casa te interesa?"));
         break;
     case "mail" :
         $titulo = ucfirst(_("buscar e-mails de los centros de la dl"));
@@ -62,7 +62,7 @@ switch ($tipo) {
         break;
     case "ctrsf" :
         $titulo = strtoupper(_("centros de la sf"));
-        $tituloGros = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
+        $tituloGros = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("¿qué centro te interesa?"));
         break;
     default:
         $titulo = '';

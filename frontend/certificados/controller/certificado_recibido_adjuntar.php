@@ -43,7 +43,7 @@ $certificado = '';
 $f_certificado = '';
 $f_recibido = $form['f_enviado'];
 $firmado = '';
-$chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
+$chk_firmado = \frontend\shared\helpers\FuncTablasSupport::isTrue($firmado) ? 'checked' : '';
 
 $oHashCertificadoPdf = new HashF();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');

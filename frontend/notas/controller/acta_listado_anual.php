@@ -54,7 +54,7 @@ $aOpciones = [
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

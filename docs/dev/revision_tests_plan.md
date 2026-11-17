@@ -1247,7 +1247,7 @@ Un formulario firmado lleva `h`, el hash de los **nombres** de sus campos. Si al
 - Spec `tarifas-tipo-actividad.spec.ts`: alta y borrado de una relación por la interfaz (con el código anterior, 302). Spec `formularios-de-alta.spec.ts` (solo lectura): abre siete formularios de alta o de valor por defecto de tarifas y pasarela y comprueba su hash; comprobado que falla con el código anterior en los tres.
 - `esperarSrc()` dice ahora «petición rechazada con un 302» y los campos enviados, en vez de un error al leer la respuesta.
 - **No eran fallos:** `encargossacd/encargo_ver`, `asistentes/que_ctr_lista`, `actividades/actividad_select_ubi` y `actividad_que` (sus desplegables los rellena el JavaScript o dependen de los parámetros; los cubren sus specs o la pasada del menú), `inventario/doc_asignado` y `doc_no_asignado` (igual), `usuarios/usuario_form` (sin `quien` no pinta `nom_usuario`), `pasarela/nombre_lista` (el alta no envía el formulario entero).
-- `frontend/pasarela/controller/nombre_form.php` no se usa desde ningún sitio (la pantalla usa `nombre_ajax.php`) y firma campos de tarifas; anotado en `backlog.md` como código muerto.
+- `frontend/pasarela/controller/nombre_form.php` no se usa desde ningún sitio (la pantalla usa `nombre_ajax.php`) y firma campos de tarifas; anotado en `backlog.md` como código muerto; ya borrado.
 
 **Límites:** un formulario que solo se pinta tras varios pasos y no está en `formularios-de-alta.spec.ts` no se comprueba (si un spec de flujo lo envía, `esperarSrc()` avisa del 302). Tampoco se comprueban los hidden que el JavaScript cambia antes de enviar (los valida `hh`). Botón «ctrs org» sin destino: duda 22.
 

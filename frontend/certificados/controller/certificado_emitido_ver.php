@@ -49,7 +49,7 @@ $destino = $ver['destino'];
 $certificado = $ver['certificado'];
 $f_certificado = $ver['f_certificado'];
 $f_enviado = $ver['f_enviado'];
-$chk_firmado = \src\shared\domain\helpers\FuncTablasSupport::isTrue($ver['firmado']) ? 'checked' : '';
+$chk_firmado = \frontend\shared\helpers\FuncTablasSupport::isTrue($ver['firmado']) ? 'checked' : '';
 $content_pdf = base64_decode($ver['content'], true);
 if ($content_pdf === false) {
     $content_pdf = '';

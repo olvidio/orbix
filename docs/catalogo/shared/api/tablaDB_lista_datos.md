@@ -56,7 +56,7 @@ Resuelve `Info*` desde `clase_info`, aplica filtros de contexto (`pau`, `id_pau`
 | `a_botones` | Botones de fila (editar, etc.). |
 | `a_valores` | Filas de datos. |
 | `id_tabla` | Id DOM (`repo_tabla_sql_{clase}`). |
-| `script` | JS adicional de la tabla. |
+| `eliminar_txt` | Texto de confirmación al eliminar (el JS de la tabla lo monta el frontend con `DatosTablaScript`). |
 | `titulo` | Título de pantalla. |
 | `explicacion` | Texto explicativo. |
 

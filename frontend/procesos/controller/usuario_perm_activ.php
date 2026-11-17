@@ -90,7 +90,7 @@ $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinValParams();
 
-if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qdl_propia)) {
+if (\frontend\shared\helpers\FuncTablasSupport::isTrue($Qdl_propia)) {
     $chk_propia = 'checked';
     $chk_otra = '';
 } else {

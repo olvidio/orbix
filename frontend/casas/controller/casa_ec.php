@@ -57,7 +57,7 @@ $oForm->setAction('');
 $oSelects = $oForm->getSelects();
 $oSelects->setAction('');
 
-$oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
+$oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
 $oForm->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 
 $web = AppUrlConfig::getPublicAppBaseUrl();

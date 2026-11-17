@@ -58,7 +58,7 @@ ListNavSupport::syncNavStateAt(
     ], $Qid_sel, $Qscroll_id),
 );
 
-if (!\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_n) && !\src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_agd)) {
+if (!\frontend\shared\helpers\FuncTablasSupport::isTrue($Qpersonas_n) && !\frontend\shared\helpers\FuncTablasSupport::isTrue($Qpersonas_agd)) {
     exit(_("Debe marcar un grupo de personas (n o agd)"));
 }
 

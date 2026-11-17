@@ -49,7 +49,7 @@ if ($ce_lugar === '') {
 $datos = $payload;
 
 $a_campos = [
-    'titulo' => \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("alumnos numerarios")),
+    'titulo' => \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("alumnos numerarios")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

@@ -173,7 +173,7 @@ Endpoints aportados por capacidades:
 
 ### `pasarela.pantalla.nombre_form`
 
-- Controller: `frontend/pasarela/controller/nombre_form.php`
+- Controller: `frontend/pasarela/controller/nombre_ajax.php` (`form_modificar` / `form_nuevo`)
 - Subtipo: `fragmento_ajax`
 
 Endpoints directos:

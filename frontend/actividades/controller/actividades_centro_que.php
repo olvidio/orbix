@@ -120,7 +120,7 @@ $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
 
 $oFormP = null;
 if ($Qperiodo === 'no') {
-    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("resumen económico")));
+    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("resumen económico")));
     $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 } else {
     $aOpciones = array(
@@ -143,7 +143,7 @@ if ($Qperiodo === 'no') {
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setEmpiezaMax($Qempiezamax);
 
-    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un centro y un período")));
+    $oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un centro y un período")));
     $oFormP->setAntes($oSelects->ListaSelects());
     $oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 }

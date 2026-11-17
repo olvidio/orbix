@@ -60,21 +60,18 @@ class DossiersVerFichaDatosTabla
     }
 
     /**
-     * Reusa `DatosTablaRepo::getScript()` inyectando la URL de acción ya firmada.
-     * La clase sólo necesita `bloque`, `action_form`, `action_update`, `action_tabla`
-     * y `eliminar_txt` para producir el script: no se requieren datos de dominio.
+     * Script de la tabla con la URL de acción ya firmada.
      *
      * @param array{bloque: string, action_form: string, action_update: string, eliminar_txt: string} $ctx
      */
     private static function buildScript(array $ctx, string $actionTablaUrl): string
     {
-        $repo = new \src\shared\domain\DatosTablaRepo();
-        $repo->setBloque($ctx['bloque']);
-        $repo->setAction_form($ctx['action_form']);
-        $repo->setAction_update($ctx['action_update']);
-        $repo->setAction_tabla($actionTablaUrl);
-        $repo->setEliminar_txt($ctx['eliminar_txt']);
-
-        return $repo->getScript();
+        return \frontend\shared\helpers\DatosTablaScript::script(
+            $ctx['eliminar_txt'],
+            $ctx['bloque'],
+            $ctx['action_form'],
+            $ctx['action_update'],
+            $actionTablaUrl,
+        );
     }
 }

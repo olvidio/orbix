@@ -2,6 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\helpers\DatosTablaScript;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
@@ -190,6 +191,7 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
     $a_campos_buscar = tablaDB_lista_ver_campos_buscar($data['a_campos'] ?? null);
+    $a_campos_buscar['script'] = DatosTablaScript::script(tablaDB_lista_ver_payload_string($a_campos_buscar, 'eliminar_txt'));
     $meta = tablaDB_lista_ver_campos_buscar($a_campos_buscar['documentos_form_hash_meta'] ?? null);
     if ($meta !== []) {
         $oHashDocForm = new HashF();
@@ -245,7 +247,7 @@ $a_campos_backend = [
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $txt_explicacion = tablaDB_lista_ver_payload_string($data, 'explicacion');
 $txt_titulo = tablaDB_lista_ver_payload_string($data, 'titulo');
-$script = tablaDB_lista_ver_payload_string($data, 'script');
+$script = DatosTablaScript::script(tablaDB_lista_ver_payload_string($data, 'eliminar_txt'));
 $id_tabla = tablaDB_lista_ver_payload_string($data, 'id_tabla');
 $a_cabeceras = tablaDB_lista_ver_cabeceras($data['a_cabeceras'] ?? null);
 $a_botones = tablaDB_lista_ver_botones($data['a_botones'] ?? null);

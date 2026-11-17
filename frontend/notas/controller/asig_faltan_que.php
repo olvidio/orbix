@@ -27,18 +27,18 @@ if ($Qb_c === 'b') {
     $chk_c = 'checked';
 }
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
-$chk_c1 = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qc1) ? 'checked' : '';
+$chk_c1 = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qc1) ? 'checked' : '';
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
-$chk_c2 = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qc2) ? 'checked' : '';
+$chk_c2 = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qc2) ? 'checked' : '';
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
-$chk_n = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_n) ? 'checked' : '';
+$chk_n = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qpersonas_n) ? 'checked' : '';
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
-$chk_agd = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qpersonas_agd) ? 'checked' : '';
+$chk_agd = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qpersonas_agd) ? 'checked' : '';
 
 $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
-$chk_lista = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qlista) ? 'checked' : '';
+$chk_lista = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qlista) ? 'checked' : '';
 
 $oPosicion->nav()->enter(
     PayloadCoercion::string($_SERVER['PHP_SELF'] ?? ''),

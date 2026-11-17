@@ -73,7 +73,7 @@ $oSelects = $oForm->getSelects();
 $oFormP = null;
 if ($Qperiodo === 'no') {
     if ($Qtipo_lista === 'datosEc') {
-        $oForm->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
+        $oForm->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb((string)_("resumen económico")));
     }
     $oForm->setBoton("<input type='button' name='buscar' value='" . _("buscar") . "' onclick='fnjs_ver();'>");
 } else {
@@ -92,7 +92,7 @@ if ($Qperiodo === 'no') {
     }
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('seleccion');
-    $oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb((string)_("seleccionar una casa y un período")));
+    $oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb((string)_("seleccionar una casa y un período")));
     $oFormP->setPosiblesPeriodos($aOpciones);
     if ($Qyear !== 0) {
         $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));

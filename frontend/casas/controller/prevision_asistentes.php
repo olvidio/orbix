@@ -78,7 +78,7 @@ $aOpciones = [
 ];
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("período del listado del año próximo")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("período del listado del año próximo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel(CasasPayload::periodoYearSel($Qyear));

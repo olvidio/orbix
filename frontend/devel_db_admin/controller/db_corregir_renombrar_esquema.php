@@ -8,10 +8,8 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
+// Si no llega `esquema_origen`, el endpoint lo deduce de `esquema` (nombre con sufijo v/f).
 $QEsquemaOrigen = trim((string) filter_input(INPUT_POST, 'esquema_origen'));
-if ($QEsquemaOrigen === '') {
-    $QEsquemaOrigen = \src\devel_db_admin\application\RenombrarEsquemaVerificacionContexto::baseDesdeCampoOrigen((string) filter_input(INPUT_POST, 'esquema'));
-}
 $Qregion = (string) filter_input(INPUT_POST, 'region');
 $Qdl = (string) filter_input(INPUT_POST, 'dl');
 $Qcomun = (int) filter_input(INPUT_POST, 'comun');
@@ -20,6 +18,7 @@ $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
 $data = PostRequest::getDataFromUrl('/src/devel_db_admin/corregir_renombrar_esquema', [
     'esquema_origen' => $QEsquemaOrigen,
+    'esquema' => (string) filter_input(INPUT_POST, 'esquema'),
     'region' => $Qregion,
     'dl' => $Qdl,
     'comun' => $Qcomun,

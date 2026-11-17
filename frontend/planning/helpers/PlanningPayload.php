@@ -353,9 +353,9 @@ public static function filtrosPersonaDesdeSaWhereEncoded(
         return compact('nombre', 'apellido1', 'apellido2', 'centro', 'na');
     }
 
-    $aWhereDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($saWhere), true);
+    $aWhereDecoded = json_decode(\frontend\shared\helpers\FuncTablasSupport::urlsafeB64decode($saWhere), true);
     $aWhere = is_array($aWhereDecoded) ? $aWhereDecoded : [];
-    $aWhereCtrDecoded = json_decode(\src\shared\domain\helpers\FuncTablasSupport::urlsafeB64decode($saWhereCtr), true);
+    $aWhereCtrDecoded = json_decode(\frontend\shared\helpers\FuncTablasSupport::urlsafeB64decode($saWhereCtr), true);
     $aWhereCtr = is_array($aWhereCtrDecoded) ? $aWhereCtrDecoded : [];
 
     $apellido1 = self::whereString($aWhere, 'apellido1', $apellido1);

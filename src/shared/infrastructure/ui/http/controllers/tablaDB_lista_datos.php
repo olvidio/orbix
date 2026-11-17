@@ -59,7 +59,7 @@ if (is_array($aValores)) {
 }
 $data['a_valores'] = $aValores;
 $data['id_tabla'] = $id_tabla;
-$data['script'] = $oDatosTabla->getScript();
+$data['eliminar_txt'] = $oDatosTabla->getEliminar_txt();
 $data['titulo'] = $oInfoClase->getTxtTitulo();
 $data['explicacion'] = $oInfoClase->getTxtExplicacion();
 

@@ -60,7 +60,7 @@ switch ($Qque) {
 
         foreach ($encargos as $idx => $e) {
             $aQuery = ['id_ubi' => EncargossacdPayload::sacdFichaEncargoIdUbi($e)];
-            array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+            array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
             $encargos[$idx]['pagina_ctr'] = HashF::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
             );

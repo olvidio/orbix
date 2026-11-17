@@ -99,7 +99,7 @@ $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 if (!empty($Qsactividad2)) {
     $Qextendida = TRUE;
 }
-$extendida = \src\shared\domain\helpers\FuncTablasSupport::isTrue($Qextendida) ? TRUE : FALSE;
+$extendida = \frontend\shared\helpers\FuncTablasSupport::isTrue($Qextendida) ? TRUE : FALSE;
 
 
 if (empty($Qstatus)) {
@@ -164,7 +164,7 @@ $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
-array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $Link_borrar = HashF::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {

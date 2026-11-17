@@ -122,7 +122,7 @@ $aOpciones = [
 ];
 $oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(\src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo de selección de actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMax($Qempiezamax);

@@ -45,7 +45,7 @@ final class PeriodoPlanningHelper
         string $titulo = ''
     ): PeriodoQue {
         if ($titulo === '') {
-            $titulo = \src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del planning actividades"));
+            $titulo = \frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("periodo del planning actividades"));
         }
 
         $oForm = new PeriodoQue();

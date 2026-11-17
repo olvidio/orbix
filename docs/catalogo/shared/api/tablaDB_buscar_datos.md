@@ -52,7 +52,7 @@ de filtro (`addCamposFormBuscar`), textos y vista opcional personalizada antes d
 
 | Clave | Descripción |
 |-------|-------------|
-| `a_campos` | Metadatos del buscador: `script`, `txt_buscar`, `k_buscar`, `camposForm`, campos extra del `Info*`. |
+| `a_campos` | Metadatos del buscador: `eliminar_txt` (el JS lo monta el frontend con `DatosTablaScript`), `txt_buscar`, `k_buscar`, `camposForm`, campos extra del `Info*`. |
 | `buscar_view` | Vista `.phtml` alternativa (si `getBuscar_view()` del `Info*`). |
 | `namespace_view` | Namespace de la vista (default `frontend\shared\view`). |
 

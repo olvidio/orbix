@@ -173,7 +173,7 @@ if ($Qmod === 'nueva' || $notas === 'nuevo') {
 } else {
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
-    $a_camposHidden['sa_actas'] = \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
+    $a_camposHidden['sa_actas'] = \frontend\shared\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
     $a_camposHidden['ctx_guardar'] = $form['ctx_guardar'];
 }
 if ($notas !== '') {

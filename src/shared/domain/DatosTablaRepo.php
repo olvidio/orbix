@@ -43,79 +43,10 @@ class DatosTablaRepo
     private mixed $id_sel = null;
     private mixed $scroll_id = null;
 
-    private string $html_script = '';
     /** @var list<string>|null */
     private ?array $a_cabeceras = null;
     /** @var array<int|string, mixed>|null */
     private ?array $a_valores = null;
-
-    public function getScript(): string
-    {
-        $bloque = $this->getBloque();
-        $action_form = $this->getAction_form();
-        $action_update = $this->getAction_update();
-        $action_tabla = $this->getAction_tabla();
-        $respuesta = _("respuesta");
-        $html_script = "
-		fnjs_nuevo=function(formulario){
-			$('#mod').val(\"nuevo\");
-			$(formulario).attr('action',\"$action_form\");
-			fnjs_enviar_formulario(formulario,'$bloque');
-		}
-		fnjs_modificar=function(formulario){
-			rta=fnjs_solo_uno(formulario);
-			if (rta==1) {
-				$('#mod').val(\"editar\");
-				$(formulario).attr('action',\"$action_form\");
-				fnjs_enviar_formulario(formulario,'$bloque');
-			}
-		}
-		fnjs_eliminar=function(formulario){
-			var err;
-			var eliminar;
-			eliminar=\"$this->eliminar_txt\";
-
-			if (!eliminar) eliminar=\"" . _("¿Está seguro que desea eliminar este registro?") . "\";
-			rta=fnjs_solo_uno(formulario);
-			if (rta==1) {
-				if (confirm(eliminar) ) {
-					var ctx_eliminar = fnjs_ctx_fila_seleccionada(formulario, 'ctx_eliminar');
-					if (!ctx_eliminar) {
-						alert(\"$respuesta\" + ': ' + " . json_encode(_("Operación no autorizada")) . ");
-						return;
-					}
-					$('#mod').val(\"eliminar\");
-					$(formulario).attr('action',\"$action_update\");
-					$(formulario).one(\"submit\", function() {
-						$.ajax({
-							url: $(this).attr('action'),
-							type: 'post',
-							data: $(this).serialize() + '&ctx_eliminar=' + encodeURIComponent(ctx_eliminar),
-							dataType: 'json'
-							})
-                        .done(function (json) {
-                            if (json.success !== true) {
-                                alert(\"$respuesta\" + ': ' + json.mensaje);
-                            } else {
-                                fnjs_actualizar(formulario);
-                            }
-                        });
-						return false;
-					});
-					$(formulario).trigger(\"submit\");
-					$(formulario).off();
-				}
-			}
-		}
-		fnjs_actualizar=function(formulario){
-			var campo = '<input name=\"refresh\" type=\"hidden\" value=1>';
-			$(formulario).attr('action',\"$action_tabla\");
-			$(formulario).append(campo);
-			fnjs_enviar_formulario(formulario,'#main');
-		}
-		";
-        return $html_script;
-    }
 
     /**
      * @return list<array{txt: string, click: string}>
@@ -352,10 +283,6 @@ class DatosTablaRepo
         return $this->scroll_id;
     }
 
-    public function getHtml_script(): string
-    {
-        return $this->html_script;
-    }
 
     /**
      * @return list<string>|null
@@ -421,10 +348,6 @@ class DatosTablaRepo
         $this->scroll_id = $scroll_id;
     }
 
-    public function setHtml_script(string $html_script): void
-    {
-        $this->html_script = $html_script;
-    }
 
     /**
      * @param list<string>|null $a_cabeceras

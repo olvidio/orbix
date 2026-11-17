@@ -80,7 +80,7 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(src\shared\domain\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un periodo")));
+$oFormP->setTitulo(\frontend\shared\helpers\FuncTablasSupport::strtoupperDlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $sBotonBuscar = "<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">";
 $sBotonEnviar = "<input type=button name=\"enviar\" value=\"" . _("enviar mail") . "\" onclick=\"fnjs_enviar_mails();\">";

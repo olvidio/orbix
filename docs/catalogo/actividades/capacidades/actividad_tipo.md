@@ -6,7 +6,7 @@ nombre: "Gestionar Actividad Tipo"
 entidades: ["ActividadTipoGetActividad", "ActividadTipoGetAsistentes", "ActividadTipoGetDlOrg", "ActividadTipoGetFiltroLugar", "ActividadTipoGetIdTarifa", "ActividadTipoGetLugar", "ActividadTipoGetNivelStgrDefecto", "ActividadTipoGetNomTipo", "ActividadTipoGetNomTipoTabla"]
 acciones: ["obtener"]
 endpoints: ["/src/actividades/actividad_tipo_get"]
-pantallas: ["frontend/actividades/controller/actividad_que.php", "frontend/actividades/controller/actividad_select_ubi.php", "frontend/actividades/helpers/ActividadTipo.php", "frontend/actividades/view/actividad_select_ubi.phtml", "frontend/pasarela/controller/nombre_form.php", "frontend/procesos/controller/fases_activ_cambio.php"]
+pantallas: ["frontend/actividades/controller/actividad_que.php", "frontend/actividades/controller/actividad_select_ubi.php", "frontend/actividades/helpers/ActividadTipo.php", "frontend/actividades/view/actividad_select_ubi.phtml", "frontend/procesos/controller/fases_activ_cambio.php"]
 casos_uso: ["src\\actividades\\application\\ActividadTipoGetActividad", "src\\actividades\\application\\ActividadTipoGetAsistentes", "src\\actividades\\application\\ActividadTipoGetDlOrg", "src\\actividades\\application\\ActividadTipoGetFiltroLugar", "src\\actividades\\application\\ActividadTipoGetIdTarifa", "src\\actividades\\application\\ActividadTipoGetLugar", "src\\actividades\\application\\ActividadTipoGetNivelStgrDefecto", "src\\actividades\\application\\ActividadTipoGetNomTipo", "src\\actividades\\application\\ActividadTipoGetNomTipoTabla"]
 tags: ["actividad", "actividad_tipo", "actividades", "get", "tipo"]
 estado_revision: "generado"
@@ -34,7 +34,6 @@ Gestiona ActividadTipoGetActividad, ActividadTipoGetAsistentes, ActividadTipoGet
 - `frontend/actividades/controller/actividad_select_ubi.php`
 - `frontend/actividades/helpers/ActividadTipo.php`
 - `frontend/actividades/view/actividad_select_ubi.phtml`
-- `frontend/pasarela/controller/nombre_form.php`
 - `frontend/procesos/controller/fases_activ_cambio.php`
 
 ## Casos De Uso Detectados

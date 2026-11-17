@@ -36,7 +36,7 @@ $oDatosTabla->setColeccion($oInfoClase->getColeccion());
 $camposForm = $oInfoClase->addCamposFormBuscar();
 
 $a_campos = [
-    'script' => $oDatosTabla->getScript(),
+    'eliminar_txt' => $oDatosTabla->getEliminar_txt(),
     'txt_buscar' => $oInfoClase->getTxtBuscar(),
     'k_buscar' => $Qk_buscar,
     'camposForm' => $camposForm,

@@ -6,7 +6,7 @@ nombre: "Gestionar Relacion Tarifa"
 entidades: ["RelacionTarifa"]
 acciones: ["crear_actualizar", "eliminar", "listar", "ver_formulario"]
 endpoints: ["/src/actividadtarifas/relacion_tarifa_eliminar", "/src/actividadtarifas/relacion_tarifa_form_data", "/src/actividadtarifas/relacion_tarifa_lista_data", "/src/actividadtarifas/relacion_tarifa_update"]
-pantallas: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad.php", "frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php", "frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php", "frontend/pasarela/controller/nombre_form.php"]
+pantallas: ["frontend/actividadtarifas/controller/tarifa_tipo_actividad.php", "frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php", "frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php"]
 casos_uso: ["src\\actividadtarifas\\application\\RelacionTarifaEliminar", "src\\actividadtarifas\\application\\RelacionTarifaFormData", "src\\actividadtarifas\\application\\RelacionTarifaListaData", "src\\actividadtarifas\\application\\RelacionTarifaUpdate"]
 tags: ["actividadtarifas", "data", "eliminar", "form", "lista", "relacion", "relacion_tarifa", "tarifa", "update"]
 estado_revision: "generado"
@@ -39,7 +39,6 @@ Gestiona RelacionTarifa. crea o actualiza una RelacionTarifaTipoActividad. datos
 - `frontend/actividadtarifas/controller/tarifa_tipo_actividad.php`
 - `frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php`
 - `frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php`
-- `frontend/pasarela/controller/nombre_form.php`
 
 ## Casos De Uso Detectados
 

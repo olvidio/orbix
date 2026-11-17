@@ -13,7 +13,7 @@ respuesta_data_schema: "actividades_ActividadTipoGetData"
 respuesta_data: ["id:string", "opciones:array<int|string,string>", "selected:string", "blanco:bool", "val_blanco:string", "action:string", "content:string"]
 requiere_hashb: false
 errores: ["opción no definida: salida=<valor>"]
-frontend_referencias: ["frontend/actividades/view/_actividad_tipo.js.html.twig", "frontend/actividades/view/_actividad_tipo_gestion.js.html.twig", "frontend/actividades/view/actividad_que.html.twig", "frontend/actividades/controller/actividad_select_ubi.php", "frontend/actividades/view/actividad_select_ubi.phtml", "frontend/pasarela/controller/nombre_form.php", "frontend/procesos/controller/fases_activ_cambio.php"]
+frontend_referencias: ["frontend/actividades/view/_actividad_tipo.js.html.twig", "frontend/actividades/view/_actividad_tipo_gestion.js.html.twig", "frontend/actividades/view/actividad_que.html.twig", "frontend/actividades/controller/actividad_select_ubi.php", "frontend/actividades/view/actividad_select_ubi.phtml", "frontend/procesos/controller/fases_activ_cambio.php"]
 casos_uso: ["src\\actividades\\application\\ActividadTipoGetActividad", "src\\actividades\\application\\ActividadTipoGetAsistentes", "src\\actividades\\application\\ActividadTipoGetDlOrg", "src\\actividades\\application\\ActividadTipoGetFiltroLugar", "src\\actividades\\application\\ActividadTipoGetIdTarifa", "src\\actividades\\application\\ActividadTipoGetLugar", "src\\actividades\\application\\ActividadTipoGetNivelStgrDefecto", "src\\actividades\\application\\ActividadTipoGetNomTipo", "src\\actividades\\application\\ActividadTipoGetNomTipoTabla"]
 tags: ["actividades", "actividad", "tipo", "get"]
 estado_revision: "revisado"
@@ -76,7 +76,6 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 - `frontend/actividades/view/_actividad_tipo_gestion.js.html.twig` — variante gestion
 - `frontend/actividades/view/actividad_que.html.twig` — `fnjs_lugar()`
 - `frontend/actividades/controller/actividad_select_ubi.php` + `actividad_select_ubi.phtml`
-- `frontend/pasarela/controller/nombre_form.php`
 - `frontend/procesos/controller/fases_activ_cambio.php`
 
 ## Revision Manual

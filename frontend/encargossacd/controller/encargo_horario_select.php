@@ -104,7 +104,7 @@ foreach ($filas as $fila) {
         'id_item_h' => $id_item_h,
         'desc_enc' => $desc_enc,
     ];
-    array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+    array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
     $pagina = HashF::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i] = [
@@ -132,7 +132,7 @@ $aQuery = [
     'desc_enc' => $desc_enc,
     'origen' => $Qorigen,
 ];
-array_walk($aQuery, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $pagina_nuevo = HashF::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
 $aQuerySelf = [
@@ -140,7 +140,7 @@ $aQuerySelf = [
     'desc_enc' => $desc_enc,
     'origen' => $Qorigen,
 ];
-array_walk($aQuerySelf, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
+array_walk($aQuerySelf, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $url_self = HashF::link('frontend/encargossacd/controller/encargo_horario_select.php?' . http_build_query($aQuerySelf));
 
 $oTabla = new Lista();
