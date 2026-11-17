@@ -233,12 +233,26 @@ final class MisasCasosDeUsoPequenosTest extends myTest
         $this->assertSame(['x-y', 'z-w'], PeriodoDateRange::resolve('otro', 'x/y', 'z/w'));
     }
 
+    /** «Esta semana» empieza el lunes de la semana en curso, también si hoy es lunes o domingo. */
+    #[\PHPUnit\Framework\Attributes\DataProvider('diasDeLaSemanaProvider')]
+    public function test_esta_semana_empieza_el_lunes_de_la_semana_en_curso(string $hoy, string $lunes, string $lunesSiguiente): void
+    {
+        $this->assertSame([$lunes, $lunesSiguiente], PeriodoDateRange::resolve('esta_semana', '', '', new \DateTimeImmutable($hoy)));
+    }
+
+    /** @return iterable<string, array{string, string, string}> */
+    public static function diasDeLaSemanaProvider(): iterable
+    {
+        yield 'lunes' => ['2026-03-02', '2026-03-02', '2026-03-09'];
+        yield 'miércoles' => ['2026-03-04', '2026-03-02', '2026-03-09'];
+        yield 'domingo' => ['2026-03-08', '2026-03-02', '2026-03-09'];
+    }
+
     public function test_rangos_de_semana_y_mes_son_coherentes_con_hoy(): void
     {
         $hoy = new \DateTimeImmutable('today');
         [$min, $max] = PeriodoDateRange::resolve('esta_semana', '', '');
         $this->assertLessThanOrEqual($hoy->format('Y-m-d'), $min);
-        // Hallazgo: en lunes `esta_semana` retrocede 6 días (martes anterior) en vez de 0; ver plan.
         $this->assertSame(7, (new \DateTimeImmutable($min))->diff(new \DateTimeImmutable($max))->days);
 
         [$min, $max] = PeriodoDateRange::resolve('proxima_semana', '', '');

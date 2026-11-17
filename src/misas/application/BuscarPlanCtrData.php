@@ -169,7 +169,8 @@ class BuscarPlanCtrData
                 $criterioES->andWhere(Filter::gt(EncargoSacdField::FFin, $hoy))
             );
 
-            $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
+            // array_merge: con «+» las dos listas (claves 0, 1…) se pisaban y se perdían encargos.
+            $cEncargosSacd = array_merge($cEncargosSacd1, $cEncargosSacd2);
             foreach ($cEncargosSacd as $oEncargoSacd) {
                 $id_enc = $oEncargoSacd->getId_enc();
                 $oEncargo = $this->encargoRepository->findById($id_enc);

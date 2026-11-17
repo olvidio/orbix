@@ -19,16 +19,14 @@ class PeriodoDateRange
     /**
      * @return array{0: string, 1: string} [Y-m-d, Y-m-d]
      */
-    public static function resolve(string $periodo, string $empiezamin, string $empiezamax): array
+    public static function resolve(string $periodo, string $empiezamin, string $empiezamax, ?\DateTimeInterface $hoy = null): array
     {
+        $hoyIso = ($hoy ?? new \DateTimeImmutable('today'))->format('Y-m-d');
         switch ($periodo) {
             case 'esta_semana':
-                $dia_week = (int)date('N');
-                $dia_week--;
-                if ($dia_week === 0) {
-                    $dia_week = 6;
-                }
-                $empiezamin_dt = new DateTimeLocal(date('Y-m-d'));
+                // Días desde el lunes de esta semana (0 si hoy es lunes; antes, en lunes, retrocedía 6 días).
+                $dia_week = (int)(new \DateTimeImmutable($hoyIso))->format('N') - 1;
+                $empiezamin_dt = new DateTimeLocal($hoyIso);
                 $di = new \DateInterval('P' . $dia_week . 'D');
                 $di->invert = 1;
                 $empiezamin_dt->add($di);
@@ -39,8 +37,8 @@ class PeriodoDateRange
 
                 return [$min, $max];
             case 'proxima_semana':
-                $dia_week = (int)date('N');
-                $empiezamin_dt = new DateTimeLocal(date('Y-m-d'));
+                $dia_week = (int)(new \DateTimeImmutable($hoyIso))->format('N');
+                $empiezamin_dt = new DateTimeLocal($hoyIso);
                 $empiezamin_dt->add(new \DateInterval('P' . (8 - $dia_week) . 'D'));
                 $min = $empiezamin_dt->format('Y-m-d');
                 $empiezamax_dt = $empiezamin_dt;
@@ -49,8 +47,8 @@ class PeriodoDateRange
 
                 return [$min, $max];
             case 'este_mes':
-                $mes = (int)date('m');
-                $anyo = (int)date('Y');
+                $mes = (int)substr($hoyIso, 5, 2);
+                $anyo = (int)substr($hoyIso, 0, 4);
                 $min = (new DateTimeLocal(sprintf('%04d-%02d-01', $anyo, $mes)))->format('Y-m-d');
                 $siguiente = $mes + 1;
                 if ($siguiente === 13) {
@@ -61,8 +59,8 @@ class PeriodoDateRange
 
                 return [$min, $max];
             case 'proximo_mes':
-                $proximo = (int)date('m') + 1;
-                $anyo = (int)date('Y');
+                $proximo = (int)substr($hoyIso, 5, 2) + 1;
+                $anyo = (int)substr($hoyIso, 0, 4);
                 if ($proximo === 13) {
                     $proximo = 1;
                     $anyo++;

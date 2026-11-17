@@ -357,7 +357,7 @@ final class PlanPorCentroDataTest extends myTest
 
         $this->buscar([], $repoSacd, $repoEnc)->getData(0);
 
-        // Hallazgo: la unión con `+` de dos listas indexadas descarta el segundo elemento (misma clave 0).
-        $this->assertSame([77], $consultados);
+        // Los dos encargos (sin fecha fin y con fecha fin futura) se consultan.
+        $this->assertSame([77, 78], $consultados);
     }
 }
