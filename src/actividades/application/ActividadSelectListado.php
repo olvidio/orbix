@@ -378,11 +378,13 @@ final class ActividadSelectListado
                             }
                         }
                     }
-                    if ($oPermActividadesSesion instanceof PermisosActividades) {
-                        $oPermActividadesSesion->setActividad($id_activ, $id_tipo_activ_txt, $dl_org);
-                        $oPermActiv = $oPermActividadesSesion->getPermisoActual('datos');
-                        $oPermSacd = $oPermActividadesSesion->getPermisoActual('sacd');
+                    if (!($oPermActividadesSesion instanceof PermisosActividades)) {
+                        // Sin permisos en la sesión no se ve nada.
+                        continue;
                     }
+                    $oPermActividadesSesion->setActividad($id_activ, $id_tipo_activ_txt, $dl_org);
+                    $oPermActiv = $oPermActividadesSesion->getPermisoActual('datos');
+                    $oPermSacd = $oPermActividadesSesion->getPermisoActual('sacd');
                 }
             }
             $i++;

@@ -223,9 +223,9 @@ final class ListaActividadesSgListadoTest extends myTest
     }
 
     /**
-     * Hallazgo: con procesos instalado y sin objeto de permisos en la sesión, las
-     * actividades se saltan sin contarlas ni como «sin permiso» (la búsqueda
-     * general, ActividadSelectListado, las muestra todas en ese caso).
+     * Con procesos instalado y sin objeto de permisos en la sesión, las actividades
+     * se saltan sin contarlas ni como «sin permiso» (criterio común a los listados
+     * de actividades: sin permisos no se ve nada).
      */
     public function test_con_procesos_sin_permisos_en_sesion_no_sale_nada_ni_se_cuenta(): void
     {

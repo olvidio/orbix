@@ -321,6 +321,19 @@ final class ActividadSelectListadoTest extends myTest
         $this->assertStringStartsWith('3 actividades encontradas (1 sin permiso)', $out['resultado']);
     }
 
+    /**
+     * Con procesos instalado y sin objeto de permisos en la sesión no sale ninguna actividad (antes salían todas),
+     * igual que en el listado de sg.
+     */
+    public function test_con_procesos_sin_permisos_en_la_sesion_no_sale_nada(): void
+    {
+        $this->apps(['procesos']);
+        unset($_SESSION['oPermActividades']);
+        $this->devolver([$this->actividad(10, 112021, '2027-03-01')]);
+        $out = $this->uc()->ejecutar([], 0);
+        $this->assertSame([], array_values(array_filter($out['a_valores'], 'is_int', ARRAY_FILTER_USE_KEY)));
+    }
+
     public function test_filtro_de_fases_completadas_y_no_completadas(): void
     {
         $this->apps(['procesos']);

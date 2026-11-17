@@ -131,10 +131,8 @@ final class CasaActividadesListaData
                         $oPermCtr = $oPermSesion->getPermisoActual('ctr');
                         $oPermSacd = $oPermSesion->getPermisoActual('sacd');
                     } else {
-                        $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
-                        $oPermActiv = $oPermActividades->getPermisoActual('datos');
-                        $oPermCtr = $oPermActividades->getPermisoActual('ctr');
-                        $oPermSacd = $oPermActividades->getPermisoActual('sacd');
+                        // Sin permisos en la sesión no se ve nada.
+                        continue;
                     }
                 } else {
                     $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());

@@ -373,8 +373,8 @@ final class CasaIngresosListaDataTest extends myTest
     }
 
     /**
-     * Hallazgo: sin objeto de permisos en la sesión no se lista ninguna actividad (el listado de actividades por
-     * casa, en cambio, lo trata como «se ve todo»).
+     * Sin objeto de permisos en la sesión no se lista ninguna actividad (criterio común a los listados de
+     * actividades: sin permisos no se ve nada).
      */
     public function test_sin_permisos_en_la_sesion_no_se_lista_ninguna_actividad(): void
     {

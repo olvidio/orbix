@@ -286,15 +286,17 @@ final class CasaActividadesListaDataTest extends myTest
         $this->assertSame('traer sábanas', $fila[13]);
     }
 
-    public function test_con_procesos_pero_sin_permisos_en_la_sesion_se_ve_todo(): void
+    /**
+     * Con procesos instalado y sin objeto de permisos en la sesión no se ve ninguna actividad (antes se veía
+     * todo; ahora igual que los ingresos por casa y el listado de sg).
+     */
+    public function test_con_procesos_pero_sin_permisos_en_la_sesion_no_se_ve_nada(): void
     {
         $this->apps(['procesos']);
         unset($_SESSION['oPermActividades']);
         $this->actividadesPorCasa[77] = [$this->actividad(3001)];
 
-        $fila = $this->uc()->execute(['id_cdc' => [77]] + self::PERIODO)['a_valores'][77][1];
-
-        $this->assertSame('traer sábanas', $fila[13]);
+        $this->assertSame([], $this->uc()->execute(['id_cdc' => [77]] + self::PERIODO)['a_valores'][77] ?? []);
     }
 
     private function sacd(string $nombre): PersonaSacd&MockObject
