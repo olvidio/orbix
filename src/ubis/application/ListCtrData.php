@@ -151,6 +151,7 @@ class ListCtrData
         } else {
             switch ($Qque_lista) {
                 case "ctr_n":
+                case "ctr_n_ex": // la pantalla de «otras» ofrece estos nombres
                     $obj = 'CentroEx';
                     $filtros[] = ['tipo_ctr', Operator::Matches, '^n'];
                     break;
@@ -159,10 +160,12 @@ class ListCtrData
                     $filtros[] = ['tipo_ctr', Operator::Matches, '^x'];
                     break;
                 case "ctr_agd":
+                case "ctr_agd_ex":
                     $obj = 'CentroEx';
                     $filtros[] = ['tipo_ctr', Operator::Matches, '^a[^p]*'];
                     break;
                 case "ctr_s":
+                case "ctr_s_ex":
                     $obj = 'CentroEx';
                     $filtros[] = ['tipo_ctr', Operator::Matches, '^(sj|sm|s)$'];
                     break;

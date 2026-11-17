@@ -232,27 +232,27 @@ final class ListCtrDataTest extends myTest
     }
 
     /**
-     * Hallazgo: las opciones de la lista de «otras» se llaman `ctr_n_ex`, `ctr_agd_ex` y `ctr_s_ex`, pero el
-     * `switch` solo conoce `ctr_n`, `ctr_agd` y `ctr_s`: elegir una de ellas devuelve una lista vacía.
+     * Las opciones de la lista de «otras» (`ctr_n_ex`, `ctr_agd_ex`, `ctr_s_ex`) filtran los centros de fuera
+     * por tipo, como sus equivalentes de la dl.
      *
-     * @dataProvider opcionesExDesconocidasProvider
+     * @dataProvider opcionesExProvider
      */
-    public function test_las_opciones_ex_con_sufijo_no_tienen_caso_y_dan_lista_vacia(string $lista): void
+    public function test_las_opciones_ex_con_sufijo_filtran_los_centros_de_fuera(string $lista, string $filtro): void
     {
         $r = $this->uc()->execute('ex', $lista);
 
-        $this->assertArrayHasKey($lista, $r['opciones_que_lista'], 'la pantalla sí ofrece esta opción');
-        $this->assertSame([], $this->filtros);
+        $this->assertArrayHasKey($lista, $r['opciones_que_lista'], 'la pantalla ofrece esta opción');
+        $this->assertSame(['active eq true', $filtro], $this->filtros['CentroEx'] ?? []);
     }
 
     /**
-     * @return iterable<string, array{string}>
+     * @return iterable<string, array{string, string}>
      */
-    public static function opcionesExDesconocidasProvider(): iterable
+    public static function opcionesExProvider(): iterable
     {
-        yield 'n' => ['ctr_n_ex'];
-        yield 'agd' => ['ctr_agd_ex'];
-        yield 's' => ['ctr_s_ex'];
+        yield 'n' => ['ctr_n_ex', 'tipo_ctr matches ^n'];
+        yield 'agd' => ['ctr_agd_ex', 'tipo_ctr matches ^a[^p]*'];
+        yield 's' => ['ctr_s_ex', 'tipo_ctr matches ^(sj|sm|s)$'];
     }
 
     // ---- filas y opciones ----------------------------------------------------------------------
