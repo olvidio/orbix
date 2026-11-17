@@ -65,7 +65,8 @@ final class E43CertificadoData
         $nom = $oPersona->getNombreApellidos();
         $lugarNacimiento = $oPersona->getLugar_nacimiento();
         $fNacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
-        $txtNacimiento = "$lugarNacimiento ($fNacimiento)";
+        // «lugar (fecha)», sin paréntesis vacíos si falta algún dato.
+        $txtNacimiento = trim((string) $lugarNacimiento . (empty($fNacimiento) ? '' : " ($fNacimiento)"));
 
         $dlOrigen = ConfigGlobal::mi_delef();
         $dlDestino = $oPersona->getDl();

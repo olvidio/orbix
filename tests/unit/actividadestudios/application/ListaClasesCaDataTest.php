@@ -186,14 +186,15 @@ final class ListaClasesCaDataTest extends myTest
         $this->assertSame([], $r['datos_asignatura']);
     }
 
-    /** Hallazgo: el caso de uso devuelve HTML (`<span class=no_print>`) en el nombre del director. */
+    /** Sin director nombrado se devuelve la indicación de cómo nombrarlo, sin HTML (lo pinta la vista). */
     public function test_sin_director_nombrado_se_devuelve_la_indicacion_de_como_nombrarlo(): void
     {
         $this->actividad();
 
         $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->assertStringStartsWith('<span class=no_print>', $r['nom_director_est']);
+        $this->assertSame(_("para nombrarlo, ir al dossier de cargos de la actividad"), $r['nom_director_est']);
+        $this->assertTrue($r['sin_director']);
         $this->assertSame('', $r['msg_err']);
     }
 
@@ -208,20 +209,18 @@ final class ListaClasesCaDataTest extends myTest
         $this->assertStringContainsString('id_nom: 10011', $r['msg_err']);
     }
 
-    /**
-     * Hallazgo: si el cargo «d.est.» no está en la tabla de cargos, `$cCargos[0]` no existe y la pantalla acaba
-     * en un error fatal en lugar de un mensaje.
-     */
-    public function test_sin_el_cargo_dest_en_la_tabla_de_cargos_el_listado_revienta(): void
+    /** Sin el cargo «d.est.» en la tabla de cargos no hay director, y se avisa (antes, error fatal). */
+    public function test_sin_el_cargo_dest_en_la_tabla_de_cargos_se_avisa(): void
     {
         $this->actividad();
         $cargos = $this->createMock(CargoRepositoryInterface::class);
         $cargos->method('matching')->willReturn([]);
         $uc = new ListaClasesCaData($this->actividades, $cargos, $this->actividadCargos, $this->actividadAsignaturas, $this->asignaturas, $this->matriculas);
 
-        $this->expectException(\Error::class);
+        $r = $uc->execute(['id_activ' => self::ID_ACTIV]);
 
-        @$uc->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertTrue($r['sin_director']);
+        $this->assertStringContainsString(_("No existe el cargo «d.est.» en la tabla de cargos."), $r['msg_err']);
     }
 
     public function test_cada_asignatura_lleva_su_profesor_y_sus_alumnos_ordenados_sin_acentos(): void
@@ -293,19 +292,21 @@ final class ListaClasesCaDataTest extends myTest
         $this->assertSame('', $r['msg_err']);
     }
 
-    /** Hallazgo: una asignatura del ca que ya no existe lanza `RuntimeException` y tumba el listado entero. */
-    public function test_una_asignatura_que_ya_no_existe_lanza_excepcion(): void
+    /** Una asignatura del ca que ya no existe se salta con un aviso; el resto del listado sale. */
+    public function test_una_asignatura_que_ya_no_existe_se_salta_y_se_avisa(): void
     {
         $this->actividad();
         $this->asignaturaDelCa(9999);
+        $this->asignaturaDelCa(1101);
 
-        $this->expectException(\RuntimeException::class);
+        $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertCount(1, $r['datos_asignatura']);
+        $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $r['msg_err']);
     }
 
-    /** Hallazgo: los alumnos se indexan por nombre; dos con el mismo «apellidos, nombre» quedan en una sola fila. */
-    public function test_dos_alumnos_con_el_mismo_nombre_quedan_en_una_sola_fila(): void
+    /** Dos alumnos con el mismo «apellidos, nombre» salen los dos. */
+    public function test_dos_alumnos_con_el_mismo_nombre_salen_los_dos(): void
     {
         $this->actividad();
         $this->asignaturaDelCa(1101);
@@ -314,6 +315,6 @@ final class ListaClasesCaDataTest extends myTest
 
         $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->assertSame(['García, José' => 'ctr30002'], $r['datos_asignatura'][1]['alumnos']);
+        $this->assertSame(['García, José' => 'ctr30001', 'García, José (30002)' => 'ctr30002'], $r['datos_asignatura'][1]['alumnos']);
     }
 }

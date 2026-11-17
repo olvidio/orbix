@@ -229,15 +229,13 @@ final class FormAsignaturasDeUnaActividadDataTest extends TestCase
         $this->assertSame(['id_activ' => self::ID_ACTIV], HashB::open($r['a_camposHidden']['ctx_nueva'], 'actividad_asignatura_nueva'));
     }
 
-    /**
-     * Hallazgo: sin actividad, el alta consulta antes los profesores de la «actividad 0» y después lanza una
-     * excepción cuyo texto habla del nombre de la asignatura, no de la actividad que falta.
-     */
-    public function test_alta_sin_actividad_lanza_excepcion_despues_de_consultar_los_profesores(): void
+    /** Sin actividad, el alta avisa de que falta la actividad sin consultar antes los profesores. */
+    public function test_alta_sin_actividad_avisa_sin_consultar_los_profesores(): void
     {
-        $this->profesorActividad->expects($this->once())->method('getArrayProfesoresActividad')->with([0])->willReturn([]);
+        $this->profesorActividad->expects($this->never())->method('getArrayProfesoresActividad');
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(_("falta id_activ"));
 
         $this->uc()->execute([]);
     }

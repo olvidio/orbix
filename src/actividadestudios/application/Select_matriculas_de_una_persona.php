@@ -361,7 +361,7 @@ class Select_matriculas_de_una_persona
             $cAsistencias = $this->asistenteActividadService->getActividadesDeAsistente($criteriaAsistente, $criteriaAct, true);
         } else {
             $criteriaAct = Criteria::create()
-                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)'));
+                ->where(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122|222|332|123)'));
             if (empty($this->todos)) {
                 $criteriaAct = $criteriaAct->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca));
             }

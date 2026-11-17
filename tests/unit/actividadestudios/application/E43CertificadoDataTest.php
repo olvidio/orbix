@@ -280,10 +280,8 @@ final class E43CertificadoDataTest extends myTest
         $this->assertSame(['nom_asignatura' => '', 'nota' => 'Magna cum laude (8,6-9,5/10)', 'f_acta' => '', 'acta' => ''], $fila);
     }
 
-    /**
-     * Hallazgo: sin fecha ni lugar de nacimiento el texto queda « ()»; y sin dl de la persona, el destino vacío.
-     */
-    public function test_sin_datos_de_nacimiento_el_texto_queda_con_los_parentesis_vacios(): void
+    /** Sin fecha ni lugar de nacimiento el texto queda vacío (antes « ()»); con solo uno, sin paréntesis vacíos. */
+    public function test_sin_datos_de_nacimiento_el_texto_queda_vacio(): void
     {
         $p = $this->createMock(PersonaDl::class);
         $p->method('getNombreApellidos')->willReturn('Joan Pla Roca');
@@ -296,7 +294,20 @@ final class E43CertificadoDataTest extends myTest
 
         $r = $this->uc()->execute(['id_nom' => self::ID_NOM, 'id_activ' => self::ID_ACTIV]);
 
-        $this->assertSame(' ()', $r['txt_nacimiento']);
+        $this->assertSame('', $r['txt_nacimiento']);
         $this->assertSame('', $r['dl_destino']);
+    }
+
+    public function test_con_solo_el_lugar_de_nacimiento_no_salen_parentesis(): void
+    {
+        $p = $this->createMock(PersonaDl::class);
+        $p->method('getNombreApellidos')->willReturn('Joan Pla Roca');
+        $p->method('getLugar_nacimiento')->willReturn('Girona');
+        $p->method('getF_nacimiento')->willReturn(null);
+        $this->finder->method('findPersonaEnGlobalODePaso')->willReturn($p);
+        $this->actividad();
+        $this->matriculas([]);
+
+        $this->assertSame('Girona', $this->uc()->execute(['id_nom' => self::ID_NOM, 'id_activ' => self::ID_ACTIV])['txt_nacimiento']);
     }
 }

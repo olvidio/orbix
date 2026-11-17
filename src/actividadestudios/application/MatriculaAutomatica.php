@@ -116,7 +116,7 @@ final class MatriculaAutomatica
             $criteriaAct = Criteria::create()
                 ->where(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
                 ->andWhere(Filter::between(ActividadAllField::FIni, $inicurs_ca, $fincurs_ca))
-                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)'));
+                ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . ConfigGlobal::mi_sfsv() . '(122|222|332)'));
         }
 
         foreach ($cAlumnos as $oPersonaDl) {

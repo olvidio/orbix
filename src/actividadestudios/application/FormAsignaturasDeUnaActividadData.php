@@ -125,6 +125,9 @@ final class FormAsignaturasDeUnaActividadData
                 'id_asignatura' => $idAsignatura,
             ]);
         } else {
+            if (empty($idActiv)) {
+                throw new \InvalidArgumentException(_("falta id_activ"));
+            }
             $mod = 'nuevo';
             $nombreCorto = '';
             $idProfesorSel = -1;
@@ -132,9 +135,6 @@ final class FormAsignaturasDeUnaActividadData
             $avisoTxt = implode("\n", $this->profesorActividad->getLastAvisos());
             $fIni = '';
             $fFin = '';
-            if (empty($idActiv)) {
-                throw new \InvalidArgumentException(_("debería haber un nombre de asignatura"));
-            }
             $oDesplAsignaturasOpciones = $this->asignaturaRepository->getArrayAsignaturasConSeparador(
                 false,
                 PlanEstudios::PLAN_2026,

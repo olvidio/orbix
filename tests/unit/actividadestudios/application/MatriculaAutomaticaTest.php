@@ -121,6 +121,32 @@ final class MatriculaAutomaticaTest extends TestCase
         $this->assertStringNotContainsString(_("está de repaso"), $out['msg']);
     }
 
+    /** Sin actividad, los ca del curso se buscan con un patrón que ancla la sección y agrupa las alternativas. */
+    public function test_sin_actividad_los_ca_del_curso_se_buscan_con_el_patron_bien_agrupado(): void
+    {
+        $sesion = $_SESSION ?? [];
+        $curso = ['ini_dia' => 1, 'ini_mes' => 10, 'fin_dia' => 30, 'fin_mes' => 9];
+        $_SESSION['oConfig'] = new \src\configuracion\domain\value_objects\ConfigSnapshot(null, null, null, null, null, null, 'dl', null, null, null, 'es_ES.UTF-8', null, null, $curso, $curso);
+        $_SESSION['session_auth'] = ['sfsv' => 1, 'esquema' => 'H-dlbv'];
+        try {
+            $finder = $this->createMock(PersonaFinderService::class);
+            $finder->method('findPersonaEnGlobalODePaso')->willReturn($this->personaDePaso(NivelStgrId::B));
+            $filtros = null;
+            $servicio = $this->createMock(AsistenteActividadService::class);
+            $servicio->method('getActividadesDeAsistente')->willReturnCallback(function ($asistencia, $actividades) use (&$filtros): array {
+                $filtros = \Tests\support\DescribeCriteria::filtros($actividades);
+
+                return [];
+            });
+
+            $this->useCase(['finder' => $finder, 'asistenteActividad' => $servicio])->execute(['id_pau' => -100162294]);
+
+            $this->assertContains('id_tipo_activ matches ^1(122|222|332)', $filtros);
+        } finally {
+            $_SESSION = $sesion;
+        }
+    }
+
     /**
      * @param array<string, object> $deps
      */

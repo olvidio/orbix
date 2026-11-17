@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 10:56+0100\n"
+"POT-Creation-Date: 2026-11-17 13:44+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -150,7 +150,7 @@ msgstr "error desconegut"
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
-#: frontend/ubis/controller/plano_bytea.php:76
+#: frontend/ubis/controller/plano_bytea.php:77
 #: frontend/ubis/view/direccion_form.phtml:77
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/teleco_tabla.phtml:32
@@ -320,7 +320,7 @@ msgstr "falten dades obligatòries: activitat, persona i tipus de càrrec."
 #: src/actividades/application/ListaSrCsvListado.php:167
 #: src/actividadplazas/application/GestionPlazasData.php:246
 #: src/actividadplazas/application/PlazasBalanceData.php:99
-#: src/asistentes/application/ListaEstCtrData.php:205
+#: src/asistentes/application/ListaEstCtrData.php:204
 #: src/cambios/domain/AvisoObjetoCatalog.php:39
 #: src/casas/application/PrevisionAsistentesData.php:63
 #: src/profesores/domain/entity/ProfesorDocenciaStgr.php:241
@@ -908,7 +908,7 @@ msgstr "id"
 #: frontend/usuarios/view/grupo_lista.phtml:57
 #: frontend/usuarios/view/role_form.phtml:60
 #: frontend/usuarios/view/usuario_lista.phtml:42
-#: src/asistentes/application/ListaEstCtrData.php:204
+#: src/asistentes/application/ListaEstCtrData.php:203
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
@@ -1067,7 +1067,7 @@ msgstr "Està segur que vol eliminar aquest tipus d'activitat?"
 #: src/certificados/domain/CertificadoEmitidoSelect.php:58
 #: src/configuracion/application/ModulosSelectData.php:48
 #: src/shared/domain/DatosTablaRepo.php:57
-#: src/ubis/application/ListCtrData.php:337
+#: src/ubis/application/ListCtrData.php:340
 #: src/ubis/application/TelecoTablaData.php:113
 #: src/ubis/application/UbisTablaData.php:109
 #: src/usuarios/application/rolesLista.php:66
@@ -1456,7 +1456,7 @@ msgstr "esborrar"
 #: src/ubis/application/CentrosSListaData.php:58
 #: src/ubis/application/HomeUbisData.php:63
 #: src/ubis/application/HomeUbisData.php:68
-#: src/ubis/application/ListCtrData.php:222
+#: src/ubis/application/ListCtrData.php:225
 #: src/zonassacd/application/ZonaCtrLista.php:83
 msgid "centro"
 msgstr "centre"
@@ -1664,7 +1664,7 @@ msgstr "sss+"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:483
 #: src/ubis/application/DireccionesTablaData.php:62
-#: src/ubis/application/ListCtrData.php:226
+#: src/ubis/application/ListCtrData.php:229
 #: src/ubis/application/UbisListaData.php:92
 #: src/ubis/application/UbisTablaData.php:121
 msgid "cp"
@@ -1822,7 +1822,7 @@ msgstr "data i lloc del sem, ca o cv"
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:63
 #: frontend/profesores/view/profesor_asignatura_que.phtml:14
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:79
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:76
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:77
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:114
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:301
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:316
@@ -1855,7 +1855,7 @@ msgstr "nº de l'acta"
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:51
 #: frontend/actividadestudios/view/acta_notas.phtml:82
 #: frontend/notas/view/acta_ver.phtml:229
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:77
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:78
 #: src/certificados/domain/CertificadoEmitidoSelect.php:67
 msgid "alumno"
 msgstr "alumne"
@@ -1890,8 +1890,8 @@ msgstr "dl"
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:113
 #: frontend/actividadestudios/view/form_matriculas_de_una_persona.phtml:121
 #: frontend/notas/view/form_notas_de_una_persona.phtml:422
-#: src/actividadestudios/application/ListaClasesCaData.php:116
-#: src/actividadestudios/application/PlanEstudiosCaData.php:197
+#: src/actividadestudios/application/ListaClasesCaData.php:125
+#: src/actividadestudios/application/PlanEstudiosCaData.php:208
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:113
 #: src/actividadestudios/domain/value_objects/TipoActividadAsignatura.php:20
 #: src/notas/application/Select_notas_de_una_persona.php:61
@@ -1915,7 +1915,7 @@ msgstr "veure assignatures ca"
 
 #: frontend/actividadestudios/controller/matriculas_lista.php:86
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:48
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:68
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:69
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:102
 msgid "borrar matrícula"
 msgstr "esborrar matrícula"
@@ -1947,7 +1947,7 @@ msgstr "alerta"
 #: src/actividades/application/ActividadSelectListado.php:204
 #: src/actividades/application/ActividadSelectListado.php:233
 #: src/asignaturas/domain/InfoAsignaturas.php:19
-#: src/asistentes/application/ListaEstCtrData.php:206
+#: src/asistentes/application/ListaEstCtrData.php:205
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:268
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
@@ -2044,8 +2044,8 @@ msgid "cuadrienio"
 msgstr "quadrienni"
 
 #: frontend/actividadestudios/view/ca_posibles_cuadro.phtml:31
-#: src/actividadestudios/application/PlanEstudiosCaData.php:169
-#: src/asistentes/application/ListaEstCtrData.php:155
+#: src/actividadestudios/application/PlanEstudiosCaData.php:179
+#: src/asistentes/application/ListaEstCtrData.php:154
 msgid "repaso"
 msgstr "repàs"
 
@@ -2179,7 +2179,7 @@ msgid "asignatura de una actividad"
 msgstr "assignatura d'una activitat"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:101
-#: src/actividadestudios/application/ListaClasesCaData.php:118
+#: src/actividadestudios/application/ListaClasesCaData.php:127
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:82
 msgid "profesor"
 msgstr "professor"
@@ -2327,12 +2327,12 @@ msgstr "pla d'estudis confirmat"
 #: frontend/planning/view/planning_ctr_que.phtml:55
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
-#: src/asistentes/application/ListaAsistentesData.php:118
-#: src/asistentes/application/ListaAsistentesData.php:122
+#: src/asistentes/application/ListaAsistentesData.php:119
 #: src/asistentes/application/ListaAsistentesData.php:123
-#: src/asistentes/application/ListaAsistentesData.php:173
-#: src/asistentes/application/ListaAsistentesData.php:177
+#: src/asistentes/application/ListaAsistentesData.php:124
+#: src/asistentes/application/ListaAsistentesData.php:174
 #: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:379
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
@@ -2361,12 +2361,12 @@ msgstr "si"
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
 #: src/actividades/application/ActividadQueFiltrosBloque.php:98
-#: src/asistentes/application/ListaAsistentesData.php:120
-#: src/asistentes/application/ListaAsistentesData.php:122
+#: src/asistentes/application/ListaAsistentesData.php:121
 #: src/asistentes/application/ListaAsistentesData.php:123
-#: src/asistentes/application/ListaAsistentesData.php:175
-#: src/asistentes/application/ListaAsistentesData.php:177
+#: src/asistentes/application/ListaAsistentesData.php:124
+#: src/asistentes/application/ListaAsistentesData.php:176
 #: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
@@ -2510,7 +2510,7 @@ msgstr "total"
 #: frontend/casas/view/casas_resumen_periodo.phtml:66
 #: frontend/casas/view/casas_resumen_periodo.phtml:80
 #: frontend/casas/view/casas_resumen_periodo.phtml:102
-#: src/casas/application/CasaIngresosListaData.php:284
+#: src/casas/application/CasaIngresosListaData.php:288
 msgid "totales"
 msgstr "totals"
 
@@ -2643,7 +2643,7 @@ msgstr "assistència a una activitat"
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:102
 #: src/asistentes/application/Select_actividades_de_una_persona.php:126
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:261
-#: src/asistentes/domain/entity/Asistente.php:538
+#: src/asistentes/domain/entity/Asistente.php:542
 msgid "propio"
 msgstr "propi"
 
@@ -2651,7 +2651,7 @@ msgstr "propi"
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:106
 #: src/asistentes/application/Select_actividades_de_una_persona.php:128
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:263
-#: src/asistentes/domain/entity/Asistente.php:562
+#: src/asistentes/domain/entity/Asistente.php:566
 msgid "falta"
 msgstr "falta"
 
@@ -3200,7 +3200,7 @@ msgstr "Cartes de presentació"
 #: frontend/ubis/view/ctrex_form.phtml:52
 #: frontend/ubis/view/ubis_buscar.phtml:71
 #: frontend/ubis/view/ubis_buscar.phtml:247
-#: src/ubis/application/ListCtrData.php:223
+#: src/ubis/application/ListCtrData.php:226
 #: src/ubis/application/UbisListaData.php:90
 #: src/ubis/application/UbisTablaData.php:119
 msgid "región"
@@ -3221,7 +3221,7 @@ msgstr "delegació (H)"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:23
 #: src/profesores/application/ProfesoresAsignaturaLista.php:41
-#: src/ubis/application/ListCtrData.php:228
+#: src/ubis/application/ListCtrData.php:231
 msgid "teléfono"
 msgstr "telèfon"
 
@@ -4009,7 +4009,7 @@ msgstr "De moment aquests botons no fan res"
 #: frontend/dbextern/view/ver_orbix.phtml:83
 #: frontend/dbextern/view/ver_orbix_otradl.phtml:51
 #: frontend/dbextern/view/ver_traslados.phtml:50
-#: src/ubis/application/ListCtrData.php:341
+#: src/ubis/application/ListCtrData.php:344
 msgid "trasladar"
 msgstr "traslladar"
 
@@ -10450,7 +10450,7 @@ msgstr "i"
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
 #: src/asistentes/application/AsistenteGuardar.php:208
-#: src/asistentes/application/AsistentePlazaAsignar.php:80
+#: src/asistentes/application/AsistentePlazaAsignar.php:79
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
 #: src/dbextern/domain/SincroDB.php:548
@@ -10644,23 +10644,23 @@ msgstr "assignar una adreça"
 msgid "número total de s: %s"
 msgstr "nombre total de s: %s"
 
-#: frontend/ubis/controller/plano_bytea.php:58
+#: frontend/ubis/controller/plano_bytea.php:59
 msgid "introducir documento"
 msgstr "introduir document"
 
-#: frontend/ubis/controller/plano_bytea.php:59
+#: frontend/ubis/controller/plano_bytea.php:60
 msgid "introducir"
 msgstr "introduir"
 
-#: frontend/ubis/controller/plano_bytea.php:88
+#: frontend/ubis/controller/plano_bytea.php:89
 msgid "No se ha recibido ningún archivo."
 msgstr "No s'ha rebut cap arxiu."
 
-#: frontend/ubis/controller/plano_bytea.php:101
+#: frontend/ubis/controller/plano_bytea.php:102
 msgid "ya existe un escrito. ¿Desea reemplazarlo?"
 msgstr "ja hi ha un escrit. Voleu reemplaçar-lo?"
 
-#: frontend/ubis/controller/plano_bytea.php:112
+#: frontend/ubis/controller/plano_bytea.php:113
 msgid "ubicación del fichero"
 msgstr "ubicació del fitxer"
 
@@ -10828,7 +10828,7 @@ msgstr "ajuda!"
 #: frontend/ubis/view/home_ubis.phtml:39
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:249
 #: src/ubis/application/DireccionesTablaData.php:61
-#: src/ubis/application/ListCtrData.php:225
+#: src/ubis/application/ListCtrData.php:228
 #: src/ubis/application/UbisListaData.php:91
 #: src/ubis/application/UbisTablaData.php:120
 msgid "dirección"
@@ -12387,8 +12387,8 @@ msgstr "falta id_item"
 #: src/actividades/application/BorrarActividad.php:53
 #: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
-#: src/asistentes/application/AsistenteEliminar.php:88
-#: src/asistentes/application/AsistenteEliminar.php:101
+#: src/asistentes/application/AsistenteEliminar.php:89
+#: src/asistentes/application/AsistenteEliminar.php:102
 #: src/configuracion/application/ModulosUpdateAction.php:65
 #: src/dbextern/application/DesunirPersonaUseCase.php:25
 #: src/dbextern/domain/VincularIdMatch.php:101
@@ -12724,7 +12724,7 @@ msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "L'activitat: %s no té lloc assignat"
 
 #: src/actividades/application/CalendarioListasDatos.php:292
-#: src/casas/application/CasaActividadesListaData.php:154
+#: src/casas/application/CasaActividadesListaData.php:153
 msgid "ocupado"
 msgstr "ocupat"
 
@@ -12819,7 +12819,7 @@ msgid "dl_org"
 msgstr "dl_org"
 
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:70
-#: src/asistentes/domain/entity/Asistente.php:524
+#: src/asistentes/domain/entity/Asistente.php:528
 msgid "nombre actividad"
 msgstr "nom activitat"
 
@@ -13056,7 +13056,7 @@ msgstr "atenció activitats per al període %s"
 
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
-#: src/asistentes/application/AsistenteEliminar.php:53
+#: src/asistentes/application/AsistenteEliminar.php:54
 #: src/asistentes/application/AsistenteGuardar.php:87
 msgid "faltan parametros id_activ / id_nom"
 msgstr "falten paràmetres id_activ / id_nom"
@@ -13165,7 +13165,7 @@ msgid "No puede modificar un acta de otra dl"
 msgstr "No pot modificar un acta d'una altra dl"
 
 #: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:102
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:106
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:109
 msgid "no encuentro la actividad"
 msgstr "no trobo l'activitat"
 
@@ -13292,21 +13292,21 @@ msgstr "no trobo l'assistent"
 msgid "Parámetro na no válido"
 msgstr "Paràmetre na no vàlid"
 
-#: src/actividadestudios/application/CaPosiblesData.php:280
+#: src/actividadestudios/application/CaPosiblesData.php:279
 #, php-format
 msgid "el ca: %s no tiene puesto el nivel de stgr."
 msgstr "el ca: %s no té posat el nivell de stgr."
 
-#: src/actividadestudios/application/CaPosiblesData.php:288
+#: src/actividadestudios/application/CaPosiblesData.php:287
 #, php-format
 msgid "el ca: %s no tiene puesta ninguna asignatura."
 msgstr "el ca: %s no té posada cap assignatura."
 
-#: src/actividadestudios/application/CaPosiblesData.php:468
+#: src/actividadestudios/application/CaPosiblesData.php:469
 msgid "sólo debebería haber uno"
 msgstr "només debebería haver-hi un"
 
-#: src/actividadestudios/application/CaPosiblesData.php:475
+#: src/actividadestudios/application/CaPosiblesData.php:476
 #, php-format
 msgid "posibles ca de %s (%s)"
 msgstr "possibles ca de %s ( %s )"
@@ -13380,30 +13380,30 @@ msgstr ""
 msgid "Se ha actualizado la docencia para el periodo: %s"
 msgstr "S'ha actualitzat la docència per al període: %s"
 
-#: src/actividadestudios/application/E43CertificadoData.php:76
-#: src/actividadestudios/application/ListaClasesCaData.php:57
+#: src/actividadestudios/application/E43CertificadoData.php:77
+#: src/actividadestudios/application/ListaClasesCaData.php:59
 #: src/actividadestudios/application/MatriculasListaData.php:111
-#: src/actividadestudios/application/PlanEstudiosCaData.php:63
+#: src/actividadestudios/application/PlanEstudiosCaData.php:65
 #, php-format
 msgid "No encuentro actividad con id: %d"
 msgstr "No trobo activitat amb id: %d"
 
-#: src/actividadestudios/application/E43CertificadoData.php:128
+#: src/actividadestudios/application/E43CertificadoData.php:129
 msgid "no hay ninguna matrícula de esta persona"
 msgstr "no hi ha cap matrícula d'aquesta persona"
 
 #: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:117
 #: src/actividadestudios/application/FormMatriculasDeUnaPersonaData.php:127
-#: src/actividadestudios/application/ListaClasesCaData.php:101
+#: src/actividadestudios/application/ListaClasesCaData.php:109
 #: src/actividadestudios/application/MatriculaNueva.php:86
 #: src/actividadestudios/application/MatriculasListaData.php:135
 #: src/actividadestudios/application/MatriculasPendientesData.php:90
-#: src/actividadestudios/application/PlanEstudiosCaData.php:111
-#: src/actividadestudios/application/PlanEstudiosCaData.php:193
+#: src/actividadestudios/application/PlanEstudiosCaData.php:118
+#: src/actividadestudios/application/PlanEstudiosCaData.php:202
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:149
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:153
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:200
-#: src/asistentes/application/ListaEstCtrData.php:170
+#: src/asistentes/application/ListaEstCtrData.php:169
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:190
 #: src/notas/application/ActaImprimirPresentacionData.php:75
 #: src/notas/application/AsigFaltanPersonasSelectTablaData.php:93
@@ -13420,9 +13420,10 @@ msgstr "no hi ha cap matrícula d'aquesta persona"
 msgid "No se ha encontrado la asignatura con id: %s"
 msgstr "No s'ha trobat l'assignatura amb id: %s"
 
-#: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:136
-msgid "debería haber un nombre de asignatura"
-msgstr "hauria d'haver un nom d'assignatura"
+#: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:129
+#: src/asistentes/application/AsistentePlazaAsignar.php:30
+msgid "falta id_activ"
+msgstr "falta id_activ"
 
 #: src/actividadestudios/application/FormMatriculasDeUnaPersonaData.php:99
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:134
@@ -13436,8 +13437,13 @@ msgstr "No s'ha trobat cap activitat amb id: %s"
 msgid "no encuentro la matricula"
 msgstr "no trobo la mtricula"
 
-#: src/actividadestudios/application/ListaClasesCaData.php:79
-#: src/actividadestudios/application/PlanEstudiosCaData.php:86
+#: src/actividadestudios/application/ListaClasesCaData.php:72
+#: src/actividadestudios/application/PlanEstudiosCaData.php:79
+msgid "No existe el cargo «d.est.» en la tabla de cargos."
+msgstr "El càrrec «d.est.» no existe a la taula de càrrecs."
+
+#: src/actividadestudios/application/ListaClasesCaData.php:86
+#: src/actividadestudios/application/PlanEstudiosCaData.php:92
 msgid "para nombrarlo, ir al dossier de cargos de la actividad"
 msgstr "per nomenar-lo, anar al dossier de càrrecs de l'activitat"
 
@@ -13516,8 +13522,8 @@ msgstr ""
 "La matrícula de la persona %1$s (assignatura %2$s, acta %3$s) no té nota "
 "desada: no s'esborra"
 
-#: src/actividadestudios/application/PlanEstudiosCaData.php:172
-#: src/asistentes/application/ListaEstCtrData.php:152
+#: src/actividadestudios/application/PlanEstudiosCaData.php:182
+#: src/asistentes/application/ListaEstCtrData.php:151
 msgid "plan de formación"
 msgstr "pla de formació"
 
@@ -13527,7 +13533,7 @@ msgstr "treure assignatura"
 
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:80
 #: src/asignaturas/domain/entity/Asignatura.php:462
-#: src/asistentes/application/ListaEstCtrData.php:192
+#: src/asistentes/application/ListaEstCtrData.php:191
 msgid "créditos"
 msgstr "crèdits"
 
@@ -13543,11 +13549,11 @@ msgstr "Esteu segur que voleu treure aquesta assignatura?"
 msgid "No puede modificar una asignatura que depende de otra dl"
 msgstr "No pot modificar una assignatura que depèn d'una altra dl"
 
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:124
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:127
 msgid "esta actividad no tiene ninguna asignatura"
 msgstr "aquesta activitat no té cap assignatura"
 
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:209
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:215
 msgid "¿Está seguro que desea quitar esta matrícula?"
 msgstr "Esteu segur que voleu treure aquesta matrícula?"
 
@@ -13923,21 +13929,21 @@ msgstr "tipus breu"
 msgid "tipo_latin"
 msgstr "tipo_latin"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:181
+#: src/asistentes/application/ActivPendientesSelectData.php:182
 #, php-format
 msgid "lista de %s sin %s en el curso %s"
 msgstr "llista de %s sense %s en el curs %s"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:183
-#: src/asistentes/application/ListaEstCtrData.php:203
+#: src/asistentes/application/ActivPendientesSelectData.php:184
+#: src/asistentes/application/ListaEstCtrData.php:202
 msgid "nº"
 msgstr "nº"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:184
+#: src/asistentes/application/ActivPendientesSelectData.php:185
 msgid "nombre de la persona"
 msgstr "nom de la persona"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:186
+#: src/asistentes/application/ActivPendientesSelectData.php:187
 #: src/notas/application/TablaAlumnosAsignaturas.php:183
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
@@ -13946,18 +13952,18 @@ msgstr "nom de la persona"
 msgid "nivel stgr"
 msgstr "nivell stgr"
 
-#: src/asistentes/application/AsistenteEliminar.php:110
+#: src/asistentes/application/AsistenteEliminar.php:111
 #: src/asistentes/application/AsistenteMoverData.php:77
-#: src/asistentes/application/AsistentePlazaAsignar.php:63
+#: src/asistentes/application/AsistentePlazaAsignar.php:62
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "no es troba l'assistent (id_nom: %s, id_activ: %s)"
 
-#: src/asistentes/application/AsistenteEliminar.php:113
+#: src/asistentes/application/AsistenteEliminar.php:114
 #: src/asistentes/application/AsistenteGuardar.php:157
 #: src/asistentes/application/AsistenteGuardar.php:165
 #: src/asistentes/application/AsistenteMoverData.php:87
-#: src/asistentes/application/AsistentePlazaAsignar.php:67
+#: src/asistentes/application/AsistentePlazaAsignar.php:66
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "les dades d'assistència dels modifica la dl de l'assistent"
 
@@ -13984,23 +13990,19 @@ msgstr "places lliures/concedides: %s/%s"
 msgid "créditos: %s"
 msgstr "crèdits: %s"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:31
-msgid "falta id_activ"
-msgstr "falta id_activ"
-
-#: src/asistentes/application/AsistentePlazaAsignar.php:40
+#: src/asistentes/application/AsistentePlazaAsignar.php:39
 #, php-format
 msgid "Plaza no válida: %s"
 msgstr "Plaça no vàlida: %s"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:47
+#: src/asistentes/application/AsistentePlazaAsignar.php:46
 msgid "falta lista de seleccion"
 msgstr "falta llista de selecció"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:55
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:283
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:331
-#: src/asistentes/application/services/AsistenteActividadService.php:350
+#: src/asistentes/application/services/AsistenteActividadService.php:352
 #, php-format
 msgid "No se ha encontrado la actividad con id: %s"
 msgstr "No s'ha trobat l'activitat amb id: %s"
@@ -14022,6 +14024,7 @@ msgstr "No es troba l'assistent per aquesta activitat."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
+#: src/devel_codegen/infrastructure/ui/http/controllers/tabla_estructura_datos.php:17
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
 #: src/inventario/application/DocumentosTrasladar.php:30
 #: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:39
@@ -14050,16 +14053,16 @@ msgstr "activitats de la dl/r"
 msgid "actividades de otras dl/r"
 msgstr "activitats d'altres dl/r"
 
-#: src/asistentes/application/ListaAsistentesData.php:129
+#: src/asistentes/application/ListaAsistentesData.php:130
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
 msgid "no asiste"
 msgstr "no assisteix"
 
-#: src/asistentes/application/ListaEstCtrData.php:147
+#: src/asistentes/application/ListaEstCtrData.php:146
 msgid "ya lo ha hecho"
 msgstr "ja ho ha fet"
 
-#: src/asistentes/application/ListaEstCtrData.php:214
+#: src/asistentes/application/ListaEstCtrData.php:213
 msgid "(*) El preceptor no asiste al ca"
 msgstr "(*) El preceptor no assisteix al ca"
 
@@ -14222,12 +14225,12 @@ msgstr "esborrar assistència"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:127
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
-#: src/asistentes/domain/entity/Asistente.php:550
+#: src/asistentes/domain/entity/Asistente.php:554
 msgid "est. ok"
 msgstr "est. ok"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:129
-#: src/asistentes/domain/entity/Asistente.php:574
+#: src/asistentes/domain/entity/Asistente.php:578
 msgid "observ."
 msgstr "observ."
 
@@ -14345,7 +14348,7 @@ msgstr "(%s per decidir)"
 msgid "peticiones (libres/concedidas)"
 msgstr "peticions (lliures/concedides)"
 
-#: src/asistentes/application/services/AsistenteActividadService.php:371
+#: src/asistentes/application/services/AsistenteActividadService.php:373
 msgid "No puede modificar los datos de asistencia de una persona de otra dl"
 msgstr "No pot modificar les dades d'assistència d'una persona d'una altra dl"
 
@@ -14586,7 +14589,7 @@ msgid "No tiene permiso"
 msgstr "No tens permís"
 
 #: src/cambios/application/UsuarioFormAvisosData.php:102
-#: src/ubis/application/ListCtrData.php:306
+#: src/ubis/application/ListCtrData.php:309
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:91
 msgid "otras"
 msgstr "altres"
@@ -14861,35 +14864,35 @@ msgstr "ing. previstos acumulats"
 msgid "ing. reales acumulados"
 msgstr "ing. reales acumulats"
 
-#: src/casas/application/CasaIngresosListaData.php:179
+#: src/casas/application/CasaIngresosListaData.php:183
 #, php-format
 msgid "%s %s días x %s ~= %s"
 msgstr "%s %s dies x %s ~= %s"
 
-#: src/casas/application/CasaIngresosListaData.php:198
+#: src/casas/application/CasaIngresosListaData.php:202
 #, php-format
 msgid "No está definido el núm. de asistente previstos para: %s"
 msgstr "No està definit el núm. d'assistents previstos per a: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:203
+#: src/casas/application/CasaIngresosListaData.php:207
 #, php-format
 msgid "No está definido el núm. de asistente para: %s"
 msgstr "No està definit el núm. d'assistents per a: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:208
+#: src/casas/application/CasaIngresosListaData.php:212
 #, php-format
 msgid "No se han introducido los ingresos para: %s"
 msgstr "No s'han introduït ingressos per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:254
+#: src/casas/application/CasaIngresosListaData.php:258
 msgid "totales sv"
 msgstr "totals sv"
 
-#: src/casas/application/CasaIngresosListaData.php:269
+#: src/casas/application/CasaIngresosListaData.php:273
 msgid "totales sf"
 msgstr "totals sf"
 
-#: src/casas/application/CasaIngresosListaData.php:304
+#: src/casas/application/CasaIngresosListaData.php:308
 msgid "* Se cuentan los ingresos proporcionales correspondientes al periodo."
 msgstr "* Es compten els ingressos proporcionals corresponents al període."
 
@@ -19389,7 +19392,7 @@ msgstr ""
 "aquest cas, assigneu-la. En cas contrari creï una nova."
 
 #: src/ubis/application/DireccionesTablaData.php:63
-#: src/ubis/application/ListCtrData.php:227
+#: src/ubis/application/ListCtrData.php:230
 #: src/ubis/application/UbisListaData.php:93
 #: src/ubis/application/UbisTablaData.php:122
 msgid "ciudad"
@@ -19403,66 +19406,66 @@ msgstr "ap. correus"
 msgid "última modif."
 msgstr "última modif."
 
-#: src/ubis/application/ListCtrData.php:224
+#: src/ubis/application/ListCtrData.php:227
 msgid "tipo ctr o casa"
 msgstr "tipus ctr o casa"
 
-#: src/ubis/application/ListCtrData.php:310
-#: src/ubis/application/ListCtrData.php:327
+#: src/ubis/application/ListCtrData.php:313
+#: src/ubis/application/ListCtrData.php:330
 msgid "sólo centros de n"
 msgstr "només centres de n"
 
-#: src/ubis/application/ListCtrData.php:311
+#: src/ubis/application/ListCtrData.php:314
 msgid "todos los ctr de la dl"
 msgstr "tots els ctr de la dl"
 
-#: src/ubis/application/ListCtrData.php:312
-#: src/ubis/application/ListCtrData.php:328
+#: src/ubis/application/ListCtrData.php:315
+#: src/ubis/application/ListCtrData.php:331
 msgid "sólo centros de agd"
 msgstr "només centres d'agd"
 
-#: src/ubis/application/ListCtrData.php:313
-#: src/ubis/application/ListCtrData.php:329
+#: src/ubis/application/ListCtrData.php:316
+#: src/ubis/application/ListCtrData.php:332
 msgid "sólo centros de s"
 msgstr "només centres de s"
 
-#: src/ubis/application/ListCtrData.php:316
+#: src/ubis/application/ListCtrData.php:319
 msgid "sólo centros de sss+"
 msgstr "només centres de sss+"
 
-#: src/ubis/application/ListCtrData.php:319
+#: src/ubis/application/ListCtrData.php:322
 msgid "sólo centros de nax"
 msgstr "només centres de nax"
 
-#: src/ubis/application/ListCtrData.php:321
+#: src/ubis/application/ListCtrData.php:324
 msgid "sólo obras corporativas"
 msgstr "només obres corporatives"
 
-#: src/ubis/application/ListCtrData.php:322
+#: src/ubis/application/ListCtrData.php:325
 msgid "casas de retiros y de cv"
 msgstr "cases de recés i de cv"
 
-#: src/ubis/application/ListCtrData.php:323
+#: src/ubis/application/ListCtrData.php:326
 msgid "sólo colegios"
 msgstr "només col·legis"
 
-#: src/ubis/application/ListCtrData.php:324
+#: src/ubis/application/ListCtrData.php:327
 msgid "resto casas cdc"
 msgstr "resta cases cdc"
 
-#: src/ubis/application/ListCtrData.php:330
+#: src/ubis/application/ListCtrData.php:333
 msgid "todos los centros"
 msgstr "tots els centres"
 
-#: src/ubis/application/ListCtrData.php:331
+#: src/ubis/application/ListCtrData.php:334
 msgid "sólo delegaciones"
 msgstr "només delegacions"
 
-#: src/ubis/application/ListCtrData.php:332
+#: src/ubis/application/ListCtrData.php:335
 msgid "sólo comisiones regionales"
 msgstr "només comissions regionals"
 
-#: src/ubis/application/ListCtrData.php:333
+#: src/ubis/application/ListCtrData.php:336
 msgid "todas las casas"
 msgstr "totes les cases"
 
@@ -21014,6 +21017,9 @@ msgstr "permís off (sense marcar)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permís on (marcat)"
+
+#~ msgid "debería haber un nombre de asignatura"
+#~ msgstr "hauria d'haver un nom d'assignatura"
 
 #~ msgid "¿Está seguro que desea borrar este nombre?"
 #~ msgstr "Està segur que desitja esborrar aquest nom?"

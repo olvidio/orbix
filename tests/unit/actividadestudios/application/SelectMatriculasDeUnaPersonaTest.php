@@ -229,18 +229,14 @@ final class SelectMatriculasDeUnaPersonaTest extends myTest
         $this->assertNotSame('', $d['empty_cas_message']);
     }
 
-    /**
-     * Hallazgo: el patrón de tipos de actividad es `^1(122)|(222)|(332)|(123)`: el `^` y el dígito de sección
-     * solo afectan a la primera alternativa; las otras tres casan en cualquier posición del id (y de cualquier
-     * sección).
-     */
-    public function test_el_patron_de_tipos_de_actividad_solo_ancla_la_primera_alternativa(): void
+    /** El patrón de tipos de actividad ancla la sección y agrupa las cuatro alternativas (ca de n, agd y sss+). */
+    public function test_el_patron_de_tipos_de_actividad_ancla_todas_las_alternativas(): void
     {
         $this->alumnoDeMiDl();
 
         $this->widget()->getSegmentData();
 
-        $this->assertSame('id_tipo_activ matches ^1(122)|(222)|(332)|(123)', $this->consulta['actividad'][0]);
+        $this->assertSame('id_tipo_activ matches ^1(122|222|332|123)', $this->consulta['actividad'][0]);
     }
 
     public function test_sin_ningun_ca_este_curso_se_ofrece_el_formulario_para_verlos_todos(): void

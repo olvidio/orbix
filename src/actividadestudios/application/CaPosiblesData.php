@@ -231,10 +231,9 @@ final class CaPosiblesData
             if (count($dlsGrupo) > 1) {
                 $criterioActividad = $criterioActividad->andWhere(Filter::in(ActividadAllField::DlOrg, $dlsGrupo));
             } else {
-                // Comportamiento heredado: con 0 o 1 delegaciones el valor se comparaba por
-                // igualdad con el texto ya entrecomillado (`'dl'`), que no coincide nunca.
-                $dlHeredada = $dlsGrupo === [] ? '' : "'" . $dlsGrupo[0] . "'";
-                $criterioActividad = $criterioActividad->andWhere(Filter::eq(ActividadAllField::DlOrg, $dlHeredada));
+                // Una dl: igualdad con esa dl (antes, con el texto entrecomillado, que no coincidía nunca).
+                // Ninguna: no hay ca del grupo (la cadena vacía no coincide con ninguna dl).
+                $criterioActividad = $criterioActividad->andWhere(Filter::eq(ActividadAllField::DlOrg, $dlsGrupo[0] ?? ''));
             }
         }
 
@@ -443,7 +442,9 @@ final class CaPosiblesData
                     ];
                 }
 
-                $cuadro[$Ctr][$nomPersona] = [
+                // Dos personas con el mismo nombre en un centro: la segunda lleva su id_nom.
+                $clavePersona = isset($cuadro[$Ctr][$nomPersona]) ? "$nomPersona ($idNom)" : $nomPersona;
+                $cuadro[$Ctr][$clavePersona] = [
                     'stgr' => $stgr,
                     'aActividades' => $aActividades,
                 ];
@@ -503,7 +504,6 @@ final class CaPosiblesData
                 'nc_repaso' => $ncRepaso,
                 'nc_ce' => $ncCe,
                 'nc_otros' => $ncOtros,
-                'stgr' => $stgr,
                 'ctr' => $ctr,
                 'ref' => $Qref,
                 'height' => $maxLenActiv,

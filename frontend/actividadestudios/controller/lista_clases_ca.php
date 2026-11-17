@@ -47,6 +47,7 @@ $d = ListaClasesCaPayload::fromPayload(ActividadestudiosRenderSupport::stringKey
 $msg_err = $d['msg_err'];
 $nom_activ = $d['nom_activ'];
 $nom_director_est = $d['nom_director_est'];
+$sin_director = $d['sin_director'];
 $datos_asignatura = $d['datos_asignatura'];
 
 if ($msg_err !== '') {
@@ -56,6 +57,7 @@ if ($msg_err !== '') {
 $a_campos = ['oPosicion' => $oPosicion,
     'nom_activ' => $nom_activ,
     'nom_director_est' => $nom_director_est,
+    'sin_director' => $sin_director,
     'datos_asignatura' => $datos_asignatura,
 ];
 

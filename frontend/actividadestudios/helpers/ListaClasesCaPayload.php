@@ -11,7 +11,7 @@ final class ListaClasesCaPayload
 {
     /**
      * @param array<string, mixed> $payload
-     * @return array{msg_err: string, nom_activ: string, nom_director_est: string, datos_asignatura: array<int|string, mixed>}
+     * @return array{msg_err: string, nom_activ: string, nom_director_est: string, sin_director: bool, datos_asignatura: array<int|string, mixed>}
      */
     public static function fromPayload(array $payload): array
     {
@@ -19,6 +19,7 @@ final class ListaClasesCaPayload
             'msg_err' => \frontend\shared\helpers\PayloadCoercion::string($payload['msg_err'] ?? ''),
             'nom_activ' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_activ'] ?? ''),
             'nom_director_est' => \frontend\shared\helpers\PayloadCoercion::string($payload['nom_director_est'] ?? ''),
+            'sin_director' => ($payload['sin_director'] ?? false) === true,
             'datos_asignatura' => ActividadesListaSupport::datos($payload['datos_asignatura'] ?? []),
         ];
     }

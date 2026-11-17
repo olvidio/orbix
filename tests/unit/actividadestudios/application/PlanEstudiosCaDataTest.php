@@ -223,17 +223,18 @@ final class PlanEstudiosCaDataTest extends myTest
         $this->assertStringContainsString('id_nom: 10011', $r['msg_err']);
     }
 
-    /** Hallazgo: igual que en la lista de clases, sin el cargo «d.est.» en la tabla de cargos hay error fatal. */
-    public function test_sin_el_cargo_dest_en_la_tabla_de_cargos_revienta(): void
+    /** Sin el cargo «d.est.» en la tabla de cargos no hay director, y se avisa (antes, error fatal). */
+    public function test_sin_el_cargo_dest_en_la_tabla_de_cargos_se_avisa(): void
     {
         $this->actividad();
         $cargos = $this->createMock(CargoRepositoryInterface::class);
         $cargos->method('matching')->willReturn([]);
         $uc = new PlanEstudiosCaData($this->actividades, $cargos, $this->actividadCargos, $this->actividadAsignaturas, $this->asignaturas, $this->asistentesSvc, $this->matriculas);
 
-        $this->expectException(\Error::class);
+        $r = $uc->execute(['id_activ' => self::ID_ACTIV]);
 
-        @$uc->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertTrue($r['sin_director']);
+        $this->assertStringContainsString(_("No existe el cargo «d.est.» en la tabla de cargos."), $r['msg_err']);
     }
 
     public function test_las_asignaturas_se_reparten_entre_profesores_y_preceptores(): void
@@ -253,29 +254,27 @@ final class PlanEstudiosCaDataTest extends myTest
         $this->assertSame([2 => ['nombre_corto' => 'Asig 1102', 'creditos' => 4.5, 'nom_profesor' => 'Soler, Marc']], $r['aPreceptores']);
     }
 
-    /**
-     * Hallazgo: si el profesor asignado no se encuentra, la asignatura desaparece del plan (solo queda el aviso);
-     * la lista de clases, en cambio, la muestra con el profesor en blanco.
-     */
-    public function test_una_asignatura_cuyo_profesor_no_se_encuentra_desaparece_del_plan(): void
+    /** Si el profesor asignado no se encuentra, la asignatura sale con el profesor en blanco y se avisa. */
+    public function test_una_asignatura_cuyo_profesor_no_se_encuentra_sale_con_el_profesor_en_blanco(): void
     {
         $this->actividad();
         $this->asignaturaDelCa(1101, 20009);
 
         $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->assertSame([], $r['aProfesores']);
+        $this->assertSame([''], array_column($r['aProfesores'], 'nom_profesor'));
         $this->assertStringContainsString('id_nom: 20009', $r['msg_err']);
     }
 
-    public function test_una_asignatura_del_ca_que_ya_no_existe_lanza_excepcion(): void
+    public function test_una_asignatura_del_ca_que_ya_no_existe_se_salta_y_se_avisa(): void
     {
         $this->actividad();
         $this->asignaturaDelCa(9999);
 
-        $this->expectException(\RuntimeException::class);
+        $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertSame([], $r['aProfesores']);
+        $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $r['msg_err']);
     }
 
     public function test_cada_alumno_propio_lleva_sus_asignaturas_matriculadas(): void
@@ -335,8 +334,8 @@ final class PlanEstudiosCaDataTest extends myTest
         $this->assertNotSame($alumnos[1]['aAsignaturas'], $alumnos[2]['aAsignaturas']);
     }
 
-    /** Hallazgo: el índice se incrementa antes de buscar a la persona; un alumno no encontrado deja un hueco. */
-    public function test_un_alumno_que_no_se_encuentra_se_omite_se_avisa_y_deja_un_hueco_en_la_numeracion(): void
+    /** Un alumno que no se encuentra se omite y se avisa, sin dejar hueco en la numeración. */
+    public function test_un_alumno_que_no_se_encuentra_se_omite_se_avisa_y_no_deja_hueco(): void
     {
         $this->actividad();
         $this->asistente(30009);
@@ -345,19 +344,20 @@ final class PlanEstudiosCaDataTest extends myTest
 
         $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->assertSame([2], array_keys($r['aAlumnos']));
+        $this->assertSame([1], array_keys($r['aAlumnos']));
         $this->assertStringContainsString('id_nom: 30009', $r['msg_err']);
     }
 
-    public function test_una_matricula_de_una_asignatura_que_ya_no_existe_lanza_excepcion(): void
+    public function test_una_matricula_de_una_asignatura_que_ya_no_existe_se_salta_y_se_avisa(): void
     {
         $this->actividad();
         $this->asistente(30001);
         $this->personas[30001] = ['Zamora, Luis', NivelStgrId::C1];
-        $this->matriculasPorAlumno[30001] = [[9999, null]];
+        $this->matriculasPorAlumno[30001] = [[9999, null], [1101, null]];
 
-        $this->expectException(\RuntimeException::class);
+        $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
 
-        $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertCount(1, $r['aAlumnos'][1]['aAsignaturas']);
+        $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $r['msg_err']);
     }
 }

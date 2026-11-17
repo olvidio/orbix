@@ -47,6 +47,7 @@ class Select_matriculas_de_una_actividad
     private array $a_grupos = [];
     private string $sin_asignaturas_mensaje = '';
     private string $msg_err = '';
+    private bool $tablaCalculada = false;
     private string $bloque = '';
 
     private string $queSel = '';
@@ -81,7 +82,7 @@ class Select_matriculas_de_una_actividad
     /** @return array<int|string, mixed> */
     public function getValores(): array
     {
-        if (empty($this->a_valores) && $this->sin_asignaturas_mensaje === '') {
+        if (!$this->tablaCalculada) {
             $this->getTabla();
         }
         return $this->a_valores;
@@ -90,7 +91,7 @@ class Select_matriculas_de_una_actividad
     /** @return array<int|string, string> */
     public function getGrupos(): array
     {
-        if (empty($this->a_grupos) && $this->sin_asignaturas_mensaje === '') {
+        if (!$this->tablaCalculada) {
             $this->getTabla();
         }
         return $this->a_grupos;
@@ -98,6 +99,8 @@ class Select_matriculas_de_una_actividad
 
     private function getTabla(): void
     {
+        // Una sola vez, aunque salga vacía (antes, sin matrículas, cada getValores() repetía las consultas).
+        $this->tablaCalculada = true;
         $this->sin_asignaturas_mensaje = '';
         $this->msg_err = '';
         $mi_dele = ConfigGlobal::mi_delef();
@@ -146,9 +149,12 @@ class Select_matriculas_de_una_actividad
 
             $oAsignatura = $this->asignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
-                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+                // Las matrículas siguen visibles (y borrables) bajo el id de la asignatura; se avisa.
+                $msg_err .= '<br>' . sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura);
+                $nombre_corto = '?' . $id_asignatura;
+            } else {
+                $nombre_corto = $oAsignatura->getNombre_corto() ?? '';
             }
-            $nombre_corto = $oAsignatura->getNombre_corto() ?? '';
             $aGrupos[$id_asignatura] = $nombre_corto;
 
             $repoMatriculas = ($mi_dele == $dl_org)
@@ -243,7 +249,7 @@ class Select_matriculas_de_una_actividad
     public function setId_dossier(int|string $id_dossier): void { $this->id_dossier = (int) $id_dossier; }
     public function setPau(string|int|float|bool|null $pau = null): void { $this->pau = $pau === null ? '' : (string) $pau; }
     public function setObj_pau(string|int|float|bool|null $obj_pau = null): void { $this->obj_pau = $obj_pau === null ? '' : (string) $obj_pau; }
-    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; }
+    public function setId_pau(int|string $id_pau): void { $this->id_pau = (int) $id_pau; $this->tablaCalculada = false; }
     public function setPermiso(int|string $permiso): void { $this->permiso = (int) $permiso; }
     public function setQid_sel(int|string|null $Qid_sel): void { $this->Qid_sel = $Qid_sel; }
     public function setQscroll_id(int|string|null $Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }

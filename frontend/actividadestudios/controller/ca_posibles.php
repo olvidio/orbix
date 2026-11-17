@@ -150,7 +150,6 @@ if ($caPosibles['modo'] === 'lista') {
             'nc_repaso' => $fila['nc_repaso'],
             'nc_ce' => $fila['nc_ce'],
             'nc_otros' => $fila['nc_otros'],
-            'stgr' => $fila['stgr'],
             'ctr' => $fila['ctr'],
             'ref' => $fila['ref'],
             'height' => $fila['height'],

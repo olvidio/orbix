@@ -131,11 +131,12 @@ final class MatriculasListaData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(
-                    sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura),
-                );
+                // La matrícula sale (con el id de la asignatura) para poder verla y borrarla; se avisa.
+                $msgErr .= '<br>' . sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura);
+                $nombreCorto = '?' . $idAsignatura;
+            } else {
+                $nombreCorto = $oAsignatura->getNombre_corto();
             }
-            $nombreCorto = $oAsignatura->getNombre_corto();
 
             $aValores[$i]['sel'] = "$idActiv#$idAsignatura#$idNom";
             $aValores[$i][1] = $apellidosNombre;

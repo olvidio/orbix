@@ -22,6 +22,7 @@ use src\personas\domain\entity\Persona;
  *   msg_err: string,
  *   nom_activ: string,
  *   nom_director_est: string,
+ *   sin_director: bool,
  *   datos_asignatura: array<int, array{nom_profesor: string, tipo_profesor: string, nombre_corto: mixed, alumnos: array<string, string>}>
  * }
  */
@@ -43,6 +44,7 @@ final class ListaClasesCaData
      *   msg_err: string,
      *   nom_activ: string,
      *   nom_director_est: string,
+     *   sin_director: bool,
      *   datos_asignatura: array<int, array{nom_profesor: string, tipo_profesor: string, nombre_corto: mixed, alumnos: array<string, string>}>
      * }
      */
@@ -57,6 +59,7 @@ final class ListaClasesCaData
                 'msg_err' => sprintf(_("No encuentro actividad con id: %d"), $idActiv),
                 'nom_activ' => '',
                 'nom_director_est' => '',
+                'sin_director' => false,
                 'datos_asignatura' => [],
             ];
         }
@@ -64,19 +67,23 @@ final class ListaClasesCaData
         $dlOrg = $oActividad->getDl_org();
 
         $cCargos = $this->cargoRepository->matching(Criteria::create()->where(Filter::eq(CargoField::Cargo, 'd.est.')));
-        $idCargo = $cCargos[0]->getId_cargo();
-        $cActividadCargos = $this->actividadCargoRepository->matching(
-            Criteria::create()
-                ->where(Filter::eq(ActividadCargoField::IdActiv, $idActiv))
-                ->andWhere(Filter::eq(ActividadCargoField::IdCargo, $idCargo))
-        );
         $idNomDtorEst = 0;
-        if (count($cActividadCargos) > 0) {
-            $idNomDtorEst = $cActividadCargos[0]->getId_nom();
+        if ($cCargos === []) {
+            $msgErr .= '<br>' . _("No existe el cargo «d.est.» en la tabla de cargos.");
+        } else {
+            $cActividadCargos = $this->actividadCargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadCargoField::IdActiv, $idActiv))
+                    ->andWhere(Filter::eq(ActividadCargoField::IdCargo, $cCargos[0]->getId_cargo()))
+            );
+            if (count($cActividadCargos) > 0) {
+                $idNomDtorEst = $cActividadCargos[0]->getId_nom();
+            }
         }
 
         if ($idNomDtorEst <= 0) {
-            $nomDirectorEst = '<span class=no_print>' . _("para nombrarlo, ir al dossier de cargos de la actividad") . '</span>';
+            // Texto sin HTML: la vista lo marca como no imprimible (sin_director).
+            $nomDirectorEst = _("para nombrarlo, ir al dossier de cargos de la actividad");
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
             if (!is_object($oPersona)) {
@@ -98,7 +105,9 @@ final class ListaClasesCaData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
+                // Asignatura que ya no existe: se salta con un aviso, sin tumbar el listado.
+                $msgErr .= '<br>' . sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura);
+                continue;
             }
             $nombreCorto = $oAsignatura->getNombre_corto();
             if (!empty($idProfesor)) {
@@ -135,7 +144,8 @@ final class ListaClasesCaData
                 }
                 $nomPersona = $oPersona->getPrefApellidosNombre();
                 $ctr = $oPersona->getCentro_o_dl();
-                $aMatriculados[$nomPersona] = $ctr;
+                // Dos alumnos con el mismo nombre: el segundo lleva su id_nom para no pisar al primero.
+                $aMatriculados[isset($aMatriculados[$nomPersona]) ? "$nomPersona ($idNom)" : $nomPersona] = $ctr;
             }
             uksort($aMatriculados, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
 
@@ -151,6 +161,7 @@ final class ListaClasesCaData
             'msg_err' => $msgErr,
             'nom_activ' => $nomActiv,
             'nom_director_est' => $nomDirectorEst,
+            'sin_director' => $idNomDtorEst <= 0,
             'datos_asignatura' => $datosAsignatura,
         ];
     }

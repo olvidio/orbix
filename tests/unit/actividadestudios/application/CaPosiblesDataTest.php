@@ -304,17 +304,14 @@ final class CaPosiblesDataTest extends myTest
         $this->assertContains('dl_org in [dlb,dlp]', $this->filtros['publicadas']);
     }
 
-    /**
-     * Hallazgo (ya comentado en el código): con una sola dl en el grupo se compara `dl_org` con el texto
-     * entrecomillado (`'dlb'`), que no coincide nunca; y con ninguna, con la cadena vacía.
-     */
-    public function test_con_una_sola_dl_en_el_grupo_se_compara_con_el_texto_entrecomillado(): void
+    /** Con una sola dl en el grupo, los ca publicados se filtran por esa dl (antes, por el texto entrecomillado). */
+    public function test_con_una_sola_dl_en_el_grupo_se_filtra_por_esa_dl(): void
     {
         $this->dlsDelGrupo = ['dlb'];
 
         $this->uc()->execute(['id_ctr_n' => 1003, 'grupo_estudios' => 'g1'] + self::PERIODO);
 
-        $this->assertContains("dl_org eq 'dlb'", $this->filtros['publicadas']);
+        $this->assertContains('dl_org eq dlb', $this->filtros['publicadas']);
     }
 
     public function test_el_cuadro_cruza_cada_persona_con_cada_ca_segun_su_nivel(): void
@@ -453,22 +450,23 @@ final class CaPosiblesDataTest extends myTest
     }
 
     /**
-     * Hallazgo: `stgr` de cada fila de la tabla es el nivel de la última persona de todo el cuadro, no un dato
-     * del centro; y las personas se indexan por nombre (dos con el mismo «apellidos, nombre» en un centro se
-     * pisan).
+     * Las filas de la tabla son por centro: no llevan un «stgr» (antes, el de la última persona de todo el cuadro);
+     * y dos personas con el mismo «apellidos, nombre» en un centro salen las dos.
      */
-    public function test_el_stgr_de_cada_fila_es_el_de_la_ultima_persona_del_cuadro(): void
+    public function test_las_filas_son_por_centro_sin_stgr_y_los_homonimos_salen_los_dos(): void
     {
         $this->personas = [
             $this->persona(10011, 'Pla, Joan', NivelStgrId::B, 1004),
             $this->persona(10012, 'Bosch, Pau', NivelStgrId::C2, 1003),
+            $this->persona(10013, 'Bosch, Pau', NivelStgrId::B, 1003),
         ];
         $this->publicadas = [$this->ca(3001, 'ca n bienio', 1)];
 
         $filas = $this->uc()->execute($this->porCentroN(1))['tabla_filas'];
 
         $this->assertSame(['Augusta', 'Brafa'], array_column($filas, 'ctr'));
-        $this->assertSame([NivelStgrId::C2, NivelStgrId::C2], array_column($filas, 'stgr'));
+        $this->assertArrayNotHasKey('stgr', $filas[0]);
+        $this->assertSame(['Bosch, Pau', 'Bosch, Pau (10013)'], array_keys($filas[array_search('Brafa', array_column($filas, 'ctr'), true)]['cPersonas']));
     }
 
     public function test_con_idca_no_se_calcula_ningun_ca(): void

@@ -48,6 +48,7 @@ $d = PlanEstudiosCaPayload::fromPayload(ActividadestudiosRenderSupport::stringKe
 $msg_err = $d['msg_err'];
 $nom_activ = $d['nom_activ'];
 $nom_director_est = $d['nom_director_est'];
+$sin_director = $d['sin_director'];
 $aPreceptores = $d['aPreceptores'];
 $aProfesores = $d['aProfesores'];
 $aAlumnos = $d['aAlumnos'];
@@ -59,6 +60,7 @@ if ($msg_err !== '') {
 $a_campos = ['oPosicion' => $oPosicion,
     'nom_activ' => $nom_activ,
     'nom_director_est' => $nom_director_est,
+    'sin_director' => $sin_director,
     'aPreceptores' => $aPreceptores,
     'aProfesores' => $aProfesores,
     'aAlumnos' => $aAlumnos,

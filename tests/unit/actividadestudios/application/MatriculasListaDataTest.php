@@ -252,15 +252,16 @@ final class MatriculasListaDataTest extends myTest
         $this->assertStringContainsString('3999', $r['msg_err']);
     }
 
-    /** Hallazgo: una matrícula de una asignatura que ya no existe lanza `RuntimeException` y tumba el listado. */
-    public function test_una_asignatura_que_ya_no_existe_lanza_excepcion(): void
+    /** Una matrícula de una asignatura que ya no existe sale con el id de la asignatura y un aviso (para poder borrarla). */
+    public function test_una_asignatura_que_ya_no_existe_sale_con_su_id_y_se_avisa(): void
     {
         $this->personas = [10011 => 'Pla, Joan'];
         $this->matricula(3001, 9999, 10011);
 
-        $this->expectException(\RuntimeException::class);
+        $r = $this->uc()->execute(self::PERIODO);
 
-        $this->uc()->execute(self::PERIODO);
+        $this->assertSame(['?9999'], array_column($r['a_valores'], 5));
+        $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $r['msg_err']);
     }
 
     /** Hallazgo: los mensajes de error llevan la ruta del fichero PHP del servidor. */

@@ -285,15 +285,16 @@ final class SelectMatriculasDeUnaActividadTest extends myTest
         $this->assertSame([1109 => ''], $this->widget()->getSegmentData()['tabla']['grupos']);
     }
 
-    /** Hallazgo: una asignatura del ca que ya no existe lanza excepción y tumba el dossier entero. */
-    public function test_una_asignatura_que_ya_no_existe_lanza_excepcion(): void
+    /** Una asignatura del ca que ya no existe sale con su id y un aviso; el dossier no se cae. */
+    public function test_una_asignatura_que_ya_no_existe_sale_con_su_id_y_se_avisa(): void
     {
         $this->actividad();
         $this->asignaturasDelCa = [[9999, null]];
 
-        $this->expectException(\Exception::class);
+        $w = $this->widget();
 
-        $this->widget()->getSegmentData();
+        $this->assertSame([9999 => '?9999'], $w->getGrupos());
+        $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $w->getSegmentData()['msg_err']);
     }
 
     public function test_get_valores_y_get_grupos_calculan_la_tabla_una_sola_vez(): void
@@ -312,11 +313,8 @@ final class SelectMatriculasDeUnaActividadTest extends myTest
         $this->assertSame(['asignaturas dl', 'matriculas todas'], $this->repos);
     }
 
-    /**
-     * Hallazgo: con asignaturas pero sin ninguna matrícula, `getValores()` queda vacío y cada llamada a
-     * `getValores()` vuelve a hacer todas las consultas.
-     */
-    public function test_sin_matriculas_cada_llamada_a_get_valores_repite_las_consultas(): void
+    /** Con asignaturas pero sin ninguna matrícula, la tabla también se calcula una sola vez. */
+    public function test_sin_matriculas_la_tabla_se_calcula_una_sola_vez(): void
     {
         $this->actividad();
         $this->asignaturasDelCa = [[1101, null]];
@@ -325,7 +323,7 @@ final class SelectMatriculasDeUnaActividadTest extends myTest
         $w->getValores();
         $w->getValores();
 
-        $this->assertSame(['asignaturas dl', 'matriculas todas', 'asignaturas dl', 'matriculas todas'], $this->repos);
+        $this->assertSame(['asignaturas dl', 'matriculas todas'], $this->repos);
     }
 
     public function test_getters_y_setters_del_widget(): void

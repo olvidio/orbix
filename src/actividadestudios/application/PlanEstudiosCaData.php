@@ -23,6 +23,7 @@ use src\personas\domain\entity\Persona;
  *   msg_err: string,
  *   nom_activ: string,
  *   nom_director_est: string,
+ *   sin_director: bool,
  *   aPreceptores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
  *   aProfesores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
  *   aAlumnos: array<int, array{nom_persona: string, ctr: string, observ_est: mixed, aAsignaturas: mixed}>
@@ -47,6 +48,7 @@ final class PlanEstudiosCaData
      *   msg_err: string,
      *   nom_activ: string,
      *   nom_director_est: string,
+     *   sin_director: bool,
      *   aPreceptores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
      *   aProfesores: array<int, array{nombre_corto: mixed, creditos: mixed, nom_profesor: string}>,
      *   aAlumnos: array<int, array{nom_persona: string, ctr: string, observ_est: mixed, aAsignaturas: mixed}>
@@ -63,6 +65,7 @@ final class PlanEstudiosCaData
                 'msg_err' => sprintf(_("No encuentro actividad con id: %d"), $idActiv),
                 'nom_activ' => '',
                 'nom_director_est' => '',
+                'sin_director' => false,
                 'aPreceptores' => [],
                 'aProfesores' => [],
                 'aAlumnos' => [],
@@ -71,15 +74,18 @@ final class PlanEstudiosCaData
         $nomActiv = $oActividad->getNom_activ();
 
         $cCargos = $this->cargoRepository->matching(Criteria::create()->where(Filter::eq(CargoField::Cargo, 'd.est.')));
-        $idCargo = $cCargos[0]->getId_cargo();
-        $cActividadCargos = $this->actividadCargoRepository->matching(
-            Criteria::create()
-                ->where(Filter::eq(ActividadCargoField::IdActiv, $idActiv))
-                ->andWhere(Filter::eq(ActividadCargoField::IdCargo, $idCargo))
-        );
         $idNomDtorEst = 0;
-        if (count($cActividadCargos) > 0) {
-            $idNomDtorEst = $cActividadCargos[0]->getId_nom();
+        if ($cCargos === []) {
+            $msgErr .= '<br>' . _("No existe el cargo «d.est.» en la tabla de cargos.");
+        } else {
+            $cActividadCargos = $this->actividadCargoRepository->matching(
+                Criteria::create()
+                    ->where(Filter::eq(ActividadCargoField::IdActiv, $idActiv))
+                    ->andWhere(Filter::eq(ActividadCargoField::IdCargo, $cCargos[0]->getId_cargo()))
+            );
+            if (count($cActividadCargos) > 0) {
+                $idNomDtorEst = $cActividadCargos[0]->getId_nom();
+            }
         }
 
         if ($idNomDtorEst <= 0) {
@@ -108,7 +114,9 @@ final class PlanEstudiosCaData
 
             $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
             if ($oAsignatura === null) {
-                throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
+                // Asignatura que ya no existe: se salta con un aviso, sin tumbar el listado.
+                $msgErr .= '<br>' . sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura);
+                continue;
             }
             $nombreCorto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
@@ -116,10 +124,12 @@ final class PlanEstudiosCaData
             if (!empty($idProfesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($idProfesor);
                 if (!is_object($oPersona)) {
+                    // Como en la lista de clases: la asignatura sale con el profesor en blanco.
                     $msgErr .= "<br>No encuentro a nadie con id_nom: $idProfesor en  " . __FILE__ . ': line ' . __LINE__;
-                    continue;
+                    $nomProfesor = '';
+                } else {
+                    $nomProfesor = $oPersona->getPrefApellidosNombre();
                 }
-                $nomProfesor = $oPersona->getPrefApellidosNombre();
             } else {
                 $nomProfesor = '?';
             }
@@ -146,7 +156,6 @@ final class PlanEstudiosCaData
             if (!$oAsistente->isPropio()) {
                 continue;
             }
-            $a++;
             $idNom = $oAsistente->getId_nom();
             $observEst = $oAsistente->getObserv_est();
             $oPersona = Persona::findPersonaEnGlobal($idNom);
@@ -154,6 +163,7 @@ final class PlanEstudiosCaData
                 $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
                 continue;
             }
+            $a++; // después de encontrar a la persona: un alumno omitido no deja hueco
             $nomPersona = $oPersona->getPrefApellidosNombre();
             $ctr = $oPersona->getCentro_o_dl();
             $stgr = $oPersona->getNivel_stgr();
@@ -184,14 +194,15 @@ final class PlanEstudiosCaData
                 $aAsignaturas = [];
                 $i = 0;
                 foreach ($cMatriculas as $oMatricula) {
-                    $i++;
                     $idAsignatura = $oMatricula->getId_asignatura();
                     $preceptor = $oMatricula->isPreceptor();
 
                     $oAsignatura = $this->asignaturaRepository->findById($idAsignatura);
                     if ($oAsignatura === null) {
-                        throw new \RuntimeException(sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura));
+                        $msgErr .= '<br>' . sprintf(_("No se ha encontrado la asignatura con id: %s"), (string)$idAsignatura);
+                        continue;
                     }
+                    $i++;
                     $nombreCorto = $oAsignatura->getNombre_corto();
                     $creditos = $oAsignatura->getCreditos();
                     $preceptorTxt = \src\shared\domain\helpers\FuncTablasSupport::isTrue($preceptor) ? '(' . _("preceptor") . ')' : '';
@@ -215,6 +226,7 @@ final class PlanEstudiosCaData
             'msg_err' => $msgErr,
             'nom_activ' => $nomActiv,
             'nom_director_est' => $nomDirectorEst,
+            'sin_director' => $idNomDtorEst <= 0,
             'aPreceptores' => $aPreceptores,
             'aProfesores' => $aProfesores,
             'aAlumnos' => $aAlumnos,

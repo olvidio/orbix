@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 10:56+0100\n"
+"POT-Creation-Date: 2026-11-17 13:44+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -150,7 +150,7 @@ msgstr "errore sconosciuto"
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
-#: frontend/ubis/controller/plano_bytea.php:76
+#: frontend/ubis/controller/plano_bytea.php:77
 #: frontend/ubis/view/direccion_form.phtml:77
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/teleco_tabla.phtml:32
@@ -321,7 +321,7 @@ msgstr ""
 #: src/actividades/application/ListaSrCsvListado.php:167
 #: src/actividadplazas/application/GestionPlazasData.php:246
 #: src/actividadplazas/application/PlazasBalanceData.php:99
-#: src/asistentes/application/ListaEstCtrData.php:205
+#: src/asistentes/application/ListaEstCtrData.php:204
 #: src/cambios/domain/AvisoObjetoCatalog.php:39
 #: src/casas/application/PrevisionAsistentesData.php:63
 #: src/profesores/domain/entity/ProfesorDocenciaStgr.php:241
@@ -909,7 +909,7 @@ msgstr "id"
 #: frontend/usuarios/view/grupo_lista.phtml:57
 #: frontend/usuarios/view/role_form.phtml:60
 #: frontend/usuarios/view/usuario_lista.phtml:42
-#: src/asistentes/application/ListaEstCtrData.php:204
+#: src/asistentes/application/ListaEstCtrData.php:203
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
@@ -1068,7 +1068,7 @@ msgstr "Sei sicuro di voler eliminare questo tipo di attività?"
 #: src/certificados/domain/CertificadoEmitidoSelect.php:58
 #: src/configuracion/application/ModulosSelectData.php:48
 #: src/shared/domain/DatosTablaRepo.php:57
-#: src/ubis/application/ListCtrData.php:337
+#: src/ubis/application/ListCtrData.php:340
 #: src/ubis/application/TelecoTablaData.php:113
 #: src/ubis/application/UbisTablaData.php:109
 #: src/usuarios/application/rolesLista.php:66
@@ -1456,7 +1456,7 @@ msgstr "cancellare"
 #: src/ubis/application/CentrosSListaData.php:58
 #: src/ubis/application/HomeUbisData.php:63
 #: src/ubis/application/HomeUbisData.php:68
-#: src/ubis/application/ListCtrData.php:222
+#: src/ubis/application/ListCtrData.php:225
 #: src/zonassacd/application/ZonaCtrLista.php:83
 msgid "centro"
 msgstr "centro"
@@ -1665,7 +1665,7 @@ msgstr "sss+"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:483
 #: src/ubis/application/DireccionesTablaData.php:62
-#: src/ubis/application/ListCtrData.php:226
+#: src/ubis/application/ListCtrData.php:229
 #: src/ubis/application/UbisListaData.php:92
 #: src/ubis/application/UbisTablaData.php:121
 msgid "cp"
@@ -1826,7 +1826,7 @@ msgstr "data e luogo del sem, ca o cv"
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:63
 #: frontend/profesores/view/profesor_asignatura_que.phtml:14
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:79
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:76
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:77
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:114
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:301
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:316
@@ -1859,7 +1859,7 @@ msgstr "n. del verbale d'esame"
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:51
 #: frontend/actividadestudios/view/acta_notas.phtml:82
 #: frontend/notas/view/acta_ver.phtml:229
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:77
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:78
 #: src/certificados/domain/CertificadoEmitidoSelect.php:67
 msgid "alumno"
 msgstr "studente"
@@ -1894,8 +1894,8 @@ msgstr "dl"
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:113
 #: frontend/actividadestudios/view/form_matriculas_de_una_persona.phtml:121
 #: frontend/notas/view/form_notas_de_una_persona.phtml:422
-#: src/actividadestudios/application/ListaClasesCaData.php:116
-#: src/actividadestudios/application/PlanEstudiosCaData.php:197
+#: src/actividadestudios/application/ListaClasesCaData.php:125
+#: src/actividadestudios/application/PlanEstudiosCaData.php:208
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:113
 #: src/actividadestudios/domain/value_objects/TipoActividadAsignatura.php:20
 #: src/notas/application/Select_notas_de_una_persona.php:61
@@ -1919,7 +1919,7 @@ msgstr "vedi materie ca"
 
 #: frontend/actividadestudios/controller/matriculas_lista.php:86
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:48
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:68
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:69
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:102
 msgid "borrar matrícula"
 msgstr "elimina iscrizione"
@@ -1951,7 +1951,7 @@ msgstr "allarme"
 #: src/actividades/application/ActividadSelectListado.php:204
 #: src/actividades/application/ActividadSelectListado.php:233
 #: src/asignaturas/domain/InfoAsignaturas.php:19
-#: src/asistentes/application/ListaEstCtrData.php:206
+#: src/asistentes/application/ListaEstCtrData.php:205
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:268
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
@@ -2049,8 +2049,8 @@ msgid "cuadrienio"
 msgstr "quadriennio"
 
 #: frontend/actividadestudios/view/ca_posibles_cuadro.phtml:31
-#: src/actividadestudios/application/PlanEstudiosCaData.php:169
-#: src/asistentes/application/ListaEstCtrData.php:155
+#: src/actividadestudios/application/PlanEstudiosCaData.php:179
+#: src/asistentes/application/ListaEstCtrData.php:154
 msgid "repaso"
 msgstr "recensione"
 
@@ -2184,7 +2184,7 @@ msgid "asignatura de una actividad"
 msgstr "materia di un'attività"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:101
-#: src/actividadestudios/application/ListaClasesCaData.php:118
+#: src/actividadestudios/application/ListaClasesCaData.php:127
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:82
 msgid "profesor"
 msgstr "professore"
@@ -2335,12 +2335,12 @@ msgstr "curriculum confermato"
 #: frontend/planning/view/planning_ctr_que.phtml:55
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
-#: src/asistentes/application/ListaAsistentesData.php:118
-#: src/asistentes/application/ListaAsistentesData.php:122
+#: src/asistentes/application/ListaAsistentesData.php:119
 #: src/asistentes/application/ListaAsistentesData.php:123
-#: src/asistentes/application/ListaAsistentesData.php:173
-#: src/asistentes/application/ListaAsistentesData.php:177
+#: src/asistentes/application/ListaAsistentesData.php:124
+#: src/asistentes/application/ListaAsistentesData.php:174
 #: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:379
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
@@ -2369,12 +2369,12 @@ msgstr "sì"
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
 #: src/actividades/application/ActividadQueFiltrosBloque.php:98
-#: src/asistentes/application/ListaAsistentesData.php:120
-#: src/asistentes/application/ListaAsistentesData.php:122
+#: src/asistentes/application/ListaAsistentesData.php:121
 #: src/asistentes/application/ListaAsistentesData.php:123
-#: src/asistentes/application/ListaAsistentesData.php:175
-#: src/asistentes/application/ListaAsistentesData.php:177
+#: src/asistentes/application/ListaAsistentesData.php:124
+#: src/asistentes/application/ListaAsistentesData.php:176
 #: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
@@ -2518,7 +2518,7 @@ msgstr "totale"
 #: frontend/casas/view/casas_resumen_periodo.phtml:66
 #: frontend/casas/view/casas_resumen_periodo.phtml:80
 #: frontend/casas/view/casas_resumen_periodo.phtml:102
-#: src/casas/application/CasaIngresosListaData.php:284
+#: src/casas/application/CasaIngresosListaData.php:288
 msgid "totales"
 msgstr "totale"
 
@@ -2651,7 +2651,7 @@ msgstr "partecipazione a un'attività"
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:102
 #: src/asistentes/application/Select_actividades_de_una_persona.php:126
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:261
-#: src/asistentes/domain/entity/Asistente.php:538
+#: src/asistentes/domain/entity/Asistente.php:542
 msgid "propio"
 msgstr "proprio"
 
@@ -2659,7 +2659,7 @@ msgstr "proprio"
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:106
 #: src/asistentes/application/Select_actividades_de_una_persona.php:128
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:263
-#: src/asistentes/domain/entity/Asistente.php:562
+#: src/asistentes/domain/entity/Asistente.php:566
 msgid "falta"
 msgstr "mancanza"
 
@@ -3208,7 +3208,7 @@ msgstr "Lettere di accompagnamento"
 #: frontend/ubis/view/ctrex_form.phtml:52
 #: frontend/ubis/view/ubis_buscar.phtml:71
 #: frontend/ubis/view/ubis_buscar.phtml:247
-#: src/ubis/application/ListCtrData.php:223
+#: src/ubis/application/ListCtrData.php:226
 #: src/ubis/application/UbisListaData.php:90
 #: src/ubis/application/UbisTablaData.php:119
 msgid "región"
@@ -3229,7 +3229,7 @@ msgstr "delegazione (H)"
 
 #: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:23
 #: src/profesores/application/ProfesoresAsignaturaLista.php:41
-#: src/ubis/application/ListCtrData.php:228
+#: src/ubis/application/ListCtrData.php:231
 msgid "teléfono"
 msgstr "telefono"
 
@@ -4022,7 +4022,7 @@ msgstr "Al momento questi pulsanti non fanno nulla"
 #: frontend/dbextern/view/ver_orbix.phtml:83
 #: frontend/dbextern/view/ver_orbix_otradl.phtml:51
 #: frontend/dbextern/view/ver_traslados.phtml:50
-#: src/ubis/application/ListCtrData.php:341
+#: src/ubis/application/ListCtrData.php:344
 msgid "trasladar"
 msgstr "mossa"
 
@@ -10485,7 +10485,7 @@ msgstr "e"
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
 #: src/asistentes/application/AsistenteGuardar.php:208
-#: src/asistentes/application/AsistentePlazaAsignar.php:80
+#: src/asistentes/application/AsistentePlazaAsignar.php:79
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
 #: src/dbextern/domain/SincroDB.php:548
@@ -10679,23 +10679,23 @@ msgstr "assegnare un indirizzo"
 msgid "número total de s: %s"
 msgstr "numero totale di s: %s"
 
-#: frontend/ubis/controller/plano_bytea.php:58
+#: frontend/ubis/controller/plano_bytea.php:59
 msgid "introducir documento"
 msgstr "inserisci il documento"
 
-#: frontend/ubis/controller/plano_bytea.php:59
+#: frontend/ubis/controller/plano_bytea.php:60
 msgid "introducir"
 msgstr "introdurre"
 
-#: frontend/ubis/controller/plano_bytea.php:88
+#: frontend/ubis/controller/plano_bytea.php:89
 msgid "No se ha recibido ningún archivo."
 msgstr "Non è stato ricevuto alcun file."
 
-#: frontend/ubis/controller/plano_bytea.php:101
+#: frontend/ubis/controller/plano_bytea.php:102
 msgid "ya existe un escrito. ¿Desea reemplazarlo?"
 msgstr "C'è già una scrittura. Vuoi sostituirlo?"
 
-#: frontend/ubis/controller/plano_bytea.php:112
+#: frontend/ubis/controller/plano_bytea.php:113
 msgid "ubicación del fichero"
 msgstr "posizione del file"
 
@@ -10863,7 +10863,7 @@ msgstr "aiuto!"
 #: frontend/ubis/view/home_ubis.phtml:39
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:249
 #: src/ubis/application/DireccionesTablaData.php:61
-#: src/ubis/application/ListCtrData.php:225
+#: src/ubis/application/ListCtrData.php:228
 #: src/ubis/application/UbisListaData.php:91
 #: src/ubis/application/UbisTablaData.php:120
 msgid "dirección"
@@ -12423,8 +12423,8 @@ msgstr "manca id_item"
 #: src/actividades/application/BorrarActividad.php:53
 #: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
-#: src/asistentes/application/AsistenteEliminar.php:88
-#: src/asistentes/application/AsistenteEliminar.php:101
+#: src/asistentes/application/AsistenteEliminar.php:89
+#: src/asistentes/application/AsistenteEliminar.php:102
 #: src/configuracion/application/ModulosUpdateAction.php:65
 #: src/dbextern/application/DesunirPersonaUseCase.php:25
 #: src/dbextern/domain/VincularIdMatch.php:101
@@ -12760,7 +12760,7 @@ msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "L'attività: %s non ha un luogo assegnato"
 
 #: src/actividades/application/CalendarioListasDatos.php:292
-#: src/casas/application/CasaActividadesListaData.php:154
+#: src/casas/application/CasaActividadesListaData.php:153
 msgid "ocupado"
 msgstr "Occupato"
 
@@ -12856,7 +12856,7 @@ msgid "dl_org"
 msgstr "dl_org"
 
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:70
-#: src/asistentes/domain/entity/Asistente.php:524
+#: src/asistentes/domain/entity/Asistente.php:528
 msgid "nombre actividad"
 msgstr "nome dell'attività"
 
@@ -13094,7 +13094,7 @@ msgstr "attività di attenzione per il periodo %s"
 
 #: src/actividadessacd/application/SacdAsignar.php:49
 #: src/actividadessacd/application/SacdReordenar.php:33
-#: src/asistentes/application/AsistenteEliminar.php:53
+#: src/asistentes/application/AsistenteEliminar.php:54
 #: src/asistentes/application/AsistenteGuardar.php:87
 msgid "faltan parametros id_activ / id_nom"
 msgstr "manca il parametro id_activ / id_nom"
@@ -13203,7 +13203,7 @@ msgid "No puede modificar un acta de otra dl"
 msgstr "Non è possibile modificare un verbale d'esame di un'altra dl"
 
 #: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:102
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:106
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:109
 msgid "no encuentro la actividad"
 msgstr "non trovo l'attività"
 
@@ -13333,21 +13333,21 @@ msgstr "non trovo il partecipante"
 msgid "Parámetro na no válido"
 msgstr "Parametro na non valido"
 
-#: src/actividadestudios/application/CaPosiblesData.php:280
+#: src/actividadestudios/application/CaPosiblesData.php:279
 #, php-format
 msgid "el ca: %s no tiene puesto el nivel de stgr."
 msgstr "il ca: %s non ha il livello di stgr."
 
-#: src/actividadestudios/application/CaPosiblesData.php:288
+#: src/actividadestudios/application/CaPosiblesData.php:287
 #, php-format
 msgid "el ca: %s no tiene puesta ninguna asignatura."
 msgstr "il ca: %s non ha alcuna materia assegnata."
 
-#: src/actividadestudios/application/CaPosiblesData.php:468
+#: src/actividadestudios/application/CaPosiblesData.php:469
 msgid "sólo debebería haber uno"
 msgstr "ci dovrebbe essere solo uno"
 
-#: src/actividadestudios/application/CaPosiblesData.php:475
+#: src/actividadestudios/application/CaPosiblesData.php:476
 #, php-format
 msgid "posibles ca de %s (%s)"
 msgstr "possibile ca di %s ( %s )"
@@ -13422,30 +13422,30 @@ msgstr ""
 msgid "Se ha actualizado la docencia para el periodo: %s"
 msgstr "L'insegnamento è stato aggiornato per il periodo: %s"
 
-#: src/actividadestudios/application/E43CertificadoData.php:76
-#: src/actividadestudios/application/ListaClasesCaData.php:57
+#: src/actividadestudios/application/E43CertificadoData.php:77
+#: src/actividadestudios/application/ListaClasesCaData.php:59
 #: src/actividadestudios/application/MatriculasListaData.php:111
-#: src/actividadestudios/application/PlanEstudiosCaData.php:63
+#: src/actividadestudios/application/PlanEstudiosCaData.php:65
 #, php-format
 msgid "No encuentro actividad con id: %d"
 msgstr "Non trovo l'attività con id: %d"
 
-#: src/actividadestudios/application/E43CertificadoData.php:128
+#: src/actividadestudios/application/E43CertificadoData.php:129
 msgid "no hay ninguna matrícula de esta persona"
 msgstr "non esiste alcuna iscrizione di questa persona"
 
 #: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:117
 #: src/actividadestudios/application/FormMatriculasDeUnaPersonaData.php:127
-#: src/actividadestudios/application/ListaClasesCaData.php:101
+#: src/actividadestudios/application/ListaClasesCaData.php:109
 #: src/actividadestudios/application/MatriculaNueva.php:86
 #: src/actividadestudios/application/MatriculasListaData.php:135
 #: src/actividadestudios/application/MatriculasPendientesData.php:90
-#: src/actividadestudios/application/PlanEstudiosCaData.php:111
-#: src/actividadestudios/application/PlanEstudiosCaData.php:193
+#: src/actividadestudios/application/PlanEstudiosCaData.php:118
+#: src/actividadestudios/application/PlanEstudiosCaData.php:202
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:149
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:153
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:200
-#: src/asistentes/application/ListaEstCtrData.php:170
+#: src/asistentes/application/ListaEstCtrData.php:169
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:190
 #: src/notas/application/ActaImprimirPresentacionData.php:75
 #: src/notas/application/AsigFaltanPersonasSelectTablaData.php:93
@@ -13462,9 +13462,10 @@ msgstr "non esiste alcuna iscrizione di questa persona"
 msgid "No se ha encontrado la asignatura con id: %s"
 msgstr "Non è stata trovata la materia con id: %s"
 
-#: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:136
-msgid "debería haber un nombre de asignatura"
-msgstr "dovrebbe esserci un nome di materia"
+#: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:129
+#: src/asistentes/application/AsistentePlazaAsignar.php:30
+msgid "falta id_activ"
+msgstr "manca id_activ"
 
 #: src/actividadestudios/application/FormMatriculasDeUnaPersonaData.php:99
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:134
@@ -13478,8 +13479,13 @@ msgstr "Non è stata trovata l'attività con id: %s"
 msgid "no encuentro la matricula"
 msgstr "non trovo l'iscrizione"
 
-#: src/actividadestudios/application/ListaClasesCaData.php:79
-#: src/actividadestudios/application/PlanEstudiosCaData.php:86
+#: src/actividadestudios/application/ListaClasesCaData.php:72
+#: src/actividadestudios/application/PlanEstudiosCaData.php:79
+msgid "No existe el cargo «d.est.» en la tabla de cargos."
+msgstr "La carica «d.est.» non esiste nella tabella delle cariche."
+
+#: src/actividadestudios/application/ListaClasesCaData.php:86
+#: src/actividadestudios/application/PlanEstudiosCaData.php:92
 msgid "para nombrarlo, ir al dossier de cargos de la actividad"
 msgstr "per nominarlo, andare al dossier delle cariche dell'attività"
 
@@ -13559,8 +13565,8 @@ msgstr ""
 "L'iscrizione della persona %1$s (materia %2$s, verbale %3$s) non ha un voto "
 "salvato: non viene cancellata"
 
-#: src/actividadestudios/application/PlanEstudiosCaData.php:172
-#: src/asistentes/application/ListaEstCtrData.php:152
+#: src/actividadestudios/application/PlanEstudiosCaData.php:182
+#: src/asistentes/application/ListaEstCtrData.php:151
 msgid "plan de formación"
 msgstr "piano di allenamento"
 
@@ -13570,7 +13576,7 @@ msgstr "rimuovi materia"
 
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:80
 #: src/asignaturas/domain/entity/Asignatura.php:462
-#: src/asistentes/application/ListaEstCtrData.php:192
+#: src/asistentes/application/ListaEstCtrData.php:191
 msgid "créditos"
 msgstr "crediti"
 
@@ -13586,11 +13592,11 @@ msgstr "È sicuro di voler rimuovere questa materia?"
 msgid "No puede modificar una asignatura que depende de otra dl"
 msgstr "Non è possibile modificare una materia che dipende da un'altra dl"
 
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:124
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:127
 msgid "esta actividad no tiene ninguna asignatura"
 msgstr "questa attività non ha alcuna materia"
 
-#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:209
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:215
 msgid "¿Está seguro que desea quitar esta matrícula?"
 msgstr "Sei sicuro di voler rimuovere questa iscrizione?"
 
@@ -13968,21 +13974,21 @@ msgstr "tipo breve"
 msgid "tipo_latin"
 msgstr "tipo_latin"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:181
+#: src/asistentes/application/ActivPendientesSelectData.php:182
 #, php-format
 msgid "lista de %s sin %s en el curso %s"
 msgstr "lista di %s senza %s nel corso %s"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:183
-#: src/asistentes/application/ListaEstCtrData.php:203
+#: src/asistentes/application/ActivPendientesSelectData.php:184
+#: src/asistentes/application/ListaEstCtrData.php:202
 msgid "nº"
 msgstr "No."
 
-#: src/asistentes/application/ActivPendientesSelectData.php:184
+#: src/asistentes/application/ActivPendientesSelectData.php:185
 msgid "nombre de la persona"
 msgstr "nome della persona"
 
-#: src/asistentes/application/ActivPendientesSelectData.php:186
+#: src/asistentes/application/ActivPendientesSelectData.php:187
 #: src/notas/application/TablaAlumnosAsignaturas.php:183
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
@@ -13991,18 +13997,18 @@ msgstr "nome della persona"
 msgid "nivel stgr"
 msgstr "livello stgr"
 
-#: src/asistentes/application/AsistenteEliminar.php:110
+#: src/asistentes/application/AsistenteEliminar.php:111
 #: src/asistentes/application/AsistenteMoverData.php:77
-#: src/asistentes/application/AsistentePlazaAsignar.php:63
+#: src/asistentes/application/AsistentePlazaAsignar.php:62
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "partecipante non trovato (id_nom: %s, id_activ: %s)"
 
-#: src/asistentes/application/AsistenteEliminar.php:113
+#: src/asistentes/application/AsistenteEliminar.php:114
 #: src/asistentes/application/AsistenteGuardar.php:157
 #: src/asistentes/application/AsistenteGuardar.php:165
 #: src/asistentes/application/AsistenteMoverData.php:87
-#: src/asistentes/application/AsistentePlazaAsignar.php:67
+#: src/asistentes/application/AsistentePlazaAsignar.php:66
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "i dati di partecipazione li modifica la dl del partecipante"
 
@@ -14029,23 +14035,19 @@ msgstr "Posti gratuiti / assegnati: %s / %s"
 msgid "créditos: %s"
 msgstr "Crediti: %s"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:31
-msgid "falta id_activ"
-msgstr "manca id_activ"
-
-#: src/asistentes/application/AsistentePlazaAsignar.php:40
+#: src/asistentes/application/AsistentePlazaAsignar.php:39
 #, php-format
 msgid "Plaza no válida: %s"
 msgstr "Posto non valido: %s"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:47
+#: src/asistentes/application/AsistentePlazaAsignar.php:46
 msgid "falta lista de seleccion"
 msgstr "manca lista di selezione"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:55
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:283
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:331
-#: src/asistentes/application/services/AsistenteActividadService.php:350
+#: src/asistentes/application/services/AsistenteActividadService.php:352
 #, php-format
 msgid "No se ha encontrado la actividad con id: %s"
 msgstr "Non è stata trovata l'attività con id: %s"
@@ -14068,6 +14070,7 @@ msgstr "Il partecipante per questa attività non è stato trovato."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
+#: src/devel_codegen/infrastructure/ui/http/controllers/tabla_estructura_datos.php:17
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
 #: src/inventario/application/DocumentosTrasladar.php:30
 #: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:39
@@ -14096,16 +14099,16 @@ msgstr "attività dl/r"
 msgid "actividades de otras dl/r"
 msgstr "altre attività dl/r"
 
-#: src/asistentes/application/ListaAsistentesData.php:129
+#: src/asistentes/application/ListaAsistentesData.php:130
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
 msgid "no asiste"
 msgstr "non frequenta"
 
-#: src/asistentes/application/ListaEstCtrData.php:147
+#: src/asistentes/application/ListaEstCtrData.php:146
 msgid "ya lo ha hecho"
 msgstr "l'ha già fatto"
 
-#: src/asistentes/application/ListaEstCtrData.php:214
+#: src/asistentes/application/ListaEstCtrData.php:213
 msgid "(*) El preceptor no asiste al ca"
 msgstr "(*) Il precettore non frequenta il ca"
 
@@ -14269,12 +14272,12 @@ msgstr "cancella partecipazione"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:127
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
-#: src/asistentes/domain/entity/Asistente.php:550
+#: src/asistentes/domain/entity/Asistente.php:554
 msgid "est. ok"
 msgstr "est. bene"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:129
-#: src/asistentes/domain/entity/Asistente.php:574
+#: src/asistentes/domain/entity/Asistente.php:578
 msgid "observ."
 msgstr "Obs."
 
@@ -14392,7 +14395,7 @@ msgstr "( %s da decidere)"
 msgid "peticiones (libres/concedidas)"
 msgstr "richieste (libere/concesse)"
 
-#: src/asistentes/application/services/AsistenteActividadService.php:371
+#: src/asistentes/application/services/AsistenteActividadService.php:373
 msgid "No puede modificar los datos de asistencia de una persona de otra dl"
 msgstr ""
 "Non è possibile modificare i dati di partecipazione di una persona di "
@@ -14635,7 +14638,7 @@ msgid "No tiene permiso"
 msgstr "Non hai il permesso"
 
 #: src/cambios/application/UsuarioFormAvisosData.php:102
-#: src/ubis/application/ListCtrData.php:306
+#: src/ubis/application/ListCtrData.php:309
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:91
 msgid "otras"
 msgstr "altro"
@@ -14913,35 +14916,35 @@ msgstr "ing.previsione cumulativa"
 msgid "ing. reales acumulados"
 msgstr "ing.reale accumulato"
 
-#: src/casas/application/CasaIngresosListaData.php:179
+#: src/casas/application/CasaIngresosListaData.php:183
 #, php-format
 msgid "%s %s días x %s ~= %s"
 msgstr "%s %s giorni x %s ~= %s"
 
-#: src/casas/application/CasaIngresosListaData.php:198
+#: src/casas/application/CasaIngresosListaData.php:202
 #, php-format
 msgid "No está definido el núm. de asistente previstos para: %s"
 msgstr "Il numero non è definito.numero di partecipanti previsti per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:203
+#: src/casas/application/CasaIngresosListaData.php:207
 #, php-format
 msgid "No está definido el núm. de asistente para: %s"
 msgstr "Il n. di partecipante non è definito per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:208
+#: src/casas/application/CasaIngresosListaData.php:212
 #, php-format
 msgid "No se han introducido los ingresos para: %s"
 msgstr "Le entrate non sono state inserite per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:254
+#: src/casas/application/CasaIngresosListaData.php:258
 msgid "totales sv"
 msgstr "totali sv"
 
-#: src/casas/application/CasaIngresosListaData.php:269
+#: src/casas/application/CasaIngresosListaData.php:273
 msgid "totales sf"
 msgstr "totali sf"
 
-#: src/casas/application/CasaIngresosListaData.php:304
+#: src/casas/application/CasaIngresosListaData.php:308
 msgid "* Se cuentan los ingresos proporcionales correspondientes al periodo."
 msgstr "* Si conteggiano le entrate proporzionali corrispondenti al periodo."
 
@@ -19512,7 +19515,7 @@ msgstr ""
 "assegnaglielo. Altrimenti crearne uno nuovo."
 
 #: src/ubis/application/DireccionesTablaData.php:63
-#: src/ubis/application/ListCtrData.php:227
+#: src/ubis/application/ListCtrData.php:230
 #: src/ubis/application/UbisListaData.php:93
 #: src/ubis/application/UbisTablaData.php:122
 msgid "ciudad"
@@ -19526,66 +19529,66 @@ msgstr "ap. posta"
 msgid "última modif."
 msgstr "ultima modifica"
 
-#: src/ubis/application/ListCtrData.php:224
+#: src/ubis/application/ListCtrData.php:227
 msgid "tipo ctr o casa"
 msgstr "scrivi ctr o casa"
 
-#: src/ubis/application/ListCtrData.php:310
-#: src/ubis/application/ListCtrData.php:327
+#: src/ubis/application/ListCtrData.php:313
+#: src/ubis/application/ListCtrData.php:330
 msgid "sólo centros de n"
 msgstr "solo n centri"
 
-#: src/ubis/application/ListCtrData.php:311
+#: src/ubis/application/ListCtrData.php:314
 msgid "todos los ctr de la dl"
 msgstr "tutto il ctr del dl"
 
-#: src/ubis/application/ListCtrData.php:312
-#: src/ubis/application/ListCtrData.php:328
+#: src/ubis/application/ListCtrData.php:315
+#: src/ubis/application/ListCtrData.php:331
 msgid "sólo centros de agd"
 msgstr "solo centri agd"
 
-#: src/ubis/application/ListCtrData.php:313
-#: src/ubis/application/ListCtrData.php:329
+#: src/ubis/application/ListCtrData.php:316
+#: src/ubis/application/ListCtrData.php:332
 msgid "sólo centros de s"
 msgstr "solo centri di s"
 
-#: src/ubis/application/ListCtrData.php:316
+#: src/ubis/application/ListCtrData.php:319
 msgid "sólo centros de sss+"
 msgstr "solo centri di sss+"
 
-#: src/ubis/application/ListCtrData.php:319
+#: src/ubis/application/ListCtrData.php:322
 msgid "sólo centros de nax"
 msgstr "solo centri nax"
 
-#: src/ubis/application/ListCtrData.php:321
+#: src/ubis/application/ListCtrData.php:324
 msgid "sólo obras corporativas"
 msgstr "solo opere aziendali"
 
-#: src/ubis/application/ListCtrData.php:322
+#: src/ubis/application/ListCtrData.php:325
 msgid "casas de retiros y de cv"
 msgstr "ritiro e case cv"
 
-#: src/ubis/application/ListCtrData.php:323
+#: src/ubis/application/ListCtrData.php:326
 msgid "sólo colegios"
 msgstr "solo scuole"
 
-#: src/ubis/application/ListCtrData.php:324
+#: src/ubis/application/ListCtrData.php:327
 msgid "resto casas cdc"
 msgstr "riposa case di cdc"
 
-#: src/ubis/application/ListCtrData.php:330
+#: src/ubis/application/ListCtrData.php:333
 msgid "todos los centros"
 msgstr "tutti i centri"
 
-#: src/ubis/application/ListCtrData.php:331
+#: src/ubis/application/ListCtrData.php:334
 msgid "sólo delegaciones"
 msgstr "solo delegazioni"
 
-#: src/ubis/application/ListCtrData.php:332
+#: src/ubis/application/ListCtrData.php:335
 msgid "sólo comisiones regionales"
 msgstr "solo commissioni regionali"
 
-#: src/ubis/application/ListCtrData.php:333
+#: src/ubis/application/ListCtrData.php:336
 msgid "todas las casas"
 msgstr "tutte le case"
 
@@ -21147,6 +21150,9 @@ msgstr "autorizzazione disattivata (non selezionata)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "autorizzazione attiva (selezionata)"
+
+#~ msgid "debería haber un nombre de asignatura"
+#~ msgstr "dovrebbe esserci un nome di materia"
 
 #~ msgid "¿Está seguro que desea borrar este nombre?"
 #~ msgstr "Sei sicuro di voler eliminare questo nome?"

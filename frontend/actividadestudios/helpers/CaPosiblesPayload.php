@@ -98,7 +98,6 @@ final class CaPosiblesPayload
             'nc_repaso' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_repaso'] ?? ''),
             'nc_ce' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_ce'] ?? ''),
             'nc_otros' => \frontend\shared\helpers\PayloadCoercion::string($row['nc_otros'] ?? ''),
-            'stgr' => \frontend\shared\helpers\PayloadCoercion::string($row['stgr'] ?? ''),
             'ctr' => \frontend\shared\helpers\PayloadCoercion::string($row['ctr'] ?? ''),
             'ref' => \frontend\shared\helpers\PayloadCoercion::string($row['ref'] ?? ''),
             'height' => \frontend\shared\helpers\PayloadCoercion::string($row['height'] ?? ''),
