@@ -2472,7 +2472,7 @@ msgstr "EYE! This activity is not published"
 #: src/casas/application/PrevisionAsistentesData.php:64
 #: src/ubis/application/CentrosGetPlazasData.php:46
 msgid "plazas"
-msgstr "plazas"
+msgstr "places"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:48
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:772
@@ -2664,7 +2664,7 @@ msgstr "confirmed studies"
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:109
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:128
 msgid "plaza"
-msgstr "square"
+msgstr "place"
 
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:113
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:132
@@ -7117,7 +7117,7 @@ msgstr "Activity Types management"
 
 #: frontend/menus/view/traducir_menu.phtml:308
 msgid "gestión de plazas"
-msgstr "management of squares"
+msgstr "places management"
 
 #: frontend/menus/view/traducir_menu.phtml:309
 msgid "grup menu"
@@ -14247,11 +14247,11 @@ msgstr "Surnames"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:308
 msgid "plazas casa (max - min)"
-msgstr "house squares (max - min)"
+msgstr "house places (max - min)"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:312
 msgid "plazas actividad"
-msgstr "activity squares"
+msgstr "activity places"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:414
 msgid "ERROR: más de un asistente con el mismo id_nom"
@@ -14263,7 +14263,7 @@ msgstr "In the tables"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:581
 msgid "ALERTA: asistente sin propiedad en la plaza"
-msgstr "ALERT: Assistant without property in the square"
+msgstr "ALERT: attendee whose place has no owner"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:668
 msgid ""

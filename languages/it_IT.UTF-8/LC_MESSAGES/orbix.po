@@ -2672,7 +2672,7 @@ msgstr "studi confermati"
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:109
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:128
 msgid "plaza"
-msgstr "plaza"
+msgstr "posto"
 
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:113
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:132
@@ -7142,7 +7142,7 @@ msgstr "gestione Tipologie di attività"
 
 #: frontend/menus/view/traducir_menu.phtml:308
 msgid "gestión de plazas"
-msgstr "gestione delle piazze"
+msgstr "gestione dei posti"
 
 #: frontend/menus/view/traducir_menu.phtml:309
 msgid "grup menu"
@@ -9380,7 +9380,7 @@ msgstr "attività provvisoria"
 
 #: frontend/planning/view/leyenda.phtml:49
 msgid "si plaza es: Pedida, En espera o Denegada"
-msgstr "se la plaza è: Richiesta, In attesa o Negata"
+msgstr "se il posto è: Richiesto, In attesa o Negato"
 
 #: frontend/planning/view/leyenda.phtml:52
 msgid "actividad en proyecto"
@@ -14325,7 +14325,7 @@ msgstr "sui tavoli"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:581
 msgid "ALERTA: asistente sin propiedad en la plaza"
-msgstr "AVVISO: assistente senza proprietà in piazza"
+msgstr "AVVISO: partecipante il cui posto non ha proprietario"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:668
 msgid ""
@@ -14982,7 +14982,7 @@ msgstr "l'ingresso non è stato trovato"
 
 #: src/casas/application/PrevisionAsistentesData.php:64
 msgid "plazas de la casa"
-msgstr "piazze delle case"
+msgstr "posti della casa"
 
 #: src/casas/application/PrevisionAsistentesData.php:65
 msgid "mínimas"
