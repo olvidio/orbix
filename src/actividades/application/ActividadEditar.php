@@ -162,29 +162,33 @@ final class ActividadEditar
                 if (count($cDelegaciones) > 0) {
                     $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
                 }
-                $cActividadPlazas = $this->actividadPlazasRepository->matching(
-                    Criteria::create()
-                        ->where(Filter::eq(ActividadPlazasField::IdActiv, $Qid_activ))
-                        ->andWhere(Filter::eq(ActividadPlazasField::IdDl, $id_dl))
-                        ->andWhere(Filter::eq(ActividadPlazasField::DlTabla, $mi_dele))
-                );
-                $salta = 0;
-                if (count($cActividadPlazas) === 1) {
-                    $oActividadPlazasDl = $cActividadPlazas[0];
-                    $plazas_dl = $oActividadPlazasDl->getPlazas();
-                    if ($plazas_dl !== $plazas_old) {
-                        $salta = 1;
+                // Plazas de mi dl en la actividad: si ya tengo una fila, solo se toca si tenía todas
+                // las plazas de antes (no se pisa un reparto hecho a mano); si no tengo, se crea.
+                $oActividadPlazasDl = null;
+                if ($id_dl !== 0) {
+                    $cActividadPlazas = $this->actividadPlazasRepository->matching(
+                        Criteria::create()
+                            ->where(Filter::eq(ActividadPlazasField::IdActiv, $Qid_activ))
+                            ->andWhere(Filter::eq(ActividadPlazasField::IdDl, $id_dl))
+                            ->andWhere(Filter::eq(ActividadPlazasField::DlTabla, $mi_dele))
+                    );
+                    if ($cActividadPlazas === []) {
+                        $oActividadPlazasDl = new ActividadPlazas();
+                        $oActividadPlazasDl->setId_activ($Qid_activ);
+                        $oActividadPlazasDl->setId_dl($id_dl);
+                        $oActividadPlazasDl->setDlTablaVo($mi_dele);
+                    } elseif (count($cActividadPlazas) === 1) {
+                        $plazas_dl = $cActividadPlazas[0]->getPlazas();
+                        if ($plazas_dl !== null && (int) $plazas_dl === $plazas_old) {
+                            $oActividadPlazasDl = $cActividadPlazas[0];
+                        }
                     }
                 }
-                if ($salta !== 1) {
-                    $oActividadPlazasDl = $this->actividadPlazasRepository->findById($Qid_activ);
-                    if ($oActividadPlazasDl instanceof ActividadPlazas) {
-                        $oActividadPlazasDl->setPlazas($Qplazas);
-
-                        if ($this->actividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
-                            $error_txt .= _("hay un error, no se ha guardado");
-                            $error_txt .= "\n" . $this->actividadPlazasDlRepository->getErrorTxt();
-                        }
+                if ($oActividadPlazasDl !== null) {
+                    $oActividadPlazasDl->setPlazas($Qplazas);
+                    if ($this->actividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
+                        $error_txt .= _("hay un error, no se ha guardado");
+                        $error_txt .= "\n" . $this->actividadPlazasDlRepository->getErrorTxt();
                     }
                 }
             }

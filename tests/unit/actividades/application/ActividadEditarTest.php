@@ -11,6 +11,9 @@ use src\actividades\domain\entity\ActividadAll;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\config\ConfigGlobal;
+use src\ubis\domain\entity\Delegacion;
+use src\ubis\domain\value_objects\DelegacionId;
 use src\permisos\domain\PermisosActividades;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\PermAccion;
@@ -195,7 +198,63 @@ final class ActividadEditarTest extends myTest
         $uc->execute(['id_activ' => '3001', 'dl_org' => 'dlx']);
     }
 
-    public function test_al_cambiar_las_plazas_de_mi_dl_se_actualiza_la_tabla_de_plazas_de_la_dl(): void
+    private function miDelegacion(int $idDl = 7): void
+    {
+        $d = $this->createMock(Delegacion::class);
+        $d->method('getIdDlVo')->willReturn(new DelegacionId($idDl));
+        $this->delegaciones->method('matching')->willReturn([$d]);
+    }
+
+    private function plazasDeMiDl(int $plazas): ActividadPlazas
+    {
+        $pl = new ActividadPlazas();
+        $pl->setId_activ(3001);
+        $pl->setId_dl(7);
+        $pl->setDlTablaVo(ConfigGlobal::mi_delef());
+        $pl->setPlazas($plazas);
+
+        return $pl;
+    }
+
+    public function test_al_cambiar_las_plazas_sin_fila_de_mi_dl_se_crea_con_las_plazas_nuevas(): void
+    {
+        $this->apps(['actividadplazas']);
+        $this->permisos(false);
+        $this->repo->method('findById')->willReturn($this->actividad('dlb', 20));
+        $this->repo->method('Guardar')->willReturn(true);
+        $this->miDelegacion();
+        $this->plazas->method('matching')->willReturn([]);
+        $this->plazas->expects($this->never())->method('findById');
+        $guardada = null;
+        $this->plazasDl->expects($this->once())->method('Guardar')->willReturnCallback(function (ActividadPlazas $pl) use (&$guardada): bool {
+            $guardada = $pl;
+
+            return true;
+        });
+
+        $this->assertSame('', $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30'])['error_txt']);
+        $this->assertSame([3001, 7, ConfigGlobal::mi_delef(), '30'], [$guardada->getId_activ(), $guardada->getId_dl(), $guardada->getDlTablaVo()->value(), $guardada->getPlazas()]);
+    }
+
+    /** Si la fila de mi dl tenía las mismas plazas que la actividad (las tenía todas), se actualiza esa fila. */
+    public function test_al_cambiar_las_plazas_la_fila_de_mi_dl_con_las_plazas_anteriores_se_actualiza(): void
+    {
+        $this->apps(['actividadplazas']);
+        $this->permisos(false);
+        $this->repo->method('findById')->willReturn($this->actividad('dlb', 20));
+        $this->repo->method('Guardar')->willReturn(true);
+        $this->miDelegacion();
+        $fila = $this->plazasDeMiDl(20);
+        $this->plazas->method('matching')->willReturn([$fila]);
+        $this->plazas->expects($this->never())->method('findById');
+        $this->plazasDl->expects($this->once())->method('Guardar')->with($fila)->willReturn(true);
+
+        $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30']);
+
+        $this->assertSame('30', $fila->getPlazas());
+    }
+
+    public function test_sin_mi_delegacion_no_se_crea_la_fila_de_plazas(): void
     {
         $this->apps(['actividadplazas']);
         $this->permisos(false);
@@ -203,12 +262,9 @@ final class ActividadEditarTest extends myTest
         $this->repo->method('Guardar')->willReturn(true);
         $this->delegaciones->method('matching')->willReturn([]);
         $this->plazas->method('matching')->willReturn([]);
-        $pl = $this->createMock(ActividadPlazas::class);
-        $pl->expects($this->once())->method('setPlazas')->with(30);
-        $this->plazas->method('findById')->with(3001)->willReturn($pl);
-        $this->plazasDl->expects($this->once())->method('Guardar')->with($pl)->willReturn(true);
+        $this->plazasDl->expects($this->never())->method('Guardar');
 
-        $this->assertSame('', $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30'])['error_txt']);
+        $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30']);
     }
 
     public function test_si_la_dl_ya_habia_cambiado_las_plazas_por_su_cuenta_no_se_pisan(): void
@@ -246,32 +302,11 @@ final class ActividadEditarTest extends myTest
         $this->permisos(false);
         $this->repo->method('findById')->willReturn($this->actividad('dlb', 20));
         $this->repo->method('Guardar')->willReturn(true);
-        $this->delegaciones->method('matching')->willReturn([]);
+        $this->miDelegacion();
         $this->plazas->method('matching')->willReturn([]);
-        $this->plazas->method('findById')->willReturn($this->createMock(ActividadPlazas::class));
         $this->plazasDl->method('Guardar')->willReturn(false);
         $this->plazasDl->method('getErrorTxt')->willReturn('fk');
 
         $this->assertStringContainsString('fk', $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30'])['error_txt']);
-    }
-
-    /**
-     * Hallazgo: `ActividadPlazas::getPlazas()` devuelve `?string` y `$plazas_old` es `?int`; la comparación
-     * estricta `!==` es siempre verdadera, así que si la dl ya tiene una fila de plazas nunca se actualiza,
-     * aunque su valor coincida con el anterior (el caso en el que sí debería actualizarse).
-     */
-    public function test_la_fila_de_plazas_de_la_dl_nunca_se_actualiza_por_comparar_string_con_int(): void
-    {
-        $this->apps(['actividadplazas']);
-        $this->permisos(false);
-        $this->repo->method('findById')->willReturn($this->actividad('dlb', 20));
-        $this->repo->method('Guardar')->willReturn(true);
-        $this->delegaciones->method('matching')->willReturn([]);
-        $igualQueAntes = $this->createMock(ActividadPlazas::class);
-        $igualQueAntes->method('getPlazas')->willReturn('20');
-        $this->plazas->method('matching')->willReturn([$igualQueAntes]);
-        $this->plazasDl->expects($this->never())->method('Guardar');
-
-        $this->uc()->execute(['id_activ' => '3001', 'dl_org' => 'dlb', 'plazas' => '30']);
     }
 }
