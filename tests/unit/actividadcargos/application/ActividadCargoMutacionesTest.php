@@ -41,6 +41,8 @@ final class ActividadCargoMutacionesTest extends myTest
     private DossierRepositoryInterface&MockObject $dossiers;
     /** @var list<string> dossiers abiertos «tabla-id_pau-tipo» */
     private array $abiertos = [];
+    /** @var list<string> dossiers cerrados «tabla-id_pau-tipo» */
+    private array $cerrados = [];
     private mixed $erroresAnterior = null;
 
     public function setUp(): void
@@ -58,6 +60,9 @@ final class ActividadCargoMutacionesTest extends myTest
             $d = $this->createMock(Dossier::class);
             $d->method('abrir')->willReturnCallback(function () use ($pk): void {
                 $this->abiertos[] = $pk->tabla() . '-' . $pk->idPau() . '-' . $pk->idTipoDossier();
+            });
+            $d->method('cerrar')->willReturnCallback(function () use ($pk): void {
+                $this->cerrados[] = $pk->tabla() . '-' . $pk->idPau() . '-' . $pk->idTipoDossier();
             });
             return $d;
         });
@@ -308,18 +313,27 @@ final class ActividadCargoMutacionesTest extends myTest
         $this->assertSame([], $this->abiertos);
     }
 
-    /**
-     * Hallazgo: tras borrar la asistencia «abre» los dossiers 1301/3101 en lugar
-     * de cerrarlos como hace ActividadCargoEliminar.
-     */
-    public function test_editar_desmarcar_asiste_borra_la_asistencia_de_mi_dl(): void
+    /** Al desmarcar «asiste» se borra la asistencia y se cierra el dossier 1301 de la persona (si era su última actividad). */
+    public function test_editar_desmarcar_asiste_borra_la_asistencia_y_cierra_el_dossier_de_la_persona(): void
     {
         $this->cargos->method('Guardar')->willReturn(true);
         $mia = $this->asistente(dl: 'dlb');
         $this->asisDl->method('findById')->willReturn($mia);
         $this->asistentes->expects($this->once())->method('eliminar')->with($this->identicalTo($mia))->willReturn(true);
+        $this->asistentes->method('matching')->willReturn([]);
         $this->assertSame('', $this->editar()->execute(self::ENTRADA + ['asis_presente' => '1']));
-        $this->assertSame(['p-100123-1301', 'a-10-3101'], $this->abiertos);
+        $this->assertSame([], $this->abiertos);
+        $this->assertSame(['p-100123-1301'], $this->cerrados);
+    }
+
+    public function test_editar_desmarcar_asiste_no_cierra_el_dossier_si_quedan_otras_actividades(): void
+    {
+        $this->cargos->method('Guardar')->willReturn(true);
+        $this->asisDl->method('findById')->willReturn($this->asistente(dl: 'dlb'));
+        $this->asistentes->method('eliminar')->willReturn(true);
+        $this->asistentes->method('matching')->willReturn([$this->asistente(dl: 'dlb')]);
+        $this->editar()->execute(self::ENTRADA + ['asis_presente' => '1']);
+        $this->assertSame([], $this->cerrados);
     }
 
     public function test_editar_desmarcar_asiste_si_no_se_borra(): void

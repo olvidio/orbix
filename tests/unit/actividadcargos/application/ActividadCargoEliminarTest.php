@@ -178,11 +178,17 @@ final class ActividadCargoEliminarTest extends myTest
         $this->assertSame('', $this->sut()->execute(['id_item' => self::ID_ITEM, 'elim_asis' => 2]));
     }
 
-    /** Hallazgo: `cerrarDossier` exige `id_pau > 0`, así que a una persona de paso (id negativo) no se le cierra el 1302. */
-    public function test_a_una_persona_de_paso_no_se_le_cierra_el_dossier(): void
+    /** A una persona de paso (id negativo) también se le cierra el 1302. */
+    public function test_a_una_persona_de_paso_tambien_se_le_cierra_el_dossier(): void
     {
         $this->hayCargo(idNom: -1001123);
-        $this->dossiers->expects($this->never())->method('findByPk');
+        $d = $this->createMock(Dossier::class);
+        $d->expects($this->once())->method('cerrar');
+        $this->dossiers->expects($this->once())->method('findByPk')->willReturnCallback(function (DossierPk $pk) use ($d): Dossier {
+            $this->assertSame([-1001123, 1302], [$pk->idPau(), $pk->idTipoDossier()]);
+
+            return $d;
+        });
 
         $this->assertSame('', $this->sut()->execute(['id_item' => self::ID_ITEM]));
     }

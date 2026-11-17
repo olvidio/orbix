@@ -2,6 +2,9 @@
 
 namespace src\actividadcargos\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -105,7 +108,13 @@ final class ActividadCargoEliminar
         if ($this->asistenteApplicationService->eliminar($oAsistente) === false) {
             return _("hay un error, no se ha eliminado el asistente");
         }
-        $this->cerrarDossier('p', $id_nom, 1301);
+        // Si sigue apuntada a otras actividades, su dossier de actividades sigue abierto.
+        $otras = $this->asistenteApplicationService->matching(
+            Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom))->limit(1)
+        );
+        if ($otras === []) {
+            $this->cerrarDossier('p', $id_nom, 1301);
+        }
         return '';
     }
 
@@ -130,7 +139,8 @@ final class ActividadCargoEliminar
 
     private function cerrarDossier(string $tabla, ?int $id_pau, int $id_tipo_dossier): void
     {
-        if ($id_pau === null || $id_pau <= 0) {
+        // Las personas de paso tienen id negativo: también tienen dossier.
+        if ($id_pau === null || $id_pau === 0) {
             return;
         }
         $oDossier = $this->dossierRepository->findByPk(DossierPk::fromArray([

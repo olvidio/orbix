@@ -2,6 +2,9 @@
 
 namespace src\actividadcargos\application;
 
+use src\asistentes\domain\criteria\AsistenteField;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\asistentes\application\services\AsistenteApplicationService;
@@ -110,8 +113,8 @@ final class ActividadCargoEditar
             if ($this->asistenteApplicationService->eliminar($oAsistente) === false) {
                 return _("hay un error, no se ha eliminado el asistente");
             }
-            $this->abrirDossier('p', $id_nom, 1301);
-            $this->abrirDossier('a', $id_activ, 3101);
+            // Como ActividadCargoEliminar: se cierra (no se abre) el dossier de actividades de la persona.
+            $this->cerrarDossier1301SiNoQuedanActividades($id_nom);
         }
 
         return '';
@@ -124,6 +127,26 @@ final class ActividadCargoEditar
     {
         $dl = $oAsistente->getDl_responsable();
         return $dl !== null && $dl !== '' && $dl !== ConfigGlobal::mi_delef();
+    }
+
+    private function cerrarDossier1301SiNoQuedanActividades(int $id_nom): void
+    {
+        $otras = $this->asistenteApplicationService->matching(
+            Criteria::create()->where(Filter::eq(AsistenteField::IdNom, $id_nom))->limit(1)
+        );
+        if ($otras !== []) {
+            return;
+        }
+        $oDossier = $this->dossierRepository->findByPk(DossierPk::fromArray([
+            'tabla' => 'p',
+            'id_pau' => $id_nom,
+            'id_tipo_dossier' => 1301,
+        ]));
+        if ($oDossier === null) {
+            return;
+        }
+        $oDossier->cerrar();
+        $this->dossierRepository->Guardar($oDossier);
     }
 
     private function abrirDossier(string $tabla, int $id_pau, int $id_tipo_dossier): void
