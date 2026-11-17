@@ -31,7 +31,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->assertTrue($result);
 
         // Verificar que se guardó
-        $oActividadPlazasGuardado = $this->repository->findById($id);
+        $oActividadPlazasGuardado = $this->repository->findById($id, 1, 'test_dl');
         $this->assertNotNull($oActividadPlazasGuardado);
         $this->assertEquals($id, $oActividadPlazasGuardado->getId_activ());
 
@@ -54,7 +54,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->assertTrue($result);
 
         // Verificar actualización
-        $oActividadPlazasActualizado = $this->repository->findById($id);
+        $oActividadPlazasActualizado = $this->repository->findById($id, 1, 'test_dl');
         $this->assertNotNull($oActividadPlazasActualizado);
 
         // Limpiar
@@ -69,7 +69,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->repository->Guardar($oActividadPlazas);
 
         // Buscar por ID
-        $oActividadPlazasEncontrado = $this->repository->findById($id);
+        $oActividadPlazasEncontrado = $this->repository->findById($id, 1, 'test_dl');
         $this->assertNotNull($oActividadPlazasEncontrado);
         $this->assertInstanceOf(ActividadPlazas::class, $oActividadPlazasEncontrado);
         $this->assertEquals($id, $oActividadPlazasEncontrado->getId_activ());
@@ -81,7 +81,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
     public function test_find_by_id_no_existente()
     {
         $id_inexistente = 99999999;
-        $oActividadPlazas = $this->repository->findById($id_inexistente);
+        $oActividadPlazas = $this->repository->findById($id_inexistente, 1, 'test_dl');
 
         $this->assertNull($oActividadPlazas);
     }
@@ -94,20 +94,20 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->repository->Guardar($oActividadPlazas);
 
         // Obtener datos por ID
-        $aDatos = $this->repository->datosById($id);
+        $aDatos = $this->repository->datosById($id, 1, 'test_dl');
         $this->assertIsArray($aDatos);
         $this->assertArrayHasKey('id_activ', $aDatos);
         $this->assertEquals($id, $aDatos['id_activ']);
 
         // Limpiar
-        $oActividadPlazasParaborrar = $this->repository->findById($id);
+        $oActividadPlazasParaborrar = $this->repository->findById($id, 1, 'test_dl');
         $this->repository->Eliminar($oActividadPlazasParaborrar);
     }
 
     public function test_datos_by_id_no_existente()
     {
         $id_inexistente = 99999999;
-        $aDatos = $this->repository->datosById($id_inexistente);
+        $aDatos = $this->repository->datosById($id_inexistente, 1, 'test_dl');
 
         $this->assertFalse($aDatos);
     }
@@ -120,7 +120,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->repository->Guardar($oActividadPlazas);
 
         // Verificar que existe
-        $oActividadPlazasExiste = $this->repository->findById($id);
+        $oActividadPlazasExiste = $this->repository->findById($id, 1, 'test_dl');
         $this->assertNotNull($oActividadPlazasExiste);
 
         // Eliminar
@@ -128,7 +128,7 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         $this->assertTrue($result);
 
         // Verificar que ya no existe
-        $oActividadPlazasEliminado = $this->repository->findById($id);
+        $oActividadPlazasEliminado = $this->repository->findById($id, 1, 'test_dl');
         $this->assertNull($oActividadPlazasEliminado);
     }
 
@@ -140,4 +140,41 @@ class PgActividadPlazasDlRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
+    /** @return list<ActividadPlazas> */
+    private function filasDe(int $id_activ): array
+    {
+        return $this->repository->matching(
+            \src\shared\domain\criteria\Criteria::create()
+                ->where(\src\shared\domain\criteria\Filter::eq(\src\actividadplazas\domain\criteria\ActividadPlazasField::IdActiv, $id_activ))
+                ->orderBy(\src\actividadplazas\domain\criteria\ActividadPlazasField::IdDl)
+        );
+    }
+
+    /** La clave es (id_activ, id_dl, dl_tabla): dos dl en la misma actividad son dos filas independientes. */
+    public function test_dos_dl_en_la_misma_actividad_se_guardan_y_borran_por_separado(): void
+    {
+        $una = $this->factory->createSimple();
+        $id = $una->getId_activ();
+        $una->setPlazas(10);
+        $otra = $this->factory->createSimple($id);
+        $otra->setId_dl(2);
+        $otra->setPlazas(20);
+
+        try {
+            $this->assertTrue($this->repository->Guardar($una));
+            $this->assertTrue($this->repository->Guardar($otra));
+            $this->assertSame([[1, '10'], [2, '20']], array_map(fn (ActividadPlazas $p) => [$p->getId_dl(), $p->getPlazas()], $this->filasDe($id)), 'guardar la de otra dl no pisa la primera');
+
+            $una->setPlazas(11);
+            $this->assertTrue($this->repository->Guardar($una));
+            $this->assertSame([[1, '11'], [2, '20']], array_map(fn (ActividadPlazas $p) => [$p->getId_dl(), $p->getPlazas()], $this->filasDe($id)), 'actualizar una no cambia la otra');
+
+            $this->assertTrue($this->repository->Eliminar($una));
+            $this->assertSame([2], array_map(fn (ActividadPlazas $p) => $p->getId_dl(), $this->filasDe($id)), 'borrar una no borra la otra');
+        } finally {
+            foreach ($this->filasDe($id) as $p) {
+                $this->repository->Eliminar($p);
+            }
+        }
+    }
 }

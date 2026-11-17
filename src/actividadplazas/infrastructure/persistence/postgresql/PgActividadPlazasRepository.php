@@ -67,93 +67,75 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
+    /**
+     * La clave de `da_plazas` / `da_plazas_dl` es (id_activ, id_dl, dl_tabla): cada dl tiene su fila
+     * en la actividad. Borrar, guardar o buscar solo por id_activ tocaría las filas de todas las dl.
+     */
     public function Eliminar(ActividadPlazas $ActividadPlazas): bool
     {
-        $id_activ = $ActividadPlazas->getId_activ();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_activ = $id_activ";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE id_activ = :id_activ AND id_dl = :id_dl AND dl_tabla = :dl_tabla";
+        return $this->prepareAndExecute($oDbl, $sql, self::clave($ActividadPlazas), __METHOD__, __FILE__, __LINE__) !== false;
     }
 
-
     /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     * Si no existe el registro (por su clave completa), hace un insert; si existe, el update.
      * @throws JsonException
      */
     public function Guardar(ActividadPlazas $ActividadPlazas): bool
     {
-        $id_activ = $ActividadPlazas->getId_activ();
+        $aClave = self::clave($ActividadPlazas);
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_activ);
+        $bInsert = $this->datosById($aClave['id_activ'], $aClave['id_dl'], $aClave['dl_tabla']) === false;
 
         $aDatos = $ActividadPlazas->toArrayForDatabase([
             'cedidas' => fn($v) => (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false),
         ]);
         // id_dl es columna de da_plazas/da_plazas_dl; Hydratable::toArrayForDatabase() la omite.
-        $aDatos['id_dl'] = $ActividadPlazas->getId_dl();
-
-        /*
-        $aDatos = [];
-        $aDatos['id_dl'] = $ActividadPlazas->getId_dl();
-        $aDatos['plazas'] = $ActividadPlazas->getPlazasVo()->value();
-        $aDatos['cl'] = $ActividadPlazas->getClVo()->value();
-        $aDatos['dl_tabla'] = $ActividadPlazas->getDlTablaVo()->value();
-        // para los json
-        $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false);
-        array_walk($aDatos, [\src\shared\domain\helpers\FuncTablasSupport::class, 'ponerNull']);
-        */
+        $aDatos['id_dl'] = $aClave['id_dl'];
 
         if ($bInsert === false) {
-            //UPDATE
-            unset($aDatos['id_activ']);
-            $update = "
-					id_dl                    = :id_dl,
-					plazas                   = :plazas,
-					cl                       = :cl,
-					dl_tabla                 = :dl_tabla,
-					cedidas                  = :cedidas";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            // La clave no cambia: solo los datos.
+            $aDatos = [
+                'plazas' => $aDatos['plazas'] ?? null,
+                'cl' => $aDatos['cl'] ?? null,
+                'cedidas' => $aDatos['cedidas'] ?? null,
+            ] + $aClave;
+            $sql = "UPDATE $nom_tabla SET plazas = :plazas, cl = :cl, cedidas = :cedidas
+                    WHERE id_activ = :id_activ AND id_dl = :id_dl AND dl_tabla = :dl_tabla";
         } else {
-            // INSERT
-            $campos = "(id_activ,id_dl,plazas,cl,dl_tabla,cedidas)";
-            $valores = "(:id_activ,:id_dl,:plazas,:cl,:dl_tabla,:cedidas)";
-            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $sql = "INSERT INTO $nom_tabla (id_activ,id_dl,plazas,cl,dl_tabla,cedidas)
+                    VALUES (:id_activ,:id_dl,:plazas,:cl,:dl_tabla,:cedidas)";
         }
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(int $id_activ): bool
+    /** @return array{id_activ: int, id_dl: int, dl_tabla: string} */
+    private static function clave(ActividadPlazas $ActividadPlazas): array
     {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) {
-            return true;
-        }
-        if (!$stmt->rowCount()) {
-            return true;
-        }
-        return false;
+        return [
+            'id_activ' => $ActividadPlazas->getId_activ(),
+            'id_dl' => $ActividadPlazas->getId_dl(),
+            'dl_tabla' => (string) $ActividadPlazas->getDlTablaVo()->value(),
+        ];
     }
 
     /**
      * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_activ): array|false
+    public function datosById(int $id_activ, int $id_dl, string $dl_tabla): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_activ = :id_activ AND id_dl = :id_dl AND dl_tabla = :dl_tabla";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, ['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $dl_tabla], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }
@@ -175,14 +157,13 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         return $result;
     }
 
-
     /**
-     * Busca la clase con id_activ en la base de datos .
+     * La fila de una dl en una actividad.
      * @throws JsonException
      */
-    public function findById(int $id_activ): ?ActividadPlazas
+    public function findById(int $id_activ, int $id_dl, string $dl_tabla): ?ActividadPlazas
     {
-        $aDatos = $this->datosById($id_activ);
+        $aDatos = $this->datosById($id_activ, $id_dl, $dl_tabla);
         if ($aDatos === false) {
             return null;
         }

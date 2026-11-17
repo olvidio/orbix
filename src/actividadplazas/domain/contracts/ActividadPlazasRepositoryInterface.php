@@ -47,11 +47,11 @@ interface ActividadPlazasRepositoryInterface
      * @return array<string, mixed>|false
      * @throws JsonException
      */
-    public function datosById(int $id_activ): array|false;
+    public function datosById(int $id_activ, int $id_dl, string $dl_tabla): array|false;
 
     /**
-     * Busca la clase con id_activ en el repositorio.
+     * La fila de una dl en una actividad: la clave es (id_activ, id_dl, dl_tabla).
      * @throws JsonException
      */
-    public function findById(int $id_activ): ?ActividadPlazas;
+    public function findById(int $id_activ, int $id_dl, string $dl_tabla): ?ActividadPlazas;
 }
