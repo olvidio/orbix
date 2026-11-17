@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 17:43+0100\n"
+"POT-Creation-Date: 2026-11-17 20:26+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10450,6 +10450,7 @@ msgstr "Y"
 #: src/actividadplazas/application/PeticionesIncorporar.php:170
 #: src/actividadplazas/application/PlazasCeder.php:86
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:63
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
@@ -13785,13 +13786,18 @@ msgstr "The rate must be specified"
 msgid "este tipo de actividad ya tiene una tarifa"
 msgstr "this activity type already has a rate"
 
-#: src/actividadtarifas/application/TarifaUbiCopiar.php:22
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:33
 msgid "no sé qué casa/año tengo que copiar"
 msgstr "I do not know which house/year to copy"
 
-#: src/actividadtarifas/application/TarifaUbiCopiar.php:25
-msgid "función de copiar tarifas pendiente de reimplementar"
-msgstr "Rate copying function pending reimplementation"
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:39
+#, php-format
+msgid "No hay tarifas del año %d para copiar."
+msgstr "There are no rates for year %d to copy."
+
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:44
+msgid "No se han podido borrar las tarifas actuales. No se ha copiado nada."
+msgstr "The current rates could not be deleted. Nothing was copied."
 
 #: src/actividadtarifas/application/TarifaUbiEliminar.php:29
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:34
@@ -21030,6 +21036,9 @@ msgstr "permission off (unchecked)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permission on (checked)"
+
+#~ msgid "función de copiar tarifas pendiente de reimplementar"
+#~ msgstr "Rate copying function pending reimplementation"
 
 #~ msgid "debería haber un nombre de asignatura"
 #~ msgstr "there should be a subject name"

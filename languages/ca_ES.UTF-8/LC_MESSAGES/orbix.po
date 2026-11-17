@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 17:43+0100\n"
+"POT-Creation-Date: 2026-11-17 20:26+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10446,6 +10446,7 @@ msgstr "i"
 #: src/actividadplazas/application/PeticionesIncorporar.php:170
 #: src/actividadplazas/application/PlazasCeder.php:86
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:63
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
@@ -13795,13 +13796,18 @@ msgstr "ha d'indicar la tarifa"
 msgid "este tipo de actividad ya tiene una tarifa"
 msgstr "aquest tipus d'activitat ja té una tarifa"
 
-#: src/actividadtarifas/application/TarifaUbiCopiar.php:22
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:33
 msgid "no sé qué casa/año tengo que copiar"
 msgstr "no sé quina casa/any he de copiar"
 
-#: src/actividadtarifas/application/TarifaUbiCopiar.php:25
-msgid "función de copiar tarifas pendiente de reimplementar"
-msgstr "funció de copiar tarifes pendent de reimplementar"
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:39
+#, php-format
+msgid "No hay tarifas del año %d para copiar."
+msgstr "No hi ha tarifes de l'any %d per copiar."
+
+#: src/actividadtarifas/application/TarifaUbiCopiar.php:44
+msgid "No se han podido borrar las tarifas actuales. No se ha copiado nada."
+msgstr "No s'han pogut esborrar les tarifes actuals. No s'ha copiat res."
 
 #: src/actividadtarifas/application/TarifaUbiEliminar.php:29
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:34
@@ -21028,6 +21034,9 @@ msgstr "permís off (sense marcar)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permís on (marcat)"
+
+#~ msgid "función de copiar tarifas pendiente de reimplementar"
+#~ msgstr "funció de copiar tarifes pendent de reimplementar"
 
 #~ msgid "debería haber un nombre de asignatura"
 #~ msgstr "hauria d'haver un nom d'assignatura"

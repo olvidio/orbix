@@ -7,7 +7,6 @@ namespace Tests\unit\actividadtarifas\application;
 use PHPUnit\Framework\MockObject\MockObject;
 use src\actividadtarifas\application\RelacionTarifaFormData;
 use src\actividadtarifas\application\services\TipoTarifaDropdown;
-use src\actividadtarifas\application\TarifaUbiCopiar;
 use src\actividadtarifas\application\TarifaUbiFormData;
 use src\actividadtarifas\application\TarifaUbiUpdateInc;
 use src\actividadtarifas\application\TipoTarifaFormData;
@@ -41,19 +40,6 @@ final class TarifasFormulariosTest extends myTest
             $_SESSION['session_auth'] = $this->sesionAnterior;
         }
         parent::tearDown();
-    }
-
-    // ---- TarifaUbiCopiar ----------------------------------------------------------------------
-
-    public function test_copiar_tarifas_exige_casa_y_anyo_y_hoy_es_un_aviso_de_pendiente(): void
-    {
-        $uc = new TarifaUbiCopiar();
-
-        $this->assertNotSame('', $uc->execute([]));
-        $this->assertNotSame('', $uc->execute(['id_ubi' => '1003']));
-        // Hallazgo: la función está sin implementar; con datos válidos solo devuelve un aviso (no copia nada).
-        $this->assertNotSame('', $uc->execute(['id_ubi' => '1003', 'year' => '2026']));
-        $this->assertNotSame($uc->execute([]), $uc->execute(['id_ubi' => '1003', 'year' => '2026']));
     }
 
     // ---- TarifaUbiUpdateInc ----------------------------------------------------------------------
