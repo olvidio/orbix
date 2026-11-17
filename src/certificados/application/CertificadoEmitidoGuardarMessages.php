@@ -24,10 +24,13 @@ final class CertificadoEmitidoGuardarMessages
         return $raw;
     }
 
+    /**
+     * Solo la restricción única de persona y fecha (`e_certificados_rstgr_ukey` / `e_certificados_dl_ukey`,
+     * o el detalle `Key (id_nom, f_certificado)`); otra clave duplicada se devuelve tal cual.
+     */
     private static function isDuplicatePersonaFecha(string $raw): bool
     {
-        return stripos($raw, 'duplicate key') !== false
-            || stripos($raw, 'e_certificados_rstgr_ukey') !== false
-            || stripos($raw, 'unique constraint') !== false && stripos($raw, 'id_nom') !== false;
+        return preg_match('/e_certificados_(rstgr|dl)_ukey/i', $raw) === 1
+            || preg_match('/\(\s*id_nom\s*,\s*f_certificado\s*\)/i', $raw) === 1;
     }
 }

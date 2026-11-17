@@ -106,7 +106,10 @@ class CertificadoEmitidoEnviar
         $oHoy = new DateTimeLocal();
         $oCertificadoEmitido->setF_enviado($oHoy);
         $this->trasladar->setReg_dl_dst($esquema_dl_dst);
-        $this->trasladar->copiar_certificados_a_dl($oCertificadoEmitido);
+        if ($this->trasladar->copiar_certificados_a_dl($oCertificadoEmitido) === false) {
+            // Sin copia en la dl del alumno no se anuncia que se ha recibido.
+            return $error_txt . $this->trasladar->getError();
+        }
         $error_txt .= $this->trasladar->getError();
 
         $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."), $certificado, $nombre_apellidos);

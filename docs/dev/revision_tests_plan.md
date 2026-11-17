@@ -831,8 +831,8 @@ Unit (10 ficheros, 180 casos): `E43CertificadoData`, `ListaClasesCaData`, `Posib
 2. Unas 650 líneas de lógica de negocio viven en controladores (`certificado_emitido_guardar`, `certificado_recibido_guardar`, `certificado_emitido_ver_datos`, `certificado_emitido_imprimir_datos`, `certificado_emitido_imprimir_mpdf_datos`, `certificado_emitido_guardar_pdf`): según `AGENTS.md` deberían ser casos de uso de `application/`. Los tests de contrato fijan el comportamiento para poder moverla.
 
 **Hallazgos (sin corregir):**
-1. `CertificadoEmitidoEnviar` publica el anuncio «se ha recibido el certificado» aunque la copia a la dl del alumno haya fallado.
-2. `CertificadoEmitidoGuardarMessages`: cualquier «duplicate key» (de cualquier restricción) se presenta como «misma persona y fecha». (En la fase 1 anoté que mezclaba `||` y `&&` sin paréntesis: la precedencia de PHP da justo lo que pretende; no es un error.)
+1. ~~`CertificadoEmitidoEnviar` publica el anuncio «se ha recibido el certificado» aunque la copia a la dl del alumno haya fallado.~~ **Corregido el 2026-11-17:** si la copia falla se devuelve el error sin anuncio (`test_si_falla_la_copia_no_se_publica_el_anuncio`).
+2. ~~`CertificadoEmitidoGuardarMessages`: cualquier «duplicate key» (de cualquier restricción) se presenta como «misma persona y fecha».~~ **Corregido el 2026-11-17:** solo la restricción `e_certificados_rstgr_ukey` / `e_certificados_dl_ukey` o el detalle `Key (id_nom, f_certificado)`; otra clave duplicada se devuelve tal cual. (En la fase 1 anoté que mezclaba `||` y `&&` sin paréntesis: la precedencia de PHP da justo lo que pretende; no es un error.)
 3. `Select_certificados_de_una_persona` lanza una excepción con la ruta del fichero si no encuentra a la persona.
 4. `certificado_emitido_imprimir_mpdf_datos`: una nota de una asignatura que ya no existe lanza excepción y tumba el certificado; las aprobadas se indexan por nivel (dos notas del mismo hueco se pisan).
 5. `textos_certificados.php` es un fichero de textos incluido por la impresión, pero tiene ruta propia: llamado directamente no responde nada (y usa `$region_latin` sin definir).

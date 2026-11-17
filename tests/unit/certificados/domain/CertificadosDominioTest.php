@@ -175,11 +175,8 @@ final class CertificadosDominioTest extends myTest
         $this->assertNotNull($c->getF_enviado());
     }
 
-    /**
-     * Hallazgo: el anuncio «se ha recibido el certificado» se publica aunque la copia a la dl del alumno haya
-     * fallado (el error se devuelve, pero el aviso ya está en el tablón de su región).
-     */
-    public function test_el_anuncio_se_publica_aunque_falle_la_copia(): void
+    /** Si falla la copia a la dl del alumno no se anuncia que se ha recibido: se devuelve el error. */
+    public function test_si_falla_la_copia_no_se_publica_el_anuncio(): void
     {
         $this->emitidos->method('findById')->willReturn($this->emitido());
         $this->personaEn('crGalbel');
@@ -188,7 +185,7 @@ final class CertificadosDominioTest extends myTest
         $trasladar->method('copiar_certificados_a_dl')->willReturn(false);
         $trasladar->method('getError')->willReturn('no se pudo copiar');
         $anuncios = $this->createMock(AnuncioRepositoryInterface::class);
-        $anuncios->expects($this->once())->method('Guardar');
+        $anuncios->expects($this->never())->method('Guardar');
 
         $this->assertSame('no se pudo copiar', $this->enviar($trasladar, $anuncios)->execute(7));
     }
@@ -351,7 +348,9 @@ final class CertificadosDominioTest extends myTest
      */
     public static function erroresProvider(): iterable
     {
-        yield 'clave duplicada' => ['SQLSTATE[23505]: duplicate key value violates unique constraint "x"', true];
+        yield 'clave duplicada de otra restricción' => ['SQLSTATE[23505]: duplicate key value violates unique constraint "x"', false];
+        yield 'clave duplicada de persona y fecha (dl)' => ['SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "e_certificados_dl_ukey"', true];
+        yield 'detalle con id_nom y fecha' => ["ERROR:  duplicate key value violates unique constraint \"otra\"\nDETAIL:  Key (id_nom, f_certificado)=(10011, 2026-01-01) already exists.", true];
         yield 'restricción de persona y fecha' => ['violates e_certificados_rstgr_ukey', true];
         yield 'unique de id_nom' => ['unique constraint on (id_nom, f_certificado)', true];
         yield 'unique sin id_nom' => ['unique constraint on (certificado)', false];
@@ -367,14 +366,11 @@ final class CertificadosDominioTest extends myTest
         $this->assertSame(CertificadoEmitidoGuardarMessages::fromDatabaseError($raw), CertificadoEmitidoGuardarMessages::fromThrowable(new \RuntimeException($raw)));
     }
 
-    /**
-     * Hallazgo: cualquier «duplicate key», de cualquier restricción (p. ej. el número de certificado), se presenta
-     * como «ya existe un certificado para esta persona con la misma fecha».
-     */
-    public function test_cualquier_clave_duplicada_se_presenta_como_misma_persona_y_fecha(): void
+    /** Una clave duplicada de otra restricción (p. ej. el número de certificado) no se presenta como «misma persona y fecha». */
+    public function test_otra_clave_duplicada_no_se_presenta_como_misma_persona_y_fecha(): void
     {
-        $msg = CertificadoEmitidoGuardarMessages::fromDatabaseError('duplicate key value violates unique constraint "e_certificados_certificado_key"');
+        $raw = 'duplicate key value violates unique constraint "e_certificados_certificado_key"';
 
-        $this->assertStringContainsString('misma fecha', $msg);
+        $this->assertSame($raw, CertificadoEmitidoGuardarMessages::fromDatabaseError($raw));
     }
 }

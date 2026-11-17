@@ -120,12 +120,12 @@ final class ClasesPequenasVariosModulosTest extends myTest
      */
     public static function erroresBdProvider(): iterable
     {
-        yield 'duplicate key' => ['ERROR: duplicate key value violates', true];
+        yield 'duplicate key de otra restricción no cuenta' => ['ERROR: duplicate key value violates', false];
         yield 'restricción por nombre' => ['violates e_certificados_rstgr_ukey', true];
         yield 'unique con id_nom' => ['unique constraint on (id_nom, f_certificado)', true];
         yield 'unique sin id_nom no cuenta' => ['unique constraint on other', false];
         yield 'otro error' => ['connection refused', false];
-        yield 'mayúsculas' => ['DUPLICATE KEY', true];
+        yield 'mayúsculas' => ['VIOLATES E_CERTIFICADOS_DL_UKEY', true];
     }
 
     public function test_el_esquema_de_region_stgr_sale_de_la_sesion_o_es_vacio(): void
