@@ -231,19 +231,24 @@ final class ResumenPlazasEscenarioTest extends TestCase
     }
 
     /**
-     * Hallazgo: si no se conocen las plazas (actividad sin plazas y sin casa), las
-     * propias valen '?' y la comparación de texto '?' > 0 es cierta: se ofrece la
-     * plaza «dlb (10 de ?)» y getPropiedadPlazaLibre la da por libre.
+     * Si una actividad no tiene plazas ni casa, sus plazas son desconocidas ('?') y se tratan como «sin
+     * límite» (decisión del 2026-11-17, duda 30): se ofrece la plaza con la etiqueta «plazas sin definir» y se
+     * da por libre en todos los caminos (antes la etiqueta era «10 de ?» y la asignación automática la
+     * rechazaba porque no entendía el «?»).
      */
-    public function test_plazas_desconocidas_se_dan_por_libres(): void
+    public function test_plazas_desconocidas_se_dan_por_libres_y_se_etiquetan_sin_definir(): void
     {
         $this->actividad->setPublicado(false);
         $this->actividad->setPlazas(null);
         $this->filas = [];
         $s = $this->svc();
         $this->assertSame('?', $s->getPlazasTotales());
-        $this->assertSame(['dlb>dlb' => 'dlb (10 de ?)'], $s->getPosiblesPropietariosOpciones());
-        $this->assertTrue($s->getPropiedadPlazaLibre()['success']);
+        $this->assertSame(['dlb>dlb' => 'dlb (10, plazas sin definir)'], $s->getPosiblesPropietariosOpciones());
+        $rta = $s->getPropiedadPlazaLibre();
+        $this->assertTrue($rta['success']);
+        $this->assertSame(['dlb>dlb' => 'dlb (10, plazas sin definir)'], $rta['propiedad']);
+        $this->assertTrue($s->esPropiedadClaveDisponible('dlb>dlb'));
+        $this->assertSame('dlb>dlb', $s->getPrimeraPropiedadLibre());
     }
 
     public function test_actividad_inexistente(): void

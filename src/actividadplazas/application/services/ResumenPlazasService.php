@@ -105,7 +105,11 @@ class ResumenPlazasService
             }
         }
         $pl_propias = $this->getPlazasPropias();
-        if ($pl_propias > 0) {
+        if ($pl_propias === '?') {
+            // Plazas desconocidas (sin plazas ni casa): sin límite.
+            $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
+            $a_dl["$mi_dl>$mi_dl"] = self::etiquetaPlazasSinDefinir($mi_dl, $ocu);
+        } elseif ($pl_propias > 0) {
             $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
             $a_dl["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
         }
@@ -118,9 +122,13 @@ class ResumenPlazasService
     /**
      * Indica si una opcion del desplegable de propietarios tiene plazas libres.
      * Las etiquetas siguen el formato "dl (ocupadas de total)"; "2 de 2" no esta disponible.
+     * Con las plazas sin definir ({@see etiquetaPlazasSinDefinir}) siempre lo está.
      */
     public static function esPropiedadOpcionDisponible(string $label): bool
     {
+        if (str_ends_with($label, ', ' . _("plazas sin definir") . ')')) {
+            return true;
+        }
         if (preg_match('/\((\d+) de (\d+)\)\s*$/', $label, $matches)) {
             return (int)$matches[1] < (int)$matches[2];
         }
@@ -516,7 +524,11 @@ class ResumenPlazasService
         $propiedad = [];
         $pl_propias = $this->getPlazasPropias();
 
-        if ($pl_propias > 0) {
+        if ($pl_propias === '?') {
+            // Plazas desconocidas (sin plazas ni casa): sin límite.
+            $plazasOcupadas = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
+            $propiedad["$mi_dl>$mi_dl"] = self::etiquetaPlazasSinDefinir($mi_dl, $plazasOcupadas);
+        } elseif ($pl_propias > 0) {
             $plazasOcupadas = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
             if ($plazasOcupadas < $pl_propias) {
                 $propiedad["$mi_dl>$mi_dl"] = "$mi_dl ($plazasOcupadas de $pl_propias)";
@@ -586,6 +598,15 @@ class ResumenPlazasService
             $pl_propias = $pl_calendario - $pl_cedidas;
         }
         return $pl_propias;
+    }
+
+    /**
+     * Etiqueta de la opción de propietario cuando no se saben las plazas de la actividad: «dl (ocupadas, plazas
+     * sin definir)». Esas plazas se tratan como sin límite.
+     */
+    private static function etiquetaPlazasSinDefinir(string $dl, int $ocupadas): string
+    {
+        return "$dl ($ocupadas, " . _("plazas sin definir") . ')';
     }
 
     /* MÉTODOS PROTECTED --------------------------------------------------------*/

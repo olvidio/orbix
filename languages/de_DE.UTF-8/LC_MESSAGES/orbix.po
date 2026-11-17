@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 14:09+0100\n"
+"POT-Creation-Date: 2026-11-17 17:43+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -3351,7 +3351,7 @@ msgid "listado de actividades de %s"
 msgstr "Liste der Aktivitäten von %s"
 
 #: frontend/casas/controller/prevision_asistentes.php:127
-#: src/actividades/application/ActividadSelectListado.php:564
+#: src/actividades/application/ActividadSelectListado.php:566
 #: src/asistentes/application/ListaUltimaActivData.php:105
 #, php-format
 msgid "entre %s y %s"
@@ -12775,24 +12775,24 @@ msgstr "tar."
 msgid "dl org"
 msgstr "dl org"
 
-#: src/actividades/application/ActividadSelectListado.php:408
+#: src/actividades/application/ActividadSelectListado.php:410
 #: src/actividades/application/ListaActividadesSgListado.php:217
 #, php-format
 msgid "ocupado %s (%s-%s)"
 msgstr "besetzt %s (%s- %s)"
 
-#: src/actividades/application/ActividadSelectListado.php:554
+#: src/actividades/application/ActividadSelectListado.php:556
 #: src/actividades/application/ListaActividadesSgListado.php:292
 #, php-format
 msgid "%s actividades encontradas (%s sin permiso)"
 msgstr "%s gefundene Aktivitäten ( %s ohne Genehmigung)"
 
-#: src/actividades/application/ActividadSelectListado.php:556
+#: src/actividades/application/ActividadSelectListado.php:558
 #, php-format
 msgid "%s actividades encontradas"
 msgstr "%s gefundene Aktivitäten"
 
-#: src/actividades/application/ActividadSelectListado.php:576
+#: src/actividades/application/ActividadSelectListado.php:578
 msgid "del mismo tipo"
 msgstr "vom selben Typ"
 
@@ -12806,7 +12806,7 @@ msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "Die Aktivität: %s hat keinen zugewiesenen Ort"
 
 #: src/actividades/application/CalendarioListasDatos.php:292
-#: src/casas/application/CasaActividadesListaData.php:153
+#: src/casas/application/CasaActividadesListaData.php:151
 msgid "ocupado"
 msgstr "besetzt"
 
@@ -13853,11 +13853,16 @@ msgstr "Person mit id_nom %d wurde nicht gefunden"
 msgid "falta parametro id_activ"
 msgstr "Parameter id_activ fehlt"
 
-#: src/actividadplazas/application/services/ResumenPlazasService.php:113
+#: src/actividadplazas/application/services/ResumenPlazasService.php:117
 msgid "no disponibles"
 msgstr "nicht verfügbar"
 
-#: src/actividadplazas/application/services/ResumenPlazasService.php:524
+#: src/actividadplazas/application/services/ResumenPlazasService.php:129
+#: src/actividadplazas/application/services/ResumenPlazasService.php:609
+msgid "plazas sin definir"
+msgstr "Plätze nicht festgelegt"
+
+#: src/actividadplazas/application/services/ResumenPlazasService.php:536
 #: src/asistentes/application/PlazaPropietarioAsignacion.php:46
 #: src/asistentes/application/PlazaPropietarioAsignacion.php:54
 msgid "Ya están todas las plazas ocupadas"
@@ -14157,11 +14162,11 @@ msgstr "Der Teilnehmer für diese Aktivität wurde nicht gefunden."
 msgid "Faltan parámetros: %s"
 msgstr "Fehlende Parameter: %s"
 
-#: src/asistentes/application/ListaAsisConjuntoActivData.php:165
+#: src/asistentes/application/ListaAsisConjuntoActivData.php:166
 msgid "actividades de la dl/r"
 msgstr "Aktivitäten der dl/r"
 
-#: src/asistentes/application/ListaAsisConjuntoActivData.php:168
+#: src/asistentes/application/ListaAsisConjuntoActivData.php:169
 msgid "actividades de otras dl/r"
 msgstr "Aktivitäten anderer dl/r"
 
