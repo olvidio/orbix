@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 09:56+0100\n"
+"POT-Creation-Date: 2026-11-17 10:03+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -13141,56 +13141,61 @@ msgstr "No database connection"
 msgid "no encuentro la asignatura en la actividad"
 msgstr "Subject not found in the activity."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:79
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:83
 #: src/actividadestudios/application/ActaNotasMatriculaGuardar.php:36
 #: src/notas/application/support/ActaDlGuard.php:49
 msgid "No puede modificar un acta de otra dl"
 msgstr "You cannot modify a grade record from another dl."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:98
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:102
 #: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:106
 msgid "no encuentro la actividad"
 msgstr "Activity not found."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:142
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:152
 #, php-format
 msgid "nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"
 msgstr ""
 "note not saved for %s because the note ( %s ) does not reach the minimum: 6"
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:146
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:156
 #: src/actividadestudios/application/ActaNotasMatriculaGuardar.php:100
 msgid "no se puede definir cursada con preceptor"
 msgstr "cannot be defined with preceptor"
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:151
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:166
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:161
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:179
 msgid "no encuentro el acta"
 msgstr "Grade record not found."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:155
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:170
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:165
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:183
 msgid "debe introducir los datos del acta. No se ha guardado nada."
 msgstr "You must enter the grade record details. Nothing has been saved."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:162
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:175
 msgid "falta definir el acta para alguna nota"
 msgstr "A grade record is not defined for some grade."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:182
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:195
 #: src/actividadestudios/application/FormAsignaturasDeUnaActividadData.php:96
 msgid "no encuentro la asignatura de actividad"
 msgstr "Activity subject not found."
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:201
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:214
 #, php-format
 msgid "ha cursado una opcional que no tocaba (id_nom=%s)"
 msgstr "You have taken an optional that you did not touch (id_nom=%s)"
 
-#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:228
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:241
 #, php-format
 msgid "está intentando poner una nota que ya existe para: %s"
 msgstr "You are trying to enter a grade that already exists for: %s"
+
+#: src/actividadestudios/application/ActaNotasDefinitivasGrabar.php:270
+msgid "La asignatura no tiene acta en esta actividad. No se ha guardado nada."
+msgstr ""
+"The subject has no grade record for this activity. Nothing has been saved."
 
 #: src/actividadestudios/application/ActaNotasMatriculaGuardar.php:76
 msgid "Hay una nota mayor que el máximo"

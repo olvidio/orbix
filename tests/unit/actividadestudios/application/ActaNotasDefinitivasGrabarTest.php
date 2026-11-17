@@ -519,12 +519,8 @@ final class ActaNotasDefinitivasGrabarTest extends myTest
         $this->assertSame([], $this->guardadas);
     }
 
-    /**
-     * Hallazgo: los errores de acta cortan con `return` en mitad del bucle y sin transacción: las notas de los
-     * alumnos anteriores ya están grabadas aunque la respuesta sea de error (uno de los mensajes dice incluso
-     * «No se ha guardado nada»).
-     */
-    public function test_un_error_de_acta_a_mitad_deja_grabadas_las_notas_anteriores(): void
+    /** Un error de acta en cualquier matrícula corta el proceso antes de grabar ninguna nota. */
+    public function test_un_error_de_acta_a_mitad_no_deja_grabada_ninguna_nota(): void
     {
         $this->actividad();
         $this->acta();
@@ -534,22 +530,47 @@ final class ActaNotasDefinitivasGrabarTest extends myTest
         $r = $this->grabar();
 
         $this->assertFalse($r['success']);
-        $this->assertCount(1, $this->guardadas);
-        $this->assertSame(10011, $this->guardadas[0]->getId_nom());
+        $this->assertSame(_("falta definir el acta para alguna nota"), $r['mensaje']);
+        $this->assertSame([], $this->guardadas);
     }
 
-    /**
-     * Hallazgo: una matrícula sin situación (o cursada/examinada) toma la fecha de `$cActas[0]` sin comprobar que
-     * exista: si la asignatura aún no tiene acta en el ca, el guardado acaba en un error fatal.
-     */
-    public function test_sin_acta_de_la_asignatura_en_el_ca_una_matricula_sin_situacion_revienta(): void
+    /** Tampoco se borra la nota anterior de un alumno si después otra matrícula corta el proceso. */
+    public function test_un_error_de_acta_a_mitad_no_borra_las_notas_anteriores(): void
+    {
+        $this->actividad();
+        $this->acta();
+        $this->notaPrevia(10011, self::ID_ACTIV);
+        $this->matricula(10011, null, null, '');
+        $this->matricula(10012, 8.0, NotaSituacion::NUMERICA, null);
+
+        $this->assertFalse($this->grabar()['success']);
+        $this->assertSame([], $this->eliminadas);
+        $this->assertSame([], $this->guardadas);
+    }
+
+    /** Sin acta de la asignatura en el ca, una matrícula vacía no necesita fecha: no se graba nada y no falla. */
+    public function test_sin_acta_de_la_asignatura_en_el_ca_una_matricula_vacia_no_graba_nada(): void
     {
         $this->actividad();
         $this->matricula(10011, null, null, null);
 
-        $this->expectException(\Error::class);
+        $r = $this->grabar();
 
-        @$this->grabar();
+        $this->assertTrue($r['success']);
+        $this->assertSame([], $this->guardadas);
+    }
+
+    /** Sin acta de la asignatura en el ca, una nota que toma la fecha de esa acta corta el proceso con un aviso. */
+    public function test_sin_acta_de_la_asignatura_en_el_ca_una_nota_que_necesita_su_fecha_corta_el_proceso(): void
+    {
+        $this->actividad();
+        $this->matricula(10011, 4.0, NotaSituacion::EXAMINADO, self::ACTA);
+
+        $r = $this->grabar();
+
+        $this->assertFalse($r['success']);
+        $this->assertSame(_("La asignatura no tiene acta en esta actividad. No se ha guardado nada."), $r['mensaje']);
+        $this->assertSame([], $this->guardadas);
     }
 
     public function test_con_preceptor_la_nota_lleva_el_profesor_de_la_asignatura_como_preceptor(): void

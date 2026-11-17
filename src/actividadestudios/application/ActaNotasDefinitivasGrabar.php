@@ -40,6 +40,10 @@ use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
  * Sustituye a la rama `que=3` del legacy
  * `apps/actividadestudios/controller/acta_notas_update.php`.
  *
+ * Todo o nada ante los errores de acta: si una matrícula corta el proceso no se
+ * graba ni se borra ninguna nota. Los avisos por alumno (nota por debajo del
+ * corte, nota que ya existe en otra actividad…) solo saltan a ese alumno.
+ *
  * Devuelve array asociativo `['success' => bool, 'mensaje' => string]`. La
  * respuesta JSON la publica el controlador HTTP.
  */
@@ -113,6 +117,11 @@ final class ActaNotasDefinitivasGrabar
         }
         $cMatriculados = $this->matriculaRepository->matching($criteriaMatriculas);
 
+        // Primero se revisan todas las matrículas y se apuntan las escrituras; si alguna corta
+        // el proceso (return con error) no se ha grabado ni borrado nada. Cada matrícula es de
+        // un alumno distinto, así que lo que se lee de uno no depende de lo que se graba de otro.
+        /** @var list<array{0: 'eliminar'|'editar'|'nuevo', 1: PersonaNota}> $aEscrituras */
+        $aEscrituras = [];
         foreach ($cMatriculados as $oMatricula) {
             $id_nom = $oMatricula->getId_nom();
             $id_situacion = $oMatricula->getId_situacion();
@@ -120,6 +129,7 @@ final class ActaNotasDefinitivasGrabar
             $nota_num = $oMatricula->getNota_num();
             $nota_max = $oMatricula->getNota_max();
             $acta = $oMatricula->getActa();
+            $faltaActaDelCa = false;
             $firmada = $this->firmadaPolicy->mensajeSiFirmada((string) $acta);
             if ($firmada !== '' && MatriculaNotaEstado::tieneNota($nota_num)) {
                 continue;
@@ -156,7 +166,10 @@ final class ActaNotasDefinitivasGrabar
                 }
             } else {
                 if ($id_situacion === NotaSituacion::CURSADA || $id_situacion === NotaSituacion::EXAMINADO || empty($id_situacion)) {
-                    $oF_acta = $cActas[0]->getF_acta();
+                    // La fecha es la del acta de la asignatura en el ca; si aún no tiene, solo es
+                    // un error cuando de verdad se va a grabar una nota (ver más abajo).
+                    $faltaActaDelCa = !isset($cActas[0]);
+                    $oF_acta = $faltaActaDelCa ? null : $cActas[0]->getF_acta();
                 } else {
                     if (empty($acta)) {
                         return ['success' => false, 'mensaje' => _("falta definir el acta para alguna nota")];
@@ -232,7 +245,7 @@ final class ActaNotasDefinitivasGrabar
             switch ($acta) {
                 case '':
                     if ($oPersonaNotaAnterior !== null) {
-                        $this->crearEditarPersonaNota($oPersonaNotaAnterior)->eliminar();
+                        $aEscrituras[] = ['eliminar', $oPersonaNotaAnterior];
                     }
                     continue 2;
                 case NotaSituacion::CURSADA:
@@ -246,11 +259,15 @@ final class ActaNotasDefinitivasGrabar
                                 : NotaSituacion::NUMERICA;
                         } else {
                             if ($oPersonaNotaAnterior !== null) {
-                                $this->crearEditarPersonaNota($oPersonaNotaAnterior)->eliminar();
+                                $aEscrituras[] = ['eliminar', $oPersonaNotaAnterior];
                             }
                             continue 2;
                         }
                     }
+            }
+
+            if ($faltaActaDelCa) {
+                return ['success' => false, 'mensaje' => _("La asignatura no tiene acta en esta actividad. No se ha guardado nada.")];
             }
 
             $oPersonaNota = new PersonaNota();
@@ -269,13 +286,17 @@ final class ActaNotasDefinitivasGrabar
             $oPersonaNota->setNotaNumVo($nota_num !== null && $nota_num !== '' ? $notaNumFloat : null);
             $oPersonaNota->setNotaMaxVo(is_numeric($nota_max) ? (int) $nota_max : null);
 
-            $oEditarPersonaNota = $this->crearEditarPersonaNota($oPersonaNota);
+            $aEscrituras[] = [$oPersonaNotaAnterior !== null ? 'editar' : 'nuevo', $oPersonaNota];
+        }
+
+        foreach ($aEscrituras as [$operacion, $oNota]) {
+            $oEditarPersonaNota = $this->crearEditarPersonaNota($oNota);
             try {
-                if ($oPersonaNotaAnterior !== null) {
-                    $oEditarPersonaNota->editar($Qid_asignatura);
-                } else {
-                    $oEditarPersonaNota->nuevo();
-                }
+                match ($operacion) {
+                    'eliminar' => $oEditarPersonaNota->eliminar(),
+                    'editar' => $oEditarPersonaNota->editar($Qid_asignatura),
+                    'nuevo' => $oEditarPersonaNota->nuevo(),
+                };
             } catch (\RuntimeException $e) {
                 $msg_err .= "\r\n" . $e->getMessage();
             }
