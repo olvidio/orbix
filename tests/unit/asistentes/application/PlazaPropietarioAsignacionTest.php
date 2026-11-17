@@ -140,8 +140,8 @@ final class PlazaPropietarioAsignacionTest extends TestCase
     }
 
     /**
-     * Hallazgo: «permitir sin plaza libre» solo vale con un propietario ya elegido; sin propietario y sin cupo
-     * libre se avisa igualmente.
+     * «Permitir sin plaza libre» solo vale con un propietario ya elegido; sin propietario y sin cupo libre se
+     * avisa igualmente: no hay cupo al que cargar la plaza (confirmado el 2026-11-17, duda 31 del plan).
      */
     public function test_permitir_sin_plaza_libre_no_sirve_si_no_hay_propietario(): void
     {
