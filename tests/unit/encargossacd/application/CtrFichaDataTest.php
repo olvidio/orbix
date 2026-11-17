@@ -64,11 +64,13 @@ final class CtrFichaDataTest extends TestCase
      */
     public static function tiposDeCentroProvider(): iterable
     {
-        foreach (['a', 'n', 's', 'aj', 'am', 'nj', 'nm', 'sj', 'sm'] as $t) {
+        // Mismo mapa que EncargoVerData.
+        foreach (['a', 'n', 's', 'aj', 'am', 'nj', 'njce', 'nm', 'sj', 'sm', 'sjce'] as $t) {
             yield "sv: $t" => [$t, EncargoGrupo::CENTRO_SV];
         }
         yield 'sssc' => ['ss', EncargoGrupo::CENTRO_SSSC];
         yield 'iglesia' => ['igloc', EncargoGrupo::IGL];
+        yield 'iglesia igl' => ['igl', EncargoGrupo::IGL];
         yield 'cgi: cgioc' => ['cgioc', EncargoGrupo::CGI];
         yield 'cgi: oc' => ['oc', EncargoGrupo::CGI];
         yield 'tipo desconocido: se queda el filtro recibido' => ['zz', 99];

@@ -148,7 +148,8 @@ final class EncargoVerDataTest extends TestCase
      */
     public static function tiposDeCentroProvider(): iterable
     {
-        foreach (['aj', 'am', 'nj', 'njce', 'nm', 'sj', 'sm', 'sjce'] as $t) {
+        // Mismo mapa que CtrFichaData.
+        foreach (['a', 'n', 's', 'aj', 'am', 'nj', 'njce', 'nm', 'sj', 'sm', 'sjce'] as $t) {
             yield "sv: $t" => [$t, (string) EncargoGrupo::CENTRO_SV];
         }
         yield 'sssc' => ['ss', (string) EncargoGrupo::CENTRO_SSSC];
@@ -157,9 +158,6 @@ final class EncargoVerDataTest extends TestCase
         yield 'cgi' => ['cgioc', (string) EncargoGrupo::CGI];
         yield 'oc' => ['oc', (string) EncargoGrupo::CGI];
         yield 'desconocido' => ['zz', '0'];
-        // Hallazgo: a, n y s (sin sufijo) no se mapean aquí, a diferencia de CtrFichaData.
-        yield 'a sin sufijo' => ['a', '0'];
-        yield 'n sin sufijo' => ['n', '0'];
     }
 
     public function test_un_centro_sf_es_el_grupo_sf_y_se_busca_en_el_repositorio_de_ellas(): void

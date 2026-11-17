@@ -152,7 +152,8 @@ final class EncargoVerData
         }
 
         return match ($tipo_ctr) {
-            'aj', 'am', 'nj', 'njce', 'nm', 'sj', 'sm', 'sjce' => EncargoGrupo::CENTRO_SV,
+            // Mismo mapa que CtrFichaData.
+            'a', 'n', 's', 'aj', 'am', 'nj', 'njce', 'nm', 'sj', 'sm', 'sjce' => EncargoGrupo::CENTRO_SV,
             'ss' => EncargoGrupo::CENTRO_SSSC,
             'igloc', 'igl' => EncargoGrupo::IGL,
             'cgioc', 'oc' => EncargoGrupo::CGI,

@@ -161,9 +161,8 @@ final class SacdAusenciasGetDataTest extends TestCase
     }
 
     /**
-     * Hallazgo: el filtro de la fila (`preg_match('/[74]/')`) acepta un 7 o un 4 en cualquier posición,
-     * mientras que la lista de tipos de ausencia usa el prefijo `(7|4)...`. Un tipo como 2040 se
-     * mostraría como ausencia sin ser un tipo de ausencia.
+     * Solo son ausencias los tipos que empiezan por 7 o 4 (como la lista de tipos de ausencia, `(7|4)...`);
+     * un 7 o un 4 en otra posición no cuenta.
      *
      * @dataProvider tiposProvider
      */
@@ -183,8 +182,8 @@ final class SacdAusenciasGetDataTest extends TestCase
         yield 'empieza por 7' => [7100, true];
         yield 'empieza por 4' => [4100, true];
         yield 'sin 7 ni 4' => [2100, false];
-        yield 'contiene un 4 en medio (falso positivo)' => [2040, true];
-        yield 'contiene un 7 al final (falso positivo)' => [1007, true];
+        yield 'contiene un 4 en medio' => [2040, false];
+        yield 'contiene un 7 al final' => [1007, false];
     }
 
     public function test_la_dedicacion_por_modulo_sale_de_los_horarios_del_sacd(): void

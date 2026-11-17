@@ -79,7 +79,8 @@ final class SacdAusenciasGetData
                 continue;
             }
             $id_tipo_enc = (string)$oEncargo->getId_tipo_enc();
-            if (!preg_match('/[74]/', $id_tipo_enc)) {
+            // Tipos de ausencia: los que empiezan por 7 o 4, como la lista de tipos (`(7|4)...`).
+            if (!preg_match('/^[74]/', $id_tipo_enc)) {
                 continue;
             }
 
