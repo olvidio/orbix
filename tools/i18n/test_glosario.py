@@ -12,10 +12,13 @@ import glosario  # noqa: E402
 
 G = {
     "siglas": ["ca", "dl", "n"],
+    "ignorar": ["en lugar de", "NOTA:"],
     "terminos": [
         {"es": ["acta", "actas"], "en": ["grade record", "grade records"], "de": ["Notenprotokoll"]},
         {"es": ["asistente", "asistentes"], "de": ["Teilnehmer"], "nota": "no Assistent"},
         {"es": ["de paso"], "en": ["visiting"]},
+        {"es": ["lugar", "lugares"], "en": ["place", "places"]},
+        {"es": ["nota", "notas"], "en": ["grade", "grades"]},
     ],
 }
 
@@ -53,6 +56,12 @@ class GlosarioTest(unittest.TestCase):
         self.assertEqual(["ca"], terminos("asistentes al ca", "Teilnehmer am AK", "de"))
         self.assertEqual([], terminos("asistentes al ca", "Teilnehmer am CA", "de"))
         self.assertEqual([], terminos("n.º de la dl: %s", "Nr. der DL: %s", "de"), "n (una letra) no se comprueba")
+
+    def test_las_expresiones_de_ignorar_no_cuentan(self):
+        self.assertEqual([], terminos("usar esto en lugar de aquello", "use this instead of that", "en"))
+        self.assertEqual([], terminos("NOTA: salen todas", "NOTE: all are shown", "en"))
+        self.assertEqual(["nota"], terminos("NOTA: falta la nota", "NOTE: the mark is missing", "en"), "la otra «nota» sí cuenta")
+        self.assertEqual(["lugar"], terminos("lugar de la actividad", "activity site", "en"))
 
     def test_una_traduccion_vacia_no_se_marca(self):
         self.assertEqual([], terminos("borrar acta", "", "en"))

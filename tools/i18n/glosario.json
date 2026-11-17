@@ -1,5 +1,5 @@
 {
-  "_descripcion": "Vocabulario de la casa para las traducciones de Orbix (ca, en, de, it). Cada término: formas en español (es) y formas aceptadas en cada idioma. El auditor marca las cadenas cuyo msgid contiene una forma de «es» y cuya traducción no contiene ninguna de las formas del idioma (sin distinguir mayúsculas; en alemán vale dentro de una palabra compuesta). Las siglas se dejan tal cual.",
+  "_descripcion": "Vocabulario de la casa para las traducciones de Orbix (ca, en, de, it). Cada término: formas en español (es) y formas aceptadas en cada idioma. El auditor marca las cadenas cuyo msgid contiene una forma de «es» y cuya traducción no contiene ninguna de las formas del idioma (sin distinguir mayúsculas; en alemán vale dentro de una palabra compuesta). Las siglas se dejan tal cual. «ignorar»: expresiones del msgid donde un término no tiene su sentido de la casa (no se comprueban).",
   "siglas": [
     "n",
     "agd",
@@ -33,6 +33,15 @@
     "dre",
     "BDU",
     "ODF"
+  ],
+  "ignorar": [
+    "en lugar de",
+    "NOTA:",
+    "Nota:",
+    "zona horaria",
+    "Periodo::",
+    "profesores asistentes",
+    "se omite el traslado"
   ],
   "terminos": [
     {

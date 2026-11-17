@@ -7,7 +7,8 @@ Lo usan:
 Regla: si el msgid contiene una forma en español de un término (palabra entera, sin distinguir
 mayúsculas), la traducción debe contener alguna de las formas acordadas para ese idioma (sin
 distinguir mayúsculas y también dentro de una palabra, para los compuestos alemanes). Las siglas
-de dos o más letras que aparecen en el msgid deben aparecer también en la traducción.
+de dos o más letras que aparecen en el msgid deben aparecer también en la traducción. Las
+expresiones de «ignorar» se quitan del msgid antes de comprobar.
 """
 
 from __future__ import annotations
@@ -65,6 +66,9 @@ def incumplimientos(glosario: dict, msgid: str, msgstr: str, idioma: str) -> lis
     if not msgid or not msgstr:
         return []
     traduccion = msgstr.lower()
+    # Expresiones donde un término no tiene su sentido de la casa («en lugar de», «NOTA:», «zona horaria»…).
+    for expresion in glosario.get("ignorar", []):
+        msgid = re.sub(re.escape(expresion), " ", msgid, flags=re.IGNORECASE)
     salida: list[Incumplimiento] = []
     for t in glosario["terminos"]:
         formas = t.get(idioma) or []
