@@ -217,11 +217,8 @@ final class PropuestasAprobarServiceTest extends TestCase
         $this->servicio->execute();
     }
 
-    /**
-     * Hallazgo: al cerrar el encargo se pone fecha de fin a los horarios de la PROPUESTA, pero los
-     * horarios REALES del sacd saliente (EncargoSacdHorario) no se tocan: siguen abiertos.
-     */
-    public function test_al_cerrar_el_encargo_se_cierran_los_horarios_de_la_propuesta_pero_no_los_reales(): void
+    /** Al cerrar el encargo se cierran hoy también los horarios reales que el sacd saliente tenía abiertos. */
+    public function test_al_cerrar_el_encargo_se_cierran_hoy_los_horarios_reales_abiertos(): void
     {
         $this->conPropuestas($this->propuesta(41, 5, 10011, null));
         $actual = new EncargoSacd();
@@ -232,15 +229,20 @@ final class PropuestasAprobarServiceTest extends TestCase
         $actual->setF_ini(new DateTimeLocal('2020-01-01'));
         $this->encargosSacd->method('findById')->willReturn($actual);
         $this->encargosSacd->method('Guardar')->willReturn(true);
-        $hp = $this->horarioPropuesta('m', 3);
-        $this->horariosPropuesta([$hp]);
-        $this->propuestaHorarios->expects($this->once())->method('Guardar')->with($hp)->willReturn(true);
-        $this->horarios->expects($this->never())->method('Guardar');
-        $this->horarios->expects($this->never())->method('matching');
+        $this->horariosPropuesta([$this->horarioPropuesta('m', 3)]);
+        $real = $this->horarioPropuesta('m', 3);
+        $filtros = null;
+        $this->horarios->expects($this->once())->method('matching')->willReturnCallback(function (Criteria $c) use (&$filtros, $real): array {
+            $filtros = DescribeCriteria::filtros($c);
+
+            return [$real];
+        });
+        $this->horarios->expects($this->once())->method('Guardar')->with($real)->willReturn(true);
 
         $this->servicio->execute();
 
-        $this->assertSame($this->hoy(), $hp->getF_fin()->format('Y-m-d'));
+        $this->assertSame(['id_item_tarea_sacd eq 41', 'f_fin is_null'], $filtros);
+        $this->assertSame($this->hoy(), $real->getF_fin()->format('Y-m-d'));
     }
 
     // ---- mismo titular: se concilian los horarios ----------------------------------------------------------------------

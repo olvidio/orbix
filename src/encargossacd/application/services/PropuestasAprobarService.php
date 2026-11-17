@@ -154,19 +154,23 @@ final class PropuestasAprobarService
         }
         $oEncargoSacd->setF_fin($f_fin);
         $this->encargoSacdRepository->Guardar($oEncargoSacd);
-        $this->finHorarioPropuesta($id_item, $f_fin);
+        $this->finHorarioReal($id_item, $f_fin);
     }
 
-    private function finHorarioPropuesta(int $id_item, DateTimeLocal $f_fin): void
+    /**
+     * Cierra los horarios reales que el sacd saliente tenía abiertos en esa tarea. (Antes se cerraban los
+     * de la propuesta, que se borran al terminar, y los reales quedaban abiertos.)
+     */
+    private function finHorarioReal(int $id_item, DateTimeLocal $f_fin): void
     {
-        $cPropuestaHorarios = $this->propuestaHorarioRepository->matching(
+        $cHorarios = $this->encargoSacdHorarioRepository->matching(
             Criteria::create()
-                ->where(Filter::eq(PropuestaEncargoSacdHorarioField::IdItemTareaSacd, $id_item))
-                ->andWhere(Filter::isNotNull(PropuestaEncargoSacdHorarioField::IdNom))
+                ->where(Filter::eq(EncargoSacdHorarioField::IdItemTareaSacd, $id_item))
+                ->andWhere(Filter::isNull(EncargoSacdHorarioField::FFin))
         );
-        foreach ($cPropuestaHorarios as $oPropuestaHorario) {
-            $oPropuestaHorario->setF_fin($f_fin);
-            $this->propuestaHorarioRepository->Guardar($oPropuestaHorario);
+        foreach ($cHorarios as $oEncargoSacdHorario) {
+            $oEncargoSacdHorario->setF_fin($f_fin);
+            $this->encargoSacdHorarioRepository->Guardar($oEncargoSacdHorario);
         }
     }
 }
