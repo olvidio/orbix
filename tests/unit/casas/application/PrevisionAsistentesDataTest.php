@@ -222,10 +222,8 @@ final class PrevisionAsistentesDataTest extends myTest
         $this->assertSame(0, $r['a_valores'][1]['plazas']['valor']);
     }
 
-    /**
-     * Hallazgo: una casa sin plazas definidas deja `null` en la celda (no 0), a diferencia de la casa inexistente.
-     */
-    public function test_una_casa_sin_plazas_definidas_deja_null_en_la_celda(): void
+    /** Una casa sin plazas definidas da 0, como una casa que no se encuentra. */
+    public function test_una_casa_sin_plazas_definidas_da_cero(): void
     {
         $this->actividadesDevueltas = [$this->actividad(3001, 'crt n', 77)];
         $casa = $this->createMock(Casa::class);
@@ -235,7 +233,7 @@ final class PrevisionAsistentesDataTest extends myTest
 
         $r = $this->uc()->execute(['mi_of' => 'sm']);
 
-        $this->assertNull($r['a_valores'][1]['plazas']['valor']);
-        $this->assertNull($r['a_valores'][1]['plazas_min']['valor']);
+        $this->assertSame(0, $r['a_valores'][1]['plazas']['valor']);
+        $this->assertSame(0, $r['a_valores'][1]['plazas_min']['valor']);
     }
 }

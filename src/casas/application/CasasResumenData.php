@@ -393,20 +393,16 @@ final class CasasResumenData
             if ($id_ubi !== $id_ubi_hijo || $id_ubi_padre === 0 || !isset($original[$id_ubi_padre])) {
                 continue;
             }
+            // Superávit conjunto = el propio de la madre + el propio de la hija, cada uno con sus aportaciones,
+            // ingresos y gastos repartidos según sus periodos (sin periodos, el propio es 0). Antes se sumaban los
+            // ingresos de la hija pero no se restaba su gasto, y sin periodos en la madre se perdía el de la hija.
             $padre = $original[$id_ubi_padre];
             foreach ([1, 2] as $s) {
-                $gastoPctPadre = $padre[$s]['gasto%'];
-                if (is_numeric($gastoPctPadre)) {
-                    $aportacionPadre = is_numeric($padre[$s]['aportacion']) ? (float) $padre[$s]['aportacion'] : 0.0;
-                    $inAcuPadre = is_numeric($padre[$s]['in_acu']) ? (float) $padre[$s]['in_acu'] : 0.0;
-                    $inAcuHijo = is_numeric($row[$s]['in_acu']) ? (float) $row[$s]['in_acu'] : 0.0;
-                    $gastoTotalPadre = (float) $padre[0]['gasto'];
-                    $in = $aportacionPadre + $inAcuPadre + $inAcuHijo;
-                    $out = round((float) $gastoPctPadre * $gastoTotalPadre / 100, 2);
-                    $padreRow = $a_resumen[$id_ubi_padre];
-                    $padreRow[$s]['superavit'] = round($in - $out, 2);
-                    $a_resumen[$id_ubi_padre] = $padreRow;
-                }
+                $propioPadre = is_numeric($padre[$s]['superavit']) ? (float) $padre[$s]['superavit'] : 0.0;
+                $propioHijo = is_numeric($row[$s]['superavit']) ? (float) $row[$s]['superavit'] : 0.0;
+                $padreRow = $a_resumen[$id_ubi_padre];
+                $padreRow[$s]['superavit'] = round($propioPadre + $propioHijo, 2);
+                $a_resumen[$id_ubi_padre] = $padreRow;
                 $hijoRow = $a_resumen[$id_ubi];
                 $hijoRow[$s]['superavit'] = '';
                 $a_resumen[$id_ubi] = $hijoRow;

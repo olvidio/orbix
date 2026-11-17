@@ -132,8 +132,8 @@ final class PrevisionAsistentesData
                 if ($id_ubi !== null) {
                     $oUbi = $this->casaDlRepository->findById($id_ubi);
                     if ($oUbi !== null) {
-                        $plazas = $oUbi->getPlazas();
-                        $plazas_min = $oUbi->getPlazas_min();
+                        $plazas = $oUbi->getPlazas() ?? 0;
+                        $plazas_min = $oUbi->getPlazas_min() ?? 0;
                     }
                 }
 

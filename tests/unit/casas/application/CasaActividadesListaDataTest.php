@@ -358,11 +358,8 @@ final class CasaActividadesListaDataTest extends myTest
         $this->assertSame('Pla, Joan', $fila[12]);
     }
 
-    /**
-     * Hallazgo: el permiso «ver sacd» no oculta nada. La condición es «puede ver O hay nombres», así que con
-     * sacd asignados salen siempre, tenga o no permiso quien consulta.
-     */
-    public function test_sin_permiso_de_ver_sacd_los_nombres_salen_igualmente(): void
+    /** Sin permiso de ver los sacd, la columna sale vacía aunque la actividad los tenga. */
+    public function test_sin_permiso_de_ver_sacd_los_nombres_no_salen(): void
     {
         $this->apps(['procesos', 'actividadessacd']);
         $this->permisosDeSesion(['datos' => 3, 'ctr' => 3, 'sacd' => 0]);
@@ -371,14 +368,11 @@ final class CasaActividadesListaDataTest extends myTest
 
         $fila = $this->uc()->execute(['id_cdc' => [77]] + self::PERIODO)['a_valores'][77][1];
 
-        $this->assertSame('Pla, Joan', $fila[12]);
+        $this->assertSame('', $fila[12]);
     }
 
-    /**
-     * Hallazgo: el índice de fila se incrementa antes del filtro de permisos, así que las filas ocultas dejan huecos
-     * en la numeración (aquí la única visible es la 2).
-     */
-    public function test_las_filas_ocultas_dejan_huecos_en_la_numeracion(): void
+    /** Las filas ocultas por permisos no dejan huecos en la numeración. */
+    public function test_las_filas_ocultas_no_dejan_huecos_en_la_numeracion(): void
     {
         $this->apps(['procesos']);
         $p = $this->createMock(PermisosActividades::class);
@@ -394,6 +388,6 @@ final class CasaActividadesListaDataTest extends myTest
 
         $r = $this->uc()->execute(['id_cdc' => [77]] + self::PERIODO);
 
-        $this->assertSame([2], array_keys($r['a_valores'][77]));
+        $this->assertSame([1], array_keys($r['a_valores'][77]));
     }
 }

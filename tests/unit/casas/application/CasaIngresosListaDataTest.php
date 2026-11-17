@@ -280,17 +280,13 @@ final class CasaIngresosListaDataTest extends myTest
         $this->assertSame(1250.0, $fila[9]);
     }
 
-    /**
-     * Hallazgo: la «parte proporcional al periodo» se calcula con `getDuracionEnPeriodo($f_ini, $f_fin)` de la
-     * propia actividad, no con el periodo consultado: la duración en periodo es siempre la duración real, el
-     * factor es siempre 1 y el asterisco de la nota nunca aparece con datos reales.
-     */
-    public function test_la_duracion_en_periodo_se_pide_con_las_fechas_de_la_propia_actividad(): void
+    /** La parte proporcional se calcula con el periodo consultado, no con las fechas de la propia actividad. */
+    public function test_la_duracion_en_periodo_se_pide_con_las_fechas_del_periodo_consultado(): void
     {
         $a = $this->actividad(3001);
         $a->expects($this->once())->method('getDuracionEnPeriodo')->with(
-            $this->callback(static fn (DateTimeLocal $d): bool => $d->getIso() === '2026-02-10'),
-            $this->callback(static fn (DateTimeLocal $d): bool => $d->getIso() === '2026-02-15'),
+            $this->callback(static fn (DateTimeLocal $d): bool => $d->getIso() === '2026-01-01'),
+            $this->callback(static fn (DateTimeLocal $d): bool => $d->getIso() === '2026-12-31'),
         );
         $this->actividadesDevueltas = [$a];
 
@@ -407,16 +403,13 @@ final class CasaIngresosListaDataTest extends myTest
         $this->assertStringStartsWith('f_fin between', $this->filtros[0]);
     }
 
-    /**
-     * Hallazgo: la tarifa de la casa se busca con el año del formulario tal cual; con un periodo por fechas (sin
-     * año) se busca la tarifa del año «» y nunca se encuentra, aunque las fechas digan de qué año se trata.
-     */
-    public function test_sin_anyo_en_la_entrada_la_tarifa_se_busca_con_el_anyo_vacio(): void
+    /** Sin año en el formulario (periodo por fechas), la tarifa se busca con el año de la actividad. */
+    public function test_sin_anyo_en_la_entrada_la_tarifa_se_busca_con_el_anyo_de_la_actividad(): void
     {
         $this->actividadesDevueltas = [$this->actividad(3001)];
 
         $this->uc()->execute(['id_cdc' => [77], 'year' => ''] + self::PERIODO);
 
-        $this->assertSame(['id_tarifa eq 5', 'id_ubi eq 77', 'year eq '], $this->filtrosTarifa);
+        $this->assertSame(['id_tarifa eq 5', 'id_ubi eq 77', 'year eq 2026'], $this->filtrosTarifa);
     }
 }

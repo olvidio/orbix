@@ -144,8 +144,8 @@ final class CalendarioUbiResumenData
         $r_it = (float)$this->ubiGastoRepository->getSumaGastos($id_ubi, 3, $oIniAnt, $oFinAnt);
 
         if ($r_it <= 0.0) {
-            return $this->empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t)
-                + [
+            // array_replace: los datos ya calculados sustituyen a los vacíos (con «+» ganaban los vacíos).
+            return array_replace($this->empty($id_ubi, $seccion, $any_actual, $any_anterior, $any_prev, $G, $inc_t), [
                     'ok' => false,
                     'error' => 'sin_gastos_anterior',
                     'nombre_ubi' => $nombre_ubi,
@@ -154,7 +154,7 @@ final class CalendarioUbiResumenData
                     'a_tarifas_prev' => $a_tarifas_prev,
                     'p_dv' => $p_dv,
                     'p_df' => $p_df,
-                ];
+                ]);
         }
 
         // Previsión de ingresos por sección

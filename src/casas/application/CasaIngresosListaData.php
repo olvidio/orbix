@@ -102,6 +102,9 @@ final class CasaIngresosListaData
         $oPeriodo->setPeriodo($periodo);
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
+        // Límites del periodo consultado, para la parte proporcional de cada actividad.
+        $oInicioPeriodo = new DateTimeLocal($inicioIso);
+        $oFinPeriodo = new DateTimeLocal($finIso);
 
         $campoFecha = $periodo === 'desdeHoy' ? ActividadAllField::FFin : ActividadAllField::FIni;
 
@@ -139,7 +142,7 @@ final class CasaIngresosListaData
                     }
 
                     $num_dias_act = (float)$oActividad->getDuracionAumentada();
-                    $num_dias = (float)$oActividad->getDuracionEnPeriodo($oF_ini, $oF_fin);
+                    $num_dias = (float)$oActividad->getDuracionEnPeriodo($oInicioPeriodo, $oFinPeriodo);
                     $num_dias_real = (float)$oActividad->getDuracionReal();
                     $factor_dias = $num_dias_real > 0 ? ($num_dias / $num_dias_real) : 0.0;
                     $factor = $num_dias_real > 0 ? ($num_dias_act - $num_dias_real) / $num_dias_real : 0.0;
@@ -164,7 +167,8 @@ final class CasaIngresosListaData
                             Criteria::create()
                                 ->where(Filter::eq(TarifaUbiField::IdTarifa, $id_tarifa))
                                 ->andWhere(Filter::eq(TarifaUbiField::IdUbi, $id_ubi))
-                                ->andWhere(Filter::eq(TarifaUbiField::Year, $year))
+                                // Sin año en el formulario (periodo por fechas), el de la actividad.
+                                ->andWhere(Filter::eq(TarifaUbiField::Year, $year !== '' ? $year : $oF_ini->format('Y')))
                         );
                         if (isset($cTarifasUbi[0])) {
                             $cantidad = (float)$cTarifasUbi[0]->getCantidad();

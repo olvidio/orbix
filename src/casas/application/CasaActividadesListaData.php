@@ -111,7 +111,6 @@ final class CasaActividadesListaData
 
             $a = 0;
             foreach ($cActividades as $oActividad) {
-                $a++;
                 $id_activ = (int)$oActividad->getId_activ();
                 $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
@@ -187,7 +186,7 @@ final class CasaActividadesListaData
                                 $nombresSacd[] = $nom_sacd;
                             }
                         }
-                        if ($puedeVerSacd || $nombresSacd !== []) {
+                        if ($puedeVerSacd) {
                             $txt_sacds = implode('# ', $nombresSacd);
                         }
                     }
@@ -199,6 +198,8 @@ final class CasaActividadesListaData
                     $letra_tarifa = $oTipoTarifa?->getLetra() ?? '';
                 }
 
+                // Se numera después de los filtros de permisos: las filas ocultas no dejan huecos.
+                $a++;
                 $a_valores[$id_ubi][$a] = [
                     1 => $f_ini,
                     2 => $h_ini,

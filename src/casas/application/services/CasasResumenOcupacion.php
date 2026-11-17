@@ -20,7 +20,7 @@ final class CasasResumenOcupacion
      */
     public static function inicioPeriodo(string $iso_ini, int $delta_h = 4): string
     {
-        $oInicio = DateTimeLocal::createFromFormat('Ymd', $iso_ini);
+        $oInicio = DateTimeLocal::createFromFormat('!Ymd', $iso_ini);
         if ($oInicio === false) {
             return '';
         }
@@ -34,7 +34,7 @@ final class CasasResumenOcupacion
      */
     public static function finPeriodo(string $iso_fin, int $delta_h = 10): string
     {
-        $oFin = DateTimeLocal::createFromFormat('Ymd', $iso_fin);
+        $oFin = DateTimeLocal::createFromFormat('!Ymd', $iso_fin);
         if ($oFin === false) {
             return '';
         }
@@ -122,18 +122,18 @@ final class CasasResumenOcupacion
         $oF_fin->setTime((int) $fin_h, (int) $fin_m, (int) $fin_s);
 
         if ($oF_ini < $oIniTotLocal) {
-            $isoActivIni = $oIniTotLocal->format('YmdHis');
+            $isoActivIni = $oIniTotLocal->format('Y-m-d H:i:s');
             $oLocal = clone $oIniTotLocal;
             $num_dias = $oLocal->duracion($oF_fin);
         } else {
-            $isoActivIni = $oF_ini->format('YmdHis');
+            $isoActivIni = $oF_ini->format('Y-m-d H:i:s');
         }
         if ($oF_fin > $oFinTotLocal) {
-            $isoActivFin = $oFinTotLocal->format('YmdHis');
+            $isoActivFin = $oFinTotLocal->format('Y-m-d H:i:s');
             $oLocal = clone $oF_fin;
             $num_dias = $oLocal->duracion($oFinTotLocal);
         } else {
-            $isoActivFin = $oF_fin->format('YmdHis');
+            $isoActivFin = $oF_fin->format('Y-m-d H:i:s');
         }
 
         $p = 0;

@@ -225,12 +225,8 @@ final class CalendarioUbiResumenDataTest extends myTest
         $this->assertSame([[1, "$ant-01-01", "$ant-12-31"], [2, "$ant-01-01", "$ant-12-31"], [3, "$ant-01-01", "$ant-12-31"]], $this->llamadasGastos);
     }
 
-    /**
-     * Hallazgo: la respuesta «sin gastos del año anterior» pretende incluir el nombre de la casa, las plazas, las
-     * tarifas y los días, pero se monta con `empty() + [...]` y la unión de arrays conserva los valores de la
-     * izquierda (los vacíos). Solo llegan `ok` y `error`. El frontend solo usa `id_ubi` y `any_anterior`.
-     */
-    public function test_sin_gastos_del_anyo_anterior_se_avisa_y_los_datos_ya_calculados_se_pierden(): void
+    /** Sin gastos del año anterior se avisa, y la respuesta lleva los datos ya calculados (nombre, plazas, tarifas…). */
+    public function test_sin_gastos_del_anyo_anterior_se_avisa_con_los_datos_ya_calculados(): void
     {
         $this->sumaGastos[3] = 0.0;
         $this->tipoTarifa(5, 2, 'A', 10.0, 12.0);
@@ -242,10 +238,8 @@ final class CalendarioUbiResumenDataTest extends myTest
         $this->assertSame('sin_gastos_anterior', $r['error']);
         $this->assertSame(77, $r['id_ubi']);
         $this->assertSame($this->any - 1, $r['any_anterior']);
-        $this->assertSame('', $r['nombre_ubi'], 'debería ser «Casa Alta»');
-        $this->assertSame(0, $r['plazas_min']);
-        $this->assertSame([], $r['a_tarifas_actual']);
-        $this->assertSame(0, $r['p_dv']);
+        $this->assertSame('Casa Alta', $r['nombre_ubi']);
+        $this->assertNotSame([], $r['a_tarifas_actual']);
     }
 
     public function test_estudio_completo_de_sv_con_tarifa_por_dia(): void

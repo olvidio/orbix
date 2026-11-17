@@ -380,21 +380,17 @@ final class CasasResumenDataTest extends TestCase
         $madre = $r['a_resumen'][77];
         $hija = $r['a_resumen'][78];
         $this->assertSame([77, 78], [$hija['_id_ubi_padre'], $hija['_id_ubi_hijo']]);
-        // Madre: aportación 1000 + ingresos propios 2500 + ingresos de la hija 800 − gasto 4000.
-        $this->assertSame(300.0, $madre[1]['superavit']);
+        // Conjunto = superávit propio de la madre (1000 + 2500 − 4000 = −500) + el de la hija (800 − 600 = 200).
+        $this->assertSame(-300.0, $madre[1]['superavit']);
         $this->assertSame(500.0, $madre[2]['superavit']);
         $this->assertSame(['', ''], [$hija[1]['superavit'], $hija[2]['superavit']]);
         // El total solo cuenta el de la madre (el de la hija está vacío).
-        $this->assertSame(300.0, $r['tot'][1]['superavit']);
+        $this->assertSame(-300.0, $r['tot'][1]['superavit']);
         $this->assertSame(4600.0, $r['tot'][0]['gasto']);
     }
 
-    /**
-     * Hallazgo: el gasto propio de la casa hija (600) no entra en el superávit conjunto: se suman sus ingresos a
-     * los de la madre pero solo se resta el gasto de la madre. Lo fija el test anterior (300 y no −300).
-     * Además, si la madre no tiene periodos (reparto «-») su superávit no se toca, pero el de la hija se vacía.
-     */
-    public function test_si_la_madre_no_tiene_periodos_su_superavit_no_cambia_pero_el_de_la_hija_se_vacia(): void
+    /** Si la madre no tiene periodos (sin reparto, superávit propio 0), el conjunto es el de la hija: no se pierde. */
+    public function test_si_la_madre_no_tiene_periodos_el_conjunto_es_el_superavit_de_la_hija(): void
     {
         $this->casasDevueltas = [$this->casa(77, 'Casa Alta'), $this->casa(78, 'Anexo')];
         $this->grupo(77, 78);
@@ -403,7 +399,7 @@ final class CasasResumenDataTest extends TestCase
 
         $r = $this->uc()->execute(self::PERIODO);
 
-        $this->assertSame(0, $r['a_resumen'][77][1]['superavit']);
+        $this->assertSame(-400.0, $r['a_resumen'][77][1]['superavit']);
         $this->assertSame('', $r['a_resumen'][78][1]['superavit']);
     }
 
@@ -479,10 +475,11 @@ final class CasasResumenDataTest extends TestCase
 
         $r = $this->uc()->execute(['que' => 'anual']);
 
+        // Madre 1000 − 4000 = −3000; hija −600 (su gasto también cuenta).
         foreach ($r['a_anys'] as $any) {
-            $this->assertSame(-3000.0, $r['a_resumen'][77][$any][1]['superavit']);
+            $this->assertSame(-3600.0, $r['a_resumen'][77][$any][1]['superavit']);
             $this->assertSame('', $r['a_resumen'][78][$any][1]['superavit']);
-            $this->assertSame(-3000.0, $r['tot'][$any][1]['superavit']);
+            $this->assertSame(-3600.0, $r['tot'][$any][1]['superavit']);
         }
     }
 }

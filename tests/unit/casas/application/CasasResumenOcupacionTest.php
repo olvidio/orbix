@@ -13,18 +13,12 @@ use src\shared\domain\value_objects\TimeLocal;
 /** Cálculo de ocupación de una casa por periodos sv/sf. */
 final class CasasResumenOcupacionTest extends TestCase
 {
-    /**
-     * Hallazgo: `createFromFormat('Ymd', …)` sin `!` rellena la hora con la hora actual del reloj, así que los
-     * límites del periodo («fecha − 4 h» y «fecha + 1 día + 10 h») dependen de la hora a la que se calcule: no son
-     * 20:00 del día anterior ni 10:00 del siguiente, como pretende el código.
-     */
-    public function test_los_limites_del_periodo_arrastran_la_hora_actual_del_reloj(): void
+    /** El periodo empieza a las 20:00 del día anterior y acaba a las 10:00 del día siguiente, sea la hora que sea. */
+    public function test_los_limites_del_periodo_son_las_20_del_dia_anterior_y_las_10_del_siguiente(): void
     {
-        $ini = CasasResumenOcupacion::inicioPeriodo('20260210');
-        $fin = CasasResumenOcupacion::finPeriodo('20260210');
-
-        $this->assertMatchesRegularExpression('/^2026-02-(09|10) \d\d:\d\d:\d\d$/', $ini);
-        $this->assertMatchesRegularExpression('/^2026-02-1[12] \d\d:\d\d:\d\d$/', $fin);
+        $this->assertSame('2026-02-09 20:00:00', CasasResumenOcupacion::inicioPeriodo('20260210'));
+        $this->assertSame('2026-02-11 10:00:00', CasasResumenOcupacion::finPeriodo('20260210'));
+        $this->assertSame('2026-02-10 00:00:00', CasasResumenOcupacion::inicioPeriodo('20260210', 0));
     }
 
     public function test_una_fecha_invalida_da_cadena_vacia(): void
@@ -76,17 +70,13 @@ final class CasasResumenOcupacionTest extends TestCase
         $this->assertSame([1 => 0.0, 2 => 0.0, 'avisos' => []], $r);
     }
 
-    /**
-     * Hallazgo: `inicioPeriodo`/`finPeriodo` devuelven `Y-m-d H:i:s` y la actividad se compara en formato
-     * `YmdHis`; al comparar cadenas de formatos distintos (`2026…` frente a `2026-…`) una actividad de febrero,
-     * que cae en el primer periodo (sv, enero–junio), se atribuye al segundo (sf, julio–diciembre).
-     */
-    public function test_una_actividad_de_febrero_en_el_periodo_sv_se_atribuye_por_error_a_sf(): void
+    /** Una actividad de febrero cae en el primer periodo (sv, enero–junio). */
+    public function test_una_actividad_de_febrero_se_atribuye_al_periodo_sv(): void
     {
         $r = CasasResumenOcupacion::diasOcupacion(self::PERIODOS, $this->actividad('2026-02-10', '2026-02-17'), new DateTimeLocal('2026-01-01'), new DateTimeLocal('2026-12-31'));
 
-        $this->assertSame(0.0, $r[1]);
-        $this->assertSame(7.5, $r[2], 'debería ser sv (sección 1)');
+        $this->assertSame(7.5, $r[1]);
+        $this->assertSame(0.0, $r[2]);
         $this->assertSame([], $r['avisos']);
     }
 }
