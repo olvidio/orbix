@@ -281,8 +281,8 @@ PHP);
         $claseCorta = substr((string) strrchr('\\' . get_class($p), '\\'), 1);
         $this->assertSame('Ana Ruiz', $top['nom_cabecera']);
         $this->assertSame($claseCorta, $top['go_home_link_spec']['query']['obj_pau']);
-        // Hallazgo: el enlace «ver dossiers» se monta antes de deducir el tipo y conserva el genérico.
-        $this->assertSame($objPau, $top['go_dossiers_link_spec']['query']['obj_pau']);
+        // El enlace «ver dossiers» lleva también el tipo deducido (antes conservaba el genérico; duda 34 del plan).
+        $this->assertSame($claseCorta, $top['go_dossiers_link_spec']['query']['obj_pau']);
     }
 
     /** @return array<string, array{string}> */

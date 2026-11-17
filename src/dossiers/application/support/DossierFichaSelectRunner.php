@@ -70,9 +70,11 @@ final class DossierFichaSelectRunner
         if (method_exists($select, 'getSegmentData')) {
             $segmentPayload = $select->getSegmentData();
             $payload = is_array($segmentPayload) ? $segmentPayload : [];
-            $segmentTipo = is_string($payload['segment_tipo'] ?? null)
-                ? $payload['segment_tipo']
-                : 'select_habitaciones_cdc';
+            $segmentTipo = $payload['segment_tipo'] ?? null;
+            if (!is_string($segmentTipo) || $segmentTipo === '') {
+                // Error de programación: el frontend elige cómo pintar el bloque por este tipo.
+                throw new \LogicException('El widget de dossier ' . get_class($select) . ' no declara segment_tipo en getSegmentData().');
+            }
             unset($payload['segment_tipo']);
 
             return array_merge(

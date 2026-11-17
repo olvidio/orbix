@@ -15,7 +15,7 @@ class WidgetSegmentoDePrueba
     /** @var list<array{string, mixed}> */
     public static array $llamadas = [];
     /** @var mixed lo que devuelve getSegmentData */
-    public static mixed $segmento = [];
+    public static mixed $segmento = ['segment_tipo' => 'select_demo'];
 
     public function setId_dossier(mixed $v): void { self::$llamadas[] = ['setId_dossier', $v]; }
     public function setPau(mixed $v): void { self::$llamadas[] = ['setPau', $v]; }
@@ -58,7 +58,7 @@ final class DossierFichaSelectRunnerTest extends myTest
     {
         parent::setUp();
         WidgetSegmentoDePrueba::$llamadas = [];
-        WidgetSegmentoDePrueba::$segmento = [];
+        WidgetSegmentoDePrueba::$segmento = ['segment_tipo' => 'select_demo'];
     }
 
     /**
@@ -219,17 +219,48 @@ final class DossierFichaSelectRunnerTest extends myTest
         $this->assertSame(['tipo' => 'select_demo', 'id' => 'otro'], $this->segmento());
     }
 
-    /** Hallazgo: el tipo por defecto es el de habitaciones (2006), sea cual sea el widget. */
-    public function test_sin_tipo_declarado_o_con_un_payload_que_no_es_array_el_tipo_es_el_de_habitaciones(): void
+    /**
+     * Un widget con getSegmentData que no declara `segment_tipo` (o lo declara mal, o no devuelve un array) es un
+     * error de programación: se avisa con el nombre de la clase (antes se suponía que era el de habitaciones).
+     *
+     * @dataProvider segmentosSinTipoProvider
+     */
+    public function test_sin_tipo_declarado_es_un_error_con_el_nombre_del_widget(mixed $segmento): void
     {
-        WidgetSegmentoDePrueba::$segmento = ['tabla' => []];
-        $this->assertSame(['tipo' => 'select_habitaciones_cdc', 'id' => 'ficha3102', 'tabla' => []], $this->segmento());
+        WidgetSegmentoDePrueba::$segmento = $segmento;
 
-        WidgetSegmentoDePrueba::$segmento = 'no es un array';
-        $this->assertSame(['tipo' => 'select_habitaciones_cdc', 'id' => 'ficha3102'], $this->segmento());
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('WidgetSegmentoDePrueba');
+        $this->segmento();
+    }
 
-        WidgetSegmentoDePrueba::$segmento = ['segment_tipo' => 42];
-        $this->assertSame(['tipo' => 'select_habitaciones_cdc', 'id' => 'ficha3102'], $this->segmento());
+    /** @return array<string, array{mixed}> */
+    public static function segmentosSinTipoProvider(): array
+    {
+        return [
+            'sin segment_tipo' => [['tabla' => []]],
+            'no es un array' => ['no es un array'],
+            'segment_tipo no es texto' => [['segment_tipo' => 42]],
+            'segment_tipo vacío' => [['segment_tipo' => '']],
+        ];
+    }
+
+    /** Guardia: todos los widgets de dossier con getSegmentData declaran su `segment_tipo`. */
+    public function test_todos_los_widgets_con_segmento_declaran_su_tipo(): void
+    {
+        $raiz = dirname(__DIR__, 5) . '/src';
+        $sinTipo = [];
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($raiz, \FilesystemIterator::SKIP_DOTS));
+        foreach ($it as $f) {
+            if ($f->getExtension() !== 'php') {
+                continue;
+            }
+            $codigo = (string) file_get_contents($f->getPathname());
+            if (str_contains($codigo, 'function getSegmentData') && !str_contains($codigo, "'segment_tipo' =>")) {
+                $sinTipo[] = substr($f->getPathname(), strlen($raiz) + 1);
+            }
+        }
+        $this->assertSame([], $sinTipo);
     }
 
     public function test_un_widget_que_solo_sabe_pintarse_da_un_segmento_html(): void

@@ -141,6 +141,7 @@ class Select_habitaciones_cdc
         $aQueryNuevo = ['nuevo' => 1, 'id_ubi' => $this->id_pau];
 
         return [
+            'segment_tipo' => 'select_habitaciones_cdc',
             'hash' => [
                 'campos_form' => '',
                 'campos_no' => 'sel!mod!scroll_id!refresh!id_sel!ctx_eliminar',

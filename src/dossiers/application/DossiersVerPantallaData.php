@@ -162,11 +162,6 @@ class DossiersVerPantallaData
                 break;
         }
 
-        $goDossiersLinkSpec = [
-            'path' => 'frontend/dossiers/controller/dossiers_ver.php',
-            'query' => ['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau],
-        ];
-
         $goHomeLinkSpec = null;
         $nom_cabecera = '';
         switch ($pau) {
@@ -223,6 +218,12 @@ class DossiersVerPantallaData
             default:
                 return ['error' => 'pau desconocido', 'ficha_segmentos' => []];
         }
+
+        // Después del switch: con una persona sin tipo, lleva el obj_pau ya deducido.
+        $goDossiersLinkSpec = [
+            'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+            'query' => ['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau],
+        ];
 
         $top_data = [
             'web_icons' => ConfigGlobal::getWeb_icons(),
