@@ -33,7 +33,7 @@ final readonly class ListaAsistentesData
 
     /**
      * @param array<string, mixed> $input
-     * @return array{nom_activ: string, queSel: string, aAsistentes: array<string, array{nombre: string, a_datos_cl: array<string, string>}>}|array{error: string}
+     * @return array{nom_activ: string, queSel: string, aAsistentes: list<array{etiqueta: string, nombre: string, a_datos_cl: array<string, string>}>}|array{error: string}
      */
     public function build(array $input): array
     {
@@ -70,12 +70,13 @@ final readonly class ListaAsistentesData
                 if ($id_nom === null) {
                     continue;
                 }
-                $aListaCargos[] = $id_nom;
                 $id_cargo = $oActividadCargo->getId_cargo();
                 $oCargo = $this->cargoRepository->findById($id_cargo);
                 if ($oCargo === null) {
+                    // Cargo que ya no existe: la persona sale entre los asistentes, no desaparece.
                     continue;
                 }
+                $aListaCargos[] = $id_nom;
                 $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
                 $cargo = $oCargo->getCargoVo()->value();
                 if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
@@ -198,9 +199,10 @@ final readonly class ListaAsistentesData
             $a_valores[$c] = $val;
         }
 
+        // Lista de filas (no un mapa por etiqueta): dos personas con el mismo cargo salen las dos.
         $aAsistentes = [];
         foreach ($a_valores as $k => $val) {
-            $c = $val[1];
+            $etiqueta = $val[1];
             $oPersona = $val[7];
             $a_datos_cl = [];
             if ($queSel === 'listcl') {
@@ -208,7 +210,8 @@ final readonly class ListaAsistentesData
                 $a_datos_cl['observ'] = (string)($a_valores[$k][6] ?? '');
             }
 
-            $aAsistentes[$c] = [
+            $aAsistentes[] = [
+                'etiqueta' => $etiqueta,
                 'nombre' => $val[2],
                 'a_datos_cl' => $a_datos_cl,
             ];

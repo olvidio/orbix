@@ -150,18 +150,16 @@ final class AsistenteReglasTest extends TestCase
         $this->assertSame(PlazaId::CONFIRMADA, $a->getPlazaVo()?->value());
     }
 
-    /**
-     * Hallazgo: la plaza nueva queda puesta en la entidad aunque el comprobador la rechace; quien llama tiene que
-     * descartar el objeto (los casos de uso no lo guardan, pero la entidad queda inconsistente).
-     */
-    public function test_si_el_comprobador_rechaza_la_plaza_esta_queda_puesta_igualmente(): void
+    /** Si el comprobador rechaza la plaza nueva, la entidad conserva la que tenía. */
+    public function test_si_el_comprobador_rechaza_la_plaza_se_conserva_la_anterior(): void
     {
         $a = $this->asistente();
+        $a->setPlaza(PlazaId::PEDIDA);
         $comprobador = $this->createMock(PlazaPropietarioAsignacionInterface::class);
         $comprobador->method('asegurar')->willReturn('Ya están todas las plazas ocupadas');
 
         $this->assertNotSame('', $a->setPlazaVoComprobando(PlazaId::ASIGNADA, $comprobador));
-        $this->assertSame(PlazaId::ASIGNADA, $a->getPlazaVo()?->value());
+        $this->assertSame(PlazaId::PEDIDA, $a->getPlazaVo()?->value());
     }
 
     public function test_sin_plaza_previa_la_actual_es_pedida_y_sin_comprobador_no_se_comprueba(): void

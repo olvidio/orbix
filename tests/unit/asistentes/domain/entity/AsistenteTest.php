@@ -146,7 +146,7 @@ class AsistenteTest extends myTest
             $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA, $asignacion);
 
             $this->assertNotSame('', $err);
-            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+            $this->assertNull($this->Asistente->getPlazaVo(), 'rechazada: se conserva la plaza anterior (ninguna)');
         } finally {
             $this->restaurarConfigApps($configBackup);
         }
@@ -217,7 +217,7 @@ class AsistenteTest extends myTest
             $err = $this->Asistente->setPlazaVoComprobando(PlazaId::ASIGNADA, $asignacion);
 
             $this->assertNotSame('', $err);
-            $this->assertSame(PlazaId::ASIGNADA, $this->Asistente->getPlazaVo()->value());
+            $this->assertNull($this->Asistente->getPlazaVo(), 'rechazada: se conserva la plaza anterior (ninguna)');
         } finally {
             $this->restaurarConfigApps($configBackup);
         }

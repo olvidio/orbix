@@ -317,15 +317,18 @@ final class AsistenteActividadServiceTest extends myTest
         $this->assertSame($repos, $this->consultasConjunto[0][0]);
     }
 
-    /** Hallazgo: los asistentes se indexan por apellidos y nombre; dos personas que se llamen igual quedan en una. */
-    public function test_dos_asistentes_con_el_mismo_nombre_quedan_en_uno(): void
+    /** Dos personas que se llaman igual salen las dos; la segunda lleva su id_nom en la clave para distinguirla. */
+    public function test_dos_asistentes_con_el_mismo_nombre_salen_los_dos(): void
     {
         $this->actividad(3001, 'dlb');
         $this->personaDl(10011, 'Pla');
         $this->personaDl(10012, 'Pla');
         $this->asistentesConjunto = [$this->asistente(3001, 10011), $this->asistente(3001, 10012)];
 
-        $this->assertCount(1, $this->sut()->getAsistentesDeActividad(3001));
+        $r = $this->sut()->getAsistentesDeActividad(3001);
+
+        $this->assertSame([10011, 10012], array_map(fn ($a) => $a->getId_nom(), array_values($r)));
+        $this->assertSame(['Pla,  X', 'Pla,  X (10012)'], array_keys($r));
     }
 
     public function test_una_actividad_que_no_existe_no_tiene_asistentes(): void

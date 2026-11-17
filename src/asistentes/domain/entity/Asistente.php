@@ -368,9 +368,13 @@ class Asistente extends Entity implements AggregateRoot
             ? $oPlazaId->value()
             : $oPlazaId;
         $iplaza = (int) $iplaza;
-        $this->plaza = PlazaId::fromNullableInt($iplaza);
+        // La plaza nueva solo se pone si el comprobador la acepta; si no, se conserva la anterior.
+        $error = $plazaPropietario?->asegurar($this, $plaza_actual, $iplaza, $permitirSinPlazaLibre) ?? '';
+        if ($error === '') {
+            $this->plaza = PlazaId::fromNullableInt($iplaza);
+        }
 
-        return $plazaPropietario?->asegurar($this, $plaza_actual, $iplaza, $permitirSinPlazaLibre) ?? '';
+        return $error;
     }
 
     /**

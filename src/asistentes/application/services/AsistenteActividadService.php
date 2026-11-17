@@ -300,7 +300,9 @@ class AsistenteActividadService
                 continue;
             }
             $apellidos = $oPersona->getPrefApellidosNombre();
-            $cAsistentesOk[$apellidos] = $oAsistente;
+            // Dos personas con el mismo nombre: la segunda lleva su id_nom para no pisar a la primera.
+            $clave = isset($cAsistentesOk[$apellidos]) ? "$apellidos ($id_nom)" : $apellidos;
+            $cAsistentesOk[$clave] = $oAsistente;
         }
 
         uksort($cAsistentesOk, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);

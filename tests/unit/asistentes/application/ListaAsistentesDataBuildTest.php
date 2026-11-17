@@ -109,6 +109,22 @@ final class ListaAsistentesDataBuildTest extends myTest
         $_SESSION['config'] = $config;
     }
 
+    /**
+     * Filas del listado por su etiqueta (cargo o «n.-»), para leerlas en los tests.
+     *
+     * @param array<string, mixed> $r
+     * @return array<string, array<string, mixed>>
+     */
+    private function porEtiqueta(array $r): array
+    {
+        $m = [];
+        foreach ($r['aAsistentes'] as $fila) {
+            $m[$fila['etiqueta']] = $fila;
+        }
+
+        return $m;
+    }
+
     private function uc(): ListaAsistentesData
     {
         return new ListaAsistentesData($this->actividades, $this->asistentes, $this->actividadCargos, $this->cargos);
@@ -168,9 +184,9 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $this->assertSame('ca n verano', $r['nom_activ']);
         $this->assertSame('lista', $r['queSel']);
-        $this->assertSame(['1.-', '2.-', '3.-'], array_keys($r['aAsistentes']));
-        $this->assertSame(['Álvarez, Juan  (ctr10012)', 'Bosch, Pau  (ctr10013)', 'Zamora, Luis  (ctr10011)'], array_column($r['aAsistentes'], 'nombre'));
-        $this->assertSame([], $r['aAsistentes']['1.-']['a_datos_cl']);
+        $this->assertSame(['1.-', '2.-', '3.-'], array_keys($this->porEtiqueta($r)));
+        $this->assertSame(['Álvarez, Juan  (ctr10012)', 'Bosch, Pau  (ctr10013)', 'Zamora, Luis  (ctr10011)'], array_column($this->porEtiqueta($r), 'nombre'));
+        $this->assertSame([], $this->porEtiqueta($r)['1.-']['a_datos_cl']);
     }
 
     public function test_la_actividad_puede_llegar_en_la_seleccion_con_su_nombre(): void
@@ -196,7 +212,7 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $r = $this->uc()->build(['id_pau' => self::ID_ACTIV]);
 
-        $this->assertSame(['A  (ctr10011)', 'B  (ctr10012)'], array_column($r['aAsistentes'], 'nombre'));
+        $this->assertSame(['A  (ctr10011)', 'B  (ctr10012)'], array_column($this->porEtiqueta($r), 'nombre'));
     }
 
     public function test_con_cargos_salen_primero_con_su_cargo_y_despues_el_resto_numerados_a_continuacion(): void
@@ -214,10 +230,10 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $r = $this->uc()->build(['id_pau' => self::ID_ACTIV]);
 
-        $this->assertSame(['d.est.', 'asist.', '3.-', '4.-'], array_keys($r['aAsistentes']));
-        $this->assertSame('Vidal, Pere  (ctr20001)', $r['aAsistentes']['d.est.']['nombre']);
-        $this->assertSame('Pla, Joan  (ctr10011)', $r['aAsistentes']['asist.']['nombre']);
-        $this->assertSame(['Bosch, Pau  (ctr10012)', 'Roca, Pere  (ctr10013)'], [$r['aAsistentes']['3.-']['nombre'], $r['aAsistentes']['4.-']['nombre']]);
+        $this->assertSame(['d.est.', 'asist.', '3.-', '4.-'], array_keys($this->porEtiqueta($r)));
+        $this->assertSame('Vidal, Pere  (ctr20001)', $this->porEtiqueta($r)['d.est.']['nombre']);
+        $this->assertSame('Pla, Joan  (ctr10011)', $this->porEtiqueta($r)['asist.']['nombre']);
+        $this->assertSame(['Bosch, Pau  (ctr10012)', 'Roca, Pere  (ctr10013)'], [$this->porEtiqueta($r)['3.-']['nombre'], $this->porEtiqueta($r)['4.-']['nombre']]);
     }
 
     public function test_con_listcl_cada_fila_lleva_los_datos_de_la_persona_y_las_observaciones(): void
@@ -230,17 +246,14 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $r = $this->uc()->build(['id_pau' => self::ID_ACTIV, 'queSel' => 'listcl']);
 
-        $cargo = $r['aAsistentes']['d.est.']['a_datos_cl'];
+        $cargo = $this->porEtiqueta($r)['d.est.']['a_datos_cl'];
         $this->assertSame('médico', $cargo['profesion']);
         $this->assertSame('llega tarde', trim($cargo['observ']), 'el director no asiste: solo la observación del cargo');
-        $this->assertSame(['arquitecto', 'vegetariano', '?'], [$r['aAsistentes']['2.-']['a_datos_cl']['profesion'], $r['aAsistentes']['2.-']['a_datos_cl']['observ'], $r['aAsistentes']['2.-']['a_datos_cl']['eap']]);
+        $this->assertSame(['arquitecto', 'vegetariano', '?'], [$this->porEtiqueta($r)['2.-']['a_datos_cl']['profesion'], $this->porEtiqueta($r)['2.-']['a_datos_cl']['observ'], $this->porEtiqueta($r)['2.-']['a_datos_cl']['eap']]);
     }
 
-    /**
-     * Hallazgo: las filas de cargos se indexan por el nombre del cargo; dos personas con el mismo cargo (p. ej. dos
-     * «asist.») quedan en una sola fila.
-     */
-    public function test_dos_personas_con_el_mismo_cargo_quedan_en_una_fila(): void
+    /** Dos personas con el mismo cargo (p. ej. dos «asist.») salen las dos, cada una en su fila. */
+    public function test_dos_personas_con_el_mismo_cargo_salen_las_dos(): void
     {
         $this->apps(['actividadcargos']);
         $this->persona(20001, 'Vidal, Pere');
@@ -250,22 +263,21 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $r = $this->uc()->build(['id_pau' => self::ID_ACTIV]);
 
-        $this->assertSame(['asist.'], array_keys($r['aAsistentes']));
-        $this->assertSame('Soler, Marc  (ctr20002)', $r['aAsistentes']['asist.']['nombre']);
+        $this->assertSame(['asist.', 'asist.'], array_column($r['aAsistentes'], 'etiqueta'));
+        $this->assertSame(['Vidal, Pere  (ctr20001)', 'Soler, Marc  (ctr20002)'], array_column($r['aAsistentes'], 'nombre'));
     }
 
-    /**
-     * Hallazgo: una persona con cargo cuyo cargo ya no existe, o a quien no se encuentra, se apunta como «tiene
-     * cargo» antes de saltarla: desaparece del bloque de cargos y también del de asistentes.
-     */
-    public function test_una_persona_con_un_cargo_que_no_existe_desaparece_del_listado(): void
+    /** Una persona cuyo cargo ya no existe no sale en los cargos, pero sí entre los asistentes. */
+    public function test_una_persona_con_un_cargo_que_no_existe_sale_entre_los_asistentes(): void
     {
         $this->apps(['actividadcargos']);
         $this->persona(10011, 'Pla, Joan');
         $this->cargo(10011, 99);
         $this->asistente(10011);
 
-        $this->assertSame([], $this->uc()->build(['id_pau' => self::ID_ACTIV])['aAsistentes']);
+        $r = $this->uc()->build(['id_pau' => self::ID_ACTIV]);
+
+        $this->assertSame([['etiqueta' => '1.-', 'nombre' => 'Pla, Joan  (ctr10011)']], array_map(fn (array $f) => ['etiqueta' => $f['etiqueta'], 'nombre' => $f['nombre']], $r['aAsistentes']));
     }
 
     public function test_en_sf_el_sacd_no_sale_en_ningun_bloque(): void
@@ -276,7 +288,7 @@ final class ListaAsistentesDataBuildTest extends myTest
         $this->cargo(20001, 2);
         $this->asistente(20001);
 
-        $this->assertSame([], $this->uc()->build(['id_pau' => self::ID_ACTIV])['aAsistentes']);
+        $this->assertSame([], $this->porEtiqueta($this->uc()->build(['id_pau' => self::ID_ACTIV])));
     }
 
     public function test_en_sv_el_sacd_sale_con_su_cargo(): void
@@ -285,7 +297,7 @@ final class ListaAsistentesDataBuildTest extends myTest
         $this->persona(20001, 'Vidal, Pere');
         $this->cargo(20001, 2);
 
-        $this->assertSame(['sacd'], array_keys($this->uc()->build(['id_pau' => self::ID_ACTIV])['aAsistentes']));
+        $this->assertSame(['sacd'], array_keys($this->porEtiqueta($this->uc()->build(['id_pau' => self::ID_ACTIV]))));
     }
 
     public function test_sin_la_app_de_cargos_no_se_consultan_los_cargos(): void
@@ -294,7 +306,7 @@ final class ListaAsistentesDataBuildTest extends myTest
         $this->persona(10011, 'Pla, Joan');
         $this->asistente(10011);
 
-        $this->assertSame(['1.-'], array_keys($this->uc()->build(['id_pau' => self::ID_ACTIV])['aAsistentes']));
+        $this->assertSame(['1.-'], array_keys($this->porEtiqueta($this->uc()->build(['id_pau' => self::ID_ACTIV]))));
     }
 
     public function test_la_persona_con_cargo_de_paso_sin_fecha_de_nacimiento_tiene_edad_vacia(): void
@@ -305,7 +317,7 @@ final class ListaAsistentesDataBuildTest extends myTest
 
         $r = $this->uc()->build(['id_pau' => self::ID_ACTIV, 'queSel' => 'listcl']);
 
-        $this->assertSame('', $r['aAsistentes']['d.est.']['a_datos_cl']['edad']);
+        $this->assertSame('', $this->porEtiqueta($r)['d.est.']['a_datos_cl']['edad']);
         $this->assertInstanceOf(PersonaDl::class, $p);
     }
 
@@ -320,7 +332,7 @@ final class ListaAsistentesDataBuildTest extends myTest
         $this->personas[10011] = $p;
         $this->asistente(10011);
 
-        $datos = $this->uc()->build(['id_pau' => self::ID_ACTIV, 'queSel' => 'listcl'])['aAsistentes']['1.-']['a_datos_cl'];
+        $datos = $this->porEtiqueta($this->uc()->build(['id_pau' => self::ID_ACTIV, 'queSel' => 'listcl']))['1.-']['a_datos_cl'];
 
         $this->assertSame('30', $datos['edad']);
         $this->assertSame('fl : 4/5/2020', $datos['inc_f_inc']);

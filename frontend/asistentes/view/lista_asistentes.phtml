@@ -27,11 +27,11 @@
         ?>
     </tr>
     <?php
-    foreach ($aAsistentes as $c => $datos) {
+    foreach ($aAsistentes as $datos) {
         $a_datos_cl = $datos['a_datos_cl'];
         ?>
         <tr>
-            <td class=contenido_especial align=RIGHT><?= $c ?></td>
+            <td class=contenido_especial align=RIGHT><?= $datos['etiqueta'] ?></td>
             <td class=contenido_especial><?= $datos['nombre'] ?></td>
             <td class=contenido_especial></td>
             <?php
