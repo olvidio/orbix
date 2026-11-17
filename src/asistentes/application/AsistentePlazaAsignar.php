@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application;
 
+use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\contracts\PlazaPropietarioAsignacionInterface;
 
@@ -29,6 +30,16 @@ final class AsistentePlazaAsignar
             return _("falta id_activ");
         }
         $plaza = $input['plaza'] ?? null;
+        $id_plaza = null;
+        if ($plaza !== null && $plaza !== '') {
+            // Solo las plazas posibles; antes un texto se guardaba como «sin plaza» y un número
+            // fuera de rango acababa en una excepción del VO.
+            $plazaTxt = is_scalar($plaza) ? trim((string) $plaza) : '';
+            if (!ctype_digit($plazaTxt) || !in_array((int) $plazaTxt, [PlazaId::PEDIDA, PlazaId::EN_ESPERA, PlazaId::DENEGADA, PlazaId::ASIGNADA, PlazaId::CONFIRMADA], true)) {
+                return sprintf(_("Plaza no válida: %s"), is_scalar($plaza) ? (string) $plaza : '');
+            }
+            $id_plaza = (int) $plazaTxt;
+        }
         $lista_json = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'lista_json');
         $arr = json_decode($lista_json);
         if (!is_array($arr) || empty($arr)) {
@@ -55,8 +66,8 @@ final class AsistentePlazaAsignar
                 $msg_err .= _("los datos de asistencia los modifica la dl del asistente") . "\n";
                 continue;
             }
-            if ($plaza !== null && $plaza !== '') {
-                $err_plaza = $oAsistente->setPlazaComprobando(is_numeric($plaza) ? (int) $plaza : 0, $this->plazaPropietarioAsignacion);
+            if ($id_plaza !== null) {
+                $err_plaza = $oAsistente->setPlazaComprobando($id_plaza, $this->plazaPropietarioAsignacion);
                 if ($err_plaza !== '') {
                     $msg_err .= $err_plaza . "\n";
                     continue;

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 10:39+0100\n"
+"POT-Creation-Date: 2026-11-17 10:56+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10482,7 +10482,7 @@ msgstr "e"
 #: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
 #: src/asistentes/application/AsistenteGuardar.php:208
-#: src/asistentes/application/AsistentePlazaAsignar.php:68
+#: src/asistentes/application/AsistentePlazaAsignar.php:80
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:105
 #: src/dbextern/application/CrearPersonaDesdeListasUseCase.php:114
 #: src/dbextern/domain/SincroDB.php:548
@@ -13992,7 +13992,7 @@ msgstr "livello stgr"
 
 #: src/asistentes/application/AsistenteEliminar.php:110
 #: src/asistentes/application/AsistenteMoverData.php:77
-#: src/asistentes/application/AsistentePlazaAsignar.php:51
+#: src/asistentes/application/AsistentePlazaAsignar.php:63
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
 msgstr "non si trova l'assistente (id_nom: %s, id_activ: %s)"
@@ -14001,7 +14001,7 @@ msgstr "non si trova l'assistente (id_nom: %s, id_activ: %s)"
 #: src/asistentes/application/AsistenteGuardar.php:157
 #: src/asistentes/application/AsistenteGuardar.php:165
 #: src/asistentes/application/AsistenteMoverData.php:87
-#: src/asistentes/application/AsistentePlazaAsignar.php:55
+#: src/asistentes/application/AsistentePlazaAsignar.php:67
 msgid "los datos de asistencia los modifica la dl del asistente"
 msgstr "i dati di assistenza sono modificati dal dl dell'assistente"
 
@@ -14028,11 +14028,16 @@ msgstr "Posti gratuiti / assegnati: %s / %s"
 msgid "créditos: %s"
 msgstr "Crediti: %s"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:29
+#: src/asistentes/application/AsistentePlazaAsignar.php:31
 msgid "falta id_activ"
 msgstr "manca id_activ"
 
-#: src/asistentes/application/AsistentePlazaAsignar.php:35
+#: src/asistentes/application/AsistentePlazaAsignar.php:40
+#, php-format
+msgid "Plaza no válida: %s"
+msgstr "Posto non valido: %s"
+
+#: src/asistentes/application/AsistentePlazaAsignar.php:47
 msgid "falta lista de seleccion"
 msgstr "manca lista di selezione"
 
@@ -15055,7 +15060,7 @@ msgstr ""
 "Il certificato deve essere inviato manualmente. Questa persona non è in "
 "acquinato"
 
-#: src/certificados/domain/CertificadoEmitidoEnviar.php:112
+#: src/certificados/domain/CertificadoEmitidoEnviar.php:115
 #, php-format
 msgid "se ha recibido el certificado %s para %s."
 msgstr "è stato ricevuto il certificato %s per %s."

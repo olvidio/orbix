@@ -176,20 +176,27 @@ final class AsistentePlazaAsignarTest extends TestCase
         $this->assertSame('', $this->createSut($app)->execute(['id_activ' => 9, 'plaza' => 4, 'lista_json' => '[1, "x", {"value": "#"}, {"otro": 5}]']));
     }
 
-    /**
-     * Hallazgo: una plaza no numérica se convierte en 0 y se guarda como «sin plaza» (`PlazaId::fromNullableInt(0)`)
-     * sin avisar; la plaza vacía, en cambio, deja `null` explícitamente.
-     */
-    public function test_una_plaza_no_numerica_se_guarda_como_cero_sin_avisar(): void
+    /** Una plaza que no es ninguna de las posibles se rechaza sin tocar a ningún asistente. */
+    #[\PHPUnit\Framework\Attributes\DataProvider('plazaNoValidaProvider')]
+    public function test_una_plaza_no_valida_se_rechaza_sin_guardar(string $plazaPost): void
     {
-        $a = $this->asistente(5, 'dl', PlazaId::ASIGNADA);
         $app = $this->createMock(AsistenteApplicationService::class);
-        $app->method('findById')->willReturn($a);
-        $app->method('guardar')->willReturn(true);
-        $plaza = $this->createMock(PlazaPropietarioAsignacionInterface::class);
-        $plaza->expects($this->once())->method('asegurar')->with($a, PlazaId::ASIGNADA, 0)->willReturn('');
+        $app->expects($this->never())->method('findById');
+        $app->expects($this->never())->method('guardar');
 
-        $this->assertSame('', $this->createSut($app, $plaza)->execute(['id_activ' => 9, 'plaza' => 'abc', 'lista_json' => self::lista(['5#'])]));
+        $this->assertSame(
+            sprintf(_("Plaza no válida: %s"), $plazaPost),
+            $this->createSut($app)->execute(['id_activ' => 9, 'plaza' => $plazaPost, 'lista_json' => self::lista(['5#'])])
+        );
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function plazaNoValidaProvider(): iterable
+    {
+        yield 'texto' => ['abc'];
+        yield 'fuera de rango' => ['9'];
+        yield 'cero' => ['0'];
+        yield 'decimal' => ['4.5'];
     }
 
     public function test_un_json_que_no_es_una_lista_se_rechaza(): void
