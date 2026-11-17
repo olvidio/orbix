@@ -1541,7 +1541,7 @@ msgstr "títol: activitat"
 
 #: frontend/actividadessacd/controller/com_sacd_txt.php:46
 msgid "titulo: asistentes"
-msgstr "títol: assitents"
+msgstr "títol: assistents"
 
 #: frontend/actividadessacd/controller/com_sacd_txt.php:47
 msgid "titulo: encargado"
@@ -1675,8 +1675,8 @@ msgid ""
 "esto asignará el sacd titular del centro a las actividades que tengan un "
 "centro encargado"
 msgstr ""
-"d'aquesta manera s'assignarà el titular del centre a les activitats que "
-"tenen un centre encarregat"
+"això assignarà el sacd titular del centre a les activitats que tinguin un "
+"centre encarregat"
 
 #: frontend/actividadessacd/view/asignar_sacd_auto.phtml:17
 #, php-format
@@ -1709,7 +1709,7 @@ msgstr "llista amb l'atenció de les activitats a enviar als sacds"
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:31
 msgid "atención de actividades del sacd seleccionado"
-msgstr "atenció d'activitats del Mn. seleccionat"
+msgstr "atenció de les activitats del sacd seleccionat"
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:32
 msgid "click para modificar los textos de las comunicaciones"
@@ -2284,8 +2284,8 @@ msgid ""
 "Salen las personas de paso con notas en las delegaciones de esta región. "
 "Quien ya tiene ficha en un esquema de Aquinate no necesita este envío."
 msgstr ""
-"Surt la gent de pas amb notes a les delegacions d’aquesta regió. Qui ja té "
-"fitxa en un esquema d’Aquinate no necessita aquest enviament."
+"Surten les persones de pas amb notes a les delegacions d'aquesta regió. Qui "
+"ja té fitxa en un esquema d'Aquinate no necessita aquest enviament."
 
 #: frontend/actividadestudios/view/matriculas_otras_r.phtml:52
 msgid "la admiración (!) en alert, significa que no existe acta firmada"
@@ -2296,8 +2296,8 @@ msgid ""
 "la señal ⚠ en alert, indica que falta indicar la región del stgr de la dl "
 "del alumno"
 msgstr ""
-"la señal ⚠ en alert, indica que falta indicar la región del stgr de la dl "
-"del alumno"
+"el senyal ⚠ a alert, indica que falta indicar la regió del stgr de la dl de "
+"l'alumne"
 
 #: frontend/actividadestudios/view/plan_estudios_ca.phtml:13
 #: frontend/notas/view/resumen_anual.phtml:31
@@ -2443,7 +2443,9 @@ msgstr "Incorporar peticions de places"
 msgid ""
 "Incorporar las primeras peticiones de %s como asistencia con plaza asignada/"
 "pedida."
-msgstr "Incorporar les primeres peticions de %s com a assistència amb plaça assignada/demanada."
+msgstr ""
+"Incorporar les primeres peticions de %s com a assistència amb plaça "
+"assignada/demanada."
 
 #: frontend/actividadplazas/view/peticiones_activ.phtml:27
 msgid "error al guardar"
@@ -2938,9 +2940,9 @@ msgid ""
 "estado de la actividad (proyecto, actual, terminada, borrable), no por fases "
 "de proceso."
 msgstr ""
-"Sin el módulo de procesos, las preferencias de aviso se definen por el "
-"estado de la actividad (proyecto, actual, terminada, borrable), no por fases "
-"de proceso."
+"Sense el mòdul de processos, les preferències d'avís es defineixen per "
+"l'estat de l'activitat (projecte, actual, acabada, esborrable), no per fases "
+"de procés."
 
 #: frontend/cambios/view/avisos_generar.phtml:89
 msgid ""
@@ -3062,8 +3064,8 @@ msgid ""
 "NOTA: Los estados posibles son los de la actividad (proyecto, actual, "
 "terminada, borrable)."
 msgstr ""
-"NOTA: Los estados posibles son los de la actividad (proyecto, actual, "
-"terminada, borrable)."
+"NOTA: Els estats possibles són els de l'activitat (projecte, actual, "
+"acabada, esborrable)."
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:222
 #: src/cambios/application/UsuarioAvisosPrefFormData.php:158
@@ -3404,11 +3406,11 @@ msgstr "Ingressos totals any anterior procedents de dl"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:58
 msgid "Ingresos totales año anterior procedentes de asistencias"
-msgstr "Ingressos totals any anterior procedents d'assistencies"
+msgstr "Ingressos totals de l'any anterior procedents d'assistències"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:59
 msgid "número total de asistencias"
-msgstr "nombre total d'assistencies"
+msgstr "nombre total d'assistències"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:62
 #, php-format
@@ -3435,7 +3437,9 @@ msgstr "Increment de despeses 2 anys"
 msgid ""
 "id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/"
 "[p_ta]"
-msgstr "id_tarifa mitjana ponderada: prev.ing.activitats/prev.assistències: [p_tia]/[p_ta]"
+msgstr ""
+"id_tarifa mitjana ponderada: prev.ing.activitats/prev.assistències: [p_tia]/"
+"[p_ta]"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:74
 msgid "Actividades próximo año"
@@ -3454,7 +3458,7 @@ msgstr "previsió d'assistents"
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:80
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:138
 msgid "nº total de asistencias"
-msgstr "nº total d'assistencies"
+msgstr "nº total d'assistències"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:82
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:139
@@ -3483,7 +3487,7 @@ msgstr "pistes per equilibrar la gestió"
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:126
 #, php-format
 msgid "incrementar las asistencias en %s"
-msgstr "incrementar les assistencies en %s"
+msgstr "incrementar les assistències en %s"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:127
 #, php-format
@@ -3510,7 +3514,7 @@ msgstr "total segons activitats"
 #: frontend/casas/view/casa_ec_gastos_lista.phtml:22
 #, php-format
 msgid "gastos y aportaciones %s para %s"
-msgstr "despeses i aportaciones %s per %s"
+msgstr "despeses i aportacions %s per a %s"
 
 #: frontend/casas/view/casa_ec_gastos_lista.phtml:25
 #: frontend/encargossacd/controller/encargo_horario_select.php:83
@@ -3655,7 +3659,7 @@ msgstr "Està segur que vol eliminar el certificat?"
 #: frontend/certificados/view/certificado_emitido_lista.phtml:49
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:58
 msgid "No hay URL de descarga para el certificado seleccionado."
-msgstr "No hay URL de descarga para el certificado seleccionado."
+msgstr "No hi ha URL de descàrrega per al certificat seleccionat."
 
 #: frontend/certificados/view/certificado_emitido_lista.phtml:108
 #: frontend/notas/view/acta_select.phtml:78
@@ -3868,7 +3872,7 @@ msgstr "baixa"
 
 #: frontend/dbextern/view/ver_desaparecidos_de_listas.phtml:55
 msgid "fallecido o traslado a otra r"
-msgstr "mort o traslladat  a un altre r"
+msgstr "mort o trasllat a una altra r"
 
 #: frontend/dbextern/view/ver_desaparecidos_de_orbix.phtml:30
 msgid "personas de la BDU que habían estado en aquinate y no se encuentran"
@@ -6326,7 +6330,7 @@ msgstr "Fitxa sacd"
 
 #: frontend/menus/view/traducir_menu.phtml:113
 msgid "Filtro alumno/asignatura"
-msgstr "Filtre alumne/materia"
+msgstr "Filtre alumne/assignatura"
 
 #: frontend/menus/view/traducir_menu.phtml:114
 msgid "Generar nuevo curso"
@@ -6346,7 +6350,7 @@ msgstr "Gestió de places"
 
 #: frontend/menus/view/traducir_menu.phtml:118
 msgid "Gestión de plazas y peticiones"
-msgstr "Gestió de places i sol·licituds"
+msgstr "Gestió de places i peticions"
 
 #: frontend/menus/view/traducir_menu.phtml:119
 msgid "Gestión de zonas"
@@ -6406,7 +6410,7 @@ msgstr "Informe anual professors"
 
 #: frontend/menus/view/traducir_menu.phtml:133
 msgid "Iniciales sacd"
-msgstr "Inicials Mn"
+msgstr "Inicials sacd"
 
 #: frontend/menus/view/traducir_menu.phtml:134
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:147
@@ -6582,7 +6586,7 @@ msgstr "Previsió econòmica"
 
 #: frontend/menus/view/traducir_menu.phtml:176
 msgid "Profesor para asignatura"
-msgstr "Professor per a la matèria"
+msgstr "Professor per a assignatura"
 
 #: frontend/menus/view/traducir_menu.phtml:177
 msgid "Propuestas"
@@ -6750,7 +6754,7 @@ msgstr "assignar document"
 
 #: frontend/menus/view/traducir_menu.phtml:218
 msgid "asignar sacd"
-msgstr "assignar Mn"
+msgstr "assignar sacd"
 
 #: frontend/menus/view/traducir_menu.phtml:220
 msgid "asitencia a congresos"
@@ -7398,7 +7402,7 @@ msgstr "num de pas"
 
 #: frontend/menus/view/traducir_menu.phtml:381
 msgid "nº alum. por asignatura"
-msgstr "nº alum. per matèria"
+msgstr "nº alum. per assignatura"
 
 #: frontend/menus/view/traducir_menu.phtml:382
 msgid "opcionales"
@@ -8526,7 +8530,7 @@ msgstr "Error al pujar l'arxiu."
 
 #: frontend/notas/view/acta_ver.phtml:373
 msgid "¿Está seguro que desea borrar esta acta firmada?"
-msgstr "Esteu segur que voleu suprimir aquesta plantilla?"
+msgstr "Esteu segur que voleu esborrar aquesta acta signada?"
 
 #: frontend/notas/view/actividad_buscar_form.phtml:2
 msgid "seleccionar la actividad"
@@ -10230,7 +10234,7 @@ msgstr "Documentació per mòdul de Orbix."
 
 #: frontend/shared/view/regiones_en_orbix.phtml:11
 msgid "Regiones o delegaciones que usan este programa actualmente"
-msgstr "Regiones o delegacions que usen aquest programa actualment"
+msgstr "Regions o delegacions que utilitzen actualment aquest programa"
 
 #: frontend/shared/view/regiones_en_orbix.phtml:13
 msgid "región o dl"
@@ -12268,7 +12272,7 @@ msgstr "ha de seleccionar una zona de destí"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:78
 msgid "debe seleccionar algún sacd de la lista"
-msgstr "heu de seleccionar algun Mn. de la llista"
+msgstr "heu de seleccionar algun sacd de la llista"
 
 #: public/portada.php:56
 msgid "esto borrará los anuncios seleccionados"
@@ -12368,12 +12372,12 @@ msgstr "ja existeix aquest càrrec per a aquesta activitat"
 #: src/actividadcargos/application/ActividadCargoEditar.php:102
 #: src/actividadcargos/application/ActividadCargoNuevo.php:110
 msgid "hay un error, no se ha guardado el asistente"
-msgstr "hi ha un error, no s'ha guardat l'assistència"
+msgstr "Hi ha un error, no s'ha desat l'assistent"
 
 #: src/actividadcargos/application/ActividadCargoEditar.php:111
 #: src/actividadcargos/application/ActividadCargoEliminar.php:106
 msgid "hay un error, no se ha eliminado el asistente"
-msgstr "hi ha un error, no s'ha eliminat l'assistència"
+msgstr "Hi ha un error, no s'ha eliminat l'assistent"
 
 #: src/actividadcargos/application/ActividadCargoEliminar.php:60
 msgid "falta id_item"
@@ -13059,7 +13063,7 @@ msgstr "falten paràmetres id_activ / id_nom"
 
 #: src/actividadessacd/application/SacdAsignar.php:56
 msgid "No puede haber tantos cargos de sacd en una actividad"
-msgstr "No hi pot haver tants càrrecs de Mn. en una activitat"
+msgstr "No hi pot haver tants càrrecs de sacd en una activitat"
 
 #: src/actividadessacd/application/SacdAsignar.php:65
 msgid "hay un error, no se ha guardado el cargo"
@@ -13488,7 +13492,7 @@ msgstr "no s'ha trobat cap assignatura per aquest nivell"
 #: src/actividadestudios/application/MatriculasListaData.php:57
 #, php-format
 msgid "Lista de matrículas en el periodo: %s - %s."
-msgstr "Llista de matricules en el període: %s - %s."
+msgstr "Llista de matrícules en el període: %s - %s."
 
 #: src/actividadestudios/application/MatriculasListaOtrasRData.php:94
 msgid "Personas de paso pendientes de certificado"
@@ -13844,7 +13848,7 @@ msgstr "Esteu segur que voleu suprimir aquest tipus d'assignatura?"
 
 #: src/asignaturas/domain/InfoAsignaturaTipo.php:21
 msgid "buscar un tipo de asignatura"
-msgstr "cercar un tipus d'asignatura"
+msgstr "buscar un tipus d'assignatura"
 
 #: src/asignaturas/domain/InfoAsignaturas.php:20
 msgid "¿Está seguro que desea eliminar esta asignatura?"
@@ -14065,7 +14069,7 @@ msgstr "relació de càrrecs en les cv de s"
 
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:108
 msgid "propuesta de cl en cv de sss+"
-msgstr "proposta de cl en cv de sss +"
+msgstr "proposta de cl en cv de sss+"
 
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:110
 msgid "relación de asistentes a las actividades seleccionadas"
@@ -14378,7 +14382,7 @@ msgstr "Activitat: s'ha creat l'activitat \"%1$s\""
 #: src/cambios/application/CambioAvisoTxtBuilder.php:140
 #, php-format
 msgid "Cl: se ha asignado un cargo a \"%4$s\" a la actividad \"%1$s\""
-msgstr "Cl: s'ha assignat un càrrec a \"%4$s\" en l'actividad \"%1$s\""
+msgstr "Cl: s'ha assignat un càrrec a \"%4$s\" a l'activitat \"%1$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:143
 #, php-format
@@ -14771,7 +14775,7 @@ msgstr "Casa no trobada"
 
 #: src/casas/application/CalendarioUbiResumenData.php:172
 msgid "Mínimo de asistencias (p_dv.M)"
-msgstr "Mínim d'assistencies (p_dv.M)"
+msgstr "Mínim d'assistències (p_dv.M)"
 
 #: src/casas/application/CalendarioUbiResumenData.php:173
 msgid "según asignación dias sv"
@@ -14783,7 +14787,7 @@ msgstr "Previsió d'ingressos sv a 2 anys vista (1+G).r_it(p_dv/(p_dv+p_df))"
 
 #: src/casas/application/CalendarioUbiResumenData.php:182
 msgid "Mínimo de asistencias (p_df.M)"
-msgstr "Mínim d'assistencies (p_df.M)"
+msgstr "Mínim d'assistències (p_df.M)"
 
 #: src/casas/application/CalendarioUbiResumenData.php:183
 msgid "según asignación dias sf"
@@ -14835,7 +14839,7 @@ msgstr "Activitat no trobada"
 
 #: src/casas/application/CasaIngresoUpdate.php:56
 msgid "Hay un error, no se ha guardado la actividad."
-msgstr "Hi ha un error, no s'ha guardat l'assistència."
+msgstr "Hi ha un error, no s'ha desat l'activitat."
 
 #: src/casas/application/CasaIngresosListaData.php:68
 msgid "asistentes reales"
@@ -14887,7 +14891,7 @@ msgstr "totals sf"
 
 #: src/casas/application/CasaIngresosListaData.php:304
 msgid "* Se cuentan los ingresos proporcionales correspondientes al periodo."
-msgstr "* Es compten els ingressos proporcionals corresponents al periode."
+msgstr "* Es compten els ingressos proporcionals corresponents al període."
 
 #: src/casas/application/CasasResumenData.php:280
 #, php-format
@@ -15098,7 +15102,7 @@ msgstr "Heu de definir la regió stgr a la qual pertany"
 
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_lista_datos.php:24
 msgid "No se encuentra la tabla. ¿Seguro que es una región del stgr?"
-msgstr "No s'ha trobat la taula.Esteu segur que és una regió sgr?"
+msgstr "No es troba la taula. Segur que és una regió del stgr?"
 
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_download.php:19
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_download.php:19
@@ -16519,7 +16523,7 @@ msgstr "No es pot crear la taula"
 
 #: src/encargossacd/application/SacdAusenciasUpdate.php:69
 msgid "no se ha encontrado el encargo del sacd"
-msgstr "no s'ha trobat el encàrrec del Mn"
+msgstr "no s'ha trobat l'encàrrec del sacd"
 
 #: src/encargossacd/application/SacdFichaData.php:181
 msgid "horario del ctr"
@@ -16833,7 +16837,7 @@ msgstr "tipus de document"
 #: src/inventario/domain/entity/Documento.php:529
 #: src/inventario/domain/entity/Lugar.php:102
 msgid "centro/casa"
-msgstr "centre/llar"
+msgstr "centre/casa"
 
 #: src/inventario/domain/entity/Documento.php:593
 msgid "observaciones para el centro"
@@ -17051,7 +17055,7 @@ msgstr "Falta el identificador del encàrrec-centre a elilminar"
 #: src/misas/application/GuardarEncargoCentro.php:36
 #, php-format
 msgid "No se encuentra el encargo-centro %s"
-msgstr "No es troba l'encàrrec-centr %s"
+msgstr "No es troba l'encàrrec-centre %s"
 
 #: src/misas/application/GuardarHorarioTarea.php:27
 #: src/misas/application/QuitarHorarioTarea.php:28
@@ -17167,7 +17171,7 @@ msgstr ""
 #: src/notas/application/ActaSelectData.php:116
 #, php-format
 msgid "lista de actas del curso %s. Máximo %s"
-msgstr "llista dels minuts del curs %s.Màxim %s"
+msgstr "llista d'actes del curs %s. Màxim %s"
 
 #: src/notas/application/ActaVerAddPersona.php:63
 msgid "Faltan acta o persona"
@@ -17261,7 +17265,7 @@ msgstr "nº de agd en quadrienni amb bienni pendent"
 
 #: src/notas/application/InformeStgrAgregados.php:63
 msgid "nº de agd en bienio que han superado asignaturas con preceptor"
-msgstr "nº d'agd en bieni que han superat assignatures amb preceptor"
+msgstr "nº d'agd en bienni que han superat assignatures amb preceptor"
 
 #: src/notas/application/InformeStgrAgregados.php:67
 msgid "número de agregados Cuadrienio"
@@ -17302,7 +17306,7 @@ msgstr "nombre d'agregats de quadrienni que no han superat cap assignatura"
 msgid ""
 "número de agregados que han superado asignaturas de cuadrienio con preceptor"
 msgstr ""
-"nombre d'agregats que ha superat assignatures de quadrieni amb preceptor"
+"nombre d'agregats que han superat assignatures de quadrienni amb preceptor"
 
 #: src/notas/application/InformeStgrAgregados.php:96
 msgid "número de agregados que han terminado el cuadrienio este curso"
@@ -17365,7 +17369,7 @@ msgstr "nombre de numeraris en anys II-IV de quadrienni"
 
 #: src/notas/application/InformeStgrNumerarios.php:79
 msgid "número de numerarios en cuadrienio"
-msgstr "nombre de numeraris en quadrieni"
+msgstr "nombre de numeraris en quadrienni"
 
 #: src/notas/application/InformeStgrNumerarios.php:90
 #, php-format
@@ -17478,7 +17482,7 @@ msgstr "fi bienni"
 #: src/personas/domain/Trasladar.php:388
 #, php-format
 msgid "ca: %s, asignatura: %s"
-msgstr "es: %s , assignatura: %s"
+msgstr "ca: %s, assignatura: %s"
 
 #: src/notas/application/NotasDeUnaPersonaData.php:72
 #: src/personas/domain/Trasladar.php:392
@@ -17641,7 +17645,7 @@ msgstr "No existeix una persona amb id_nom: %s"
 #: src/notas/application/TesseraVerData.php:37
 #, php-format
 msgid "No encuentro persona con id_nom: %s"
-msgstr "No trobo ningú amb id_nom: %s"
+msgstr "No trobo persona amb id_nom: %s"
 
 #: src/notas/application/legacy/Resumen.php:698
 #, php-format
@@ -17659,7 +17663,7 @@ msgstr "No pot modificar un acta d'una altra dl"
 
 #: src/notas/application/support/ActaDlGuard.php:46
 msgid "No puede eliminar un acta de otra dl"
-msgstr "No es pot eliminar un acte d'un altre dl"
+msgstr "No es pot eliminar un acta d'una altra dl"
 
 #: src/notas/application/support/LiberarHuecoNivelNota.php:70
 #, php-format
@@ -18476,7 +18480,7 @@ msgstr "No trobo aquest ctr"
 #: src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php:29
 #: src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php:39
 msgid "Faltan fechas de periodo"
-msgstr "Falten dates del periode"
+msgstr "Falten dates de període"
 
 #: src/procesos/application/ActividadProcesoGet.php:70
 #: src/procesos/application/FasesActivCambioUpdate.php:57
@@ -19496,11 +19500,11 @@ msgstr "No es troba ubi id %s"
 
 #: src/ubis/application/UbisEditarLoadData.php:98
 msgid "tipo de entidad inesperado para centro dl"
-msgstr "tipus d'entitat inesperat pe a centro dl"
+msgstr "tipus d'entitat inesperat per al centre dl"
 
 #: src/ubis/application/UbisEditarLoadData.php:104
 msgid "tipo de entidad inesperado para centro ex"
-msgstr "tipus d'entitat inesperat pe a centro ex"
+msgstr "tipus d'entitat inesperat per al centre ex"
 
 #: src/ubis/application/UbisEditarLoadData.php:107
 msgid "tipo de entidad inesperado para casa"
