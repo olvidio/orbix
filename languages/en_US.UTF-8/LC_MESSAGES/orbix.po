@@ -19,7 +19,7 @@ msgstr ""
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:21
 msgid "faltan datos obligatorios: actividad, asistente y tipo de cargo."
-msgstr "required data missing: activity, assistant and type of charge."
+msgstr "required data missing: activity, attendee and type of position."
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:52
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:43
@@ -216,12 +216,12 @@ msgstr "Communication error with the server"
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:68
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:56
 msgid "cargo de una actividad"
-msgstr "charge of an activity"
+msgstr "position in an activity"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:71
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:90
 msgid "asistente"
-msgstr "assistant"
+msgstr "attendee"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:79
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:73
@@ -299,7 +299,7 @@ msgstr "cancel"
 
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:15
 msgid "faltan datos obligatorios: actividad, persona y tipo de cargo."
-msgstr "required data missing: activity, person and type of charge."
+msgstr "required data missing: activity, person and type of position."
 
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:59
 #: frontend/actividadescentro/view/activ_ctr.phtml:32
@@ -608,7 +608,7 @@ msgstr "Unauthorized operation"
 #: frontend/actividadcargos/view/select_cargos_de_actividad.phtml:56
 #: frontend/actividadcargos/view/select_cargos_personas_en_actividad.phtml:48
 msgid "relación de cargos"
-msgstr "list of charges"
+msgstr "list of positions"
 
 #: frontend/actividadcargos/view/select_cargos_personas_en_actividad.phtml:66
 msgid "añadir cargo de la dl"
@@ -2190,7 +2190,7 @@ msgstr "corresponds"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:106
 msgid "dl y asistentes"
-msgstr "dl and assistants"
+msgstr "dl and attendees"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:107
 msgid "otros de paso"
@@ -2314,7 +2314,7 @@ msgstr "preceptors"
 #: src/actividades/application/ActividadSelectListado.php:221
 #: src/actividades/application/ListaActividadesSgListado.php:119
 msgid "asistentes"
-msgstr "assistants"
+msgstr "attendees"
 
 #: frontend/actividadestudios/view/selectUnCa.phtml:12
 #: frontend/actividadestudios/view/selectUnCa.phtml:55
@@ -2674,7 +2674,7 @@ msgstr "property of"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:87
 msgid "asistente a una actividad"
-msgstr "assistant to an activity"
+msgstr "attendee of an activity"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:114
 #: frontend/asistentes/view/lista_asistentes.phtml:24
@@ -2688,11 +2688,11 @@ msgstr "observations studies"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:145
 msgid "guardar datos del asistente"
-msgstr "save assistant data"
+msgstr "save attendee data"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:147
 msgid "guardar y añadir otro asistente"
-msgstr "save and add another assistant"
+msgstr "save and add another attendee"
 
 #: frontend/asistentes/view/lista_activ_ctr.phtml:19
 msgid "actividades previstas"
@@ -2705,7 +2705,7 @@ msgstr "pending request"
 #: frontend/asistentes/view/lista_asistentes.phtml:6
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:200
 msgid "relación de asistentes"
-msgstr "relation of assistants"
+msgstr "list of attendees"
 
 #: frontend/asistentes/view/lista_asistentes.phtml:20
 #: frontend/menus/view/traducir_menu.phtml:294
@@ -2801,7 +2801,7 @@ msgstr "Add activity from another dl"
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:128
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:151
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
-msgstr "Are you sure you want to remove this charge from this person?"
+msgstr "Are you sure you want to remove this position from this person?"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:189
 msgid ""
@@ -2812,17 +2812,17 @@ msgstr ""
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:224
 msgid "añadir asistente de la dl"
-msgstr "Add dl assistant"
+msgstr "add attendee from the dl"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:232
 #, php-format
 msgid "añadir asistente: %s"
-msgstr "Add assistant: %s"
+msgstr "add attendee: %s"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:231
 msgid "añadir asistente de otra dl"
-msgstr "add assistant from another delegation"
+msgstr "add attendee from another dl"
 
 #: frontend/cambios/controller/avisos_generar.php:123
 #: src/cambios/application/AvisosEncolarMails.php:193
@@ -3381,7 +3381,7 @@ msgid ""
 "las dl para equilibrar los gastos."
 msgstr ""
 "It is assumed that total expenditure = total revenue. This hypothesis is "
-"true if the income includes those from the assistants, the fines paid by the "
+"true if the income includes those from the attendees, the fines paid by the "
 "ctr and the amounts contributed directly by the dl to balance the expenses."
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:53
@@ -7199,7 +7199,7 @@ msgstr "Activity list"
 
 #: frontend/menus/view/traducir_menu.phtml:329
 msgid "lista cargos"
-msgstr "list of charges"
+msgstr "list of positions"
 
 #: frontend/menus/view/traducir_menu.phtml:330
 msgid "lista ctr i nº s"
@@ -10753,7 +10753,7 @@ msgstr "In use"
 
 #: frontend/ubis/view/cdc_form.phtml:80
 msgid "minimo asistentes"
-msgstr "minimum assistants"
+msgstr "minimum attendees"
 
 #: frontend/ubis/view/cdc_form.phtml:82
 msgid "nº máximo de sacd"
@@ -12347,17 +12347,17 @@ msgstr "position not found"
 #: src/actividadcargos/application/ActividadCargoEditar.php:79
 #: src/actividadcargos/application/ActividadCargoNuevo.php:67
 msgid "ya existe este cargo para esta actividad"
-msgstr "this charge already exists for this activity"
+msgstr "this position already exists for this activity"
 
 #: src/actividadcargos/application/ActividadCargoEditar.php:102
 #: src/actividadcargos/application/ActividadCargoNuevo.php:110
 msgid "hay un error, no se ha guardado el asistente"
-msgstr "there is an error, the assistant has not been saved"
+msgstr "there is an error, the attendee has not been saved"
 
 #: src/actividadcargos/application/ActividadCargoEditar.php:111
 #: src/actividadcargos/application/ActividadCargoEliminar.php:106
 msgid "hay un error, no se ha eliminado el asistente"
-msgstr "there is an error, the assistant has not been deleted"
+msgstr "there is an error, the attendee has not been deleted"
 
 #: src/actividadcargos/application/ActividadCargoEliminar.php:60
 msgid "falta id_item"
@@ -12421,13 +12421,13 @@ msgstr "activity not found"
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:87
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:244
 msgid "modificar cargo"
-msgstr "modify charge"
+msgstr "modify position"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:86
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:88
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:245
 msgid "quitar cargo"
-msgstr "remove charge"
+msgstr "remove position"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:137
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:156
@@ -12444,7 +12444,7 @@ msgstr "add %s"
 #: src/actividades/application/ActividadSelectListado.php:217
 #: src/actividades/application/ListaActividadesSgListado.php:118
 msgid "cargos"
-msgstr "charges"
+msgstr "positions"
 
 #: src/actividadcargos/domain/InfoCargo.php:20
 msgid "¿Está seguro que desea eliminar este cargo?"
@@ -12460,7 +12460,7 @@ msgstr "cargo order"
 
 #: src/actividadcargos/domain/entity/Cargo.php:273
 msgid "tipo de cargo"
-msgstr "type of charge"
+msgstr "type of position"
 
 #: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:119
 #: src/personas/infrastructure/cli/sacd_resincronizar.php:120
@@ -13268,7 +13268,7 @@ msgstr "missing id_activ or id_nom"
 #: src/actividadestudios/application/AsistenteObservEst.php:42
 #: src/actividadestudios/application/AsistentePlanEstOk.php:42
 msgid "no encuentro al asistente"
-msgstr "Assistant not found"
+msgstr "attendee not found"
 
 #: src/actividadestudios/application/CaPosiblesData.php:167
 msgid "Parámetro na no válido"
@@ -13422,7 +13422,7 @@ msgstr "Enrollment not found"
 #: src/actividadestudios/application/ListaClasesCaData.php:79
 #: src/actividadestudios/application/PlanEstudiosCaData.php:86
 msgid "para nombrarlo, ir al dossier de cargos de la actividad"
-msgstr "to name it, go to the dossier of charges of the activity"
+msgstr "to appoint them, go to the activity's positions dossier"
 
 #: src/actividadestudios/application/MatriculaAutomatica.php:89
 #, php-format
@@ -13934,7 +13934,7 @@ msgstr "stgr level"
 #: src/asistentes/application/AsistentePlazaAsignar.php:63
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
-msgstr "assistant not found (id_nom: %s, id_activ: %s)"
+msgstr "attendee not found (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/AsistenteEliminar.php:113
 #: src/asistentes/application/AsistenteGuardar.php:157
@@ -13942,7 +13942,7 @@ msgstr "assistant not found (id_nom: %s, id_activ: %s)"
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:67
 msgid "los datos de asistencia los modifica la dl del asistente"
-msgstr "the assistance data is modified by the dl of the assistant"
+msgstr "attendance data is modified by the attendee's dl"
 
 #: src/asistentes/application/AsistenteGuardar.php:58
 #, php-format
@@ -13991,7 +13991,7 @@ msgstr "Activity with id: %s not found"
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:68
 #, php-format
 msgid "No se ha encontrado el asistente (id_nom: %s, id_activ: %s)"
-msgstr "Assistant not found (id_nom: %s, id_activ: %s)"
+msgstr "Attendee not found (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:87
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:115
@@ -14001,7 +14001,7 @@ msgstr "the attendance data is modified by the owner of the place: %s"
 
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:97
 msgid "No se encontró el asistente para esta actividad."
-msgstr "The assistant for this activity was not found."
+msgstr "The attendee for this activity was not found."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
@@ -14048,7 +14048,7 @@ msgstr "(*) The preceptor does not attend the ca"
 
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:105
 msgid "relación de cargos en las cv de s"
-msgstr "list of charges in the cv of s"
+msgstr "list of positions in the cv of s"
 
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:108
 msgid "propuesta de cl en cv de sss+"
@@ -14197,12 +14197,12 @@ msgstr "period of beginning or end of activities"
 #: src/asistentes/application/Select_actividades_de_una_persona.php:115
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:237
 msgid "modificar asistencia"
-msgstr "modify assistance"
+msgstr "modify attendance"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:116
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:239
 msgid "borrar asistencia"
-msgstr "delete assistance"
+msgstr "delete attendance"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:127
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
@@ -14231,7 +14231,7 @@ msgstr "transfer to historical"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:243
 msgid "añadir cargo"
-msgstr "add charge"
+msgstr "add position"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:249
 msgid "E43"
@@ -14334,11 +14334,11 @@ msgstr "You cannot modify the attendance data of a person from another dl"
 
 #: src/asistentes/domain/InfoAsistenteDl.php:30
 msgid "actividades como asistente"
-msgstr "activities as an assistant"
+msgstr "activities as attendee"
 
 #: src/asistentes/infrastructure/persistence/postgresql/PgAsistenteRepository.php:246
 msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
-msgstr "Missing id_schema of session (mi_id_schema) to persist the assistant."
+msgstr "Missing session id_schema (mi_id_schema) to save the attendee."
 
 #: src/cambios/application/AvisosEncolarMails.php:198
 msgid "Avisos de cambios en actividades"
@@ -14600,7 +14600,7 @@ msgstr "No database connection."
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:43
 msgid "asistencias"
-msgstr "assists"
+msgstr "attendances"
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:46
 msgid "fases actividad"
@@ -19911,7 +19911,7 @@ msgstr "occupied by"
 #: src/ubiscamas/application/UpdateCamaAsistente.php:28
 #, php-format
 msgid "Asistencia no encontrada para id_nom %d e id_activ %d."
-msgstr "No assistance found for id_nom %d and id_activ %d."
+msgstr "Attendance not found for id_nom %d and id_activ %d."
 
 #: src/ubiscamas/application/UpdateCamaAsistente.php:42
 msgid "Error al guardar la asignación de la cama"
@@ -20388,7 +20388,7 @@ msgstr "must specify the section on the type of activity"
 #: frontend/actividades/view/_actividad_form.js.html.twig:93
 #: frontend/actividades/view/_calendario_form.js.html.twig:131
 msgid "debe concretar los asistentes en el tipo de actividad"
-msgstr "must specify the assistants in the type of activity"
+msgstr "you must specify the attendees in the activity type"
 
 #: frontend/actividades/view/_actividad_form.js.html.twig:94
 #: frontend/actividades/view/_calendario_form.js.html.twig:135

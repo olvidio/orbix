@@ -19,8 +19,7 @@ msgstr ""
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:21
 msgid "faltan datos obligatorios: actividad, asistente y tipo de cargo."
-msgstr ""
-"manca la informazione obbligatoria: attività, assistente e tipo di carica."
+msgstr "mancano dati obbligatori: attività, partecipante e tipo di carica."
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:52
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:43
@@ -222,7 +221,7 @@ msgstr "carica di un'attività"
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:71
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:90
 msgid "asistente"
-msgstr "assistente"
+msgstr "partecipante"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:79
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:73
@@ -285,7 +284,7 @@ msgstr "Partecipi?"
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:102
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:96
 msgid "guardar datos del cargo"
-msgstr "salva i dati del carico"
+msgstr "salva i dati della carica"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:105
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:33
@@ -1542,7 +1541,7 @@ msgstr "titolo: attività"
 
 #: frontend/actividadessacd/controller/com_sacd_txt.php:46
 msgid "titulo: asistentes"
-msgstr "titolo: assistenti"
+msgstr "titolo: partecipanti"
 
 #: frontend/actividadessacd/controller/com_sacd_txt.php:47
 msgid "titulo: encargado"
@@ -2196,7 +2195,7 @@ msgstr "corrisponde"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:106
 msgid "dl y asistentes"
-msgstr "dl e assistenti"
+msgstr "dl e partecipanti"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:107
 msgid "otros de paso"
@@ -2682,7 +2681,7 @@ msgstr "proprietà di"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:87
 msgid "asistente a una actividad"
-msgstr "assistente di un'attività"
+msgstr "partecipante a un'attività"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:114
 #: frontend/asistentes/view/lista_asistentes.phtml:24
@@ -2696,11 +2695,11 @@ msgstr "studi di osservazioni"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:145
 msgid "guardar datos del asistente"
-msgstr "salva i dati di assistente"
+msgstr "salva i dati del partecipante"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:147
 msgid "guardar y añadir otro asistente"
-msgstr "salva e aggiungi un altro assistente"
+msgstr "salva e aggiungi un altro partecipante"
 
 #: frontend/asistentes/view/lista_activ_ctr.phtml:19
 msgid "actividades previstas"
@@ -2713,7 +2712,7 @@ msgstr "richiesta in sospeso"
 #: frontend/asistentes/view/lista_asistentes.phtml:6
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:200
 msgid "relación de asistentes"
-msgstr "relazione degli assistenti"
+msgstr "elenco dei partecipanti"
 
 #: frontend/asistentes/view/lista_asistentes.phtml:20
 #: frontend/menus/view/traducir_menu.phtml:294
@@ -2821,17 +2820,17 @@ msgstr ""
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:224
 msgid "añadir asistente de la dl"
-msgstr "aggiungere assistente della dl"
+msgstr "aggiungere partecipante della dl"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:225
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:232
 #, php-format
 msgid "añadir asistente: %s"
-msgstr "aggiungere assistente: %s"
+msgstr "aggiungere partecipante: %s"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:231
 msgid "añadir asistente de otra dl"
-msgstr "aggiungere assistente di un'altra dl"
+msgstr "aggiungere partecipante di un'altra dl"
 
 #: frontend/cambios/controller/avisos_generar.php:123
 #: src/cambios/application/AvisosEncolarMails.php:193
@@ -3417,11 +3416,11 @@ msgstr "Totale entrate anno precedente da dl"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:58
 msgid "Ingresos totales año anterior procedentes de asistencias"
-msgstr "Entrate totali dell'anno precedente derivanti dall'assistenza"
+msgstr "Entrate totali dell'anno precedente dalle partecipazioni"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:59
 msgid "número total de asistencias"
-msgstr "numero totale di assist"
+msgstr "numero totale di partecipazioni"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:62
 #, php-format
@@ -3468,7 +3467,7 @@ msgstr "previsione delle presenze"
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:80
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:138
 msgid "nº total de asistencias"
-msgstr "numero totale di assist"
+msgstr "n. totale di partecipazioni"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:82
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:139
@@ -10146,11 +10145,11 @@ msgstr "Materie di ca"
 
 #: frontend/shared/view/ayuda_index.phtml:114
 msgid "asistentes dl a ca"
-msgstr "assistenti dl a ca"
+msgstr "partecipanti dl a ca"
 
 #: frontend/shared/view/ayuda_index.phtml:115
 msgid "asistentes otras dl a ca"
-msgstr "assistenti altre dl a ca"
+msgstr "partecipanti altre dl a ca"
 
 #: frontend/shared/view/ayuda_index.phtml:116
 msgid "matriculaciones asignaturas ca"
@@ -10787,7 +10786,7 @@ msgstr "in uso"
 
 #: frontend/ubis/view/cdc_form.phtml:80
 msgid "minimo asistentes"
-msgstr "assistenti minimi"
+msgstr "partecipanti minimi"
 
 #: frontend/ubis/view/cdc_form.phtml:82
 msgid "nº máximo de sacd"
@@ -12405,12 +12404,12 @@ msgstr "questa tassa esiste già per questa attività"
 #: src/actividadcargos/application/ActividadCargoEditar.php:102
 #: src/actividadcargos/application/ActividadCargoNuevo.php:110
 msgid "hay un error, no se ha guardado el asistente"
-msgstr "c'è un errore, non è stato salvato l'assistente"
+msgstr "c'è un errore, il partecipante non è stato salvato"
 
 #: src/actividadcargos/application/ActividadCargoEditar.php:111
 #: src/actividadcargos/application/ActividadCargoEliminar.php:106
 msgid "hay un error, no se ha eliminado el asistente"
-msgstr "c'è un errore, non è stato eliminato l'assistente"
+msgstr "c'è un errore, il partecipante non è stato eliminato"
 
 #: src/actividadcargos/application/ActividadCargoEliminar.php:60
 msgid "falta id_item"
@@ -12497,7 +12496,7 @@ msgstr "aggiungi %s"
 #: src/actividades/application/ActividadSelectListado.php:217
 #: src/actividades/application/ListaActividadesSgListado.php:118
 msgid "cargos"
-msgstr "oneri"
+msgstr "cariche"
 
 #: src/actividadcargos/domain/InfoCargo.php:20
 msgid "¿Está seguro que desea eliminar este cargo?"
@@ -12509,7 +12508,7 @@ msgstr "cerca una carica"
 
 #: src/actividadcargos/domain/entity/Cargo.php:224
 msgid "orden cargo"
-msgstr "ordine di carico"
+msgstr "ordine carica"
 
 #: src/actividadcargos/domain/entity/Cargo.php:273
 msgid "tipo de cargo"
@@ -13325,7 +13324,7 @@ msgstr "manca id_activ o id_nom"
 #: src/actividadestudios/application/AsistenteObservEst.php:42
 #: src/actividadestudios/application/AsistentePlanEstOk.php:42
 msgid "no encuentro al asistente"
-msgstr "non trovo l'assistente"
+msgstr "non trovo il partecipante"
 
 #: src/actividadestudios/application/CaPosiblesData.php:167
 msgid "Parámetro na no válido"
@@ -13995,7 +13994,7 @@ msgstr "livello stgr"
 #: src/asistentes/application/AsistentePlazaAsignar.php:63
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
-msgstr "non si trova l'assistente (id_nom: %s, id_activ: %s)"
+msgstr "partecipante non trovato (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/AsistenteEliminar.php:113
 #: src/asistentes/application/AsistenteGuardar.php:157
@@ -14003,7 +14002,7 @@ msgstr "non si trova l'assistente (id_nom: %s, id_activ: %s)"
 #: src/asistentes/application/AsistenteMoverData.php:87
 #: src/asistentes/application/AsistentePlazaAsignar.php:67
 msgid "los datos de asistencia los modifica la dl del asistente"
-msgstr "i dati di assistenza sono modificati dal dl dell'assistente"
+msgstr "i dati di partecipazione li modifica la dl del partecipante"
 
 #: src/asistentes/application/AsistenteGuardar.php:58
 #, php-format
@@ -14052,7 +14051,7 @@ msgstr "Non è stata trovata l'attività con id: %s"
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:68
 #, php-format
 msgid "No se ha encontrado el asistente (id_nom: %s, id_activ: %s)"
-msgstr "Non è stato trovato l'assistente (id_nom: %s, id_activ: %s)"
+msgstr "Partecipante non trovato (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:87
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:115
@@ -14063,7 +14062,7 @@ msgstr ""
 
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:97
 msgid "No se encontró el asistente para esta actividad."
-msgstr "Non è stato trovato l'assistente per questa attività."
+msgstr "Il partecipante per questa attività non è stato trovato."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
@@ -14259,12 +14258,12 @@ msgstr "periodo di inizio o fine delle attività"
 #: src/asistentes/application/Select_actividades_de_una_persona.php:115
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:237
 msgid "modificar asistencia"
-msgstr "modificare l'assistenza"
+msgstr "modificare la partecipazione"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:116
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:239
 msgid "borrar asistencia"
-msgstr "cancella assistenza"
+msgstr "cancella partecipazione"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:127
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
@@ -14397,12 +14396,11 @@ msgstr "Non può modificare i dati di presenza di una persona di un'altra dl"
 
 #: src/asistentes/domain/InfoAsistenteDl.php:30
 msgid "actividades como asistente"
-msgstr "attività come assistente"
+msgstr "attività come partecipante"
 
 #: src/asistentes/infrastructure/persistence/postgresql/PgAsistenteRepository.php:246
 msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
-msgstr ""
-"Mancante id_schema di sessione (mi_id_schema) per persistire l'assistente."
+msgstr "Manca l'id_schema della sessione (mi_id_schema) per salvare il partecipante."
 
 #: src/cambios/application/AvisosEncolarMails.php:198
 msgid "Avisos de cambios en actividades"
@@ -14665,7 +14663,7 @@ msgstr "Nessuna connessione al database."
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:43
 msgid "asistencias"
-msgstr "assist"
+msgstr "partecipazioni"
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:46
 msgid "fases actividad"
@@ -14823,7 +14821,7 @@ msgstr "Casa non trovata"
 
 #: src/casas/application/CalendarioUbiResumenData.php:172
 msgid "Mínimo de asistencias (p_dv.M)"
-msgstr "Assist minimi (p_dv.M)"
+msgstr "Minimo di partecipazioni (p_dv.M)"
 
 #: src/casas/application/CalendarioUbiResumenData.php:173
 msgid "según asignación dias sv"
@@ -14835,7 +14833,7 @@ msgstr "Previsione del reddito SV a 2 anni (1+G).r_it(p_dv/(p_dv+p_df))"
 
 #: src/casas/application/CalendarioUbiResumenData.php:182
 msgid "Mínimo de asistencias (p_df.M)"
-msgstr "Assist minimi (p_df.M)"
+msgstr "Minimo di partecipazioni (p_df.M)"
 
 #: src/casas/application/CalendarioUbiResumenData.php:183
 msgid "según asignación dias sf"
@@ -14892,7 +14890,7 @@ msgstr "C'è un errore, l'attività non è stata salvata."
 
 #: src/casas/application/CasaIngresosListaData.php:68
 msgid "asistentes reales"
-msgstr "assistenti reali"
+msgstr "partecipanti reali"
 
 #: src/casas/application/CasaIngresosListaData.php:69
 msgid "dif. asistencias"
@@ -18196,7 +18194,7 @@ msgstr "fase sacd"
 #: src/permisos/domain/PermisosActividades.php:659
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "fase asistentes sacd"
-msgstr "fase assistenti sacd"
+msgstr "fase partecipanti sacd"
 
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "solo asiste y "
@@ -20036,7 +20034,7 @@ msgstr "occupata da"
 #: src/ubiscamas/application/UpdateCamaAsistente.php:28
 #, php-format
 msgid "Asistencia no encontrada para id_nom %d e id_activ %d."
-msgstr "Assistenza non trovata per id_nom %d e id_activ %d."
+msgstr "Partecipazione non trovata per id_nom %d e id_activ %d."
 
 #: src/ubiscamas/application/UpdateCamaAsistente.php:42
 msgid "Error al guardar la asignación de la cama"
@@ -20518,7 +20516,7 @@ msgstr "deve specificare la sezione sul tipo di attività"
 #: frontend/actividades/view/_actividad_form.js.html.twig:93
 #: frontend/actividades/view/_calendario_form.js.html.twig:131
 msgid "debe concretar los asistentes en el tipo de actividad"
-msgstr "deve specificare gli assistenti nel tipo di attività"
+msgstr "deve specificare i partecipanti nel tipo di attività"
 
 #: frontend/actividades/view/_actividad_form.js.html.twig:94
 #: frontend/actividades/view/_calendario_form.js.html.twig:135

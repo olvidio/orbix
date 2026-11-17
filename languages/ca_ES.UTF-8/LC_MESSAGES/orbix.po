@@ -19,7 +19,7 @@ msgstr ""
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:21
 msgid "faltan datos obligatorios: actividad, asistente y tipo de cargo."
-msgstr "faltan datos obligatorios: actividad, asistente y tipo de cargo."
+msgstr "falten dades obligatòries: activitat, assistent i tipus de càrrec."
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:52
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:43
@@ -299,7 +299,7 @@ msgstr "cancel·lar"
 
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:15
 msgid "faltan datos obligatorios: actividad, persona y tipo de cargo."
-msgstr "faltan datos obligatorios: actividad, persona y tipo de cargo."
+msgstr "falten dades obligatòries: activitat, persona i tipus de càrrec."
 
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:59
 #: frontend/actividadescentro/view/activ_ctr.phtml:32
@@ -2443,9 +2443,7 @@ msgstr "Incorporar peticions de places"
 msgid ""
 "Incorporar las primeras peticiones de %s como asistencia con plaza asignada/"
 "pedida."
-msgstr ""
-"Incorporar las primeras peticiones de %s como asistencia con plaza asignada/"
-"pedida."
+msgstr "Incorporar les primeres peticions de %s com a assistència amb plaça assignada/demanada."
 
 #: frontend/actividadplazas/view/peticiones_activ.phtml:27
 msgid "error al guardar"
@@ -3437,9 +3435,7 @@ msgstr "Increment de despeses 2 anys"
 msgid ""
 "id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/"
 "[p_ta]"
-msgstr ""
-"id_tarifa mitja ponderada: prev.ing.activitats/prev.asistències: [p_tia]/"
-"[p_ta]"
+msgstr "id_tarifa mitjana ponderada: prev.ing.activitats/prev.assistències: [p_tia]/[p_ta]"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:74
 msgid "Actividades próximo año"
@@ -14148,7 +14144,7 @@ msgstr "s joves (< 30) que no han assistit a cv de s"
 
 #: src/asistentes/application/ListaUltimaActivData.php:181
 msgid "No sé en que tipo de actividad hay que mirar las asistencias"
-msgstr "No sé en quin tipus d'activitat s'han de mirar les asistències"
+msgstr "No sé en quin tipus d'activitat s'han de mirar les assistències"
 
 #: src/asistentes/application/ListaUltimaActivData.php:228
 #: src/asistentes/application/ListaUltimaActivData.php:235
@@ -14351,7 +14347,7 @@ msgstr "No pot modificar les dades d'assistència d'una persona d'una altra dl"
 
 #: src/asistentes/domain/InfoAsistenteDl.php:30
 msgid "actividades como asistente"
-msgstr "activitats com asistent"
+msgstr "activitats com a assistent"
 
 #: src/asistentes/infrastructure/persistence/postgresql/PgAsistenteRepository.php:246
 msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
@@ -14869,12 +14865,12 @@ msgstr "%s %s dies x %s ~= %s"
 #: src/casas/application/CasaIngresosListaData.php:198
 #, php-format
 msgid "No está definido el núm. de asistente previstos para: %s"
-msgstr "No està definit el núm. d'asistents previstos per: %s"
+msgstr "No està definit el núm. d'assistents previstos per a: %s"
 
 #: src/casas/application/CasaIngresosListaData.php:203
 #, php-format
 msgid "No está definido el núm. de asistente para: %s"
-msgstr "No està definit el núm. d'asistent per: %s"
+msgstr "No està definit el núm. d'assistents per a: %s"
 
 #: src/casas/application/CasaIngresosListaData.php:208
 #, php-format
@@ -19920,7 +19916,7 @@ msgstr "ocupat per"
 #: src/ubiscamas/application/UpdateCamaAsistente.php:28
 #, php-format
 msgid "Asistencia no encontrada para id_nom %d e id_activ %d."
-msgstr "Asistencia no encontrada para id_nom %d e id_activ %d."
+msgstr "No s'ha trobat l'assistència per a id_nom %d i id_activ %d."
 
 #: src/ubiscamas/application/UpdateCamaAsistente.php:42
 msgid "Error al guardar la asignación de la cama"

@@ -19,7 +19,7 @@ msgstr ""
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:21
 msgid "faltan datos obligatorios: actividad, asistente y tipo de cargo."
-msgstr "Fehlende obligatorische Daten: Aktivität, Assistent und Typ von Amt."
+msgstr "Fehlende Pflichtangaben: Aktivität, Teilnehmer und Art des Amtes."
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:52
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:43
@@ -2834,7 +2834,7 @@ msgstr "Teilnehmer hinzufügen: %s"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:231
 msgid "añadir asistente de otra dl"
-msgstr "Assistenten einer anderen DL hinzufügen"
+msgstr "Teilnehmer einer anderen DL hinzufügen"
 
 #: frontend/cambios/controller/avisos_generar.php:123
 #: src/cambios/application/AvisosEncolarMails.php:193
@@ -12446,12 +12446,12 @@ msgstr "Für diese Aktivität gibt es bereits dieses Amt"
 #: src/actividadcargos/application/ActividadCargoEditar.php:102
 #: src/actividadcargos/application/ActividadCargoNuevo.php:110
 msgid "hay un error, no se ha guardado el asistente"
-msgstr "Ein Fehler ist aufgetreten, der Assistent wurde nicht gespeichert"
+msgstr "Ein Fehler ist aufgetreten, der Teilnehmer wurde nicht gespeichert"
 
 #: src/actividadcargos/application/ActividadCargoEditar.php:111
 #: src/actividadcargos/application/ActividadCargoEliminar.php:106
 msgid "hay un error, no se ha eliminado el asistente"
-msgstr "Ein Fehler ist aufgetreten, der Assistent wurde nicht gelöscht"
+msgstr "Ein Fehler ist aufgetreten, der Teilnehmer wurde nicht gelöscht"
 
 #: src/actividadcargos/application/ActividadCargoEliminar.php:60
 msgid "falta id_item"
@@ -12550,11 +12550,11 @@ msgstr "Position suchen"
 
 #: src/actividadcargos/domain/entity/Cargo.php:224
 msgid "orden cargo"
-msgstr "orden cargo"
+msgstr "Reihenfolge Amt"
 
 #: src/actividadcargos/domain/entity/Cargo.php:273
 msgid "tipo de cargo"
-msgstr "tipo de cargo"
+msgstr "Art des Amtes"
 
 #: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:119
 #: src/personas/infrastructure/cli/sacd_resincronizar.php:120
@@ -13373,7 +13373,7 @@ msgstr "Fehlender id_activ oder id_nom"
 #: src/actividadestudios/application/AsistenteObservEst.php:42
 #: src/actividadestudios/application/AsistentePlanEstOk.php:42
 msgid "no encuentro al asistente"
-msgstr "Ich finde den Assistenten nicht."
+msgstr "Teilnehmer nicht gefunden"
 
 #: src/actividadestudios/application/CaPosiblesData.php:167
 msgid "Parámetro na no válido"
@@ -14052,7 +14052,7 @@ msgstr "Stufe stgr"
 #: src/asistentes/application/AsistentePlazaAsignar.php:63
 #, php-format
 msgid "no se encuentra el asistente (id_nom: %s, id_activ: %s)"
-msgstr "Assistent nicht gefunden (id_nom: %s, id_activ: %s)"
+msgstr "Teilnehmer nicht gefunden (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/AsistenteEliminar.php:113
 #: src/asistentes/application/AsistenteGuardar.php:157
@@ -14109,7 +14109,7 @@ msgstr "Aktivität mit ID %s wurde nicht gefunden"
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:68
 #, php-format
 msgid "No se ha encontrado el asistente (id_nom: %s, id_activ: %s)"
-msgstr "Assistent nicht gefunden (id_nom: %s, id_activ: %s)"
+msgstr "Teilnehmer nicht gefunden (id_nom: %s, id_activ: %s)"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:87
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:115
@@ -14120,7 +14120,7 @@ msgstr ""
 
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:97
 msgid "No se encontró el asistente para esta actividad."
-msgstr "Assistent für diese Aktivität wurde nicht gefunden."
+msgstr "Der Teilnehmer für diese Aktivität wurde nicht gefunden."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
@@ -14459,13 +14459,11 @@ msgstr ""
 
 #: src/asistentes/domain/InfoAsistenteDl.php:30
 msgid "actividades como asistente"
-msgstr "Aktivitäten als Assistent"
+msgstr "Aktivitäten als Teilnehmer"
 
 #: src/asistentes/infrastructure/persistence/postgresql/PgAsistenteRepository.php:246
 msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
-msgstr ""
-"Fehlender id_schema der Sitzung (mi_id_schema) zur Persistenz des "
-"Assistenten."
+msgstr "Fehlendes id_schema der Sitzung (mi_id_schema), um den Teilnehmer zu speichern."
 
 #: src/cambios/application/AvisosEncolarMails.php:198
 msgid "Avisos de cambios en actividades"
@@ -14540,9 +14538,7 @@ msgstr ""
 msgid ""
 "Asistente: ha cambiado la asistencia en la actividad \"%1$s\" el campo "
 "\"%2$s\" de \"%3$s\" a \"%4$s\""
-msgstr ""
-"Assistent: hat die Anwesenheit in der Aktivität \"%1$s\" im Feld \"%2$s\" "
-"von \"%3$s\" zu \"%4$s\" geändert"
+msgstr "Teilnehmer: hat die Teilnahme an der Aktivität \"%1$s\" im Feld \"%2$s\" von \"%3$s\" auf \"%4$s\" geändert"
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:176
 #, php-format
@@ -18290,7 +18286,7 @@ msgstr "Phase SACD"
 #: src/permisos/domain/PermisosActividades.php:659
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "fase asistentes sacd"
-msgstr "Phase SACD-Assistenten"
+msgstr "Phase Teilnehmer SACD"
 
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "solo asiste y "
