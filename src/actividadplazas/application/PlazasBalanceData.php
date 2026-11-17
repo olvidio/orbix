@@ -127,6 +127,10 @@ final class PlazasBalanceData
         string $fincurs,
         string $mi_dl
     ): array {
+        if ($inicurs === '' || $fincurs === '') {
+            // Tipo sin curso (no es ca, cv ni crt): sin periodo no se consulta (BETWEEN '' AND '' es un error SQL).
+            return ['plazasB' => 0, 'a_valores' => []];
+        }
         $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dlA)));
         $id_dlA = $cDelegaciones !== [] ? (int) $cDelegaciones[0]->getIdDlVo()->value() : 0;
         $cDelegaciones = $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dlB)));

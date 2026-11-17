@@ -147,15 +147,13 @@ final class PlazasBalanceDataCalculoTest extends myTest
         $this->assertStringStartsWith("f_ini between [$ini,", $this->consultasActividades[0][3]);
     }
 
-    /**
-     * Hallazgo: para un tipo que no es ca, cv ni crt (p. ej. cve) el periodo queda
-     * vacío y la consulta filtra `f_ini BETWEEN '' AND ''` (error SQL en PostgreSQL).
-     */
-    public function test_otro_tipo_consulta_con_periodo_vacio(): void
+    /** Para un tipo sin curso (no es ca, cv ni crt; p. ej. cve) no se consulta con un periodo vacío: no hay filas. */
+    public function test_otro_tipo_no_consulta_y_no_hay_filas(): void
     {
         $this->escenario();
-        $this->uc()->execute(['dl' => 'dlp', 'id_tipo_activ' => '114']);
-        $this->assertSame('f_ini between [,]', $this->consultasActividades[0][3]);
+        $out = $this->uc()->execute(['dl' => 'dlp', 'id_tipo_activ' => '114']);
+        $this->assertSame([], $this->consultasActividades);
+        $this->assertSame([], $out['a_valores']);
     }
 
     public function test_delegacion_desconocida_usa_id_cero_y_sin_actividades_no_hay_filas(): void
