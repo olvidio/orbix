@@ -1923,7 +1923,7 @@ msgstr "delete registration"
 #: frontend/actividadestudios/controller/matriculas_lista.php:109
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:81
 msgid "¿Está seguro que desea borrar todas las matrículas seleccionadas?"
-msgstr "Are you sure you want to delete all the selected license plates?"
+msgstr "Are you sure you want to delete all the selected enrollments?"
 
 #: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:39
 #: frontend/certificados/controller/certificado_emitido_lista.php:67
@@ -1976,7 +1976,7 @@ msgstr "Delegations without stgr region"
 
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:45
 msgid "lista de matrículas pendientes de poner nota"
-msgstr "list of pending license plates"
+msgstr "list of enrollments pending a grade"
 
 #: frontend/actividadestudios/controller/matriculas_pendientes.php:51
 msgid "p"
@@ -6456,7 +6456,7 @@ msgstr "Enroll all"
 
 #: frontend/menus/view/traducir_menu.phtml:145
 msgid "Matrículas"
-msgstr "License plates"
+msgstr "Enrollments"
 
 #: frontend/menus/view/traducir_menu.phtml:146
 msgid "Matrículas realizadas"
@@ -13525,7 +13525,7 @@ msgstr "this activity does not have any subject"
 
 #: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:209
 msgid "¿Está seguro que desea quitar esta matrícula?"
-msgstr "Are you sure you want to remove this license plate?"
+msgstr "Are you sure you want to remove this enrollment?"
 
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:127
 msgid "no está como propio, no debería tener plan de estudios"
