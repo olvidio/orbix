@@ -356,11 +356,8 @@ final class EdicionesActividadEstudiosTest extends myTest
         $this->assertSame('i', $tipo);
     }
 
-    /**
-     * Hallazgo: el resultado de `Guardar` no se comprueba; un fallo al grabar la docencia se pierde en silencio
-     * y el mensaje final siempre dice que se ha actualizado.
-     */
-    public function test_un_fallo_de_guardado_no_se_nota_en_el_mensaje_final(): void
+    /** Si falla el guardado de alguna docencia, el mensaje lo dice (y no dice que se ha actualizado). */
+    public function test_un_fallo_de_guardado_se_avisa_en_el_mensaje_final(): void
     {
         $uc = $this->docencia();
         $this->actividades->method('matching')->willReturn([$this->actividadTerminada()]);
@@ -370,6 +367,9 @@ final class EdicionesActividadEstudiosTest extends myTest
         $this->docencias->method('getNewId')->willReturn(1);
         $this->docencias->method('Guardar')->willReturn(false);
 
-        $this->assertStringContainsString('2025', $uc->execute(self::PERIODO));
+        $msg = $uc->execute(self::PERIODO);
+
+        $this->assertStringStartsWith(sprintf(_("Hay un error: no se ha guardado la docencia de %s asignaturas del periodo: %s"), 1, ''), $msg);
+        $this->assertStringContainsString('2025', $msg);
     }
 }

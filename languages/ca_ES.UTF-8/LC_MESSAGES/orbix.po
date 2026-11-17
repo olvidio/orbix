@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 10:21+0100\n"
+"POT-Creation-Date: 2026-11-17 10:39+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -10421,7 +10421,7 @@ msgstr "i"
 #: src/actividades/application/ActividadCambiarTipo.php:102
 #: src/actividades/application/ActividadDuplicar.php:60
 #: src/actividades/application/ActividadEditar.php:141
-#: src/actividades/application/ActividadEditar.php:185
+#: src/actividades/application/ActividadEditar.php:190
 #: src/actividades/application/ActividadNueva.php:166
 #: src/actividades/application/ActividadNueva.php:198
 #: src/actividades/application/ActividadNuevoCurso.php:293
@@ -10447,7 +10447,7 @@ msgstr "i"
 #: src/actividadplazas/application/PlazasCeder.php:86
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
-#: src/actividadtarifas/application/TarifaUbiUpdateInc.php:51
+#: src/actividadtarifas/application/TarifaUbiUpdateInc.php:52
 #: src/actividadtarifas/application/TipoTarifaUpdate.php:52
 #: src/asistentes/application/AsistenteGuardar.php:208
 #: src/asistentes/application/AsistentePlazaAsignar.php:68
@@ -13368,7 +13368,14 @@ msgstr "no trobo el grup d'estudis a què pertany la dl"
 msgid "todos los ctr"
 msgstr "tots els ctr"
 
-#: src/actividadestudios/application/DocenciaActualizar.php:150
+#: src/actividadestudios/application/DocenciaActualizar.php:154
+#, php-format
+msgid ""
+"Hay un error: no se ha guardado la docencia de %s asignaturas del periodo: %s"
+msgstr ""
+"Hi ha un error: no s'ha desat la docència de %s assignatures del període: %s"
+
+#: src/actividadestudios/application/DocenciaActualizar.php:157
 #, php-format
 msgid "Se ha actualizado la docencia para el periodo: %s"
 msgstr "S'ha actualitzat la docència per al període: %s"

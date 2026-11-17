@@ -19,4 +19,4 @@ try {
 /** @var DocenciaActualizar $useCase */
 $useCase = DependencyResolver::get(DocenciaActualizar::class);
 $txt_rta = $useCase->execute($_POST);
-ContestarJson::enviar('', $txt_rta);
+ContestarJson::enviar('', ['txt_rta' => $txt_rta]);

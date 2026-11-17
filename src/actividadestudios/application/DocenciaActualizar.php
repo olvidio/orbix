@@ -77,6 +77,7 @@ final class DocenciaActualizar
         /** @var ConfigSnapshot $oConfig */
         $oConfig = $_SESSION['oConfig'];
         $ini_m = $oConfig->getMesIniStgr();
+        $fallos = 0;
 
         foreach ($cActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
@@ -143,8 +144,14 @@ final class DocenciaActualizar
                     $oProfesorDocencia->setTipo($tipo);
                     $oProfesorDocencia->setActa($acta);
                 }
-                $this->profesorDocenciaStgrRepository->Guardar($oProfesorDocencia);
+                if ($this->profesorDocenciaStgrRepository->Guardar($oProfesorDocencia) === false) {
+                    $fallos++;
+                }
             }
+        }
+
+        if ($fallos > 0) {
+            return sprintf(_("Hay un error: no se ha guardado la docencia de %s asignaturas del periodo: %s"), $fallos, $txt_curso);
         }
 
         return sprintf(_("Se ha actualizado la docencia para el periodo: %s"), $txt_curso);
