@@ -61,9 +61,12 @@ final class PosiblesAsignaturasCaData
                 continue;
             }
             $apNom = $oPersona->getPrefApellidosNombre();
-            $aNomAsignaturasFaltan = $pendientes->asignaturasQueFaltanPersona($idNom, CursoStgr::CUADRIENIO);
-            if (count($aNomAsignaturasFaltan) < 5) {
-                $aAlumnosFinC[] = ['apellidos_nombre' => $apNom, 'asignaturas' => $aNomAsignaturasFaltan];
+            // Fin de cuadrienio: solo los alumnos de cuadrienio.
+            if (in_array((int) $stgr, [NivelStgrId::C1, NivelStgrId::C2], true)) {
+                $aNomAsignaturasFaltan = $pendientes->asignaturasQueFaltanPersona($idNom, CursoStgr::CUADRIENIO);
+                if (count($aNomAsignaturasFaltan) < 5) {
+                    $aAlumnosFinC[] = ['apellidos_nombre' => $apNom, 'asignaturas' => $aNomAsignaturasFaltan];
+                }
             }
             $cNotas = $this->personaNotaRepository->matching(
                 Criteria::create()

@@ -258,17 +258,24 @@ final class PosiblesAsignaturasCaDataTest extends myTest
     }
 
     /**
-     * Hallazgo: la lista de fin de cuadrienio no mira el nivel del alumno: uno de bienio sale también (con las
-     * asignaturas de cuadrienio que «le faltan»), y si el catálogo no tiene cuadrienio sale con la lista vacía.
+     * En la lista de fin de cuadrienio solo salen los alumnos de cuadrienio (año I y años II-IV): uno de bienio
+     * no sale aunque le «falten» menos de cinco (antes salía, y con la lista vacía si el catálogo no tenía
+     * cuadrienio). Decidido el 2026-11-17, duda 32b del plan.
      */
-    public function test_un_alumno_de_bienio_tambien_sale_en_la_lista_de_fin_de_cuadrienio(): void
+    public function test_un_alumno_de_bienio_no_sale_en_la_lista_de_fin_de_cuadrienio(): void
     {
-        $this->asignatura(1101, 1101, 'Lógica');
+        $this->catalogoConCuadrienio(4);
         $this->personas = [-999000001 => ['Pla, Joan', NivelStgrId::B]];
 
-        $r = $this->uc()->execute(['id_activ' => self::ID_ACTIV]);
+        $this->assertSame([], $this->uc()->execute(['id_activ' => self::ID_ACTIV])['a_alumnos_fin_c']);
+    }
 
-        $this->assertSame([['apellidos_nombre' => 'Pla, Joan', 'asignaturas' => []]], $r['a_alumnos_fin_c']);
+    public function test_un_alumno_de_cuadrienio_ano_i_sale_en_la_lista_de_fin_de_cuadrienio(): void
+    {
+        $this->catalogoConCuadrienio(4);
+        $this->personas = [-999000001 => ['Pla, Joan', NivelStgrId::C1]];
+
+        $this->assertSame('Pla, Joan', $this->uc()->execute(['id_activ' => self::ID_ACTIV])['a_alumnos_fin_c'][0]['apellidos_nombre'] ?? null);
     }
 
     public function test_sin_asistentes_en_estudios_no_hay_asignaturas_posibles(): void
