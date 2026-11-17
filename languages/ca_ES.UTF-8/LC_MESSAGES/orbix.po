@@ -1578,11 +1578,11 @@ msgstr "títol: nom_tipus"
 #: src/zonassacd/application/ZonaSacdLista.php:130
 #: src/zonassacd/application/ZonaSacdListaTot.php:70
 msgid "sacd"
-msgstr "sacd"
+msgstr "Mn."
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:31
 msgid "sacd encargados"
-msgstr "sacd encarregats"
+msgstr "Mn. encarregats"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:33
 #: frontend/actividadplazas/view/peticiones_activ.phtml:58
@@ -1616,7 +1616,7 @@ msgstr "Al mateix lloc"
 #: frontend/actividadessacd/view/activ_sacd.phtml:42
 msgid "NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."
 msgstr ""
-"Nota: en sv, en assignar un sacd, l'assistència s'afegeix a l'activitat."
+"Nota: en sv, en assignar un Mn., l'assistència s'afegeix a l'activitat."
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:43
 #, php-format
@@ -1624,19 +1624,19 @@ msgid ""
 "Actividades aprobadas y no aprobadas sin sacds (independiente de la fase "
 "\"%s\")"
 msgstr ""
-"Activitats aprovades i no aprovades sense sacds (independent de la fase "
+"Activitats aprovades i no aprovades sense Mns. (independent de la fase "
 "\"%s\")"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:44
 #, php-format
 msgid "+ Actividades con sacds sin la fase \"%s\""
-msgstr "+ Activitats amb sacds sense la fase \"%s\""
+msgstr "+ Activitats amb Mns. sense la fase \"%s\""
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:479
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:54
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:124
 msgid "Selección de sacd"
-msgstr "Selecció de sacd"
+msgstr "Selecció de Mn."
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:480
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:56
@@ -1675,7 +1675,7 @@ msgid ""
 "esto asignará el sacd titular del centro a las actividades que tengan un "
 "centro encargado"
 msgstr ""
-"això assignarà el sacd titular del centre a les activitats que tinguin un "
+"això assignarà el Mn. titular del centre a les activitats que tinguin un "
 "centre encarregat"
 
 #: frontend/actividadessacd/view/asignar_sacd_auto.phtml:17
@@ -1705,11 +1705,11 @@ msgstr ""
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:30
 msgid "lista con la atención de actividades para mandar a los sacd"
-msgstr "llista amb l'atenció de les activitats a enviar als sacds"
+msgstr "llista amb l'atenció de les activitats a enviar als Mns."
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:31
 msgid "atención de actividades del sacd seleccionado"
-msgstr "atenció de les activitats del sacd seleccionat"
+msgstr "atenció de les activitats del Mn. seleccionat"
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:32
 msgid "click para modificar los textos de las comunicaciones"
@@ -1721,11 +1721,11 @@ msgstr "- S'enviarà a les 14: 30 i a les 21: 00."
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:35
 msgid "- Se enviará una copia al jefe del calendario y al ctr del sacd."
-msgstr "- S'enviarà una còpia al jefe del calendari i al ctr del sacd."
+msgstr "- S'enviarà una còpia al cap del calendari i al ctr del Mn."
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:36
 msgid "- No se enviará a los sacd que no tengan actividades"
-msgstr "- No s'enviarà als sacd que no tinguin activitats"
+msgstr "- No s'enviarà als Mns. que no tinguin activitats"
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:40
 msgid "mails encolados correctamente"
@@ -1737,7 +1737,7 @@ msgstr "sense dades per el període seleccionat"
 
 #: frontend/actividadessacd/view/com_sacd_activ_periodo.phtml:42
 msgid "Sacd de paso"
-msgstr "Sacd de pas"
+msgstr "Mn. de pas"
 
 #: frontend/actividadessacd/view/com_sacd_txt.phtml:22
 msgid "textos para las comunicaciones de las actividades"
@@ -4752,7 +4752,7 @@ msgstr "hora fi"
 
 #: frontend/encargossacd/controller/encargo_horario_select.php:82
 msgid "nº sacd"
-msgstr "nº sacd"
+msgstr "nº Mn."
 
 #: frontend/encargossacd/controller/encargo_horario_select.php:84
 msgid "f ini"
@@ -4986,7 +4986,7 @@ msgstr "grup del ctrs"
 
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:70
 msgid "sacd titular"
-msgstr "sacd titular"
+msgstr "Mn. titular"
 
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:76
 #: src/cambios/domain/AvisoObjetoCatalog.php:42
@@ -4999,7 +4999,7 @@ msgstr "Suplent"
 
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:104
 msgid "añadir sacd colaborador"
-msgstr "afegir sacd col·laborador"
+msgstr "afegir Mn. col·laborador"
 
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:111
 msgid "exigencias del ctr"
@@ -5089,7 +5089,7 @@ msgstr "generar excepcions"
 
 #: frontend/encargossacd/view/horario_ver.phtml:83
 msgid "nº de sacd"
-msgstr "nº de sacd"
+msgstr "nº de Mns."
 
 #: frontend/encargossacd/view/listas_com_ctr.phtml:81
 #: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:73
@@ -5162,15 +5162,15 @@ msgstr "oc y lp sf (cr 1/14, 10,b)"
 
 #: frontend/encargossacd/view/listas_index.phtml:23
 msgid "por sacd (cr 1/14, 10,d)"
-msgstr "per sacd (cr 1/14, 10,d)"
+msgstr "per Mn. (cr 1/14, 10,d)"
 
 #: frontend/encargossacd/view/listas_index.phtml:24
 msgid "tabla por sacd (cr 9/20, 10)"
-msgstr "taula per sacd (cr 9/20, 10)"
+msgstr "taula per Mn. (cr 9/20, 10)"
 
 #: frontend/encargossacd/view/listas_index.phtml:25
 msgid "tabla por sacd sf (cr 9/20, 10)"
-msgstr "taula per sacd sf (cr 9/20, 10)"
+msgstr "taula per Mn. sf (cr 9/20, 10)"
 
 #: frontend/encargossacd/view/listas_index.phtml:28
 msgid "listados comunicaciones"
@@ -5190,11 +5190,11 @@ msgstr "exigències igl, oc...."
 
 #: frontend/encargossacd/view/listas_index.phtml:33
 msgid "comunicación a sacd Prelatura"
-msgstr "comunicació a sacd Prelatura"
+msgstr "comunicació a Mn. Prelatura"
 
 #: frontend/encargossacd/view/listas_index.phtml:34
 msgid "comunicación a sacd sss+"
-msgstr "comunicació a sacd sss+"
+msgstr "comunicació a Mn. sss+"
 
 #: frontend/encargossacd/view/listas_index.phtml:35
 msgid "comunicación a los centros sv"
@@ -6011,7 +6011,7 @@ msgstr "|ADMINISTRACIÓ LOCAL|"
 
 #: frontend/menus/view/traducir_menu.phtml:32
 msgid "|ATENCIÓN SACD|"
-msgstr "|ATENCIÓ SACD|"
+msgstr "|ATENCIÓ MN.|"
 
 #: frontend/menus/view/traducir_menu.phtml:33
 msgid "|CASAS Y CTR|"
@@ -6091,7 +6091,7 @@ msgstr "Assignar ctr organitzadors sr"
 
 #: frontend/menus/view/traducir_menu.phtml:54
 msgid "Asignar sacd a actividades"
-msgstr "Assignar sacd a activitats"
+msgstr "Assignar Mn. a activitats"
 
 #: frontend/menus/view/traducir_menu.phtml:57
 #: frontend/shared/controller/ayuda_index.php:58
@@ -6208,7 +6208,7 @@ msgstr "Comprovar dades n"
 
 #: frontend/menus/view/traducir_menu.phtml:83
 msgid "Comunicación a los sacd"
-msgstr "Comunicació als sacd"
+msgstr "Comunicació als Mns."
 
 #: frontend/menus/view/traducir_menu.phtml:84
 msgid "Con listados"
@@ -6285,7 +6285,7 @@ msgstr "Encàrrecs ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:102
 msgid "Encargos sacd (ctr, etc.)"
-msgstr "Encàrrecs sacd (ctr, etc.)"
+msgstr "Encàrrecs Mn. (ctr, etc.)"
 
 #: frontend/menus/view/traducir_menu.phtml:103
 msgid "Envío información a otras r"
@@ -6326,7 +6326,7 @@ msgstr "Fitxa ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:112
 msgid "Ficha sacd"
-msgstr "Fitxa sacd"
+msgstr "Fitxa Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:113
 msgid "Filtro alumno/asignatura"
@@ -6410,7 +6410,7 @@ msgstr "Informe anual professors"
 
 #: frontend/menus/view/traducir_menu.phtml:133
 msgid "Iniciales sacd"
-msgstr "Inicials sacd"
+msgstr "Inicials Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:134
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:147
@@ -6419,7 +6419,7 @@ msgstr "Inventari"
 
 #: frontend/menus/view/traducir_menu.phtml:135
 msgid "Lista sacd-zona"
-msgstr "Llista sacd-zona"
+msgstr "Llista Mn.-zona"
 
 #: frontend/menus/view/traducir_menu.phtml:136
 msgid "Listado de actas"
@@ -6554,7 +6554,7 @@ msgstr "Planificació per persones"
 
 #: frontend/menus/view/traducir_menu.phtml:168
 msgid "Plannig por personas sacd"
-msgstr "Planificació per persones sacd"
+msgstr "Planificació per persones Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:169
 msgid "Planning calendario actual"
@@ -6650,7 +6650,7 @@ msgstr "Zones-ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:192
 msgid "Zonas-sacd"
-msgstr "Zones-sacd"
+msgstr "Zones-Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:193
 msgid "a ODF Calc"
@@ -6754,7 +6754,7 @@ msgstr "assignar document"
 
 #: frontend/menus/view/traducir_menu.phtml:218
 msgid "asignar sacd"
-msgstr "assignar sacd"
+msgstr "assignar Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:220
 msgid "asitencia a congresos"
@@ -6917,7 +6917,7 @@ msgstr "col·leccions"
 
 #: frontend/menus/view/traducir_menu.phtml:258
 msgid "comunic. sacd"
-msgstr "comunic. Sacd"
+msgstr "comunic. Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:259
 msgid "config esquema"
@@ -7084,7 +7084,7 @@ msgstr "exportar activitats"
 
 #: frontend/menus/view/traducir_menu.phtml:299
 msgid "falta sacd"
-msgstr "falta sacd"
+msgstr "falta Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:300
 msgid "fases"
@@ -7100,7 +7100,7 @@ msgstr "fitxa ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:303
 msgid "ficha sacd"
-msgstr "fitxa sacd"
+msgstr "fitxa Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:304
 msgid "gastos casa"
@@ -7194,7 +7194,7 @@ msgstr "list diversos crt"
 
 #: frontend/menus/view/traducir_menu.phtml:327
 msgid "lista activ. sacd"
-msgstr "llista d'activ. sacd"
+msgstr "llista d'activ. Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:328
 msgid "lista actividades"
@@ -7246,7 +7246,7 @@ msgstr "llista per ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:340
 msgid "lista sacd-zona"
-msgstr "llista sacd-zona"
+msgstr "llista Mn.-zona"
 
 #: frontend/menus/view/traducir_menu.phtml:341
 msgid "lista todo"
@@ -7552,19 +7552,19 @@ msgstr "s que no han anat al crt"
 
 #: frontend/menus/view/traducir_menu.phtml:421
 msgid "sacd agd"
-msgstr "sacd agd"
+msgstr "Mn. agd"
 
 #: frontend/menus/view/traducir_menu.phtml:422
 msgid "sacd num"
-msgstr "sacd num"
+msgstr "Mn. num"
 
 #: frontend/menus/view/traducir_menu.phtml:423
 msgid "sacd r/dl"
-msgstr "sacd r/dl"
+msgstr "Mn. r/dl"
 
 #: frontend/menus/view/traducir_menu.phtml:424
 msgid "sacd sssc"
-msgstr "sacd sssc"
+msgstr "Mn. sssc"
 
 #: frontend/menus/view/traducir_menu.phtml:425
 #: src/asignaturas/domain/InfoSectores.php:19
@@ -7762,7 +7762,7 @@ msgstr "zones-ctr"
 
 #: frontend/menus/view/traducir_menu.phtml:476
 msgid "zonas-sacd"
-msgstr "zones-sacd"
+msgstr "zones-Mn."
 
 #: frontend/menus/view/traducir_menu.phtml:479
 msgid "Entre semana"
@@ -7819,7 +7819,7 @@ msgstr "el proper mes natural"
 #: frontend/misas/controller/buscar_plan_ctr.php:66
 #: frontend/misas/controller/buscar_plan_sacd.php:39
 msgid "Debe ser un sacd o un centro para ver este menú"
-msgstr "Ha de ser un sacd o un centre per veure aquest menú"
+msgstr "Ha de ser un Mn. o un centre per veure aquest menú"
 
 #: frontend/misas/controller/modificar_encargos.php:20
 #: src/misas/application/ModificarEncargosData.php:48
@@ -9421,7 +9421,7 @@ msgstr "tots els ctr amb s"
 
 #: frontend/planning/view/planning_ctr_que.phtml:53
 msgid "incluir sacd"
-msgstr "incloure sacd"
+msgstr "incloure Mn."
 
 #: frontend/planning/view/planning_persona_que.phtml:37
 #, php-format
@@ -10759,7 +10759,7 @@ msgstr "mínim assistents"
 
 #: frontend/ubis/view/cdc_form.phtml:82
 msgid "nº máximo de sacd"
-msgstr "nª màxim d'sacd"
+msgstr "nº màxim de Mns."
 
 #: frontend/ubis/view/ctrdl_form.phtml:22
 #: frontend/ubis/view/ctrex_form.phtml:22
@@ -12218,11 +12218,11 @@ msgstr "assignar els centres marcats a la zona"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:12
 msgid "lista de sacd de la zona"
-msgstr "llista de sacd de la zona"
+msgstr "llista de Mns. de la zona"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:26
 msgid "asignar los sacd marcados a la zona"
-msgstr "assignar els sacd marcats a la zona"
+msgstr "assignar els Mns. marcats a la zona"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:36
 msgid "cambiar asignación zona"
@@ -12272,7 +12272,7 @@ msgstr "ha de seleccionar una zona de destí"
 
 #: frontend/zonassacd/view/zona_sacd.phtml:78
 msgid "debe seleccionar algún sacd de la lista"
-msgstr "heu de seleccionar algun sacd de la llista"
+msgstr "heu de seleccionar algun Mn. de la llista"
 
 #: public/portada.php:56
 msgid "esto borrará los anuncios seleccionados"
@@ -13063,7 +13063,7 @@ msgstr "falten paràmetres id_activ / id_nom"
 
 #: src/actividadessacd/application/SacdAsignar.php:56
 msgid "No puede haber tantos cargos de sacd en una actividad"
-msgstr "No hi pot haver tants càrrecs de sacd en una activitat"
+msgstr "No hi pot haver tants càrrecs de Mn. en una activitat"
 
 #: src/actividadessacd/application/SacdAsignar.php:65
 msgid "hay un error, no se ha guardado el cargo"
@@ -13083,7 +13083,7 @@ msgstr "hi ha un error, no s'ha eliminat l'assistència"
 
 #: src/actividadessacd/application/SolapesSacdData.php:124
 msgid "listado de sacd con actividades incompatibles"
-msgstr "llistat de sacd amb activitats incompatibles"
+msgstr "llistat de Mns. amb activitats incompatibles"
 
 #: src/actividadessacd/application/TextoComunicacionGuardar.php:31
 msgid "faltan parametros clave / idioma"
@@ -13117,7 +13117,7 @@ msgstr "falta posar l'adreça a la dl"
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:199
 #, php-format
 msgid "La actividad «%s» (id %d%s) del sacd %s no tiene permiso: %s."
-msgstr "L'activitat «%s» (id %d%s) del sacd %s no té permís: %s."
+msgstr "L'activitat «%s» (id %d%s) del Mn. %s no té permís: %s."
 
 #: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:315
 msgid "falta el definir el jefe de calendario"
@@ -14255,7 +14255,7 @@ msgstr "E43"
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:265
 msgid "sacd."
-msgstr "sacd."
+msgstr "Mn."
 
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:269
 msgid "apellidos"
@@ -14387,7 +14387,7 @@ msgstr "Cl: s'ha assignat un càrrec a \"%4$s\" a l'activitat \"%1$s\""
 #: src/cambios/application/CambioAvisoTxtBuilder.php:143
 #, php-format
 msgid "Sacd: se ha asignado el sacd \"%4$s\" a la actividad \"%1$s\""
-msgstr "Sacd: s'ha assignat el sacd \"%4$s\" a l'activitat \"%1$s\""
+msgstr "Mn.: s'ha assignat el Mn. \"%4$s\" a l'activitat \"%1$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:149
 #, php-format
@@ -14423,7 +14423,7 @@ msgid ""
 "Sacd: ha cambiado el cargo en la actividad \"%1$s\" el campo \"%2$s\" de "
 "\"%3$s\" a \"%4$s\""
 msgstr ""
-"Sacd: ha canviat el càrrec en l'activitat \"%1$s\" el campo \"%2$s\" de "
+"Mn.: ha canviat el càrrec en l'activitat \"%1$s\" el camp \"%2$s\" de "
 "\"%3$s\" a \"%4$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:173
@@ -14453,7 +14453,7 @@ msgstr "Cl: s'ha tret el càrrec a \"%3$s\" de l'activitat \"%1$s\""
 #: src/cambios/application/CambioAvisoTxtBuilder.php:191
 #, php-format
 msgid "Sacd: se ha quitado al sacd \"%3$s\" de la actividad \"%1$s\""
-msgstr "Sacd: s'ha tret al sacd \"%3$s\" de l'activitat \"%1$s\""
+msgstr "Mn.: s'ha tret al Mn. \"%3$s\" de l'activitat \"%1$s\""
 
 #: src/cambios/application/CambioAvisoTxtBuilder.php:197
 #, php-format
@@ -16325,7 +16325,7 @@ msgstr "Cal nomenar un sacerdot titular"
 
 #: src/encargossacd/application/CtrFichaUpdate.php:296
 msgid "El sacd titular y suplente deben ser distintos"
-msgstr "El sacd titular i el suplent han de ser diferents"
+msgstr "El Mn. titular i el suplent han de ser diferents"
 
 #: src/encargossacd/application/EncargoComprobacionesCtr.php:67
 #, php-format
@@ -16523,7 +16523,7 @@ msgstr "No es pot crear la taula"
 
 #: src/encargossacd/application/SacdAusenciasUpdate.php:69
 msgid "no se ha encontrado el encargo del sacd"
-msgstr "no s'ha trobat l'encàrrec del sacd"
+msgstr "no s'ha trobat l'encàrrec del Mn."
 
 #: src/encargossacd/application/SacdFichaData.php:181
 msgid "horario del ctr"
@@ -16721,7 +16721,7 @@ msgstr "zones de misses"
 #: src/encargossacd/infrastructure/persistence/postgresql/PgEncargoSacdRepository.php:58
 #, php-format
 msgid "se han eliminado %s sacd de encargos inexistentes \n"
-msgstr "s'han eliminat %s sacd de encàrrecs inexistents \n"
+msgstr "s'han eliminat %s Mns. d'encàrrecs inexistents \n"
 
 #: src/inventario/application/DocumentosAsignar.php:78
 #: src/inventario/application/DocumentosAsignar.php:101
@@ -17099,7 +17099,7 @@ msgstr "No té permís per veure aquesta pàgina"
 
 #: src/misas/domain/EncargosZona.php:90
 msgid "sin sacd"
-msgstr "sense sacd"
+msgstr "sense Mn."
 
 #: src/misas/domain/value_objects/EncargoDiaStatus.php:17
 msgid "propuesta"
@@ -17107,7 +17107,7 @@ msgstr "proposta"
 
 #: src/misas/domain/value_objects/EncargoDiaStatus.php:18
 msgid "visible sacd"
-msgstr "sacd visible"
+msgstr "Mn. visible"
 
 #: src/misas/domain/value_objects/EncargoDiaStatus.php:19
 msgid "visible ctr"
@@ -17980,7 +17980,7 @@ msgstr "CP/AMIG"
 
 #: src/pasarela/application/Conversiones.php:174
 msgid "SACD"
-msgstr "SACD"
+msgstr "MN."
 
 #: src/pasarela/application/Conversiones.php:179
 msgid "SR"
@@ -18100,12 +18100,12 @@ msgstr "té càrrec i"
 
 #: src/permisos/domain/PermisosActividades.php:657
 msgid "fase sacd"
-msgstr "fase sacd"
+msgstr "fase Mn."
 
 #: src/permisos/domain/PermisosActividades.php:659
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "fase asistentes sacd"
-msgstr "fase assistents sacd"
+msgstr "fase assistents Mn."
 
 #: src/permisos/domain/PermisosActividades.php:669
 msgid "solo asiste y "
@@ -20834,7 +20834,7 @@ msgstr "per oficines"
 #: frontend/encargossacd/view/propuestas_lista.html.twig:114
 #: frontend/encargossacd/view/propuestas_lista.html.twig:141
 msgid "Primero debe introducir un sacd"
-msgstr "Primer ha d'introduir un sacd"
+msgstr "Primer ha d'introduir un Mn."
 
 #: frontend/encargossacd/view/propuestas_menu.html.twig:2
 msgid "Acciones para propuestas"
@@ -20858,7 +20858,7 @@ msgstr "modificar propostes"
 
 #: frontend/encargossacd/view/propuestas_menu.html.twig:10
 msgid "listado propuestas por sacd"
-msgstr "llistat propostes per sacd"
+msgstr "llistat propostes per Mn."
 
 #: frontend/encargossacd/view/propuestas_menu.html.twig:11
 msgid "listado propuestas por encargos"

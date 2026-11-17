@@ -68,6 +68,14 @@ class GlosarioTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             glosario.idioma_de("fr_FR.UTF-8")
 
+    def test_en_catalan_sacd_se_traduce_mn_y_en_los_demas_se_deja(self):
+        g = glosario.cargar()
+        f = lambda msgid, msgstr, idioma: [x.termino for x in glosario.incumplimientos(g, msgid, msgstr, idioma)]
+        self.assertEqual([], f("asignar sacd", "assignar Mn.", "ca"))
+        self.assertEqual(["sacd"], f("asignar sacd", "assignar sacd", "ca"))
+        self.assertEqual([], f("asignar sacd", "assign sacd", "en"))
+        self.assertEqual(["sacd"], f("asignar sacd", "assign priest", "en"))
+
     def test_el_glosario_del_repo_es_valido(self):
         g = glosario.cargar()
         self.assertGreater(len(g["terminos"]), 0)

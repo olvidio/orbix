@@ -18,7 +18,6 @@
     "cr",
     "sv",
     "sf",
-    "sacd",
     "stgr",
     "ubi",
     "vsm",
@@ -56,6 +55,26 @@
       "it": [
         "attività"
       ]
+    },
+    {
+      "es": [
+        "sacd",
+        "sacds"
+      ],
+      "ca": [
+        "Mn.",
+        "Mns."
+      ],
+      "en": [
+        "sacd"
+      ],
+      "de": [
+        "sacd"
+      ],
+      "it": [
+        "sacd"
+      ],
+      "nota": "sacerdote; en catalán «Mn.» (plural «Mns.»), también en menús y cabeceras; en los demás idiomas la sigla tal cual"
     },
     {
       "es": [
