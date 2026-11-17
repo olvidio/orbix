@@ -13,7 +13,11 @@ use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\Ingreso;
 use src\casas\domain\entity\UbiGasto;
+use src\casas\domain\value_objects\UbiGastoCantidad;
 use src\casas\domain\value_objects\UbiGastoTipo;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\value_objects\DateTimeLocal;
+use Tests\support\DescribeCriteria;
 use Tests\myTest;
 
 /** Gastos mensuales de una casa e ingresos de una actividad. */
@@ -59,19 +63,107 @@ final class CasaGastosEIngresosTest extends myTest
         $this->assertSame(1003, $guardados[0]->getId_ubi());
     }
 
-    /**
-     * Hallazgo: la documentación dice «borra los existentes y los reinserta», pero no hay ningún borrado:
-     * cada guardado añade 36 apuntes nuevos sobre los del año, duplicando los gastos.
-     */
-    public function test_no_se_borran_los_gastos_anteriores_del_anyo(): void
+    private function gastoExistente(int $id_item, int $mes, int $tipo, float $cantidad): UbiGasto
+    {
+        $g = new UbiGasto();
+        $g->setId_item($id_item);
+        $g->setId_ubi(1003);
+        $g->setF_gasto(new DateTimeLocal("2026/$mes/5"));
+        $g->setTipoVo(new UbiGastoTipo($tipo));
+        $g->setCantidadVo(new UbiGastoCantidad($cantidad));
+
+        return $g;
+    }
+
+    public function test_los_gastos_del_anyo_se_buscan_por_casa_y_fechas_del_anyo(): void
     {
         $repo = $this->createMock(UbiGastoRepositoryInterface::class);
         $repo->method('getNewId')->willReturn(1);
         $repo->method('Guardar')->willReturn(true);
-        $repo->expects($this->never())->method('Eliminar');
-        $repo->expects($this->never())->method('matching');
+        $filtros = null;
+        $repo->expects($this->once())->method('matching')->willReturnCallback(function (Criteria $c) use (&$filtros): array {
+            $filtros = DescribeCriteria::filtros($c);
+
+            return [];
+        });
 
         (new CasaEcGastosGuardar($repo))->execute(['id_ubi' => '1003', 'year' => '2026']);
+
+        $this->assertContains('id_ubi eq 1003', $filtros);
+        $this->assertContains('f_gasto between [2026-01-01,2026-12-31]', $filtros);
+    }
+
+    public function test_el_apunte_que_ya_existe_para_el_mes_y_tipo_se_actualiza_en_lugar_de_crear_otro(): void
+    {
+        $existente = $this->gastoExistente(500, 3, UbiGastoTipo::GASTO, 10.0);
+        $repo = $this->createMock(UbiGastoRepositoryInterface::class);
+        $repo->method('matching')->willReturn([$existente]);
+        $repo->expects($this->exactly(35))->method('getNewId')->willReturn(1);
+        $guardados = [];
+        $repo->method('Guardar')->willReturnCallback(function (UbiGasto $g) use (&$guardados): bool {
+            $guardados[] = $g;
+
+            return true;
+        });
+        $repo->expects($this->never())->method('Eliminar');
+
+        $r = (new CasaEcGastosGuardar($repo))->execute(['id_ubi' => '1003', 'year' => '2026', 'g3' => '25,5']);
+
+        $this->assertTrue($r['ok']);
+        $this->assertCount(36, $guardados);
+        $this->assertContains($existente, $guardados, 'se guarda el mismo apunte, no uno nuevo');
+        $this->assertSame(25.5, $existente->getCantidadVo()->value());
+    }
+
+    public function test_los_apuntes_repetidos_del_mismo_mes_y_tipo_se_borran_y_queda_uno(): void
+    {
+        $primero = $this->gastoExistente(500, 3, UbiGastoTipo::GASTO, 10.0);
+        $repetido = $this->gastoExistente(501, 3, UbiGastoTipo::GASTO, 10.0);
+        $otroRepetido = $this->gastoExistente(502, 3, UbiGastoTipo::GASTO, 10.0);
+        $repo = $this->createMock(UbiGastoRepositoryInterface::class);
+        $repo->method('matching')->willReturn([$primero, $repetido, $otroRepetido]);
+        $repo->method('getNewId')->willReturn(1);
+        $repo->method('Guardar')->willReturn(true);
+        $borrados = [];
+        $repo->method('Eliminar')->willReturnCallback(function (UbiGasto $g) use (&$borrados): bool {
+            $borrados[] = $g->getId_item();
+
+            return true;
+        });
+
+        $r = (new CasaEcGastosGuardar($repo))->execute(['id_ubi' => '1003', 'year' => '2026', 'g3' => '7']);
+
+        $this->assertTrue($r['ok']);
+        $this->assertSame([501, 502], $borrados);
+        $this->assertSame(7.0, $primero->getCantidadVo()->value());
+    }
+
+    public function test_si_falla_un_guardado_no_se_borran_los_repetidos(): void
+    {
+        $repo = $this->createMock(UbiGastoRepositoryInterface::class);
+        $repo->method('matching')->willReturn([
+            $this->gastoExistente(500, 3, UbiGastoTipo::GASTO, 10.0),
+            $this->gastoExistente(501, 3, UbiGastoTipo::GASTO, 10.0),
+        ]);
+        $repo->method('getNewId')->willReturn(1);
+        $repo->method('Guardar')->willReturn(false);
+        $repo->expects($this->never())->method('Eliminar');
+
+        $this->assertFalse((new CasaEcGastosGuardar($repo))->execute(['id_ubi' => '1003', 'year' => '2026'])['ok']);
+    }
+
+    public function test_si_falla_un_borrado_se_avisa(): void
+    {
+        $repo = $this->createMock(UbiGastoRepositoryInterface::class);
+        $repo->method('matching')->willReturn([
+            $this->gastoExistente(500, 3, UbiGastoTipo::GASTO, 10.0),
+            $this->gastoExistente(501, 3, UbiGastoTipo::GASTO, 10.0),
+        ]);
+        $repo->method('getNewId')->willReturn(1);
+        $repo->method('Guardar')->willReturn(true);
+        $repo->method('Eliminar')->willReturn(false);
+
+        $this->assertFalse((new CasaEcGastosGuardar($repo))->execute(['id_ubi' => '1003', 'year' => '2026'])['ok']);
     }
 
     public function test_un_fallo_de_guardado_corta_en_el_primer_apunte(): void

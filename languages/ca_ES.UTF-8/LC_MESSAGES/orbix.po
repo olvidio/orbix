@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-16 12:20+0100\n"
+"POT-Creation-Date: 2026-11-17 09:44+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -84,7 +84,6 @@ msgstr "error desconegut"
 #: frontend/certificados/view/certificado_emitido_lista.phtml:25
 #: frontend/certificados/view/certificado_emitido_lista.phtml:76
 #: frontend/certificados/view/certificado_emitido_lista.phtml:87
-#: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:20
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:13
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:24
 #: frontend/configuracion/view/modulos_select.phtml:13
@@ -179,7 +178,7 @@ msgstr "error desconegut"
 #: frontend/zonassacd/view/zona_sacd.phtml:84
 #: frontend/zonassacd/view/zona_sacd.phtml:89
 #: frontend/zonassacd/view/zona_sacd.phtml:116
-#: frontend/zonassacd/view/zona_sacd.phtml:132 public/portada.php:75
+#: frontend/zonassacd/view/zona_sacd.phtml:132 public/portada.php:76
 #: src/shared/domain/DatosTablaRepo.php:58
 msgid "respuesta"
 msgstr "resposta"
@@ -224,16 +223,16 @@ msgstr "assistent"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:79
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:73
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:98
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:99
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:94
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:96
 #: src/actividadcargos/domain/entity/Cargo.php:207
 msgid "cargo"
 msgstr "càrrec"
 
 #: frontend/actividadcargos/view/form_cargos_de_actividad.phtml:83
 #: frontend/actividadcargos/view/form_cargos_personas_en_actividad.phtml:77
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:100
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:101
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:96
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:98
 msgid "¿Puede ser agd?"
 msgstr "¿Pot ser agd?"
 
@@ -258,13 +257,13 @@ msgstr "¿Pot ser agd?"
 #: frontend/procesos/controller/actividad_proceso_get.php:31
 #: frontend/ubis/view/ctrdl_form.phtml:80
 #: frontend/ubis/view/teleco_form.phtml:25
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:101
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:102
-#: src/actividades/application/ActividadSelectListado.php:263
-#: src/actividades/application/ListaActivTabla.php:217
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:97
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:99
+#: src/actividades/application/ActividadSelectListado.php:265
+#: src/actividades/application/ListaActivTabla.php:219
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:156
-#: src/casas/application/CasaActividadesListaData.php:78
-#: src/casas/application/CasaIngresosListaData.php:72
+#: src/casas/application/CasaActividadesListaData.php:80
+#: src/casas/application/CasaIngresosListaData.php:74
 #: src/inventario/domain/entity/Documento.php:581
 #: src/personas/domain/entity/TelecoPersona.php:217
 #: src/personas/domain/entity/Traslado.php:298
@@ -314,12 +313,12 @@ msgstr "faltan datos obligatorios: actividad, persona y tipo de cargo."
 #: frontend/casas/view/casas_resumen_periodo.phtml:20
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:42
 #: frontend/notas/view/actividad_buscar_form.phtml:6
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:100
-#: src/actividades/application/ActividadSelectListado.php:250
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:97
+#: src/actividades/application/ActividadSelectListado.php:252
 #: src/actividades/application/ListaSrCsvListado.php:167
-#: src/actividadplazas/application/GestionPlazasData.php:244
+#: src/actividadplazas/application/GestionPlazasData.php:246
 #: src/actividadplazas/application/PlazasBalanceData.php:99
-#: src/asistentes/application/ListaEstCtrData.php:204
+#: src/asistentes/application/ListaEstCtrData.php:205
 #: src/cambios/domain/AvisoObjetoCatalog.php:39
 #: src/casas/application/PrevisionAsistentesData.php:63
 #: src/profesores/domain/entity/ProfesorDocenciaStgr.php:241
@@ -347,7 +346,7 @@ msgstr "activitat"
 #: frontend/menus/view/grupmenu_lista.phtml:22
 #: frontend/notas/view/acta_select.phtml:47
 #: frontend/notas/view/select_notas_de_una_persona.phtml:16
-#: frontend/procesos/controller/fases_activ_cambio.php:135
+#: frontend/procesos/controller/fases_activ_cambio.php:137
 #: frontend/ubis/view/list_ctr.phtml:30
 #: frontend/ubis/view/teleco_tabla.phtml:21
 #: frontend/ubis/view/ubis_tabla.phtml:6
@@ -672,7 +671,7 @@ msgstr ""
 msgid "atención"
 msgstr "atenció"
 
-#: frontend/actividades/controller/actividad_que.php:121
+#: frontend/actividades/controller/actividad_que.php:122
 #: frontend/actividades/controller/actividades_centro_que.php:127
 #: frontend/actividades/controller/lista_actividades_sg.php:137
 #: frontend/actividades/controller/lista_sr_csv_que.php:54
@@ -688,14 +687,14 @@ msgstr "atenció"
 #: frontend/casas/controller/prevision_asistentes.php:71
 #: frontend/inventario/controller/equipajes_nuevo.php:19
 #: frontend/notas/controller/acta_listado_anual.php:44
-#: frontend/pasarela/controller/exportar_que.php:74
+#: frontend/pasarela/controller/exportar_que.php:76
 #: frontend/planning/support/PeriodoPlanningHelper.php:24
-#: frontend/procesos/controller/fases_activ_cambio.php:77
+#: frontend/procesos/controller/fases_activ_cambio.php:79
 #: src/asistentes/application/QueCtrListaData.php:120
 msgid "todo el año"
 msgstr "tot l'any"
 
-#: frontend/actividades/controller/actividad_que.php:122
+#: frontend/actividades/controller/actividad_que.php:123
 #: frontend/actividades/controller/actividades_centro_que.php:128
 #: frontend/actividades/controller/lista_actividades_sg.php:138
 #: frontend/actividades/controller/lista_sr_csv_que.php:55
@@ -711,13 +710,13 @@ msgstr "tot l'any"
 #: frontend/casas/controller/prevision_asistentes.php:72
 #: frontend/inventario/controller/equipajes_nuevo.php:20
 #: frontend/notas/controller/acta_listado_anual.php:45
-#: frontend/pasarela/controller/exportar_que.php:75
+#: frontend/pasarela/controller/exportar_que.php:77
 #: frontend/planning/support/PeriodoPlanningHelper.php:25
-#: frontend/procesos/controller/fases_activ_cambio.php:78
+#: frontend/procesos/controller/fases_activ_cambio.php:80
 msgid "primer trimestre"
 msgstr "primer trimestre"
 
-#: frontend/actividades/controller/actividad_que.php:123
+#: frontend/actividades/controller/actividad_que.php:124
 #: frontend/actividades/controller/actividades_centro_que.php:129
 #: frontend/actividades/controller/lista_actividades_sg.php:139
 #: frontend/actividades/controller/lista_sr_csv_que.php:56
@@ -733,13 +732,13 @@ msgstr "primer trimestre"
 #: frontend/casas/controller/prevision_asistentes.php:73
 #: frontend/inventario/controller/equipajes_nuevo.php:21
 #: frontend/notas/controller/acta_listado_anual.php:46
-#: frontend/pasarela/controller/exportar_que.php:76
+#: frontend/pasarela/controller/exportar_que.php:78
 #: frontend/planning/support/PeriodoPlanningHelper.php:26
-#: frontend/procesos/controller/fases_activ_cambio.php:79
+#: frontend/procesos/controller/fases_activ_cambio.php:81
 msgid "segundo trimestre"
 msgstr "segon trimestre"
 
-#: frontend/actividades/controller/actividad_que.php:124
+#: frontend/actividades/controller/actividad_que.php:125
 #: frontend/actividades/controller/actividades_centro_que.php:130
 #: frontend/actividades/controller/lista_actividades_sg.php:140
 #: frontend/actividades/controller/lista_sr_csv_que.php:57
@@ -755,13 +754,13 @@ msgstr "segon trimestre"
 #: frontend/casas/controller/prevision_asistentes.php:74
 #: frontend/inventario/controller/equipajes_nuevo.php:22
 #: frontend/notas/controller/acta_listado_anual.php:47
-#: frontend/pasarela/controller/exportar_que.php:77
+#: frontend/pasarela/controller/exportar_que.php:79
 #: frontend/planning/support/PeriodoPlanningHelper.php:27
-#: frontend/procesos/controller/fases_activ_cambio.php:80
+#: frontend/procesos/controller/fases_activ_cambio.php:82
 msgid "tercer trimestre"
 msgstr "tercer trimestre"
 
-#: frontend/actividades/controller/actividad_que.php:125
+#: frontend/actividades/controller/actividad_que.php:126
 #: frontend/actividades/controller/actividades_centro_que.php:131
 #: frontend/actividades/controller/lista_actividades_sg.php:141
 #: frontend/actividades/controller/lista_sr_csv_que.php:58
@@ -777,13 +776,13 @@ msgstr "tercer trimestre"
 #: frontend/casas/controller/prevision_asistentes.php:75
 #: frontend/inventario/controller/equipajes_nuevo.php:23
 #: frontend/notas/controller/acta_listado_anual.php:48
-#: frontend/pasarela/controller/exportar_que.php:78
+#: frontend/pasarela/controller/exportar_que.php:80
 #: frontend/planning/support/PeriodoPlanningHelper.php:28
-#: frontend/procesos/controller/fases_activ_cambio.php:81
+#: frontend/procesos/controller/fases_activ_cambio.php:83
 msgid "cuarto trimestre"
 msgstr "quart trimestre"
 
-#: frontend/actividades/controller/actividad_que.php:127
+#: frontend/actividades/controller/actividad_que.php:128
 #: frontend/actividades/controller/actividades_centro_que.php:133
 #: frontend/actividades/controller/lista_actividades_sg.php:143
 #: frontend/actividades/controller/lista_sr_csv_que.php:60
@@ -796,7 +795,7 @@ msgstr "quart trimestre"
 msgid "curso ca"
 msgstr "curs ca"
 
-#: frontend/actividades/controller/actividad_que.php:128
+#: frontend/actividades/controller/actividad_que.php:129
 #: frontend/actividades/controller/actividades_centro_que.php:134
 #: frontend/actividades/controller/lista_actividades_sg.php:144
 #: frontend/actividades/controller/lista_sr_csv_que.php:61
@@ -806,7 +805,7 @@ msgstr "curs ca"
 msgid "curso crt"
 msgstr "curs crt"
 
-#: frontend/actividades/controller/actividad_que.php:130
+#: frontend/actividades/controller/actividad_que.php:131
 #: frontend/actividades/controller/actividades_centro_que.php:136
 #: frontend/actividades/controller/lista_actividades_sg.php:146
 #: frontend/actividades/controller/lista_sr_csv_que.php:63
@@ -827,22 +826,22 @@ msgstr "curs crt"
 #: frontend/misas/controller/preparar_plan_de_misas.php:20
 #: frontend/misas/controller/ver_plan_de_misas.php:22
 #: frontend/notas/controller/acta_listado_anual.php:52
-#: frontend/pasarela/controller/exportar_que.php:80
+#: frontend/pasarela/controller/exportar_que.php:82
 #: frontend/planning/support/PeriodoPlanningHelper.php:30
-#: frontend/procesos/controller/fases_activ_cambio.php:83
+#: frontend/procesos/controller/fases_activ_cambio.php:85
 #: src/asistentes/application/QueCtrListaData.php:122
 msgid "otro"
 msgstr "un altre"
 
-#: frontend/actividades/controller/actividad_que.php:171
+#: frontend/actividades/controller/actividad_que.php:172
 msgid "buscar actividad de otras dl para importar"
 msgstr "cercar activitat d'altres dl per importar"
 
-#: frontend/actividades/controller/actividad_que.php:174
+#: frontend/actividades/controller/actividad_que.php:175
 msgid "buscar actividades de mi dl para publicar"
 msgstr "buscar activitats de la meva dl per publicar"
 
-#: frontend/actividades/controller/actividad_que.php:177
+#: frontend/actividades/controller/actividad_que.php:178
 msgid "buscar actividad"
 msgstr "buscar activitat"
 
@@ -872,7 +871,57 @@ msgstr "tornar"
 msgid "no olvides ajustar el nombre de la actividad"
 msgstr "no oblidis ajustar el nom de l'activitat"
 
-#: frontend/actividades/controller/actividad_ver.php:114
+#: frontend/actividades/controller/actividad_tipo_nom_tipo_tabla.php:34
+#: frontend/actividades/view/tipo_activ_form_nuevo.phtml:10
+#: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:55
+#: frontend/encargossacd/controller/encargo_horario_select.php:75
+#: frontend/inventario/controller/doc_imprimir_dlb.php:44
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:268
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:301
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:314
+#: src/ubis/application/DireccionesTablaData.php:59
+msgid "id"
+msgstr "id"
+
+#: frontend/actividades/controller/actividad_tipo_nom_tipo_tabla.php:34
+#: frontend/actividades/view/tipo_activ_form_modificar.phtml:9
+#: frontend/actividades/view/tipo_activ_form_nuevo.phtml:11
+#: frontend/asistentes/view/lista_activ_ctr.phtml:18
+#: frontend/asistentes/view/lista_asistentes.phtml:15
+#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:20
+#: frontend/dbextern/view/ver_desaparecidos_de_listas.phtml:40
+#: frontend/dbextern/view/ver_desaparecidos_de_orbix.phtml:33
+#: frontend/dbextern/view/ver_listas.phtml:137
+#: frontend/dbextern/view/ver_listas.phtml:165
+#: frontend/dbextern/view/ver_orbix.phtml:64
+#: frontend/dbextern/view/ver_orbix.phtml:96
+#: frontend/dbextern/view/ver_traslados.phtml:37
+#: frontend/inventario/controller/equipajes_doc_casa.php:30
+#: frontend/personas/view/personas_que.phtml:39
+#: frontend/planning/view/planning_persona_que.phtml:40
+#: frontend/profesores/view/ficha_profesor_stgr.print.phtml:24
+#: frontend/usuarios/view/grupo_form.phtml:25
+#: frontend/usuarios/view/grupo_lista.phtml:57
+#: frontend/usuarios/view/role_form.phtml:60
+#: frontend/usuarios/view/usuario_lista.phtml:42
+#: src/asistentes/application/ListaEstCtrData.php:204
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
+#: src/asistentes/application/Select_actividades_de_una_persona.php:125
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
+#: src/asistentes/application/TablaPeticionesData.php:71
+#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
+#: src/configuracion/application/ModulosSelectData.php:53
+#: src/configuracion/domain/entity/ModuloInstalado.php:83
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:268
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:301
+#: src/notas/application/ResiduoOtraRegionComprobarData.php:315
+#: src/pasarela/application/ExportarActividadesData.php:125
+#: src/ubiscamas/application/HabitacionesCamaLista.php:98
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:63
+msgid "nombre"
+msgstr "nom"
+
+#: frontend/actividades/controller/actividad_ver.php:115
 #: frontend/personas/controller/personas_select.php:122
 #: frontend/personas/view/_persona_header.phtml:24
 #: frontend/personas/view/home_persona.phtml:19
@@ -884,7 +933,7 @@ msgstr "no oblidis ajustar el nom de l'activitat"
 msgid "ver dossiers"
 msgstr "veure dossiers"
 
-#: frontend/actividades/controller/actividad_ver.php:115
+#: frontend/actividades/controller/actividad_ver.php:116
 #: frontend/personas/view/_persona_header.phtml:24
 #: frontend/personas/view/home_persona.phtml:19
 #: frontend/personas/view/traslado_form.phtml:56
@@ -895,9 +944,9 @@ msgstr "veure dossiers"
 msgid "dossiers"
 msgstr "dossiers"
 
-#: frontend/actividades/controller/actividad_ver.php:238
-#: frontend/actividades/controller/actividad_ver.php:260
-#: frontend/actividades/controller/actividad_ver.php:265
+#: frontend/actividades/controller/actividad_ver.php:239
+#: frontend/actividades/controller/actividad_ver.php:261
+#: frontend/actividades/controller/actividad_ver.php:266
 #: src/actividades/application/ActividadNueva.php:98
 msgid "No tiene permiso para crear una actividad de este tipo"
 msgstr "No té permís per crear una activitat d'aquest tipus"
@@ -994,6 +1043,52 @@ msgstr "nova activitat"
 #: frontend/actividades/controller/tipo_activ.php:34
 msgid "¿Está seguro que quiere eliminar este tipo de actividad?"
 msgstr "Està segur que vol eliminar aquest tipus d'activitat?"
+
+#: frontend/actividades/controller/tipo_activ_lista.php:23
+#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: frontend/cambios/controller/usuario_form_avisos.php:53
+#: frontend/encargossacd/controller/encargo_horario_select.php:70
+#: frontend/encargossacd/controller/encargo_select.php:60
+#: frontend/inventario/controller/documentos_form.php:30
+#: frontend/menus/controller/grupmenu_lista.php:41
+#: frontend/menus/view/traducir_menu.phtml:364
+#: frontend/notas/controller/acta_select.php:69
+#: frontend/notas/controller/acta_select.php:74
+#: frontend/procesos/controller/procesos_get_listado.php:24
+#: frontend/procesos/controller/procesos_get_listado.php:38
+#: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:68
+#: src/actividadestudios/application/Select_matriculas_de_una_persona.php:101
+#: src/actividadtarifas/application/RelacionTarifaListaData.php:64
+#: src/actividadtarifas/application/TipoTarifaListaData.php:59
+#: src/certificados/domain/CertificadoEmitidoSelect.php:58
+#: src/configuracion/application/ModulosSelectData.php:48
+#: src/shared/domain/DatosTablaRepo.php:126
+#: src/ubis/application/ListCtrData.php:337
+#: src/ubis/application/TelecoTablaData.php:113
+#: src/ubis/application/UbisTablaData.php:109
+#: src/usuarios/application/rolesLista.php:66
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
+#: src/zonassacd/application/ZonaSacdLista.php:124
+msgid "modificar"
+msgstr "modificar"
+
+#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: src/actividades/domain/entity/ActividadAllDatosCampos.php:52
+#: src/procesos/application/TipoActivProcesoLista.php:43
+msgid "id_tipo_activ"
+msgstr "id_tipo_activ"
+
+#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: src/actividades/application/CalendarioListasDatos.php:341
+#: src/actividades/application/CalendarioListasDatos.php:353
+#: src/actividades/application/ListaActivTabla.php:211
+#: src/actividades/application/ListaSrCsvListado.php:168
+#: src/actividadtarifas/application/RelacionTarifaListaData.php:72
+#: src/asistentes/application/ListaUltimaActivData.php:269
+#: src/casas/application/CasaActividadesListaData.php:75
+#: src/procesos/application/TipoActivProcesoLista.php:44
+msgid "tipo actividad"
+msgstr "tipus d'activitat"
 
 #: frontend/actividades/helpers/ActividadesPayload.php:60
 msgid "No se encuentra la actividad"
@@ -1132,10 +1227,10 @@ msgstr "segons dl or"
 #: frontend/notas/view/acta_ver.phtml:154
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:56
 #: src/actividades/application/ActividadQueFiltrosBloque.php:94
-#: src/actividades/application/ListaActivTabla.php:210
-#: src/actividades/application/ListaActividadesSgListado.php:128
+#: src/actividades/application/ListaActivTabla.php:212
+#: src/actividades/application/ListaActividadesSgListado.php:130
 #: src/actividades/application/ListaSrCsvListado.php:169
-#: src/casas/application/CasaActividadesListaData.php:74
+#: src/casas/application/CasaActividadesListaData.php:76
 #: src/inventario/domain/entity/Documento.php:544
 #: src/inventario/domain/entity/Equipaje.php:293
 #: src/inventario/domain/entity/Lugar.php:116
@@ -1175,7 +1270,7 @@ msgstr "ha d'escriure un lloc"
 
 #: frontend/actividades/view/actividad_select_ubi.phtml:264
 #: src/actividades/application/ActividadVerDatos.php:155
-#: src/actividades/application/ListaActividadesSgListado.php:236
+#: src/actividades/application/ListaActividadesSgListado.php:238
 msgid "sin determinar"
 msgstr "sense determinar"
 
@@ -1184,6 +1279,101 @@ msgstr "sense determinar"
 msgid "¿Está seguro de borrar los datos económicos de esta actividad?"
 msgstr ""
 "Esteu segur que voleu suprimir les dades econòmiques d'aquesta activitat?"
+
+#: frontend/actividades/view/tipo_activ_form_modificar.phtml:11
+#: frontend/actividades/view/tipo_activ_form_nuevo.phtml:13
+#: frontend/actividadessacd/view/com_sacd_txt.phtml:24
+#: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:141
+#: frontend/actividadestudios/view/form_matriculas_de_una_persona.phtml:134
+#: frontend/actividadplazas/view/resumen_plazas.phtml:142
+#: frontend/actividadtarifas/view/tarifa_form.phtml:34
+#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:42
+#: frontend/asistentes/view/asistente_mover.phtml:23
+#: frontend/asistentes/view/form_actividades_de_una_persona.phtml:126
+#: frontend/cambios/view/usuario_avisos_pref.phtml:255
+#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:62
+#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:35
+#: frontend/casas/controller/casa_ingreso_form.php:55
+#: frontend/casas/view/casa_ec_gastos_lista.phtml:59
+#: frontend/casas/view/grupo_form.phtml:27
+#: frontend/encargossacd/view/ctr_get_ficha.phtml:126
+#: frontend/encargossacd/view/listas_com_txt.phtml:49
+#: frontend/encargossacd/view/sacd_ausencias_get.phtml:94
+#: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:142
+#: frontend/inventario/controller/documentos_form.php:51
+#: frontend/inventario/view/cabecera_pie_txt.phtml:59
+#: frontend/inventario/view/doc_asignar_ctr.phtml:37
+#: frontend/inventario/view/doc_asignar_dlb.phtml:37
+#: frontend/inventario/view/equipajes_form_nuevo.phtml:7
+#: frontend/inventario/view/equipajes_form_texto_listado.phtml:7
+#: frontend/menus/view/menus_exportar_form.phtml:35
+#: frontend/menus/view/menus_get.phtml:61
+#: frontend/misas/view/horario_tarea.phtml:20
+#: frontend/notas/view/actividad_buscar_form.phtml:9
+#: frontend/notas/view/form_notas_de_una_persona.phtml:459
+#: frontend/personas/view/stgr_cambio.phtml:33
+#: frontend/procesos/controller/actividad_proceso_get.php:64
+#: frontend/shared/view/tablaDB_formulario.phtml:178
+#: frontend/ubis/controller/calendario_periodos_form_periodo.php:31
+#: frontend/ubis/controller/calendario_periodos_nuevo.php:33
+#: frontend/ubis/controller/centros_form_labor.php:38
+#: frontend/ubis/controller/centros_form_num.php:34
+#: frontend/ubis/controller/centros_form_plazas.php:39
+#: frontend/usuarios/view/perm_menu_form.phtml:40
+msgid "guardar"
+msgstr "guardar"
+
+#: frontend/actividades/view/tipo_activ_form_modificar.phtml:12
+#: frontend/actividadtarifas/view/tarifa_form.phtml:36
+#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:44
+#: frontend/cambios/controller/usuario_form_avisos.php:54
+#: frontend/cambios/view/avisos_generar_lista.phtml:26
+#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:63
+#: frontend/casas/controller/casa_ingreso_form.php:56
+#: frontend/dossiers/view/perm_dossier_pres.phtml:108
+#: frontend/encargossacd/controller/encargo_horario_select.php:71
+#: frontend/encargossacd/controller/encargo_select.php:61
+#: frontend/menus/view/menus_get.phtml:73
+#: frontend/notas/controller/acta_select.php:73
+#: frontend/personas/view/_persona_form_botones.phtml:24
+#: frontend/procesos/controller/procesos_get_listado.php:24
+#: frontend/procesos/controller/procesos_get_listado.php:40
+#: frontend/ubis/controller/calendario_periodos_form_periodo.php:32
+#: frontend/ubis/view/cdc_form.phtml:107
+#: frontend/ubis/view/ctrdl_form.phtml:128
+#: frontend/ubis/view/ctrex_form.phtml:96
+#: src/casas/application/GrupoCasaListaData.php:60
+#: src/certificados/domain/CertificadoEmitidoSelect.php:57
+#: src/certificados/domain/Select_certificados_de_una_persona.php:52
+#: src/configuracion/application/ModulosSelectData.php:49
+#: src/shared/domain/DatosTablaRepo.php:127
+#: src/ubis/application/TelecoTablaData.php:114
+#: src/ubis/application/UbisTablaData.php:112
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
+msgid "eliminar"
+msgstr "eliminar"
+
+#: frontend/actividades/view/tipo_activ_form_modificar.phtml:13
+#: frontend/actividades/view/tipo_activ_form_nuevo.phtml:14
+#: frontend/actividadtarifas/view/tarifa_form.phtml:38
+#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:46
+#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:64
+#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:36
+#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:40
+#: frontend/casas/controller/casa_ingreso_form.php:57
+#: frontend/casas/view/casa_ec_gastos_lista.phtml:61
+#: frontend/inventario/controller/documentos_form.php:52
+#: frontend/inventario/view/equipajes_form_add.phtml:9
+#: frontend/inventario/view/equipajes_form_nuevo.phtml:8
+#: frontend/inventario/view/equipajes_form_texto_listado.phtml:8
+#: frontend/notas/view/actividad_buscar_form.phtml:10
+#: frontend/ubis/controller/calendario_periodos_form_periodo.php:33
+#: frontend/ubis/controller/calendario_periodos_nuevo.php:34
+#: frontend/ubis/controller/centros_form_labor.php:39
+#: frontend/ubis/controller/centros_form_num.php:35
+#: frontend/ubis/controller/centros_form_plazas.php:40
+msgid "cancel"
+msgstr "cancel"
 
 #: frontend/actividadescentro/controller/activ_ctr.php:53
 #: frontend/actividadessacd/controller/activ_sacd.php:37
@@ -1212,10 +1402,10 @@ msgstr "- prioritat"
 #: frontend/personas/view/personas_que.phtml:33
 #: frontend/ubis/controller/calendario_periodos_get.php:53
 #: frontend/ubis/view/direcciones_que.phtml:7
-#: src/actividades/application/ActividadSelectListado.php:211
+#: src/actividades/application/ActividadSelectListado.php:213
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:689
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:703
-#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:65
+#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:76
 #: src/usuarios/application/GruposLista.php:36
 #: src/usuarios/application/rolesLista.php:73
 #: src/usuarios/application/usuariosLista.php:69
@@ -1244,13 +1434,13 @@ msgstr "esborrar"
 #: frontend/ubis/controller/centros_form_plazas.php:31
 #: frontend/ubis/view/ubis_buscar.phtml:200
 #: frontend/usuarios/view/usuario_form.phtml:40
-#: src/actividades/application/ActividadSelectListado.php:262
-#: src/actividades/application/ListaActivTabla.php:214
+#: src/actividades/application/ActividadSelectListado.php:264
+#: src/actividades/application/ListaActivTabla.php:216
 #: src/actividades/application/ListaSrCsvListado.php:170
 #: src/actividadescentro/domain/entity/CentroEncargado.php:136
-#: src/asistentes/application/ListaUltimaActivData.php:268
+#: src/asistentes/application/ListaUltimaActivData.php:267
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:247
-#: src/casas/application/CasaActividadesListaData.php:76
+#: src/casas/application/CasaActividadesListaData.php:78
 #: src/inventario/application/DocumentosPorTipoData.php:78
 #: src/inventario/view/buscarDocsxCtr.phtml:7
 #: src/notas/application/TablaAlumnosAsignaturas.php:184
@@ -1374,11 +1564,11 @@ msgstr "títol: nom_tipus"
 #: frontend/planning/controller/planning_persona_que.php:97
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:28
 #: frontend/usuarios/view/usuario_form.phtml:30
-#: src/actividades/application/ActividadSelectListado.php:259
-#: src/actividades/application/ListaActivTabla.php:216
-#: src/actividades/application/ListaActividadesSgListado.php:130
+#: src/actividades/application/ActividadSelectListado.php:261
+#: src/actividades/application/ListaActivTabla.php:218
+#: src/actividades/application/ListaActividadesSgListado.php:132
 #: src/cambios/domain/AvisoObjetoCatalog.php:40
-#: src/casas/application/CasaActividadesListaData.php:77
+#: src/casas/application/CasaActividadesListaData.php:79
 #: src/encargossacd/application/SacdSelectData.php:39
 #: src/encargossacd/application/SacdSelectData.php:50
 #: src/zonassacd/application/ZonaSacdLista.php:130
@@ -1549,49 +1739,6 @@ msgstr "Sacd de pas"
 msgid "textos para las comunicaciones de las actividades"
 msgstr "textos per a la comunicació de les activitats"
 
-#: frontend/actividadessacd/view/com_sacd_txt.phtml:24
-#: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:141
-#: frontend/actividadestudios/view/form_matriculas_de_una_persona.phtml:134
-#: frontend/actividadplazas/view/resumen_plazas.phtml:142
-#: frontend/actividadtarifas/view/tarifa_form.phtml:34
-#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:42
-#: frontend/asistentes/view/asistente_mover.phtml:23
-#: frontend/asistentes/view/form_actividades_de_una_persona.phtml:126
-#: frontend/cambios/view/usuario_avisos_pref.phtml:255
-#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:62
-#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:35
-#: frontend/casas/controller/casa_ingreso_form.php:55
-#: frontend/casas/view/casa_ec_gastos_lista.phtml:59
-#: frontend/casas/view/grupo_form.phtml:27
-#: frontend/encargossacd/view/ctr_get_ficha.phtml:126
-#: frontend/encargossacd/view/listas_com_txt.phtml:49
-#: frontend/encargossacd/view/sacd_ausencias_get.phtml:94
-#: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:142
-#: frontend/inventario/controller/documentos_form.php:51
-#: frontend/inventario/view/cabecera_pie_txt.phtml:59
-#: frontend/inventario/view/doc_asignar_ctr.phtml:37
-#: frontend/inventario/view/doc_asignar_dlb.phtml:37
-#: frontend/inventario/view/equipajes_form_nuevo.phtml:7
-#: frontend/inventario/view/equipajes_form_texto_listado.phtml:7
-#: frontend/menus/view/menus_exportar_form.phtml:35
-#: frontend/menus/view/menus_get.phtml:61
-#: frontend/misas/view/horario_tarea.phtml:20
-#: frontend/notas/view/actividad_buscar_form.phtml:9
-#: frontend/notas/view/form_notas_de_una_persona.phtml:459
-#: frontend/personas/view/stgr_cambio.phtml:33
-#: frontend/procesos/controller/actividad_proceso_get.php:64
-#: frontend/shared/view/tablaDB_formulario.phtml:178
-#: frontend/ubis/controller/calendario_periodos_form_periodo.php:31
-#: frontend/ubis/controller/calendario_periodos_nuevo.php:33
-#: frontend/ubis/controller/centros_form_labor.php:38
-#: frontend/ubis/controller/centros_form_num.php:34
-#: frontend/ubis/controller/centros_form_plazas.php:39
-#: frontend/usuarios/view/perm_menu_form.phtml:40
-#: src/actividades/application/TipoActivFormModificar.php:38
-#: src/actividades/application/TipoActivFormNuevo.php:41
-msgid "guardar"
-msgstr "guardar"
-
 #: frontend/actividadessacd/view/com_sacd_txt.phtml:26
 msgid "texto guardado"
 msgstr "text guardat"
@@ -1612,7 +1759,7 @@ msgid "periodo de selección de actividades"
 msgstr "període de selecció d'activitats"
 
 #: frontend/actividadestudios/controller/ca_posibles.php:62
-#: src/actividadestudios/application/CaPosiblesData.php:110
+#: src/actividadestudios/application/CaPosiblesData.php:112
 msgid "debe seleccionar un centro o grupo de centros"
 msgstr "ha de seleccionar un centre o grup de centres"
 
@@ -1640,7 +1787,7 @@ msgstr "període de les activitats"
 #: frontend/notas/controller/asig_faltan_select.php:86
 #: frontend/personas/controller/personas_select.php:211
 #: frontend/planning/controller/planning_persona_select.php:138
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:99
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:95
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:259
 msgid "nombre y apellidos"
 msgstr "nom i cognoms"
@@ -1793,28 +1940,16 @@ msgstr "alerta"
 #: frontend/menus/view/traducir_menu.phtml:219
 #: frontend/notas/controller/asig_faltan_select.php:89
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:47
-#: src/actividades/application/ActividadSelectListado.php:202
-#: src/actividades/application/ActividadSelectListado.php:231
+#: src/actividades/application/ActividadSelectListado.php:204
+#: src/actividades/application/ActividadSelectListado.php:233
 #: src/asignaturas/domain/InfoAsignaturas.php:19
-#: src/asistentes/application/ListaEstCtrData.php:205
+#: src/asistentes/application/ListaEstCtrData.php:206
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:268
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:615
 msgid "asignaturas"
 msgstr "assignatures"
-
-#: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:55
-#: frontend/encargossacd/controller/encargo_horario_select.php:75
-#: frontend/inventario/controller/doc_imprimir_dlb.php:44
-#: src/actividades/application/ActividadTipoGetNomTipoTabla.php:25
-#: src/actividades/application/TipoActivFormNuevo.php:38
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:268
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:301
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:314
-#: src/ubis/application/DireccionesTablaData.php:59
-msgid "id"
-msgstr "id"
 
 #: frontend/actividadestudios/controller/matriculas_lista_otras_r.php:58
 #: src/actividadestudios/application/MatriculasListaOtrasRData.php:58
@@ -1906,7 +2041,7 @@ msgstr "quadrienni"
 
 #: frontend/actividadestudios/view/ca_posibles_cuadro.phtml:31
 #: src/actividadestudios/application/PlanEstudiosCaData.php:169
-#: src/asistentes/application/ListaEstCtrData.php:154
+#: src/asistentes/application/ListaEstCtrData.php:155
 msgid "repaso"
 msgstr "repàs"
 
@@ -2065,7 +2200,7 @@ msgstr "altres de pas"
 #: frontend/personas/view/traslado_form.phtml:69
 #: frontend/planning/controller/planning_persona_select.php:137
 #: frontend/ubis/view/ubis_buscar.phtml:180
-#: src/actividades/application/ListaActividadesSgListado.php:126
+#: src/actividades/application/ListaActividadesSgListado.php:128
 #: src/actividades/domain/entity/Repeticion.php:271
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:81
 #: src/asignaturas/domain/entity/Asignatura.php:553
@@ -2171,8 +2306,8 @@ msgstr "preceptors"
 
 #: frontend/actividadestudios/view/plan_estudios_ca.phtml:38
 #: frontend/casas/controller/casa_ingreso_form.php:51
-#: src/actividades/application/ActividadSelectListado.php:219
-#: src/actividades/application/ListaActividadesSgListado.php:117
+#: src/actividades/application/ActividadSelectListado.php:221
+#: src/actividades/application/ListaActividadesSgListado.php:119
 msgid "asistentes"
 msgstr "assistents"
 
@@ -2327,7 +2462,7 @@ msgstr "ULL! Aquesta activitat no està publicada"
 #: frontend/actividadplazas/view/resumen_plazas.phtml:47
 #: frontend/ubis/controller/centros_form_plazas.php:34
 #: frontend/ubis/view/cdc_form.phtml:78 frontend/ubis/view/ctrdl_form.phtml:112
-#: src/actividades/application/ActividadSelectListado.php:224
+#: src/actividades/application/ActividadSelectListado.php:226
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:213
 #: src/casas/application/PrevisionAsistentesData.php:64
 #: src/ubis/application/CentrosGetPlazasData.php:46
@@ -2361,7 +2496,7 @@ msgstr "aconseguides"
 #: frontend/actividadplazas/view/resumen_plazas.phtml:56
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:95
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:104
-#: src/actividadplazas/application/GestionPlazasData.php:247
+#: src/actividadplazas/application/GestionPlazasData.php:249
 #: src/actividadtarifas/domain/value_objects/TarifaModoId.php:16
 msgid "total"
 msgstr "total"
@@ -2371,7 +2506,7 @@ msgstr "total"
 #: frontend/casas/view/casas_resumen_periodo.phtml:66
 #: frontend/casas/view/casas_resumen_periodo.phtml:80
 #: frontend/casas/view/casas_resumen_periodo.phtml:102
-#: src/casas/application/CasaIngresosListaData.php:282
+#: src/casas/application/CasaIngresosListaData.php:284
 msgid "totales"
 msgstr "totals"
 
@@ -2440,58 +2575,6 @@ msgstr "lletra"
 #: src/profesores/application/DocenciaLista.php:41
 msgid "modo"
 msgstr "manera"
-
-#: frontend/actividadtarifas/view/tarifa_form.phtml:36
-#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:44
-#: frontend/cambios/controller/usuario_form_avisos.php:54
-#: frontend/cambios/view/avisos_generar_lista.phtml:26
-#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:63
-#: frontend/casas/controller/casa_ingreso_form.php:56
-#: frontend/dossiers/view/perm_dossier_pres.phtml:108
-#: frontend/encargossacd/controller/encargo_horario_select.php:71
-#: frontend/encargossacd/controller/encargo_select.php:61
-#: frontend/menus/view/menus_get.phtml:73
-#: frontend/notas/controller/acta_select.php:73
-#: frontend/personas/view/_persona_form_botones.phtml:24
-#: frontend/procesos/controller/procesos_get_listado.php:24
-#: frontend/procesos/controller/procesos_get_listado.php:40
-#: frontend/ubis/controller/calendario_periodos_form_periodo.php:32
-#: frontend/ubis/view/cdc_form.phtml:107
-#: frontend/ubis/view/ctrdl_form.phtml:128
-#: frontend/ubis/view/ctrex_form.phtml:96
-#: src/actividades/application/TipoActivFormModificar.php:39
-#: src/casas/application/GrupoCasaListaData.php:60
-#: src/certificados/domain/CertificadoEmitidoSelect.php:57
-#: src/certificados/domain/Select_certificados_de_una_persona.php:52
-#: src/configuracion/application/ModulosSelectData.php:49
-#: src/shared/domain/DatosTablaRepo.php:127
-#: src/ubis/application/TelecoTablaData.php:114
-#: src/ubis/application/UbisTablaData.php:112
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
-msgid "eliminar"
-msgstr "eliminar"
-
-#: frontend/actividadtarifas/view/tarifa_form.phtml:38
-#: frontend/actividadtarifas/view/tarifa_ubi_form.phtml:46
-#: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:64
-#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:36
-#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:40
-#: frontend/casas/controller/casa_ingreso_form.php:57
-#: frontend/casas/view/casa_ec_gastos_lista.phtml:61
-#: frontend/inventario/controller/documentos_form.php:52
-#: frontend/inventario/view/equipajes_form_add.phtml:9
-#: frontend/inventario/view/equipajes_form_nuevo.phtml:8
-#: frontend/inventario/view/equipajes_form_texto_listado.phtml:8
-#: frontend/notas/view/actividad_buscar_form.phtml:10
-#: frontend/ubis/controller/calendario_periodos_form_periodo.php:33
-#: frontend/ubis/controller/calendario_periodos_nuevo.php:34
-#: frontend/ubis/controller/centros_form_labor.php:39
-#: frontend/ubis/controller/centros_form_num.php:35
-#: frontend/ubis/controller/centros_form_plazas.php:40
-#: src/actividades/application/TipoActivFormModificar.php:40
-#: src/actividades/application/TipoActivFormNuevo.php:42
-msgid "cancel"
-msgstr "cancel"
 
 #: frontend/actividadtarifas/view/tarifa_tipo_actividad.phtml:25
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:35
@@ -2607,44 +2690,6 @@ msgstr "guardar dades de l'assistent"
 msgid "guardar y añadir otro asistente"
 msgstr "guardar i afegir un altre assistent"
 
-#: frontend/asistentes/view/lista_activ_ctr.phtml:18
-#: frontend/asistentes/view/lista_asistentes.phtml:15
-#: frontend/cartaspresentacion/view/cartas_presentacion_form.phtml:20
-#: frontend/dbextern/view/ver_desaparecidos_de_listas.phtml:40
-#: frontend/dbextern/view/ver_desaparecidos_de_orbix.phtml:33
-#: frontend/dbextern/view/ver_listas.phtml:137
-#: frontend/dbextern/view/ver_listas.phtml:165
-#: frontend/dbextern/view/ver_orbix.phtml:64
-#: frontend/dbextern/view/ver_orbix.phtml:96
-#: frontend/dbextern/view/ver_traslados.phtml:37
-#: frontend/inventario/controller/equipajes_doc_casa.php:30
-#: frontend/personas/view/personas_que.phtml:39
-#: frontend/planning/view/planning_persona_que.phtml:40
-#: frontend/profesores/view/ficha_profesor_stgr.print.phtml:24
-#: frontend/usuarios/view/grupo_form.phtml:25
-#: frontend/usuarios/view/grupo_lista.phtml:57
-#: frontend/usuarios/view/role_form.phtml:60
-#: frontend/usuarios/view/usuario_lista.phtml:42
-#: src/actividades/application/ActividadTipoGetNomTipoTabla.php:25
-#: src/actividades/application/TipoActivFormModificar.php:36
-#: src/actividades/application/TipoActivFormNuevo.php:39
-#: src/asistentes/application/ListaEstCtrData.php:203
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
-#: src/asistentes/application/Select_actividades_de_una_persona.php:125
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
-#: src/asistentes/application/TablaPeticionesData.php:71
-#: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
-#: src/configuracion/application/ModulosSelectData.php:53
-#: src/configuracion/domain/entity/ModuloInstalado.php:83
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:268
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:301
-#: src/notas/application/ResiduoOtraRegionComprobarData.php:315
-#: src/pasarela/application/ExportarActividadesData.php:125
-#: src/ubiscamas/application/HabitacionesCamaLista.php:98
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:63
-msgid "nombre"
-msgstr "nom"
-
 #: frontend/asistentes/view/lista_activ_ctr.phtml:19
 msgid "actividades previstas"
 msgstr "activitats previstes"
@@ -2749,8 +2794,8 @@ msgid "añadir actividad de otra dl"
 msgstr "afegir activitat d'altres dl"
 
 #: frontend/asistentes/view/select_asistentes_a_una_actividad.phtml:163
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:132
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:157
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:128
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:151
 msgid "¿Está seguro que desea quitar este cargo a esta persona?"
 msgstr "Esteu segur que voleu treure aquest càrrec a aquesta persona?"
 
@@ -2777,17 +2822,17 @@ msgid "añadir asistente de otra dl"
 msgstr "afegir assistent d’una altra dl"
 
 #: frontend/cambios/controller/avisos_generar.php:123
-#: src/cambios/application/AvisosEncolarMails.php:194
+#: src/cambios/application/AvisosEncolarMails.php:193
 msgid "fecha cambio"
 msgstr "data canvi"
 
 #: frontend/cambios/controller/avisos_generar.php:124
-#: src/cambios/application/AvisosEncolarMails.php:195
+#: src/cambios/application/AvisosEncolarMails.php:194
 msgid "quien"
 msgstr "qui"
 
 #: frontend/cambios/controller/avisos_generar.php:125
-#: src/cambios/application/AvisosEncolarMails.php:196
+#: src/cambios/application/AvisosEncolarMails.php:195
 msgid "cambio"
 msgstr "canvi"
 
@@ -2837,7 +2882,7 @@ msgid "dl propia"
 msgstr "dl_propia"
 
 #: frontend/cambios/controller/usuario_form_avisos.php:43
-#: src/casas/application/CasaIngresosListaData.php:63
+#: src/casas/application/CasaIngresosListaData.php:65
 #: src/personas/domain/entity/UltimaAsistencia.php:156
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:52
 msgid "tipo de actividad"
@@ -2868,34 +2913,6 @@ msgstr "propietats"
 #: frontend/inventario/controller/documentos_form.php:30
 msgid "valor"
 msgstr "valor"
-
-#: frontend/cambios/controller/usuario_form_avisos.php:53
-#: frontend/encargossacd/controller/encargo_horario_select.php:70
-#: frontend/encargossacd/controller/encargo_select.php:60
-#: frontend/inventario/controller/documentos_form.php:30
-#: frontend/menus/controller/grupmenu_lista.php:41
-#: frontend/menus/view/traducir_menu.phtml:364
-#: frontend/notas/controller/acta_select.php:69
-#: frontend/notas/controller/acta_select.php:74
-#: frontend/procesos/controller/procesos_get_listado.php:24
-#: frontend/procesos/controller/procesos_get_listado.php:38
-#: src/actividades/application/TipoActivLista.php:35
-#: src/actividades/application/TipoActivLista.php:47
-#: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:68
-#: src/actividadestudios/application/Select_matriculas_de_una_persona.php:101
-#: src/actividadtarifas/application/RelacionTarifaListaData.php:64
-#: src/actividadtarifas/application/TipoTarifaListaData.php:59
-#: src/certificados/domain/CertificadoEmitidoSelect.php:58
-#: src/configuracion/application/ModulosSelectData.php:48
-#: src/shared/domain/DatosTablaRepo.php:126
-#: src/ubis/application/ListCtrData.php:337
-#: src/ubis/application/TelecoTablaData.php:113
-#: src/ubis/application/UbisTablaData.php:109
-#: src/usuarios/application/rolesLista.php:66
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
-#: src/zonassacd/application/ZonaSacdLista.php:124
-msgid "modificar"
-msgstr "modificar"
 
 #: frontend/cambios/view/avisos_generar.phtml:31
 #: src/cambios/application/CambioUsuarioEliminarHastaFecha.php:31
@@ -2972,12 +2989,13 @@ msgid "debe indicar la fase de referencia"
 msgstr "ha d'indicar la fase de referència"
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:53
+#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:63
 msgid "debe indicar por dónde avisar"
 msgstr "ha d'indicar on s'ha d'avisar"
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:71
 #: frontend/cambios/view/usuario_avisos_pref.phtml:90
-#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:113
+#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:122
 #: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:118
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
@@ -3069,6 +3087,7 @@ msgid "opciones"
 msgstr "opcions"
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:232
+#: src/cambios/application/CambioUsuarioObjetoPrefPropiedadesData.php:123
 msgid "ver cambios sólo de las casas"
 msgstr "visualitza només els canvis a la casa"
 
@@ -3250,10 +3269,10 @@ msgid "id_tarifa"
 msgstr "id_tarifa"
 
 #: frontend/casas/controller/casa_ingreso_form.php:45
-#: src/actividades/application/ListaActividadesSgListado.php:131
+#: src/actividades/application/ListaActividadesSgListado.php:133
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:120
 #: src/actividadtarifas/application/TarifaUbiListaData.php:137
-#: src/casas/application/CasaIngresosListaData.php:64
+#: src/casas/application/CasaIngresosListaData.php:66
 msgid "precio"
 msgstr "preu"
 
@@ -3262,7 +3281,7 @@ msgid "Ingreso"
 msgstr "Ingrés"
 
 #: frontend/casas/controller/casa_ingreso_form.php:50
-#: src/casas/application/CasaIngresosListaData.php:69
+#: src/casas/application/CasaIngresosListaData.php:71
 msgid "ingresos reales"
 msgstr "ingressos reales"
 
@@ -3300,9 +3319,9 @@ msgid "oficina"
 msgstr "oficina"
 
 #: frontend/casas/controller/prevision_asistentes.php:122
-#: src/actividades/application/ListaActivTabla.php:171
-#: src/actividades/application/ListaSrCsvListado.php:230
-#: src/actividadessacd/application/ListaActividadesSacdData.php:184
+#: src/actividades/application/ListaActivTabla.php:173
+#: src/actividades/application/ListaSrCsvListado.php:223
+#: src/actividadessacd/application/ListaActividadesSacdData.php:186
 msgid "listado de actividades"
 msgstr "llistat d'activitats"
 
@@ -3312,8 +3331,8 @@ msgid "listado de actividades de %s"
 msgstr "llistat d'activitats de %s"
 
 #: frontend/casas/controller/prevision_asistentes.php:127
-#: src/actividades/application/ActividadSelectListado.php:562
-#: src/asistentes/application/ListaUltimaActivData.php:106
+#: src/actividades/application/ActividadSelectListado.php:564
+#: src/asistentes/application/ListaUltimaActivData.php:105
 #, php-format
 msgid "entre %s y %s"
 msgstr "entre %s i %s"
@@ -3706,17 +3725,14 @@ msgid "H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15"
 msgstr ""
 "H .*/15 |crESO .*/15 => tots els certificats H o crESO a partir del curs 15"
 
-#: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:10
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:10
 msgid "¿seguro que desea borrar el certificado?"
 msgstr "Esteu segur que voleu suprimir el certificat?"
 
-#: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:61
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:67
 msgid "relación de certificados"
 msgstr "relació de certificats"
 
-#: ⁨frontend/certificados/view/select_certificados _de_una_persona.phtml⁩:70
 #: frontend/certificados/view/select_certificados_de_una_persona.phtml:77
 msgid "adjuntar nuevo certificado"
 msgstr "adjuntar un nou certificat"
@@ -4392,7 +4408,7 @@ msgstr "sv"
 #: frontend/ubis/view/cdc_form.phtml:85
 #: frontend/usuarios/view/role_form.phtml:62
 #: src/actividadcargos/domain/entity/Cargo.php:241
-#: src/actividades/application/ListaActividadesSgListado.php:125
+#: src/actividades/application/ListaActividadesSgListado.php:127
 #: src/actividadtarifas/application/TarifaUbiListaData.php:50
 #: src/actividadtarifas/application/TipoTarifaListaData.php:34
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:98
@@ -4712,21 +4728,21 @@ msgid "variación"
 msgstr "variació"
 
 #: frontend/encargossacd/controller/encargo_horario_select.php:80
-#: src/actividades/application/ActividadSelectListado.php:251
-#: src/actividades/application/ListaActivTabla.php:198
-#: src/casas/application/CasaActividadesListaData.php:67
+#: src/actividades/application/ActividadSelectListado.php:253
+#: src/actividades/application/ListaActivTabla.php:200
+#: src/casas/application/CasaActividadesListaData.php:69
 msgid "hora ini"
 msgstr "hora ini"
 
 #: frontend/encargossacd/controller/encargo_horario_select.php:81
 #: frontend/encargossacd/view/horario_sacd_ver.phtml:152
 #: frontend/encargossacd/view/horario_ver.phtml:80
-#: src/actividades/application/ActividadSelectListado.php:252
+#: src/actividades/application/ActividadSelectListado.php:254
 #: src/actividades/application/CalendarioListasDatos.php:344
 #: src/actividades/application/CalendarioListasDatos.php:357
-#: src/actividades/application/ListaActivTabla.php:202
+#: src/actividades/application/ListaActivTabla.php:204
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:112
-#: src/casas/application/CasaActividadesListaData.php:69
+#: src/casas/application/CasaActividadesListaData.php:71
 #: src/pasarela/application/ExportarActividadesData.php:130
 msgid "hora fin"
 msgstr "hora fi"
@@ -4775,7 +4791,7 @@ msgstr "descripció lloc"
 #: frontend/encargossacd/controller/encargo_select.php:69
 #: frontend/encargossacd/view/encargo_ver.phtml:276
 #: frontend/usuarios/view/preferencias.phtml:100
-#: src/actividades/application/ActividadSelectListado.php:264
+#: src/actividades/application/ActividadSelectListado.php:266
 #: src/certificados/domain/CertificadoEmitidoSelect.php:70
 msgid "idioma"
 msgstr "idioma"
@@ -5196,10 +5212,10 @@ msgstr "altres encàrrecs i absències"
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:32
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:77
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:56
-#: src/actividades/application/ActividadSelectListado.php:248
-#: src/actividades/application/ListaActividadesSgListado.php:123
+#: src/actividades/application/ActividadSelectListado.php:250
+#: src/actividades/application/ListaActividadesSgListado.php:125
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:84
-#: src/casas/application/CasaIngresosListaData.php:61
+#: src/casas/application/CasaIngresosListaData.php:63
 #: src/profesores/application/CongresosLista.php:33
 msgid "inicio"
 msgstr "inici"
@@ -5207,10 +5223,10 @@ msgstr "inici"
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:33
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:79
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:56
-#: src/actividades/application/ActividadSelectListado.php:249
-#: src/actividades/application/ListaActividadesSgListado.php:124
+#: src/actividades/application/ActividadSelectListado.php:251
+#: src/actividades/application/ListaActividadesSgListado.php:126
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:85
-#: src/casas/application/CasaIngresosListaData.php:62
+#: src/casas/application/CasaIngresosListaData.php:64
 #: src/profesores/application/CongresosLista.php:34
 msgid "fin"
 msgstr "fi"
@@ -5503,16 +5519,16 @@ msgid "B) Documentación que envía la Delegación."
 msgstr "B) Documentació que envia la Delegació."
 
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:40
-#: src/actividades/application/ListaActivTabla.php:196
+#: src/actividades/application/ListaActivTabla.php:198
 #: src/actividades/application/ListaSrCsvListado.php:163
-#: src/casas/application/CasaActividadesListaData.php:66
+#: src/casas/application/CasaActividadesListaData.php:68
 msgid "empieza"
 msgstr "comença"
 
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:41
-#: src/actividades/application/ListaActivTabla.php:200
+#: src/actividades/application/ListaActivTabla.php:202
 #: src/actividades/application/ListaSrCsvListado.php:164
-#: src/casas/application/CasaActividadesListaData.php:68
+#: src/casas/application/CasaActividadesListaData.php:70
 msgid "termina"
 msgstr "acaba"
 
@@ -5876,7 +5892,7 @@ msgstr "Trieu menús de referència"
 
 #: frontend/menus/view/menus_importar_form.phtml:34
 #: frontend/menus/view/traducir_menu.phtml:313
-#: src/actividades/application/ActividadSelectListado.php:195
+#: src/actividades/application/ActividadSelectListado.php:197
 msgid "importar"
 msgstr "importar"
 
@@ -8118,7 +8134,7 @@ msgstr "descarregar pdf"
 #: src/certificados/domain/CertificadoEmitidoSelect.php:66
 #: src/devel_db_admin/application/MigracionesListaData.php:56
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:319
-#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:69
+#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:73
 msgid "fecha"
 msgstr "data"
 
@@ -8811,7 +8827,7 @@ msgid "petición crt"
 msgstr "petició crt"
 
 #: frontend/personas/controller/personas_select.php:164
-#: src/actividades/application/ActividadSelectListado.php:234
+#: src/actividades/application/ActividadSelectListado.php:236
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:248
 msgid "plan estudios"
 msgstr "pla estudis"
@@ -8832,7 +8848,7 @@ msgstr "adjuntar certificat"
 
 #: frontend/personas/controller/personas_select.php:200
 #: frontend/personas/view/persona_publicar.phtml:39
-#: src/actividades/application/ActividadSelectListado.php:199
+#: src/actividades/application/ActividadSelectListado.php:201
 msgid "publicar"
 msgstr "publicar"
 
@@ -9065,7 +9081,7 @@ msgid "debería llenar el campo situación"
 msgstr "hauria d'omplir el camp de situació"
 
 #: frontend/personas/view/traslado_form.phtml:70
-#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:68
+#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:72
 msgid "origen"
 msgstr "origen"
 
@@ -9487,7 +9503,7 @@ msgstr "fase (tasca)"
 msgid "responsable"
 msgstr "responsable"
 
-#: frontend/procesos/controller/fases_activ_cambio.php:112
+#: frontend/procesos/controller/fases_activ_cambio.php:114
 #: frontend/procesos/controller/procesos_select.php:70
 msgid "¿Esta seguro que desea borrar esta fase?"
 msgstr "Està segur que vol esborrar aquesta fase?"
@@ -9522,11 +9538,11 @@ msgstr "requisit"
 msgid "No ha determinado para que proceso"
 msgstr "No heu determinat per quin procés"
 
-#: frontend/procesos/controller/usuario_perm_activ.php:99
+#: frontend/procesos/controller/usuario_perm_activ.php:101
 msgid "Añadir nuevo permiso a"
 msgstr "Afegir nou permís per"
 
-#: frontend/procesos/controller/usuario_perm_activ.php:101
+#: frontend/procesos/controller/usuario_perm_activ.php:103
 msgid "Modificar el permiso para"
 msgstr "Modificar el permís per"
 
@@ -9568,7 +9584,7 @@ msgstr "categoria"
 
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:40
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:47
-#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:70
+#: src/tablonanuncios/domain/TablonAnunciosParaGM.php:74
 msgid "aviso"
 msgstr "avís"
 
@@ -10362,6 +10378,7 @@ msgid "Buscar en todas las columnas"
 msgstr "Cercar en totes les columnes"
 
 #: frontend/shared/web/Periodo.php:115 frontend/shared/web/Periodo.php:126
+#: src/shared/domain/Periodo.php:190
 msgid ""
 "Falta calendario escolar: use Periodo::conCalendarioDesdeBackend() o sesión "
 "oConfig."
@@ -10369,15 +10386,15 @@ msgstr ""
 "Falta calendari escolar: usa Periodo::conCalendarioDesdeBackend() o sessió "
 "oConfig."
 
-#: frontend/shared/web/Periodo.php:212
+#: frontend/shared/web/Periodo.php:212 src/shared/domain/Periodo.php:82
 msgid "Fecha de inicio no establecida: llame a setPeriodo() antes."
 msgstr "Data d'inici no establerta: truca a setPeriodo() abans."
 
-#: frontend/shared/web/Periodo.php:221
+#: frontend/shared/web/Periodo.php:221 src/shared/domain/Periodo.php:91
 msgid "Fecha de fin no establecida: llame a setPeriodo() antes."
 msgstr "Data de fi no establerta: truca a setPeriodo() abans."
 
-#: frontend/shared/web/Periodo.php:231
+#: frontend/shared/web/Periodo.php:231 src/shared/domain/Periodo.php:207
 #, php-format
 msgid "Fecha inválida: %d-%02d-%02d"
 msgstr "Data invàlida: %d-%02d-%02d"
@@ -10406,8 +10423,8 @@ msgstr "i"
 #: src/actividades/application/ActividadPublicar.php:38
 #: src/actividades/application/BorrarActividad.php:58
 #: src/actividades/application/BorrarActividad.php:72
-#: src/actividades/application/TipoActivNuevo.php:44
-#: src/actividades/application/TipoActivUpdate.php:34
+#: src/actividades/application/TipoActivNuevo.php:43
+#: src/actividades/application/TipoActivUpdate.php:33
 #: src/actividadessacd/application/SacdReordenar.php:60
 #: src/actividadessacd/application/SacdReordenar.php:64
 #: src/actividadessacd/application/SacdReordenar.php:73
@@ -12265,7 +12282,7 @@ msgstr "ha de seleccionar una zona de destí"
 msgid "debe seleccionar algún sacd de la lista"
 msgstr "heu de seleccionar algun Mn. de la llista"
 
-#: public/portada.php:55
+#: public/portada.php:56
 msgid "esto borrará los anuncios seleccionados"
 msgstr "això esborrarà els anuncis seleccionats"
 
@@ -12376,7 +12393,7 @@ msgstr "falta id_item"
 
 #: src/actividadcargos/application/ActividadCargoEliminar.php:71
 #: src/actividades/application/BorrarActividad.php:53
-#: src/actividades/application/TipoActivEliminar.php:32
+#: src/actividades/application/TipoActivEliminar.php:31
 #: src/actividadestudios/application/MatriculaAutomatica.php:161
 #: src/asistentes/application/AsistenteEliminar.php:67
 #: src/asistentes/application/AsistenteEliminar.php:80
@@ -12428,32 +12445,32 @@ msgstr "no trobo ningú amb id_nom: %d"
 msgid "actividad no encontrada"
 msgstr "activitat no trobada"
 
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:89
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:90
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:85
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:87
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:244
 msgid "modificar cargo"
 msgstr "modificar càrrec"
 
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:90
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:91
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:86
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:88
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:245
 msgid "quitar cargo"
 msgstr "treure càrrec"
 
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:141
-#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:162
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:137
+#: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:156
 msgid "esto también borrará a esta persona de la lista de asistentes"
 msgstr "això també esborrarà a aquesta persona de la llista d'assistents"
 
-#: src/actividadcargos/application/Select_cargos_de_actividad.php:239
+#: src/actividadcargos/application/Select_cargos_de_actividad.php:231
 #: src/ubiscamas/domain/Select_habitaciones_cdc.php:191
 #, php-format
 msgid "añadir %s"
 msgstr "afegir %s"
 
 #: src/actividadcargos/domain/InfoCargo.php:19
-#: src/actividades/application/ActividadSelectListado.php:215
-#: src/actividades/application/ListaActividadesSgListado.php:116
+#: src/actividades/application/ActividadSelectListado.php:217
+#: src/actividades/application/ListaActividadesSgListado.php:118
 msgid "cargos"
 msgstr "càrrecs"
 
@@ -12609,7 +12626,7 @@ msgid "lugar según país o dl"
 msgstr "lloc segons país o dl"
 
 #: src/actividades/application/ActividadQueFiltrosBloque.php:95
-#: src/actividadplazas/application/GestionPlazasData.php:245
+#: src/actividadplazas/application/GestionPlazasData.php:247
 #: src/profesores/application/CongresosLista.php:35
 #: src/profesores/domain/entity/ProfesorCongreso.php:280
 msgid "organiza"
@@ -12623,85 +12640,85 @@ msgstr "publicat"
 msgid "todas"
 msgstr "totes"
 
-#: src/actividades/application/ActividadSelectListado.php:198
-#: src/actividades/application/ActividadSelectListado.php:206
+#: src/actividades/application/ActividadSelectListado.php:200
 #: src/actividades/application/ActividadSelectListado.php:208
+#: src/actividades/application/ActividadSelectListado.php:210
 msgid "datos"
 msgstr "dades"
 
-#: src/actividades/application/ActividadSelectListado.php:210
+#: src/actividades/application/ActividadSelectListado.php:212
 msgid "duplicar"
 msgstr "duplicar"
 
-#: src/actividades/application/ActividadSelectListado.php:212
+#: src/actividades/application/ActividadSelectListado.php:214
 msgid "cambiar tipo"
 msgstr "canvi de tipus"
 
-#: src/actividades/application/ActividadSelectListado.php:216
+#: src/actividades/application/ActividadSelectListado.php:218
 msgid "lista cl"
 msgstr "llista cl"
 
-#: src/actividades/application/ActividadSelectListado.php:220
+#: src/actividades/application/ActividadSelectListado.php:222
 msgid "otras peticiones"
 msgstr "altres peticions"
 
-#: src/actividades/application/ActividadSelectListado.php:221
-#: src/actividades/application/ListaActividadesSgListado.php:118
+#: src/actividades/application/ActividadSelectListado.php:223
+#: src/actividades/application/ListaActividadesSgListado.php:120
 #: src/cambios/domain/value_objects/AvisoTipoId.php:16
 msgid "lista"
 msgstr "llista"
 
-#: src/actividades/application/ActividadSelectListado.php:227
+#: src/actividades/application/ActividadSelectListado.php:229
 #: src/procesos/application/TipoActivProcesoLista.php:45
 msgid "proceso"
 msgstr "procés"
 
-#: src/actividades/application/ActividadSelectListado.php:237
+#: src/actividades/application/ActividadSelectListado.php:239
 msgid "listas de clase"
 msgstr "llistes de classe"
 
-#: src/actividades/application/ActividadSelectListado.php:238
+#: src/actividades/application/ActividadSelectListado.php:240
 msgid "posibles asignaturas"
 msgstr "possibles assignatures"
 
-#: src/actividades/application/ActividadSelectListado.php:242
+#: src/actividades/application/ActividadSelectListado.php:244
 msgid "habitaciones"
 msgstr "habitacions"
 
-#: src/actividades/application/ActividadSelectListado.php:255
-#: src/casas/application/CasaActividadesListaData.php:70
+#: src/actividades/application/ActividadSelectListado.php:257
+#: src/casas/application/CasaActividadesListaData.php:72
 msgid "sf/sv"
 msgstr "sf/sv"
 
-#: src/actividades/application/ActividadSelectListado.php:257
-#: src/actividades/application/ListaActivTabla.php:212
-#: src/casas/application/CasaActividadesListaData.php:75
+#: src/actividades/application/ActividadSelectListado.php:259
+#: src/actividades/application/ListaActivTabla.php:214
+#: src/casas/application/CasaActividadesListaData.php:77
 msgid "tar."
 msgstr "tar."
 
-#: src/actividades/application/ActividadSelectListado.php:260
+#: src/actividades/application/ActividadSelectListado.php:262
 #: src/actividadplazas/application/PlazasBalanceData.php:100
 msgid "dl org"
 msgstr "dl org"
 
-#: src/actividades/application/ActividadSelectListado.php:406
-#: src/actividades/application/ListaActividadesSgListado.php:215
+#: src/actividades/application/ActividadSelectListado.php:408
+#: src/actividades/application/ListaActividadesSgListado.php:217
 #, php-format
 msgid "ocupado %s (%s-%s)"
 msgstr "ocupat %s ( %s - %s )"
 
-#: src/actividades/application/ActividadSelectListado.php:552
-#: src/actividades/application/ListaActividadesSgListado.php:290
+#: src/actividades/application/ActividadSelectListado.php:554
+#: src/actividades/application/ListaActividadesSgListado.php:292
 #, php-format
 msgid "%s actividades encontradas (%s sin permiso)"
 msgstr "%s activitats trobades ( %s sense permís)"
 
-#: src/actividades/application/ActividadSelectListado.php:554
+#: src/actividades/application/ActividadSelectListado.php:556
 #, php-format
 msgid "%s actividades encontradas"
 msgstr "%s activitats trobades"
 
-#: src/actividades/application/ActividadSelectListado.php:574
+#: src/actividades/application/ActividadSelectListado.php:576
 msgid "del mismo tipo"
 msgstr "del mateix tipus"
 
@@ -12715,7 +12732,7 @@ msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "L'activitat: %s no té lloc assignat"
 
 #: src/actividades/application/CalendarioListasDatos.php:292
-#: src/casas/application/CasaActividadesListaData.php:152
+#: src/casas/application/CasaActividadesListaData.php:154
 msgid "ocupado"
 msgstr "ocupat"
 
@@ -12724,21 +12741,9 @@ msgstr "ocupat"
 msgid "sv/sf"
 msgstr "sv/sf"
 
-#: src/actividades/application/CalendarioListasDatos.php:341
-#: src/actividades/application/CalendarioListasDatos.php:353
-#: src/actividades/application/ListaActivTabla.php:209
-#: src/actividades/application/ListaSrCsvListado.php:168
-#: src/actividades/application/TipoActivLista.php:34
-#: src/actividadtarifas/application/RelacionTarifaListaData.php:72
-#: src/asistentes/application/ListaUltimaActivData.php:270
-#: src/casas/application/CasaActividadesListaData.php:73
-#: src/procesos/application/TipoActivProcesoLista.php:44
-msgid "tipo actividad"
-msgstr "tipus d'activitat"
-
 #: src/actividades/application/CalendarioListasDatos.php:345
 #: src/actividades/application/CalendarioListasDatos.php:358
-#: src/casas/application/CasaIngresosListaData.php:65
+#: src/casas/application/CasaIngresosListaData.php:67
 msgid "asistentes previstos"
 msgstr "assistents previstos"
 
@@ -12751,31 +12756,31 @@ msgstr "centres encarregats"
 msgid "cdc"
 msgstr "cdc"
 
-#: src/actividades/application/ListaActivTabla.php:194
+#: src/actividades/application/ListaActivTabla.php:196
 msgid "común"
 msgstr "comú"
 
-#: src/actividades/application/ListaActivTabla.php:207
-#: src/casas/application/CasaActividadesListaData.php:71
+#: src/actividades/application/ListaActivTabla.php:209
+#: src/casas/application/CasaActividadesListaData.php:73
 msgid "activ."
 msgstr "activ."
 
-#: src/actividades/application/ListaActivTabla.php:208
-#: src/actividades/application/ListaActividadesSgListado.php:127
+#: src/actividades/application/ListaActivTabla.php:210
+#: src/actividades/application/ListaActividadesSgListado.php:129
 #: src/actividades/application/ListaSrCsvListado.php:166
-#: src/casas/application/CasaActividadesListaData.php:72
+#: src/casas/application/CasaActividadesListaData.php:74
 msgid "asist."
 msgstr "asist."
 
-#: src/actividades/application/ListaActivTabla.php:313
+#: src/actividades/application/ListaActivTabla.php:315
 msgid "ver asistentes"
 msgstr "veure assistents"
 
-#: src/actividades/application/ListaActividadesSgListado.php:119
+#: src/actividades/application/ListaActividadesSgListado.php:121
 msgid "ctrs org"
 msgstr "ctrs org"
 
-#: src/actividades/application/ListaActividadesSgListado.php:129
+#: src/actividades/application/ListaActividadesSgListado.php:131
 msgid "ctrs"
 msgstr "ctrs"
 
@@ -12787,23 +12792,21 @@ msgstr "hi ha un error, no s'ha guardat la preferència"
 msgid "nom activ."
 msgstr "nom activ."
 
-#: src/actividades/application/TipoActivEliminar.php:29
-#: src/actividades/application/TipoActivUpdate.php:30
+#: src/actividades/application/TipoActivEliminar.php:28
+#: src/actividades/application/TipoActivUpdate.php:29
 #: src/procesos/application/TipoActivProcesoAsignar.php:29
 msgid "tipo de actividad no encontrado"
 msgstr "tipus d'activitat no trobat"
 
-#: src/actividades/application/TipoActivLista.php:33
-#: src/actividades/domain/entity/ActividadAllDatosCampos.php:52
-#: src/procesos/application/TipoActivProcesoLista.php:43
-msgid "id_tipo_activ"
-msgstr "id_tipo_activ"
+#: src/actividades/application/TipoActivFormModificarData.php:23
+msgid "Tipo no válido"
+msgstr "Tipus no vàlid"
 
-#: src/actividades/application/TipoActivNuevo.php:36
+#: src/actividades/application/TipoActivNuevo.php:34
 msgid "Id incorrecto"
 msgstr "Id incorrecte"
 
-#: src/actividades/application/TipoActivNuevo.php:52
+#: src/actividades/application/TipoActivNuevo.php:46
 msgid "IMPORTANTE: Debe añadir un proceso para el nuevo tipo de actividad"
 msgstr "IMPORTANT: Ha d'afegir un procés per al nou tipus d'activitat"
 
@@ -12980,7 +12983,7 @@ msgstr "opció no definida: tipo =%s"
 msgid "falta saber quien organiza"
 msgstr "cal saber qui organitza"
 
-#: src/actividades/infrastructure/ui/http/controllers/actividad_tipo_get.php:92
+#: src/actividades/infrastructure/ui/http/controllers/actividad_tipo_get.php:93
 #, php-format
 msgid "opción no definida: salida=%s"
 msgstr "opció no definida: salida=%s"
@@ -13032,7 +13035,7 @@ msgstr "error al ordenar (4)"
 msgid "tipo no valido"
 msgstr "tipus no vàlid"
 
-#: src/actividadescentro/application/ListaActividadesCtrData.php:155
+#: src/actividadescentro/application/ListaActividadesCtrData.php:157
 #, php-format
 msgid "listado de actividades %s"
 msgstr "llistat d'activitats %s"
@@ -13049,12 +13052,12 @@ msgstr "Està segur que vol eliminar aquest centre?"
 msgid "buscar un centro"
 msgstr "cercar un centre"
 
-#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:65
+#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:67
 #: src/actividadessacd/application/ComunicacionActividadesSacdEnviar.php:31
 msgid "falta determinar un periodo"
 msgstr "falta determinar un període"
 
-#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:183
+#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:185
 #, php-format
 msgid "atención actividades para el periodo %s"
 msgstr "atenció activitats per al període %s"
@@ -13086,7 +13089,7 @@ msgstr "hi ha un error, no s'ha eliminat el càrrec"
 msgid "hay un error, no se ha eliminado la asistencia"
 msgstr "hi ha un error, no s'ha eliminat l'assistència"
 
-#: src/actividadessacd/application/SolapesSacdData.php:122
+#: src/actividadessacd/application/SolapesSacdData.php:124
 msgid "listado de sacd con actividades incompatibles"
 msgstr "llistat de sacd amb activitats incompatibles"
 
@@ -13284,35 +13287,35 @@ msgstr "falta id_activ o id_nom"
 msgid "no encuentro al asistente"
 msgstr "no trobo l'assistent"
 
-#: src/actividadestudios/application/CaPosiblesData.php:165
+#: src/actividadestudios/application/CaPosiblesData.php:167
 msgid "Parámetro na no válido"
 msgstr "Paràmetre na no vàlid"
 
-#: src/actividadestudios/application/CaPosiblesData.php:278
+#: src/actividadestudios/application/CaPosiblesData.php:280
 #, php-format
 msgid "el ca: %s no tiene puesto el nivel de stgr."
 msgstr "el ca: %s no té posat el nivell de stgr."
 
-#: src/actividadestudios/application/CaPosiblesData.php:286
+#: src/actividadestudios/application/CaPosiblesData.php:288
 #, php-format
 msgid "el ca: %s no tiene puesta ninguna asignatura."
 msgstr "el ca: %s no té posada cap assignatura."
 
-#: src/actividadestudios/application/CaPosiblesData.php:466
+#: src/actividadestudios/application/CaPosiblesData.php:468
 msgid "sólo debebería haber uno"
 msgstr "només debebería haver-hi un"
 
-#: src/actividadestudios/application/CaPosiblesData.php:473
+#: src/actividadestudios/application/CaPosiblesData.php:475
 #, php-format
 msgid "posibles ca de %s (%s)"
 msgstr "possibles ca de %s ( %s )"
 
-#: src/actividadestudios/application/CaPosiblesData.php:546
+#: src/actividadestudios/application/CaPosiblesData.php:548
 #, php-format
 msgid "Centro: %s."
 msgstr "Centre: %s."
 
-#: src/actividadestudios/application/CaPosiblesData.php:551
+#: src/actividadestudios/application/CaPosiblesData.php:553
 msgid ""
 "No hay numerarios activos en ese centro con nivel de estudios bienio o "
 "cuadrienio."
@@ -13320,11 +13323,11 @@ msgstr ""
 "No hi ha numeraris actius en aquest centre amb nivell d'estudis bienni o "
 "quadrienni."
 
-#: src/actividadestudios/application/CaPosiblesData.php:554
+#: src/actividadestudios/application/CaPosiblesData.php:556
 msgid "No hay agregados activos en ese centro."
 msgstr "No hi ha agregats actius en aquest centre."
 
-#: src/actividadestudios/application/CaPosiblesData.php:559
+#: src/actividadestudios/application/CaPosiblesData.php:561
 #, php-format
 msgid ""
 "No hay actividades de centro de estudios en el periodo %s — %s (compruebe "
@@ -13333,24 +13336,24 @@ msgstr ""
 "No hi ha activitats de centre d'estudis en el període %s — %s (comprova "
 "dates i tipus de CA)."
 
-#: src/actividadestudios/application/CaPosiblesData.php:565
+#: src/actividadestudios/application/CaPosiblesData.php:567
 msgid "No hay datos para generar el cuadro."
 msgstr "No hi ha dades per generar el quadre."
 
-#: src/actividadestudios/application/CaPosiblesData.php:588
+#: src/actividadestudios/application/CaPosiblesData.php:590
 msgid "sin centro"
 msgstr "sense centre"
 
-#: src/actividadestudios/application/CaPosiblesData.php:589
+#: src/actividadestudios/application/CaPosiblesData.php:591
 msgid "hay personas sin centro asignado"
 msgstr "hi ha persones sense centre assignat"
 
-#: src/actividadestudios/application/CaPosiblesData.php:596
+#: src/actividadestudios/application/CaPosiblesData.php:598
 #, php-format
 msgid "centro desconocido (%s)"
 msgstr "centre desconegut (%s)"
 
-#: src/actividadestudios/application/CaPosiblesData.php:597
+#: src/actividadestudios/application/CaPosiblesData.php:599
 #, php-format
 msgid "no se encuentra el centro con id: %s"
 msgstr "no es troba el centre amb id: %s"
@@ -13364,7 +13367,7 @@ msgstr "no trobo el grup d'estudis a què pertany la dl"
 msgid "todos los ctr"
 msgstr "tots els ctr"
 
-#: src/actividadestudios/application/DocenciaActualizar.php:148
+#: src/actividadestudios/application/DocenciaActualizar.php:150
 #, php-format
 msgid "Se ha actualizado la docencia para el periodo: %s"
 msgstr "S'ha actualitzat la docència per al període: %s"
@@ -13392,7 +13395,7 @@ msgstr "no hi ha cap matrícula d'aquesta persona"
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:113
 #: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:149
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:200
-#: src/asistentes/application/ListaEstCtrData.php:169
+#: src/asistentes/application/ListaEstCtrData.php:170
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:190
 #: src/notas/application/ActaImprimirPresentacionData.php:75
 #: src/notas/application/AsigFaltanPersonasSelectTablaData.php:93
@@ -13506,7 +13509,7 @@ msgstr ""
 "desada: no s'esborra"
 
 #: src/actividadestudios/application/PlanEstudiosCaData.php:172
-#: src/asistentes/application/ListaEstCtrData.php:151
+#: src/asistentes/application/ListaEstCtrData.php:152
 msgid "plan de formación"
 msgstr "pla de formació"
 
@@ -13516,7 +13519,7 @@ msgstr "treure assignatura"
 
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:80
 #: src/asignaturas/domain/entity/Asignatura.php:462
-#: src/asistentes/application/ListaEstCtrData.php:191
+#: src/asistentes/application/ListaEstCtrData.php:192
 msgid "créditos"
 msgstr "crèdits"
 
@@ -13603,27 +13606,27 @@ msgstr "Falta id_dl per modificar la matrícula en esquema regió STGR."
 msgid "Se requieren inicioIso y finIso"
 msgstr "Es requereixen inicioIso i finIso"
 
-#: src/actividadplazas/application/GestionPlazasData.php:243
+#: src/actividadplazas/application/GestionPlazasData.php:245
 #: src/actividadplazas/application/PlazasBalanceData.php:98
 #: src/casas/application/PrevisionAsistentesData.php:62
 msgid "id_activ"
 msgstr "id_activ"
 
-#: src/actividadplazas/application/GestionPlazasData.php:245
+#: src/actividadplazas/application/GestionPlazasData.php:247
 msgid "org"
 msgstr "org"
 
-#: src/actividadplazas/application/GestionPlazasData.php:248
+#: src/actividadplazas/application/GestionPlazasData.php:250
 msgid "totales actividad"
 msgstr "totals activitat"
 
-#: src/actividadplazas/application/GestionPlazasData.php:258
+#: src/actividadplazas/application/GestionPlazasData.php:260
 #: src/actividadplazas/application/PlazasBalanceData.php:101
 #: src/actividadplazas/application/PlazasBalanceData.php:103
 msgid "concedidas"
 msgstr "concedides"
 
-#: src/actividadplazas/application/GestionPlazasData.php:266
+#: src/actividadplazas/application/GestionPlazasData.php:268
 msgid "pedidas"
 msgstr "demanades"
 
@@ -13918,7 +13921,7 @@ msgid "lista de %s sin %s en el curso %s"
 msgstr "llista de %s sense %s en el curs %s"
 
 #: src/asistentes/application/ActivPendientesSelectData.php:183
-#: src/asistentes/application/ListaEstCtrData.php:202
+#: src/asistentes/application/ListaEstCtrData.php:203
 msgid "nº"
 msgstr "nº"
 
@@ -14000,11 +14003,11 @@ msgstr "les dades d'assistència dels modifica el propietari de la plaça: %s"
 msgid "No se encontró el asistente para esta actividad."
 msgstr "No es troba l'assistent per aquesta activitat."
 
-#: src/asistentes/application/ListaActivCtrData.php:56
+#: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
 #: src/inventario/application/DocumentosTrasladar.php:30
-#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:35
+#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:39
 #: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
 #: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
 #: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
@@ -14021,7 +14024,7 @@ msgstr "No es troba l'assistent per aquesta activitat."
 msgid "Faltan parámetros: %s"
 msgstr "Falten paràmetres: %s"
 
-#: src/asistentes/application/ListaAsisConjuntoActivData.php:163
+#: src/asistentes/application/ListaAsisConjuntoActivData.php:165
 msgid "actividades de la dl/r"
 msgstr "activitats de la dl/r"
 
@@ -14034,11 +14037,11 @@ msgstr "activitats d'altres dl/r"
 msgid "no asiste"
 msgstr "no assisteix"
 
-#: src/asistentes/application/ListaEstCtrData.php:146
+#: src/asistentes/application/ListaEstCtrData.php:147
 msgid "ya lo ha hecho"
 msgstr "ja ho ha fet"
 
-#: src/asistentes/application/ListaEstCtrData.php:213
+#: src/asistentes/application/ListaEstCtrData.php:214
 msgid "(*) El preceptor no asiste al ca"
 msgstr "(*) El preceptor no assisteix al ca"
 
@@ -14068,42 +14071,42 @@ msgstr "dif"
 msgid "plazas (max-min): %s, ocupadas: %s"
 msgstr "places (max-min): %s , ocupades: %s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:113
+#: src/asistentes/application/ListaUltimaActivData.php:112
 msgid "s que todavía no han asistido a crt-s o crt-sg"
 msgstr "s que encare no han assistit a crt-s o crt-sg"
 
-#: src/asistentes/application/ListaUltimaActivData.php:115
+#: src/asistentes/application/ListaUltimaActivData.php:114
 #, php-format
 msgid "s de %s que todavía no han asistido a crt-s o crt-sg"
 msgstr "s de %s que encare no han assistit a crt-s o crt-sg"
 
-#: src/asistentes/application/ListaUltimaActivData.php:120
+#: src/asistentes/application/ListaUltimaActivData.php:119
 #, php-format
 msgid "s no celadores que NO han asistido al crt interno"
 msgstr "s no cel·ladors que NO han assistit al crt intern"
 
-#: src/asistentes/application/ListaUltimaActivData.php:121
-#: src/asistentes/application/ListaUltimaActivData.php:131
+#: src/asistentes/application/ListaUltimaActivData.php:120
+#: src/asistentes/application/ListaUltimaActivData.php:130
 #, php-format
 msgid "para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"
 msgstr ""
 "para indicar si es celador, el camp Eap ha de tenir alguna cosa tipus: 'C12'"
 
-#: src/asistentes/application/ListaUltimaActivData.php:130
+#: src/asistentes/application/ListaUltimaActivData.php:129
 #, php-format
 msgid "s celadores que NO han asistido a un crt interno"
 msgstr "s cel·ladors que NO han assistit a un crt intern"
 
-#: src/asistentes/application/ListaUltimaActivData.php:137
+#: src/asistentes/application/ListaUltimaActivData.php:136
 msgid "s que no han asistido a cv de s"
 msgstr "s que no han assistit a cv de s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:139
+#: src/asistentes/application/ListaUltimaActivData.php:138
 #, php-format
 msgid "s de %s que todavía no han asistido a cv de s"
 msgstr "s de %s que encara no han assistit a cv de s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:144
+#: src/asistentes/application/ListaUltimaActivData.php:143
 #, php-format
 msgid ""
 "s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión "
@@ -14112,36 +14115,36 @@ msgstr ""
 "s amb ad recent -entre 6 i 18 mesos abans de l'última cv d'admissió de "
 "l'any- que encara no han assistit a cv de ad"
 
-#: src/asistentes/application/ListaUltimaActivData.php:165
+#: src/asistentes/application/ListaUltimaActivData.php:164
 msgid "No hay"
 msgstr "No hi ha"
 
-#: src/asistentes/application/ListaUltimaActivData.php:171
+#: src/asistentes/application/ListaUltimaActivData.php:170
 #, php-format
 msgid "última cv: %s"
 msgstr "última cv: %s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:174
+#: src/asistentes/application/ListaUltimaActivData.php:173
 msgid "s jóvenes (<30) que no han asistido a cv de s"
 msgstr "s joves (< 30) que no han assistit a cv de s"
 
-#: src/asistentes/application/ListaUltimaActivData.php:182
+#: src/asistentes/application/ListaUltimaActivData.php:181
 msgid "No sé en que tipo de actividad hay que mirar las asistencias"
 msgstr "No sé en quin tipus d'activitat s'han de mirar les asistències"
+
+#: src/asistentes/application/ListaUltimaActivData.php:228
+#: src/asistentes/application/ListaUltimaActivData.php:235
+#: src/asistentes/application/ListaUltimaActivData.php:254
+msgid "No hay datos"
+msgstr "No hi ha dades"
 
 #: src/asistentes/application/ListaUltimaActivData.php:229
 #: src/asistentes/application/ListaUltimaActivData.php:236
 #: src/asistentes/application/ListaUltimaActivData.php:255
-msgid "No hay datos"
-msgstr "No hi ha dades"
-
-#: src/asistentes/application/ListaUltimaActivData.php:230
-#: src/asistentes/application/ListaUltimaActivData.php:237
-#: src/asistentes/application/ListaUltimaActivData.php:256
 msgid "No consta"
 msgstr "No consta"
 
-#: src/asistentes/application/ListaUltimaActivData.php:267
+#: src/asistentes/application/ListaUltimaActivData.php:266
 #: src/notas/application/TablaAlumnosAsignaturas.php:185
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:486
 #: src/notas/infrastructure/ui/http/controllers/comprobar_notas_page_body.inc.php:524
@@ -14155,11 +14158,11 @@ msgstr "No consta"
 msgid "apellidos, nombre"
 msgstr "cognoms, nom"
 
-#: src/asistentes/application/ListaUltimaActivData.php:269
+#: src/asistentes/application/ListaUltimaActivData.php:268
 msgid "fecha última asistencia"
 msgstr "data de l'ultima assistència"
 
-#: src/asistentes/application/ListaUltimaActivData.php:277
+#: src/asistentes/application/ListaUltimaActivData.php:275
 #, php-format
 msgid "número de personas: %s de %s"
 msgstr "nombre  de persones: %s de %s"
@@ -14337,15 +14340,15 @@ msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
 msgstr ""
 "Falta l'id_schema de sessió (mi_id_schema) per a persistir l'assistent."
 
-#: src/cambios/application/AvisosEncolarMails.php:202
+#: src/cambios/application/AvisosEncolarMails.php:198
 msgid "Avisos de cambios en actividades"
 msgstr "Avisos de canvis en activitats"
 
-#: src/cambios/application/AvisosEncolarMails.php:203
+#: src/cambios/application/AvisosEncolarMails.php:199
 msgid "Tabla de cambios en actividades"
 msgstr "Taula de canvis en activitats"
 
-#: src/cambios/application/AvisosEncolarMails.php:251
+#: src/cambios/application/AvisosEncolarMails.php:245
 #: src/cambios/application/CambioUsuarioEliminar.php:60
 #: src/cambios/application/CambioUsuarioObjetoPrefEliminar.php:35
 #: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:139
@@ -14491,12 +14494,12 @@ msgstr "falta id_item_usuario_objeto"
 msgid "preferencia no encontrada"
 msgstr "preferència no trobada"
 
-#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:54
+#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:56
 #: src/cambios/application/UsuarioAvisosPrefFormData.php:88
 msgid "falta id_usuario"
 msgstr "falta id_usuario"
 
-#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:88
+#: src/cambios/application/CambioUsuarioObjetoPrefGuardar.php:97
 msgid "id_tipo_activ invalido"
 msgstr "id_tipo_activ invàlid"
 
@@ -14534,10 +14537,6 @@ msgstr "objecte %s no trobat"
 #: src/cambios/application/CambioUsuarioObjetoPrefPropiedadesData.php:117
 msgid "cualquier cambio"
 msgstr "qualsevol canvi"
-
-#: src/cambios/application/CambioUsuarioObjetoPrefPropiedadesData.php:122
-msgid "ja veurem"
-msgstr "ja veurem"
 
 #: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:41
 msgid "faltan parametros"
@@ -14714,7 +14713,7 @@ msgid "No puede modificar datos de otra dl"
 msgstr "No es poden modificar les dades d'un altre dl"
 
 #: src/cartaspresentacion/application/CartaPresentacionUpdate.php:74
-#: src/casas/application/CasaEcGastosGuardar.php:57
+#: src/casas/application/CasaEcGastosGuardar.php:86
 #: src/casas/application/CasaIngresoUpdate.php:74
 #: src/casas/application/GrupoCasaUpdate.php:54
 #: src/dossiers/application/TipoDossierGuardar.php:78
@@ -14785,13 +14784,19 @@ msgid "tar. no definida"
 msgstr "tar. no definida"
 
 #: src/casas/application/CasaEcGastosFormData.php:47
-#: src/casas/application/CasaIngresosListaData.php:86
+#: src/casas/application/CasaIngresosListaData.php:88
 msgid "Debe seleccionar una casa."
 msgstr "Ha de seleccionar una casa."
 
-#: src/casas/application/CasaEcGastosGuardar.php:35
+#: src/casas/application/CasaEcGastosGuardar.php:40
 msgid "Faltan id_ubi o year."
 msgstr "Falten id_ubi o year."
+
+#: src/casas/application/CasaEcGastosGuardar.php:93
+msgid ""
+"Los gastos se han guardado, pero no se han podido borrar los apuntes "
+"repetidos."
+msgstr "Les despeses s'han desat, però no s'han pogut esborrar els apunts repetits."
 
 #: src/casas/application/CasaIngresoEliminar.php:28
 #: src/procesos/application/ProcesosEliminar.php:24
@@ -14817,64 +14822,64 @@ msgstr "Activitat no trobada"
 msgid "Hay un error, no se ha guardado la actividad."
 msgstr "Hi ha un error, no s'ha guardat l'assistència."
 
-#: src/casas/application/CasaIngresosListaData.php:66
+#: src/casas/application/CasaIngresosListaData.php:68
 msgid "asistentes reales"
 msgstr "assistents reals"
 
-#: src/casas/application/CasaIngresosListaData.php:67
+#: src/casas/application/CasaIngresosListaData.php:69
 msgid "dif. asistencias"
 msgstr "dif. assistències"
 
-#: src/casas/application/CasaIngresosListaData.php:68
+#: src/casas/application/CasaIngresosListaData.php:70
 msgid "ingresos previstos"
 msgstr "ingressos previstos"
 
-#: src/casas/application/CasaIngresosListaData.php:70
+#: src/casas/application/CasaIngresosListaData.php:72
 msgid "ing. previstos acumulados"
 msgstr "ing. previstos acumulats"
 
-#: src/casas/application/CasaIngresosListaData.php:71
+#: src/casas/application/CasaIngresosListaData.php:73
 msgid "ing. reales acumulados"
 msgstr "ing. reales acumulats"
 
-#: src/casas/application/CasaIngresosListaData.php:177
+#: src/casas/application/CasaIngresosListaData.php:179
 #, php-format
 msgid "%s %s días x %s ~= %s"
 msgstr "%s %s dies x %s ~= %s"
 
-#: src/casas/application/CasaIngresosListaData.php:196
+#: src/casas/application/CasaIngresosListaData.php:198
 #, php-format
 msgid "No está definido el núm. de asistente previstos para: %s"
 msgstr "No està definit el núm. d'asistents previstos per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:201
+#: src/casas/application/CasaIngresosListaData.php:203
 #, php-format
 msgid "No está definido el núm. de asistente para: %s"
 msgstr "No està definit el núm. d'asistent per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:206
+#: src/casas/application/CasaIngresosListaData.php:208
 #, php-format
 msgid "No se han introducido los ingresos para: %s"
 msgstr "No s'han introduït ingressos per: %s"
 
-#: src/casas/application/CasaIngresosListaData.php:252
+#: src/casas/application/CasaIngresosListaData.php:254
 msgid "totales sv"
 msgstr "totals sv"
 
-#: src/casas/application/CasaIngresosListaData.php:267
+#: src/casas/application/CasaIngresosListaData.php:269
 msgid "totales sf"
 msgstr "totals sf"
 
-#: src/casas/application/CasaIngresosListaData.php:302
+#: src/casas/application/CasaIngresosListaData.php:304
 msgid "* Se cuentan los ingresos proporcionales correspondientes al periodo."
 msgstr "* Es compten els ingressos proporcionals corresponents al periode."
 
-#: src/casas/application/CasasResumenData.php:278
+#: src/casas/application/CasasResumenData.php:280
 #, php-format
 msgid "No hay ingresos previstos para la actividad %s"
 msgstr "No hi ha ingressos previstos per a l'activitat %s"
 
-#: src/casas/application/CasasResumenData.php:286
+#: src/casas/application/CasasResumenData.php:288
 #, php-format
 msgid "No hay asistentes previstos para la actividad %s"
 msgstr "No hi ha assistents previstos per a l'activitat %s"
@@ -16706,7 +16711,7 @@ msgstr "No s'ha trobat el document"
 #: src/inventario/application/DocumentosAsignar.php:110
 #: src/inventario/application/DocumentosModificar.php:60
 #: src/inventario/application/EquipajeNuevo.php:31
-#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:45
+#: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:49
 #, php-format
 msgid "Fecha no válida: %s"
 msgstr "Data no vàlida: %s"
@@ -18452,8 +18457,8 @@ msgstr "No puc trobar persones per a %s"
 msgid "No encuentro este ctr"
 msgstr "No trobo aquest ctr"
 
-#: src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php:28
-#: src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php:38
+#: src/planning/infrastructure/ui/http/controllers/planning_ctr_select_data.php:29
+#: src/planning/infrastructure/ui/http/controllers/planning_persona_ver_data.php:39
 msgid "Faltan fechas de periodo"
 msgstr "Falten dates del periode"
 
@@ -18469,35 +18474,35 @@ msgstr "error: la fase del procés  tipus %s, fase: %s, tasca: %s"
 msgid "no se encuentra la tarea del proceso"
 msgstr "no es troba la tasca del procés"
 
-#: src/procesos/application/FasesActivCambioLista.php:54
+#: src/procesos/application/FasesActivCambioLista.php:56
 msgid "Debe poner la fase nueva"
 msgstr "Ha de posar la fase nova"
 
-#: src/procesos/application/FasesActivCambioLista.php:98
+#: src/procesos/application/FasesActivCambioLista.php:100
 msgid "nom"
 msgstr "nom"
 
-#: src/procesos/application/FasesActivCambioLista.php:98
+#: src/procesos/application/FasesActivCambioLista.php:100
 msgid "cumple requisito"
 msgstr "compleix el requisit"
 
-#: src/procesos/application/FasesActivCambioLista.php:131
+#: src/procesos/application/FasesActivCambioLista.php:133
 msgid "No tiene marcada la fase"
 msgstr "No ha marcat la fase"
 
-#: src/procesos/application/FasesActivCambioLista.php:138
+#: src/procesos/application/FasesActivCambioLista.php:140
 msgid "No tiene proceso. Debe crearlo"
 msgstr "No hi ha cap procés. Heu de crear-lo"
 
-#: src/procesos/application/FasesActivCambioLista.php:142
+#: src/procesos/application/FasesActivCambioLista.php:144
 msgid "Ya la tiene"
 msgstr "Ja la té"
 
-#: src/procesos/application/FasesActivCambioLista.php:164
+#: src/procesos/application/FasesActivCambioLista.php:166
 msgid "ok, tiene la(s) fase(s) previa(s)"
 msgstr "correcte, té les fase(s) prèvies"
 
-#: src/procesos/application/FasesActivCambioLista.php:187
+#: src/procesos/application/FasesActivCambioLista.php:189
 #, php-format
 msgid "%s actividades, %s para cambiar"
 msgstr "%s activitats, %s per canviar"
@@ -20558,18 +20563,6 @@ msgstr "convivències"
 msgid "descargar"
 msgstr "descarregar"
 
-#: frontend/actividades/view/tipo_activ.html.twig:53
-#: frontend/actividades/view/tipo_activ.html.twig:90
-#: frontend/pasarela/view/activacion_lista.html.twig:56
-#: frontend/pasarela/view/activacion_lista.html.twig:75
-#: frontend/pasarela/view/activacion_lista.html.twig:97
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:31
-#: frontend/pasarela/view/contribucion_x_lista.html.twig:83
-#: frontend/pasarela/view/nombre_lista.html.twig:23
-#: frontend/pasarela/view/nombre_lista.html.twig:55
-msgid "Tipo no válido"
-msgstr "Tipus no vàlid"
-
 #: frontend/actividades/view/tipo_activ.html.twig:54
 #: frontend/actividades/view/tipo_activ.html.twig:91
 #: frontend/pasarela/view/nombre_lista.html.twig:27
@@ -20993,6 +20986,9 @@ msgstr "permís off (sense marcar)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permís on (marcat)"
+
+#~ msgid "ja veurem"
+#~ msgstr "ja veurem"
 
 #~ msgid "El texto no puede superar 1000 caracteres"
 #~ msgstr "El text no pot superar 1000 caràcters"
