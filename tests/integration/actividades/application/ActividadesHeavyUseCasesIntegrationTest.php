@@ -19,6 +19,9 @@ use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\domain\criteria\Criteria;
+use src\shared\domain\criteria\Filter;
+use src\actividadplazas\domain\criteria\ActividadPlazasField;
 use Tests\myTest;
 
 /**
@@ -317,7 +320,8 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
                 'plazas' => 4,
             ]);
             $this->assertGreaterThan(0, $idActiv);
-            $rowPlazas = $repoPlazas->findById($idActiv);
+            // La clave de las plazas es (id_activ, id_dl, dl_tabla): se busca la fila de esta actividad.
+            $rowPlazas = $repoPlazas->matching(Criteria::create()->where(Filter::eq(ActividadPlazasField::IdActiv, $idActiv)))[0] ?? null;
             if ($plazasEsperadasEnRepo === null) {
                 $this->assertNull($rowPlazas);
             } else {
@@ -327,8 +331,7 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
         } finally {
             $this->restoreSessionAppsConfig($bak);
             if ($idActiv > 0) {
-                $pz = $repoPlazas->findById($idActiv);
-                if ($pz !== null) {
+                foreach ($repoPlazas->matching(Criteria::create()->where(Filter::eq(ActividadPlazasField::IdActiv, $idActiv))) as $pz) {
                     $repoPlazas->Eliminar($pz);
                 }
                 $borrar = $repo->findById($idActiv);
