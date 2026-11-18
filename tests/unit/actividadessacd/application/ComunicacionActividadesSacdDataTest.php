@@ -84,6 +84,36 @@ final class ComunicacionActividadesSacdDataTest extends TestCase
         $this->assertSame('2030-12-31', $ctx['finIso']);
     }
 
+    /**
+     * Un p-sacd que manda la selección de otro sacd (`sel[]`, como desde la lista de personas) sigue viendo
+     * solo lo suyo. Revisión de seguridad del 2026-11-18, punto 2: antes `sel` cambiaba el sacd después de
+     * fijarlo al del usuario.
+     */
+    public function test_resolver_contexto_rol_p_sacd_no_cambia_de_sacd_con_sel(): void
+    {
+        $oUsuario = new Usuario();
+        $oUsuario->setId_usuario(443);
+        $oUsuario->setId_role(77);
+        $oUsuario->setCsvIdPauVo('9988');
+
+        $usuarioRepo = $this->createMock(UsuarioRepositoryInterface::class);
+        $usuarioRepo->method('findById')->with(443)->willReturn($oUsuario);
+
+        $roleRepo = $this->createMock(RoleRepositoryInterface::class);
+        $roleRepo->method('getArrayRoles')->willReturn([77 => 'p-sacd']);
+
+        $ctx = $this->makeUseCase($usuarioRepo, $roleRepo)->resolverContexto([
+            'que' => 'un_sacd',
+            'id_nom' => 5555,
+            'sel' => ['5555#n'],
+            'periodo' => 'tot_any',
+            'year' => '2030',
+        ]);
+
+        $this->assertSame('un_sacd', $ctx['que']);
+        $this->assertSame(9988, $ctx['id_nom']);
+    }
+
     public function test_resolver_contexto_rol_distinto_de_p_sacd_no_fuerza_un_sacd(): void
     {
         $oUsuario = new Usuario();

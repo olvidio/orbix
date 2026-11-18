@@ -61,6 +61,16 @@ final class AccesoRolPauTest extends TestCase
         $this->assertFalse(AccesoRolPau::permite('ctr', 'src/notas/persona_nota_eliminar'));
     }
 
+    /** Del planning, la casa solo llega al de casas: no al de personas, centros ni zonas. */
+    public function test_la_casa_solo_llega_al_planning_de_casas(): void
+    {
+        $this->assertTrue(AccesoRolPau::permite('cdc', 'frontend/planning/controller/planning_casa_select.php'));
+        $this->assertTrue(AccesoRolPau::permite('cdc', 'src/planning/planning_casa_ver_data'));
+        $this->assertFalse(AccesoRolPau::permite('cdc', 'frontend/planning/controller/planning_persona_select.php'));
+        $this->assertFalse(AccesoRolPau::permite('cdc', 'src/planning/planning_ctr_select_data'));
+        $this->assertFalse(AccesoRolPau::permite('cdc', 'frontend/planning/controller/planning_zones_que.php'));
+    }
+
     /** Un pau que no está en la lista solo llega a lo común. */
     public function test_un_pau_desconocido_solo_lo_comun(): void
     {

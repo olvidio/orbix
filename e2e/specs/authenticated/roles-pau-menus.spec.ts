@@ -14,7 +14,9 @@ import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, redEnCalma, sql
  * - ninguna acaba en un error del servidor;
  * - ninguna petición queda fuera de la lista (`log/acceso_pau_denegado.log` no gana líneas de ese pau);
  * - una pantalla de oficina pedida directamente sí queda fuera (se apunta; sin `ORBIX_ACCESO_PAU=exigir`
- *   no se corta, por eso el spec mira el registro y no la respuesta).
+ *   no se corta, por eso el spec mira el registro y no la respuesta);
+ * - la casa: pedir en una de sus pantallas todas las casas sv (`cdc_sel=4`) también queda fuera (el id
+ *   tiene que ser de sus casas; el registro añade el nombre del parámetro).
  *
  * Con `log/acceso_pau_registrar` presente, `AccesoRolPau` apunta además todo lo que piden
  * (`log/acceso_pau.log`).
@@ -31,6 +33,7 @@ const ROLES = [
 ];
 const DENEGADO = path.resolve(__dirname, '../../../log/acceso_pau_denegado.log');
 const OFICINA = 'frontend/personas/controller/personas_select.php';
+const CASAS_RESUMEN = 'frontend/casas/controller/casas_resumen_lista.php';
 
 /** Rutas denegadas a ese pau desde `desde` (el registro lo escribe el servidor, en la misma carpeta). */
 function denegadas(pau: string, desde: number): string[] {
@@ -42,7 +45,7 @@ function denegadas(pau: string, desde: number): string[] {
     .split('\n')
     .map((l) => l.split('\t'))
     .filter((c) => c.length >= 4 && c[1] === pau && Date.parse(c[0]) >= desde)
-    .map((c) => `${c[2]} ${c[3]}`);
+    .map((c) => `${c[2]} ${c[3]}${c[5] ? ` ${c[5]}` : ''}`);
 }
 const marca = marcaE2e().toLowerCase().slice(0, 14);
 const creados: string[] = [];
@@ -94,6 +97,32 @@ async function entrar(browser: Browser, baseURL: string | undefined, usuario: st
   return p;
 }
 
+/**
+ * La casa elige una de sus casas y ve sus actividades y su planning: los ids que mandan esas pantallas
+ * (`id_cdc[]`, `cdc_sel=9`) son de sus casas y no se apuntan.
+ */
+async function verSuCasa(p: Page, usuario: string): Promise<void> {
+  const casa = sqlDev('sv-e', `SELECT split_part(csv_id_pau, ',', 1) FROM "${ESQUEMA_V}".aux_usuarios WHERE usuario = '${usuario}'`);
+  await abrirPantalla(p, 'frontend/casas/controller/casa.php?periodo=tot_any&tipo_lista=lista_activ', 'form#seleccion');
+  await p.locator('#main #id_cdc_mas').selectOption(casa);
+  await p.evaluate(() => {
+    // @ts-expect-error función de la vista casa.phtml
+    fnjs_ver();
+  });
+  await redEnCalma(p, 30_000);
+  await expect(p.locator('#main #exportar')).not.toBeEmpty();
+
+  await abrirPantalla(p, 'frontend/planning/controller/planning_casa_que.php', 'form#que');
+  await p.locator('#main #cdc_sel_9').check();
+  await p.locator('#main #id_cdc_mas').selectOption(casa);
+  await p.locator('#main #periodo').selectOption({ index: 1 });
+  await p.locator('#main input[onclick*="fnjs_ver_planning(this.form,1)"]').click();
+  await redEnCalma(p, 30_000);
+  await expect(p.locator('#main form#que')).toHaveCount(0);
+  const html = await p.locator('#main').innerHTML();
+  expect(html, 'el planning de su casa').not.toMatch(/Fatal error|Uncaught |SQLSTATE|Operación no autorizada/);
+}
+
 for (const rol of ROLES) {
   test(`rol ${rol.nombre}: abre todas las entradas de sus menús`, async ({ page, browser, baseURL }) => {
     test.setTimeout(10 * 60_000);
@@ -138,6 +167,9 @@ for (const rol of ROLES) {
     console.log(`${rol.nombre}: grupos ${grupos.length}, entradas abiertas ${abiertas}`);
     expect(abiertas, 'ha abierto alguna entrada').toBeGreaterThan(0);
     expect(fallos, fallos.join('\n')).toEqual([]);
+    if (rol.pau === 'cdc') {
+      await verSuCasa(p, usuario);
+    }
     expect(denegadas(rol.pau, desde), 'lo que piden sus menús está en la lista').toEqual([]);
 
     // Una pantalla de oficina pedida directamente queda fuera.
@@ -146,6 +178,14 @@ for (const rol of ROLES) {
     if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
       // Con `ORBIX_ACCESO_PAU=exigir` en el servidor, además se corta.
       expect(oficina.status(), 'la pantalla de oficina se niega').toBe(403);
+    }
+    if (rol.pau === 'cdc') {
+      // En una pantalla suya, todas las casas sv en lugar de las suyas.
+      const todas = await p.request.post(CASAS_RESUMEN, { form: { cdc_sel: '4', que: 'get' }, failOnStatusCode: false });
+      expect(denegadas(rol.pau, desde), 'se apunta pedir todas las casas').toContain(`POST ${CASAS_RESUMEN} cdc_sel`);
+      if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
+        expect(todas.status(), 'todas las casas se niegan').toBe(403);
+      }
     }
     await p.context().close();
   });

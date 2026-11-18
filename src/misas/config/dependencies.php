@@ -32,6 +32,7 @@ use src\misas\application\VerPlanSacdData;
 use src\misas\application\ZonaSacdDatosGet;
 use src\misas\application\ZonaSacdDatosPut;
 use src\misas\application\services\InicialesSacdService;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
@@ -47,6 +48,7 @@ return [
     InicialesSacdRepositoryInterface::class => autowire(PgInicialesSacdRepository::class),
 
     IdNomJefeResolver::class => autowire(IdNomJefeResolver::class),
+    AlcancePauMisas::class => autowire(AlcancePauMisas::class),
     InicialesSacdService::class => autowire(InicialesSacdService::class),
 
     BuscarPlanCtrData::class => autowire(BuscarPlanCtrData::class),

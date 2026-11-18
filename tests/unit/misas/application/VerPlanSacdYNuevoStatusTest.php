@@ -12,6 +12,7 @@ use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoTipo;
 use src\misas\application\NuevoStatusPeriodo;
 use src\misas\application\VerPlanSacdData;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaStatus;
@@ -51,7 +52,8 @@ final class VerPlanSacdYNuevoStatusTest extends myTest
 
     // ---- VerPlanSacdData ----------------------------------------------------------------------
 
-    private function planSacd(bool $jefeZona, bool $usuarioExiste = true, bool $conSacd = true): VerPlanSacdData
+    /** @param list<int>|null $sacdsPermitidos los que puede pedir el usuario (null: sin límite) */
+    private function planSacd(bool $jefeZona, bool $usuarioExiste = true, bool $conSacd = true, ?array $sacdsPermitidos = null): VerPlanSacdData
     {
         $usuarios = $this->createMock(UsuarioRepositoryInterface::class);
         if ($usuarioExiste) {
@@ -68,7 +70,10 @@ final class VerPlanSacdYNuevoStatusTest extends myTest
             $zonas->expects($this->never())->method('matching');
         }
 
-        return new VerPlanSacdData($usuarios, $zonas, $this->encargosDia, $this->encargos);
+        $alcance = $this->createMock(AlcancePauMisas::class);
+        $alcance->method('sacds')->willReturn($sacdsPermitidos);
+
+        return new VerPlanSacdData($usuarios, $zonas, $this->encargosDia, $this->encargos, $alcance);
     }
 
     private function encargoDia(?int $status, string $ini, string $fin, ?int $idEnc = 5, ?string $observ = null): EncargoDia
@@ -94,6 +99,28 @@ final class VerPlanSacdYNuevoStatusTest extends myTest
         $this->encargosDia->method('matching')->willReturn([]);
         $r = $this->planSacd(false, true, false)->getData('10#AB', 'otro', '02/03/2026', '04/03/2026');
         $this->assertCount(2, $r['rows']);
+    }
+
+    /**
+     * Un p-sacd que pide el plan de un sacd que no es él ni de su zona no ve nada. Revisión de seguridad del
+     * 2026-11-18, punto 2: antes veía el plan de cualquier sacd cambiando `id_sacd`.
+     */
+    public function test_el_plan_de_un_sacd_que_no_puede_ver_sale_vacio(): void
+    {
+        $this->encargosDia->expects($this->never())->method('matching');
+
+        $r = $this->planSacd(false, true, true, [10011])->getData('20022#XY', 'otro', '01/03/2026', '04/03/2026');
+
+        $this->assertSame(['rows' => []], $r);
+    }
+
+    public function test_el_plan_de_un_sacd_que_si_puede_ver(): void
+    {
+        $this->encargosDia->method('matching')->willReturn([]);
+
+        $r = $this->planSacd(false, true, true, [10011, 20022])->getData('20022#XY', 'otro', '01/03/2026', '02/03/2026');
+
+        $this->assertCount(1, $r['rows']);
     }
 
     public function test_cada_dia_del_rango_sin_el_ultimo_tiene_su_fila_aunque_este_libre(): void

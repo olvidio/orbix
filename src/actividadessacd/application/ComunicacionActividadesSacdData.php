@@ -149,6 +149,15 @@ final class ComunicacionActividadesSacdData
         $empiezamin = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamin');
         $empiezamax = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'empiezamax');
 
+        $a_sel = $input['sel'] ?? [];
+        if (is_array($a_sel) && !empty($a_sel) && is_string($a_sel[0] ?? null)) {
+            $id_nom = (int)strtok($a_sel[0], '#');
+            if ($que === '') {
+                $que = 'un_sacd';
+            }
+        }
+
+        // Un p-sacd solo ve lo suyo, aunque mande otro sacd (en `id_nom` o en `sel`).
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         if ($oMiUsuario !== null) {
             $id_role = $oMiUsuario->getId_role();
@@ -156,14 +165,6 @@ final class ComunicacionActividadesSacdData
             if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
                 $csvId = $oMiUsuario->getCsvIdPauAsString();
                 $id_nom = is_numeric($csvId) ? (int)$csvId : 0;
-                $que = 'un_sacd';
-            }
-        }
-
-        $a_sel = $input['sel'] ?? [];
-        if (is_array($a_sel) && !empty($a_sel) && is_string($a_sel[0] ?? null)) {
-            $id_nom = (int)strtok($a_sel[0], '#');
-            if ($que === '') {
                 $que = 'un_sacd';
             }
         }

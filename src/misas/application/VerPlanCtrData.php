@@ -5,6 +5,7 @@ namespace src\misas\application;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\application\support\EncargoDiaTimeHelper;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
@@ -36,6 +37,7 @@ class VerPlanCtrData
         private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
         private readonly InicialesSacdRepositoryInterface $inicialesSacdRepository,
         private readonly PersonaSacdRepositoryInterface $personaSacdRepository,
+        private readonly AlcancePauMisas $alcancePau,
     ) {
     }
     /**
@@ -52,7 +54,9 @@ class VerPlanCtrData
         string $empiezamax,
     ): array {
         $oMiUsuario = $this->usuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-        if ($oMiUsuario === null) {
+        // Un centro solo ve su plan; un p-sacd, el de los centros de sus encargos y de sus zonas.
+        $centrosPermitidos = $this->alcancePau->centros();
+        if ($oMiUsuario === null || ($centrosPermitidos !== null && !in_array($id_ubi, $centrosPermitidos, true))) {
             return [
                 'columns' => [],
                 'rows' => [],

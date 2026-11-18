@@ -11,6 +11,7 @@ use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\misas\application\BuscarPlanCtrData;
 use src\misas\application\VerPlanCtrData;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
@@ -47,6 +48,19 @@ final class PlanPorCentroDataTest extends myTest
     private RoleRepositoryInterface&MockObject $roles;
     private ZonaRepositoryInterface&MockObject $zonas;
     private mixed $sesionAnterior;
+    /** @var list<int>|null centros que puede pedir el usuario (null: sin límite) */
+    private ?array $centrosPermitidos = null;
+    /** @var list<int>|null zonas que puede pedir el usuario (null: sin límite) */
+    private ?array $zonasPermitidas = null;
+
+    private function alcance(): AlcancePauMisas
+    {
+        $alcance = $this->createMock(AlcancePauMisas::class);
+        $alcance->method('centros')->willReturnCallback(fn (): ?array => $this->centrosPermitidos);
+        $alcance->method('zonas')->willReturnCallback(fn (): ?array => $this->zonasPermitidas);
+
+        return $alcance;
+    }
 
     public function setUp(): void
     {
@@ -110,7 +124,7 @@ final class PlanPorCentroDataTest extends myTest
             return $p;
         });
 
-        return new VerPlanCtrData($this->usuarios, $this->roles, $this->zonas, $this->encargosCtr, $this->encargos, $this->encargosDia, $iniciales, $personas);
+        return new VerPlanCtrData($this->usuarios, $this->roles, $this->zonas, $this->encargosCtr, $this->encargos, $this->encargosDia, $iniciales, $personas, $this->alcance());
     }
 
     private function encargoCtr(?int $idEnc): EncargoCtr
@@ -184,6 +198,20 @@ final class PlanPorCentroDataTest extends myTest
         $this->assertSame('Misa diaria', $r['rows'][0]['desc_enc']);
         $this->assertSame([' -- ', 'AB 08:30*', ' -- '], $r['rows'][0]['cells']);
         $this->assertSame([['iniciales' => 'AB', 'nombre' => 'Ana B']], $r['legend']);
+    }
+
+    /**
+     * Un centro, o un sacd, que pide el plan de un centro que no es el suyo (ni de sus encargos o zonas) no
+     * ve nada. Revisión de seguridad del 2026-11-18, punto 2: antes bastaba cambiar `id_ubi`.
+     */
+    public function test_el_plan_de_un_centro_que_no_puede_ver_sale_vacio(): void
+    {
+        $this->usuario(2, '1003');
+        $this->centrosPermitidos = [1003];
+        $v = $this->verPlan();
+        $this->encargosCtr->expects($this->never())->method('getEncargosCentro');
+
+        $this->assertSame(['columns' => [], 'rows' => [], 'legend' => []], $v->getData(2004, 'otro', '02/03/2026', '04/03/2026'));
     }
 
     public function test_un_sacd_ve_comunicados_a_sacd_y_a_centro_y_un_jefe_de_zona_todo(): void
@@ -261,7 +289,8 @@ final class PlanPorCentroDataTest extends myTest
             $encargosSacd ?? $this->createMock(EncargoSacdRepositoryInterface::class),
             $encargos ?? $this->createMock(EncargoRepositoryInterface::class),
             new IdNomJefeResolver($this->usuarios, $this->roles),
-            new CentrosDeZona($zc)
+            new CentrosDeZona($zc),
+            $this->alcance()
         );
     }
 
@@ -303,6 +332,21 @@ final class PlanPorCentroDataTest extends myTest
         $this->assertSame(4, $r['zonas_selected']);
         $this->assertSame(['501' => 'Ctr sv', '502' => 'Ctr sf'], $r['centros_opciones']);
         $this->assertSame('502', $r['centros_selected'], 'queda seleccionado el último centro');
+    }
+
+    /** Un sacd que elige una zona que no es suya ve los centros de sus encargos, como sin zona elegida. */
+    public function test_un_sacd_con_una_zona_que_no_es_suya_ve_los_de_sus_encargos(): void
+    {
+        $this->usuario(1, '10011');
+        $this->zonasPermitidas = [4];
+        $this->zonas->method('getArrayZonas')->willReturn([4 => 'Zona 4']);
+        $encargosSacd = $this->createMock(EncargoSacdRepositoryInterface::class);
+        $encargosSacd->method('matching')->willReturn([]);
+
+        $r = $this->buscar([501, 502], $encargosSacd)->getData(7);
+
+        $this->assertSame(-1, $r['zonas_selected']);
+        $this->assertSame([], $r['centros_opciones']);
     }
 
     public function test_una_zona_sin_centros_deja_la_lista_vacia(): void

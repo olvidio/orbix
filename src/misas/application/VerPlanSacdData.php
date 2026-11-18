@@ -5,6 +5,7 @@ namespace src\misas\application;
 use src\shared\config\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\application\support\EncargoDiaTimeHelper;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\criteria\EncargoDiaField;
@@ -28,6 +29,7 @@ class VerPlanSacdData
         private readonly ZonaRepositoryInterface $zonaRepository,
         private readonly EncargoDiaRepositoryInterface $encargoDiaRepository,
         private readonly EncargoRepositoryInterface $encargoRepository,
+        private readonly AlcancePauMisas $alcancePau,
     ) {
     }
     /**
@@ -52,6 +54,11 @@ class VerPlanSacdData
 
         $exp_id_sacd = explode('#', $id_sacd_key);
         $Qid_sacd = $exp_id_sacd[0];
+        // Un p-sacd solo ve su plan y el de los sacds de su zona, aunque mande otro.
+        $sacdsPermitidos = $this->alcancePau->sacds();
+        if ($sacdsPermitidos !== null && !in_array((int) $Qid_sacd, $sacdsPermitidos, true)) {
+            return ['rows' => []];
+        }
 
         [$Qempiezamin_rep, $Qempiezamax_rep] = PeriodoDateRange::resolve($periodo, $empiezamin, $empiezamax);
 

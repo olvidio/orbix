@@ -5,6 +5,7 @@ namespace src\misas\application;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\criteria\EncargoSacdField;
+use src\misas\application\support\AlcancePauMisas;
 use src\misas\application\support\IdNomJefeResolver;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
@@ -37,6 +38,7 @@ class BuscarPlanCtrData
         private readonly EncargoRepositoryInterface     $encargoRepository,
         private readonly IdNomJefeResolver              $idNomJefeResolver,
         private readonly CentrosDeZona                  $centrosDeZona,
+        private readonly AlcancePauMisas                $alcancePau,
     )
     {
     }
@@ -116,7 +118,9 @@ class BuscarPlanCtrData
         }
         $id_nom_jefe = $jefe['id_nom_jefe'];
 
-        if ($id_zona === 0) {
+        // Una zona que no es suya, como sin zona elegida: los centros de sus encargos.
+        $zonasPermitidas = $this->alcancePau->zonas();
+        if ($id_zona === 0 || ($id_zona > 0 && $zonasPermitidas !== null && !in_array($id_zona, $zonasPermitidas, true))) {
             $id_zona = -1;
         }
         $zonas_selected = $id_zona;

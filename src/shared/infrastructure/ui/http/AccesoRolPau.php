@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace src\shared\infrastructure\ui\http;
 
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+
 /**
  * Lo que pueden pedir desde el navegador los usuarios con un rol limitado a una persona, casa o centro (rol
  * «pau» de `aux_roles`: `sacd`, `cdc`, `ctr`): solo lo de `src/shared/config/acceso_rol_pau.php`. Los
@@ -17,6 +19,9 @@ namespace src\shared\infrastructure\ui\http;
  *   nombres de los parámetros, nunca sus valores). Solo se corta si `ORBIX_ACCESO_PAU=exigir` (`.env`); si
  *   no, de momento solo se avisa, hasta comprobar con el uso real que la lista no deja fuera nada.
  * - Con `log/` + {@see BANDERA_REGISTRO} se apunta además todo lo que piden, en {@see REGISTRO}.
+ * - En lo permitido, los ids que manda el navegador tienen que ser de su pau ({@see parametroAjeno()}): de
+ *   momento, los de un usuario de una casa. Mismo modo aviso / exigir; en el registro se añade el nombre del
+ *   parámetro. Los parámetros dentro de una cápsula `HashB` no se miran: los ha firmado el servidor.
  */
 final class AccesoRolPau
 {
@@ -24,6 +29,10 @@ final class AccesoRolPau
     public const REGISTRO = 'acceso_pau.log';
     public const REGISTRO_DENEGADO = 'acceso_pau_denegado.log';
     private const PROXY_AJAX = 'frontend/shared/controller/src_ajax.php/';
+    /** Parámetros con ids de casa de un usuario de una casa (`sSeleccionados`: separados por comas). */
+    private const IDS_CASA = ['id_ubi', 'id_cdc', 'sSeleccionados'];
+    /** Pantallas en las que `sel[]` es la actividad (`id_activ#…`). */
+    private const SEL_ACTIVIDAD = ['frontend/actividades/controller/planning_casa_modificar.php'];
 
     /** @var array{comunes: list<string>, por_pau: array<string, list<string>>}|null */
     private static ?array $lista = null;
@@ -47,7 +56,7 @@ final class AccesoRolPau
         $parametros = $_POST !== [] ? $_POST : $_GET;
         $dirLog = dirname(__DIR__, 5) . '/log';
         self::registrar($dirLog, $pau, $metodo, $uri, $parametros);
-        if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::exigir())) {
+        if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::exigir(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
             return;
         }
         http_response_code(403);
@@ -62,19 +71,118 @@ final class AccesoRolPau
     }
 
     /**
-     * Si la petición puede seguir. Lo que el pau no puede pedir se apunta; se deja pasar si no se exige.
+     * Si la petición puede seguir. Lo que el pau no puede pedir (la ruta, o un id que no es suyo) se apunta;
+     * se deja pasar si no se exige.
      *
      * @param array<array-key, mixed> $parametros
+     * @param list<string> $idsPau ids de su persona, casas o centro (`csv_id_pau`)
+     * @param (callable(int): ?int)|null $ubiDeActividad casa (id_ubi) de una actividad
      */
-    public static function decidir(string $dirLog, string $pau, string $metodo, string $requestUri, array $parametros, bool $exigir): bool
+    public static function decidir(string $dirLog, string $pau, string $metodo, string $requestUri, array $parametros, bool $exigir, array $idsPau = [], ?callable $ubiDeActividad = null): bool
     {
         $ruta = self::ruta($requestUri);
-        if (self::permite($pau, $ruta)) {
+        if (!self::permite($pau, $ruta)) {
+            self::apuntar($dirLog . '/' . self::REGISTRO_DENEGADO, $pau, $metodo, $ruta, $parametros);
+
+            return !$exigir;
+        }
+        $ajeno = self::parametroAjeno($pau, $ruta, $parametros, $idsPau, $ubiDeActividad ?? static fn (int $id): ?int => null);
+        if ($ajeno === null) {
             return true;
         }
-        self::apuntar($dirLog . '/' . self::REGISTRO_DENEGADO, $pau, $metodo, $ruta, $parametros);
+        self::apuntar($dirLog . '/' . self::REGISTRO_DENEGADO, $pau, $metodo, $ruta, $parametros, $ajeno);
 
         return !$exigir;
+    }
+
+    /**
+     * El primer parámetro con un id que no es del pau del usuario, o null. De momento solo se mira el de una
+     * casa (`cdc`): sus casas, «una casa» (`cdc_sel=9`) con alguna suya, y actividades en sus casas.
+     *
+     * @param array<array-key, mixed> $parametros
+     * @param list<string> $idsPau
+     * @param callable(int): ?int $ubiDeActividad
+     */
+    public static function parametroAjeno(string $pau, string $ruta, array $parametros, array $idsPau, callable $ubiDeActividad): ?string
+    {
+        if ($pau !== 'cdc') {
+            return null;
+        }
+        $mias = array_flip($idsPau);
+        $alguna = false;
+        foreach (self::IDS_CASA as $nombre) {
+            foreach (self::valores($parametros[$nombre] ?? null, $nombre === 'sSeleccionados') as $valor) {
+                if (!isset($mias[$valor])) {
+                    return $nombre;
+                }
+                $alguna = true;
+            }
+        }
+        if (array_key_exists('cdc_sel', $parametros) && ($parametros['cdc_sel'] !== '9' || !$alguna)) {
+            return 'cdc_sel';
+        }
+        $actividades = ['id_activ' => self::valores($parametros['id_activ'] ?? null, false)];
+        if (in_array(self::rutaEfectiva($ruta), self::SEL_ACTIVIDAD, true)) {
+            $actividades['sel'] = array_map(static fn (string $v): string => strtok($v, '#') ?: '', self::valores($parametros['sel'] ?? null, false));
+        }
+        foreach ($actividades as $nombre => $ids) {
+            foreach ($ids as $id) {
+                $ubi = ctype_digit($id) ? $ubiDeActividad((int) $id) : null;
+                if ($ubi === null || !isset($mias[(string) $ubi])) {
+                    return $nombre;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Los valores no vacíos (ni `0`) de un parámetro, escalar o lista.
+     *
+     * @return list<string>
+     */
+    private static function valores(mixed $parametro, bool $porComas): array
+    {
+        $valores = [];
+        foreach (is_array($parametro) ? $parametro : [$parametro] as $v) {
+            if (!is_scalar($v)) {
+                continue;
+            }
+            foreach ($porComas ? explode(',', (string) $v) : [(string) $v] as $parte) {
+                $parte = trim($parte);
+                if ($parte !== '' && $parte !== '0') {
+                    $valores[] = $parte;
+                }
+            }
+        }
+
+        return $valores;
+    }
+
+    /**
+     * Ids de su persona, casas o centro (`csv_id_pau` del usuario en sesión).
+     *
+     * @return list<string>
+     */
+    private static function idsDelPau(mixed $auth): array
+    {
+        $usuario = is_array($auth) ? ($auth['MiUsuario'] ?? null) : null;
+        $csv = is_object($usuario) && method_exists($usuario, 'getCsvIdPauAsString') ? $usuario->getCsvIdPauAsString() : null;
+
+        return is_string($csv) ? self::valores($csv, true) : [];
+    }
+
+    private static function ubiDeActividad(int $idActiv): ?int
+    {
+        $container = $GLOBALS['container'] ?? null;
+        if (!is_object($container) || !method_exists($container, 'get')) {
+            return null;
+        }
+        $repositorio = $container->get(ActividadAllRepositoryInterface::class);
+        $actividad = $repositorio instanceof ActividadAllRepositoryInterface ? $repositorio->findById($idActiv) : null;
+
+        return $actividad?->getId_ubi();
     }
 
     /** Si un usuario con ese pau (vacío: de oficina) puede pedir esa ruta (ver {@see ruta()}). */
@@ -128,11 +236,11 @@ final class AccesoRolPau
     }
 
     /** @param array<array-key, mixed> $parametros */
-    private static function apuntar(string $fichero, string $pau, string $metodo, string $ruta, array $parametros): void
+    private static function apuntar(string $fichero, string $pau, string $metodo, string $ruta, array $parametros, string $ajeno = ''): void
     {
         $nombres = array_map('strval', array_keys($parametros));
         sort($nombres);
-        $linea = date('c') . "\t" . $pau . "\t" . $metodo . "\t" . $ruta . "\t" . implode(',', $nombres) . "\n";
+        $linea = date('c') . "\t" . $pau . "\t" . $metodo . "\t" . $ruta . "\t" . implode(',', $nombres) . ($ajeno !== '' ? "\t" . $ajeno : '') . "\n";
         @file_put_contents($fichero, $linea, FILE_APPEND | LOCK_EX);
     }
 

@@ -85,8 +85,10 @@ return [
             'src/casas/*',
             'frontend/actividadtarifas/controller/*',
             'src/actividadtarifas/*',
-            'frontend/planning/controller/*',
-            'src/planning/*',
+            // Del planning, solo el de casas (no el de personas, centros ni zonas)
+            'frontend/planning/controller/planning_casa_*',
+            'frontend/planning/controller/leyenda.php',
+            'src/planning/planning_casa_*',
             'frontend/actividades/controller/actividad_mutacion_ajax.php',
             'frontend/actividades/controller/actividad_select_ubi.php',
             'frontend/actividades/controller/calendario_listas.php',
