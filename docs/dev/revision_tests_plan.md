@@ -1434,3 +1434,7 @@ Hallazgos de `LoginProcesarIntegracionTest`, `AppMobileLoginIntegracionTest` y `
 
 **Cierre del login (2026-11-18):** suite completa en verde (11 267 tests), `composer qa:huecos` sin huecos nuevos y specs `smoke-login-form` y `app-movil-contrato` en verde. Quedan del bloque 1: el HTML sin escapar en el acta y las rutas de fichero en los mensajes de error. Pendiente fuera del código: ejecutar desde el menú de migraciones `202611181000_aux_usuarios_bloqueo_login_y_totp` (sv-e y sf) para registrarla, y aplicarla en producción **antes o junto con** este código (sin las columnas, el bloqueo y el TOTP de un solo uso no actúan; el login sigue funcionando).
 
+### Acta: HTML sin escapar (2026-11-18)
+
+`ActaImprimirPresentacionData` montaba el bloque del tribunal (pantalla y PDF del acta) con los nombres de los examinadores y el lugar sin escapar: los dos son texto libre. Ahora van con `htmlspecialchars`; los arrays de datos (`examinadores`, `lugar_fecha`) siguen sin tocar. Lo demás que pintan las vistas del acta son nombres de persona (lista blanca sin `<`/`>`), números, catálogo y configuración. Tests que fallaban antes: `test_el_nombre_del_examinador_se_escapa_en_el_html` y `test_el_lugar_se_escapa_en_el_html_del_tribunal`.
+

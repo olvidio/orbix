@@ -148,11 +148,12 @@ final class ActaImprimirPresentacionData
 
         $lugar_fecha = $lugar . ',  ' . ($oF_acta instanceof DateTimeLocal ? $oF_acta->getFechaLatin() : '');
 
+        // Examinadores y lugar son texto libre: van escapados en el HTML.
         $tribunal_html = "<div class=\"tribunal\">TRIBUNAL:</div>";
         foreach ($examinadores as $examinador) {
-            $tribunal_html .= "<div class=\"examinador\">$examinador</div>";
+            $tribunal_html .= '<div class="examinador">' . htmlspecialchars((string) $examinador, ENT_QUOTES, 'UTF-8') . '</div>';
         }
-        $tribunal_html .= "<div class=\"fecha\">$lugar_fecha</div>";
+        $tribunal_html .= '<div class="fecha">' . htmlspecialchars($lugar_fecha, ENT_QUOTES, 'UTF-8') . '</div>';
         $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 
         $aPersonasNotas_list = [];

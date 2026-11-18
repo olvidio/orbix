@@ -360,18 +360,38 @@ final class ActaImprimirPresentacionDataTest extends myTest
         $this->assertSame(6, $out['lin_tribunal'], '4 líneas de encabezado + 2 por examinador');
     }
 
-    /**
-     * Hallazgo: los nombres de los examinadores se insertan en el HTML del tribunal sin escapar.
-     */
-    public function test_el_nombre_del_examinador_no_se_escapa_en_el_html(): void
+    /** Los nombres de los examinadores (texto libre) van escapados en el HTML del tribunal. */
+    public function test_el_nombre_del_examinador_se_escapa_en_el_html(): void
     {
         $this->escenarioBase();
         $this->tribunalDl = $this->createMock(ActaTribunalDlRepositoryInterface::class);
-        $this->tribunalDl->method('matching')->willReturn([$this->tribunal('<b>Perez</b>')]);
+        $this->tribunalDl->method('matching')->willReturn([$this->tribunal('<b>Perez</b> & "Gil"')]);
 
         $out = $this->uc()->execute('dlb 12/24', 'imprimir');
 
-        $this->assertStringContainsString('<div class="examinador"><b>Perez</b></div>', $out['tribunal_html']);
+        $this->assertStringContainsString(
+            '<div class="examinador">&lt;b&gt;Perez&lt;/b&gt; &amp; &quot;Gil&quot;</div>',
+            $out['tribunal_html']
+        );
+        $this->assertStringNotContainsString('<b>', $out['tribunal_html']);
+        $this->assertSame(['<b>Perez</b> & "Gil"'], $out['examinadores'], 'los datos sin HTML no se tocan');
+    }
+
+    /** El lugar (texto libre) también va escapado en el HTML del tribunal. */
+    public function test_el_lugar_se_escapa_en_el_html_del_tribunal(): void
+    {
+        $acta = $this->createMock(Acta::class);
+        $acta->method('getId_asignatura')->willReturn(1101);
+        $acta->method('getLugar')->willReturn('<script>x()</script>');
+        $acta->method('getF_acta')->willReturn(null);
+        $this->actas->method('findById')->willReturn($acta);
+        $this->asignaturas->method('findById')->willReturn($this->asignatura());
+        $this->tipos->method('findById')->willReturn($this->tipoLatin());
+
+        $out = $this->uc()->execute('dlb 12/24', 'imprimir');
+
+        $this->assertStringContainsString('<div class="fecha">&lt;script&gt;x()&lt;/script&gt;,  </div>', $out['tribunal_html']);
+        $this->assertStringNotContainsString('<script>', $out['tribunal_html']);
     }
 
     public function test_sin_fecha_el_lugar_va_con_la_fecha_vacia(): void
