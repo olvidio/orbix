@@ -76,10 +76,8 @@ final class CalendarioUbiResumenData
         );
         $a_tarifas_actual = [];
         $a_tarifas_prev = [];
-        $ultimo_id_tarifa = 0;
         foreach ($cTipoTarifas as $oTipoTarifa) {
                 $id_tarifa = (int)$oTipoTarifa->getId_tarifa();
-                $ultimo_id_tarifa = $id_tarifa;
                 $modo = (int)$oTipoTarifa->getModo();
                 $letra = (string)$oTipoTarifa->getLetra();
 
@@ -223,9 +221,8 @@ final class CalendarioUbiResumenData
                 $oTipoActiv = new TiposActividades($id_tipo_activ);
                 $nom = $oTipoActiv->getNom() . " ($f_ini_local - $f_fin_local)";
 
-                // Tarifa asociada: la legacy sólo miraba el último id_tarifa del
-                // bucle anterior; replicamos ese comportamiento.
-                $id_tarifa = $ultimo_id_tarifa;
+                // Tarifa de la actividad (el código antiguo valoraba todas con la última del listado).
+                $id_tarifa = (int) ($oActividad->getTarifa() ?? 0);
                 if ($id_tarifa > 0 && isset($a_tarifas_prev[$id_tarifa])) {
                     $oIngreso = $this->ingresoRepository->findById($id_activ);
                     $num_asistentes = $oIngreso?->getNumAsistentesVo()?->value() ?? 0;

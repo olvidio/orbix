@@ -139,10 +139,11 @@ final class CalendarioUbiResumenDataTest extends myTest
         }
     }
 
-    private function actividad(int $id, float $enPeriodo = 5.0): ActividadAll&MockObject
+    private function actividad(int $id, float $enPeriodo = 5.0, ?int $tarifa = 5): ActividadAll&MockObject
     {
         $a = $this->createMock(ActividadAll::class);
         $a->method('getId_activ')->willReturn($id);
+        $a->method('getTarifa')->willReturn($tarifa);
         $a->method('getId_tipo_activ')->willReturn(self::TIPO);
         $a->method('getF_ini')->willReturn(new DateTimeLocal(($this->any + 1) . '-02-10'));
         $a->method('getF_fin')->willReturn(new DateTimeLocal(($this->any + 1) . '-02-15'));
@@ -398,24 +399,37 @@ final class CalendarioUbiResumenDataTest extends myTest
         $this->assertSame(0, $r['inc_pt']);
     }
 
-    /**
-     * Hallazgo (ya comentado en el código): todas las actividades se valoran con la última tarifa del listado de
-     * tipos de tarifa de la sección, no con la tarifa de cada actividad.
-     */
-    public function test_todas_las_actividades_se_valoran_con_la_ultima_tarifa_del_listado(): void
+    /** Cada actividad se valora con su propia tarifa (antes, todas con la última del listado de tipos de tarifa). */
+    public function test_cada_actividad_se_valora_con_su_tarifa(): void
     {
         $this->tipoTarifa(5, 2, 'A', 10.0, 12.0);
         $this->tipoTarifa(6, 2, 'B', 20.0, 25.0, 901);
-        $a = $this->actividad(3001);
-        $a->expects($this->never())->method('getTarifa');
-        $this->actividadesDevueltas = [$a];
+        $this->actividadesDevueltas = [$this->actividad(3001, 5.0, 5), $this->actividad(3002, 5.0, 6)];
         $this->asistentes(30);
 
         $r = $this->uc()->execute(['id_ubi' => 77, 'seccion' => 'sv']);
 
-        $this->assertSame('B', $r['a_actividades'][0]['id_tarifa']);
-        $this->assertSame(4125.0, $r['a_actividades'][0]['ingresos']);
+        // 5 días con el aumento del 10 % → 5,5 días × 30 asistentes = 165 asistencias
+        $this->assertSame('A', $r['a_actividades'][0]['id_tarifa']);
+        $this->assertSame(1980.0, $r['a_actividades'][0]['ingresos']);
+        $this->assertSame('B', $r['a_actividades'][1]['id_tarifa']);
+        $this->assertSame(4125.0, $r['a_actividades'][1]['ingresos']);
         $this->assertSame(['id_ubi' => 77, 'id_items' => [900, 901]], HashB::open($r['ctx_inc'], 'tarifa_ubi_update_inc'));
+    }
+
+    /** Una actividad sin tarifa, o con una tarifa que no está en el listado de la sección, sale «tar. no definida». */
+    public function test_actividad_sin_tarifa_o_con_una_tarifa_desconocida(): void
+    {
+        $this->tipoTarifa(5, 2, 'A', 10.0, 12.0);
+        $this->actividadesDevueltas = [$this->actividad(3001, 5.0, null), $this->actividad(3002, 5.0, 7)];
+        $this->asistentes(30);
+
+        $r = $this->uc()->execute(['id_ubi' => 77, 'seccion' => 'sv']);
+
+        foreach ([0, 1] as $i) {
+            $this->assertSame(_("tar. no definida"), $r['a_actividades'][$i]['ingresos']);
+            $this->assertSame('', $r['a_actividades'][$i]['id_tarifa']);
+        }
     }
 
     public function test_varias_actividades_suman_dias_asistentes_e_ingresos(): void
