@@ -217,8 +217,10 @@ final class ListaActividadesSgListadoTest extends myTest
         $this->assertSame('10#crt 10', $filas[0]['sel']);
         $this->assertSame('', $filas[0][8], 'sin permiso de ver sacd');
         $this->assertSame('', $filas[1]['sel']);
-        // Hallazgo menor: el texto «ocupado» va en la columna de inicio.
-        $this->assertStringStartsWith('ocupado sv (', $filas[1][1]);
+        // Las fechas van en sus columnas (y se ordenan como fechas); «ocupado» en la del tipo.
+        $this->assertSame($filas[0][1], $filas[1][1]);
+        $this->assertSame($filas[0][2], $filas[1][2]);
+        $this->assertSame(_("ocupado") . ' sv', $filas[1][4]);
         $this->assertSame('3 actividades encontradas (1 sin permiso)', $out['result_busqueda']);
     }
 

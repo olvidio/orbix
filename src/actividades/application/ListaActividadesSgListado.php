@@ -214,10 +214,11 @@ final class ListaActividadesSgListado
             }
             if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ(PermAccionBits::VER) === false) {
                 $a_valores[$i]['sel'] = '';
-                $a_valores[$i][1] = sprintf(_("ocupado %s (%s-%s)"), $ssfsv, $f_ini, $f_fin);
-                $a_valores[$i][2] = '';
+                // Fechas en sus columnas (se ordenan como fechas); «ocupado» en la del tipo.
+                $a_valores[$i][1] = $f_ini;
+                $a_valores[$i][2] = $f_fin;
                 $a_valores[$i][3] = '';
-                $a_valores[$i][4] = '';
+                $a_valores[$i][4] = _("ocupado") . ' ' . $ssfsv;
                 $a_valores[$i][5] = '';
                 $a_valores[$i][6] = '';
                 $a_valores[$i][7] = '';
