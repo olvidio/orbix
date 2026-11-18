@@ -82,12 +82,8 @@ final class PeticionesActivData
             foreach ($cDelegaciones as $oDelegacion) {
                 $dlsGrupo[] = (string) $oDelegacion->getDlVo()->value();
             }
-            if (count($dlsGrupo) > 1) {
+            if ($dlsGrupo !== []) {
                 $filtroGrupo = Filter::in(ActividadAllField::DlOrg, $dlsGrupo);
-            } elseif ($dlsGrupo !== []) {
-                // Comportamiento heredado: con una sola delegación el valor se comparaba por
-                // igualdad con el texto ya entrecomillado (`'dl'`), que no coincide nunca.
-                $filtroGrupo = Filter::eq(ActividadAllField::DlOrg, "'" . $dlsGrupo[0] . "'");
             }
         }
 

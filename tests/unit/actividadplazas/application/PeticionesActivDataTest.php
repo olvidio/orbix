@@ -147,11 +147,8 @@ final class PeticionesActivDataTest extends myTest
         $this->assertNotContains('dl_org in [dlx,dly]', DescribeCriteria::filtros($this->c[1]), 'las publicadas no se filtran por grupo');
     }
 
-    /**
-     * Hallazgo (ya comentado en el código): con una sola delegación en el grupo el valor se compara por
-     * igualdad con el texto entrecomillado `'dlx'`, que no coincide con ningún dl_org real.
-     */
-    public function test_un_grupo_de_una_sola_delegacion_compara_con_el_texto_entrecomillado(): void
+    /** Con una sola delegación en el grupo se filtra por esa dl (antes, por el texto entrecomillado `'dlx'`). */
+    public function test_un_grupo_de_una_sola_delegacion_filtra_por_esa_dl(): void
     {
         $this->personas->method('findById')->willReturn(null);
         $this->peticiones->method('matching')->willReturn([]);
@@ -162,7 +159,9 @@ final class PeticionesActivDataTest extends myTest
 
         $this->uc->execute(['id_nom' => '1', 'na' => 'n', 'sactividad' => 'ca', 'todos' => 3]);
 
-        $this->assertContains("dl_org eq 'dlx'", DescribeCriteria::filtros($this->c[0]));
+        $filtros = DescribeCriteria::filtros($this->c[0]);
+        $this->assertContains('dl_org in [dlx]', $filtros);
+        $this->assertNotContains("dl_org eq 'dlx'", $filtros);
     }
 
     /** Duda 19 del plan de tests: abrir la pantalla no borra nada; la petición obsoleta solo no se enseña. */
