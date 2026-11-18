@@ -142,6 +142,26 @@ final class PeticionesIncorporarTest extends myTest
         $this->assertTrue($guardado->isPropio());
     }
 
+    /**
+     * Incorporar peticiones no es para personas de paso (id_nom negativo): sus asistencias van a
+     * `d_asistentes_ex` y aquí solo se elige entre dl y out. El filtro `^\d{4}…` ya las deja fuera;
+     * esto lo fija aunque una petición así llegara.
+     */
+    public function test_la_peticion_de_una_persona_de_paso_no_se_incorpora(): void
+    {
+        $this->todas->method('matching')->willReturn([$this->actividad(3001, 'dlb')]);
+        $this->peticionesDevueltas = [$this->peticion(-100162470, 3001)];
+        $this->asistentesDl->method('matching')->willReturn([]);
+        $this->asistentesOut->method('matching')->willReturn([]);
+        $this->asistentesDl->expects($this->never())->method('Guardar');
+        $this->asistentesOut->expects($this->never())->method('Guardar');
+
+        $r = $this->uc()->execute(self::NUMERARIOS);
+
+        $this->assertSame(0, $r['incorporadas']);
+        $this->assertSame('', $r['error']);
+    }
+
     public function test_una_actividad_de_otra_dl_se_guarda_en_el_repositorio_de_fuera_y_se_quita_la_f_final(): void
     {
         $this->todas->method('matching')->willReturn([$this->actividad(3002, 'dlpf')]);

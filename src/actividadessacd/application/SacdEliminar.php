@@ -5,18 +5,24 @@ namespace src\actividadessacd\application;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 
 /**
  * Elimina un sacd ({id_activ, id_cargo}) de una actividad, incluyendo
  * la fila de `Asistencia` {id_activ, id_nom} asociada (si existe).
+ *
+ * La asistencia de un sacd de paso (`id_nom` negativo) está en `d_asistentes_ex` y solo se borra si la
+ * creó la asignación (`propio = false`): si asiste por sí mismo, se conserva. Las anteriores al
+ * 2026-11-18 quedaron en `d_asistentes_dl` y se siguen borrando de ahí.
  */
 final class SacdEliminar
 {
     public function __construct(
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private AsistenteDlRepositoryInterface $asistenteDlRepository,
+        private AsistenteExRepositoryInterface $asistenteExRepository,
     ) {
     }
 
@@ -52,6 +58,14 @@ final class SacdEliminar
             if ($oAsisActiv !== null) {
                 if ($this->asistenteDlRepository->Eliminar($oAsisActiv) === false) {
                     $errors .= _("hay un error, no se ha eliminado la asistencia") . ' ';
+                }
+            }
+            if ($id_nom < 0) {
+                $oAsisEx = $this->asistenteExRepository->findById($id_activ, $id_nom);
+                if ($oAsisEx !== null && !$oAsisEx->isPropio()) {
+                    if ($this->asistenteExRepository->Eliminar($oAsisEx) === false) {
+                        $errors .= _("hay un error, no se ha eliminado la asistencia") . ' ';
+                    }
                 }
             }
         }

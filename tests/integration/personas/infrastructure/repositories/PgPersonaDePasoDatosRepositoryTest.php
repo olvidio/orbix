@@ -32,15 +32,32 @@ final class PgPersonaDePasoDatosRepositoryTest extends myTest
     /** @return iterable<string, array{0: string, 1: string, 2: string, 3?: string}> */
     public static function origenes(): iterable
     {
-        // Las asistencias se buscan por la madre común: en producción `global.d_asistentes_dl` no es legible.
-        yield 'asistencia en una dl' => [Datos::ASISTENCIAS, 'oDBE_Select', 'publicv.d_asistentes_all', "tableoid::regclass::text LIKE '%d_asistentes_dl'"];
-        yield 'asistencia out o de paso' => [Datos::ASISTENCIAS, 'oDBE_Select', 'publicv.d_asistentes_all', "tableoid::regclass::text NOT LIKE '%d_asistentes_dl'"];
+        // Las asistencias de una persona de paso se graban en `restov.d_asistentes_ex`; solo se mira ahí.
+        yield 'asistencia de paso' => [Datos::ASISTENCIAS, 'oDBE_Select', 'restov.d_asistentes_ex'];
         yield 'cargo' => [Datos::CARGOS, 'oDBE_Select', 'global.d_cargos_activ'];
         yield 'encargo' => [Datos::ENCARGOS, 'oDBE_Select', 'global.encargos_sacd'];
         yield 'nota' => [Datos::NOTAS, 'oDB', 'publicv.e_notas'];
         yield 'matrícula' => [Datos::MATRICULAS, 'oDB', 'publicv.d_matriculas_activ'];
         yield 'docencia' => [Datos::DOCENCIA, 'oDB', 'global.d_docencia_stgr'];
         yield 'zona' => [Datos::ZONAS, 'oDBC_Select', 'global.zonas_sacd'];
+    }
+
+    /**
+     * En producción las dl no leen las madres de asistencias (`global.d_asistentes_dl`, y por si acaso
+     * tampoco se cuenta con `publicv.d_asistentes_all`): la consulta va directa a `restov.d_asistentes_ex`.
+     */
+    public function test_las_asistencias_se_buscan_solo_en_d_asistentes_ex(): void
+    {
+        $origenes = (new \ReflectionClassConstant($this->repo, 'ORIGENES'))->getValue();
+        $this->assertIsArray($origenes);
+        $tablas = [];
+        foreach ($origenes as $origen) {
+            if (is_array($origen) && ($origen[0] ?? null) === Datos::ASISTENCIAS) {
+                $tablas[] = $origen[2] ?? null;
+            }
+        }
+
+        $this->assertSame(['resto{s}.d_asistentes_ex'], $tablas);
     }
 
     #[DataProvider('origenes')]

@@ -137,6 +137,10 @@ final class PeticionesIncorporar
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
             $id_nom = $oPlazaPeticion->getId_nom();
             $id_activ_new = $oPlazaPeticion->getId_activ();
+            if ($id_nom < 0) {
+                // Persona de paso: no se incorpora por peticiones (sus asistencias van a d_asistentes_ex).
+                continue;
+            }
             if (!array_key_exists($id_activ_new, $aId_activ)) {
                 continue;
             }

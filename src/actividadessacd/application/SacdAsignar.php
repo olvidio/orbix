@@ -8,6 +8,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\actividadcargos\domain\criteria\ActividadCargoField;
 use src\asistentes\domain\entity\Asistente;
 use src\shared\domain\criteria\Criteria;
@@ -22,7 +23,9 @@ use src\shared\domain\criteria\OrderDirection;
  *    tipo `sacd` (`CargoRepository::getArrayCargos('sacd')`). Si todos
  *    estan ocupados, se calcula `max(id_cargo) + 1`.
  *  - Si la actividad es de sv (`id_tipo_activ` empieza por `1`), se
- *    crea ademas la fila de `Asistencia` correspondiente.
+ *    crea ademas la fila de `Asistencia` correspondiente: en `d_asistentes_dl`, o en
+ *    `d_asistentes_ex` si el sacd es una persona de paso (`id_nom` negativo), como el resto de sus
+ *    asistencias. Si la persona de paso ya asiste a la actividad, su asistencia no se toca.
  *
  * Sucesor de la rama `asignar` del dispatcher legacy
  * `apps/actividadessacd/controller/activ_sacd_ajax.php`.
@@ -34,6 +37,7 @@ final class SacdAsignar
         private ActividadCargoRepositoryInterface $actividadCargoRepository,
         private ActividadDlRepositoryInterface $actividadDlRepository,
         private AsistenteDlRepositoryInterface $asistenteDlRepository,
+        private AsistenteExRepositoryInterface $asistenteExRepository,
     ) {
     }
 
@@ -68,14 +72,17 @@ final class SacdAsignar
         // Crear asistencia si es actividad de sv (id_tipo_activ[0] === '1').
         $oActividad = $this->actividadDlRepository->findById($id_activ);
         $id_tipo_activ = $oActividad !== null ? (string)$oActividad->getId_tipo_activ() : '';
-        if ($id_tipo_activ !== '' && $id_tipo_activ[0] === '1') {
+        $dePaso = $id_nom < 0;
+        $yaAsiste = $dePaso && $this->asistenteExRepository->findById($id_activ, $id_nom) !== null;
+        if ($id_tipo_activ !== '' && $id_tipo_activ[0] === '1' && !$yaAsiste) {
+            $asistenteRepository = $dePaso ? $this->asistenteExRepository : $this->asistenteDlRepository;
             $oAsisActiv = new Asistente();
             $oAsisActiv->setId_activ($id_activ);
             $oAsisActiv->setId_nom($id_nom);
             $oAsisActiv->setPropio(false);
             $oAsisActiv->setFalta(false);
             $oAsisActiv->setDl_responsable(ConfigGlobal::mi_delef());
-            if ($this->asistenteDlRepository->Guardar($oAsisActiv) === false) {
+            if ($asistenteRepository->Guardar($oAsisActiv) === false) {
                 return _("hay un error, no se ha guardado la asistencia");
             }
         }

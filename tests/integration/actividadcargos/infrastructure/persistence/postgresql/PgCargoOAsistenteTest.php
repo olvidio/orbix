@@ -21,6 +21,8 @@ final class PgCargoOAsistenteTest extends myTest
     private const NOM = 990777001;
     private const NOM2 = 990777002;
     private const A = 99800000;
+    /** Persona de paso (id negativo): sus asistencias están en `restov.d_asistentes_ex`. */
+    private const PASO = -990777003;
 
     private CargoOAsistenteInterface $repo;
     private \PDO $db;
@@ -42,7 +44,8 @@ final class PgCargoOAsistenteTest extends myTest
 
     private function limpiar(): void
     {
-        $noms = self::NOM . ',' . self::NOM2;
+        $noms = self::NOM . ',' . self::NOM2 . ',' . self::PASO;
+        $this->db->exec("DELETE FROM restov.d_asistentes_ex WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_asistentes_dl WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_asistentes_out WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_cargos_activ_dl WHERE id_nom IN ($noms)");
@@ -77,6 +80,33 @@ final class PgCargoOAsistenteTest extends myTest
             array_map(fn ($c) => [$c->getId_activ(), $c->isPropio(), $c->getId_cargo()], $res)
         );
         $this->assertSame(self::NOM, $res[0]->getId_nom());
+    }
+
+    public function test_las_asistencias_de_una_persona_de_paso_estan_en_d_asistentes_ex(): void
+    {
+        $this->asiste('restov.d_asistentes_ex', 1, false, self::PASO);
+        $this->cargo(1, 35, self::PASO);
+        $this->asiste('restov.d_asistentes_ex', 2, true, self::PASO);
+
+        $res = $this->repo->getCargoOAsistente(self::PASO);
+
+        $this->assertSame(
+            [[self::A + 1, false, 35], [self::A + 2, true, 0]],
+            array_map(fn ($c) => [$c->getId_activ(), $c->isPropio(), $c->getId_cargo()], $res)
+        );
+    }
+
+    public function test_solapes_de_una_persona_de_paso_por_sus_asistencias_en_d_asistentes_ex(): void
+    {
+        $this->asiste('restov.d_asistentes_ex', 1, true, self::PASO);
+        $this->asiste('restov.d_asistentes_ex', 2, false, self::PASO);
+
+        $res = $this->repo->getSolapes([$this->sacd(self::PASO)], [
+            $this->actividad(1, '2091-03-01', '2091-03-05'),
+            $this->actividad(2, '2091-03-04', '2091-03-08'),
+        ]);
+
+        $this->assertSame([self::PASO => [self::A + 1, self::A + 2]], $res);
     }
 
     public function test_persona_sin_actividades(): void

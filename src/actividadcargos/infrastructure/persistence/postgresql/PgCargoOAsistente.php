@@ -9,6 +9,7 @@ use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\entity\CargoOAsistente;
 use src\actividades\domain\entity\ActividadAll;
 use src\personas\domain\entity\PersonaGlobal;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\traits\HandlesPdoErrors;
 use src\shared\traits\StoresPdoErrorTxt;
@@ -29,6 +30,14 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
     }
 
     /**
+     * Asistencias de las personas de paso: tabla común a todas las dl, fuera del esquema de la conexión.
+     */
+    private function tablaAsistentesEx(): string
+    {
+        return (ConfigGlobal::mi_sfsv() === 2 ? 'restof' : 'restov') . '.d_asistentes_ex';
+    }
+
+    /**
      * @return list<CargoOAsistente>
      */
     public function getCargoOAsistente(int $iid_nom): array
@@ -36,9 +45,12 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
         $oDbl = $this->oDbl;
 
         $oCargoOAsistenteSet = new Set();
+        $tablaEx = $this->tablaAsistentesEx();
         $sQuery = "SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
 					UNION ALL
 		        SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_out WHERE id_nom=$iid_nom
+					UNION ALL
+		        SELECT id_activ,propio,0 as id_cargo FROM $tablaEx WHERE id_nom=$iid_nom
 					UNION ALL
 				SELECT id_activ,'f' as propio,id_cargo FROM d_cargos_activ_dl WHERE id_nom=$iid_nom
 				ORDER BY 1,2 DESC";
@@ -91,6 +103,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
     {
         $oDbl = $this->oDbl;
 
+        $tablaEx = $this->tablaAsistentesEx();
         $tabla_tmp = 'tmp_activ_solape';
         $tabla_p_tmp = 'tmp_sacd_solape';
 
@@ -147,6 +160,9 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                         UNION ALL
                     SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
                         FROM d_asistentes_out d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
+                        UNION ALL
+                    SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
+                        FROM $tablaEx d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
                         UNION ALL
                     SELECT d.id_activ, 'f' as propio, d.id_cargo, a.f_ini, a.f_fin, a.id_ubi 
                         FROM d_cargos_activ_dl d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
@@ -208,7 +224,8 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             if ($id_nom === $id_nom_anterior) {
                 $a_actividades[] = $id_activ;
             } else {
-                if ($id_nom_anterior > 0) {
+                // 0 = todavía ninguna persona; un id negativo es una persona de paso.
+                if ($id_nom_anterior !== 0) {
                     $a_solapes[$id_nom_anterior] = $a_actividades;
                     $a_actividades = [];
                 }
@@ -216,7 +233,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             }
             $id_nom_anterior = $id_nom;
         }
-        if ($id_nom_anterior > 0) {
+        if ($id_nom_anterior !== 0) {
             $a_solapes[$id_nom_anterior] = $a_actividades;
         }
 
