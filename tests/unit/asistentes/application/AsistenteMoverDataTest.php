@@ -225,17 +225,22 @@ final class AsistenteMoverDataTest extends myTest
     }
 
     /**
-     * Hallazgo (anotado en la fase 1): para un tipo que no es ca, cv ni crt no hay curso y el filtro de fechas se
-     * monta entre dos cadenas vacías.
+     * Para un tipo que no es ca, cv ni crt no hay curso: se ofrecen las del mismo tipo que empiezan hoy o
+     * más tarde (decisión del 2026-11-18; antes el filtro iba entre dos fechas vacías y la consulta fallaba).
      */
-    public function test_otro_tipo_de_actividad_filtra_entre_fechas_vacias(): void
+    public function test_otro_tipo_de_actividad_ofrece_las_que_empiezan_desde_hoy(): void
     {
         $this->instalarPlazas(false);
         $this->actividad(self::ACTIV_ORIGEN, 'cve origen', self::TIPO_CVE);
 
         $this->uc()->build($this->entrada());
 
-        $this->assertSame('f_ini between [,]', $this->filtros[0]);
+        $this->assertSame([
+            'f_ini gte ' . date('Y-m-d'),
+            'id_tipo_activ matches ^' . self::TIPO_CVE,
+            'status eq ' . StatusId::ACTUAL,
+            'f_ini asc',
+        ], $this->filtros);
     }
 
     public function test_las_actividades_pedidas_salen_primero_separadas_y_solo_si_siguen_valiendo(): void

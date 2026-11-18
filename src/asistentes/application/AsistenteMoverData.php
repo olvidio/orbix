@@ -133,12 +133,14 @@ final class AsistenteMoverData
                     $oFincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt');
                     break;
             }
-            $inicurs_iso = $oInicurs ? $oInicurs->format('Y-m-d') : '';
-            $fincurs_iso = $oFincurs ? $oFincurs->format('Y-m-d') : '';
+            // ca, cv y crt: las del curso. Otros tipos no tienen curso: las que empiezan hoy o más tarde.
+            $filtroFechas = ($oInicurs !== null && $oFincurs !== null)
+                ? Filter::between(ActividadAllField::FIni, $oInicurs->format('Y-m-d'), $oFincurs->format('Y-m-d'))
+                : Filter::gte(ActividadAllField::FIni, date('Y-m-d'));
 
             $cActividades = $this->actividadRepository->matching(
                 Criteria::create()
-                    ->where(Filter::between(ActividadAllField::FIni, $inicurs_iso, $fincurs_iso))
+                    ->where($filtroFechas)
                     ->andWhere(Filter::matches(ActividadAllField::IdTipoActiv, '^' . $id_tipo))
                     ->andWhere(Filter::eq(ActividadAllField::Status, StatusId::ACTUAL))
                     ->orderBy(ActividadAllField::FIni)
