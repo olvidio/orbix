@@ -8,14 +8,14 @@ import { abrirApp, abrirPantalla, aceptarDialogos, esperarSrc, limpiar, marcaE2e
  *    (`/src/personas/persona_update`) → está en la BD → abrir su ficha → modificarla → guardar.
  *    A un numerario no se le borra desde la ficha (solo se ofrece «eliminar» a las personas de
  *    paso): se limpia con SQL.
- * 2. Persona de paso de la propia dl: alta → abrir su ficha → «eliminar» con confirmación
- *    (`/src/personas/persona_eliminar`) → ya no está en la BD.
+ * 2. Persona de paso: alta (sale «Otra» elegida; la dl propia no se ofrece) → abrir su ficha →
+ *    «eliminar» con confirmación (`/src/personas/persona_eliminar`; sin datos se puede borrar) →
+ *    ya no está en la BD.
  *
  * Los selectores van por `onclick`/`name`, no por texto: la interfaz puede estar en otro idioma.
  * Los datos llevan una marca propia y se borran con SQL al final aunque el test falle a medias.
  */
 const ESQUEMA = process.env.E2E_ESQUEMA ?? 'H-dlbv';
-const DL = (ESQUEMA.split('-')[1] ?? 'dlbv').replace(/v$/, '');
 const marca = marcaE2e();
 
 const numerario = (campos: string) => sqlDev('sv', `SELECT ${campos} FROM "${ESQUEMA}".p_numerarios WHERE apellido1 = '${marca}'`);
@@ -82,13 +82,14 @@ test('persona de paso: alta y borrado desde su ficha', async ({ page }) => {
   const ficha = page.locator('#main form#frm2');
   await ficha.locator('[name="nom"]').fill('Paso');
   await ficha.locator('[name="apellido1"]').fill(marca);
-  await ficha.locator('select[name="dl"]').selectOption(DL);
+  const dl = ficha.locator('select[name="dl"]');
+  await expect(dl, 'en el alta sale «Otra» elegida').toHaveValue('Otra');
   const alta = await esperarSrc(page, 'persona_update', () => ficha.locator('th[onclick*="fnjs_guardar"]').click());
   expect(alta.success, alta.mensaje).toBe(true);
   const idNom = dePaso('id_nom');
   expect(idNom, 'la persona de paso está en la BD').toMatch(/^-?\d+$/);
   idsCreados.push(idNom);
-  expect(dePaso(`nom || '|' || dl`)).toBe(`Paso|${DL}`);
+  expect(dePaso(`nom || '|' || dl`)).toBe('Paso|Otra');
 
   await abrirPantalla(page, `frontend/personas/controller/personas_editar.php?obj_pau=PersonaEx&sel[]=${idNom}%23pn`, 'form#frm2');
   await expect(ficha.locator('[name="apellido1"]')).toHaveValue(marca);
