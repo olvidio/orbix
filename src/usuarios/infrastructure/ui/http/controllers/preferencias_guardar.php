@@ -1,5 +1,6 @@
 <?php
 use src\shared\infrastructure\DependencyResolver;
+use src\shared\infrastructure\SessionAuthWriter;
 use src\shared\domain\helpers\FilterPostGet;
 
 use src\shared\config\ConfigGlobal;
@@ -147,9 +148,8 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
-    if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
-        $_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
-    }
+    // Con efecto inmediato: la sesión puede estar ya cerrada (ver SessionAuthWriter).
+    SessionAuthWriter::actualizar(['ordenApellidos' => $QordenApellidos]);
 
     // Guardar idioma:
     $Qidioma_nou = (string)\src\shared\domain\helpers\FilterPostGet::post('idioma_nou');
@@ -164,9 +164,7 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
-    if (isset($_SESSION['session_auth']) && is_array($_SESSION['session_auth'])) {
-        $_SESSION['session_auth']['idioma'] = $Qidioma_nou;
-    }
+    SessionAuthWriter::actualizar(['idioma' => $Qidioma_nou]);
     if ($Qidioma_nou !== '') {
         $arr_cookie_options = [
             'expires' => time() + (86400 * 30),

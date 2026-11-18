@@ -78,8 +78,11 @@ final class PreferenciasGuardarSesionTest extends myTest
         }
         session_id('pref-guardar-' . md5((string) $this->name() . microtime()));
         session_start();
-        $_SESSION = $this->sesionAnterior;
+        $_SESSION = ['session_auth' => $this->sesionAnterior['session_auth']];
         session_write_close();
+        // Tras session_write_close() $_SESSION sigue en memoria (el resto del
+        // request la lee); se restaura entera para el bootstrap del controlador.
+        $_SESSION = $this->sesionAnterior;
 
         $_POST = [
             'ctx_guardar' => HashB::sign('preferencias_guardar'),
