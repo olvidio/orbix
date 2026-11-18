@@ -1,6 +1,7 @@
 <?php
 
 use src\shared\application\copias\AvisarErrorCopias;
+use src\shared\application\PermisoTablaGenerica;
 use src\shared\application\copias\CopiasResincronizar;
 use src\shared\application\listeners\RegistrarCambioListener;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
@@ -20,6 +21,7 @@ use function DI\get;
 return [
 // Mapeos de Interfaces a Implementaciones
     AvisarErrorCopias::class => autowire(AvisarErrorCopias::class),
+    PermisoTablaGenerica::class => autowire(PermisoTablaGenerica::class),
     CopiasResincronizar::class => autowire(CopiasResincronizar::class),
     ColaMailRepositoryInterface::class => autowire(PgColaMailRepository::class),
     ConnectionRepositoryFactoryInterface::class => autowire(ConnectionRepositoryFactory::class),

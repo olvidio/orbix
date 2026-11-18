@@ -1,6 +1,8 @@
 <?php
 
+use src\shared\application\PermisoTablaGenerica;
 use src\shared\domain\DatosUpdateRepo;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
@@ -40,6 +42,15 @@ $obj = urldecode($Qclase_info_encoded);
 $oInfoClase = DatosInfoRepoResolver::resolve($obj);
 if ($oInfoClase->isSoloLectura()) {
     // Tabla de solo consulta: no se da de alta, modifica ni borra con la pantalla genérica.
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+// La cápsula no basta: tiene que poder modificar esta tabla ahora (la regla con la que se muestra).
+if (!DependencyResolver::get(PermisoTablaGenerica::class)->puedeModificar(
+    $Qclase_info_encoded,
+    method_exists($oInfoClase, 'getId_dossier') ? (int) $oInfoClase->getId_dossier() : null,
+    (int) $Qid_pau
+)) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }

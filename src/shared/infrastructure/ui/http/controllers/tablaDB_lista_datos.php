@@ -2,7 +2,9 @@
 
 namespace src\shared;
 
+use src\shared\application\PermisoTablaGenerica;
 use src\shared\domain\DatosTablaRepo;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
@@ -43,7 +45,13 @@ $error_txt = '';
 $data['a_cabeceras'] = $oDatosTabla->getCabeceras();
 $data['a_botones'] = $oDatosTabla->getBotones();
 $aValores = $oDatosTabla->getValores();
-if (is_array($aValores)) {
+// La cápsula de borrado de cada fila, solo para quien puede modificar esta tabla.
+$puedeModificar = !$oInfoClase->isSoloLectura() && DependencyResolver::get(PermisoTablaGenerica::class)->puedeModificar(
+    $Qclase_info_encoded,
+    method_exists($oInfoClase, 'getId_dossier') ? (int) $oInfoClase->getId_dossier() : null,
+    $Qid_pau
+);
+if ($puedeModificar && is_array($aValores)) {
     foreach ($aValores as $k => $row) {
         if (!is_array($row) || !isset($row['sel']) || !is_scalar($row['sel'])) {
             continue;

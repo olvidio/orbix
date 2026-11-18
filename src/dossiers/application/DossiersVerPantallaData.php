@@ -2,6 +2,7 @@
 
 namespace src\dossiers\application;
 
+use src\shared\application\PermisoTablaGenerica;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\dossiers\application\support\DossierFichaSelectRunner;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
@@ -29,6 +30,7 @@ class DossiersVerPantallaData
         private DossiersListaFichasData $dossiersListaFichasData,
         private DossierTipoFileSuffixResolver $suffixResolver,
         private DossierFichaSelectRunner $fichaSelectRunner,
+        private PermisoTablaGenerica $permisoTablaGenerica,
     ) {
     }
 
@@ -328,6 +330,9 @@ class DossiersVerPantallaData
                 }
 
                 $soloLectura = $oInfoClase->isSoloLectura();
+                // Permiso de escritura en este dossier sobre esta persona/actividad/ubi, calculado aquí.
+                $puedeModificar = !$soloLectura
+                    && $this->permisoTablaGenerica->puedeModificar($clase_info, (int) $id_dossier, (int) $id_pau);
                 $fichaSegmentos[] = [
                     'tipo' => 'datos_tabla',
                     'id' => $nom_bloque,
@@ -347,11 +352,12 @@ class DossiersVerPantallaData
                     'tabla' => [
                         'id_tabla' => 'datos_sql' . $id_dossier,
                         'cabeceras' => $oDatosTabla->getCabeceras(),
-                        'botones' => $soloLectura ? [] : $oDatosTabla->getBotones(),
-                        'valores' => $soloLectura ? $oDatosTabla->getValores() : $this->conCapsulaDeBorrado($oDatosTabla->getValores(), $Qclase_info_enc, (string) $id_pau, $Qobj_pau),
+                        'botones' => $puedeModificar ? $oDatosTabla->getBotones() : [],
+                        'valores' => $puedeModificar ? $this->conCapsulaDeBorrado($oDatosTabla->getValores(), $Qclase_info_enc, (string) $id_pau, $Qobj_pau) : $oDatosTabla->getValores(),
                     ],
-                    // De solo consulta: sin «modificar» / «eliminar» ni «nuevo» (permiso de lectura).
-                    'permiso' => $soloLectura ? 1 : (int) $Qpermiso,
+                    // De solo consulta: sin «modificar» / «eliminar» ni «nuevo» (permiso de lectura). Sin
+                    // permiso de escritura en el dossier, como mucho lectura aunque el POST diga otra cosa.
+                    'permiso' => $soloLectura ? 1 : ($puedeModificar ? (int) $Qpermiso : min((int) $Qpermiso, 2)),
                     'ins_traslado_link_spec' => $insTrasladoLinkSpec,
                 ];
             }

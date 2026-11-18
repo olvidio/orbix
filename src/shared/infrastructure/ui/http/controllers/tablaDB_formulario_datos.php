@@ -1,6 +1,8 @@
 <?php
 
+use src\shared\application\PermisoTablaGenerica;
 use src\shared\domain\DatosFormRepo;
+use src\shared\infrastructure\DependencyResolver;
 use src\shared\infrastructure\DatosInfoRepoResolver;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
@@ -31,10 +33,21 @@ if ($oInfoClase->isSoloLectura()) {
     ContestarJson::enviar(_("Operación no autorizada"), 'none');
     return;
 }
+// Solo alta o modificación, y solo quien puede modificar esta tabla (la regla con la que se muestra).
+$idPauPermiso = (int) FilterPostGet::post('id_pau');
+if (!in_array($mod, ['nuevo', 'editar'], true)
+    || !DependencyResolver::get(PermisoTablaGenerica::class)->puedeModificar(
+        (string) $Qclase_info_encoded,
+        method_exists($oInfoClase, 'getId_dossier') ? (int) $oInfoClase->getId_dossier() : null,
+        $idPauPermiso
+    )) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);
 }
-$oInfoClase->setMod($mod !== '' ? $mod : null);
+$oInfoClase->setMod($mod);
 $oInfoClase->setA_pkey($a_pkey);
 $oFicha = $oInfoClase->getFicha();
 $aCamposDepende = $oInfoClase->getArrayCamposDepende();
@@ -72,9 +85,7 @@ if (!empty($oFicha)) {
     $oDatosFormRepo->setFicha($oFicha);
 }
 
-if ($mod !== '') {
-    $oDatosFormRepo->setMod($mod);
-}
+$oDatosFormRepo->setMod($mod);
 
 // Get the form data
 $formData = $oDatosFormRepo->getFormularioData();
@@ -84,11 +95,14 @@ $data = $formData;
 $data['explicacion_txt'] = $explicacion_txt;
 $data['tit_txt'] = $tit_txt;
 $Qid_pau = (string)FilterPostGet::post('id_pau');
-$Qs_pkey = (string)FilterPostGet::post('s_pkey');
+// Se firma la clave del registro que se ha cargado (a_pkey), no la que llegue en el POST.
+$sPkeyFirmada = ($mod === 'editar' && $a_pkey !== null && $a_pkey !== '')
+    ? \src\shared\domain\helpers\FuncTablasSupport::urlsafeB64encode(json_encode($a_pkey, JSON_THROW_ON_ERROR))
+    : '';
 $data['ctx_update'] = HashB::sign('tablaDB_update', [
     'clase_info' => is_string($Qclase_info_encoded) ? $Qclase_info_encoded : '',
     'mod' => $mod,
-    's_pkey' => $Qs_pkey,
+    's_pkey' => $sPkeyFirmada,
     'id_pau' => $Qid_pau,
     'obj_pau' => is_string($Qobj_pau) ? $Qobj_pau : '',
 ]);

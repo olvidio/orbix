@@ -26,6 +26,9 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\PermisoMenuBits;
+use src\shared\application\PermisoTablaGenerica;
 use Tests\myTest;
 
 /**
@@ -53,9 +56,14 @@ final class DossiersVerPantallaDataTest extends myTest
     private array $originales = [];
     private string $raiz = '';
 
+    private mixed $permMenusPrevio = null;
+
     public function setUp(): void
     {
         parent::setUp();
+        // Por defecto, el usuario puede escribir en el dossier 1022 (escritura «sm», ver hayTipos()).
+        $this->permMenusPrevio = $_SESSION['iPermMenus'] ?? null;
+        $_SESSION['iPermMenus'] = PermisoMenuBits::map()['sm'];
         $this->tipos = $this->createMock(TipoDossierRepositoryInterface::class);
         $this->actividades = $this->createMock(ActividadAllRepositoryInterface::class);
         $this->personasN = $this->createMock(PersonaNRepositoryInterface::class);
@@ -120,6 +128,11 @@ PHP);
 
     public function tearDown(): void
     {
+        if ($this->permMenusPrevio === null) {
+            unset($_SESSION['iPermMenus']);
+        } else {
+            $_SESSION['iPermMenus'] = $this->permMenusPrevio;
+        }
         foreach ($this->originales as $id => $original) {
             $GLOBALS['container']->set($id, $original);
         }
@@ -163,6 +176,7 @@ PHP);
             $this->lista,
             new DossierTipoFileSuffixResolver($this->raiz),
             new DossierFichaSelectRunner(),
+            new PermisoTablaGenerica($this->createStub(MenuDbRepositoryInterface::class), $this->tipos),
         );
     }
 
@@ -189,6 +203,9 @@ PHP);
             }
             $t = $this->createMock(TipoDossier::class);
             $t->method('getId_tipo_dossier')->willReturn($id === 1004 ? 1022 : $id);
+            $t->method('getTabla_from')->willReturn('p');
+            $t->method('getPermiso_lectura')->willReturn(PermisoMenuBits::map()['sg']);
+            $t->method('getPermiso_escritura')->willReturn(PermisoMenuBits::map()['sm']);
             if ($id === 9001) {
                 $t->method('getApp')->willReturn('fixdossier');
                 $t->method('getCodigoVo')->willReturn(new TipoDossierCodigo('demo'));
@@ -552,6 +569,25 @@ PHP);
         $this->assertSame('datos_tabla', $s['tipo']);
         $this->assertSame([], $s['tabla']['botones']);
         $this->assertSame(1, $s['permiso'], 'permiso de lectura: la vista no pinta «nuevo»');
+    }
+
+    /**
+     * El permiso del dossier lo decide el servidor, no el POST: con solo permiso de lectura (`sg`) la tabla
+     * se lista sin «modificar» / «eliminar» ni cápsulas de borrado aunque llegue `permiso=3` (revisión de
+     * seguridad del 2026-11-18).
+     */
+    public function test_un_dossier_de_datos_sin_permiso_de_escritura_no_ofrece_modificar(): void
+    {
+        $_SESSION['iPermMenus'] = PermisoMenuBits::map()['sg'];
+        $this->hayPersonaN();
+        $this->hayTipos();
+
+        $data = $this->sut()->build(self::personaPost() + ['id_dossier' => '1022', 'permiso' => '3']);
+
+        $s = $data['ficha_segmentos'][0];
+        $this->assertSame('datos_tabla', $s['tipo']);
+        $this->assertSame([], $s['tabla']['botones']);
+        $this->assertSame(2, $s['permiso']);
     }
 
     public function test_el_dossier_de_traslados_1004_añade_el_enlace_al_formulario_de_traslado(): void
