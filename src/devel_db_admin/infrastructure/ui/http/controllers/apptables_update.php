@@ -10,6 +10,13 @@ use src\devel_db_admin\application\ApptablesUpdate;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+use src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard;
+
+// Solo quien ve las herramientas de base de datos en el menú (PermisoHerramientasBd).
+if (!PermisoHerramientasBdGuard::permiteEsquemas()) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 
 try {

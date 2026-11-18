@@ -1477,6 +1477,6 @@ Pendiente desde la sección 17 («el barrido no fue exhaustivo»). Un script sac
 **Pendiente, de autorización (decisión del usuario):**
 - `HashF::validatePost()` no comprueba nada si la petición no trae `h`; las rutas `/src` no miran el rol: cualquier usuario con sesión llega a cualquier endpoint que no abra una cápsula `HashB`.
 - `tablaDB_formulario_datos` firma `ctx_update` con `mod` y `s_pkey` del POST (oráculo de firma para la pantalla genérica de tablas).
-- `db_propiedades_data` reparte las cápsulas de las herramientas de esquemas sin mirar el rol.
+- ~~`db_propiedades_data` reparte las cápsulas de las herramientas de esquemas sin mirar el rol.~~ **Hecho (2026-11-18):** los 16 controladores de `src/devel_db_admin` comprueban lo primero `PermisoHerramientasBdGuard` con la misma regla que el menú (permiso de menú `admin_sv`; las migraciones, también `admin_sf`, como «actualizar DB» en sf); sin él, «Operación no autorizada». Tests: `PermisoHerramientasBdTest` y `HerramientasBdSoloAdministracionTest` (con un usuario sin administración, los cuatro controladores de lectura devolvían sus datos y cápsulas; además comprueba que cada controlador mira el permiso antes de leer la petición).
 - `usuario_guardar` guarda `casas[]` sin convertir a entero (la lectura ya filtra).
 

@@ -14,6 +14,13 @@ use src\devel_db_admin\application\AbsorberEsquema;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
+use src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard;
+
+// Solo quien ve las herramientas de base de datos en el menú (PermisoHerramientasBd).
+if (!PermisoHerramientasBdGuard::permiteEsquemas()) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 
 try {

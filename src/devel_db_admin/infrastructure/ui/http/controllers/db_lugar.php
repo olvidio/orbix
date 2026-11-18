@@ -13,6 +13,13 @@ use src\devel_db_admin\application\DbLugarDropdown;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\web\ContestarJson;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard;
+
+// Solo quien ve las herramientas de base de datos en el menú (PermisoHerramientasBd).
+if (!PermisoHerramientasBdGuard::permiteEsquemas()) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 /** @var DelegacionRepositoryInterface $repoDl */
 $repoDl = DependencyResolver::get(DelegacionRepositoryInterface::class);
