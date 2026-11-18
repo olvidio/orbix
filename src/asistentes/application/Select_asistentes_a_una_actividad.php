@@ -28,6 +28,8 @@ use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Ubi;
 use src\actividades\domain\entity\TiposActividades;
 use src\permisos\domain\MenuDlPermissionBits;
+use src\personas\domain\OrdenPorApellidos;
+
 
 /**
  * Widget del dossier `3101` (codigo `asistentes_a_una_actividad`):
@@ -62,7 +64,7 @@ class Select_asistentes_a_una_actividad
     /** @var array<int|string, mixed> */
     private array $a_valores = [];
 
-    /** @var array<string, array<int|string, mixed>> */
+    /** @var array<int|string, array<int|string, mixed>> asistentes ordenados por apellidos (int) y plazas libres de otras dl (string) */
     private array $a_asistentes = [];
 
     private string $mi_dele = '';
@@ -654,9 +656,12 @@ class Select_asistentes_a_una_actividad
                 $a_val[14] = $propietario_txt;
             }
 
-            $this->a_asistentes[$nom] = $a_val;
+            $a_val['orden'] = OrdenPorApellidos::campos($oPersona);
+            // Lista, no mapa por nombre: dos personas con el mismo nombre salen las dos.
+            $this->a_asistentes[] = $a_val;
         }
-        uksort($this->a_asistentes, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
+        // Por primer apellido, aunque el nombre se muestre «Nombre Apellidos».
+        usort($this->a_asistentes, static fn (array $a, array $b): int => OrdenPorApellidos::comparar($a['orden'], $b['orden']));
     }
 
     public function getLeyenda(): void
@@ -894,6 +899,7 @@ class Select_asistentes_a_una_actividad
 
         $n = $c;
         foreach ($this->a_asistentes as $val) {
+            unset($val['orden']);
             $c++;
             $val[1] = "-";
             if (ConfigGlobal::is_app_installed('actividadplazas')) {

@@ -130,10 +130,19 @@ final class ListaAsistentesDataBuildTest extends myTest
         return new ListaAsistentesData($this->actividades, $this->asistentes, $this->actividadCargos, $this->cargos);
     }
 
-    private function persona(int $id, string $apellido, ?string $profesion = null): PersonaDl
+    /**
+     * @param string $apellido nombre tal como se muestra; si no se dan los apellidos, «Apellido1, Nombre»
+     */
+    private function persona(int $id, string $apellido, ?string $profesion = null, ?string $apellido1 = null, ?string $apellido2 = null, ?string $nom = null): PersonaDl
     {
+        if ($apellido1 === null) {
+            [$apellido1, $nom] = array_pad(explode(', ', $apellido, 2), 2, null);
+        }
         $p = $this->createMock(PersonaDl::class);
         $p->method('getPrefApellidosNombre')->willReturn($apellido);
+        $p->method('getApellido1')->willReturn($apellido1);
+        $p->method('getApellido2')->willReturn($apellido2);
+        $p->method('getNom')->willReturn($nom);
         $p->method('getCentro_o_dl')->willReturn('ctr' . $id);
         $p->method('getProfesion')->willReturn($profesion);
         $p->method('getF_nacimiento')->willReturn(null);
@@ -187,6 +196,54 @@ final class ListaAsistentesDataBuildTest extends myTest
         $this->assertSame(['1.-', '2.-', '3.-'], array_keys($this->porEtiqueta($r)));
         $this->assertSame(['Álvarez, Juan  (ctr10012)', 'Bosch, Pau  (ctr10013)', 'Zamora, Luis  (ctr10011)'], array_column($this->porEtiqueta($r), 'nombre'));
         $this->assertSame([], $this->porEtiqueta($r)['1.-']['a_datos_cl']);
+    }
+
+    public function test_con_la_preferencia_nombre_apellidos_se_ordena_por_el_primer_apellido(): void
+    {
+        $this->persona(10011, 'Luis Zamora', null, 'Zamora', null, 'Luis');
+        $this->persona(10012, 'Juan Álvarez', null, 'Álvarez', null, 'Juan');
+        $this->persona(10013, 'Pau Bosch', null, 'Bosch', null, 'Pau');
+        $this->asistente(10011);
+        $this->asistente(10012);
+        $this->asistente(10013);
+
+        $r = $this->uc()->build(['id_pau' => (string) self::ID_ACTIV, 'queSel' => 'lista']);
+
+        $this->assertSame(['Juan Álvarez  (ctr10012)', 'Pau Bosch  (ctr10013)', 'Luis Zamora  (ctr10011)'], array_column($r['aAsistentes'], 'nombre'));
+        $this->assertSame(['1.-', '2.-', '3.-'], array_column($r['aAsistentes'], 'etiqueta'));
+    }
+
+    public function test_con_el_mismo_primer_apellido_decide_el_segundo_y_despues_el_nombre(): void
+    {
+        $this->persona(10011, 'Ana Pérez Ruiz', null, 'Pérez', 'Ruiz', 'Ana');
+        $this->persona(10012, 'Pedro Pérez Gómez', null, 'Pérez', 'Gómez', 'Pedro');
+        $this->persona(10013, 'Bea Pérez Gómez', null, 'Pérez', 'Gómez', 'Bea');
+        $this->persona(10014, 'Carlos Pérez', null, 'Pérez', null, 'Carlos');
+        $this->asistente(10011);
+        $this->asistente(10012);
+        $this->asistente(10013);
+        $this->asistente(10014);
+
+        $r = $this->uc()->build(['id_pau' => (string) self::ID_ACTIV, 'queSel' => 'lista']);
+
+        $this->assertSame([
+            'Carlos Pérez  (ctr10014)',
+            'Bea Pérez Gómez  (ctr10013)',
+            'Pedro Pérez Gómez  (ctr10012)',
+            'Ana Pérez Ruiz  (ctr10011)',
+        ], array_column($r['aAsistentes'], 'nombre'));
+    }
+
+    public function test_dos_personas_con_el_mismo_nombre_salen_las_dos(): void
+    {
+        $this->persona(10011, 'Juan Pérez', null, 'Pérez', null, 'Juan');
+        $this->persona(10012, 'Juan Pérez', null, 'Pérez', null, 'Juan');
+        $this->asistente(10011);
+        $this->asistente(10012);
+
+        $r = $this->uc()->build(['id_pau' => (string) self::ID_ACTIV, 'queSel' => 'lista']);
+
+        $this->assertSame(['Juan Pérez  (ctr10011)', 'Juan Pérez  (ctr10012)'], array_column($r['aAsistentes'], 'nombre'));
     }
 
     public function test_la_actividad_puede_llegar_en_la_seleccion_con_su_nombre(): void

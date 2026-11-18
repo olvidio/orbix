@@ -183,11 +183,16 @@ final class SelectAsistentesAUnaActividadTest extends myTest
         return $w;
     }
 
-    private function persona(int $id, string $apellidos, bool $sacd = false, string $idTabla = 'n'): PersonaDl
+    /**
+     * @param string $apellidos nombre tal como se muestra; si no se da `$apellido1`, el primer apellido es lo que va antes de la coma
+     */
+    private function persona(int $id, string $apellidos, bool $sacd = false, string $idTabla = 'n', ?string $apellido1 = null, ?string $apellido2 = null, ?string $nom = null): PersonaDl
     {
         $p = $this->createMock(PersonaDl::class);
         $p->method('getPrefApellidosNombre')->willReturn($apellidos);
-        $p->method('getNom')->willReturn('Nom' . $id);
+        $p->method('getNom')->willReturn($nom ?? 'Nom' . $id);
+        $p->method('getApellido1')->willReturn($apellido1 ?? explode(', ', $apellidos, 2)[0]);
+        $p->method('getApellido2')->willReturn($apellido2);
         $p->method('getApellidos')->willReturn($apellidos);
         $p->method('isSacd')->willReturn($sacd);
         $p->method('getDl')->willReturn('dlb');
@@ -265,6 +270,39 @@ final class SelectAsistentesAUnaActividadTest extends myTest
         ], $valores[1]);
         $zamora = $valores[2];
         $this->assertSame(['2.-', 'no', 'llega tarde', 'sí', '93 111 / 600 222', 'luis@example.org'], [$zamora[1], $zamora[4], $zamora[7], $zamora[8], $zamora[9], $zamora[10]]);
+    }
+
+    public function test_con_la_preferencia_nombre_apellidos_se_ordena_por_el_primer_apellido(): void
+    {
+        $this->actividad();
+        $this->persona(10011, 'Luis Zamora', false, 'n', 'Zamora', null, 'Luis');
+        $this->persona(10012, 'Juan Álvarez', false, 'n', 'Álvarez', null, 'Juan');
+        $this->persona(10013, 'Ana Pérez Ruiz', false, 'n', 'Pérez', 'Ruiz', 'Ana');
+        $this->persona(10014, 'Bea Pérez Gómez', false, 'n', 'Pérez', 'Gómez', 'Bea');
+        foreach ([10011, 10012, 10013, 10014] as $id) {
+            $this->asistente($id);
+        }
+
+        $valores = $this->widget()->getSegmentData()['tabla']['valores'];
+
+        $this->assertSame(
+            ['Juan Álvarez  (ctr10012)', 'Bea Pérez Gómez  (ctr10014)', 'Ana Pérez Ruiz  (ctr10013)', 'Luis Zamora  (ctr10011)'],
+            array_values(array_column($valores, 2))
+        );
+        $this->assertSame(['1.-', '2.-', '3.-', '4.-'], array_values(array_column($valores, 1)));
+    }
+
+    public function test_dos_personas_con_el_mismo_nombre_salen_las_dos(): void
+    {
+        $this->actividad();
+        $this->persona(10011, 'Juan Pérez', false, 'n', 'Pérez', null, 'Juan');
+        $this->persona(10012, 'Juan Pérez', false, 'n', 'Pérez', null, 'Juan');
+        $this->asistente(10011);
+        $this->asistente(10012);
+
+        $valores = $this->widget()->getSegmentData()['tabla']['valores'];
+
+        $this->assertSame(['10011', '10012'], array_values(array_column($valores, 'sel')));
     }
 
     public function test_sin_permiso_de_modificar_las_filas_no_se_pueden_seleccionar(): void

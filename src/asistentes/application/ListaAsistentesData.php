@@ -15,6 +15,7 @@ use src\personas\domain\entity\Persona;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaPub;
+use src\personas\domain\OrdenPorApellidos;
 use src\shared\config\ConfigGlobal;
 
 /**
@@ -184,16 +185,20 @@ final readonly class ListaAsistentesData
             $a_val[5] = $chk_falta;
             $a_val[6] = $observ;
             $a_val[7] = $oPersona;
-            $asistentes[$nom] = $a_val;
+            $a_val['orden'] = OrdenPorApellidos::campos($oPersona);
+            // Lista, no mapa por nombre: dos personas con el mismo nombre salen las dos.
+            $asistentes[] = $a_val;
         }
-        uksort($asistentes, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
+        // Por primer apellido, aunque el nombre se muestre «Nombre Apellidos».
+        usort($asistentes, static fn (array $a, array $b): int => OrdenPorApellidos::comparar($a['orden'], $b['orden']));
 
         $c = 0;
         if (ConfigGlobal::is_app_installed('actividadcargos')) {
             $c = count($a_valores);
         }
 
-        foreach ($asistentes as $nom => $val) {
+        foreach ($asistentes as $val) {
+            unset($val['orden']);
             $c++;
             $val[1] = "$c.-";
             $a_valores[$c] = $val;
