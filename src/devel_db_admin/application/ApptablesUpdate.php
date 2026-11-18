@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use src\devel_db_admin\infrastructure\ModuleDbClassInvoker;
 use src\shared\config\ReplicaSelectPolicy;
 
@@ -46,6 +47,9 @@ final class ApptablesUpdate
 
         if (in_array($accion, self::ACCIONES_ESQUEMA, true) && $esquema === '') {
             throw new \RuntimeException(_("Debe elegir un esquema."));
+        }
+        if (in_array($accion, self::ACCIONES_ESQUEMA, true)) {
+            SiglasEsquema::validarEsquema($esquema);
         }
 
         $claseGlobal = "$nomApp\\db\\DB";

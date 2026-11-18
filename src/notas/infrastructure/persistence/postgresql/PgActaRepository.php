@@ -130,8 +130,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $acta = $Acta->getActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE acta = '$acta'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE acta = :w_acta";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_acta' => $acta], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
 
@@ -164,7 +164,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 					observ                   = :observ,
 					pdf                      = :pdf,
 					hash_impreso             = :hash_impreso";
-            $sql = "UPDATE $nom_tabla SET $update WHERE acta = '$acta'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE acta = :w_acta";
+            $aDatos['w_acta'] = $acta;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
@@ -183,8 +184,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE acta = '$acta'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE acta = :w_acta";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_acta' => $acta], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -205,8 +206,8 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE acta = '$acta'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE acta = :w_acta";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_acta' => $acta], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

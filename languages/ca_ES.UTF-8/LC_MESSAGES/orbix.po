@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-18 10:30+0100\n"
+"POT-Creation-Date: 2026-11-18 11:31+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -584,7 +584,7 @@ msgstr "activitat"
 #: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:14
 #: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:21
 #: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:19
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:69
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:70
 #: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:16
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:19
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:18
@@ -2332,12 +2332,12 @@ msgstr "pla d'estudis confirmat"
 #: frontend/planning/view/planning_ctr_que.phtml:55
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
-#: src/asistentes/application/ListaAsistentesData.php:119
-#: src/asistentes/application/ListaAsistentesData.php:123
+#: src/asistentes/application/ListaAsistentesData.php:120
 #: src/asistentes/application/ListaAsistentesData.php:124
-#: src/asistentes/application/ListaAsistentesData.php:174
-#: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:125
+#: src/asistentes/application/ListaAsistentesData.php:175
 #: src/asistentes/application/ListaAsistentesData.php:179
+#: src/asistentes/application/ListaAsistentesData.php:180
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:379
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
@@ -2366,12 +2366,12 @@ msgstr "si"
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:49
 #: frontend/profesores/view/ficha_profesor_stgr.phtml:112
 #: src/actividades/application/ActividadQueFiltrosBloque.php:98
-#: src/asistentes/application/ListaAsistentesData.php:121
-#: src/asistentes/application/ListaAsistentesData.php:123
+#: src/asistentes/application/ListaAsistentesData.php:122
 #: src/asistentes/application/ListaAsistentesData.php:124
-#: src/asistentes/application/ListaAsistentesData.php:176
-#: src/asistentes/application/ListaAsistentesData.php:178
+#: src/asistentes/application/ListaAsistentesData.php:125
+#: src/asistentes/application/ListaAsistentesData.php:177
 #: src/asistentes/application/ListaAsistentesData.php:179
+#: src/asistentes/application/ListaAsistentesData.php:180
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
@@ -4381,7 +4381,7 @@ msgstr "Per les bases de dades:"
 #: frontend/devel_db_admin/view/db_eliminar_esquema_que.phtml:38
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:44
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:142
-#: src/devel_db_admin/application/CopiarEsquema.php:51
+#: src/devel_db_admin/application/CopiarEsquema.php:54
 msgid "comun"
 msgstr "comú"
 
@@ -10539,14 +10539,14 @@ msgstr "i"
 #: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:60
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:106
 #: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:58
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:83
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:103
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:119
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:133
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:147
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:59
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:84
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:104
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:120
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:134
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:148
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:164
-#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:196
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:194
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:47
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:52
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:29
@@ -12456,8 +12456,8 @@ msgstr "no trobo ningú amb id_nom: %d"
 #: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:173
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:186
 #: src/asistentes/application/FormAsistentesAUnaActividadData.php:85
-#: src/asistentes/application/ListaAsistentesData.php:88
-#: src/asistentes/application/ListaAsistentesData.php:156
+#: src/asistentes/application/ListaAsistentesData.php:89
+#: src/asistentes/application/ListaAsistentesData.php:157
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:240
 #: src/asistentes/application/Select_actividades_de_una_persona.php:154
 #: src/asistentes/application/services/AsistenteActividadService.php:299
@@ -14115,7 +14115,7 @@ msgstr "activitats de la dl/r"
 msgid "actividades de otras dl/r"
 msgstr "activitats d'altres dl/r"
 
-#: src/asistentes/application/ListaAsistentesData.php:130
+#: src/asistentes/application/ListaAsistentesData.php:131
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
 msgid "no asiste"
 msgstr "no assisteix"
@@ -15491,57 +15491,57 @@ msgstr "Delegació origen no trobada."
 msgid "se ha pasado la %s a %s"
 msgstr "s'ha passat la %s a %s"
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:34
+#: src/devel_db_admin/application/ApptablesUpdate.php:35
 msgid "No hay aplicaciones configuradas en la sesión."
 msgstr "No hi ha aplicacions configurades en la sessió."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:40
+#: src/devel_db_admin/application/ApptablesUpdate.php:41
 msgid "Aplicación no válida."
 msgstr "Aplicació no vàlida."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:44
+#: src/devel_db_admin/application/ApptablesUpdate.php:45
 msgid "Acción no indicada."
 msgstr "Acció no indicada."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:48
+#: src/devel_db_admin/application/ApptablesUpdate.php:49
 msgid "Debe elegir un esquema."
 msgstr "Ha d'escollir un esquema."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:62
+#: src/devel_db_admin/application/ApptablesUpdate.php:66
 msgid "Acción no reconocida."
 msgstr "Acció no reconeguda."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:67
+#: src/devel_db_admin/application/ApptablesUpdate.php:71
 #, php-format
 msgid "La aplicación %s no define clases DB para esta operación."
 msgstr "L'aplicació %s no defineix classes DB per a aquesta operació."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:149
+#: src/devel_db_admin/application/ApptablesUpdate.php:153
 #, php-format
 msgid "Tablas globales de %s creadas correctamente."
 msgstr "Taules globals de %s creades correctament."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:150
+#: src/devel_db_admin/application/ApptablesUpdate.php:154
 #, php-format
 msgid "Tablas globales de %s eliminadas correctamente."
 msgstr "Taules globals de %s eliminades correctament."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:151
+#: src/devel_db_admin/application/ApptablesUpdate.php:155
 #, php-format
 msgid "Tablas de esquema de %s creadas correctamente (%s)."
 msgstr "Taules d'esquema de %s creades correctament (%s)."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:152
+#: src/devel_db_admin/application/ApptablesUpdate.php:156
 #, php-format
 msgid "Tablas de esquema de %s eliminadas correctamente (%s)."
 msgstr "Taules d'esquema de %s eliminades correctament (%s)."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:153
+#: src/devel_db_admin/application/ApptablesUpdate.php:157
 #, php-format
 msgid "Tablas de esquema de %s rellenadas correctamente (%s)."
 msgstr "Taules d'esquema de %s omplertes correctament (%s)."
 
-#: src/devel_db_admin/application/ApptablesUpdate.php:154
+#: src/devel_db_admin/application/ApptablesUpdate.php:158
 msgid "Operación completada correctamente."
 msgstr "Operació completada correctament."
 
@@ -15633,24 +15633,24 @@ msgstr ""
 "entrades als fitxers .inc que indica aquest pas.%2$s%2$sRols que falten a "
 "PostgreSQL:%2$s%3$s"
 
-#: src/devel_db_admin/application/CopiarEsquema.php:31
+#: src/devel_db_admin/application/CopiarEsquema.php:34
 msgid "Faltan región o delegación destino para copiar datos."
 msgstr "Falten regió o delegació destí per copiar dades."
 
-#: src/devel_db_admin/application/CopiarEsquema.php:40
-#: src/devel_db_admin/application/CrearEsquema.php:44
+#: src/devel_db_admin/application/CopiarEsquema.php:43
+#: src/devel_db_admin/application/CrearEsquema.php:47
 msgid "Esquema de referencia no válido."
 msgstr "Esquema de referència no vàlid."
 
-#: src/devel_db_admin/application/CopiarEsquema.php:86
+#: src/devel_db_admin/application/CopiarEsquema.php:89
 msgid "sv (sv-e)"
 msgstr "sv (sv-e)"
 
-#: src/devel_db_admin/application/CopiarEsquema.php:119
+#: src/devel_db_admin/application/CopiarEsquema.php:122
 msgid "sf (sf-e)"
 msgstr "sf (sf-e)"
 
-#: src/devel_db_admin/application/CopiarEsquema.php:164
+#: src/devel_db_admin/application/CopiarEsquema.php:167
 msgid "Se omitió"
 msgstr "Omitit"
 
@@ -15790,17 +15790,17 @@ msgstr "Valors per defecte ALTER reaplicats (%s)."
 msgid "para gestión global"
 msgstr "per a gestió global"
 
-#: src/devel_db_admin/application/EliminarEsquemaDl.php:189
+#: src/devel_db_admin/application/EliminarEsquemaDl.php:191
 #, php-format
 msgid "No se pudo eliminar el esquema «%1$s» en %2$s: %3$s"
 msgstr "No es pot eliminar l'esquema «%1$s» en %2$s: %3$s"
 
-#: src/devel_db_admin/application/EliminarEsquemaDl.php:237
+#: src/devel_db_admin/application/EliminarEsquemaDl.php:239
 #, php-format
 msgid "El rol «%s» ya no existía; no se intentó borrarlo."
 msgstr "El rol «%s» ja no existia; no s'ha intentat esborrar."
 
-#: src/devel_db_admin/application/EliminarEsquemaDl.php:246
+#: src/devel_db_admin/application/EliminarEsquemaDl.php:248
 #, php-format
 msgid ""
 "Aviso: no se pudo eliminar el rol «%1$s» (los esquemas ya se borraron): %2$s"
@@ -15853,7 +15853,7 @@ msgstr "Error per %s"
 msgid "error al escribir el fichero"
 msgstr "error en escriure el fitxer"
 
-#: src/devel_db_admin/application/RenombrarEsquema.php:330
+#: src/devel_db_admin/application/RenombrarEsquema.php:332
 #, php-format
 msgid ""
 "Aviso: en sf solo existía el rol «%1$s»/«%2$s», no el esquema (no se marcó "
@@ -15864,7 +15864,7 @@ msgstr ""
 "sf en «crear esquema»). S'ha canviat el nom del rol i les claus .inc; no "
 "s'ha tocat la BD sf-e."
 
-#: src/devel_db_admin/application/RenombrarEsquema.php:336
+#: src/devel_db_admin/application/RenombrarEsquema.php:338
 #, php-format
 msgid ""
 "Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» "
@@ -15873,7 +15873,7 @@ msgstr ""
 "Avís: sf marcat al formulari però no hi ha cap esquema ni rol «%1$s»/«%2$s» "
 "a PostgreSQL; només s'han actualitzat els .inc si existien."
 
-#: src/devel_db_admin/application/RenombrarEsquema.php:369
+#: src/devel_db_admin/application/RenombrarEsquema.php:371
 #, php-format
 msgid ""
 "El esquema «%1$s» no tiene entrada de conexión en «%2$s.inc» (ni con el "
@@ -16340,6 +16340,15 @@ msgstr ""
 #, php-format
 msgid "… y %d desajustes más de defaults."
 msgstr "... i %d desajustos més de defaults."
+
+#: src/devel_db_admin/domain/SiglasEsquema.php:22
+msgid "Región o delegación no válida: solo letras, dígitos, «_» y «+»."
+msgstr "Regió o delegació no vàlida: només lletres, dígits, «_» i «+»."
+
+#: src/devel_db_admin/domain/SiglasEsquema.php:29
+#: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:993
+msgid "Nombre de esquema no válido."
+msgstr "Nom de l'esquema no vàlid."
 
 #: src/dossiers/application/PermDossierVerFormData.php:79
 msgid "¿Está seguro que desea eliminar este dossier?"
@@ -19138,7 +19147,7 @@ msgstr ""
 "Falten user/password de manteniment en importar (%1$s, plantilla «%2$s»). "
 "Reviseu el per defecte i %3$s."
 
-#: src/shared/infrastructure/persistence/DBConnection.php:97
+#: src/shared/infrastructure/persistence/DBConnection.php:98
 msgid "Error de configuración: faltan parámetros para conectar con la BDU."
 msgstr "Error de configuració: falten paràmetres per connectar amb la BDU."
 
@@ -19193,10 +19202,6 @@ msgstr "Falta ssh_user per eliminar l'esquema en el servidor interior («%s»)."
 #, php-format
 msgid "Falta dbname en la conexión de mantenimiento «%s»."
 msgstr "Falta dbname en la connexió de manteniment «%s»."
-
-#: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:993
-msgid "Nombre de esquema no válido."
-msgstr "Nom de l'esquema no vàlid."
 
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:1133
 #, php-format
@@ -20398,16 +20403,16 @@ msgstr "No se pudo resolver nombre de tabla para: %s"
 msgid "infoTable no implementado para la tabla: %s"
 msgstr "infoTable no implementado para la tabla: %s"
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:236
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:237
 msgid "Error obteniendo nuevo id de db_idschema."
 msgstr "Error obteniendo nuevo id de db_idschema."
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:278
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:279
 #, php-format
 msgid "Base de datos no soportada: %s"
 msgstr "Base de datos no soportada: %s"
 
-#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:328
+#: src/utils_database/infrastructure/persistence/postgresql/PgDbSchemaRepository.php:329
 msgid "No se encuentra ningún id_schema en el rango 3000-4000"
 msgstr "No es trobat cap id_schema en el rang 3000-4000"
 

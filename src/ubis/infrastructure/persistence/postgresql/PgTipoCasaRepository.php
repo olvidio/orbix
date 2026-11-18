@@ -81,8 +81,8 @@ public function getArrayTiposCasa(): array
         $tipo_casa = $TipoCasa->getTipoCasaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE tipo_casa = :w_tipo_casa";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_tipo_casa' => $tipo_casa], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
 
@@ -102,7 +102,8 @@ public function getArrayTiposCasa(): array
             unset($aDatos['tipo_casa']);
             $update = "
 					nombre_tipo_casa         = :nombre_tipo_casa";
-            $sql = "UPDATE $nom_tabla SET $update WHERE tipo_casa = '$tipo_casa'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE tipo_casa = :w_tipo_casa";
+            $aDatos['w_tipo_casa'] = $tipo_casa;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
@@ -121,8 +122,8 @@ public function getArrayTiposCasa(): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = :w_tipo_casa";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo_casa' => $tipo_casa], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -143,8 +144,8 @@ public function getArrayTiposCasa(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE tipo_casa = :w_tipo_casa";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo_casa' => $tipo_casa], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

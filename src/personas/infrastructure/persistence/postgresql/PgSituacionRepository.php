@@ -90,8 +90,8 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $situacion = $Situacion->getSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE situacion = '$situacion'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE situacion = :w_situacion";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_situacion' => $situacion], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -110,7 +110,8 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             unset($aDatos['situacion']);
             $update = "
 					nombre_situacion         = :nombre_situacion";
-            $sql = "UPDATE $nom_tabla SET $update WHERE situacion = '$situacion'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE situacion = :w_situacion";
+            $aDatos['w_situacion'] = $situacion;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
@@ -129,8 +130,8 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE situacion = '$situacion'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE situacion = :w_situacion";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_situacion' => $situacion], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -151,8 +152,8 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE situacion = '$situacion'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE situacion = :w_situacion";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_situacion' => $situacion], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

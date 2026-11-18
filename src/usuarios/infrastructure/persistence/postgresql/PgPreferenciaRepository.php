@@ -66,8 +66,8 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
         $tipo = $Preferencia->getTipoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = :w_tipo";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_tipo' => $tipo], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -89,7 +89,8 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
             $update = "
 					preferencia              = :preferencia
 					";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario AND tipo = :w_tipo";
+            $aDatos['w_tipo'] = $tipo;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
@@ -109,8 +110,8 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = :w_tipo";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo' => $tipo], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -131,8 +132,8 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario AND  tipo = '$tipo'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario AND  tipo = :w_tipo";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo' => $tipo], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

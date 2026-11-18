@@ -50,7 +50,8 @@ class DBConnection
         $esquema = $this->esquemaOverride ?? $this->configString($config, 'schema');
         $pdoDB = new PDO($dsn);
         $pdoDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $pdoDB->exec("SET search_path TO \"$esquema\"");
+        // Identificador entre comillas dobles: las de dentro se duplican (si no, cerraban el identificador).
+        $pdoDB->exec('SET search_path TO "' . str_replace('"', '""', $esquema) . '"');
         /* le paso la gestión a la clase web\datetimelocal */
         //$oDB->exec("SET DATESTYLE TO '$datestyle'");
         return $pdoDB;

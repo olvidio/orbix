@@ -165,23 +165,26 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $nom_tabla = $this->getNomTabla();
         $oPersonaNotaOtraRegionStgrSet = new Set();
 
-        $jsonParts = [];
+        // El número de certificado lo escribe el usuario: el filtro JSON va como parámetro.
+        $filtro = [];
         if ($certificado !== null && $certificado !== '') {
-            $jsonParts[] = "\"certificado\":\"$certificado\"";
+            $filtro['certificado'] = $certificado;
         }
         if ($estado !== null && $estado !== '') {
-            $jsonParts[] = "\"estado\":\"$estado\"";
+            $filtro['estado'] = $estado;
         }
 
         $where_condi = '';
-        if ($jsonParts !== []) {
-            $json = implode(',', $jsonParts);
-            $where_condi = "WHERE json_certificados @> '[{" . $json . "}]'";
+        $params = [];
+        if ($filtro !== []) {
+            $where_condi = 'WHERE json_certificados @> CAST(:filtro AS jsonb)';
+            $json = (new ConverterJson([$filtro], true))->toPg(false);
+            $params[':filtro'] = is_string($json) ? $json : '[]';
         }
 
         $sQry = "SELECT * FROM $nom_tabla $where_condi ";
 
-        $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }

@@ -63,6 +63,11 @@ class ActividadLugar
             $dl_r = 'r';
             $reg = substr($reg, 2);
         }
+        // La sigla llega de la petición y va entre comillas en el WHERE de casas y centros:
+        // solo los caracteres de una sigla de dl o región (crs+ lleva «+»).
+        if (preg_match('/^[A-Za-z0-9_+-]+$/', $reg) !== 1) {
+            return [];
+        }
         $reg_no_f = (string) preg_replace('/(\.*)f$/', '\1', $reg);
 
         if ($this->ssfsv === 'sv') {

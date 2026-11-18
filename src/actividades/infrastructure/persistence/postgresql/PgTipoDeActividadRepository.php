@@ -41,11 +41,14 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 
     public function getArrayTiposActividad(string $sid_tipo_activ = '......'): array
     {
+        if (preg_match('/^[0-9.\[\]]*$/', $sid_tipo_activ) !== 1) {
+            return [];
+        }
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT id_tipo_activ
-		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $sid_tipo_activ . "' order by id_tipo_activ";
-        $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
+		   	FROM $nom_tabla  where id_tipo_activ::text ~ :patron order by id_tipo_activ";
+        $stmt = $this->prepareAndExecute($oDbl, $query, [':patron' => $sid_tipo_activ], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -85,6 +88,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
                 $a_sfsv = [$isfsv];
         }
 
+        // Patrón del tipo de actividad (dígitos, «.» como comodín y clases «[…]»); llega de la petición.
+        if (preg_match('/^[0-9.\[\]]*$/', $sid_tipo_activ) !== 1) {
+            return [];
+        }
         $aTiposDeProcesos = [];
         foreach ($a_sfsv as $isfsv) {
             if ($isfsv == 1) {
@@ -97,15 +104,15 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             if (\src\shared\domain\helpers\FuncTablasSupport::isTrue($bdl_propia)) {
                 $sQry = "SELECT $nom_tipo_proceso as id_tipo_proceso 
                             FROM $nom_tabla 
-                            WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                            WHERE id_tipo_activ::text ~ ('^' || :patron)
                             GROUP BY $nom_tipo_proceso";
             } else {
                 $sQry = "SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
                         FROM $nom_tabla 
-                        WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
+                        WHERE id_tipo_activ::text ~ ('^' || :patron)
                         GROUP BY $nom_tipo_proceso_ex";
             }
-            $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->prepareAndExecute($oDbl, $sQry, [':patron' => $sid_tipo_activ], __METHOD__, __FILE__, __LINE__);
             if ($stmt === false) {
                 return [];
             }

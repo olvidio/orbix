@@ -59,4 +59,34 @@ final class ActividadLugarApplicationTest extends TestCase
 
         $this->assertSame([10 => 'Casa A', 20 => 'Ctr B'], $out);
     }
+
+    /**
+     * La entrada (`dl|sigla`, `r|sigla`) llega de la petición y la sigla acababa entre comillas en el WHERE
+     * que reciben los repositorios de casas y centros. Una sigla con caracteres que no son de una dl o región
+     * no consulta nada (revisión de seguridad del 2026-11-18).
+     */
+    public function test_una_sigla_con_comillas_no_consulta_nada(): void
+    {
+        $casaRepo = $this->createMock(CasaRepositoryInterface::class);
+        $casaRepo->expects($this->never())->method('getArrayCasas');
+        $centroRepo = $this->createMock(CentroRepositoryInterface::class);
+        $centroRepo->expects($this->never())->method('getArrayCentrosCdc');
+
+        $o = new ActividadLugar($casaRepo, $centroRepo);
+
+        $this->assertSame([], $o->getLugaresPosibles("dl|x' OR '1'='1"));
+        $this->assertSame([], $o->getLugaresPosibles("r|crx' OR '1'='1"));
+    }
+
+    /** Las siglas reales llevan letras, dígitos y a veces «+» (crs+): se siguen aceptando. */
+    public function test_una_region_con_mas_se_acepta(): void
+    {
+        $casaRepo = $this->createMock(CasaRepositoryInterface::class);
+        $casaRepo->expects($this->once())->method('getArrayCasas')
+            ->with($this->stringContains("region='s+'"))->willReturn([]);
+        $centroRepo = $this->createMock(CentroRepositoryInterface::class);
+        $centroRepo->method('getArrayCentrosCdc')->willReturn([]);
+
+        (new ActividadLugar($casaRepo, $centroRepo))->getLugaresPosibles('r|crs+');
+    }
 }

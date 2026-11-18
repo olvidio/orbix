@@ -89,8 +89,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         $id_locale = $Local->getIdLocaleVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE id_locale = :w_id_locale";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_id_locale' => $id_locale], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
 
@@ -113,7 +113,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 					idioma                   = :idioma,
 					nom_idioma               = :nom_idioma,
 					active                   = :active";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_locale = :w_id_locale";
+            $aDatos['w_id_locale'] = $id_locale;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
@@ -133,8 +134,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = :w_id_locale";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_id_locale' => $id_locale], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -155,8 +156,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = :w_id_locale";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_id_locale' => $id_locale], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

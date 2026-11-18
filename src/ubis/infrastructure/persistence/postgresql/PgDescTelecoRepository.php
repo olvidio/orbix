@@ -44,10 +44,14 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
      */
 public function getArrayDescTelecoPersonas(string $sdepende): array
     {
+        // id_tipo_teleco es entero; llega de la petición (`valor_depende`).
+        if (!ctype_digit($sdepende)) {
+            return [];
+        }
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE persona='t' AND id_tipo_teleco='$sdepende' ORDER BY orden";
-        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
+        $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE persona='t' AND id_tipo_teleco = :tipo ORDER BY orden";
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':tipo' => (int) $sdepende], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -64,10 +68,15 @@ public function getArrayDescTelecoPersonas(string $sdepende): array
      */
 public function getArrayDescTelecoUbis(string $sdepende): array
     {
+        // id_tipo_teleco es entero; llega de la petición (`valor_depende`).
+        if (!ctype_digit($sdepende)) {
+            return [];
+        }
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE ubi='t' AND id_tipo_teleco='$sdepende' ORDER BY orden";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);        if ($stmt === false) {
+        $sQuery = "SELECT id_item, desc_teleco FROM $nom_tabla WHERE ubi='t' AND id_tipo_teleco = :tipo ORDER BY orden";
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':tipo' => (int) $sdepende], __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
             return [];
         }
 

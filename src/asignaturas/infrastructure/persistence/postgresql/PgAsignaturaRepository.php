@@ -46,19 +46,17 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             : null;
         unset($aWhere['plan_estudios']);
 
+        // El texto de búsqueda llega de la petición (`asignaturas_search`): va como parámetro.
         $sCondi = '';
+        $params = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === 'nombre_asignatura' && !empty($val) && is_scalar($val)) {
-                $valStr = (string) $val;
-                $sCondi .= "WHERE active=true AND nombre_asignatura ILIKE '%$valStr%'";
+                $sCondi .= "WHERE active=true AND nombre_asignatura ILIKE :nombre";
+                $params[':nombre'] = '%' . (string) $val . '%';
             }
-            if ($camp === 'id' && !empty($val) && is_scalar($val)) {
-                $valStr = (string) $val;
-                if ($sCondi !== '') {
-                    $sCondi .= " AND id_asignatura = $valStr";
-                } else {
-                    $sCondi .= "WHERE id_asignatura = $valStr";
-                }
+            if ($camp === 'id' && !empty($val) && is_numeric($val)) {
+                $sCondi .= ($sCondi !== '' ? ' AND ' : 'WHERE ') . 'id_asignatura = :id';
+                $params[':id'] = (int) $val;
             }
         }
         if ($planEstudios !== null) {
@@ -67,7 +65,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $sOrdre = " ORDER BY id_nivel";
         $sLimit = " LIMIT 25";
         $sQuery = "SELECT DISTINCT id_asignatura,nombre_asignatura,id_nivel FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return '[]';
         }

@@ -82,8 +82,8 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $tipo_ctr = $TipoCentro->getTipoCtrVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE tipo_ctr = :w_tipo_ctr";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_tipo_ctr' => $tipo_ctr], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -102,7 +102,8 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
             unset($aDatos['tipo_ctr']);
             $update = "
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
-            $sql = "UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE tipo_ctr = :w_tipo_ctr";
+            $aDatos['w_tipo_ctr'] = $tipo_ctr;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
@@ -122,8 +123,8 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE tipo_ctr = :w_tipo_ctr";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo_ctr' => $tipo_ctr], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -144,8 +145,8 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE tipo_ctr = :w_tipo_ctr";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_tipo_ctr' => $tipo_ctr], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

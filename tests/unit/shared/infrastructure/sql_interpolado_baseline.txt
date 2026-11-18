@@ -1,0 +1,125 @@
+# Líneas de SQL de src/ con un valor de PHP dentro de un literal entre comillas, revisadas el 2026-11-18
+# como seguras: enteros o fechas ya convertidos, value objects que validan el formato (uuid, códigos con
+# patrón), valores del propio código o de la configuración, siglas validadas antes (ActividadLugar,
+# herramientas de esquemas con SiglasEsquema). Formato: fichero|línea sin sangría.
+# Al convertir una a parámetro, quitarla de aquí. No añadir líneas nuevas: usar un parámetro.
+# Guardia: tests/unit/shared/infrastructure/SqlSinValoresInterpoladosTest.php
+src/actividadcargos/infrastructure/persistence/postgresql/PgCargoRepository.php|$where = " WHERE tipo_cargo = '$tipo_cargo' ";
+src/actividadcargos/infrastructure/persistence/postgresql/PgCargoRepository.php|$where = $tipo_cargo === '' ? '' : " WHERE tipo_cargo = '$tipo_cargo' ";
+src/actividades/application/ActividadLugar.php|$donde = "WHERE dl='$reg_no_f' ";
+src/actividades/application/ActividadLugar.php|$donde = "WHERE region='$reg_no_f' ";
+src/actividades/application/ListaCentrosActivDatos.php|$condicion_periodo = "f_fin BETWEEN '$inicioIso' AND '$finIso'";
+src/actividades/application/ListaCentrosActivDatos.php|$condicion_periodo = "f_ini BETWEEN '$inicioIso' AND '$finIso'";
+src/actividades/infrastructure/persistence/postgresql/PgActividadAllRepository.php|$scondicion = "AND f_ini > '$inicurs'";
+src/actividades/infrastructure/persistence/postgresql/PgTipoDeActividadRepository.php|$query = "SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$filtro_regexp_txt' order by id_tipo_activ";
+src/actividades/infrastructure/persistence/postgresql/PgTipoDeActividadRepository.php|$query = "SELECT substring(id_tipo_activ::text from '" . $regexp . "')
+src/actividades/infrastructure/persistence/postgresql/PgTipoDeActividadRepository.php|FROM $nom_tabla  where id_tipo_activ::text ~'" . $filtro_regexp_txt . "' order by id_tipo_activ";
+src/actividadescentro/application/CentrosDisponiblesData.php|? "f_ini BETWEEN '" . $inicioIso . "' AND '" . $finIso . "'"
+src/actividadescentro/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/actividadescentro/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/actividadescentro/infrastructure/persistence/postgresql/PgCentroEncargadoRepository.php|$sQuery = "SELECT nom_activ,f_ini,f_fin,(f_ini - date '" . $f_ini_act_iso . "') as dif
+src/actividadessacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/actividadessacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/actividadessacd/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/asignaturas/infrastructure/persistence/postgresql/PgAsignaturaRepository.php|$sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
+src/asignaturas/infrastructure/persistence/postgresql/PgAsignaturaRepository.php|$sql = "SELECT 1 FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
+src/asistentes/application/FormActividadesDeUnaPersonaData.php|$condicion .= " AND dl_org = '$que_dl_esc'";
+src/cambios/db/DB.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/cambios/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+src/cambios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/cambios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER COLUMN $campo_seq SET DEFAULT (((1)::text || (nextval('$id_seq'::regclass))::text))::integer ; ";
+src/cambios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER dl_org SET DEFAULT '$mi_dele'";
+src/cambios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/cambios/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/cartaspresentacion/db/DB.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/cartaspresentacion/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/casas/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/casas/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/casas/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/certificados/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/certificados/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/certificados/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/configuracion/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/configuracion/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/dbextern/domain/CopiarBDU.php|$sqlTime = "INSERT INTO $tabla (identif, apenom) VALUES ('1111' , '$fecha_iso');";
+src/dbextern/domain/SincroDB.php|$oDB->exec('SET search_path TO public,"' . $esquema . '"');
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "SELECT to_regclass('$full_name'); ";
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "UPDATE $full_name SET $campo = '$new' WHERE $campo = '$old' ";
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "UPDATE $full_name SET $campo = regexp_replace($campo, '$pattern', '$replacement' ,'g') ";
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "UPDATE global.d_asistentes_dl set propietario = regexp_replace(propietario::text, '\m$old\M', '$new', 'g')::text where propietario is not null;";
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "UPDATE publicv.d_asistentes_de_paso set propietario = regexp_replace(propietario::text, '\m$old\M', '$new', 'g')::text where propietario is not null;";
+src/devel_db_admin/infrastructure/DBAlterSchema.php|$sql = "UPDATE publicv.da_plazas set cedidas =  regexp_replace(cedidas::text, '\m$old\M', '$new', 'g')::jsonb where cedidas is not null;";
+src/dossiers/infrastructure/persistence/postgresql/PgDossierRepository.php|$sql = "DELETE FROM $nom_tabla WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla' ";
+src/dossiers/infrastructure/persistence/postgresql/PgDossierRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla' ";
+src/dossiers/infrastructure/persistence/postgresql/PgDossierRepository.php|$sql = "UPDATE $nom_tabla SET $update WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla'";
+src/encargossacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/encargossacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/encargossacd/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/encargossacd/db/DBPropuestas.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass)";
+src/encargossacd/db/DBPropuestas.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/encargossacd/db/DBPropuestas.php|$a_sql[] = "SELECT setval('$id_seq', COALESCE((SELECT MAX($campo_seq)+1 FROM $nom_tabla), 1), FALSE)";
+src/inventario/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+src/inventario/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/inventario/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/inventario/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/menus/infrastructure/persistence/postgresql/PgMenusPlantillaImportador.php|$this->oDB->query("SELECT setval('$secuencia', (SELECT MAX($columnaSecuencia) FROM $destino))");
+src/misas/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/misas/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/misas/infrastructure/persistence/postgresql/PgEncargoCtrRepository.php|$sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoCtrRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoCtrRepository.php|$sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = " SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
+src/notas/application/legacy/Resumen.php|$curso = "BETWEEN '" . $this->getIniCurso() . "' AND '" . $this->getFinCurso() . "' ";
+src/notas/application/legacy/Resumen.php|$where_dl = "p.dl IN ('$dl_csv') AND";
+src/notas/application/services/ResumenTempTablesService.php|$whereDl = "u.dl IN ('$dlCsv') AND";
+src/notas/infrastructure/persistence/postgresql/PgResiduoOtraRegionConsulta.php|FROM " . '"' . str_replace('"', '""', $resto) . '"' . ".p_de_paso_ex p
+src/notas/infrastructure/persistence/postgresql/PgResiduoOtraRegionConsulta.php|FROM (" . implode(' UNION ALL ', $partes) . ") r
+src/pasarela/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/pasarela/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/personas/application/services/PersonaFinderService.php|$oDB->exec('SET search_path TO public,"' . $esquema . '"');
+src/personas/domain/Trasladar.php|$qRs = $oDBR->query("SELECT '$esquema' as schemaName,id_schema,situacion,f_situacion FROM $tabla_personas WHERE id_nom=$id_orbix");
+src/personas/infrastructure/persistence/postgresql/PgPersonaAllRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion != 'A' AND id_schema = $mi_id_schema ";
+src/personas/infrastructure/persistence/postgresql/PgPersonaAllRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $mi_id_schema ";
+src/personas/infrastructure/persistence/postgresql/traits/PersonaGlobalListsTrait.php|$sQuery = "SELECT id_ctr FROM $nom_tabla WHERE situacion='A' $sdonde GROUP BY id_ctr";
+src/procesos/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+src/procesos/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/procesos/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/procesos/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/procesos/infrastructure/persistence/postgresql/PgActividadProcesoTareaRepository.php|if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$id_item'")) === FALSE) {
+src/shared/infrastructure/persistence/postgresql/DBPropiedades.php|$sQuery = "SELECT idschema('$esquema'::text) ";
+src/shared/infrastructure/persistence/postgresql/DBPropiedades.php|$sQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema ='$esquema' ORDER BY table_name";
+src/shared/infrastructure/persistence/postgresql/DBRol.php|$sql = "ALTER ROLE \"$this->sUser\" SET search_path TO '$this->sUser', 'public'; ";
+src/shared/infrastructure/persistence/postgresql/DBRol.php|$sql = "SELECT count(*) FROM pg_roles WHERE rolname='$this->sUser'";
+src/shared/infrastructure/persistence/postgresql/DBView.php|"SELECT 1 FROM pg_matviews WHERE schemaname='$schemaName' AND matviewname='$view' LIMIT 1"
+src/shared/infrastructure/persistence/postgresql/DBView.php|"SELECT ispopulated FROM pg_matviews WHERE schemaname='$schemaName' AND matviewname='$view'"
+src/shared/infrastructure/persistence/postgresql/PgColaMailRepository.php|$sQry = "DELETE FROM $nom_tabla WHERE sended < '$date_iso'";
+src/tablonanuncios/infrastructure/persistence/postgresql/PgAnuncioRepository.php|$sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/tablonanuncios/infrastructure/persistence/postgresql/PgAnuncioRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+src/tablonanuncios/infrastructure/persistence/postgresql/PgAnuncioRepository.php|$sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
+src/ubis/application/UbisEditarOpcionesData.php|return "WHERE dl = '$dl'";
+src/ubis/application/UbisEditarOpcionesData.php|return "WHERE region = '$region'";
+src/ubis/infrastructure/persistence/postgresql/PgRegionRepository.php|$sql = "DELETE FROM $nom_tabla WHERE region = '$region'";
+src/ubis/infrastructure/persistence/postgresql/PgTrasladoUbiRepository.php|$sql = "SELECT to_regclass('$full_name')";
+src/ubiscamas/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/usuarios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/usuarios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/usuarios/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/utils_database/domain/entity/DBAbstract.php|$cond = "EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$rol') AND EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto')";
+src/utils_database/domain/entity/DBAbstract.php|$sql = "SELECT to_regclass('$nom_tabla');";
+src/utils_database/domain/entity/DBAbstract.php|return "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$member') AND EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$grantee') THEN BEGIN EXECUTE 'GRANT \"$member\" TO \"$grantee\"'; EXCEPTION WHEN insufficient_privilege OR undefined_object THEN NULL; END; END IF; END $$;";
+src/utils_database/domain/entity/DBAbstract.php|return "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$member') AND EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$grantee') THEN EXECUTE 'REVOKE \"$member\" FROM \"$grantee\"'; END IF; END $$;";
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas ALTER id_schema SET DEFAULT public.idschema('$esquemaSql'::text)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas ALTER id_zona SET DEFAULT nextval('$q.zonas_id_zona_seq'::regclass)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas_ctr ALTER id_schema SET DEFAULT public.idschema('$esquemaSql'::text)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas_grupos ALTER id_grupo SET DEFAULT nextval('$q.zonas_grupos_id_grupo_seq'::regclass)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas_grupos ALTER id_schema SET DEFAULT public.idschema('$esquemaSql'::text)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas_sacd ALTER id_item SET DEFAULT nextval('$q.zonas_sacd_id_item_seq'::regclass)",
+src/zonassacd/application/ZonasAComun.php|"ALTER TABLE $q.zonas_sacd ALTER id_schema SET DEFAULT public.idschema('$esquemaSql'::text)",
+src/zonassacd/application/ZonasAComun.php|$destino->exec("SELECT SETVAL('$seq'::regclass, COALESCE((SELECT MAX($pk) FROM $tablaDestino), 1), true)");
+src/zonassacd/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
+src/zonassacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
+src/zonassacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/zonassacd/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";

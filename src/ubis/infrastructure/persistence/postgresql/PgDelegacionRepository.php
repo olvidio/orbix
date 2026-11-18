@@ -62,8 +62,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = :w_dele";
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':w_dele' => $dele], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }
@@ -95,8 +95,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             $region_dele = $dele;
             $region_stgr = $dele;
         } else {
-            $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
-            $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+            $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = :w_dele";
+            $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':w_dele' => $dele], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -136,8 +136,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         // buscar el id_schema de $esquema_region_stgr y de $dele
         $sQuery = "SELECT schema, id 
                         FROM db_idschema
-                        WHERE schema = '$esquema_region_stgr' OR schema = '$esquema_dele'";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+                        WHERE schema = :esquema_region_stgr OR schema = :esquema_dele";
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':esquema_region_stgr' => $esquema_region_stgr, ':esquema_dele' => $esquema_dele], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             throw new RegionStgrConfigException(
                 RegionStgrAviso::TIPO_ESQUEMA_NO_ENCONTRADO,
@@ -185,17 +185,16 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         // añadir la propia:
         $a_schemas[] = $sRegionStgr . '-' . $sRegionStgr . $mi_sfsv_text;
 
-        $list_dl = '';
-        foreach ($a_schemas as $schema) {
-            $list_dl .= empty($list_dl) ? '' : ", ";
-            $list_dl .= "'$schema'::character varying";
+        $params = [];
+        foreach (array_values($a_schemas) as $n => $schema) {
+            $params[":s$n"] = (string) $schema;
         }
-        $where = "(db_idschema.schema)::text = any ((array[$list_dl])::text[])";
+        $where = "(db_idschema.schema)::text IN (" . implode(', ', array_keys($params)) . ")";
 
         $sQuery = "SELECT schema, id FROM db_idschema 
                  WHERE $where
                 ";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -222,9 +221,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
-                 WHERE active = 't' AND region_stgr = '$sRegionStgr'
+                 WHERE active = 't' AND region_stgr = :region_stgr
                  ORDER BY region,dl";
-        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, [':region_stgr' => $sRegionStgr], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }
@@ -307,8 +306,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $dl = $Delegacion->getDlVo()->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE dl = '$dl'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE dl = :w_dl";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_dl' => $dl], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
 

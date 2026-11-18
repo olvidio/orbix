@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\postgresql\DBTabla;
 use src\shared\infrastructure\persistence\postgresql\DBTrasvase;
@@ -27,6 +28,8 @@ final class CopiarEsquema
         $avisos = [];
         $region = trim($region);
         $dl = trim($dl);
+        SiglasEsquema::validarSiglas($region, $dl);
+        SiglasEsquema::validarEsquema(trim($esquemaRefPost));
         if ($region === '' || $dl === '') {
             throw new \InvalidArgumentException(_("Faltan región o delegación destino para copiar datos."));
         }

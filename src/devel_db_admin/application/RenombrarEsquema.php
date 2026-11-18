@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use PDO;
 use RuntimeException;
 use src\devel_db_admin\infrastructure\DBAlterSchema;
@@ -42,6 +43,7 @@ final class RenombrarEsquema
         int $sv,
         int $sf,
     ): array {
+        SiglasEsquema::validarSiglas(trim($region), trim($dl));
         $ctx = RenombrarEsquemaVerificacionContexto::desdeEntrada($esquemaOrigenCampo, $region, $dl, $comun, $sv, $sf);
         if (is_array($ctx)) {
             return ['avisos' => [$ctx['resumen']]];

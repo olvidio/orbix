@@ -287,8 +287,12 @@ class DBPropiedades
         $config = $oConfigDB->getEsquema('publicv');
         $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
-        $sQuery = "SELECT table_schema FROM information_schema.tables WHERE table_name ='$tabla' ORDER BY table_schema";
-        $oDblSt = $oDBP->query($sQuery);
+        // El nombre de la tabla llega del formulario (`db_propiedades_data`, `mover_tabla`): va como parámetro.
+        $sQuery = "SELECT table_schema FROM information_schema.tables WHERE table_name = :tabla ORDER BY table_schema";
+        $oDblSt = $oDBP->prepare($sQuery);
+        if ($oDblSt !== false && !$oDblSt->execute([':tabla' => $tabla])) {
+            $oDblSt = false;
+        }
         if ($oDblSt === false) {
             $sClauError = 'Schemas.lista';
             if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {

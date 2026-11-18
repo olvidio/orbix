@@ -90,9 +90,25 @@ final class CambioUsuarioPropiedadPrefItemData
             $miSfsv = ConfigGlobal::mi_sfsv();
             $donde = '';
             if ($oRole->isRolePau(PauType::PAU_CDC)) {
-                $id_pau = $oMiUsuario->getCsvIdPauAsString() ?? '';
-                $sDonde = str_replace(',', ' OR id_ubi=', $id_pau);
-                $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
+                // csv_id_pau se guarda tal como llega del formulario de usuario: solo ids numéricos.
+                $idsUbi = array_values(array_filter(
+                    explode(',', $oMiUsuario->getCsvIdPauAsString() ?? ''),
+                    static fn (string $id): bool => ctype_digit(trim($id))
+                ));
+                if ($idsUbi === []) {
+                    return [
+                        'error' => '',
+                        'id_item' => $id_item,
+                        'objeto' => $objeto,
+                        'propiedad' => $propiedad,
+                        'valor' => $valor,
+                        'operador' => $operador,
+                        'chk_old' => $chk_old,
+                        'chk_new' => $chk_new,
+                        'aOpcionesCasas' => [],
+                    ];
+                }
+                $donde = "WHERE active='t' AND (id_ubi=" . implode(' OR id_ubi=', array_map(static fn (string $id): int => (int) $id, $idsUbi)) . ')';
             } else {
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 if ($oPerm instanceof XPermisos

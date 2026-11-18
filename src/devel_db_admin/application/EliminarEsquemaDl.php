@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use src\shared\config\ReplicaSelectPolicy;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -26,6 +27,7 @@ final class EliminarEsquemaDl
         int $sv,
         int $sf,
     ): array {
+        SiglasEsquema::validarSiglas($region, $dl);
         $avisos = [];
         $esquema = "$region-$dl";
         $esquemav = $esquema . 'v';

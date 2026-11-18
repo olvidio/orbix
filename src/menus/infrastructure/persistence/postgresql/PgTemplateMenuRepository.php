@@ -183,8 +183,8 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE nombre = '$nombre'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE nombre = :w_nombre";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_nombre' => $nombre], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return null;
         }

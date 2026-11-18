@@ -74,8 +74,8 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $uuid_item = $ColaMail->getUuid_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE uuid_item = :w_uuid_item";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_uuid_item' => $uuid_item], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -102,7 +102,8 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 					headers                  = :headers,
 					writed_by                 = :writed_by,
 					sended                   = :sended";
-            $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = :w_uuid_item";
+            $aDatos['w_uuid_item'] = $uuid_item;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
@@ -123,8 +124,8 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = :w_uuid_item";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_uuid_item' => $uuid_item], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -142,10 +143,14 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
      */
     public function datosById(string $uuid_item): array|false
     {
+        // La columna es uuid: un texto que no lo es no puede existir (y la consulta fallaría).
+        if (!\Ramsey\Uuid\Uuid::isValid($uuid_item)) {
+            return false;
+        }
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = :w_uuid_item";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_uuid_item' => $uuid_item], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

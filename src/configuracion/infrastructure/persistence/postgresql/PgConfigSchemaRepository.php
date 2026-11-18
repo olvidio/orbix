@@ -69,8 +69,8 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $parametro = $ConfigSchema->getParametroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE parametro = '$parametro'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE parametro = :w_parametro";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_parametro' => $parametro], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -89,7 +89,8 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
             unset($aDatos['parametro']);
             $update = "
 					valor                    = :valor";
-            $sql = "UPDATE $nom_tabla SET $update WHERE parametro = '$parametro'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE parametro = :w_parametro";
+            $aDatos['w_parametro'] = $parametro;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
@@ -108,8 +109,8 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE parametro = '$parametro'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE parametro = :w_parametro";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_parametro' => $parametro], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -130,8 +131,8 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE parametro = '$parametro'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE parametro = :w_parametro";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_parametro' => $parametro], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

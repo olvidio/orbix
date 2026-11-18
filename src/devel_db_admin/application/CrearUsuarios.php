@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
@@ -15,6 +16,7 @@ final class CrearUsuarios
 {
     public function ejecutar(string $region, string $dl, bool $sessionEsSf): CrearUsuariosResult
     {
+        SiglasEsquema::validarSiglas($region, $dl);
         $esquema = "$region-$dl";
         $esquema_pwd = self::generarPassword(11);
         $esquemav = $esquema . 'v';

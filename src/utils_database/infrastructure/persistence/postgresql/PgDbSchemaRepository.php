@@ -133,8 +133,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $schema = $DbSchema->getSchemaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE schema = '$schema'";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE schema = :w_schema";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_schema' => $schema], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -153,7 +153,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             //UPDATE
             $update = "
 					id                       = :id";
-            $sql = "UPDATE $nom_tabla SET $update WHERE schema = '$schema'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE schema = :w_schema";
+            $aDatos['w_schema'] = $schema;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
@@ -173,8 +174,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE schema = '$schema'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE schema = :w_schema";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_schema' => $schema], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -195,8 +196,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE schema = '$schema'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE schema = :w_schema";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_schema' => $schema], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

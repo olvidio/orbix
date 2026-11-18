@@ -117,4 +117,31 @@ class PgPersonaNotaOtraRegionStgrRepositoryTest extends myTest
     }
 
 
+
+    /**
+     * El número de certificado lo escribe el usuario y se metía en el filtro `json_certificados @> '…'`
+     * (se usa al borrar un certificado emitido). Con comillas, la condición era siempre cierta y salían
+     * todas las notas. Revisión de seguridad del 2026-11-18. Solo lee.
+     */
+    public function test_buscar_por_certificado_con_comillas_no_trae_nada(): void
+    {
+        $buscar = new \ReflectionMethod($this->repository, 'getPersonaNotasConCertificado');
+        $carga = 'x"}]\' OR true OR json_certificados @> \'[{"a":"b';
+
+        $this->assertSame([], $buscar->invoke($this->repository, $carga));
+    }
+
+    public function test_buscar_por_certificado_encuentra_las_notas_de_ese_certificado(): void
+    {
+        $pdo = (new \ReflectionMethod($this->repository, 'getoDbl'))->invoke($this->repository);
+        $nomTabla = (new \ReflectionMethod($this->repository, 'getNomTabla'))->invoke($this->repository);
+        $st = $pdo->query("SELECT e->>'certificado' FROM $nomTabla, jsonb_array_elements(json_certificados) e WHERE e->>'certificado' <> '' LIMIT 1");
+        $certificado = $st === false ? false : $st->fetchColumn();
+        if (!is_string($certificado)) {
+            $this->markTestIncomplete('En las BD de pruebas no hay notas con certificado');
+        }
+        $buscar = new \ReflectionMethod($this->repository, 'getPersonaNotasConCertificado');
+
+        $this->assertNotSame([], $buscar->invoke($this->repository, $certificado));
+    }
 }

@@ -52,9 +52,9 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
         $nom_parametro = $PasarelaConfig->getNomParametroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE nom_parametro = '$nom_parametro'";
+        $sql = "DELETE FROM $nom_tabla WHERE nom_parametro = :w_nom_parametro";
 
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->prepareAndExecute($oDbl, $sql, [':w_nom_parametro' => $nom_parametro], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     public function Guardar(PasarelaConfig $PasarelaConfig): bool
@@ -72,7 +72,8 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
             unset($aDatos['nom_parametro']);
             $update = '
 					json_valor              = :json_valor';
-            $sql = "UPDATE $nom_tabla SET $update WHERE nom_parametro = '$nom_parametro'";
+            $sql = "UPDATE $nom_tabla SET $update WHERE nom_parametro = :w_nom_parametro";
+            $aDatos['w_nom_parametro'] = $nom_parametro;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             $campos = '(nom_parametro,json_valor)';
@@ -92,8 +93,8 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE nom_parametro = '$nom_parametro'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE nom_parametro = :w_nom_parametro";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_nom_parametro' => $nom_parametro], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -111,8 +112,8 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE nom_parametro = '$nom_parametro'";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE nom_parametro = :w_nom_parametro";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_nom_parametro' => $nom_parametro], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }

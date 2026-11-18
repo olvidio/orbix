@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\devel_db_admin\domain\SiglasEsquema;
 use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -32,6 +33,8 @@ final class CrearEsquema
         int $sv,
         int $sf,
     ): array {
+        SiglasEsquema::validarSiglas($region, $dl);
+        SiglasEsquema::validarEsquema($esquemaRef);
         $avisos = [];
         $esquema = "$region-$dl";
         $esquemav = $esquema . 'v';

@@ -65,8 +65,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $id_resto = $MapId->getIdRestoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto ";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "DELETE FROM $nom_tabla WHERE objeto = :w_objeto AND id_resto = $id_resto ";
+        return $this->prepareAndExecute($oDbl, $sql, [':w_objeto' => $objeto], __METHOD__, __FILE__, __LINE__) !== false;
     }
 
     /**
@@ -89,7 +89,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             //UPDATE
             $update = "
 					id_dl                    = :id_dl";
-            $sql = "UPDATE $nom_tabla SET $update WHERE objeto = '$objeto' AND id_resto = $id_resto ";
+            $sql = "UPDATE $nom_tabla SET $update WHERE objeto = :w_objeto AND id_resto = $id_resto ";
+            $aDatos['w_objeto'] = $objeto;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
@@ -109,8 +110,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE objeto = :w_objeto AND id_resto = $id_resto";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_objeto' => $objeto], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return true;
         }
@@ -131,8 +132,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sql = "SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto";
-        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE objeto = :w_objeto AND id_resto = $id_resto";
+        $stmt = $this->prepareAndExecute($oDbl, $sql, [':w_objeto' => $objeto], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }
