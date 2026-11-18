@@ -138,17 +138,15 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertSame('missing_credentials', $this->login(['password' => ''])['code']);
     }
 
-    /**
-     * Hallazgo: un hash vacío en BD no deja entrar, pero la respuesta no es controlada: el VO
-     * `Password` lanza `InvalidArgumentException` al hidratar el usuario.
-     */
-    public function test_usuario_con_hash_vacio_en_bd_lanza_excepcion_sin_controlar(): void
+    /** Un hash vacío en BD es como no tener contraseña: credenciales incorrectas, sin excepción. */
+    public function test_usuario_con_hash_vacio_en_bd_se_rechaza(): void
     {
         $this->crearUsuario(['password' => '']);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $r = $this->login(['password' => 'x']);
 
-        $this->login(['password' => 'x']);
+        $this->assertSame(self::rechazo(), $r);
+        $this->assertRechazadoSinFugas($r, 'invalid_credentials');
     }
 
     #[DataProvider('usuariosConInyeccion')]
@@ -227,42 +225,28 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertSame(self::ESQUEMA, $r['data']['esquema']);
     }
 
-    /**
-     * Hallazgo: si la instalación fija el esquema con ESQUEMA, el esquema de la petición sigue
-     * teniendo prioridad: el cliente puede autenticarse contra otra dl.
-     */
-    public function test_el_esquema_de_la_peticion_prevalece_sobre_el_del_entorno(): void
+    /** Si la instalación fija el esquema con ESQUEMA, el de la petición no cuenta. */
+    public function test_el_esquema_del_entorno_prevalece_sobre_el_de_la_peticion(): void
     {
         $this->crearUsuario();
-        putenv('ESQUEMA=H-Hv');
+        putenv('ESQUEMA=' . self::ESQUEMA);
 
-        $r = $this->login(['esquema' => self::ESQUEMA]);
+        $r = $this->login(['esquema' => 'H-Hv']);
 
         $this->assertTrue($r['ok']);
         $this->assertSame(self::ESQUEMA, $r['data']['esquema']);
     }
 
-    /**
-     * Hallazgo: un esquema que no está en los ficheros de conexión NO devuelve `invalid_schema`:
-     * `ConfigDB` lanza `RuntimeException` (solo se captura `PDOException`) y el mensaje incluye la
-     * ruta de los ficheros de contraseñas del servidor.
-     */
+    /** Un esquema que no está en los ficheros de conexión es `invalid_schema`, sin excepción ni rutas del servidor. */
     #[DataProvider('esquemasDesconocidos')]
-    public function test_esquema_desconocido_lanza_excepcion_sin_controlar(string $esquema): void
+    public function test_esquema_desconocido_se_rechaza(string $esquema): void
     {
         $this->crearUsuario();
 
-        try {
-            $r = $this->login(['esquema' => $esquema]);
-        } catch (\RuntimeException $e) {
-            $this->assertNotInstanceOf(\PDOException::class, $e);
-            $this->assertStringContainsString($esquema, $e->getMessage());
-            $this->assertStringContainsString('.inc', $e->getMessage(), 'el mensaje delata el fichero de configuración');
-            $this->assertSame($this->sesionPrevia['session_auth'], $_SESSION['session_auth']);
+        $r = $this->login(['esquema' => $esquema]);
 
-            return;
-        }
-        $this->fail('Se esperaba RuntimeException; respuesta: ' . $this->comoTexto($r));
+        $this->assertSame(['ok' => false, 'code' => 'invalid_schema', 'mensaje' => _("Esquema no válido")], $r);
+        $this->assertRechazadoSinFugas($r, 'invalid_schema');
     }
 
     /** @return iterable<string, array{string}> */
@@ -274,20 +258,16 @@ class AppMobileLoginIntegracionTest extends myTest
         yield 'solo v' => ['v'];
     }
 
-    /**
-     * Hallazgo: con un esquema válido de la BD común (sin sufijo «v») la conexión se abre, pero
-     * `aux_usuarios` no existe allí: `PDOException` sin controlar con el SQL en el mensaje. Las ramas
-     * `=== false` → `server_error` son código muerto (las PDO usan ERRMODE_EXCEPTION).
-     */
+    /** Un esquema de la BD común abre conexión pero no tiene `aux_usuarios`: `invalid_schema`, sin `PDOException`. */
     #[DataProvider('esquemasDeLaBdComun')]
-    public function test_esquema_de_la_bd_comun_lanza_pdoexception_sin_controlar(string $esquema): void
+    public function test_esquema_de_la_bd_comun_se_rechaza(string $esquema): void
     {
         $this->crearUsuario();
 
-        $this->expectException(\PDOException::class);
-        $this->expectExceptionMessage('aux_usuarios');
+        $r = $this->login(['esquema' => $esquema]);
 
-        $this->login(['esquema' => $esquema]);
+        $this->assertSame(['ok' => false, 'code' => 'invalid_schema', 'mensaje' => _("Esquema no válido")], $r);
+        $this->assertRechazadoSinFugas($r, 'invalid_schema');
     }
 
     /** @return iterable<string, array{string}> */

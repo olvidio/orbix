@@ -56,7 +56,8 @@ final class AppMobileLogin
 
         $_SESSION['private'] = $private;
 
-        $esquema = $esquemaIn !== '' ? $esquemaIn : $esquema_web;
+        // Si la instalación fija el esquema (ESQUEMA), el de la petición no cuenta.
+        $esquema = $esquema_web !== '' ? $esquema_web : $esquemaIn;
         if ($esquema === '') {
             return [
                 'ok' => false,
@@ -76,24 +77,22 @@ final class AppMobileLogin
             ];
         }
 
-        $aWhere = ['usuario' => $username];
-        $query = 'SELECT * FROM aux_usuarios WHERE usuario = :usuario';
-        $oDBSt = $oDB_Select->prepare($query);
-        if ($oDBSt === false) {
-            self::logPdoError($oDB_Select, 'app_login.prepare');
-
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Error de servidor")];
+        // Un esquema sin `aux_usuarios` (p. ej. el de la BD común) es un esquema no válido.
+        try {
+            $oDBSt = $oDB_Select->prepare('SELECT * FROM aux_usuarios WHERE usuario = :usuario');
+            $oDBSt->execute(['usuario' => $username]);
+            $password_db = null;
+            $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
+            $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException) {
+            return [
+                'ok' => false,
+                'code' => 'invalid_schema',
+                'mensaje' => _("Esquema no válido"),
+            ];
         }
-        if ($oDBSt->execute($aWhere) === false) {
-            self::logPdoError($oDB_Select, 'app_login.execute');
-
-            return ['ok' => false, 'code' => 'server_error', 'mensaje' => _("Error de servidor")];
-        }
-
-        $password_db = null;
-        $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
-        $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
+        // Sin hash guardado (null o vacío) no se puede entrar; el VO `Password` no admite el vacío.
+        if (!is_array($row) || !is_string($password_db) || $password_db === '') {
             return [
                 'ok' => false,
                 'code' => 'invalid_credentials',
@@ -280,6 +279,10 @@ final class AppMobileLogin
         ];
     }
 
+    /**
+     * Conexión al esquema indicado, o null si no existe. `ConfigDB` lanza `RuntimeException` (con la ruta
+     * de los ficheros de configuración en el mensaje) si el esquema no está en ellos; `PDOException` la extiende.
+     */
     private static function pdoForEsquema(string &$esquema, int &$sfsv, string $ubicacion): ?\PDO
     {
         $sfsv = 0;
@@ -294,7 +297,7 @@ final class AppMobileLogin
                 $oConexion = new DBConnection($config);
 
                 return $oConexion->getPDO();
-            } catch (\PDOException) {
+            } catch (\RuntimeException) {
                 return null;
             }
         }
@@ -308,7 +311,7 @@ final class AppMobileLogin
                     $oConexion = new DBConnection($config);
 
                     return $oConexion->getPDO();
-                } catch (\PDOException) {
+                } catch (\RuntimeException) {
                     $esquema = substr($esquema, 0, -1);
                     $sfsv = 0;
                 }
@@ -327,7 +330,7 @@ final class AppMobileLogin
             $oConexion = new DBConnection($config);
 
             return $oConexion->getPDO();
-        } catch (\PDOException) {
+        } catch (\RuntimeException) {
             return null;
         }
     }

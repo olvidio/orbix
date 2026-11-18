@@ -57,7 +57,8 @@ final class LoginProcesar
         $esquemaIn = (string)($input['esquema'] ?? '');
         $verification_code = (string)($input['verification_code'] ?? '');
 
-        $esquema = empty($esquemaIn) ? $esquemaWeb : $esquemaIn;
+        // Si la instalación fija el esquema (ESQUEMA), el del formulario no cuenta.
+        $esquema = $esquemaWeb !== '' ? $esquemaWeb : $esquemaIn;
 
         // PDO según sufijo v/sv-e o f/sf, o comun (nombre base). La «f» solo implica BD sf si la entrada es sf (UBICACION/PRIVATE); si no, se usa comun (p. ej. Docker sin rol …f).
         $sfsv = 0;
@@ -66,21 +67,18 @@ final class LoginProcesar
             return ['ok' => false, 'error' => 1];
         }
 
-        $aWhere = ['usuario' => $username];
-        $query = 'SELECT * FROM aux_usuarios WHERE usuario = :usuario';
-        if (($oDBSt = $oDB_Select->prepare($query)) === false) {
-            $this->logPdoError($oDB_Select, 'login.prepare');
+        // Un esquema sin `aux_usuarios` (p. ej. el de la BD común) es un esquema no válido, no un error del servidor.
+        try {
+            $oDBSt = $oDB_Select->prepare('SELECT * FROM aux_usuarios WHERE usuario = :usuario');
+            $oDBSt->execute(['usuario' => $username]);
+            $password_db = null;
+            $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
+            $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException) {
             return ['ok' => false, 'error' => 1];
         }
-        if ($oDBSt->execute($aWhere) === false) {
-            $this->logPdoError($oDB_Select, 'login.execute');
-            return ['ok' => false, 'error' => 1];
-        }
-
-        $password_db = null;
-        $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
-        $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
-        if (!is_array($row)) {
+        // Sin hash guardado (null o vacío) no se puede entrar; el VO `Password` no admite el vacío.
+        if (!is_array($row) || !is_string($password_db) || $password_db === '') {
             return ['ok' => false, 'error' => 1];
         }
         $row['password'] = $password_db;
@@ -234,6 +232,10 @@ final class LoginProcesar
         ];
     }
 
+    /**
+     * Conexión al esquema indicado, o null si no existe. `ConfigDB` lanza `RuntimeException` (con la ruta
+     * de los ficheros de configuración en el mensaje) si el esquema no está en ellos; `PDOException` la extiende.
+     */
     private function pdoForEsquema(string &$esquema, int &$sfsv, string $ubicacion): ?\PDO
     {
         $sfsv = 0;
@@ -248,7 +250,7 @@ final class LoginProcesar
                 $oConexion = new DBConnection($config);
 
                 return $oConexion->getPDO();
-            } catch (\PDOException) {
+            } catch (\RuntimeException) {
                 return null;
             }
         }
@@ -262,7 +264,7 @@ final class LoginProcesar
                     $oConexion = new DBConnection($config);
 
                     return $oConexion->getPDO();
-                } catch (\PDOException) {
+                } catch (\RuntimeException) {
                     $esquema = substr($esquema, 0, -1);
                     $sfsv = 0;
                 }
@@ -281,7 +283,7 @@ final class LoginProcesar
             $oConexion = new DBConnection($config);
 
             return $oConexion->getPDO();
-        } catch (\PDOException) {
+        } catch (\RuntimeException) {
             return null;
         }
     }
