@@ -330,8 +330,9 @@ final class ComunicarActividadesSacdMailsTest extends myTest
         $this->assertSame('jefe@dl.org, sacd@dl.org', $alSacd->getMail_to());
         $this->assertSame('atención actividades', $alSacd->getSubject());
         $this->assertStringContainsString('Reply-To: jefe@dl.org', $alSacd->getHeaders());
-        // Hallazgo menor: el atributo lang lleva el locale tal cual (no «ca» ni «ca-ES»).
-        $this->assertStringStartsWith('<html lang="ca_ES.UTF-8"><body>', $alSacd->getMessage());
+        // El atributo lang va en formato de idioma HTML (ca-ES), no con el locale del sistema (ca_ES.UTF-8).
+        $this->assertStringStartsWith('<html lang="ca-ES"><body>', $alSacd->getMessage());
+        $this->assertStringStartsWith('<html lang="ca-ES"><body>', $alCtr->getMessage());
         $this->assertStringContainsString('D. Juan García', $alSacd->getMessage());
         $this->assertStringContainsString('* 5.III.27', $alSacd->getMessage());
         $this->assertStringContainsString('te carrec. obs', $alSacd->getMessage());

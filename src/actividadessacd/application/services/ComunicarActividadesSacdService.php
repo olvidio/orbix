@@ -464,7 +464,8 @@ final class ComunicarActividadesSacdService
 
             $write_by = basename(__FILE__);
 
-            $cuerpo = "<html lang=\"$idioma\"><body>$body_sacd</body></html>";
+            $lang = self::langHtml($idioma);
+            $cuerpo = "<html lang=\"$lang\"><body>$body_sacd</body></html>";
             $ColaMailId = new ColaMailId(Uuid::random());
             $oColaMail = new ColaMail();
             $oColaMail->setUuid_item($ColaMailId);
@@ -476,7 +477,7 @@ final class ComunicarActividadesSacdService
             $ColaMailRepository->Guardar($oColaMail);
 
             if (!empty($e_mail_ctr)) {
-                $cuerpo = "<html lang=\"$idioma\"><body>$body_ctr</body></html>";
+                $cuerpo = "<html lang=\"$lang\"><body>$body_ctr</body></html>";
                 $ColaMailId = new ColaMailId(Uuid::random());
                 $oColaMail = new ColaMail();
                 $oColaMail->setUuid_item($ColaMailId);
@@ -579,5 +580,13 @@ final class ComunicarActividadesSacdService
     private function mixedToInt(mixed $value): int
     {
         return is_numeric($value) ? (int)$value : 0;
+    }
+
+    /** Locale del sistema (`ca_ES.UTF-8`) → etiqueta de idioma para el atributo `lang` de HTML (`ca-ES`). */
+    private static function langHtml(string $locale): string
+    {
+        $base = preg_split('/[.@]/', $locale)[0] ?? '';
+
+        return htmlspecialchars(str_replace('_', '-', $base), ENT_QUOTES, 'UTF-8');
     }
 }
