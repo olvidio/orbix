@@ -164,7 +164,9 @@ final class AppMobileLogin
                     'mensaje' => _("Código 2FA requerido"),
                 ];
             }
-            if (!Verify2fa::verify_2fa_code($verification_code, $secret2fa)) {
+            // Un código aceptado (o uno de una ventana anterior) no sirve otra vez.
+            $paso = Verify2fa::paso_2fa_valido($verification_code, $secret2fa);
+            if ($paso === null || !$this->intentos->aceptarPasoTotp($esquema, $sfsv, $idUsuario, $paso)) {
                 $this->anotarFallo($esquema, $sfsv, $idUsuario);
                 return [
                     'ok' => false,

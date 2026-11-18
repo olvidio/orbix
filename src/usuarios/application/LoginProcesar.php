@@ -112,7 +112,9 @@ final class LoginProcesar
             if ($verification_code === '') {
                 return ['ok' => false, 'error' => 3];
             }
-            if (!Verify2fa::verify_2fa_code($verification_code, $user_secret)) {
+            // Un código aceptado (o uno de una ventana anterior) no sirve otra vez.
+            $paso = Verify2fa::paso_2fa_valido($verification_code, $user_secret);
+            if ($paso === null || !$this->intentos->aceptarPasoTotp($esquema, $sfsv, $idUsuario, $paso)) {
                 $this->anotarFallo($esquema, $sfsv, $idUsuario);
                 return ['ok' => false, 'error' => 4];
             }

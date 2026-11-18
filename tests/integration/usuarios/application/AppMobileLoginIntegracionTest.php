@@ -487,6 +487,20 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertSame('invalid_2fa', $this->login(['verification_code' => $viejo])['code']);
     }
 
+    /** Un código TOTP aceptado no sirve otra vez. */
+    public function test_2fa_un_codigo_no_sirve_dos_veces(): void
+    {
+        $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);
+        $codigo = $this->codigoTotp(self::SECRETO_2FA);
+        $this->assertTrue($this->login(['verification_code' => $codigo])['ok']);
+        $_SESSION = $this->sesionPrevia;
+
+        $r = $this->login(['verification_code' => $codigo]);
+
+        $this->assertSame(['ok' => false, 'code' => 'invalid_2fa', 'mensaje' => _("Código 2FA inválido")], $r);
+        $this->assertRechazadoSinFugas($r, 'invalid_2fa');
+    }
+
     public function test_2fa_con_codigo_valido_entra(): void
     {
         $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);

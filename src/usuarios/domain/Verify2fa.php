@@ -13,21 +13,29 @@ class Verify2fa
      * @return bool True si el código es válido, False en caso contrario
      */
     public static function verify_2fa_code(string $code, string $secret): bool {
+        return self::paso_2fa_valido($code, $secret) !== null;
+    }
+
+    /**
+     * Paso de 30 s al que corresponde un código válido (el actual, el anterior o el siguiente, para
+     * compensar la desincronización del reloj), o null si el código no vale. El login guarda el último
+     * paso aceptado para que un código no sirva dos veces.
+     */
+    public static function paso_2fa_valido(string $code, string $secret): ?int {
         // Eliminar espacios y convertir a mayúsculas
         $code = strtoupper(str_replace(' ', '', $code));
 
         // Obtener el tiempo actual en intervalos de 30 segundos
-        $time = floor(time() / 30);
+        $time = intdiv(time(), 30);
 
-        // Verificar el código actual y los adyacentes (para compensar desincronización)
         for ($i = -1; $i <= 1; $i++) {
-            $timeSlice = (int) ($time + $i);
-            if (self::calculate_totp($secret, $timeSlice) === $code) {
-                return true;
+            $timeSlice = $time + $i;
+            if (hash_equals(self::calculate_totp($secret, $timeSlice), $code)) {
+                return $timeSlice;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

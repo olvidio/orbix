@@ -576,17 +576,25 @@ class LoginProcesarIntegracionTest extends myTest
         $this->assertTrue($r['ok']);
     }
 
-    /**
-     * Hallazgo: un código TOTP válido se puede reutilizar dentro de su ventana (hasta ~90 s): no se
-     * guarda el último código aceptado.
-     */
-    public function test_2fa_el_mismo_codigo_sirve_dos_veces(): void
+    /** Un código TOTP aceptado no sirve otra vez (ni uno de una ventana anterior), y el intento cuenta como fallo. */
+    public function test_2fa_un_codigo_no_sirve_dos_veces(): void
     {
         $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);
         $codigo = $this->codigoTotp(self::SECRETO_2FA);
 
         $this->assertTrue($this->login(['verification_code' => $codigo])['ok']);
-        $this->assertTrue($this->login(['verification_code' => $codigo])['ok']);
+        $this->assertSame(['ok' => false, 'error' => 4], $this->login(['verification_code' => $codigo]));
+        $this->assertSame(['ok' => false, 'error' => 4], $this->login(['verification_code' => $this->codigoTotp(self::SECRETO_2FA, -1)]));
+        $this->assertSame(2, $this->falloDeLogin());
+    }
+
+    /** El código de la ventana siguiente (reloj del móvil adelantado) se acepta, y después ya no el actual. */
+    public function test_2fa_tras_aceptar_un_codigo_solo_vale_uno_posterior(): void
+    {
+        $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);
+
+        $this->assertTrue($this->login(['verification_code' => $this->codigoTotp(self::SECRETO_2FA, 1)])['ok']);
+        $this->assertSame(['ok' => false, 'error' => 4], $this->login(['verification_code' => $this->codigoTotp(self::SECRETO_2FA)]));
     }
 
     /** Con `has_2fa` desactivado el secreto guardado no obliga a nada. */
