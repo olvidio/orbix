@@ -4,6 +4,7 @@ namespace src\personas\application;
 
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDePasoDatosRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -20,7 +21,8 @@ use src\personas\domain\entity\PersonaSSSC;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Elimina una persona si pertenece a la dl del usuario actual.
+ * Elimina una persona si pertenece a la dl del usuario actual; una persona de paso, si no tiene
+ * datos en ninguna dl ({@see PersonaDePasoDatosRepositoryInterface}).
  *
  * Migrado desde la rama "eliminar" de `apps/personas/controller/personas_update.php`
  * (slice 2 de la migracion del modulo `personas`).
@@ -29,6 +31,7 @@ final class PersonaEliminar
 {
     public function __construct(
         private PersonaRepositoryResolver $personaRepositoryResolver,
+        private PersonaDePasoDatosRepositoryInterface $datosDePaso,
     ) {
     }
 
@@ -61,8 +64,18 @@ final class PersonaEliminar
             return _("No se encuentra la persona");
         }
 
-        // Solo se permite borrar a personas de la misma dl.
-        if (ConfigGlobal::mi_delef() !== $oPersona->getDl()) {
+        if ($obj_pau === 'PersonaEx') {
+            // Una persona de paso es de fuera y su tabla es común a todas las dl: se borra si no
+            // tiene datos en ninguna (asistencias, cargos, encargos, notas…).
+            $datos = $this->datosDePaso->datosDe($id_nom);
+            if ($datos !== []) {
+                return sprintf(
+                    _("No se ha eliminado: esta persona de paso tiene %s"),
+                    implode(', ', array_map(self::etiquetaDatos(...), $datos))
+                );
+            }
+        } elseif (ConfigGlobal::mi_delef() !== $oPersona->getDl()) {
+            // El resto, solo personas de la misma dl.
             return _("No se ha eliminado, porque no es de mi dl");
         }
 
@@ -73,6 +86,20 @@ final class PersonaEliminar
         }
 
         return '';
+    }
+
+    private static function etiquetaDatos(string $tipo): string
+    {
+        return match ($tipo) {
+            PersonaDePasoDatosRepositoryInterface::ASISTENCIAS => _("asistencias"),
+            PersonaDePasoDatosRepositoryInterface::CARGOS => _("cargos"),
+            PersonaDePasoDatosRepositoryInterface::ENCARGOS => _("encargos"),
+            PersonaDePasoDatosRepositoryInterface::NOTAS => _("notas"),
+            PersonaDePasoDatosRepositoryInterface::MATRICULAS => _("matrículas"),
+            PersonaDePasoDatosRepositoryInterface::DOCENCIA => _("docencia"),
+            PersonaDePasoDatosRepositoryInterface::ZONAS => _("zonas"),
+            default => $tipo,
+        };
     }
 
     /**

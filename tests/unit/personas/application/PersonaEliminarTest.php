@@ -9,6 +9,7 @@ use src\personas\application\PersonaEliminar;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaDePasoDatosRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -36,14 +37,14 @@ final class PersonaEliminarTest extends TestCase
 
     public function test_sin_id_nom(): void
     {
-        $useCase = new PersonaEliminar($this->makeResolver());
+        $useCase = new PersonaEliminar(datosDePaso: $this->createStub(PersonaDePasoDatosRepositoryInterface::class), personaRepositoryResolver: $this->makeResolver());
 
         $this->assertNotSame('', $useCase->execute(0, 'PersonaN'));
     }
 
     public function test_obj_pau_desconocido(): void
     {
-        $useCase = new PersonaEliminar($this->makeResolver());
+        $useCase = new PersonaEliminar(datosDePaso: $this->createStub(PersonaDePasoDatosRepositoryInterface::class), personaRepositoryResolver: $this->makeResolver());
 
         $this->assertNotSame('', $useCase->execute(1, 'PersonaX'));
     }
@@ -53,7 +54,7 @@ final class PersonaEliminarTest extends TestCase
         $repo = $this->createMock(PersonaNRepositoryInterface::class);
         $repo->method('findById')->with(9)->willReturn(null);
 
-        $useCase = new PersonaEliminar($this->makeResolver([
+        $useCase = new PersonaEliminar(datosDePaso: $this->createStub(PersonaDePasoDatosRepositoryInterface::class), personaRepositoryResolver: $this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
         ]));
 
@@ -74,7 +75,7 @@ final class PersonaEliminarTest extends TestCase
             'sfsv' => 1,
         ]);
 
-        $useCase = new PersonaEliminar($this->makeResolver([
+        $useCase = new PersonaEliminar(datosDePaso: $this->createStub(PersonaDePasoDatosRepositoryInterface::class), personaRepositoryResolver: $this->makeResolver([
             PersonaNRepositoryInterface::class => $repo,
         ]));
 

@@ -79,6 +79,39 @@ final class PersonasEditarDataTest extends TestCase
         $this->assertSame(['xyz' => 'xyz', 'abc' => 'abc'], $out['opciones_dl']);
     }
 
+    /**
+     * Alta de una persona de paso: no se ofrece la dl propia (la ficha tampoco la admite y con ella el sacd
+     * no sale en la lista para encargarle actividades) y sale «Otra» elegida. Antes, el valor por defecto
+     * era la dl propia y, al conservar la dl actual, se colaba en las opciones.
+     */
+    public function test_alta_persona_ex_no_ofrece_la_dl_propia_y_sale_otra(): void
+    {
+        $sesionPrevia = $_SESSION ?? null;
+        $_SESSION['session_auth'] = ['esquema' => 'H-bcnv', 'sfsv' => 1];
+        try {
+            $repo = $this->createMock(PersonaExRepositoryInterface::class);
+            $repo->method('getNewId')->willReturn(7);
+            $repo->method('getNewIdNom')->with(7)->willReturn(-7);
+
+            $useCase = $this->makeUseCase(
+                $this->makeResolver([PersonaExRepositoryInterface::class => $repo]),
+                [...$this->delegacionesActivas(), $this->makeDelegacion('Otra')],
+                $this->dbPropiedadesConEsquema(['bcn' => 'bcn']),
+            );
+
+            $out = $useCase->execute(['nuevo' => 1, 'obj_pau' => 'PersonaEx', 'id_tabla' => 'pn']);
+        } finally {
+            if ($sesionPrevia === null) {
+                unset($_SESSION);
+            } else {
+                $_SESSION = $sesionPrevia;
+            }
+        }
+
+        $this->assertSame('Otra', $out['dl']);
+        $this->assertSame(['xyz' => 'xyz', 'abc' => 'abc', 'Otra' => 'Otra'], $out['opciones_dl']);
+    }
+
     public function test_edicion_persona_ex_conserva_dl_actual_aunque_tenga_esquema(): void
     {
         $out = $this->editarPersonaExConDl('bcn');

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-18 09:07+0100\n"
+"POT-Creation-Date: 2026-11-18 10:30+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -910,7 +910,7 @@ msgstr "id"
 #: frontend/usuarios/view/role_form.phtml:60
 #: frontend/usuarios/view/usuario_lista.phtml:42
 #: src/asistentes/application/ListaEstCtrData.php:203
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:336
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
 #: src/asistentes/application/TablaPeticionesData.php:71
@@ -1275,7 +1275,7 @@ msgstr "è necessario inserire un luogo"
 
 #: frontend/actividades/view/actividad_select_ubi.phtml:264
 #: src/actividades/application/ActividadVerDatos.php:155
-#: src/actividades/application/ListaActividadesSgListado.php:238
+#: src/actividades/application/ListaActividadesSgListado.php:239
 msgid "sin determinar"
 msgstr "non determinato"
 
@@ -1462,7 +1462,7 @@ msgid "centro"
 msgstr "centro"
 
 #: frontend/actividadescentro/view/activ_ctr.phtml:29
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:336
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:335
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:258
 msgid "num"
 msgstr "num"
@@ -1895,6 +1895,7 @@ msgstr "dl"
 #: frontend/actividadestudios/view/form_matriculas_de_una_persona.phtml:121
 #: frontend/notas/view/form_notas_de_una_persona.phtml:422
 #: src/actividadestudios/application/ListaClasesCaData.php:125
+#: src/actividadestudios/application/MatriculasListaData.php:91
 #: src/actividadestudios/application/PlanEstudiosCaData.php:208
 #: src/actividadestudios/application/Select_matriculas_de_una_persona.php:113
 #: src/actividadestudios/domain/value_objects/TipoActividadAsignatura.php:20
@@ -2184,8 +2185,12 @@ msgid "asignatura de una actividad"
 msgstr "materia di un'attività"
 
 #: frontend/actividadestudios/view/form_asignaturas_de_una_actividad.phtml:101
+#: src/actividadestudios/application/ListaClasesCaData.php:116
 #: src/actividadestudios/application/ListaClasesCaData.php:127
 #: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:82
+#: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:156
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:146
+#: src/actividadestudios/application/Select_matriculas_de_una_persona.php:186
 msgid "profesor"
 msgstr "professore"
 
@@ -3359,7 +3364,7 @@ msgid "incremento gasto"
 msgstr "aumentare la spesa"
 
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:16
-#: src/casas/application/CalendarioUbiResumenData.php:288
+#: src/casas/application/CalendarioUbiResumenData.php:285
 msgid "no disponible"
 msgstr "non disponibile"
 
@@ -5254,7 +5259,7 @@ msgid "fin"
 msgstr "fine"
 
 #: frontend/encargossacd/view/sacd_ausencias_get.phtml:69
-#: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:546
+#: src/actividadessacd/application/services/ComunicarActividadesSacdService.php:547
 msgid "ausencias/tareas"
 msgstr "assenze/compiti"
 
@@ -7770,6 +7775,7 @@ msgid "ver plan centro"
 msgstr "visualizza piano centro"
 
 #: frontend/menus/view/traducir_menu.phtml:473
+#: src/personas/application/PersonaEliminar.php:100
 msgid "zonas"
 msgstr "zone"
 
@@ -11314,7 +11320,7 @@ msgid "Sesión no autenticada"
 msgstr "Sessione non autenticata"
 
 #: frontend/usuarios/controller/login.php:91
-#: src/usuarios/application/AppMobileLogin.php:45
+#: src/usuarios/application/AppMobileLogin.php:43
 #, php-format
 msgid "No existe este equema: %s"
 msgstr "Questo schema non esiste: %s"
@@ -11624,7 +11630,7 @@ msgid "Código de verificación 2FA inválido"
 msgstr "Codice di verifica 2FA non valido"
 
 #: frontend/usuarios/view/login_form.phtml:370
-#: src/usuarios/application/AppMobileLogin.php:121
+#: src/usuarios/application/AppMobileLogin.php:117
 msgid ""
 "Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."
 msgstr "Troppi tentativi falliti. Riprova tra qualche minuto."
@@ -12448,7 +12454,7 @@ msgstr "manca id_item"
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:36
 #: src/notas/application/ActaEliminar.php:49
 #: src/notas/application/support/ActaTribunalSync.php:36
-#: src/personas/application/PersonaEliminar.php:70
+#: src/personas/application/PersonaEliminar.php:83
 #: src/procesos/application/ProcesosEliminar.php:31
 #: src/ubis/application/CalendarioPeriodoEliminar.php:25
 #: src/ubis/application/UbisEliminar.php:22
@@ -12469,6 +12475,40 @@ msgstr "c'è un errore, non è stato rimosso"
 #, php-format
 msgid "no encuentro a nadie con id_nom: %d"
 msgstr "non trovo nessuno con id_nom: %d"
+
+#: src/actividadcargos/application/FormCargosDeActividadData.php:98
+#: src/actividadcargos/application/FormCargosDeActividadData.php:106
+#: src/actividadestudios/application/E43CertificadoData.php:52
+#: src/actividadestudios/application/ListaClasesCaData.php:90
+#: src/actividadestudios/application/ListaClasesCaData.php:116
+#: src/actividadestudios/application/ListaClasesCaData.php:141
+#: src/actividadestudios/application/MatriculasListaData.php:91
+#: src/actividadestudios/application/MatriculasListaData.php:118
+#: src/actividadestudios/application/PlanEstudiosCaData.php:96
+#: src/actividadestudios/application/PlanEstudiosCaData.php:128
+#: src/actividadestudios/application/PlanEstudiosCaData.php:163
+#: src/actividadestudios/application/Select_asignaturas_de_una_actividad.php:156
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:146
+#: src/actividadestudios/application/Select_matriculas_de_una_actividad.php:173
+#: src/actividadestudios/application/Select_matriculas_de_una_persona.php:186
+#: src/asistentes/application/FormAsistentesAUnaActividadData.php:85
+#: src/asistentes/application/ListaAsistentesData.php:88
+#: src/asistentes/application/ListaAsistentesData.php:156
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:240
+#: src/asistentes/application/Select_actividades_de_una_persona.php:154
+#: src/asistentes/application/services/AsistenteActividadService.php:299
+#: src/certificados/domain/CertificadoEmitidoEnviar.php:54
+#: src/certificados/domain/Select_certificados_de_una_persona.php:86
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:62
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_datos.php:28
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:71
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:60
+#: src/dossiers/application/DossiersVerPantallaData.php:173
+#: src/dossiers/application/DossiersVerPantallaData.php:184
+#: src/profesores/domain/ProfesorActividad.php:51
+#, php-format
+msgid "No encuentro a nadie con id_nom: %s"
+msgstr "Non trovo nessuno con id_nom: %s"
 
 #: src/actividadcargos/application/FormCargosPersonasEnActividadData.php:91
 #: src/actividades/application/ActividadCambiarTipo.php:69
@@ -12506,6 +12546,7 @@ msgstr "aggiungi %s"
 #: src/actividadcargos/domain/InfoCargo.php:19
 #: src/actividades/application/ActividadSelectListado.php:217
 #: src/actividades/application/ListaActividadesSgListado.php:118
+#: src/personas/application/PersonaEliminar.php:95
 msgid "cargos"
 msgstr "cariche"
 
@@ -12737,13 +12778,12 @@ msgid "dl org"
 msgstr "dl org"
 
 #: src/actividades/application/ActividadSelectListado.php:410
-#: src/actividades/application/ListaActividadesSgListado.php:217
 #, php-format
 msgid "ocupado %s (%s-%s)"
 msgstr "occupato %s ( %s - %s )"
 
 #: src/actividades/application/ActividadSelectListado.php:556
-#: src/actividades/application/ListaActividadesSgListado.php:292
+#: src/actividades/application/ListaActividadesSgListado.php:293
 #, php-format
 msgid "%s actividades encontradas (%s sin permiso)"
 msgstr "%s attività trovate ( %s senza permesso)"
@@ -12767,6 +12807,7 @@ msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "L'attività: %s non ha un luogo assegnato"
 
 #: src/actividades/application/CalendarioListasDatos.php:292
+#: src/actividades/application/ListaActividadesSgListado.php:221
 #: src/casas/application/CasaActividadesListaData.php:151
 msgid "ocupado"
 msgstr "Occupato"
@@ -13431,7 +13472,7 @@ msgstr "L'insegnamento è stato aggiornato per il periodo: %s"
 
 #: src/actividadestudios/application/E43CertificadoData.php:77
 #: src/actividadestudios/application/ListaClasesCaData.php:59
-#: src/actividadestudios/application/MatriculasListaData.php:111
+#: src/actividadestudios/application/MatriculasListaData.php:110
 #: src/actividadestudios/application/PlanEstudiosCaData.php:65
 #, php-format
 msgid "No encuentro actividad con id: %d"
@@ -13445,7 +13486,7 @@ msgstr "non esiste alcuna iscrizione di questa persona"
 #: src/actividadestudios/application/FormMatriculasDeUnaPersonaData.php:127
 #: src/actividadestudios/application/ListaClasesCaData.php:109
 #: src/actividadestudios/application/MatriculaNueva.php:86
-#: src/actividadestudios/application/MatriculasListaData.php:135
+#: src/actividadestudios/application/MatriculasListaData.php:133
 #: src/actividadestudios/application/MatriculasPendientesData.php:90
 #: src/actividadestudios/application/PlanEstudiosCaData.php:118
 #: src/actividadestudios/application/PlanEstudiosCaData.php:202
@@ -14048,12 +14089,12 @@ msgstr "manca id_activ_old"
 msgid "La persona sigue apuntada en las dos actividades."
 msgstr "La persona continua iscritta a entrambe le attività."
 
-#: src/asistentes/application/AsistenteMoverData.php:194
+#: src/asistentes/application/AsistenteMoverData.php:191
 #, php-format
 msgid "plazas libres/concedidas: %s/%s"
 msgstr "Posti gratuiti / assegnati: %s / %s"
 
-#: src/asistentes/application/AsistenteMoverData.php:201
+#: src/asistentes/application/AsistenteMoverData.php:198
 #, php-format
 msgid "créditos: %s"
 msgstr "Crediti: %s"
@@ -14147,16 +14188,16 @@ msgstr "proposta di cl in cv di sss+"
 msgid "relación de asistentes a las actividades seleccionadas"
 msgstr "elenco dei partecipanti alle attività selezionate"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:319
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:318
 #, php-format
 msgid "plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"
 msgstr "posti (max-min): %s , per dl: %s , occupato + ordini: %s"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:324
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:323
 msgid "dif"
 msgstr "DIF"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:327
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:326
 #, php-format
 msgid "plazas (max-min): %s, ocupadas: %s"
 msgstr "posti (max-min): %s , occupato: %s"
@@ -14693,6 +14734,7 @@ msgid "No hay conexión a la base de datos."
 msgstr "Nessuna connessione al database."
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:43
+#: src/personas/application/PersonaEliminar.php:94
 msgid "asistencias"
 msgstr "partecipazioni"
 
@@ -14850,31 +14892,31 @@ msgstr "indirizzo"
 msgid "Casa no encontrada"
 msgstr "Casa non trovata"
 
-#: src/casas/application/CalendarioUbiResumenData.php:172
+#: src/casas/application/CalendarioUbiResumenData.php:170
 msgid "Mínimo de asistencias (p_dv.M)"
 msgstr "Minimo di partecipazioni (p_dv.M)"
 
-#: src/casas/application/CalendarioUbiResumenData.php:173
+#: src/casas/application/CalendarioUbiResumenData.php:171
 msgid "según asignación dias sv"
 msgstr "secondo i giorni di incarico sv"
 
-#: src/casas/application/CalendarioUbiResumenData.php:177
+#: src/casas/application/CalendarioUbiResumenData.php:175
 msgid "Previsión de ingresos sv a 2 años vista (1+G).r_it(p_dv/(p_dv+p_df))"
 msgstr "Previsione di entrate sv a 2 anni vista (1+G).r_it(p_dv/(p_dv+p_df))"
 
-#: src/casas/application/CalendarioUbiResumenData.php:182
+#: src/casas/application/CalendarioUbiResumenData.php:180
 msgid "Mínimo de asistencias (p_df.M)"
 msgstr "Minimo di partecipazioni (p_df.M)"
 
-#: src/casas/application/CalendarioUbiResumenData.php:183
+#: src/casas/application/CalendarioUbiResumenData.php:181
 msgid "según asignación dias sf"
 msgstr "secondo i giorni di assegnazione sf"
 
-#: src/casas/application/CalendarioUbiResumenData.php:187
+#: src/casas/application/CalendarioUbiResumenData.php:185
 msgid "Previsión de ingresos sf a 2 años vista (1+G).r_it(p_df/(p_dv+p_df))"
 msgstr "Previsione di entrate sf a 2 anni vista (1+G).r_it(p_df/(p_dv+p_df))"
 
-#: src/casas/application/CalendarioUbiResumenData.php:251
+#: src/casas/application/CalendarioUbiResumenData.php:248
 msgid "tar. no definida"
 msgstr "catrame.non definito"
 
@@ -15393,11 +15435,11 @@ msgstr "opzione non definita per tipo persona %s"
 #: src/dbextern/application/VerTrasladosData.php:39
 #: src/dbextern/domain/SincroDB.php:462
 #: src/personas/application/HomePersonaData.php:60
-#: src/personas/application/PersonaEliminar.php:56
+#: src/personas/application/PersonaEliminar.php:59
 #: src/personas/application/PersonaUpdate.php:53
 #: src/personas/application/PersonaUpdate.php:100
-#: src/personas/application/PersonasEditarData.php:63
-#: src/personas/application/PersonasEditarData.php:118
+#: src/personas/application/PersonasEditarData.php:64
+#: src/personas/application/PersonasEditarData.php:121
 #: src/personas/application/StgrCambioData.php:48
 #: src/personas/application/StgrCambioData.php:54
 #: src/personas/application/StgrUpdate.php:44
@@ -18252,25 +18294,47 @@ msgid "la %s está completada pero no hay permiso de ver"
 msgstr "la %s è completata ma non hai l'autorizzazione per visualizzarla"
 
 #: src/personas/application/HomePersonaData.php:67
-#: src/personas/application/PersonaEliminar.php:61
+#: src/personas/application/PersonaEliminar.php:64
 #: src/personas/application/PersonaPublicarFormData.php:51
 #: src/personas/application/PersonaPublicarFormData.php:73
-#: src/personas/application/PersonasEditarData.php:133
+#: src/personas/application/PersonasEditarData.php:136
 #: src/personas/application/StgrCambioData.php:59
 #: src/personas/application/StgrUpdate.php:64
 #: src/personas/application/TrasladoUpdate.php:72
 msgid "No se encuentra la persona"
 msgstr "La persona non è stata trovata."
 
-#: src/personas/application/PersonaEliminar.php:41
+#: src/personas/application/PersonaEliminar.php:44
 #: src/personas/application/PersonaUpdate.php:42
-#: src/personas/application/PersonasEditarData.php:128
+#: src/personas/application/PersonasEditarData.php:131
 msgid "No se ha pasado el id_nom"
 msgstr "Non è stato passato id_nom"
 
-#: src/personas/application/PersonaEliminar.php:66
+#: src/personas/application/PersonaEliminar.php:73
+#, php-format
+msgid "No se ha eliminado: esta persona de paso tiene %s"
+msgstr "Non eliminato: questa persona di passaggio ha %s"
+
+#: src/personas/application/PersonaEliminar.php:79
 msgid "No se ha eliminado, porque no es de mi dl"
 msgstr "Non è stato eliminato, perché non è della mia dl"
+
+#: src/personas/application/PersonaEliminar.php:96
+msgid "encargos"
+msgstr "incarichi"
+
+#: src/personas/application/PersonaEliminar.php:97
+msgid "notas"
+msgstr "voti"
+
+#: src/personas/application/PersonaEliminar.php:98
+msgid "matrículas"
+msgstr "iscrizioni"
+
+#: src/personas/application/PersonaEliminar.php:99
+#: src/profesores/application/ProfesoresAsignaturaLista.php:40
+msgid "docencia"
+msgstr "insegnamento"
 
 #: src/personas/application/PersonaPublicar.php:27
 msgid "Datos de persona no válidos"
@@ -18885,10 +18949,6 @@ msgstr ""
 msgid "incio curso"
 msgstr "inizio corso"
 
-#: src/profesores/application/ProfesoresAsignaturaLista.php:40
-msgid "docencia"
-msgstr "insegnamento"
-
 #: src/profesores/application/ProfesoresAsignaturaLista.php:42
 msgid "mail"
 msgstr "posta"
@@ -18961,11 +19021,6 @@ msgstr "dossier di laurea"
 #: src/profesores/domain/InfoProfesorTituloEst.php:22
 msgid "¿Está seguro que desea eliminar este título?"
 msgstr "Sei sicuro di voler cancellare questo titolo?"
-
-#: src/profesores/domain/ProfesorActividad.php:51
-#, php-format
-msgid "No encuentro a nadie con id_nom: %s"
-msgstr "Non trovo nessuno con id_nom: %s"
 
 #: src/profesores/domain/entity/ProfesorAmpliacion.php:219
 #: src/profesores/domain/entity/ProfesorDirector.php:217
@@ -19631,8 +19686,8 @@ msgid "No se han seleccionado ubis."
 msgstr "Non sono stati selezionati gli ubis."
 
 #: src/ubis/application/TrasladarUbis.php:35
-#: src/usuarios/application/AppMobileLogin.php:82
-#: src/usuarios/application/AppMobileLogin.php:97
+#: src/usuarios/application/AppMobileLogin.php:78
+#: src/usuarios/application/AppMobileLogin.php:93
 #: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
 #: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
@@ -20144,36 +20199,36 @@ msgstr "c'è un errore, la stanza non è stata eliminata"
 msgid "Error al eliminar la habitación"
 msgstr "Errore nell'eliminare la stanza"
 
-#: src/usuarios/application/AppMobileLogin.php:59
+#: src/usuarios/application/AppMobileLogin.php:57
 msgid "Usuario y contraseña obligatorios"
 msgstr "Utente e password obbligatori"
 
-#: src/usuarios/application/AppMobileLogin.php:71
+#: src/usuarios/application/AppMobileLogin.php:67
 msgid "Esquema no indicado"
 msgstr "Schema non indicato"
 
-#: src/usuarios/application/AppMobileLogin.php:105
-#: src/usuarios/application/AppMobileLogin.php:131
+#: src/usuarios/application/AppMobileLogin.php:101
+#: src/usuarios/application/AppMobileLogin.php:127
 msgid "Usuario o contraseña incorrectos"
 msgstr "Utente o password errati"
 
-#: src/usuarios/application/AppMobileLogin.php:154
+#: src/usuarios/application/AppMobileLogin.php:150
 msgid "Debe completar la configuración 2FA"
 msgstr "Deve completare la configurazione 2FA"
 
-#: src/usuarios/application/AppMobileLogin.php:164
+#: src/usuarios/application/AppMobileLogin.php:160
 msgid "Código 2FA requerido"
 msgstr "Codice 2FA richiesto"
 
-#: src/usuarios/application/AppMobileLogin.php:172
+#: src/usuarios/application/AppMobileLogin.php:170
 msgid "Código 2FA inválido"
 msgstr "Codice 2FA non valido"
 
-#: src/usuarios/application/AppMobileLogin.php:189
+#: src/usuarios/application/AppMobileLogin.php:187
 msgid "Error de servidor"
 msgstr "Errore del server"
 
-#: src/usuarios/application/AppMobileLogin.php:193
+#: src/usuarios/application/AppMobileLogin.php:191
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:22
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:37
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:48
@@ -20182,7 +20237,7 @@ msgstr "Errore del server"
 msgid "Rol no encontrado"
 msgstr "Ruolo non trovato"
 
-#: src/usuarios/application/AppMobileLogin.php:203
+#: src/usuarios/application/AppMobileLogin.php:201
 msgid "Acceso no permitido"
 msgstr "Accesso non consentito"
 
@@ -21656,9 +21711,6 @@ msgstr "autorizzazione attiva (selezionata)"
 
 #~ msgid "profesión cargo"
 #~ msgstr "posizione professionale"
-
-#~ msgid "encargos"
-#~ msgstr "commissioni"
 
 #~ msgid "titulo estudios"
 #~ msgstr "studi di laurea"

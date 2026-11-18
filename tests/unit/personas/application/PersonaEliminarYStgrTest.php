@@ -11,6 +11,7 @@ use src\personas\application\StgrUpdate;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaDePasoDatosRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -82,21 +83,59 @@ final class PersonaEliminarYStgrTest extends TestCase
         $repo->method('findById')->with(100555)->willReturn($p);
         $repo->expects($this->once())->method('Eliminar')->with($p)->willReturn(true);
         $this->repos[$repoId] = $repo;
-        $this->assertSame('', (new PersonaEliminar($this->resolver()))->execute(100555, $objPau));
+        $this->assertSame('', ($this->eliminar())->execute(100555, $objPau));
     }
 
     public function test_no_borra_una_persona_de_otra_dl(): void
+    {
+        $repo = $this->createMock(PersonaNRepositoryInterface::class);
+        $repo->method('findById')->willReturn($this->persona(PersonaN::class, 'dlp'));
+        $repo->expects($this->never())->method('Eliminar');
+        $this->repos[PersonaNRepositoryInterface::class] = $repo;
+        $this->assertSame('No se ha eliminado, porque no es de mi dl', $this->eliminar()->execute(100555, 'PersonaN'));
+    }
+
+    /**
+     * Una persona de paso es siempre de fuera (dl «Otra» o una sin Orbix) y su tabla es común a todas las dl:
+     * se borra si no tiene datos en ninguna (decisión del 2026-11-18). Antes se exigía que fuera de mi dl y,
+     * en la práctica, no se podía borrar ninguna.
+     */
+    public function test_una_persona_de_paso_sin_datos_se_borra_aunque_no_sea_de_mi_dl(): void
+    {
+        $p = $this->persona(PersonaEx::class, 'Otra');
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->willReturn($p);
+        $repo->expects($this->once())->method('Eliminar')->with($p)->willReturn(true);
+        $this->repos[PersonaExRepositoryInterface::class] = $repo;
+
+        $this->assertSame('', $this->eliminar([])->execute(100555, 'PersonaEx'));
+    }
+
+    public function test_una_persona_de_paso_con_datos_no_se_borra_y_dice_cuales(): void
     {
         $repo = $this->createMock(PersonaExRepositoryInterface::class);
         $repo->method('findById')->willReturn($this->persona(PersonaEx::class, 'dlp'));
         $repo->expects($this->never())->method('Eliminar');
         $this->repos[PersonaExRepositoryInterface::class] = $repo;
-        $this->assertSame('No se ha eliminado, porque no es de mi dl', (new PersonaEliminar($this->resolver()))->execute(100555, 'PersonaEx'));
+
+        $this->assertSame(
+            sprintf(_("No se ha eliminado: esta persona de paso tiene %s"), _("asistencias") . ', ' . _("cargos")),
+            $this->eliminar(['asistencias', 'cargos'])->execute(100555, 'PersonaEx')
+        );
+    }
+
+    /** @param list<string> $datosDePaso */
+    private function eliminar(array $datosDePaso = []): PersonaEliminar
+    {
+        $datos = $this->createMock(PersonaDePasoDatosRepositoryInterface::class);
+        $datos->method('datosDe')->willReturn($datosDePaso);
+
+        return new PersonaEliminar($this->resolver(), $datos);
     }
 
     public function test_borrar_errores(): void
     {
-        $uc = fn () => new PersonaEliminar($this->resolver());
+        $uc = fn () => $this->eliminar();
         $this->assertSame('No se ha pasado el id_nom', $uc()->execute(0, 'PersonaN'));
         $this->assertSame('No existe la clase de la persona', $uc()->execute(1, 'PersonaDl'));
         $this->assertSame('No se encuentra la persona', $uc()->execute(1, 'PersonaN'));

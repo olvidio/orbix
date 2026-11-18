@@ -6,6 +6,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\value_objects\IncCode;
+use src\personas\domain\CpSacdFila;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
@@ -102,7 +103,9 @@ final class PersonasEditarData
             $out['f_situacion'] = (new DateTimeLocal())->getFromLocal();
             $out['situacion'] = 'A';
             $out['idioma_preferido'] = ConfigGlobal::mi_Idioma();
-            $out['dl'] = ConfigGlobal::mi_dele();
+            // Una persona de paso es de fuera: por defecto «Otra» (la dl propia no se ofrece; con ella el sacd
+            // tampoco saldría en la lista para encargarle actividades, que solo copia los de paso con «Otra»).
+            $out['dl'] = $Qobj_pau === 'PersonaEx' ? CpSacdFila::DL_DE_PASO : ConfigGlobal::mi_dele();
 
             try {
                 $repoAlta = match ($Qobj_pau) {
