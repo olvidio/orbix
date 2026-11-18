@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\integration\usuarios\infrastructure\persistence\postgresql;
+namespace Tests\integration\usuarios\infrastructure\repositories;
 
 use PDO;
 use src\shared\infrastructure\persistence\ConfigDB;
