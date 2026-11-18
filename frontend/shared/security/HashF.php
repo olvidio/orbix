@@ -6,6 +6,11 @@ use frontend\shared\config\OrbixRuntime;
 
 class HashF
 {
+    /** Con este fichero en `log/`, las peticiones sin firma `h` se apuntan (ver {@see registrarSinFirma()}). */
+    public const BANDERA_REGISTRO_SIN_FIRMA = 'hashf_registrar_sin_h';
+
+    public const REGISTRO_SIN_FIRMA = 'hashf_sin_h.log';
+
     /**
      * Campos que el JS puede inyectar al enviar (p. ej. fnjs_solo_uno) y no forman parte del hash del formulario origen.
      *
@@ -376,6 +381,10 @@ class HashF
                 $salta = 1;
             }
         }
+        if ($salta === 0 && $requestUri !== null) {
+            $metodo = isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
+            self::registrarSinFirma(dirname(__DIR__, 3) . '/log', $metodo, $requestUri, $aPOST !== [] ? $aPOST : $_GET);
+        }
         if ($salta === 0 && (OrbixRuntime::miIdRole() === 1) && $requestUri !== null) {
             if (!str_contains($requestUri, '2fa.php')) {
                 echo '<div>' . $requestUri . ':  ' . _("página con seguridad desactivada") . '</div>';
@@ -383,6 +392,26 @@ class HashF
         }
     }
 }
+
+    /**
+     * Modo de registro: si existe la bandera {@see BANDERA_REGISTRO_SIN_FIRMA} en `$dirLog`, apunta en
+     * {@see REGISTRO_SIN_FIRMA} una petición que ha llegado sin firma `h` (fecha, método, ruta sin la
+     * query y nombres de los parámetros, nunca sus valores). Sirve para medir qué pantallas se romperían si
+     * la firma fuera obligatoria; sin la bandera no hace nada.
+     *
+     * @param array<array-key, mixed> $parametros
+     */
+    public static function registrarSinFirma(string $dirLog, string $metodo, string $requestUri, array $parametros): void
+    {
+        if (!is_file($dirLog . '/' . self::BANDERA_REGISTRO_SIN_FIRMA)) {
+            return;
+        }
+        $ruta = (string) parse_url($requestUri, PHP_URL_PATH);
+        $nombres = array_map('strval', array_keys($parametros));
+        sort($nombres);
+        $linea = date('c') . "\t" . $metodo . "\t" . $ruta . "\t" . implode(',', $nombres) . "\n";
+        @file_put_contents($dirLog . '/' . self::REGISTRO_SIN_FIRMA, $linea, FILE_APPEND | LOCK_EX);
+    }
 
     /**
      * Devuelve el html para poner dentro de un form, con los campos necesarios para
