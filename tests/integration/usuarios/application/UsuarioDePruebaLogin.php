@@ -60,6 +60,28 @@ trait UsuarioDePruebaLogin
         $_SESSION = $this->sesionPrevia;
     }
 
+    /** Segundos que faltan para que acabe el bloqueo del usuario de prueba (0 si no está bloqueado). */
+    protected function segundosDeBloqueo(): int
+    {
+        $st = $this->pdoUsuarios->query('SELECT GREATEST(0, EXTRACT(EPOCH FROM login_bloqueo_hasta - now()))::int FROM aux_usuarios WHERE id_usuario = ' . self::ID_USUARIO);
+        $v = $st === false ? false : $st->fetchColumn();
+
+        return is_numeric($v) ? (int) $v : 0;
+    }
+
+    protected function falloDeLogin(): int
+    {
+        $st = $this->pdoUsuarios->query('SELECT login_fallos FROM aux_usuarios WHERE id_usuario = ' . self::ID_USUARIO);
+        $v = $st === false ? false : $st->fetchColumn();
+
+        return is_numeric($v) ? (int) $v : -1;
+    }
+
+    protected function caducarBloqueo(): void
+    {
+        $this->pdoUsuarios->exec("UPDATE aux_usuarios SET login_bloqueo_hasta = now() - interval '1 second' WHERE id_usuario = " . self::ID_USUARIO);
+    }
+
     private function borrarUsuarioDePrueba(): void
     {
         $this->pdoUsuarios->exec('DELETE FROM web_preferencias WHERE id_usuario = ' . self::ID_USUARIO);

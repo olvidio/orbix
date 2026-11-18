@@ -7,6 +7,7 @@ namespace Tests\integration\usuarios\application;
 use PHPUnit\Framework\Attributes\DataProvider;
 use src\shared\config\ConfigGlobal;
 use src\usuarios\application\AppMobileLogin;
+use src\usuarios\infrastructure\persistence\postgresql\PgLoginIntentosRepository;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\domain\PasswordHasher;
 use Tests\myTest;
@@ -45,7 +46,7 @@ class AppMobileLoginIntegracionTest extends myTest
         $input += ['username' => self::USUARIO, 'password' => self::CLAVE, 'esquema' => self::ESQUEMA];
 
         // En CLI `setcookie()` no hace nada (ni avisa): las cookies «esquema» e «idioma» no se pueden comprobar aquí.
-        return (new AppMobileLogin())->execute($input);
+        return (new AppMobileLogin(new PgLoginIntentosRepository()))->execute($input);
     }
 
     /** @return array{ok: false, code: string, mensaje: string} */
@@ -185,18 +186,27 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertSame(self::ESQUEMA, $r['data']['esquema']);
     }
 
-    /**
-     * Hallazgo: no hay límite de intentos fallidos ni bloqueo temporal; tras varios fallos seguidos
-     * la contraseña correcta entra a la primera.
-     */
-    public function test_los_intentos_fallidos_no_bloquean_al_usuario(): void
+    /** Tras 5 fallos seguidos se rechaza aunque la contraseña sea correcta (`locked`); un acierto antes los pone a cero. */
+    public function test_cinco_fallos_seguidos_bloquean_aunque_la_contrasena_sea_correcta(): void
     {
         $this->crearUsuario();
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 4; $i++) {
+            $this->assertSame(self::rechazo(), $this->login(['password' => 'intento-' . $i]));
+        }
+        $this->assertTrue($this->login()['ok']);
+        $_SESSION = $this->sesionPrevia;
+        for ($i = 0; $i < 5; $i++) {
             $this->assertSame(self::rechazo(), $this->login(['password' => 'intento-' . $i]));
         }
 
-        $this->assertTrue($this->login()['ok']);
+        $r = $this->login();
+
+        $this->assertSame([
+            'ok' => false,
+            'code' => 'locked',
+            'mensaje' => _("Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."),
+        ], $r);
+        $this->assertRechazadoSinFugas($r, 'locked');
     }
 
     // ------------------------------------------------------------------ esquema

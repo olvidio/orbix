@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-17 20:26+0100\n"
+"POT-Creation-Date: 2026-11-18 09:07+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -933,8 +933,8 @@ msgstr "nome"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:38
 #: frontend/ubis/controller/home_ubis.php:65
-#: src/dossiers/application/DossiersVerPantallaData.php:229
-#: src/dossiers/application/DossiersVerPantallaData.php:465
+#: src/dossiers/application/DossiersVerPantallaData.php:230
+#: src/dossiers/application/DossiersVerPantallaData.php:466
 msgid "ver dossiers"
 msgstr "vedi fascicoli"
 
@@ -944,8 +944,8 @@ msgstr "vedi fascicoli"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:39
 #: frontend/ubis/controller/home_ubis.php:66
-#: src/dossiers/application/DossiersVerPantallaData.php:230
-#: src/dossiers/application/DossiersVerPantallaData.php:466
+#: src/dossiers/application/DossiersVerPantallaData.php:231
+#: src/dossiers/application/DossiersVerPantallaData.php:467
 msgid "dossiers"
 msgstr "dossier"
 
@@ -2833,17 +2833,17 @@ msgid "añadir asistente de otra dl"
 msgstr "aggiungere partecipante di un'altra dl"
 
 #: frontend/cambios/controller/avisos_generar.php:123
-#: src/cambios/application/AvisosEncolarMails.php:193
+#: src/cambios/application/AvisosEncolarMails.php:192
 msgid "fecha cambio"
 msgstr "cambio data"
 
 #: frontend/cambios/controller/avisos_generar.php:124
-#: src/cambios/application/AvisosEncolarMails.php:194
+#: src/cambios/application/AvisosEncolarMails.php:193
 msgid "quien"
 msgstr "Chi"
 
 #: frontend/cambios/controller/avisos_generar.php:125
-#: src/cambios/application/AvisosEncolarMails.php:195
+#: src/cambios/application/AvisosEncolarMails.php:194
 msgid "cambio"
 msgstr "modifica"
 
@@ -11314,7 +11314,7 @@ msgid "Sesión no autenticada"
 msgstr "Sessione non autenticata"
 
 #: frontend/usuarios/controller/login.php:91
-#: src/usuarios/application/AppMobileLogin.php:39
+#: src/usuarios/application/AppMobileLogin.php:45
 #, php-format
 msgid "No existe este equema: %s"
 msgstr "Questo schema non esiste: %s"
@@ -11471,7 +11471,7 @@ msgid "Ayuda de acceso"
 msgstr "Accedi alla guida"
 
 #: frontend/usuarios/view/ayuda_acceso.phtml:60
-#: frontend/usuarios/view/login_form.phtml:374
+#: frontend/usuarios/view/login_form.phtml:377
 msgid "¿Tiene problemas para acceder?"
 msgstr "Avete problemi di accesso?"
 
@@ -11622,6 +11622,12 @@ msgstr "È richiesto un codice di verifica 2FA"
 #: frontend/usuarios/view/login_form.phtml:367
 msgid "Código de verificación 2FA inválido"
 msgstr "Codice di verifica 2FA non valido"
+
+#: frontend/usuarios/view/login_form.phtml:370
+#: src/usuarios/application/AppMobileLogin.php:121
+msgid ""
+"Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."
+msgstr "Troppi tentativi falliti. Riprova tra qualche minuto."
 
 #: frontend/usuarios/view/perm_activ_lista.phtml:18
 msgid "¿Esta seguro que desea borrar este permiso?"
@@ -12492,7 +12498,7 @@ msgid "esto también borrará a esta persona de la lista de asistentes"
 msgstr "questo cancellerà anche questa persona dall'elenco dei partecipanti"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:231
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:191
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:192
 #, php-format
 msgid "añadir %s"
 msgstr "aggiungi %s"
@@ -14427,15 +14433,15 @@ msgid "Falta id_schema de sesión (mi_id_schema) para persistir el asistente."
 msgstr ""
 "Manca l'id_schema della sessione (mi_id_schema) per salvare il partecipante."
 
-#: src/cambios/application/AvisosEncolarMails.php:198
+#: src/cambios/application/AvisosEncolarMails.php:197
 msgid "Avisos de cambios en actividades"
 msgstr "Avvisi di modifiche alle attività"
 
-#: src/cambios/application/AvisosEncolarMails.php:199
+#: src/cambios/application/AvisosEncolarMails.php:198
 msgid "Tabla de cambios en actividades"
 msgstr "Tabella delle modifiche alle attività"
 
-#: src/cambios/application/AvisosEncolarMails.php:245
+#: src/cambios/application/AvisosEncolarMails.php:244
 #: src/cambios/application/CambioUsuarioEliminar.php:60
 #: src/cambios/application/CambioUsuarioObjetoPrefEliminar.php:35
 #: src/cambios/application/CambioUsuarioPropiedadPrefGuardarTodas.php:139
@@ -14731,42 +14737,42 @@ msgstr "elimina"
 msgid "fase"
 msgstr "fase"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:54
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:59
 msgid "error al apuntar cambio usuario en"
 msgstr "errore quando si indica il cambio utente"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:57
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:62
 msgid "schema"
 msgstr "schema"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:58
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:63
 msgid "id_item_cmb"
 msgstr "id_oggetto_cmb"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:59
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:64
 msgid "id_activ / id_usuario"
 msgstr "id_activ / id_usuario"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:60
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:65
 msgid "motivo / aviso tipo"
 msgstr "motivo / tipo avviso"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:81
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:103
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:86
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:108
 msgid "Algo falla"
 msgstr "Qualcosa non va"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:86
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:91
 msgid "Se han detectado incidencias al generar la tabla de avisos"
 msgstr ""
 "Si sono stati rilevati problemi durante la generazione della tabella degli "
 "avvisi"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:92
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:97
 msgid "Tabla de avisos generada."
 msgstr "Tabella degli avvisi generata."
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:93
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:98
 msgid "Puede consultar los avisos desde el menú «ver avisos»."
 msgstr "Può consultare gli avvisi dal menu «Vedi avvisi»."
 
@@ -19625,7 +19631,8 @@ msgid "No se han seleccionado ubis."
 msgstr "Non sono stati selezionati gli ubis."
 
 #: src/ubis/application/TrasladarUbis.php:35
-#: src/usuarios/application/AppMobileLogin.php:75
+#: src/usuarios/application/AppMobileLogin.php:82
+#: src/usuarios/application/AppMobileLogin.php:97
 #: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
 #: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
@@ -20137,38 +20144,36 @@ msgstr "c'è un errore, la stanza non è stata eliminata"
 msgid "Error al eliminar la habitación"
 msgstr "Errore nell'eliminare la stanza"
 
-#: src/usuarios/application/AppMobileLogin.php:53
+#: src/usuarios/application/AppMobileLogin.php:59
 msgid "Usuario y contraseña obligatorios"
 msgstr "Utente e password obbligatori"
 
-#: src/usuarios/application/AppMobileLogin.php:64
+#: src/usuarios/application/AppMobileLogin.php:71
 msgid "Esquema no indicado"
 msgstr "Schema non indicato"
 
-#: src/usuarios/application/AppMobileLogin.php:85
-#: src/usuarios/application/AppMobileLogin.php:90
-#: src/usuarios/application/AppMobileLogin.php:172
-msgid "Error de servidor"
-msgstr "Errore del server"
-
-#: src/usuarios/application/AppMobileLogin.php:100
-#: src/usuarios/application/AppMobileLogin.php:115
+#: src/usuarios/application/AppMobileLogin.php:105
+#: src/usuarios/application/AppMobileLogin.php:131
 msgid "Usuario o contraseña incorrectos"
 msgstr "Utente o password errati"
 
-#: src/usuarios/application/AppMobileLogin.php:138
+#: src/usuarios/application/AppMobileLogin.php:154
 msgid "Debe completar la configuración 2FA"
 msgstr "Deve completare la configurazione 2FA"
 
-#: src/usuarios/application/AppMobileLogin.php:148
+#: src/usuarios/application/AppMobileLogin.php:164
 msgid "Código 2FA requerido"
 msgstr "Codice 2FA richiesto"
 
-#: src/usuarios/application/AppMobileLogin.php:155
+#: src/usuarios/application/AppMobileLogin.php:172
 msgid "Código 2FA inválido"
 msgstr "Codice 2FA non valido"
 
-#: src/usuarios/application/AppMobileLogin.php:176
+#: src/usuarios/application/AppMobileLogin.php:189
+msgid "Error de servidor"
+msgstr "Errore del server"
+
+#: src/usuarios/application/AppMobileLogin.php:193
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:22
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:37
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:48
@@ -20177,7 +20182,7 @@ msgstr "Codice 2FA non valido"
 msgid "Rol no encontrado"
 msgstr "Ruolo non trovato"
 
-#: src/usuarios/application/AppMobileLogin.php:186
+#: src/usuarios/application/AppMobileLogin.php:203
 msgid "Acceso no permitido"
 msgstr "Accesso non consentito"
 

@@ -7,8 +7,10 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\usuarios\domain\contracts\LoginIntentosRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\domain\PasswordHasher;
+use src\usuarios\domain\PoliticaBloqueoLogin;
 use src\usuarios\domain\Verify2fa;
 
 /**
@@ -17,6 +19,10 @@ use src\usuarios\domain\Verify2fa;
  */
 final class AppMobileLogin
 {
+    public function __construct(private readonly LoginIntentosRepositoryInterface $intentos)
+    {
+    }
+
     /**
      * @param array{username?:string,password?:string,esquema?:string,verification_code?:string} $input
      * @return array{ok: bool, code?: string, mensaje?: string, data?: array<string, mixed>}
@@ -105,9 +111,20 @@ final class AppMobileLogin
             $normalized[(string) $key] = $value;
         }
         $MiUsuario = (new Usuario())->setAllAttributes($normalized);
+        $idUsuario = is_numeric($row['id_usuario'] ?? null) ? (int) $row['id_usuario'] : 0;
+
+        // Bloqueado por intentos fallidos: se rechaza aunque la contraseña sea correcta.
+        if ($this->intentos->estaBloqueado($esquema, $sfsv, $idUsuario)) {
+            return [
+                'ok' => false,
+                'code' => 'locked',
+                'mensaje' => _("Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."),
+            ];
+        }
 
         $oCrypt = new PasswordHasher();
         if ($oCrypt->encode($password, $password_db) !== $password_db) {
+            $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return [
                 'ok' => false,
                 'code' => 'invalid_credentials',
@@ -148,6 +165,7 @@ final class AppMobileLogin
                 ];
             }
             if (!Verify2fa::verify_2fa_code($verification_code, $secret2fa)) {
+                $this->anotarFallo($esquema, $sfsv, $idUsuario);
                 return [
                     'ok' => false,
                     'code' => 'invalid_2fa',
@@ -263,6 +281,8 @@ final class AppMobileLogin
             'httponly' => true,
             'samesite' => 'Lax',
         ];
+        $this->intentos->anotarAcierto($esquema, $sfsv, $idUsuario);
+
         setcookie('esquema', $esquema, $arr_cookie_options);
         setcookie('idioma', $idioma, $arr_cookie_options);
 
@@ -275,6 +295,17 @@ final class AppMobileLogin
                 'require_password_change' => $expire === 1,
             ],
         ];
+    }
+
+    private function anotarFallo(string $esquema, int $sfsv, int $idUsuario): void
+    {
+        $this->intentos->anotarFallo(
+            $esquema,
+            $sfsv,
+            $idUsuario,
+            PoliticaBloqueoLogin::MAX_FALLOS,
+            PoliticaBloqueoLogin::MINUTOS_BLOQUEO
+        );
     }
 
     /**

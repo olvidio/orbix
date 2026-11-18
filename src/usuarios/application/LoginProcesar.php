@@ -8,8 +8,10 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\usuarios\domain\contracts\LoginCliTicketRepositoryInterface;
+use src\usuarios\domain\contracts\LoginIntentosRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\domain\PasswordHasher;
+use src\usuarios\domain\PoliticaBloqueoLogin;
 use src\usuarios\domain\Verify2fa;
 
 /**
@@ -27,6 +29,7 @@ use src\usuarios\domain\Verify2fa;
  *   - 2: usuario sin permiso DMZ.
  *   - 3: se requiere codigo 2FA.
  *   - 4: codigo 2FA invalido.
+ *   - 5: bloqueado temporalmente por intentos fallidos ({@see PoliticaBloqueoLogin}).
  *
  * Casos especiales:
  *   - `2fa_setup_pendiente`: el usuario tiene `has_2fa=true` pero no hay
@@ -35,8 +38,10 @@ use src\usuarios\domain\Verify2fa;
  */
 final class LoginProcesar
 {
-    public function __construct(private readonly LoginCliTicketRepositoryInterface $ticketsCli)
-    {
+    public function __construct(
+        private readonly LoginCliTicketRepositoryInterface $ticketsCli,
+        private readonly LoginIntentosRepositoryInterface $intentos,
+    ) {
     }
 
     /**
@@ -70,9 +75,16 @@ final class LoginProcesar
             return ['ok' => false, 'error' => 1];
         }
         ['row' => $row, 'usuario' => $MiUsuario, 'pdo' => $oDB_Select, 'esquema' => $esquema, 'sfsv' => $sfsv] = $encontrado;
+        $idUsuario = is_numeric($row['id_usuario'] ?? null) ? (int) $row['id_usuario'] : 0;
+
+        // Bloqueado por intentos fallidos: se rechaza aunque la contraseña sea correcta.
+        if ($this->intentos->estaBloqueado($esquema, $sfsv, $idUsuario)) {
+            return ['ok' => false, 'error' => 5];
+        }
 
         $oCrypt = new PasswordHasher();
         if ($oCrypt->encode($password, $encontrado['password_db']) !== $encontrado['password_db']) {
+            $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return ['ok' => false, 'error' => 1];
         }
 
@@ -101,11 +113,28 @@ final class LoginProcesar
                 return ['ok' => false, 'error' => 3];
             }
             if (!Verify2fa::verify_2fa_code($verification_code, $user_secret)) {
+                $this->anotarFallo($esquema, $sfsv, $idUsuario);
                 return ['ok' => false, 'error' => 4];
             }
         }
 
-        return $this->completarSesion($row, $MiUsuario, $oDB_Select, $username, $esquema, $sfsv, $expire);
+        $resultado = $this->completarSesion($row, $MiUsuario, $oDB_Select, $username, $esquema, $sfsv, $expire);
+        if ($resultado['ok']) {
+            $this->intentos->anotarAcierto($esquema, $sfsv, $idUsuario);
+        }
+
+        return $resultado;
+    }
+
+    private function anotarFallo(string $esquema, int $sfsv, int $idUsuario): void
+    {
+        $this->intentos->anotarFallo(
+            $esquema,
+            $sfsv,
+            $idUsuario,
+            PoliticaBloqueoLogin::MAX_FALLOS,
+            PoliticaBloqueoLogin::MINUTOS_BLOQUEO
+        );
     }
 
     /**

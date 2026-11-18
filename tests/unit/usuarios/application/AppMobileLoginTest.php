@@ -7,6 +7,7 @@ namespace Tests\unit\usuarios\application;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use src\usuarios\application\AppMobileLogin;
+use src\usuarios\domain\contracts\LoginIntentosRepositoryInterface;
 
 /**
  * Validaciones de entrada de `AppMobileLogin` que se resuelven ANTES de abrir ninguna conexión.
@@ -51,7 +52,7 @@ final class AppMobileLoginTest extends TestCase
     #[DataProvider('credencialesIncompletas')]
     public function test_sin_usuario_o_sin_contrasena_se_rechaza_sin_consultar_nada(array $input): void
     {
-        $r = (new AppMobileLogin())->execute($input);
+        $r = (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute($input);
 
         $this->assertSame(
             ['ok' => false, 'code' => 'missing_credentials', 'mensaje' => _("Usuario y contraseña obligatorios")],
@@ -75,7 +76,7 @@ final class AppMobileLoginTest extends TestCase
     /** Las credenciales se validan antes que el esquema: sin ellas no se dice nada del esquema. */
     public function test_las_credenciales_se_validan_antes_que_el_esquema(): void
     {
-        $r = (new AppMobileLogin())->execute(['username' => '', 'password' => '', 'esquema' => 'no-existe']);
+        $r = (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute(['username' => '', 'password' => '', 'esquema' => 'no-existe']);
 
         $this->assertSame('missing_credentials', $r['code']);
     }
@@ -86,7 +87,7 @@ final class AppMobileLoginTest extends TestCase
     #[DataProvider('sinEsquema')]
     public function test_sin_esquema_en_la_peticion_ni_en_el_entorno_se_rechaza(array $input): void
     {
-        $r = (new AppMobileLogin())->execute($input);
+        $r = (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute($input);
 
         $this->assertSame(['ok' => false, 'code' => 'missing_schema', 'mensaje' => _("Esquema no indicado")], $r);
         $this->assertSame(7, $_SESSION['session_auth']['id_usuario']);
@@ -104,7 +105,7 @@ final class AppMobileLoginTest extends TestCase
     /** Fuera de la entrada sf, el sufijo «f» se recorta: un esquema «f» queda vacío y no hay conexión. */
     public function test_esquema_que_queda_vacio_al_quitar_el_sufijo_f_no_es_valido(): void
     {
-        $r = (new AppMobileLogin())->execute(['username' => 'alguien', 'password' => 'secreto', 'esquema' => 'f']);
+        $r = (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute(['username' => 'alguien', 'password' => 'secreto', 'esquema' => 'f']);
 
         $this->assertSame(['ok' => false, 'code' => 'invalid_schema', 'mensaje' => _("Esquema no válido")], $r);
         $this->assertSame(7, $_SESSION['session_auth']['id_usuario']);
@@ -113,7 +114,7 @@ final class AppMobileLoginTest extends TestCase
     /** Ningún rechazo devuelve la contraseña ni el usuario recibidos. */
     public function test_los_rechazos_no_devuelven_los_datos_recibidos(): void
     {
-        $login = new AppMobileLogin();
+        $login = new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class));
         $respuestas = [
             $login->execute(['username' => 'usuario-zz', 'password' => '']),
             $login->execute(['username' => 'usuario-zz', 'password' => 'clave-zz']),
@@ -138,11 +139,11 @@ final class AppMobileLoginTest extends TestCase
     {
         putenv('PRIVATE=sf');
 
-        (new AppMobileLogin())->execute([]);
+        (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute([]);
         $this->assertSame('sv', $_SESSION['sfsv']);
         $this->assertArrayNotHasKey('private', $_SESSION);
 
-        (new AppMobileLogin())->execute(['username' => 'alguien', 'password' => 'secreto']);
+        (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute(['username' => 'alguien', 'password' => 'secreto']);
         $this->assertSame('sf', $_SESSION['private']);
     }
 

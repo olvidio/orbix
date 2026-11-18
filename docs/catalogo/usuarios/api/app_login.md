@@ -58,6 +58,7 @@ Login JSON para app móvil: valida credenciales (y 2FA si aplica), establece ses
 - `Esquema no indicado`
 - `Esquema no válido`
 - `Error de autenticación`
+- `Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos.` (`code` = `locked`): tras 5 fallos seguidos (contraseña o código 2FA) el usuario queda bloqueado 15 minutos aunque la contraseña sea correcta.
 
 ## Permisos
 

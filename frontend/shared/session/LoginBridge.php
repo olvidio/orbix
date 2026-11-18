@@ -72,7 +72,8 @@ final class LoginBridge
     private static function useCase(): \src\usuarios\application\LoginProcesar
     {
         return new \src\usuarios\application\LoginProcesar(
-            new \src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository()
+            new \src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository(),
+            new \src\usuarios\infrastructure\persistence\postgresql\PgLoginIntentosRepository()
         );
     }
 

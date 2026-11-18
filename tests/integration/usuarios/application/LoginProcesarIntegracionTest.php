@@ -9,6 +9,7 @@ use src\shared\config\ConfigGlobal;
 use src\usuarios\application\LoginProcesar;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgLoginIntentosRepository;
 use Tests\myTest;
 
 /**
@@ -60,7 +61,7 @@ class LoginProcesarIntegracionTest extends myTest
 
     private function loginProcesar(): LoginProcesar
     {
-        return new LoginProcesar($this->tickets);
+        return new LoginProcesar($this->tickets, new PgLoginIntentosRepository());
     }
 
     // ------------------------------------------------------------------ credenciales incorrectas
@@ -171,18 +172,70 @@ class LoginProcesarIntegracionTest extends myTest
         $this->assertSame(self::RECHAZO, $this->login(['username' => ' ' . self::USUARIO . ' ']));
     }
 
-    /**
-     * Hallazgo: no hay límite de intentos fallidos ni bloqueo temporal; tras varios fallos seguidos
-     * la contraseña correcta entra a la primera (nada frena un ataque de fuerza bruta en esta capa).
-     */
-    public function test_los_intentos_fallidos_no_bloquean_al_usuario(): void
+    // ------------------------------------------------------------------ bloqueo por intentos fallidos
+
+    private const BLOQUEADO = ['ok' => false, 'error' => 5];
+
+    /** Tras 5 fallos seguidos se rechaza durante 15 min aunque la contraseña sea correcta (error 5). */
+    public function test_cinco_fallos_seguidos_bloquean_aunque_la_contrasena_sea_correcta(): void
     {
         $this->crearUsuario();
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $this->assertSame(self::RECHAZO, $this->login(['password' => 'intento-' . $i]));
         }
 
+        $this->assertSame(self::BLOQUEADO, $this->login());
+        $this->assertSame(self::BLOQUEADO, $this->login(['password' => 'otro-intento']));
+        $this->assertGreaterThan(14 * 60, $this->segundosDeBloqueo());
+        $this->assertLessThanOrEqual(15 * 60, $this->segundosDeBloqueo());
+    }
+
+    /** Un acierto pone el contador a cero: los fallos tienen que ser seguidos. */
+    public function test_un_acierto_pone_el_contador_a_cero(): void
+    {
+        $this->crearUsuario();
+        for ($vuelta = 0; $vuelta < 2; $vuelta++) {
+            for ($i = 0; $i < 4; $i++) {
+                $this->assertSame(self::RECHAZO, $this->login(['password' => 'intento-' . $i]));
+            }
+            $this->assertTrue($this->login()['ok']);
+        }
+        $this->assertSame(0, $this->falloDeLogin());
+    }
+
+    /** Pasado el bloqueo se puede entrar, y hacen falta otros 5 fallos para volver a bloquear. */
+    public function test_el_bloqueo_caduca(): void
+    {
+        $this->crearUsuario();
+        for ($i = 0; $i < 5; $i++) {
+            $this->login(['password' => 'intento-' . $i]);
+        }
+        $this->caducarBloqueo();
+
+        $this->assertSame(self::RECHAZO, $this->login(['password' => 'uno-mas']));
         $this->assertTrue($this->login()['ok']);
+    }
+
+    /** Los códigos 2FA erróneos cuentan como fallos (si no, se podría probar el código a fuerza bruta). */
+    public function test_los_codigos_2fa_erroneos_cuentan_para_el_bloqueo(): void
+    {
+        $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);
+        for ($i = 0; $i < 5; $i++) {
+            $this->assertSame(['ok' => false, 'error' => 4], $this->login(['verification_code' => $this->codigoTotpIncorrecto(self::SECRETO_2FA)]));
+        }
+
+        $this->assertSame(self::BLOQUEADO, $this->login(['verification_code' => $this->codigoTotp(self::SECRETO_2FA)]));
+    }
+
+    /** Pedir el código 2FA (contraseña correcta, sin código) no es un fallo. */
+    public function test_pedir_el_codigo_2fa_no_cuenta_como_fallo(): void
+    {
+        $this->crearUsuario(['has_2fa' => true, 'secret_2fa' => self::SECRETO_2FA]);
+        for ($i = 0; $i < 6; $i++) {
+            $this->assertSame(['ok' => false, 'error' => 3], $this->login());
+        }
+
+        $this->assertSame(0, $this->falloDeLogin());
     }
 
     // ------------------------------------------------------------------ esquema

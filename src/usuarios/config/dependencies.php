@@ -2,6 +2,8 @@
 
 use src\usuarios\application\AppMobileLogin;
 use src\usuarios\domain\contracts\LoginCliTicketRepositoryInterface;
+use src\usuarios\domain\contracts\LoginIntentosRepositoryInterface;
+use src\usuarios\infrastructure\persistence\postgresql\PgLoginIntentosRepository;
 use src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository;
 use src\usuarios\application\GruposLista;
 use src\usuarios\application\LoginProcesar;
@@ -37,6 +39,7 @@ return [
     UsuarioGrupoRepositoryInterface::class => autowire(PgUsuarioGrupoRepository::class),
     UsuarioRepositoryInterface::class => autowire(PgUsuarioRepository::class),
     LoginCliTicketRepositoryInterface::class => autowire(FicheroLoginCliTicketRepository::class),
+    LoginIntentosRepositoryInterface::class => autowire(PgLoginIntentosRepository::class),
 
     AppMobileLogin::class => autowire(AppMobileLogin::class),
     GruposLista::class => autowire(GruposLista::class),
