@@ -29,11 +29,12 @@ final class PgPersonaDePasoDatosRepositoryTest extends myTest
         $this->assertSame([], $this->repo->datosDe(-999999001));
     }
 
-    /** @return iterable<string, array{string, string, string}> */
+    /** @return iterable<string, array{0: string, 1: string, 2: string, 3?: string}> */
     public static function origenes(): iterable
     {
-        yield 'asistencia en una dl' => [Datos::ASISTENCIAS, 'oDBE_Select', 'global.d_asistentes_dl'];
-        yield 'asistencia de paso' => [Datos::ASISTENCIAS, 'oDBE_Select', 'publicv.d_asistentes_de_paso'];
+        // Las asistencias se buscan por la madre común: en producción `global.d_asistentes_dl` no es legible.
+        yield 'asistencia en una dl' => [Datos::ASISTENCIAS, 'oDBE_Select', 'publicv.d_asistentes_all', "tableoid::regclass::text LIKE '%d_asistentes_dl'"];
+        yield 'asistencia out o de paso' => [Datos::ASISTENCIAS, 'oDBE_Select', 'publicv.d_asistentes_all', "tableoid::regclass::text NOT LIKE '%d_asistentes_dl'"];
         yield 'cargo' => [Datos::CARGOS, 'oDBE_Select', 'global.d_cargos_activ'];
         yield 'encargo' => [Datos::ENCARGOS, 'oDBE_Select', 'global.encargos_sacd'];
         yield 'nota' => [Datos::NOTAS, 'oDB', 'publicv.e_notas'];
@@ -43,9 +44,9 @@ final class PgPersonaDePasoDatosRepositoryTest extends myTest
     }
 
     #[DataProvider('origenes')]
-    public function test_detecta_cada_tipo_de_dato(string $tipo, string $conexion, string $tabla): void
+    public function test_detecta_cada_tipo_de_dato(string $tipo, string $conexion, string $tabla, string $filtro = 'true'): void
     {
-        $st = GlobalPdo::get($conexion)->query("SELECT id_nom FROM $tabla WHERE id_nom < 0 LIMIT 1");
+        $st = GlobalPdo::get($conexion)->query("SELECT id_nom FROM $tabla WHERE id_nom < 0 AND $filtro LIMIT 1");
         $idNom = $st === false ? false : $st->fetchColumn();
         if ($idNom === false) {
             $this->markTestIncomplete("En las BD de pruebas no hay ninguna persona de paso en $tabla");

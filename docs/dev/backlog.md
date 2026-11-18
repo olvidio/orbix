@@ -17,6 +17,13 @@ Formato sugerido por ítem:
 - **Pendiente:** flujo certificado destino externo; informes STGR locales.
 - **Notas:** Mapa SSOT + grabar nota en esquema del acta (`EditarPersonaNota`). Diag tipo 1: `tools/audit/diag_notas_otra_region_mapa.sql`.
 
+### Fusionar `d_asistentes_out` en `d_asistentes_dl` (una sola madre legible)
+
+- **Qué:** dejar el árbol de asistencias en `publicv.d_asistentes_all` → `"<dl>".d_asistentes_dl` (una por dl, con las asistencias dl y out juntas) + `restov.d_asistentes_ex`. Quitar los niveles intermedios `global.d_asistentes_dl` y `publicv.d_asistentes_de_paso` y las tablas `"<dl>".d_asistentes_out`. «Out» pasa a deducirse (la actividad no la organiza mi dl) o a ser solo el valor de `id_tabla`.
+- **Por qué:** la separación era para que una dl no viera los asistentes de otra, y ya no importa (decisión del 2026-11-18); además no se cumple, porque la aplicación lee por `d_asistentes_all`, que es legible. No da rendimiento (≈98.000 filas dl, 12.500 out y 2.900 ex en desarrollo) y obliga a mover filas entre hijas y a buscar «en cuál está» (`AsistenteApplicationService`, `PgAsistenteOutRepository`).
+- **Por qué no ahora:** hay que migrar datos (en `H-dlbv` hay 24 pares `(id_activ, id_nom)` repetidos en dl y out: resolverlos antes), y tocar `DBView` (vistas por `id_schema`), los avisos de cambios y las herramientas de esquemas de `devel_db_admin`.
+- **Notas:** en producción las madres de `global` no son legibles por las dl y las de `publicv` sí; en Docker y en los clones `pruebas-*` todas tienen permisos para `PUBLIC`, así que los tests no ven esos fallos (el borrado de personas de paso falló por eso el 2026-11-18). Convendría que los clones de pruebas tuvieran los permisos de producción. `PgPersonaDePasoDatosRepository` todavía lee madres de `global` sin madre en `publicv` (`d_cargos_activ`, `encargos_sacd`, `d_docencia_stgr`, `zonas_sacd`): moverlas a `publicv` o darles lectura.
+
 ### Migración `ServerConf` → `.env` (y bootstrap unificado)
 
 - **Qué:** Cargar configuración por instalación (rutas, host, dmz, `DIR_PWD`, etc.) vía `.env` / variables de entorno en lugar de (o como capa sobre) constantes en `ServerConf`.

@@ -13,7 +13,8 @@ use src\shared\infrastructure\GlobalPdo;
  * Busca datos de una persona de paso en las tablas madre, que por herencia incluyen las de todas las dl
  * (PostgreSQL comprueba los permisos solo sobre la madre). `{p}` es `publicv` o `publicf` según la sección:
  *
- *   - asistencias: `global.d_asistentes_dl` (las de las dl) y `{p}.d_asistentes_de_paso` (out y de paso)
+ *   - asistencias: `{p}.d_asistentes_all`, madre de las de las dl, las out y las de paso. No se lee
+ *     `global.d_asistentes_dl`: en producción las madres de `global` no son legibles por las dl.
  *   - cargos: `global.d_cargos_activ`; encargos: `global.encargos_sacd` (solo sv)
  *   - notas: `{p}.e_notas`; matrículas: `{p}.d_matriculas_activ`; docencia: `global.d_docencia_stgr`
  *   - zonas de sacd: `global.zonas_sacd` (comun)
@@ -24,8 +25,7 @@ final class PgPersonaDePasoDatosRepository implements Datos
 {
     /** @var list<array{0: string, 1: string, 2: string}> tipo, conexión global, tabla */
     private const ORIGENES = [
-        [Datos::ASISTENCIAS, 'oDBE_Select', 'global.d_asistentes_dl'],
-        [Datos::ASISTENCIAS, 'oDBE_Select', '{p}.d_asistentes_de_paso'],
+        [Datos::ASISTENCIAS, 'oDBE_Select', '{p}.d_asistentes_all'],
         [Datos::CARGOS, 'oDBE_Select', 'global.d_cargos_activ'],
         [Datos::ENCARGOS, 'oDBE_Select', 'global.encargos_sacd'],
         [Datos::NOTAS, 'oDB', '{p}.e_notas'],
