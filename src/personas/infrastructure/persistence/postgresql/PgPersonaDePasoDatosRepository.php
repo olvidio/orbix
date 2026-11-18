@@ -53,7 +53,8 @@ final class PgPersonaDePasoDatosRepository implements Datos
                 if ((string) ($e->errorInfo[0] ?? '') === self::TABLA_INEXISTENTE) {
                     continue;
                 }
-                throw $e;
+                // Permisos u otro fallo: se dice en qué tabla, para poder diagnosticarlo.
+                throw new \RuntimeException($tabla . ': ' . ($e->errorInfo[2] ?? $e->getMessage()), 0, $e);
             }
             if ($st->fetchColumn() !== false) {
                 $datos[] = $tipo;

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-18 11:31+0100\n"
+"POT-Creation-Date: 2026-11-18 17:28+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -446,19 +446,35 @@ msgstr "Aktivität"
 #: src/dbextern/infrastructure/ui/http/controllers/sincro_trasladar.php:15
 #: src/dbextern/infrastructure/ui/http/controllers/sincro_trasladar_a.php:15
 #: src/dbextern/infrastructure/ui/http/controllers/sincro_unir.php:15
-#: src/devel_db_admin/infrastructure/ui/http/controllers/absorber_esquema.php:25
-#: src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php:21
-#: src/devel_db_admin/infrastructure/ui/http/controllers/copiar_esquema.php:24
-#: src/devel_db_admin/infrastructure/ui/http/controllers/corregir_renombrar_esquema.php:27
-#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_esquema.php:26
-#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_usuarios.php:24
-#: src/devel_db_admin/infrastructure/ui/http/controllers/eliminar_esquema.php:24
-#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php:26
-#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php:39
-#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_quitar_registro.php:27
-#: src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php:26
-#: src/devel_db_admin/infrastructure/ui/http/controllers/renombrar_esquema.php:26
-#: src/devel_db_admin/infrastructure/ui/http/controllers/verificar_renombrar_esquema.php:26
+#: src/devel_db_admin/infrastructure/ui/http/controllers/absorber_esquema.php:21
+#: src/devel_db_admin/infrastructure/ui/http/controllers/absorber_esquema.php:32
+#: src/devel_db_admin/infrastructure/ui/http/controllers/apptables_apps_data.php:16
+#: src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php:17
+#: src/devel_db_admin/infrastructure/ui/http/controllers/apptables_update.php:28
+#: src/devel_db_admin/infrastructure/ui/http/controllers/copiar_esquema.php:20
+#: src/devel_db_admin/infrastructure/ui/http/controllers/copiar_esquema.php:31
+#: src/devel_db_admin/infrastructure/ui/http/controllers/corregir_renombrar_esquema.php:23
+#: src/devel_db_admin/infrastructure/ui/http/controllers/corregir_renombrar_esquema.php:34
+#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_esquema.php:22
+#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_esquema.php:33
+#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_usuarios.php:20
+#: src/devel_db_admin/infrastructure/ui/http/controllers/crear_usuarios.php:31
+#: src/devel_db_admin/infrastructure/ui/http/controllers/db_lugar.php:20
+#: src/devel_db_admin/infrastructure/ui/http/controllers/db_propiedades_data.php:16
+#: src/devel_db_admin/infrastructure/ui/http/controllers/eliminar_esquema.php:20
+#: src/devel_db_admin/infrastructure/ui/http/controllers/eliminar_esquema.php:31
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php:14
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php:33
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_ejecutar.php:46
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_lista_data.php:13
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_quitar_registro.php:15
+#: src/devel_db_admin/infrastructure/ui/http/controllers/migraciones_quitar_registro.php:34
+#: src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php:22
+#: src/devel_db_admin/infrastructure/ui/http/controllers/mover_tabla.php:33
+#: src/devel_db_admin/infrastructure/ui/http/controllers/renombrar_esquema.php:22
+#: src/devel_db_admin/infrastructure/ui/http/controllers/renombrar_esquema.php:33
+#: src/devel_db_admin/infrastructure/ui/http/controllers/verificar_renombrar_esquema.php:22
+#: src/devel_db_admin/infrastructure/ui/http/controllers/verificar_renombrar_esquema.php:33
 #: src/dossiers/infrastructure/ui/http/controllers/tipo_dossier_eliminar.php:15
 #: src/dossiers/infrastructure/ui/http/controllers/tipo_dossier_guardar.php:15
 #: src/encargossacd/infrastructure/ui/http/controllers/comprobaciones_ctr.php:18
@@ -544,9 +560,11 @@ msgstr "Aktivität"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:31
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:26
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:43
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:33
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:44
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:28
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:45
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:54
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:14
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:21
 #: src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php:15
@@ -913,7 +931,7 @@ msgstr "id"
 #: src/asistentes/application/ListaEstCtrData.php:203
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:336
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:270
 #: src/asistentes/application/TablaPeticionesData.php:71
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:246
 #: src/configuracion/application/ModulosSelectData.php:53
@@ -934,8 +952,8 @@ msgstr "Name"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:38
 #: frontend/ubis/controller/home_ubis.php:65
-#: src/dossiers/application/DossiersVerPantallaData.php:230
-#: src/dossiers/application/DossiersVerPantallaData.php:466
+#: src/dossiers/application/DossiersVerPantallaData.php:232
+#: src/dossiers/application/DossiersVerPantallaData.php:472
 msgid "ver dossiers"
 msgstr "Siehe Dossiers"
 
@@ -945,8 +963,8 @@ msgstr "Siehe Dossiers"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:39
 #: frontend/ubis/controller/home_ubis.php:66
-#: src/dossiers/application/DossiersVerPantallaData.php:231
-#: src/dossiers/application/DossiersVerPantallaData.php:467
+#: src/dossiers/application/DossiersVerPantallaData.php:233
+#: src/dossiers/application/DossiersVerPantallaData.php:473
 msgid "dossiers"
 msgstr "Dossiers"
 
@@ -1466,7 +1484,7 @@ msgstr "Zentrum"
 
 #: frontend/actividadescentro/view/activ_ctr.phtml:29
 #: src/asistentes/application/ListaPlazasConjuntoActividades.php:335
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:258
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:260
 msgid "num"
 msgstr "Nr."
 
@@ -1800,7 +1818,7 @@ msgstr "Zeitraum der Aktivitäten"
 #: frontend/personas/controller/personas_select.php:211
 #: frontend/planning/controller/planning_persona_select.php:138
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:95
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:259
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:261
 msgid "nombre y apellidos"
 msgstr "Vorname und Nachname"
 
@@ -1870,7 +1888,7 @@ msgstr "Student"
 
 #: frontend/actividadestudios/controller/matriculas_lista.php:76
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:24
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:270
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:272
 #: src/cambios/domain/AvisoObjetoCatalog.php:41
 #: src/encargossacd/domain/entity/EncargoTipo.php:22
 msgid "ctr"
@@ -1883,7 +1901,7 @@ msgstr "ctr"
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:127
 #: frontend/profesores/view/ficha_profesor_stgr.print.phtml:25
 #: frontend/ubis/view/ubis_buscar.phtml:245
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:260
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
 #: src/profesores/application/CongresosLista.php:28
 #: src/profesores/application/DocenciaLista.php:36
 #: src/ubis/application/UbisListaData.php:89
@@ -2350,14 +2368,14 @@ msgstr "Studienplan bestätigt"
 #: src/asistentes/application/ListaAsistentesData.php:175
 #: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/ListaAsistentesData.php:180
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:379
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:381
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:554
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:482
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:483
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:556
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:634
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:635
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:18
 #: src/notas/application/NotasDeUnaPersonaData.php:124
@@ -2384,12 +2402,12 @@ msgstr "ja"
 #: src/asistentes/application/ListaAsistentesData.php:177
 #: src/asistentes/application/ListaAsistentesData.php:179
 #: src/asistentes/application/ListaAsistentesData.php:180
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:479
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:480
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:481
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:631
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:632
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:482
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:483
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:633
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:634
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:635
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:213
 #: src/devel_db_admin/application/ComprobarPrecondicionesCrearEsquema.php:188
 #: src/inventario/view/buscarDocsxCtr.phtml:17
@@ -2491,7 +2509,7 @@ msgid "plazas"
 msgstr "Plätze"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:48
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:772
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:777
 msgid "ocupadas"
 msgstr "belegt"
 
@@ -2506,7 +2524,7 @@ msgid "calendario"
 msgstr "Kalender"
 
 #: frontend/actividadplazas/view/resumen_plazas.phtml:54
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:770
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:775
 msgid "cedidas"
 msgstr "abgegeben"
 
@@ -2659,7 +2677,7 @@ msgstr "Teilnahme an einer Aktivität"
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:89
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:102
 #: src/asistentes/application/Select_actividades_de_una_persona.php:126
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:261
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:263
 #: src/asistentes/domain/entity/Asistente.php:542
 msgid "propio"
 msgstr "eigen"
@@ -2667,7 +2685,7 @@ msgstr "eigen"
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:93
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:106
 #: src/asistentes/application/Select_actividades_de_una_persona.php:128
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:263
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:265
 #: src/asistentes/domain/entity/Asistente.php:566
 msgid "falta"
 msgstr "Es fehlt"
@@ -2684,7 +2702,7 @@ msgstr "Platz"
 
 #: frontend/asistentes/view/form_actividades_de_una_persona.phtml:113
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:132
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:273
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:275
 msgid "propiedad de"
 msgstr "Eigentum von"
 
@@ -2694,7 +2712,7 @@ msgstr "Teilnehmer an einer Aktivität"
 
 #: frontend/asistentes/view/form_asistentes_a_una_actividad.phtml:114
 #: frontend/asistentes/view/lista_asistentes.phtml:24
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:264
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:266
 msgid "observaciones actividad"
 msgstr "Aktivitätsbemerkungen"
 
@@ -7792,7 +7810,7 @@ msgid "ver plan centro"
 msgstr "Zentrumsplan anzeigen"
 
 #: frontend/menus/view/traducir_menu.phtml:473
-#: src/personas/application/PersonaEliminar.php:100
+#: src/personas/application/PersonaEliminar.php:108
 msgid "zonas"
 msgstr "Zonen"
 
@@ -8230,13 +8248,13 @@ msgstr "Sie müssen eine Personengruppe markieren (n oder agd)"
 
 #: frontend/notas/controller/asig_faltan_personas_select.php:71
 #: frontend/notas/controller/asig_faltan_select.php:90
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:266
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:268
 msgid "telf."
 msgstr "Tel."
 
 #: frontend/notas/controller/asig_faltan_personas_select.php:72
 #: frontend/notas/controller/asig_faltan_select.php:91
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:267
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:269
 msgid "mails"
 msgstr "E-Mails"
 
@@ -8890,7 +8908,7 @@ msgstr "Antrag crt"
 
 #: frontend/personas/controller/personas_select.php:164
 #: src/actividades/application/ActividadSelectListado.php:236
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:248
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:250
 msgid "plan estudios"
 msgstr "Lehrplan"
 
@@ -9862,34 +9880,34 @@ msgstr "Büros"
 msgid "salir"
 msgstr "beenden"
 
-#: frontend/shared/security/HashF.php:230
+#: frontend/shared/security/HashF.php:235
 msgid "llegan campos hidden modificados"
 msgstr "llegan campos hidden modificados"
 
-#: frontend/shared/security/HashF.php:258
+#: frontend/shared/security/HashF.php:263
 msgid "llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr ""
 "Es kommen unterschiedliche Anzahl oder Namen der Felder, die gesendet werden "
 "sollen"
 
-#: frontend/shared/security/HashF.php:272
-#: frontend/shared/security/HashF.php:313
+#: frontend/shared/security/HashF.php:277
+#: frontend/shared/security/HashF.php:318
 msgid "url modificada"
 msgstr "Geänderte URL"
 
-#: frontend/shared/security/HashF.php:328
-#: frontend/shared/security/HashF.php:335
+#: frontend/shared/security/HashF.php:333
+#: frontend/shared/security/HashF.php:340
 msgid "problema general de seguridad"
 msgstr "Allgemeines Sicherheitsproblem"
 
-#: frontend/shared/security/HashF.php:336
+#: frontend/shared/security/HashF.php:341
 msgid ""
 "para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend"
 msgstr ""
 "Um weitere Details zu erhalten, definiere ORBIX_FRONT_DEBUG=1 im Frontend-"
 "Umgebung."
 
-#: frontend/shared/security/HashF.php:381
+#: frontend/shared/security/HashF.php:390
 msgid "página con seguridad desactivada"
 msgstr "Seite mit ausgeschalteter Sicherheit"
 
@@ -12501,7 +12519,7 @@ msgstr "id_item fehlt"
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:36
 #: src/notas/application/ActaEliminar.php:49
 #: src/notas/application/support/ActaTribunalSync.php:36
-#: src/personas/application/PersonaEliminar.php:83
+#: src/personas/application/PersonaEliminar.php:91
 #: src/procesos/application/ProcesosEliminar.php:31
 #: src/ubis/application/CalendarioPeriodoEliminar.php:25
 #: src/ubis/application/UbisEliminar.php:22
@@ -12550,8 +12568,8 @@ msgstr "Ich finde niemanden mit id_nom: %d"
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_datos.php:28
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:71
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:60
-#: src/dossiers/application/DossiersVerPantallaData.php:173
-#: src/dossiers/application/DossiersVerPantallaData.php:184
+#: src/dossiers/application/DossiersVerPantallaData.php:175
+#: src/dossiers/application/DossiersVerPantallaData.php:186
 #: src/profesores/domain/ProfesorActividad.php:51
 #, php-format
 msgid "No encuentro a nadie con id_nom: %s"
@@ -12569,13 +12587,13 @@ msgstr "Aktivität nicht gefunden"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:85
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:87
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:244
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:246
 msgid "modificar cargo"
 msgstr "Amt ändern"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:86
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:88
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:245
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:247
 msgid "quitar cargo"
 msgstr "Amt löschen"
 
@@ -12593,7 +12611,7 @@ msgstr "%s hinzufügen"
 #: src/actividadcargos/domain/InfoCargo.php:19
 #: src/actividades/application/ActividadSelectListado.php:217
 #: src/actividades/application/ListaActividadesSgListado.php:118
-#: src/personas/application/PersonaEliminar.php:95
+#: src/personas/application/PersonaEliminar.php:103
 msgid "cargos"
 msgstr "Ämter"
 
@@ -14173,8 +14191,8 @@ msgid "falta lista de seleccion"
 msgstr "Auswahlliste fehlt"
 
 #: src/asistentes/application/FormActividadesDeUnaPersonaData.php:55
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:283
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:331
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:285
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:333
 #: src/asistentes/application/services/AsistenteActividadService.php:352
 #, php-format
 msgid "No se ha encontrado la actividad con id: %s"
@@ -14206,8 +14224,8 @@ msgstr "Der Teilnehmer für diese Aktivität wurde nicht gefunden."
 #: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php:12
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php:8
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:11
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php:13
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:13
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php:15
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_editar.php:8
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_tabla.php:8
 #: src/ubis/infrastructure/ui/http/controllers/list_ctr_data.php:10
@@ -14227,7 +14245,7 @@ msgid "actividades de otras dl/r"
 msgstr "Aktivitäten anderer dl/r"
 
 #: src/asistentes/application/ListaAsistentesData.php:131
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:505
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:507
 msgid "no asiste"
 msgstr "nimmt nicht teil"
 
@@ -14389,17 +14407,17 @@ msgid "periodo de inicio o finalización de las actividades"
 msgstr "Zeitraum des Beginns oder Endes der Aktivitäten"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:115
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:237
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:239
 msgid "modificar asistencia"
 msgstr "Teilnahme ändern"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:116
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:239
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:241
 msgid "borrar asistencia"
 msgstr "Teilnahme löschen"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:127
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:262
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:264
 #: src/asistentes/domain/entity/Asistente.php:554
 msgid "est. ok"
 msgstr "est. ok"
@@ -14410,58 +14428,58 @@ msgid "observ."
 msgstr "Bemerkungen"
 
 #: src/asistentes/application/Select_actividades_de_una_persona.php:238
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:926
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:932
 #: src/asistentes/domain/InfoAsistenteDl.php:31
 msgid "¿Está seguro que desea borrar a esta persona de esta actividad?"
 msgstr ""
 "Sind Sie sicher, dass Sie diese Person aus dieser Aktivität entfernen "
 "möchten?"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:238
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:240
 msgid "cambiar actividad"
 msgstr "Aktivität ändern"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:240
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:242
 msgid "transferir a históricos"
 msgstr "transferir a históricos"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:243
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:245
 msgid "añadir cargo"
 msgstr "Amt hinzufügen"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:249
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:251
 msgid "E43"
 msgstr "E43"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:265
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:267
 msgid "sacd."
 msgstr "sacd."
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:269
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:271
 msgid "apellidos"
 msgstr "Nachnamen"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:308
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:310
 msgid "plazas casa (max - min)"
 msgstr "verfügbare Plätze im Haus (max-min)"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:312
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:314
 msgid "plazas actividad"
 msgstr "Plätze Aktivität"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:414
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:416
 msgid "ERROR: más de un asistente con el mismo id_nom"
 msgstr "FEHLER: mehr als ein Teilnehmer mit derselben id_nom"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:416
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:418
 msgid "En las tablas"
 msgstr "In den Tabellen"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:581
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:583
 msgid "ALERTA: asistente sin propiedad en la plaza"
 msgstr "WARNUNG: Teilnehmer ohne Eigentum im Platz"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:668
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:673
 msgid ""
 "plaza que contabiliza pero que las otras delegaciones no ven. Podría "
 "explicarse como una plaza que se desea pero no se puede conceder porque no "
@@ -14471,7 +14489,7 @@ msgstr ""
 "bekommen. Dies könnte als erwünschter Platz betrachtet werden, der aber "
 "nicht abgegeben werden kann, weil es keinen Platz gibt"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:669
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:674
 msgid ""
 "como la plaza pedida, pero cuando ya se ha solicitado a la otra delegación "
 "que nos conceda ese plaza. Implica que por nuestra parte nos parece correcto "
@@ -14482,7 +14500,7 @@ msgstr ""
 "Ordnung ist, dass er geht, aber wir benötigen eine Bestätigung, dass ein "
 "Platz vorhanden ist."
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:670
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:675
 msgid ""
 "plaza ocupada en toda regla. Las delegaciones organizadoras ven a los "
 "nuestros. Si somos nosotros los organizadores, podemos ocupar más plazas de "
@@ -14494,7 +14512,7 @@ msgstr ""
 "belegen. Wenn sie einer anderen Delegation angehören, sollte er nicht "
 "zugewiesen werden, wenn keine Plätze vorhanden sind."
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:671
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:676
 msgid ""
 "como la anterior pero con el plus de que se ha comunicado al interesado y no "
 "hay cambio"
@@ -14502,22 +14520,22 @@ msgstr ""
 "wie die vorherige, jedoch mit dem Zusatz, dass dem Interessierten mitgeteilt "
 "wurde und es keine Änderung gibt."
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:674
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:679
 msgid "para selección múltiple: 'Ctrl+Click' o bien 'Mays+Click'"
 msgstr "für Mehrfachauswahl: 'Strg+Klick' oder 'Umschalt+Klick'"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:761
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:830
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:766
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:835
 #, php-format
 msgid "(de las %s cedidas por %s)"
 msgstr "( von den %s, die von %s abgegeben wurden)"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:834
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:839
 #, php-format
 msgid "(%s en espera)"
 msgstr "( %s Warteliste)"
 
-#: src/asistentes/application/Select_asistentes_a_una_actividad.php:837
+#: src/asistentes/application/Select_asistentes_a_una_actividad.php:842
 #, php-format
 msgid "(%s por decidir)"
 msgstr "( %s zu entscheiden)"
@@ -14805,7 +14823,7 @@ msgid "No hay conexión a la base de datos."
 msgstr "Keine Verbindung zur Datenbank."
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:43
-#: src/personas/application/PersonaEliminar.php:94
+#: src/personas/application/PersonaEliminar.php:102
 msgid "asistencias"
 msgstr "Teilnahme"
 
@@ -18422,28 +18440,37 @@ msgstr "Person nicht gefunden"
 msgid "No se ha pasado el id_nom"
 msgstr "Die id_nom wurde nicht übergeben"
 
-#: src/personas/application/PersonaEliminar.php:73
+#: src/personas/application/PersonaEliminar.php:75
+#, php-format
+msgid ""
+"No se ha eliminado: no se ha podido comprobar si la persona de paso tiene "
+"datos (%s)"
+msgstr ""
+"Nicht gelöscht: Es konnte nicht überprüft werden, ob die Person auf der "
+"Durchreise Daten hat (%s)"
+
+#: src/personas/application/PersonaEliminar.php:81
 #, php-format
 msgid "No se ha eliminado: esta persona de paso tiene %s"
 msgstr "Nicht gelöscht: Diese Person auf der Durchreise hat %s"
 
-#: src/personas/application/PersonaEliminar.php:79
+#: src/personas/application/PersonaEliminar.php:87
 msgid "No se ha eliminado, porque no es de mi dl"
 msgstr "Wurde nicht gelöscht, weil es nicht zu meiner dl gehört"
 
-#: src/personas/application/PersonaEliminar.php:96
+#: src/personas/application/PersonaEliminar.php:104
 msgid "encargos"
 msgstr "Aufträge"
 
-#: src/personas/application/PersonaEliminar.php:97
+#: src/personas/application/PersonaEliminar.php:105
 msgid "notas"
 msgstr "Noten"
 
-#: src/personas/application/PersonaEliminar.php:98
+#: src/personas/application/PersonaEliminar.php:106
 msgid "matrículas"
 msgstr "Einschreibungen"
 
-#: src/personas/application/PersonaEliminar.php:99
+#: src/personas/application/PersonaEliminar.php:107
 #: src/profesores/application/ProfesoresAsignaturaLista.php:40
 msgid "docencia"
 msgstr "Lehre"
@@ -19655,7 +19682,7 @@ msgstr ""
 msgid "No se ha recibido el archivo."
 msgstr "Die Datei wurde nicht empfangen."
 
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:61
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:72
 msgid "no se ha ejecutado la acción"
 msgstr "Befehl nicht ausgeführt"
 

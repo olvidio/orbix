@@ -124,6 +124,25 @@ final class PersonaEliminarYStgrTest extends TestCase
         );
     }
 
+    /**
+     * En producción la comprobación falló con una excepción (permisos o conexión) y el endpoint respondió
+     * HTML («JSON.parse: unexpected character»). Si no se puede comprobar, no se borra y se dice por qué.
+     */
+    public function test_si_no_se_pueden_comprobar_los_datos_no_se_borra_y_dice_el_error(): void
+    {
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->willReturn($this->persona(PersonaEx::class, 'Otra'));
+        $repo->expects($this->never())->method('Eliminar');
+        $this->repos[PersonaExRepositoryInterface::class] = $repo;
+        $datos = $this->createMock(PersonaDePasoDatosRepositoryInterface::class);
+        $datos->method('datosDe')->willThrowException(new \PDOException('permission denied for table d_asistentes_dl'));
+
+        $this->assertSame(
+            sprintf(_("No se ha eliminado: no se ha podido comprobar si la persona de paso tiene datos (%s)"), 'permission denied for table d_asistentes_dl'),
+            (new PersonaEliminar($this->resolver(), $datos))->execute(100555, 'PersonaEx')
+        );
+    }
+
     /** @param list<string> $datosDePaso */
     private function eliminar(array $datosDePaso = []): PersonaEliminar
     {

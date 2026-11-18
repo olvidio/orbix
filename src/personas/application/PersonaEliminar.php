@@ -67,7 +67,15 @@ final class PersonaEliminar
         if ($obj_pau === 'PersonaEx') {
             // Una persona de paso es de fuera y su tabla es común a todas las dl: se borra si no
             // tiene datos en ninguna (asistencias, cargos, encargos, notas…).
-            $datos = $this->datosDePaso->datosDe($id_nom);
+            try {
+                $datos = $this->datosDePaso->datosDe($id_nom);
+            } catch (\RuntimeException $e) {
+                // Sin poder mirar todas las tablas no se borra; el mensaje dice qué ha fallado.
+                return sprintf(
+                    _("No se ha eliminado: no se ha podido comprobar si la persona de paso tiene datos (%s)"),
+                    $e->getMessage()
+                );
+            }
             if ($datos !== []) {
                 return sprintf(
                     _("No se ha eliminado: esta persona de paso tiene %s"),
