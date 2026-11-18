@@ -118,25 +118,20 @@ final class AsistenteMoverData
 
             /** @var ConfigSnapshot $oConfig */
             $oConfig = $_SESSION['oConfig'];
-            $oInicurs = null;
-            $oFincurs = null;
-            switch ($sactividad) {
-                case 'ca':
-                case 'cv':
-                    $any = $oConfig->any_final_curs('est');
-                    $oInicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'est');
-                    $oFincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'est');
-                    break;
-                case 'crt':
-                    $any = $oConfig->any_final_curs('crt');
-                    $oInicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, 'crt');
-                    $oFincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, 'crt');
-                    break;
-            }
             // ca, cv y crt: las del curso. Otros tipos no tienen curso: las que empiezan hoy o más tarde.
-            $filtroFechas = ($oInicurs !== null && $oFincurs !== null)
-                ? Filter::between(ActividadAllField::FIni, $oInicurs->format('Y-m-d'), $oFincurs->format('Y-m-d'))
-                : Filter::gte(ActividadAllField::FIni, date('Y-m-d'));
+            $oInicurs = null;
+            $filtroFechas = Filter::gte(ActividadAllField::FIni, date('Y-m-d'));
+            $tipoCurso = match ($sactividad) {
+                'ca', 'cv' => 'est',
+                'crt' => 'crt',
+                default => null,
+            };
+            if ($tipoCurso !== null) {
+                $any = $oConfig->any_final_curs($tipoCurso);
+                $oInicurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('inicio', $any, $tipoCurso);
+                $oFincurs = \src\shared\domain\helpers\FuncTablasSupport::cursoEst('fin', $any, $tipoCurso);
+                $filtroFechas = Filter::between(ActividadAllField::FIni, $oInicurs->format('Y-m-d'), $oFincurs->format('Y-m-d'));
+            }
 
             $cActividades = $this->actividadRepository->matching(
                 Criteria::create()

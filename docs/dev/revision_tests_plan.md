@@ -1444,3 +1444,15 @@ Hallazgos de `LoginProcesarIntegracionTest`, `AppMobileLoginIntegracionTest` y `
 
 **Bloque 1 cerrado (2026-11-18).**
 
+## 36. Últimos hallazgos de los tests (2026-11-18)
+
+El plan no define un «bloque 2»; tras los bloques 1, 3 y 4 quedaban en los tests cinco `Hallazgo:`. Decisiones del usuario (2026-11-18) en los dos primeros. Un commit por módulo; cada test se vio fallar antes del arreglo.
+
+- **`asistentes`** — «mover a otra actividad» para un tipo que no es ca, cv ni crt filtraba entre dos fechas vacías (en PostgreSQL, error). **Decidido:** se ofrecen las del mismo tipo en estado actual que empiezan hoy o más tarde. Test: `AsistenteMoverDataTest::test_otro_tipo_de_actividad_ofrece_las_que_empiezan_desde_hoy`.
+- **`casas`** — la previsión de ingresos del estudio económico (`CalendarioUbiResumenData`) valoraba todas las actividades con la última tarifa del listado de tipos de tarifa. **Decidido:** cada actividad con su tarifa; sin tarifa, o con una que la sección no tiene, «tar. no definida». Tests: `test_cada_actividad_se_valora_con_su_tarifa`, `test_actividad_sin_tarifa_o_con_una_tarifa_desconocida`.
+- **`actividadplazas`** — `PeticionesActivData` con un grupo de estudios de una sola delegación comparaba `dl_org` con `'dlx'` (comillas incluidas); ahora usa la lista como con varias. (El filtro por grupo no llega hoy desde ninguna pantalla, ver duda 19.)
+- **`actividades`** — en la lista sg, la fila «ocupado» lleva las fechas en sus columnas y «ocupado sv/sf» en la del tipo (antes todo en la de inicio; no se ordenaba por fecha). Sin textos nuevos.
+- **`actividadessacd`** — el correo a sacd y centros lleva `lang="ca-ES"` en lugar del locale del sistema (`ca_ES.UTF-8`).
+
+Suite completa en verde (11 270). Ya no queda ningún `Hallazgo:` en `tests/`.
+
