@@ -106,7 +106,18 @@ return [
 
     // Casos de uso / Application classes
     HomePersonaData::class => autowire(HomePersonaData::class),
-    PersonaEliminar::class => autowire(PersonaEliminar::class),
+    // Provisional: con ORBIX_PERSONA_DE_PASO_BORRAR_SIN_COMPROBAR=1 en `.env` no se mira si la persona de
+    // paso tiene datos antes de borrarla (en producción las dl no pueden leer las tablas madre).
+    // (se lee en una factoría, en cada petición: el contenedor compilado no deja fijo el valor).
+    PersonaEliminar::class => \DI\factory(static function (\Psr\Container\ContainerInterface $c): PersonaEliminar {
+        $sinComprobar = $_ENV['ORBIX_PERSONA_DE_PASO_BORRAR_SIN_COMPROBAR'] ?? getenv('ORBIX_PERSONA_DE_PASO_BORRAR_SIN_COMPROBAR');
+
+        return new PersonaEliminar(
+            $c->get(PersonaRepositoryResolver::class),
+            $c->get(PersonaDePasoDatosRepositoryInterface::class),
+            (string) $sinComprobar !== '1'
+        );
+    }),
     PersonaUpdate::class => autowire(PersonaUpdate::class),
     PersonasEditarData::class => autowire(PersonasEditarData::class),
     PersonasSelectData::class => autowire(PersonasSelectData::class),

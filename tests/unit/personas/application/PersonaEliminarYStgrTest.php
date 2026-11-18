@@ -143,6 +143,23 @@ final class PersonaEliminarYStgrTest extends TestCase
         );
     }
 
+    /**
+     * Provisional (2026-11-18): en producción las dl no pueden leer las tablas madre y la comprobación falla
+     * siempre. Con la comprobación desactivada por configuración, la persona de paso se borra sin mirar.
+     */
+    public function test_con_la_comprobacion_desactivada_la_persona_de_paso_se_borra_sin_mirar_sus_datos(): void
+    {
+        $p = $this->persona(PersonaEx::class, 'Otra');
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->willReturn($p);
+        $repo->expects($this->once())->method('Eliminar')->with($p)->willReturn(true);
+        $this->repos[PersonaExRepositoryInterface::class] = $repo;
+        $datos = $this->createMock(PersonaDePasoDatosRepositoryInterface::class);
+        $datos->expects($this->never())->method('datosDe');
+
+        $this->assertSame('', (new PersonaEliminar($this->resolver(), $datos, false))->execute(100555, 'PersonaEx'));
+    }
+
     /** @param list<string> $datosDePaso */
     private function eliminar(array $datosDePaso = []): PersonaEliminar
     {

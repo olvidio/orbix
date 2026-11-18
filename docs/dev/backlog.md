@@ -17,6 +17,12 @@ Formato sugerido por ítem:
 - **Pendiente:** flujo certificado destino externo; informes STGR locales.
 - **Notas:** Mapa SSOT + grabar nota en esquema del acta (`EditarPersonaNota`). Diag tipo 1: `tools/audit/diag_notas_otra_region_mapa.sql`.
 
+### Comprobación de datos al borrar una persona de paso (desactivable, provisional)
+
+- **Qué:** `PersonaEliminar` mira antes de borrar una persona de paso si tiene asistencias, cargos, encargos, notas, matrículas, docencia o zonas en alguna dl (`PgPersonaDePasoDatosRepository`). En producción el usuario de BD de cada dl no puede leer esas tablas madre y la comprobación falla siempre, así que se puede desactivar con `ORBIX_PERSONA_DE_PASO_BORRAR_SIN_COMPROBAR=1` en `.env`: con el flag se borra **sin mirar**.
+- **Pendiente:** decidir cómo se leen los datos de todas las dl y quitar el flag. Para las asistencias, ver la fusión de abajo (`publicv.d_asistentes_all`). Falta decidir sobre cargos (`global.d_cargos_activ`), encargos (`global.encargos_sacd`), docencia (`global.d_docencia_stgr`), zonas (`global.zonas_sacd`), notas (`publicv.e_notas`) y matrículas (`publicv.d_matriculas_activ`): moverlas a `publicv`, darles lectura o una función `SECURITY DEFINER` que solo diga si hay datos.
+- **Riesgo mientras tanto:** con el flag se puede borrar una persona de paso que tenga datos en otra dl, que quedan huérfanos.
+
 ### Fusionar `d_asistentes_out` en `d_asistentes_dl` (una sola madre legible)
 
 - **Qué:** dejar el árbol de asistencias en `publicv.d_asistentes_all` → `"<dl>".d_asistentes_dl` (una por dl, con las asistencias dl y out juntas) + `restov.d_asistentes_ex`. Quitar los niveles intermedios `global.d_asistentes_dl` y `publicv.d_asistentes_de_paso` y las tablas `"<dl>".d_asistentes_out`. «Out» pasa a deducirse (la actividad no la organiza mi dl) o a ser solo el valor de `id_tabla`.

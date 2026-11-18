@@ -22,7 +22,9 @@ use src\shared\config\ConfigGlobal;
 
 /**
  * Elimina una persona si pertenece a la dl del usuario actual; una persona de paso, si no tiene
- * datos en ninguna dl ({@see PersonaDePasoDatosRepositoryInterface}).
+ * datos en ninguna dl ({@see PersonaDePasoDatosRepositoryInterface}). Esa comprobación se puede
+ * desactivar (`$comprobarDatosDePaso = false`) mientras en producción las dl no puedan leer las
+ * tablas madre: pendiente en `docs/dev/backlog.md`.
  *
  * Migrado desde la rama "eliminar" de `apps/personas/controller/personas_update.php`
  * (slice 2 de la migracion del modulo `personas`).
@@ -32,6 +34,7 @@ final class PersonaEliminar
     public function __construct(
         private PersonaRepositoryResolver $personaRepositoryResolver,
         private PersonaDePasoDatosRepositoryInterface $datosDePaso,
+        private bool $comprobarDatosDePaso = true,
     ) {
     }
 
@@ -64,7 +67,9 @@ final class PersonaEliminar
             return _("No se encuentra la persona");
         }
 
-        if ($obj_pau === 'PersonaEx') {
+        if ($obj_pau === 'PersonaEx' && !$this->comprobarDatosDePaso) {
+            // Provisional: comprobación desactivada por configuración (ver `config/dependencies.php`).
+        } elseif ($obj_pau === 'PersonaEx') {
             // Una persona de paso es de fuera y su tabla es común a todas las dl: se borra si no
             // tiene datos en ninguna (asistencias, cargos, encargos, notas…).
             try {
