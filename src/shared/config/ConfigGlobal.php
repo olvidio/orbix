@@ -123,14 +123,19 @@ class ConfigGlobal extends ServerConf
 
     public static function is_dmz(): bool
     {
-        $dmz = self::$dmz; // heredada de ServerConf (FALSE), TRUE En la instalación exterior
-        if ($dmz) {
-            $private = $_SESSION['private'] ?? null;
-            if (is_string($private) && $private !== '' && $private === 'sf') {
-                $dmz = false;
-            }
-        }
-        return $dmz;
+        $private = $_SESSION['private'] ?? null;
+
+        return self::is_dmz_para_entrada(is_string($private) ? $private : '');
+    }
+
+    /**
+     * Instalación exterior (DMZ), salvo la entrada privada de sf. Para el login, que aún no ha
+     * escrito `private` en la sesión.
+     */
+    public static function is_dmz_para_entrada(string $private): bool
+    {
+        // self::$dmz: heredada de ServerConf (FALSE), TRUE en la instalación exterior.
+        return self::$dmz && $private !== 'sf';
     }
 
     public static function is_debug_mode(): bool

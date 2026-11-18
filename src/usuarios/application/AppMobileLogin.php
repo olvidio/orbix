@@ -33,8 +33,6 @@ final class AppMobileLogin
         $ubicacion = getenv('UBICACION');
         $private = getenv('PRIVATE');
 
-        $_SESSION['sfsv'] = $ubicacion;
-
         if (!empty($esquema_web)) {
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(false, true);
@@ -59,8 +57,6 @@ final class AppMobileLogin
                 'mensaje' => _("Usuario y contraseña obligatorios"),
             ];
         }
-
-        $_SESSION['private'] = $private;
 
         // Si la instalación fija el esquema (ESQUEMA), el de la petición no cuenta.
         $esquema = $esquema_web !== '' ? $esquema_web : $esquemaIn;
@@ -196,7 +192,7 @@ final class AppMobileLogin
         }
         $role_pau = is_scalar($row2['pau'] ?? null) ? (string) $row2['pau'] : '';
 
-        if (ConfigGlobal::is_dmz()) {
+        if (ConfigGlobal::is_dmz_para_entrada((string) $private)) {
             $role_dmz = $row2['dmz'] ?? null;
             if (empty($role_dmz)) {
                 return [
@@ -256,6 +252,9 @@ final class AppMobileLogin
             'ordenApellidos' => $ordenApellidos,
             'mi_id_schema' => $id_schema,
         ];
+        // La sesión solo se toca al entrar: un rechazo no deja nada en la del visitante.
+        $_SESSION['sfsv'] = $ubicacion;
+        $_SESSION['private'] = $private;
         $_SESSION['session_auth'] = $session_auth;
 
         $session_config = [

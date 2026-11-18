@@ -309,6 +309,23 @@ class AppMobileLoginIntegracionTest extends myTest
         );
     }
 
+    /** La ubicación y la entrada privada se anotan en la sesión al entrar (no antes). */
+    public function test_login_correcto_anota_ubicacion_y_entrada_privada(): void
+    {
+        $this->crearUsuario();
+        $ubicacionPrevia = getenv('UBICACION');
+        putenv('UBICACION=sv');
+        putenv('PRIVATE=sf');
+        try {
+            $this->assertTrue($this->login()['ok']);
+        } finally {
+            putenv($ubicacionPrevia === false ? 'UBICACION' : 'UBICACION=' . $ubicacionPrevia);
+        }
+
+        $this->assertSame('sv', $_SESSION['sfsv']);
+        $this->assertSame('sf', $_SESSION['private']);
+    }
+
     public function test_login_correcto_autentica_la_sesion(): void
     {
         $this->crearUsuario();
@@ -523,8 +540,9 @@ class AppMobileLoginIntegracionTest extends myTest
     // ------------------------------------------------------------------ rol y DMZ
 
     /**
-     * Hallazgo menor: con la contraseña correcta y un rol que no existe (o sin rol) la respuesta es
-     * `server_error` / «Rol no encontrado», distinta de la de credenciales incorrectas.
+     * Con la contraseña correcta y un rol que no existe (o sin rol) la respuesta es `server_error` /
+     * «Rol no encontrado», distinta de la de credenciales incorrectas. Es intencionado (revisado el
+     * 2026-11-18): solo la ve quien ya sabe la contraseña, y le dice al administrador qué falla.
      */
     #[DataProvider('rolesQueNoExisten')]
     public function test_usuario_sin_rol_valido_se_rechaza(?int $idRole): void

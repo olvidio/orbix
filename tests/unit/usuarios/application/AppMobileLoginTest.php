@@ -130,21 +130,16 @@ final class AppMobileLoginTest extends TestCase
         }
     }
 
-    /**
-     * El login anota la ubicación (`sfsv`) siempre, y la entrada privada (`private`) solo cuando hay
-     * credenciales. Hallazgo menor: lo hace aunque el login se rechace (la sesión del visitante
-     * anónimo queda con esas dos claves).
-     */
-    public function test_un_rechazo_deja_ubicacion_y_entrada_privada_en_la_sesion(): void
+    /** Un login rechazado no deja nada en la sesión del visitante (ni la ubicación ni la entrada privada). */
+    public function test_un_rechazo_no_toca_la_sesion(): void
     {
         putenv('PRIVATE=sf');
+        $antes = $_SESSION;
 
         (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute([]);
-        $this->assertSame('sv', $_SESSION['sfsv']);
-        $this->assertArrayNotHasKey('private', $_SESSION);
-
         (new AppMobileLogin($this->createStub(LoginIntentosRepositoryInterface::class)))->execute(['username' => 'alguien', 'password' => 'secreto']);
-        $this->assertSame('sf', $_SESSION['private']);
+
+        $this->assertSame($antes, $_SESSION);
     }
 
     #[DataProvider('referenciasDeApp')]
