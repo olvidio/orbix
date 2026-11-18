@@ -68,7 +68,7 @@ $error_txt .= $oConfig->formatMissingParametersMessage([
 
 $oPersona = Persona::findPersonaEnGlobal($id_nom);
 if ($error_txt === '' && $oPersona === null) {
-    $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en " . __FILE__ . ': line ' . __LINE__;
+    $error_txt .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
 }
 if ($error_txt !== '') {
     ContestarJson::enviar($error_txt, $data);

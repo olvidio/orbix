@@ -85,7 +85,7 @@ final readonly class ListaAsistentesData
 
                 $oPersona = Persona::findPersonaEnGlobal($id_nom);
                 if ($oPersona === null) {
-                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+                    $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
                     continue;
                 }
                 $nom = $oPersona->getPrefApellidosNombre();
@@ -153,7 +153,7 @@ final readonly class ListaAsistentesData
 
             $oPersona = Persona::findPersonaEnGlobal($id_nom);
             if ($oPersona === null) {
-                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+                $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
                 continue;
             }
             $nom = $oPersona->getPrefApellidosNombre();

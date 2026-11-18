@@ -170,7 +170,7 @@ class DossiersVerPantallaData
                     $oPersona = Persona::findPersonaEnGlobal($id_pau, $problemasRegionStgr);
                     if (!is_object($oPersona)) {
                         return [
-                            'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
+                            'error' => '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_pau),
                             'ficha_segmentos' => [],
                         ];
                     }
@@ -181,7 +181,7 @@ class DossiersVerPantallaData
                     $oPersona = $repo->findById($id_pau);
                     if ($oPersona === null) {
                         return [
-                            'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
+                            'error' => '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_pau),
                             'ficha_segmentos' => [],
                         ];
                     }

@@ -93,7 +93,7 @@ final class PlanEstudiosCaData
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
             if (!is_object($oPersona)) {
-                $msgErr .= "<br>No encuentro a nadie con id_nom: $idNomDtorEst en  " . __FILE__ . ': line ' . __LINE__;
+                $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNomDtorEst);
                 $nomDirectorEst = '';
             } else {
                 $nomDirectorEst = $oPersona->getPrefApellidosNombre();
@@ -125,7 +125,7 @@ final class PlanEstudiosCaData
                 $oPersona = Persona::findPersonaEnGlobal($idProfesor);
                 if (!is_object($oPersona)) {
                     // Como en la lista de clases: la asignatura sale con el profesor en blanco.
-                    $msgErr .= "<br>No encuentro a nadie con id_nom: $idProfesor en  " . __FILE__ . ': line ' . __LINE__;
+                    $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idProfesor);
                     $nomProfesor = '';
                 } else {
                     $nomProfesor = $oPersona->getPrefApellidosNombre();
@@ -160,7 +160,7 @@ final class PlanEstudiosCaData
             $observEst = $oAsistente->getObserv_est();
             $oPersona = Persona::findPersonaEnGlobal($idNom);
             if ($oPersona === null) {
-                $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
+                $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNom);
                 continue;
             }
             $a++; // después de encontrar a la persona: un alumno omitido no deja hueco

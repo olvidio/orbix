@@ -143,7 +143,7 @@ class Select_matriculas_de_una_actividad
             if (!empty($id_profesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($id_profesor);
                 if ($oPersona === null) {
-                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                    $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_profesor) . ' (' . _("profesor") . ')';
                 }
             }
 
@@ -170,7 +170,7 @@ class Select_matriculas_de_una_actividad
                 $id_nom = $oMatricula->getId_nom();
                 $oPersona = Persona::findPersonaEnGlobal($id_nom);
                 if ($oPersona === null) {
-                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                    $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
                     continue;
                 }
                 $nom_persona = $oPersona->getPrefApellidosNombre();

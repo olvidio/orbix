@@ -264,11 +264,13 @@ final class MatriculasListaDataTest extends myTest
         $this->assertStringContainsString(sprintf(_("No se ha encontrado la asignatura con id: %s"), '9999'), $r['msg_err']);
     }
 
-    /** Hallazgo: los mensajes de error llevan la ruta del fichero PHP del servidor. */
-    public function test_el_aviso_de_persona_no_encontrada_incluye_la_ruta_del_fichero(): void
+    /** Los mensajes de error no llevan la ruta del fichero PHP del servidor. */
+    public function test_el_aviso_de_persona_no_encontrada_no_lleva_la_ruta_del_fichero(): void
     {
         $this->matricula(3001, 1101, 10019);
 
-        $this->assertStringContainsString('MatriculasListaData.php', $this->uc()->execute(self::PERIODO)['msg_err']);
+        $msg = $this->uc()->execute(self::PERIODO)['msg_err'];
+        $this->assertStringContainsString('10019', $msg);
+        $this->assertStringNotContainsString('.php', $msg);
     }
 }

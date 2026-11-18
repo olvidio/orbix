@@ -201,7 +201,6 @@ class ListaPlazasConjuntoActividades
                         $oPersona = Persona::findPersonaEnGlobal($id_nom);
                         if ($oPersona === null) {
                             $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom para la actividad $nom_activ";
-                            $msg_err .= "<br>en  " . __FILE__ . ": line " . __LINE__;
                             continue;
                         }
                         $sacd = $oPersona->isSacd();
@@ -238,7 +237,7 @@ class ListaPlazasConjuntoActividades
                     if (in_array($id_nom, $aIdCargos)) continue; // si ya está como cargo, no lo pongo.
                     $oPersona = Persona::findPersonaEnGlobal($id_nom);
                     if ($oPersona === null) {
-                        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                        $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
                         continue;
                     }
                     $sacd = $oPersona->isSacd();

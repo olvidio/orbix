@@ -328,17 +328,20 @@ final class CertificadosDominioTest extends myTest
         $this->assertCount(3, $d['tabla']['botones']);
     }
 
-    /** Hallazgo: con una persona que no se encuentra, el widget lanza una excepción con la ruta del fichero. */
+    /** Con una persona que no se encuentra, el widget lanza una excepción con el id y sin la ruta del fichero. */
     public function test_el_widget_con_una_persona_que_no_existe_lanza_excepcion(): void
     {
         $this->finder->method('findPersonaEnGlobalODePaso')->willReturn(null);
         $w = new Select_certificados_de_una_persona($this->createMock(CertificadoRecibidoRepositoryInterface::class));
         $w->setId_pau(10019);
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageMatches('/Select_certificados_de_una_persona\.php/');
-
-        $w->getSegmentData();
+        try {
+            $w->getSegmentData();
+            $this->fail('Se esperaba RuntimeException');
+        } catch (\RuntimeException $e) {
+            $this->assertStringContainsString('10019', $e->getMessage());
+            $this->assertStringNotContainsString('.php', $e->getMessage());
+        }
     }
 
     // ------------------------------------------------------------------ mensajes al guardar

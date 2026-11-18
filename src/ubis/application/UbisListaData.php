@@ -53,7 +53,7 @@ class UbisListaData
                 $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Sf, true));
                 break;
             default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                 return [
                     'error' => $err_switch,
                     'a_cabeceras' => [],

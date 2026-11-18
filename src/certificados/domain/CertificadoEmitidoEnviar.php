@@ -51,7 +51,7 @@ class CertificadoEmitidoEnviar
         $certificado = (string) ($oCertificadoEmitido->getCertificado() ?? '');
         $cPersonas = Persona::buscarEnTodasRegiones($id_nom);
         if ($cPersonas === []) {
-            return "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+            return '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
         }
         if (count($cPersonas) > 1) {
             $error_txt .= 'Existe más de una persona con este id, dado de alta:';

@@ -127,7 +127,7 @@ final class CalendarioListasDatos
                 break;
             default:
                 return [
-                    'mensaje' => sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__),
+                    'mensaje' => sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__),
                 ];
         }
 

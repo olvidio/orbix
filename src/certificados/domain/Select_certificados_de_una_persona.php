@@ -83,7 +83,7 @@ class Select_certificados_de_una_persona
         $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
             throw new \RuntimeException(
-                "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ': line ' . __LINE__
+                '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $this->id_pau)
             );
         }
         // Sin filtro por 'firmado': mejor que se vean todos.

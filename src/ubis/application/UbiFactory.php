@@ -65,7 +65,7 @@ final class UbiFactory
                     $oCentro = DependencyResolver::get(CentroExRepositoryInterface::class)->findById((int)$id_ubi);
                     break;
                 default:
-                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                     exit($err_switch);
             }
 

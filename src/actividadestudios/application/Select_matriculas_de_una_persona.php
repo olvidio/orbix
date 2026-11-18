@@ -183,7 +183,7 @@ class Select_matriculas_de_una_persona
                 if (!empty($id_preceptor)) {
                     $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_preceptor);
                     if (!is_object($oPersona)) {
-                        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_preceptor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                        $msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_preceptor) . ' (' . _("profesor") . ')';
                         $preceptor = 'x';
                     } else {
                         $preceptor = $oPersona->getPrefApellidosNombre();

@@ -49,7 +49,7 @@ final class E43CertificadoData
         $msgErr = '';
         $oPersona = Persona::findPersonaEnGlobal($idNom);
         if ($oPersona === null) {
-            $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
+            $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNom);
             return [
                 'msg_err' => $msgErr,
                 'nom' => '',

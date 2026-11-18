@@ -1438,3 +1438,9 @@ Hallazgos de `LoginProcesarIntegracionTest`, `AppMobileLoginIntegracionTest` y `
 
 `ActaImprimirPresentacionData` montaba el bloque del tribunal (pantalla y PDF del acta) con los nombres de los examinadores y el lugar sin escapar: los dos son texto libre. Ahora van con `htmlspecialchars`; los arrays de datos (`examinadores`, `lugar_fecha`) siguen sin tocar. Lo demás que pintan las vistas del acta son nombres de persona (lista blanca sin `<`/`>`), números, catálogo y configuración. Tests que fallaban antes: `test_el_nombre_del_examinador_se_escapa_en_el_html` y `test_el_lugar_se_escapa_en_el_html_del_tribunal`.
 
+### Rutas de fichero en los mensajes de error (2026-11-18)
+
+28 mensajes «No encuentro a nadie con id_nom: …» (asistentes, actividadestudios, certificados, dossiers, actividadcargos) llevaban `__FILE__`, es decir, la ruta del servidor (`/var/www/orbix/src/...`), en el texto que ve el usuario. Ahora usan `sprintf(_("No encuentro a nadie con id_nom: %s"), $id)` (el `msgid` ya existía, traducido), con «(profesor)» o «preceptor:» donde los había. Las 18 ramas imposibles «opción no definida en switch en %s, linea %s» y la de `Desplegable` usan `basename(__FILE__)` (mismo `msgid`). Test-guardia nuevo `MensajesSinRutaDelServidorTest` (falla con `__FILE__` concatenado o en un `sprintf(_(...))` sin `basename`). Tests que fallaban antes: el guardia (48 líneas) y los cuatro hallazgos de `DossiersVerPantallaDataTest`, `CertificadosDominioTest`, `E43CertificadoDataTest` y `MatriculasListaDataTest`. Suite completa en verde (11 269).
+
+**Bloque 1 cerrado (2026-11-18).**
+

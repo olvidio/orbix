@@ -59,7 +59,7 @@ $oCertificadoEmitido->setId_nom($Qid_nom);
 if ($Qnom === '') {
     $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if ($oPersona === null) {
-        $error_txt .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__;
+        $error_txt .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $Qid_nom);
         ContestarJson::enviar($error_txt, 'ok');
         return;
     }

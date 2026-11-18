@@ -153,7 +153,7 @@ class Select_asignaturas_de_una_actividad
             if (!empty($id_profesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($id_profesor);
                 if ($oPersona === null) {
-                    $this->msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                    $this->msg_err .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_profesor) . ' (' . _("profesor") . ')';
                     $nom = '';
                 } else {
                     $nom = $oPersona->getPrefApellidosNombre();

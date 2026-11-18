@@ -88,8 +88,7 @@ final class MatriculasListaData
                 if (!empty($idPreceptor)) {
                     $oPersona = Persona::findPersonaEnGlobal($idPreceptor);
                     if ($oPersona === null) {
-                        $msgErr .= "<br>preceptor: No encuentro a nadie con id_nom: $idPreceptor en  "
-                            . __FILE__ . ': line ' . __LINE__;
+                        $msgErr .= '<br>' . _("preceptor") . ': ' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idPreceptor);
                     } else {
                         $preceptor = $oPersona->getPrefApellidosNombre();
                         $mailsPreceptor = $this->telecoPersonaService->getTelecosPorTipo(
@@ -116,8 +115,7 @@ final class MatriculasListaData
             if ($idNom !== $idNomAnterior) {
                 $oPersona = Persona::findPersonaEnGlobal($idNom);
                 if ($oPersona === null) {
-                    $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  "
-                        . __FILE__ . ': line ' . __LINE__;
+                    $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNom);
                     continue;
                 }
                 $apellidosNombre = $oPersona->getPrefApellidosNombre();

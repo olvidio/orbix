@@ -95,7 +95,7 @@ final class FormCargosDeActividadData
 
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
-                return ['error' => '<br>No encuentro a nadie con id_nom: ' . $Qid_nom . ' en ' . __FILE__];
+                return ['error' => '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $Qid_nom)];
             }
             $ape_nom = $oPersona->getPrefApellidosNombre();
             $id_nom_real = $Qid_nom;
@@ -103,7 +103,7 @@ final class FormCargosDeActividadData
             if ($Qid_dossier === 3101) {
                 $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
                 if (!is_object($oPersona)) {
-                    return ['error' => '<br>No encuentro a nadie con id_nom: ' . $Qid_nom . ' en ' . __FILE__];
+                    return ['error' => '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $Qid_nom)];
                 }
                 $ape_nom = $oPersona->getPrefApellidosNombre();
                 $id_nom_real = $Qid_nom;

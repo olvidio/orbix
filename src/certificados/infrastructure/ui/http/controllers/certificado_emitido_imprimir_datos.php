@@ -25,7 +25,7 @@ $error_txt .= $oConfig->formatMissingParametersMessage([
 if ($error_txt === '') {
     $oPersona = Persona::findPersonaEnGlobal($id_nom);
     if ($oPersona === null) {
-        $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+        $error_txt .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $id_nom);
     } else {
         $data['nombreApellidos'] = $oPersona->getNombreApellidos();
         $data['lugar_nacimiento'] = (string)($oPersona->getLugarNacimientoVo()?->value() ?? $oPersona->getLugar_nacimiento() ?? '');

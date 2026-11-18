@@ -276,7 +276,7 @@ final class ConfigSnapshot
                 $fin_m = $this->getMesFinCrt();
                 break;
             default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                 exit ($err_switch);
         }
         if ((int) date('m') > $fin_m) {

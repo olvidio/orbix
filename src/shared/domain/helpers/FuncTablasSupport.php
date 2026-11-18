@@ -231,13 +231,13 @@ final class FuncTablasSupport
                     $fin_m = (int)($calendario['mes_fin_crt'] ?? 0);
                     break;
                 default:
-                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                     exit($err_switch);
             }
         } else {
             $oConfig = $_SESSION['oConfig'] ?? null;
             if (!$oConfig instanceof ConfigSnapshot) {
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                 exit($err_switch);
             }
             switch ($tipo) {
@@ -254,7 +254,7 @@ final class FuncTablasSupport
                     $fin_m = $oConfig->getMesFinCrt();
                     break;
                 default:
-                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                     exit($err_switch);
             }
         }
@@ -279,7 +279,7 @@ final class FuncTablasSupport
             case "fin":
                 return $fincurs;
             default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                 exit ($err_switch);
         }
     

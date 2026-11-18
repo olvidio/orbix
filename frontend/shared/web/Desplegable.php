@@ -202,7 +202,7 @@ class Desplegable
                 $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . $keyTxt . '" ' . $chk . '>' . self::scalarString($val);
             }
         } else {
-            $msg_err = _("tiene que ser un array") . ': ' . __FILE__ . ': line ' . __LINE__;
+            $msg_err = _("tiene que ser un array") . ': ' . basename(__FILE__) . ': line ' . __LINE__;
             exit($msg_err);
         }
 

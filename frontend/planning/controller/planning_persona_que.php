@@ -95,7 +95,7 @@ $personas_txt = match ($Qobj_pau) {
     'PersonaDl' => _("de la dl"),
     'PersonaEx' => _("de paso"),
     'PersonaSacd' => _("sacd"),
-    default => exit(sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__)),
+    default => exit(sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__)),
 };
 
 $urlSelect = 'frontend/planning/controller/planning_persona_select.php';

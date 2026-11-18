@@ -38,7 +38,7 @@ class ConverterDate
                 $this->Converter = new PgTimestamp($data);
                 break;
             default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
                 exit ($err_switch);
         }
     }

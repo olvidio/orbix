@@ -127,14 +127,14 @@ final class E43CertificadoDataTest extends myTest
         $this->assertSame([], $r['aAsignaturasMatriculadas']);
     }
 
-    /** Hallazgo: el mensaje de error incluye la ruta del fichero PHP del servidor. */
-    public function test_el_error_de_persona_no_encontrada_incluye_la_ruta_del_fichero(): void
+    /** El mensaje de error no lleva la ruta del fichero PHP del servidor. */
+    public function test_el_error_de_persona_no_encontrada_no_lleva_la_ruta_del_fichero(): void
     {
         $this->finder->method('findPersonaEnGlobalODePaso')->willReturn(null);
 
         $r = $this->uc()->execute(['id_nom' => self::ID_NOM, 'id_activ' => self::ID_ACTIV]);
 
-        $this->assertStringContainsString('E43CertificadoData.php', $r['msg_err']);
+        $this->assertStringNotContainsString('.php', $r['msg_err']);
     }
 
     public function test_actividad_no_encontrada_devuelve_la_cabecera_de_la_persona_y_el_error(): void

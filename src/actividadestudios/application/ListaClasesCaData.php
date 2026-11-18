@@ -87,7 +87,7 @@ final class ListaClasesCaData
         } else {
             $oPersona = Persona::findPersonaEnGlobal($idNomDtorEst);
             if (!is_object($oPersona)) {
-                $msgErr .= "<br>No encuentro a nadie con id_nom: $idNomDtorEst en  " . __FILE__ . ': line ' . __LINE__;
+                $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNomDtorEst);
                 $nomDirectorEst = '';
             } else {
                 $nomDirectorEst = $oPersona->getPrefApellidosNombre();
@@ -113,7 +113,7 @@ final class ListaClasesCaData
             if (!empty($idProfesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($idProfesor);
                 if (!is_object($oPersona)) {
-                    $msgErr .= "<br>No encuentro a nadie con id_nom: $idProfesor (profesor) en  " . __FILE__ . ': line ' . __LINE__;
+                    $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idProfesor) . ' (' . _("profesor") . ')';
                     $nomProfesor = '';
                 } else {
                     $nomProfesor = $oPersona->getPrefApellidosNombre();
@@ -138,7 +138,7 @@ final class ListaClasesCaData
                 $oPersona = Persona::findPersonaEnGlobal($idNom);
                 if ($oPersona === null) {
                     if ($dlOrg == ConfigGlobal::mi_delef()) {
-                        $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
+                        $msgErr .= '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $idNom);
                     }
                     continue;
                 }

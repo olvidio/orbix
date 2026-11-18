@@ -151,7 +151,7 @@ class Select_actividades_de_una_persona
 
         $oPersona = $this->resolvePersona();
         if ($oPersona === null) {
-            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: {$this->id_pau} en  " . __FILE__ . ": line " . __LINE__;
+            $this->msg_err = '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $this->id_pau);
             $this->a_valores = [];
             $this->ref_perm = [];
 

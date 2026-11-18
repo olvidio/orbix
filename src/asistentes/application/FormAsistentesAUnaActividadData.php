@@ -82,7 +82,7 @@ final class FormAsistentesAUnaActividadData
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
                 return [
-                    'error' => "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__,
+                    'error' => '<br>' . sprintf(_("No encuentro a nadie con id_nom: %s"), $Qid_nom),
                 ];
             }
             // Mismo mapa que el resto del módulo de personas (n, x = nax, a, s, sssc, y los de paso pn/pa/px/psssc).

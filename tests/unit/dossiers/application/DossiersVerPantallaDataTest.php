@@ -298,8 +298,8 @@ PHP);
         $data = $this->sut()->build(['pau' => 'p', 'id_pau' => self::ID_NOM]);
 
         $this->assertStringContainsString('No encuentro a nadie con id_nom: ' . self::ID_NOM, $data['error']);
-        // Hallazgo: el mensaje de error lleva la ruta del fichero PHP del servidor.
-        $this->assertStringContainsString('DossiersVerPantallaData.php', $data['error']);
+        // El mensaje no lleva la ruta ni el nombre del fichero PHP del servidor.
+        $this->assertStringNotContainsString('.php', $data['error']);
     }
 
     public function test_un_tipo_de_persona_desconocido_lanza_excepcion(): void

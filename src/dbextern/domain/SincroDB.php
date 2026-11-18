@@ -95,7 +95,7 @@ class SincroDB
             default => 0,
         };
         if ($id_tipo === 0 && !in_array($tipo_persona, ['n', 'a', 's', 'sssc'], true)) {
-            $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+            $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), basename(__FILE__), __LINE__);
             exit($err_switch);
         }
         $this->id_tipo = $id_tipo;
