@@ -77,6 +77,7 @@ final class FrontBootstrap
         self::ensureBackendBootstrap();
         self::ensureCrStgrMaterializedViews();
         session_write_close();
+        \src\shared\infrastructure\ui\http\AccesoRolPau::comprobarPeticionActual();
         self::validateRequestHash();
 
         self::$infrastructureReady = true;

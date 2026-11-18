@@ -11,6 +11,7 @@ namespace core;
 use frontend\shared\security\HashF;
 
 session_write_close();
+\src\shared\infrastructure\ui\http\AccesoRolPau::comprobarPeticionActual();
 $oValidator = new HashF();
 $a_data = (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
 echo $oValidator->validatePost($a_data);
