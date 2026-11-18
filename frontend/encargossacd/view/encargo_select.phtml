@@ -73,6 +73,7 @@
 <?php if ($no_tipo_enc): ?>
     <form id="frm_encargo_que" action="frontend/encargossacd/controller/encargo_select.php" method="post"
           onkeydown="fnjs_enviar(event,this);">
+        <?= $oHashBuscar->getCamposHtml() ?>
         <table>
             <thead>
             <th class=titulo_inv colspan=4><?= ucfirst(_("buscar un encargo")) ?>&nbsp;&nbsp;&nbsp;

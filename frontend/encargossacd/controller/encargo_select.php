@@ -138,8 +138,13 @@ $oHash = new HashF();
 $oHash->setCamposForm('que');
 $oHash->setcamposNo('scroll_id!sel');
 
+// Búsqueda por descripción (solo cuando no se viene de un tipo de encargo).
+$oHashBuscar = new HashF();
+$oHashBuscar->setCamposForm('desc_enc');
+
 $a_campos = [
     'oPosicion' => $oPosicion,
+    'oHashBuscar' => $oHashBuscar,
     'url_horario' => $url_horario,
     'h_horario' => $h_horario,
     'url_modificar' => $url_modificar,

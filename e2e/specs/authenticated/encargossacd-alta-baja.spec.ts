@@ -28,6 +28,8 @@ test('encargo: alta, modificación y borrado desde la lista', async ({ page }) =
   const buscarElDelTest = async () => {
     const buscar = main.locator('form#frm_encargo_que');
     await expect(buscar).toBeVisible({ timeout: 20_000 });
+    // La búsqueda va firmada como cualquier formulario (antes llegaba sin `h`).
+    await expect(buscar.locator('input[name="h"]'), 'el formulario de búsqueda lleva su hash').toHaveCount(1);
     await buscar.locator('[name="desc_enc"]').fill(DESC);
     await buscar.locator('#ok').click();
     const casilla = main.locator('form#seleccionados input.sel');
