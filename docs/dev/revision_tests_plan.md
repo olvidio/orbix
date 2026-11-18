@@ -1358,7 +1358,7 @@ Spec `notas-acta-y-tessera.spec.ts`: modificar una nota desde el dossier (`perso
 Spec `asistentes-persona-y-cambio.spec.ts`, con una persona del propio test y tres crt n reales del clon (curso actual): apuntarla desde su dossier 1301 (`asistente_guardar`), «cambiar actividad» desde la lista de asistentes (`mod=mover`: aparece en la nueva y desaparece de la anterior), guardar una petición de plaza (`peticiones_guardar`) y pasarla a la actividad pedida con el enlace de la tabla de peticiones. Los cuatro guardados funcionan; no ha salido ningún fallo de la aplicación.
 
 - Dos reglas que el spec tiene que respetar: «cambiar actividad» solo ofrece actividades del mismo tipo exacto (y lleva un separador con valor 0: si se elige, responde «faltan parámetros id_activ / id_nom»), y no deja pasar a una actividad con todas las plazas ocupadas («Ya están todas las plazas ocupadas»), ni desde el formulario ni desde la tabla de peticiones.
-- **Anotado, sin tocar:** `tabla_peticiones.html.twig` tiene dos textos de interfaz sin gettext (`'error'`, `'error de comunicacion con el servidor'`).
+- ~~**Anotado, sin tocar:** `tabla_peticiones.html.twig` tiene dos textos de interfaz sin gettext (`'error'`, `'error de comunicacion con el servidor'`).~~ **Hecho (2026-11-18):** con `|trans|json_encode|raw` (los dos `msgid` ya existían traducidos).
 
 ### Centros encargados desde el dossier 3010 (2026-11-15 y 16)
 
@@ -1385,7 +1385,7 @@ Los flujos que la fase 6 solo comprobó «hasta la cápsula» ya se recorren gua
 
 - Quitar el PDF firmado de un acta y los certificados emitidos: solo los hace una región del stgr, y el usuario de E2E es de una dl. Haría falta un segundo usuario E2E de región.
 - La subida del plano de una dirección (`plano_bytea.php`, en ventana aparte). El repositorio sí tiene test con un fichero binario.
-- Anotado, sin tocar: los dos textos sin gettext de `tabla_peticiones.html.twig`.
+- ~~Anotado, sin tocar: los dos textos sin gettext de `tabla_peticiones.html.twig`.~~ Hecho el 2026-11-18.
 
 ## 33. Paso 2.10: pasada de cobertura de los módulos más bajos (2026-11-16)
 

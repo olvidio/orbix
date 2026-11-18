@@ -17,12 +17,12 @@ fnjs_cambiar_actividad=function(param){
         if (rta && rta.success) {
             fnjs_update_div('#main', {{ reload_url_json|raw }});
         } else {
-            var msg = (rta && rta.mensaje) ? rta.mensaje : 'error';
+            var msg = (rta && rta.mensaje) ? rta.mensaje : {{ "error"|trans|json_encode|raw }};
             alert(msg);
         }
     });
     request.fail(function () {
-        alert('error de comunicacion con el servidor');
+        alert({{ "error de comunicación con el servidor"|trans|json_encode|raw }});
     });
 }
 
