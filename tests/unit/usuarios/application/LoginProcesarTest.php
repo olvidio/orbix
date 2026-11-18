@@ -7,6 +7,7 @@ namespace Tests\unit\usuarios\application;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use src\usuarios\application\LoginProcesar;
+use src\usuarios\domain\contracts\LoginCliTicketRepositoryInterface;
 
 /**
  * Validaciones de `LoginProcesar` (login web) que se resuelven ANTES de abrir ninguna conexión.
@@ -49,7 +50,7 @@ final class LoginProcesarTest extends TestCase
     {
         $antes = $_SESSION;
 
-        $r = (new LoginProcesar())->execute($input, $esquemaWeb, 'sv');
+        $r = (new LoginProcesar($this->createStub(LoginCliTicketRepositoryInterface::class)))->execute($input, $esquemaWeb, 'sv');
 
         $this->assertSame(['ok' => false, 'error' => 1], $r);
         $this->assertSame($antes, $_SESSION, 'el caso de uso no toca la sesión');
@@ -71,7 +72,7 @@ final class LoginProcesarTest extends TestCase
     {
         $m = new \ReflectionMethod(LoginProcesar::class, 'resolveInstalledAppId');
 
-        $this->assertSame($esperado, $m->invoke(new LoginProcesar(), ['menus' => 4, 'procesos' => 9], $ref));
+        $this->assertSame($esperado, $m->invoke(new LoginProcesar($this->createStub(LoginCliTicketRepositoryInterface::class)), ['menus' => 4, 'procesos' => 9], $ref));
     }
 
     /** @return iterable<string, array{string, ?int}> */

@@ -1,6 +1,8 @@
 <?php
 
 use src\usuarios\application\AppMobileLogin;
+use src\usuarios\domain\contracts\LoginCliTicketRepositoryInterface;
+use src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository;
 use src\usuarios\application\GruposLista;
 use src\usuarios\application\LoginProcesar;
 use src\usuarios\application\PreferenciaTablaData;
@@ -34,6 +36,7 @@ return [
     RoleRepositoryInterface::class => autowire(PgRoleRepository::class),
     UsuarioGrupoRepositoryInterface::class => autowire(PgUsuarioGrupoRepository::class),
     UsuarioRepositoryInterface::class => autowire(PgUsuarioRepository::class),
+    LoginCliTicketRepositoryInterface::class => autowire(FicheroLoginCliTicketRepository::class),
 
     AppMobileLogin::class => autowire(AppMobileLogin::class),
     GruposLista::class => autowire(GruposLista::class),

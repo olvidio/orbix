@@ -7,7 +7,6 @@ use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\value_objects\ObjetoNombre;
 use src\cambios\domain\value_objects\PropiedadNombre;
 use src\cambios\domain\value_objects\TipoCambioId;
-use src\shared\config\ConfigGlobal;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\value_objects\DelegacionCode;
@@ -31,43 +30,6 @@ class Cambio
     public const TIPO_CMB_UPDATE = 2;
     public const TIPO_CMB_DELETE = 3;
     public const TIPO_CMB_FASE = 4;
-
-    /**
-     * Posa en marxa un procés per generar la taula d'avisos per cada usuari.
-     */
-    public function generarTabla(): void
-    {
-        $program = ConfigGlobal::$directorio . '/src/cambios/infrastructure/cli/avisos_generar_tabla.php';
-        $username = ConfigGlobal::mi_usuario();
-        $pwd = ConfigGlobal::mi_pass();
-        $err = ConfigGlobal::$directorio . '/log/avisos.err';
-        $out = ConfigGlobal::$directorio . '/log/avisos.out';
-        /* Hay que pasarle los argumentos que no tienen si se le llama por command line:
-         $username;
-         $password;
-         $dir_web = orbix | pruebas;
-         document_root = /home/dani/orbix_local
-         $ubicacion = 'sv';
-         $esquema_web = 'H-dlbv';
-         $private = 'sf'; para el caso del servidor exterior en dlb. puerto distinto.
-         $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
-         */
-        $dirweb = isset($_SERVER['DIRWEB']) && is_string($_SERVER['DIRWEB']) ? $_SERVER['DIRWEB'] : '';
-        $doc_root = isset($_SERVER['DOCUMENT_ROOT']) && is_string($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : '';
-        $ubicacion = getenv('UBICACION');
-        $esquema_web = getenv('ESQUEMA');
-        $private = getenv('PRIVATE');
-        $private = empty($private) ? 'x' : $private;
-        $db_server = getenv('DB_SERVER');
-
-        // Si he entrado escogiendo el esquema de un desplegable, no tengo el valor
-        if (empty($esquema_web)) {
-            $esquema_web = ConfigGlobal::mi_region_dl();
-        }
-
-        $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private $db_server >> $out 2>> $err < /dev/null &";
-        exec($command);
-    }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

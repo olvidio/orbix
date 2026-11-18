@@ -8,14 +8,19 @@ use src\shared\web\ContestarJson;
 /**
  * Driver CLI para generar la tabla de avisos de cambios.
  *
- * Invocado por cron, `Cambio::generarTabla()` (nohup) y el menú web
+ * Invocado por cron, `AvisosGenerarTablaLanzadorExec` (nohup) y el menú web
  * (`fnjs_link_submenu`). En petición HTTP devuelve JSON ContestarJson;
  * en CLI mantiene la salida HTML/texto legacy.
  */
 
 if (!empty($argv[1])) {
-    $_POST['username'] = $argv[1];
-    $_POST['password'] = $argv[2];
+    // Lanzado desde la web (`AvisosGenerarTablaLanzadorExec`): inicia sesión con el ticket de
+    // ORBIX_LOGIN_CLI_TICKET y la contraseña llega como «-». Desde cron: usuario y contraseña.
+    $ticketCli = getenv('ORBIX_LOGIN_CLI_TICKET');
+    if (!is_string($ticketCli) || $ticketCli === '') {
+        $_POST['username'] = $argv[1];
+        $_POST['password'] = $argv[2];
+    }
     $_SERVER['DIRWEB'] = $argv[3];
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
     putenv("UBICACION=$argv[5]");

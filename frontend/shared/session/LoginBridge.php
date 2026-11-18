@@ -56,9 +56,24 @@ final class LoginBridge
      */
     public static function loginProcesar(array $loginInput, string $esquemaWeb, string $ubicacion): array
     {
-        $useCase = new \src\usuarios\application\LoginProcesar();
+        return self::useCase()->execute($loginInput, $esquemaWeb, $ubicacion);
+    }
 
-        return $useCase->execute($loginInput, $esquemaWeb, $ubicacion);
+    /**
+     * Login de un proceso CLI lanzado desde la web con un ticket de un solo uso (sin contraseña).
+     *
+     * @return array{ok: bool, error?: int, session_auth?: array<string, mixed>, session_config?: array<string, mixed>, esquema?: string, idioma?: string, sfsv?: int}
+     */
+    public static function loginConTicketCli(string $ticket, string $ubicacion): array
+    {
+        return self::useCase()->executeConTicketCli($ticket, $ubicacion);
+    }
+
+    private static function useCase(): \src\usuarios\application\LoginProcesar
+    {
+        return new \src\usuarios\application\LoginProcesar(
+            new \src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository()
+        );
     }
 
     public static function invalidatePermisosActividadesCache(): void

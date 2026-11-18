@@ -16,6 +16,7 @@ use src\cambios\infrastructure\mail\AvisosCambiosMailHtml;
 use src\cambios\application\CambioAvisoTxtBuilder;
 use src\cambios\application\CambioParaAvisoLookup;
 use src\cambios\application\PersonaNombreParaAvisoInterface;
+use src\cambios\domain\contracts\AvisosGenerarTablaLanzadorInterface;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
@@ -129,6 +130,7 @@ final class AvisosEncolarMailsTest extends TestCase
             $txtBuilder,
             $colaRepo,
             new AvisosCambiosMailHtml(),
+            $this->createStub(AvisosGenerarTablaLanzadorInterface::class),
         );
 
         $resumen = $useCase->execute(dispararGenerarTabla: false);
@@ -188,11 +190,49 @@ final class AvisosEncolarMailsTest extends TestCase
             ),
             $colaRepo,
             new AvisosCambiosMailHtml(),
+            $this->createStub(AvisosGenerarTablaLanzadorInterface::class),
         );
 
         $resumen = $useCase->execute(dispararGenerarTabla: false);
 
         $this->assertSame(0, $resumen['encolados']);
         $this->assertSame(0, $resumen['total_avisos']);
+    }
+
+    /** Antes de encolar se lanza el generador de avisos (y se espera a que acabe), salvo que se pida lo contrario. */
+    public function test_lanza_el_generador_de_avisos_solo_si_se_pide(): void
+    {
+        foreach ([true => 1, false => 0] as $disparar => $veces) {
+            $cambioUsuarioRepo = $this->createMock(CambioUsuarioRepositoryInterface::class);
+            $cambioUsuarioRepo->method('matching')->willReturn([]);
+            $lanzador = $this->createMock(AvisosGenerarTablaLanzadorInterface::class);
+            $lanzador->expects($this->exactly($veces))->method('lanzarYEsperar');
+
+            $useCase = new AvisosEncolarMails(
+                $cambioUsuarioRepo,
+                $this->createMock(UsuarioRepositoryInterface::class),
+                $this->createMock(PreferenciaRepositoryInterface::class),
+                new CambioParaAvisoLookup(
+                    $this->createMock(CambioRepositoryInterface::class),
+                    $this->createMock(CambioDlRepositoryInterface::class),
+                ),
+                new CambioAvisoTxtBuilder(
+                    new ActividadParaAvisoLookup(
+                        $this->createMock(ActividadAllRepositoryInterface::class),
+                        $this->createMock(ActividadExRepositoryInterface::class),
+                    ),
+                    $this->createMock(CambioRepositoryInterface::class),
+                    $this->createMock(PersonaNombreParaAvisoInterface::class),
+                    $this->createMock(TipoTarifaRepositoryInterface::class),
+                    $this->createMock(RepeticionRepositoryInterface::class),
+                    $this->createMock(ActividadFaseRepositoryInterface::class),
+                ),
+                $this->createMock(ColaMailRepositoryInterface::class),
+                new AvisosCambiosMailHtml(),
+                $lanzador,
+            );
+
+            $useCase->execute(dispararGenerarTabla: (bool) $disparar);
+        }
     }
 }

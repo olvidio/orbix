@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use src\shared\config\ConfigGlobal;
 use src\usuarios\application\LoginProcesar;
 use src\usuarios\domain\entity\Usuario;
+use src\usuarios\infrastructure\persistence\FicheroLoginCliTicketRepository;
 use Tests\myTest;
 
 /**
@@ -23,14 +24,25 @@ class LoginProcesarIntegracionTest extends myTest
 
     private const RECHAZO = ['ok' => false, 'error' => 1];
 
+    private string $dirTickets;
+    private FicheroLoginCliTicketRepository $tickets;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->prepararEscenarioLogin();
+        $this->dirTickets = sys_get_temp_dir() . '/orbix_test_login_cli_' . bin2hex(random_bytes(4));
+        $this->tickets = new FicheroLoginCliTicketRepository($this->dirTickets);
     }
 
     public function tearDown(): void
     {
+        foreach (glob($this->dirTickets . '/*') ?: [] as $f) {
+            unlink($f);
+        }
+        if (is_dir($this->dirTickets)) {
+            rmdir($this->dirTickets);
+        }
         $this->restaurarEscenarioLogin();
         parent::tearDown();
     }
@@ -43,7 +55,12 @@ class LoginProcesarIntegracionTest extends myTest
     {
         $input += ['username' => self::USUARIO, 'password' => self::CLAVE, 'esquema' => self::ESQUEMA];
 
-        return (new LoginProcesar())->execute($input, $esquemaWeb, $ubicacion);
+        return $this->loginProcesar()->execute($input, $esquemaWeb, $ubicacion);
+    }
+
+    private function loginProcesar(): LoginProcesar
+    {
+        return new LoginProcesar($this->tickets);
     }
 
     // ------------------------------------------------------------------ credenciales incorrectas
@@ -289,19 +306,54 @@ class LoginProcesarIntegracionTest extends myTest
         $this->assertSame($antes, $_SESSION);
     }
 
-    /**
-     * Hallazgo: la contraseña en claro viaja en `session_auth` y `session_config` (acaba en el fichero
-     * de sesión del servidor). El hash guardado va dentro de la entidad `MiUsuario`.
-     */
-    public function test_la_contrasena_en_claro_se_devuelve_para_la_sesion(): void
+    /** La contraseña en claro no va a la sesión (acabaría en el fichero de sesión del servidor). */
+    public function test_la_sesion_no_guarda_la_contrasena(): void
     {
         $this->crearUsuario();
 
         $r = $this->login();
 
-        $this->assertSame(self::CLAVE, $r['session_auth']['password']);
-        $this->assertSame(self::CLAVE, $r['session_config']['password']);
+        $this->assertTrue($r['ok']);
+        $this->assertArrayNotHasKey('password', $r['session_auth']);
+        $this->assertArrayNotHasKey('password', $r['session_config']);
+        $this->assertStringNotContainsString(self::CLAVE, serialize([$r['session_auth'], $r['session_config']]));
         $this->assertSame($this->hashGuardado(), $r['session_auth']['MiUsuario']->getPasswordAsString());
+    }
+
+    // ------------------------------------------------------------------ login con ticket (procesos CLI)
+
+    public function test_un_ticket_valido_inicia_la_sesion_del_usuario_sin_contrasena(): void
+    {
+        $this->crearUsuario();
+        $ticket = $this->tickets->emitir(self::USUARIO, self::ESQUEMA);
+
+        $r = $this->loginProcesar()->executeConTicketCli($ticket, 'sv');
+
+        $this->assertTrue($r['ok']);
+        $this->assertSame(self::USUARIO, $r['session_auth']['username']);
+        $this->assertSame(self::ID_USUARIO, $r['session_auth']['id_usuario']);
+        $this->assertSame(self::ESQUEMA, $r['esquema']);
+        $this->assertArrayNotHasKey('password', $r['session_auth']);
+    }
+
+    /** El ticket es de un solo uso; uno desconocido o vacío no inicia sesión. */
+    public function test_un_ticket_usado_o_desconocido_se_rechaza(): void
+    {
+        $this->crearUsuario();
+        $ticket = $this->tickets->emitir(self::USUARIO, self::ESQUEMA);
+        $this->assertTrue($this->loginProcesar()->executeConTicketCli($ticket, 'sv')['ok']);
+
+        $this->assertSame(self::RECHAZO, $this->loginProcesar()->executeConTicketCli($ticket, 'sv'));
+        $this->assertSame(self::RECHAZO, $this->loginProcesar()->executeConTicketCli(str_repeat('0', 64), 'sv'));
+        $this->assertSame(self::RECHAZO, $this->loginProcesar()->executeConTicketCli('', 'sv'));
+    }
+
+    /** El ticket no sirve para un usuario que ya no existe. */
+    public function test_un_ticket_de_un_usuario_borrado_se_rechaza(): void
+    {
+        $ticket = $this->tickets->emitir(self::USUARIO, self::ESQUEMA);
+
+        $this->assertSame(self::RECHAZO, $this->loginProcesar()->executeConTicketCli($ticket, 'sv'));
     }
 
     public function test_rol_con_pau_se_copia_a_la_sesion(): void

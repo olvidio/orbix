@@ -27,7 +27,7 @@ fecha límite). Opcionalmente regenerar la tabla de avisos desde el menú de adm
 ### Generar tabla (batch)
 
 1. Abrir **generar tabla avisos** (usuarios web / ADMIN LOCAL).
-   (también cron / `Cambio::generarTabla()` vía CLI).
+   (también cron / `AvisosGenerarTablaLanzadorExec` vía CLI).
 2. El sistema cruza cambios nuevos con preferencias y crea avisos pendientes; muestra HTML de
    resultado o incidencias (sin pantalla FE).
 3. Revisar el listado de avisos que aparece.

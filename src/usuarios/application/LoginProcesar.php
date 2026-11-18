@@ -7,6 +7,7 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\usuarios\domain\contracts\LoginCliTicketRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\Verify2fa;
@@ -34,6 +35,10 @@ use src\usuarios\domain\Verify2fa;
  */
 final class LoginProcesar
 {
+    public function __construct(private readonly LoginCliTicketRepositoryInterface $ticketsCli)
+    {
+    }
+
     /**
      * @param array{username?:string, password?:string, esquema?:string, verification_code?:string} $input
      * @param string $esquemaWeb Esquema forzado por la variable de entorno ESQUEMA ('' si no hay).
@@ -60,36 +65,14 @@ final class LoginProcesar
         // Si la instalación fija el esquema (ESQUEMA), el del formulario no cuenta.
         $esquema = $esquemaWeb !== '' ? $esquemaWeb : $esquemaIn;
 
-        // PDO según sufijo v/sv-e o f/sf, o comun (nombre base). La «f» solo implica BD sf si la entrada es sf (UBICACION/PRIVATE); si no, se usa comun (p. ej. Docker sin rol …f).
-        $sfsv = 0;
-        $oDB_Select = $this->pdoForEsquema($esquema, $sfsv, $ubicacion);
-        if ($oDB_Select === null) {
+        $encontrado = $this->buscarUsuario($esquema, $username, $ubicacion);
+        if ($encontrado === null) {
             return ['ok' => false, 'error' => 1];
         }
-
-        // Un esquema sin `aux_usuarios` (p. ej. el de la BD común) es un esquema no válido, no un error del servidor.
-        try {
-            $oDBSt = $oDB_Select->prepare('SELECT * FROM aux_usuarios WHERE usuario = :usuario');
-            $oDBSt->execute(['usuario' => $username]);
-            $password_db = null;
-            $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
-            $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
-        } catch (\PDOException) {
-            return ['ok' => false, 'error' => 1];
-        }
-        // Sin hash guardado (null o vacío) no se puede entrar; el VO `Password` no admite el vacío.
-        if (!is_array($row) || !is_string($password_db) || $password_db === '') {
-            return ['ok' => false, 'error' => 1];
-        }
-        $row['password'] = $password_db;
-        $normalized = [];
-        foreach ($row as $key => $value) {
-            $normalized[(string) $key] = $value;
-        }
-        $MiUsuario = (new Usuario())->setAllAttributes($normalized);
+        ['row' => $row, 'usuario' => $MiUsuario, 'pdo' => $oDB_Select, 'esquema' => $esquema, 'sfsv' => $sfsv] = $encontrado;
 
         $oCrypt = new PasswordHasher();
-        if ($oCrypt->encode($password, $password_db) !== $password_db) {
+        if ($oCrypt->encode($password, $encontrado['password_db']) !== $encontrado['password_db']) {
             return ['ok' => false, 'error' => 1];
         }
 
@@ -122,6 +105,97 @@ final class LoginProcesar
             }
         }
 
+        return $this->completarSesion($row, $MiUsuario, $oDB_Select, $username, $esquema, $sfsv, $expire);
+    }
+
+    /**
+     * Login de un proceso CLI lanzado desde la web (generador de avisos) con un ticket de un solo uso
+     * emitido por la sesión que lo lanzó: mismo usuario y esquema, sin contraseña ni 2FA.
+     *
+     * @return array{ok: bool, error?: int, session_auth?: array<string,mixed>, session_config?: array<string,mixed>, esquema?: string, idioma?: string, sfsv?: int}
+     */
+    public function executeConTicketCli(string $ticket, string $ubicacion): array
+    {
+        $datos = $this->ticketsCli->consumir($ticket);
+        if ($datos === null) {
+            return ['ok' => false, 'error' => 1];
+        }
+        $encontrado = $this->buscarUsuario($datos['esquema'], $datos['username'], $ubicacion);
+        if ($encontrado === null) {
+            return ['ok' => false, 'error' => 1];
+        }
+
+        return $this->completarSesion(
+            $encontrado['row'],
+            $encontrado['usuario'],
+            $encontrado['pdo'],
+            $datos['username'],
+            $encontrado['esquema'],
+            $encontrado['sfsv'],
+            ''
+        );
+    }
+
+    /**
+     * Abre el esquema y lee el usuario. Null si el esquema no existe o no tiene `aux_usuarios`, si el
+     * usuario no existe o si no tiene contraseña guardada.
+     *
+     * @return array{row: array<string, mixed>, usuario: Usuario, password_db: string, pdo: \PDO, esquema: string, sfsv: int}|null
+     */
+    private function buscarUsuario(string $esquema, string $username, string $ubicacion): ?array
+    {
+        // PDO según sufijo v/sv-e o f/sf, o comun (nombre base). La «f» solo implica BD sf si la entrada es sf (UBICACION/PRIVATE); si no, se usa comun (p. ej. Docker sin rol …f).
+        $sfsv = 0;
+        $oDB_Select = $this->pdoForEsquema($esquema, $sfsv, $ubicacion);
+        if ($oDB_Select === null) {
+            return null;
+        }
+
+        // Un esquema sin `aux_usuarios` (p. ej. el de la BD común) es un esquema no válido, no un error del servidor.
+        try {
+            $oDBSt = $oDB_Select->prepare('SELECT * FROM aux_usuarios WHERE usuario = :usuario');
+            $oDBSt->execute(['usuario' => $username]);
+            $password_db = null;
+            $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
+            $row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException) {
+            return null;
+        }
+        // Sin hash guardado (null o vacío) no se puede entrar; el VO `Password` no admite el vacío.
+        if (!is_array($row) || !is_string($password_db) || $password_db === '') {
+            return null;
+        }
+        $row['password'] = $password_db;
+        $normalized = [];
+        foreach ($row as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+
+        return [
+            'row' => $normalized,
+            'usuario' => (new Usuario())->setAllAttributes($normalized),
+            'password_db' => $password_db,
+            'pdo' => $oDB_Select,
+            'esquema' => $esquema,
+            'sfsv' => $sfsv,
+        ];
+    }
+
+    /**
+     * Rol, permiso DMZ, módulos y preferencias del usuario ya autenticado: arrays de sesión.
+     *
+     * @param array<string, mixed> $row
+     * @return array{ok: bool, error?: int, session_auth?: array<string,mixed>, session_config?: array<string,mixed>, esquema?: string, idioma?: string, sfsv?: int}
+     */
+    private function completarSesion(
+        array $row,
+        Usuario $MiUsuario,
+        \PDO $oDB_Select,
+        string $username,
+        string $esquema,
+        int $sfsv,
+        int|string $expire
+    ): array {
         // Role / DMZ
         $id_usuario = isset($row['id_usuario']) && is_numeric($row['id_usuario']) ? (int) $row['id_usuario'] : 0;
         $id_role = isset($row['id_role']) && is_numeric($row['id_role']) ? (int) $row['id_role'] : 0;
@@ -193,7 +267,6 @@ final class LoginProcesar
             'id_role' => $id_role,
             'role_pau' => $role_pau,
             'username' => $username,
-            'password' => $password,
             'esquema' => $esquema,
             'perms_activ' => $perms_activ,
             'mi_oficina' => $mi_oficina,
@@ -209,7 +282,6 @@ final class LoginProcesar
             'id_role' => $id_role,
             'role_pau' => $role_pau,
             'username' => $username,
-            'password' => $password,
             'perms_activ' => $perms_activ,
             'mi_oficina' => $mi_oficina,
             'mi_oficina_menu' => $mi_oficina_menu,

@@ -72,6 +72,11 @@ En algún momento se ejecuta el programa 'aviso_generar_tabla.php'
 - Cambio,cambioDl (insert) (av_cambios, av_cambios_dl)
 - desde cron
 
+Desde la web (y desde `AvisosEncolarMails`) lo lanza `AvisosGenerarTablaLanzadorExec`: el proceso inicia
+sesión como el usuario que lo lanzó con un ticket de un solo uso (`ORBIX_LOGIN_CLI_TICKET`, en el entorno;
+ver `FicheroLoginCliTicketRepository`), la posición de la contraseña lleva «-» y todos los argumentos van
+escapados. La contraseña del usuario ya no se guarda en la sesión.
+
 Para poder llamar por cron, hay que pasar las variables de sessión en la linea de comandos:
 > $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private
 > $db_server >> $out 2>> $err < /dev/null &";

@@ -28,7 +28,7 @@ use src\procesos\domain\PermAccionBits;
  *
  * Llamado desde:
  *   - el driver CLI `src/cambios/infrastructure/cli/avisos_generar_tabla.php`
- *     (crontab y `exec()` disparado por Cambio::generarTabla()).
+ *     (crontab y `exec()` disparado por AvisosGenerarTablaLanzadorExec).
  *   - el menu web `frontend/cambios/controller/avisos_generar.php` (boton
  *     "generar tabla" — via require del driver CLI con argv vacio).
  *

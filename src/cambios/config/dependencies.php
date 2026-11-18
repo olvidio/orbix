@@ -22,6 +22,8 @@ use src\cambios\application\RegistrarCambio;
 use src\cambios\application\UsuarioAvisosPrefFormData;
 use src\cambios\application\UsuarioFormAvisosData;
 use src\cambios\domain\contracts\AvisosCambiosMailCuerpoInterface;
+use src\cambios\domain\contracts\AvisosGenerarTablaLanzadorInterface;
+use src\cambios\infrastructure\cli\AvisosGenerarTablaLanzadorExec;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
@@ -46,6 +48,7 @@ return [
     CambioUsuarioPropiedadPrefRepositoryInterface::class => autowire(PgCambioUsuarioPropiedadPrefRepository::class),
     CambioUsuarioRepositoryInterface::class => autowire(PgCambioUsuarioRepository::class),
     AvisosCambiosMailCuerpoInterface::class => autowire(AvisosCambiosMailHtml::class),
+    AvisosGenerarTablaLanzadorInterface::class => autowire(AvisosGenerarTablaLanzadorExec::class),
 
     // Casos de uso / Application classes
     Avisos::class => autowire(Avisos::class),

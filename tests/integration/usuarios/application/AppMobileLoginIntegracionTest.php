@@ -333,18 +333,16 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertSame('sv', $_SESSION['sfsv']);
     }
 
-    /**
-     * Hallazgo: la contraseña en claro se guarda en `$_SESSION['session_auth']` y en
-     * `$_SESSION['config']` (fichero de sesión del servidor); el hash va dentro de `MiUsuario`.
-     */
-    public function test_la_contrasena_en_claro_queda_en_la_sesion(): void
+    /** La contraseña en claro no va a la sesión (acabaría en el fichero de sesión del servidor). */
+    public function test_la_sesion_no_guarda_la_contrasena(): void
     {
         $this->crearUsuario();
 
-        $this->login();
+        $this->assertTrue($this->login()['ok']);
 
-        $this->assertSame(self::CLAVE, $_SESSION['session_auth']['password']);
-        $this->assertSame(self::CLAVE, $_SESSION['config']['password']);
+        $this->assertArrayNotHasKey('password', $_SESSION['session_auth']);
+        $this->assertArrayNotHasKey('password', $_SESSION['config']);
+        $this->assertStringNotContainsString(self::CLAVE, serialize([$_SESSION['session_auth'], $_SESSION['config']]));
         $this->assertSame($this->hashGuardado(), $_SESSION['session_auth']['MiUsuario']->getPasswordAsString());
     }
 

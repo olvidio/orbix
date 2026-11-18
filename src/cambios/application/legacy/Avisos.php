@@ -39,7 +39,7 @@ use src\procesos\domain\PermAccionBits;
  *     `log/avisos.out`/`log/avisos.err`).
  *   - Escritura directa al fichero PID `log/avisos.<esquema>.pid` para
  *     controlar concurrencia desde distintos procesos lanzados por
- *     `Cambio::generarTabla()` en background.
+ *     `AvisosGenerarTablaLanzadorExec` en background.
  *   - `exit` dentro de `crear_pid` cuando detecta otro proceso en marcha
  *     (es la semantica que corta el flujo cuando ya hay un generador
  *     trabajando). Cambiarlo a excepcion requiere tambien adaptar el

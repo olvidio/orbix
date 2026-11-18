@@ -37,7 +37,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
    `bucle_infinito`.
 5. Borra PID al terminar.
 
-Invocaciones: menú web (esta URL), cron / `Cambio::generarTabla()` vía driver CLI
+Invocaciones: menú web (esta URL), cron / `AvisosGenerarTablaLanzadorExec` vía driver CLI
 (`src/cambios/infrastructure/cli/avisos_generar_tabla.php`). El controller HTTP solo hace
 `require` del driver; en web el driver responde `ContestarJson`.
 

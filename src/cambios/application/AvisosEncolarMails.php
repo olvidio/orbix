@@ -5,11 +5,11 @@ namespace src\cambios\application;
 use DateInvalidTimeZoneException;
 use DateTimeZone;
 use src\cambios\domain\contracts\AvisosCambiosMailCuerpoInterface;
+use src\cambios\domain\contracts\AvisosGenerarTablaLanzadorInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\criteria\CambioUsuarioField;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
-use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
@@ -28,8 +28,8 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
  * `EnviarMailsEnCola` en el servidor exterior (DMZ).
  *
  * El use case:
- *   1. Dispara `Cambio::generarTabla()` para asegurar que no quedan cambios
- *      pendientes de anotar en otras dl, espera 60s (salvo tests).
+ *   1. Lanza el generador de avisos ({@see AvisosGenerarTablaLanzadorInterface}) para asegurar
+ *      que no quedan cambios pendientes de anotar en otras dl, y espera a que acabe.
  *   2. Itera los `CambioUsuario` con `aviso_tipo = TIPO_MAIL` no avisados.
  *   3. Para cada usuario construye una tabla HTML con sus cambios y encola
  *      un unico mail. Elimina los `CambioUsuario` despues de encolar.
@@ -48,6 +48,7 @@ class AvisosEncolarMails
         private CambioAvisoTxtBuilder $cambioAvisoTxtBuilder,
         private ColaMailRepositoryInterface $colaMailRepository,
         private AvisosCambiosMailCuerpoInterface $mailCuerpo,
+        private AvisosGenerarTablaLanzadorInterface $lanzadorGenerarTabla,
     ) {
     }
 
@@ -57,12 +58,10 @@ class AvisosEncolarMails
     public function execute(bool $dispararGenerarTabla = true): array
     {
         // Para asegurar que coge los cambios de otras dl que no tengan instalado
-        // el modulo de cambios, hay que ejecutar el generarTabla() y esperar a
+        // el modulo de cambios, hay que generar la tabla de avisos y esperar a
         // que acabe en background.
         if ($dispararGenerarTabla) {
-            $oCambio = new Cambio();
-            $oCambio->generarTabla();
-            sleep(60);
+            $this->lanzadorGenerarTabla->lanzarYEsperar();
         }
 
         $dele = ConfigGlobal::mi_dele();

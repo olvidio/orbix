@@ -97,20 +97,30 @@ if (!isset($_SESSION['session_auth'])) {
     orbix_marcar_respuesta_ajax_sin_sesion();
     $idioma = '';
 
-    if (isset($_POST['username']) && isset($_POST['password'])) {
+    $loginResult = null;
+    // Proceso CLI lanzado desde la web (generador de avisos): entra con un ticket de un solo uso.
+    $ticketCli = PHP_SAPI === 'cli' ? getenv('ORBIX_LOGIN_CLI_TICKET') : false;
+    if (is_string($ticketCli) && $ticketCli !== '') {
+        putenv('ORBIX_LOGIN_CLI_TICKET');
+        $_SESSION['private'] = $private_str;
+        $loginInput = ['username' => '', 'password' => '', 'esquema' => '', 'verification_code' => ''];
+        $loginResult = LoginBridge::loginConTicketCli($ticketCli, $ubicacion_str);
+    } elseif (isset($_POST['username']) && isset($_POST['password'])) {
         $_SESSION['private'] = $private_str;
 
         $loginInput = UsuariosPostInput::loginInputFromPost();
-        $result = LoginBridge::loginProcesar(
+        $loginResult = LoginBridge::loginProcesar(
             $loginInput,
             $esquema_web_str,
             $ubicacion_str
         );
+    }
 
-        if (!$result['ok'] && isset($result['redirect_ayuda_2fa'])) {
+    if ($loginResult !== null) {
+        if (!$loginResult['ok'] && isset($loginResult['redirect_ayuda_2fa'])) {
             $url_base = AppUrlConfig::getPublicAppBaseUrl() . '/';
             /** @var array{username: string, ubicacion: string, esquema: string} $a_params */
-            $a_params = $result['redirect_ayuda_2fa'];
+            $a_params = $loginResult['redirect_ayuda_2fa'];
             $a_params['url_base'] = $url_base;
             $url_ayuda = $url_base . 'frontend/usuarios/controller/ayuda_2fa_reset.php?'
                 . http_build_query($a_params);
@@ -118,17 +128,17 @@ if (!isset($_SESSION['session_auth'])) {
             die();
         }
 
-        if (!$result['ok']) {
+        if (!$loginResult['ok']) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();
             }
-            $error = \frontend\shared\helpers\PayloadCoercion::int($result['error'] ?? 1);
+            $error = \frontend\shared\helpers\PayloadCoercion::int($loginResult['error'] ?? 1);
             $esquema_form = $loginInput['esquema'] !== '' ? $loginInput['esquema'] : $esquema_web_str;
             render_login_form($loginInput['username'], $ubicacion, $idioma, $esquema_form, $error, $esquema_web_str);
             die();
         }
 
-        $loginSession = UsuariosPayload::loginOkSessionFromResult($result);
+        $loginSession = UsuariosPayload::loginOkSessionFromResult($loginResult);
         if ($loginSession === null) {
             if (orbix_es_peticion_api_src()) {
                 orbix_responder_login_api_sin_sesion();

@@ -255,11 +255,6 @@ class ConfigGlobal extends ServerConf
         return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'username');
     }
 
-    public static function mi_pass(): string
-    {
-        return \src\shared\domain\helpers\FuncTablasSupport::inputString(self::sessionAuth(), 'password');
-    }
-
     public static function mi_id_schema(): int
     {
         return \src\shared\domain\helpers\FuncTablasSupport::inputInt(self::sessionAuth(), 'mi_id_schema');
