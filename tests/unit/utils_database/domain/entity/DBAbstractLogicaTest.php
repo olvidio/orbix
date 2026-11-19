@@ -78,6 +78,22 @@ final class DBAbstractLogicaTest extends TestCase
         return new DBAbstractDoble($pdo, $esquema, $vf, $role, $roleVf);
     }
 
+    /**
+     * Copiar desde un fichero necesita una conexión `Pdo\Pgsql`: sobre un `PDO` genérico el método del driver
+     * (`pgsqlCopyFromFile`) está obsoleto en PHP 8.5, así que no se usa como alternativa.
+     */
+    public function test_copiar_desde_fichero_sin_conexion_pdo_pgsql_falla_con_un_mensaje(): void
+    {
+        foreach ([null, $this->createMock(PDO::class)] as $pdo) {
+            try {
+                $this->db($pdo)->copiar('t', '/no/importa');
+                $this->fail('debía fallar con ' . get_debug_type($pdo));
+            } catch (\RuntimeException $e) {
+                $this->assertStringContainsString('Pdo\\Pgsql', $e->getMessage());
+            }
+        }
+    }
+
     public function test_nombre_de_tabla_con_el_esquema_entre_comillas_y_public_con_su_sufijo(): void
     {
         $this->assertSame('"H-dlb".d_zonas', $this->db(null)->nomTabla('d_zonas'));
@@ -253,6 +269,11 @@ final class DBAbstractDoble extends DBAbstract
     public function existe(string $nomTabla): bool
     {
         return $this->tableExists($nomTabla);
+    }
+
+    public function copiar(string $tabla, string $fichero): void
+    {
+        $this->copiarDesdeFichero($this->oDbl, $tabla, $fichero, "\t", "\\\\N", 'id');
     }
 
     public function darPermisoGlobal(string $db): void

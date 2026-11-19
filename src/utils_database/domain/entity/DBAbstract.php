@@ -55,6 +55,20 @@ abstract class DBAbstract
     }
 
     /**
+     * Carga un fichero de texto (columnas separadas por $delimiter) en la tabla, con COPY FROM STDIN.
+     *
+     * Necesita una conexión Pdo\Pgsql (las de DBConnection lo son): el equivalente sobre un PDO genérico,
+     * pgsqlCopyFromFile(), está obsoleto desde PHP 8.5.
+     */
+    protected function copiarDesdeFichero(?PDO $oDbl, string $nomTabla, string $filename, string $delimiter, string $nullAs, string $fields): void
+    {
+        if (!$oDbl instanceof \Pdo\Pgsql) {
+            throw new \RuntimeException(sprintf('Para copiar desde un fichero hace falta una conexión Pdo\\Pgsql (hay %s)', get_debug_type($oDbl)));
+        }
+        $oDbl->copyFromFile($nomTabla, $filename, $delimiter, $nullAs, $fields);
+    }
+
+    /**
      *
      * Al ser de la DB comun, puede ser que al intentar crear como sf, las
      * tablas ya se hayan creado como sv (o al rev?s).

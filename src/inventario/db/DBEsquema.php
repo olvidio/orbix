@@ -641,7 +641,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -680,7 +680,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -718,7 +718,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -756,7 +756,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -794,7 +794,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -832,7 +832,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -870,7 +870,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -908,7 +908,7 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);

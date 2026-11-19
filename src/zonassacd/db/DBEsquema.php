@@ -363,7 +363,7 @@ class DBEsquema extends DBAbstract
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas."));
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql = [];
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -410,7 +410,7 @@ class DBEsquema extends DBAbstract
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas_grupos."));
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -449,7 +449,7 @@ class DBEsquema extends DBAbstract
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar zonas_sacd."));
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);

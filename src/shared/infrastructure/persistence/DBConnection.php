@@ -48,7 +48,9 @@ class DBConnection
         $dsn = 'pgsql:host=' . $host . ';port=' . $port . ';dbname=\'' . $dbname . '\';user=\'' . $user . '\';password=\'' . $password . '\';' . $str_conexio;
 
         $esquema = $this->esquemaOverride ?? $this->configString($config, 'schema');
-        $pdoDB = new PDO($dsn);
+        // Pdo\Pgsql (subclase de PDO): los métodos del driver (copyFromFile, …) solo existen aquí; sobre un PDO
+        // genérico (pgsqlCopyFromFile, …) están obsoletos desde PHP 8.5.
+        $pdoDB = new \Pdo\Pgsql($dsn);
         $pdoDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         // Identificador entre comillas dobles: las de dentro se duplican (si no, cerraban el identificador).
         $pdoDB->exec('SET search_path TO "' . str_replace('"', '""', $esquema) . '"');

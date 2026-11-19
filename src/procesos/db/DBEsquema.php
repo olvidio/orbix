@@ -613,7 +613,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar tipos de actividad."));
         }
-        $oDbl->pgsqlCopyFromFile($tabla_tmp, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $tabla_tmp, $filename, $delimiter, $null_as, $fields);
 
         $a_sql = [];
         $a_sql[0] = "UPDATE $nom_tabla SET (id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf) =
@@ -654,7 +654,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar tipos de proceso."));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
         $this->executeSql($a_sql);
@@ -693,7 +693,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar tareas."));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -732,7 +732,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar fases."));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -770,7 +770,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar tareas de proceso."));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
@@ -820,7 +820,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos para importar permisos de usuario."));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         // Fix sequences
         $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";

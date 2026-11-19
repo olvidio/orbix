@@ -936,7 +936,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos"));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         $this->delPermisoGlobal('sfsv-e');
     }
@@ -974,7 +974,7 @@ class DBEsquema extends DBAbstract
         if ($oDbl === null) {
             throw new \RuntimeException(_("No hay conexión a la base de datos"));
         }
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $this->copiarDesdeFichero($oDbl, $nom_tabla, $filename, $delimiter, $null_as, $fields);
 
         $this->delPermisoGlobal('sfsv-e');
     }
