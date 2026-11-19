@@ -12,7 +12,7 @@ Todo el conocimiento del proyecto vive bajo `docs/`. No existe la carpeta `docum
 | [`dev/`](dev/) | Refactor, baselines, arquitectura interna | Desarrollo |
 | [`dev/reports/`](dev/reports/) | Informes JSON de herramientas | Desarrollo |
 | [`legacy/obix/`](legacy/obix/) | Bóveda Obsidian legacy (solo consulta) | Referencia histórica |
-| [`guias/`](guias/) | Guías de procesos ([submodule](#submodule-docs-guias) `orbix_docs`) | Usuarios internos |
+| [`guias/`](guias/) | Guías de procesos por tarea ([submodule](#submodule-docs-guias) `orbix_docs`); son lo que responde la ayuda a «¿cómo hago X?» | Usuarios internos |
 | [`scripts/`](scripts/) | Generadores de documentación | Desarrollo |
 
 ## Documentos de entrada
@@ -31,6 +31,8 @@ Tres documentos para presentar el estado actual a técnicos que supervisan o rep
 
 - [Qué es Orbix](QUE_ES_ORBIX.md) — visión global
 - [Guía técnica (onboarding)](dev/guia_tecnica_onboarding.md) — PHP, DDD, tests, PostgreSQL/esquemas/réplicas
+- [Procedimientos](dev/procedimientos.md) — qué pasos seguir para corregir un error, añadir una pantalla, una acción, una entidad, un campo, una migración, textos, un menú o un spec E2E; cierre antes del commit y tabla de síntomas
+- [BD de pruebas](dev/bd_pruebas.md) — clones `pruebas-*`, instancia web de pruebas y envoltorio de los tests
 - [Índice de módulos](00_indice_modulos.md) — enlaces por módulo
 - [Índice de refactorización](dev/REFACTOR_INDICE.md) — estado migración DDD
 - [Copias entre bases](dev/copias_entre_bases.md) — tablas `cp_*` / `cd_*` / `cu_*` en comun: sincronización, reconciliación, cron unificado

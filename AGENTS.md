@@ -3,6 +3,8 @@
 ## Objetivo
 Mantener una estructura consistente basada en DDD para todo nuevo código en `src/`, reduciendo acoplamientos con legacy y evitando mezclar capas.
 
+**Qué pasos seguir para cada tipo de trabajo** (corregir un error, añadir una pantalla, una acción que escribe, una entidad, un campo, una migración, textos, un menú, un spec E2E, el cierre antes del commit, y por dónde empezar ante un síntoma): [`docs/dev/procedimientos.md`](docs/dev/procedimientos.md). Este documento dice cómo tiene que quedar el código; aquel, en qué orden se hace y con qué órdenes se comprueba.
+
 **Mejoras y migraciones aplazadas (no son reglas vigentes):** [`docs/dev/backlog.md`](docs/dev/backlog.md). **Histórico:** la migración `apps/` → `frontend/` + `src/` está terminada; el estado por módulo quedó en [`docs/dev/REFACTOR_INDICE.md`](docs/dev/REFACTOR_INDICE.md) y los `docs/dev/*_migracion_baseline.md`, y las reglas que solo servían durante la migración en [`docs/dev/agents_reglas_retiradas_historico.md`](docs/dev/agents_reglas_retiradas_historico.md).
 
 ## Comunicación: referencias sobrenaturales
@@ -213,6 +215,7 @@ Cobertura (vacías, fuzzy, placeholders frente a `es_ES.pot`): `php tools/audit/
 - [ ] ¿Columnas `date`/`time`/`timestamp` leídas con `ConverterDate::fromPg` y escritas con `toPg` (mismo `$type`; converters en `toArrayForDatabase`; sin fallback Hydratable ni `format` manual)?
 - [ ] ¿Columnas `json`/`jsonb` vía `ConverterJson` (no `json_encode`/`json_decode` sueltos para persistencia)?
 - [ ] Si el cambio añade o modifica textos de interfaz, ¿siguen la sección «Textos de interfaz (gettext)» (`_("...")`, `es_ES.pot`, ca/en/de/it traducidos y `.mo`)?
+- [ ] Si el cambio altera lo que el usuario ve o hace, ¿está corregida la guía de `docs/guias/` y pasa `composer qa:ayuda`?
 
 ## Scripts y herramientas offline
 
@@ -243,6 +246,8 @@ Detalle y ejemplos: [`tools/README.md`](tools/README.md). Regla Cursor: [`.curso
 ## Documentación
 
 **Todo bajo `docs/`.** No usar `documentacion/` (eliminada).
+
+**Documentación de usuario:** la ayuda de la aplicación («Preguntar a la documentación») contesta a «¿cómo hago X?» con los apartados de las guías de `docs/guias/`. Un cambio que altera lo que el usuario ve o hace (un botón, un paso, una confirmación, un mensaje, quién puede hacerlo) lleva en el mismo trabajo la guía corregida y su pregunta en `tools/audit/ayuda_preguntas.tsv`; `composer qa:ayuda` comprueba que la ayuda responde con el apartado esperado. Pasos: [`docs/dev/procedimientos.md`](docs/dev/procedimientos.md), apartado 16.
 
 | Tipo | Carpeta |
 |------|---------|

@@ -9,7 +9,7 @@ Scripts que **no** sirve la aplicación web. Se ejecutan en local o en CI.
 | `i18n/` | Traducción asistida de ficheros `.po` en `languages/` |
 | `phpstan/` | Utilidades sobre la baseline de PHPStan |
 | `qa/` | Cobertura de tests, validación VO/DB, comprobación de enlaces |
-| `phpunit-docker` | PHPUnit dentro del contenedor Docker |
+| `phpunit-docker` | PHPUnit dentro del contenedor Docker, **contra las BD de desarrollo**: no usar; los tests se lanzan con `php tools/qa/phpunit_protegido.php` ([`docs/dev/bd_pruebas.md`](../docs/dev/bd_pruebas.md), [`docs/dev/procedimientos.md`](../docs/dev/procedimientos.md)) |
 
 ## Convención
 
@@ -21,6 +21,17 @@ Scripts que **no** sirve la aplicación web. Se ejecutan en local o en CI.
 Al crear un script nuevo, elegir subcarpeta según propósito (ver tabla arriba). Documentar en el propio fichero: `php tools/<subcarpeta>/nombre.php`. Raíz del repo desde `tools/<sub>/`: `dirname(__DIR__, 2)`.
 
 Guía para agentes: [`AGENTS.md`](../AGENTS.md) (sección «Scripts y herramientas offline») y [`.cursor/rules/tools-vs-scripts.mdc`](../.cursor/rules/tools-vs-scripts.mdc).
+
+## Ayuda de usuario (`tools/audit/ayuda_preguntas.php`)
+
+Comprueba que la ayuda de la aplicación responde a las preguntas de los usuarios con el apartado de la guía que toca (`docs/guias/`). La lista de preguntas está en `tools/audit/ayuda_preguntas.tsv`.
+
+```bash
+composer qa:ayuda                                            # falla si alguna no la responde su guía
+php tools/audit/ayuda_preguntas.php "como apunto a alguien"  # qué responde la ayuda a una pregunta
+```
+
+Cómo se arregla una que falla: [`docs/dev/procedimientos.md`](../docs/dev/procedimientos.md), apartado 16.
 
 ## Traducciones (`tools/i18n/`)
 

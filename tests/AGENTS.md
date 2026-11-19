@@ -209,7 +209,7 @@ En noviembre de 2026 se perdieron así, sin que fallara ningún test, diseños d
 
 ## Ejecutar PHPUnit
 
-- PHPUnit está en **`libs/vendor/bin/phpunit`** y usa `phpunit.xml`; se le pasa la ruta al fichero o directorio de tests. Con PHP y BD en Docker se ejecuta dentro del contenedor PHP, p. ej. `docker exec -w /var/www/orbix <contenedor-php-fpm> php -d xdebug.mode=off libs/vendor/bin/phpunit -c phpunit.xml tests/unit/<modulo>`.
-- **Suite completa:** necesita más memoria que los 128 MB por defecto del contenedor (se corta hacia la mitad con `Allowed memory size … exhausted`). Añadir `-d memory_limit=1G`. Tarda unos 2–3 minutos (≈ 9000 tests).
-- **`phpunit.xml` tiene `stopOnFailure="true"`**: se para en el primer fallo y PHPUnit 11 no tiene opción para desactivarlo. Para ver todos los fallos de una vez, copiar la configuración con `stopOnFailure="false"` a un fichero temporal dentro del repo (el contenedor solo ve el repo), pasarlo con `-c` y **borrarlo después**.
+- **Siempre con el envoltorio:** `php tools/qa/phpunit_protegido.php <ruta>` (desde la raíz del repo, en el host; los argumentos son los de PHPUnit, p. ej. `--filter`). Lo ejecuta dentro del contenedor PHP con `WEBDIR=pruebas`, con memoria para la suite completa y con `build/phpunit-no-stop.xml`, que no se para en el primer fallo (`phpunit.xml` tiene `stopOnFailure="true"`). Sin ruta, la suite completa.
+- **No** lanzar `docker exec … libs/vendor/bin/phpunit` a mano, `composer test` ni `tools/phpunit-docker`: no ponen `WEBDIR=pruebas` y escriben en las BD de desarrollo.
+- Qué pasos seguir al corregir un error o añadir código, y en qué orden lanzar cada comprobación: [`docs/dev/procedimientos.md`](../docs/dev/procedimientos.md).
 - **Playwright (E2E)** en **`e2e/`**: servidor Orbix por URL configurable; sin credenciales solo smoke del formulario de login; con `E2E_USER`/`E2E_PASSWORD` se recorren enlaces de `/index.php` vía GET. Detalle en **`e2e/README.md`**. Comando: `npm run test:e2e` (antes `npm run test:e2e:install-browsers` una vez).

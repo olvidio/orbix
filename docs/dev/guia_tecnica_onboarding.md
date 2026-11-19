@@ -6,6 +6,7 @@ Documento para programadores que entran al proyecto y necesitan el mapa técnico
 |-----------|-----|
 | [`AGENTS.md`](../../AGENTS.md) | Reglas DDD, capas, checklist PR |
 | [`REFACTOR_INDICE.md`](REFACTOR_INDICE.md) | Estado de migración por módulo |
+| [`procedimientos.md`](procedimientos.md) | Qué pasos seguir para cada tipo de trabajo |
 | [`tests/AGENTS.md`](../../tests/AGENTS.md) | Cómo escribir tests |
 | [`db/migrations/README.md`](../../db/migrations/README.md) | Cómo evolucionar el esquema SQL |
 | [`QUE_ES_ORBIX.md`](../QUE_ES_ORBIX.md) | Qué hace el producto (visión funcional) |
@@ -243,16 +244,17 @@ Base de integración: `Tests\myTest` (sesión, PDO, DI). Unitarios puros de appl
 ### 5.2 Cómo ejecutarlos
 
 ```bash
-composer test                          # unit + integration
-composer test:integration
-composer test:docker                   # recomendado si hace falta BD del contenedor
-composer test:docker --filter FooTest
+php tools/qa/phpunit_protegido.php                              # unit + integration
+php tools/qa/phpunit_protegido.php tests/integration/<modulo>
+php tools/qa/phpunit_protegido.php --filter FooTest tests/unit/<modulo>
 
 composer phpstan                       # global + baseline
 composer phpstan:file -- src/<modulo>/ # sin baseline → objetivo 0 errores
 
 composer test:report                   # ¿faltan carpetas/ficheros de test?
 ```
+
+PHPUnit se lanza siempre con ese envoltorio, que lo ejecuta en el contenedor contra las BD de pruebas ([`bd_pruebas.md`](bd_pruebas.md)); `composer test` y `composer test:docker` van contra las BD de desarrollo y no se usan. Los pasos de cada tipo de trabajo están en [`procedimientos.md`](procedimientos.md).
 
 PHPUnit: `phpunit.xml` (suites `unit` e `integration`). Cobertura de líneas: `composer test:coverage` (necesita Xdebug/PCOV).
 
@@ -305,8 +307,9 @@ Scripts CLI nuevos van en `tools/`, no en `scripts/` (reservado a runtime web).
 2. Leer esta guía + la sección de capas de [`AGENTS.md`](../../AGENTS.md).
 3. Seguir un flujo real en el piloto **asistentes** (controller frontend → PostRequest → caso de uso → `PgAsistenteRepository`).
 4. Abrir [`ConnectionBootstrap.php`](../../src/shared/infrastructure/ConnectionBootstrap.php) y un `Pg*Repository` para ver las claves `oDB*`.
-5. Correr `composer test:docker` sobre un módulo pequeño y `composer phpstan:file -- src/asistentes/`.
+5. Correr `php tools/qa/phpunit_protegido.php tests/unit/<modulo>` sobre un módulo pequeño y `composer phpstan:file -- src/asistentes/`.
 6. Antes de un cambio grande: leer `docs/dev/<modulo>_migracion_baseline.md`.
+7. Antes del primer cambio: leer [`procedimientos.md`](procedimientos.md) y seguir el que corresponda.
 
 ---
 
