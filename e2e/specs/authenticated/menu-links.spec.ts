@@ -85,6 +85,8 @@ function shouldSkipBareGetOrbix(heuristicHref: string): boolean {
   if (/\/gestion_/i.test(p)) return true;
   if (/\/incorporar_/i.test(p)) return true;
   if (/\/fases_/i.test(p)) return true;
+  // Sincronización con la BDU: desde desarrollo no hay acceso a la BD de Listas y la pantalla se cuelga siempre.
+  if (/\/dbextern\/controller\/sincro_index\.php$/i.test(p)) return true;
   return false;
 }
 
