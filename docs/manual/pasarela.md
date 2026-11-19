@@ -22,7 +22,7 @@ Configurar cuándo se publica/activa cada tipo de actividad en la pasarela exter
 ### Donde Entrar
 
 - Fecha de activación (frontend/pasarela/controller/activacion_lista.php)
-- **Legacy:** dre > Pasarela > parámetros > fecha de activación
+- **Legacy:** pffe > Pasarela > parámetros > fecha de activación
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > fecha de activación
 
 ### Tareas Habituales
@@ -127,7 +127,7 @@ Importe de contribución para quien no pernocta.
 ### Donde Entrar
 
 - Contribución no duerme (frontend/pasarela/controller/contribucion_no_duerme_lista.php)
-- **Legacy:** dre > Pasarela > parámetros > Contribución no duerme
+- **Legacy:** pffe > Pasarela > parámetros > Contribución no duerme
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > Contribución no duerme
 
 ### Tareas Habituales
@@ -229,7 +229,7 @@ Importe de contribución en reserva de plaza.
 ### Donde Entrar
 
 - Contribución reserva (frontend/pasarela/controller/contribucion_reserva_lista.php)
-- **Legacy:** dre > Pasarela > parámetros > Contribución reserva
+- **Legacy:** pffe > Pasarela > parámetros > Contribución reserva
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > Contribución reserva
 
 ### Tareas Habituales
@@ -331,8 +331,8 @@ Generar listado tabular con datos de actividades filtradas para sistemas externo
 ### Donde Entrar
 
 - Exportar actividades (frontend/pasarela/controller/exportar_que.php)
-- **Legacy:** dre > Pasarela > exportar actividades
-- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
+- **Legacy:** pffe > Pasarela > exportar actividades
+- **Pills2:** pffe > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
@@ -365,8 +365,8 @@ Refrescar widget de tipo de actividad en la pantalla exportar.
 ### Donde Entrar
 
 - Exportar actividades (frontend/pasarela/controller/exportar_que.php)
-- **Legacy:** dre > Pasarela > exportar actividades
-- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
+- **Legacy:** pffe > Pasarela > exportar actividades
+- **Pills2:** pffe > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
 
 ### Tareas Habituales
 
@@ -393,7 +393,7 @@ Asignar nombre exportado distinto al tipo genérico.
 ### Donde Entrar
 
 - Nombres de actividades particulares (frontend/pasarela/controller/nombre_lista.php)
-- **Legacy:** dre > Pasarela > parámetros > nombres de actividades particulares
+- **Legacy:** pffe > Pasarela > parámetros > nombres de actividades particulares
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > nombres de actividades particulares
 
 ### Tareas Habituales
@@ -465,7 +465,7 @@ Guardar o borrar un nombre concreto.
 ### Donde Entrar
 
 - Parámetros pasarela (frontend/pasarela/controller/parametros_menu.php)
-- **Legacy:** dre > Pasarela > parámetros
+- **Legacy:** pffe > Pasarela > parámetros
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros
 
 ### Tareas Habituales

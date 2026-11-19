@@ -22,9 +22,9 @@ final class ActividadesPermSupport
         return SessionPermActividades::isPresent();
     }
 
-    public static function permDes(): bool
+    public static function permPffe(): bool
     {
-        return SessionPerm::havePermOficina(PermisoOficina::VCSD) || SessionPerm::havePermOficina(PermisoOficina::DES);
+        return SessionPerm::havePermOficina(PermisoOficina::VCSD) || SessionPerm::havePermOficina(PermisoOficina::PFFE);
     }
 
     public static function havePermOficina(string $oficina): bool
@@ -43,7 +43,7 @@ final class ActividadesPermSupport
             return true;
         }
         if (OrbixRuntime::miSfsv() === 1
-            && (self::havePermOficina(PermisoOficina::DES) || self::havePermOficina(PermisoOficina::VCSD))) {
+            && (self::havePermOficina(PermisoOficina::PFFE) || self::havePermOficina(PermisoOficina::VCSD))) {
             return true;
         }
 

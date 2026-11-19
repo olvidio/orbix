@@ -21,7 +21,7 @@ Cargar la ficha de atención sacerdotal del centro elegido.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
+Menú **pffe > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 

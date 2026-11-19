@@ -112,7 +112,7 @@ final class PrevisionAsistentesDataTest extends myTest
         yield 'sg' => ['sg', 1, '^1[45]'];
         yield 'sr' => ['sr', 1, '^17'];
         yield 'sm de sf' => ['sm', 2, '^21'];
-        yield 'des (tipos fijos de sv)' => ['des', 2, '^(16|1141|1125|1341)'];
+        yield 'pffe (tipos fijos de sv)' => ['pffe', 2, '^(16|1141|1125|1341)'];
     }
 
     public function test_sin_oficina_en_la_entrada_se_usa_la_de_la_sesion(): void

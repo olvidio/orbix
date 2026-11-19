@@ -7,7 +7,7 @@ use src\shared\security\HashB;
 
 /**
  * Emite la cápsula HashB de `sacd_asignar_auto` atada a la fecha de inicio
- * de curso des (2 de septiembre del año final de curso). El frontend no
+ * de curso pffe (2 de septiembre del año final de curso). El frontend no
  * elige esa fecha: viaja solo dentro del ctx.
  */
 final class SacdAsignarAutoFormData
@@ -17,7 +17,7 @@ final class SacdAsignarAutoFormData
      */
     public function execute(): array
     {
-        $f_ini_iso = $this->inicioCursoDesIso();
+        $f_ini_iso = $this->inicioCursoPffeIso();
 
         return [
             'f_ini_iso' => $f_ini_iso,
@@ -27,7 +27,7 @@ final class SacdAsignarAutoFormData
         ];
     }
 
-    private function inicioCursoDesIso(): string
+    private function inicioCursoPffeIso(): string
     {
         $oConfig = $_SESSION['oConfig'] ?? null;
         $any = 0;

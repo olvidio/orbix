@@ -180,11 +180,11 @@ final class ListaActividadesSgListadoTest extends myTest
         $this->assertSame('', $filas[0][8], 'sin la app no hay sacd');
     }
 
-    public function test_actividad_de_sf_muestra_solo_el_tipo_salvo_a_des(): void
+    public function test_actividad_de_sf_muestra_solo_el_tipo_salvo_a_pffe(): void
     {
         $this->devolver([$this->actividad(10, 241000)]);
         $this->assertSame('10#sf crt', self::filas($this->uc()->ejecutar([], 0))[0]['sel']);
-        $this->oficinas(['des']);
+        $this->oficinas(['pffe']);
         $this->assertSame('10#crt 10', self::filas($this->uc()->ejecutar([], 0))[0]['sel']);
     }
 

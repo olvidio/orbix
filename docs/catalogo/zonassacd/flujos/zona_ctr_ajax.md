@@ -19,7 +19,7 @@ Cargar la lista de centros de la zona elegida y guardar la nueva asignación.
 
 ## Punto De Entrada
 
-Menú **dre > zonas > zonas-ctr** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-ctr).
+Menú **pffe > zonas > zonas-ctr** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 

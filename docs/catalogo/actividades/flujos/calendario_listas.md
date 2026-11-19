@@ -22,7 +22,7 @@ Sacar listados del calendario de actividades por oficina o por casas, en un peri
 
 ## Punto De Entrada
 
-Menú **adl / dre / Calendario > Nuevo calendario > listados** (Pills2: ACTIVIDADES > Herramientas de calendario).
+Menú **adl / pffe / Calendario > Nuevo calendario > listados** (Pills2: ACTIVIDADES > Herramientas de calendario).
 
 ## Escenarios Inferidos
 
@@ -46,6 +46,6 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** adl/dre/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
+- **Legacy:** adl/pffe/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Activ. nuevo calendario por oficina /
   casas comunes / oficina propia / casas sv (según `que`).

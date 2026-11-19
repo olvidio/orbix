@@ -41,5 +41,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre/Calendario > actividades > listas sg (vía `lista_activ_que`).
+- **Legacy:** pffe/Calendario > actividades > listas sg (vía `lista_activ_que`).
 - **Pills2:** ACTIVIDADES > Listados > Listas asistentes sg.

@@ -119,7 +119,7 @@ class ListCtrData
                     $filtros[] = ['tipo_casa', Operator::Matches, 'cdc|cdr'];
                     switch ($miSfsv) {
                         case 1:
-                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))) {
                             } else {
                                 $filtros[] = ['sv', Operator::Eq, true];
                             }
@@ -134,7 +134,7 @@ class ListCtrData
                     $filtros[] = ['tipo_casa', Operator::NotMatches, 'cdc|cdr|cgi'];
                     switch ($miSfsv) {
                         case 1:
-                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
+                            if (($oPerm = $_SESSION['oPerm'] ?? null) instanceof XPermisos && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))) {
                             } else {
                                 $filtros[] = ['sv', Operator::Eq, true];
                             }

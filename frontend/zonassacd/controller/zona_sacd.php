@@ -52,7 +52,7 @@ $a_campos = [
     'h_url_put' => $h_url_put,
     'url_zona_sacd_get' => $url_zona_sacd_get,
     'url_zona_sacd_put' => $url_zona_sacd_put,
-    'perm_des' => $page['perm_des'],
+    'perm_pffe' => $page['perm_pffe'],
     'oDesplZonas' => $oDesplZonas,
 ];
 

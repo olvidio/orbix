@@ -91,7 +91,7 @@ class SincroDB
             'n' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SM)) ? 1 : 0,
             'a' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::AGD)) ? 2 : 0,
             's' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::SG)) ? 3 : 0,
-            'sssc' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) ? 4 : 0,
+            'sssc' => ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)) ? 4 : 0,
             default => 0,
         };
         if ($id_tipo === 0 && !in_array($tipo_persona, ['n', 'a', 's', 'sssc'], true)) {

@@ -61,7 +61,7 @@ final class ListaActividadesSacdDataTest extends TestCase
 
         $this->assertSame('sv', $out['tipo']);
         $this->assertSame([], $out['filas']);
-        $this->assertFalse($out['perm_des']);
+        $this->assertFalse($out['perm_pffe']);
         $this->assertFalse($out['mostrar_nota_falta_sacd']);
         $this->assertSame('', $out['texto_fase_ok_sacd']);
         $this->assertIsString($out['titulo']);

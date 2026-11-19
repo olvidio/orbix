@@ -301,7 +301,7 @@ final class UbisTablaData
     ): array {
         $oPerm = $_SESSION['oPerm'] ?? null;
         $permisoSf = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES));
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE));
 
         switch ($Qtipo) {
             case 'ctr':

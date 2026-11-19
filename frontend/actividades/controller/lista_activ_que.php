@@ -31,7 +31,7 @@ $oPosicion->nav()->enter(
     ListNavSupport::buildListaActivQueReturnParametros(['que' => $Qque]),
 );
 
-$permiso_des = ActividadesPermSupport::permDes();
+$permiso_pffe = ActividadesPermSupport::permPffe();
 
 $url_lista = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
 
@@ -65,7 +65,7 @@ switch ($Qque) {
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'permiso_des' => $permiso_des,
+    'permiso_pffe' => $permiso_pffe,
     'titulo' => $titulo,
     'sr_sg' => $sr_sg,
     'chk_sr_sf' => $chk_sr_sf,

@@ -189,7 +189,7 @@ final class SacdFichaDataTest extends TestCase
      */
     public static function oficinasProvider(): iterable
     {
-        yield 'des' => [MenuDlPermissionBits::DES, 1];
+        yield 'pffe' => [MenuDlPermissionBits::PFFE, 1];
         yield 'vcsd' => [MenuDlPermissionBits::VCSD, 1];
         yield 'agd' => [MenuDlPermissionBits::AGD, 0];
         yield 'sin permisos en sesión' => [null, 0];
@@ -302,7 +302,7 @@ final class SacdFichaDataTest extends TestCase
 
     public function test_con_permiso_se_ve_la_descripcion_completa(): void
     {
-        $this->conPermiso(MenuDlPermissionBits::DES);
+        $this->conPermiso(MenuDlPermissionBits::PFFE);
         $this->unEncargo($this->encargo(7, 2100, 2, 'Misa (Centro Norte) diaria'));
 
         $this->assertSame('Misa (Centro Norte) diaria', $this->useCase->execute(10011)['encargos'][0]['desc_enc']);

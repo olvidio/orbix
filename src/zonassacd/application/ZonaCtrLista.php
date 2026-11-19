@@ -56,15 +56,15 @@ final class ZonaCtrLista
         }
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $tienePermDes = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
+        $tienePermPffe = $oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
 
         $a_valores = [];
         $i = 0;
         foreach ($cCentros as $oCentro) {
             $i++;
             $id_ubi = (string) $oCentro->getId_ubi();
-            if ($id_ubi[0] === '2' && !$tienePermDes) {
+            if ($id_ubi[0] === '2' && !$tienePermPffe) {
                 continue;
             }
             if ($id_ubi[0] === '2') {
@@ -82,7 +82,7 @@ final class ZonaCtrLista
             'id_tabla' => 'zona_ctr_ajax',
             'a_cabeceras' => [_("centro"), _("zona")],
             'a_botones' => [],
-            'con_sel' => $tienePermDes,
+            'con_sel' => $tienePermPffe,
             'a_valores' => $a_valores,
             'error' => '',
         ];

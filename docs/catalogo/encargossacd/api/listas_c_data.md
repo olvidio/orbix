@@ -25,7 +25,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Listado «c» (ref. cr 1/14, 10, d): encargos por población/grupo. Oculta columnas sensibles si no `have_perm_oficina('vcsd'|'des')`.
+Listado «c» (ref. cr 1/14, 10, d): encargos por población/grupo. Oculta columnas sensibles si no `have_perm_oficina('vcsd'|'pffe')`.
 
 ## Endpoint
 
@@ -46,7 +46,7 @@ Sin parametros POST detectados (puede ser un listado sin filtros o un endpoint q
 ## Permisos
 
 - Permiso oficina `vcsd`
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 
 ## Casos De Uso
 

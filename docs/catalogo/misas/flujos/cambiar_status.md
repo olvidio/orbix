@@ -19,7 +19,7 @@ Cambiar el estado del plan de misas de una zona y periodo: propuesta, visible pa
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Cambiar estado** (Pills2: ATENCIÓN SACD > Gestión de misas > Cambiar estado).
+Menú **pffe > Misas > Cambiar estado** (Pills2: ATENCIÓN SACD > Gestión de misas > Cambiar estado).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -66,5 +66,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Cambiar estado
-- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
+- **Legacy:** pffe > Misas > Cambiar estado
+- **Pills2:** pffe > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado

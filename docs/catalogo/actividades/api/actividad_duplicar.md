@@ -28,7 +28,7 @@ marcadas). La copia se crea en la tabla de la propia dl con:
 
 Restriccion de origen: la actividad debe ser de la propia delegacion
 (`dl_org = mi_delef`), **o bien** de `mi_dele + 'f'` si el usuario tiene permiso
-de oficina `des` (caso sf desde sv para usuarios des).
+de oficina `pffe` (caso sf desde sv para usuarios pffe).
 
 ## Endpoint
 
@@ -55,7 +55,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 - No exige permiso para duplicar actividades de la propia dl (control en la UI:
   la accion esta en los listados de seleccion).
-- El permiso oficina `des` (`$_SESSION['oPerm']`) solo amplia el origen permitido
+- El permiso oficina `pffe` (`$_SESSION['oPerm']`) solo amplia el origen permitido
   a `mi_dele + 'f'`.
 
 ## Errores conocidos
@@ -77,5 +77,5 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Revision Manual
 
 - Revisado jun 2026 (lectura de controller + `ActividadDuplicar`): solo duplica la primera
-  seleccion; restriccion de dl y matiz del permiso `des` verificados.
+  seleccion; restriccion de dl y matiz del permiso `pffe` verificados.
 - Pendiente: ejemplos reales de request/response.

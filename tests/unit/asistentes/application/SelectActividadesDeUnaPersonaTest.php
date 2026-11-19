@@ -180,7 +180,7 @@ final class SelectActividadesDeUnaPersonaTest extends myTest
         $this->personaEncontrada();
         $this->asistencias->method('getActividadesDeAsistente')->willReturn([$this->asistencia(3001, true, false, true), $this->asistencia(3002, false, true, false), $this->asistencia(3003)]);
         $this->actividades->method('findById')->willReturnCallback(fn (int $id): ?ActividadAll => $id === 3003 ? null : $this->actividad("act $id"));
-        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::DES]);
+        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::PFFE]);
 
         $valores = $this->widget()->getSegmentData()['tabla']['valores'];
 
@@ -194,7 +194,7 @@ final class SelectActividadesDeUnaPersonaTest extends myTest
         $this->personaEncontrada();
         $this->asistencias->method('getActividadesDeAsistente')->willReturn([$this->asistencia(3001)]);
         $this->actividades->method('findById')->willReturn($this->actividad('act', 112001));
-        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::DES]);
+        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::PFFE]);
         $ref = (new PermDossier())->perm_activ_pers('n');
         $conPermiso = !empty($ref['112']['perm'] ?? null);
 
@@ -203,7 +203,7 @@ final class SelectActividadesDeUnaPersonaTest extends myTest
         $this->assertSame($conPermiso ? '3001' : '', $fila['sel']);
     }
 
-    public function test_el_nombre_de_actividades_de_otro_sfsv_se_oculta_salvo_con_permiso_des(): void
+    public function test_el_nombre_de_actividades_de_otro_sfsv_se_oculta_salvo_con_permiso_pffe(): void
     {
         $this->personaEncontrada();
         $this->asistencias->method('getActividadesDeAsistente')->willReturn([$this->asistencia(3001)]);
@@ -211,7 +211,7 @@ final class SelectActividadesDeUnaPersonaTest extends myTest
         $this->actividades->method('findById')->willReturn($this->actividad('Nombre privado', 212001));
 
         $oculto = $this->widget()->getSegmentData()['tabla']['valores'][1][2];
-        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::DES]);
+        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::PFFE]);
         $visible = $this->widget()->getSegmentData()['tabla']['valores'][1][2];
 
         $this->assertNotSame('Nombre privado', $oculto);
@@ -242,7 +242,7 @@ final class SelectActividadesDeUnaPersonaTest extends myTest
     {
         $this->personaEncontrada();
         $this->asistencias->method('getActividadesDeAsistente')->willReturn([]);
-        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::DES]);
+        $this->permiso([\src\permisos\domain\MenuDlPermissionBits::PFFE]);
         $ref = (new PermDossier())->perm_activ_pers('n');
         $esperados = count(array_filter($ref, static fn (array $v): bool => !empty($v['perm'])));
 

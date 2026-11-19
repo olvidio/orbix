@@ -19,7 +19,7 @@ Mostrar la cuadrícula del plan de misas de una zona (encargos en filas, días e
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Modificar plan / Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plan, Ver plan zona).
+Menú **pffe > Misas > Modificar plan / Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plan, Ver plan zona).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -67,5 +67,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plan
+- **Legacy:** pffe > Misas > Modificar plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan

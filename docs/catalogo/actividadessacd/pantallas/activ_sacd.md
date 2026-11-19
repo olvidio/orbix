@@ -99,7 +99,7 @@ No se han detectado controladores frontend relacionados.
 
 ## Ruta de menú
 
-- **Legacy:** dre > propuestas > asignar sacd
+- **Legacy:** pffe > propuestas > asignar sacd
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades
 
 Variantes por tipo de actividad (parámetro `tipo`): p. ej. `activ sv sg` (`tipo=sg&periodo=desdeHoy`),

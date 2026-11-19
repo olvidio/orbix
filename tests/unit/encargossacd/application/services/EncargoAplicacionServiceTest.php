@@ -156,9 +156,9 @@ final class EncargoAplicacionServiceTest extends TestCase
     // getArraySeccion
     // ============================================================
 
-    public function test_getArraySeccion_con_permiso_des_incluye_sf(): void
+    public function test_getArraySeccion_con_permiso_pffe_incluye_sf(): void
     {
-        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $_SESSION['oPerm'] = $this->oPermStub(['pffe' => true]);
 
         $arr = $this->service->getArraySeccion();
 

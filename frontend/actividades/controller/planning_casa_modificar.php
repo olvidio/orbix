@@ -41,7 +41,7 @@ if ($Qid_activ === 0) {
     $Qid_activ = \frontend\shared\helpers\PayloadCoercion::int(filter_input(INPUT_POST, 'id_activ'));
 }
 
-$permiso_des = ActividadesPermSupport::permDes();
+$permiso_pffe = ActividadesPermSupport::permPffe();
 
 $data = PayloadCoercion::stringKeyedArray(PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => $Qid_activ,
@@ -151,7 +151,7 @@ $a_campos = [
     'obj' => $obj,
     'oPermActiv' => $oPermActiv,
     'mod' => $mod,
-    'permiso_des' => $permiso_des,
+    'permiso_pffe' => $permiso_pffe,
     'accion' => $accion,
     'titulo' => $titulo,
     'sasistentes' => $sasistentes,

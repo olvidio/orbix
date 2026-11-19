@@ -16,7 +16,7 @@ estado_revision: "revisado"
 
 # Zona Sacd
 
-Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_des para mutaciones.
+Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_pffe para mutaciones.
 
 ## Tipo
 
@@ -90,5 +90,5 @@ el modal exige exactamente un sacd marcado (`fnjs_solo_uno`).
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > zonas-sacd
+- **Legacy:** pffe > zonas > zonas-sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd

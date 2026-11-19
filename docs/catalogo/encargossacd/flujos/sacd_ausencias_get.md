@@ -21,7 +21,7 @@ Ver y anotar las ausencias o actividades personales de un sacerdote.
 
 ## Punto De Entrada
 
-Menú **dre > ausencias > sacd**.
+Menú **pffe > ausencias > sacd**.
 
 ## Fragmentos O Pantallas Auxiliares
 

@@ -47,5 +47,5 @@ Endpoints asociados:
 |--------|--------|--------|
 | `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > persona dl` | `ACTIVIDADES > … > Plannig por personas` |
 | `PersonaEx&na=a|n` | `scdl > planning > agd/num de paso` | igual |
-| `PersonaSacd` | `dre > planning > sacd r/dl` | — |
+| `PersonaSacd` | `pffe > planning > sacd r/dl` | — |
 | `PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > … > Plannig por personas sacd` |

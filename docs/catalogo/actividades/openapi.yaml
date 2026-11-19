@@ -97,7 +97,7 @@ paths:
       operationId: "post_actividades_actividad_duplicar"
       summary: "Actividad Duplicar"
       description: |
-        Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso `des`).
+        Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso `pffe`).
         
         Operacion: `mutacion`.
         

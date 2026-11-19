@@ -19,7 +19,7 @@ Sacar un listado de centros o casas de una delegación o del exterior, con telé
 
 ## Punto De Entrada
 
-Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
+Menú **scdl > direcciones > listados** (también Calendario o pffe > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 

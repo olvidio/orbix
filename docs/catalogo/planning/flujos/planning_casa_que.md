@@ -47,7 +47,7 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy (actual):** `dre/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Legacy (actual):** `pffe/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
 - **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
-- **Legacy (propuesta):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Legacy (propuesta):** `adl|Calendario|pffe > Nuevo Calendario > nuevo planing`
 - **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`

@@ -237,7 +237,7 @@ final class CalendarioListasDatosModosTest extends myTest
 
     public function test_oficina_sm_solo_ve_los_grupos_de_sus_permisos(): void
     {
-        // Permiso de sm (n) y no de des: el grupo sssc se quita (antes se buscaba «sss+» y se quedaba).
+        // Permiso de sm (n) y no de pffe: el grupo sssc se quita (antes se buscaba «sss+» y se quedaba).
         // nax no tiene oficina asociada: se queda siempre.
         $this->oficina('sm', 1 << 7);
         $this->actividadesPor(fn (): array => []);
@@ -254,9 +254,9 @@ final class CalendarioListasDatosModosTest extends myTest
         $this->assertStringContainsString('s y sg', $html);
     }
 
-    public function test_oficina_des_un_solo_grupo_con_sssc_y_crt_de_s_y_sg(): void
+    public function test_oficina_pffe_un_solo_grupo_con_sssc_y_crt_de_s_y_sg(): void
     {
-        $this->oficina('des', 1 << 3);
+        $this->oficina('pffe', 1 << 3);
         $this->actividadesPor(fn (array $f): array => end($f) === 'id_tipo_activ matches ^16' ? [$this->actividad(10, 161000)] : [$this->actividad(11, 141000)]);
         $html = CalendarioListasRender::html($this->uc()->ejecutar(['que' => 'o_actual']));
         $this->assertSame(['id_tipo_activ matches ^16', 'id_tipo_activ matches ^1(124)|^1(.41)'], array_map(fn ($f) => end($f), $this->consultas));

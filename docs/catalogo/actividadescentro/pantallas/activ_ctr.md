@@ -103,9 +103,9 @@ Los enlaces de acción solo aparecen según los flags de permiso que devuelve el
 
 La misma pantalla se abre desde varias entradas de menú según el `tipo` (colectivo):
 
-- **Legacy:** dre > actividades > asignar centros — con variantes activ sg (`tipo=sg`), activ sr
+- **Legacy:** pffe > actividades > asignar centros — con variantes activ sg (`tipo=sg`), activ sr
   (`tipo=sr`), sv n y agd (`tipo=nagd`), sf s y sg (`tipo=sfsg`), sf sr (`tipo=sfsr`), sf n, nax y agd
   (`tipo=sfnagd`), sss+ (`tipo=sssc`); también Calendario > actividades > asignar centros y
   vsg/vsr > listas actividades > actividades-centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
   asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

@@ -260,7 +260,7 @@ final class SelectCargosDeActividadTest extends myTest
      * @dataProvider elimAsisProvider
      * @param list<string> $oficinas
      */
-    public function test_solo_des_o_vcsd_en_actividades_de_s_o_sg_borran_tambien_la_asistencia(array $oficinas, int $tipo, bool $borraAsistencia): void
+    public function test_solo_pffe_o_vcsd_en_actividades_de_s_o_sg_borran_tambien_la_asistencia(array $oficinas, int $tipo, bool $borraAsistencia): void
     {
         $this->permiso($oficinas);
         $this->hayActividad($tipo);
@@ -287,9 +287,9 @@ final class SelectCargosDeActividadTest extends myTest
     public static function elimAsisProvider(): array
     {
         return [
-            'des en actividad de s' => [['des'], self::TIPO_S, true],
+            'pffe en actividad de s' => [['pffe'], self::TIPO_S, true],
             'vcsd en actividad de sg' => [['vcsd'], 151001, true],
-            'des en actividad de n' => [['des'], self::TIPO_N, false],
+            'pffe en actividad de n' => [['pffe'], self::TIPO_N, false],
             'sm en actividad de s' => [['sm'], self::TIPO_S, false],
         ];
     }
@@ -313,9 +313,9 @@ final class SelectCargosDeActividadTest extends myTest
         $this->assertStringNotContainsString('añadir agd', $html);
     }
 
-    public function test_des_en_una_actividad_de_s_marca_la_fila_para_borrar_tambien_la_asistencia(): void
+    public function test_pffe_en_una_actividad_de_s_marca_la_fila_para_borrar_tambien_la_asistencia(): void
     {
-        $this->permiso(['des']);
+        $this->permiso(['pffe']);
         $this->hayActividad(self::TIPO_S);
         $this->hayUnCargo('n');
 

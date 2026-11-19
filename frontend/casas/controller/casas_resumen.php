@@ -46,7 +46,7 @@ if ($miRolePau === 'cdc') {
     $id_pau = CasasPayload::miUsuarioCsvIdPau();
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
-} elseif (ActividadesPermSupport::havePermOficina(PermisoOficina::DES) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
+} elseif (ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');

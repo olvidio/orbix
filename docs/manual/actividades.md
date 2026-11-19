@@ -22,7 +22,7 @@ Dar de alta una actividad nueva o borrar una existente.
 ### Donde Entrar
 
 - Ficha de actividad (ver/editar/nueva/cambiar tipo) (frontend/actividades/controller/actividad_ver.php)
-- **Legacy:** dre/Calendario > actividades > nueva activ (crear).
+- **Legacy:** pffe/Calendario > actividades > nueva activ (crear).
 - **Pills2:** ACTIVIDADES > Buscar actividad > Nueva actividad; ATENCIÓN SACD >
 - Actividades > Nueva actividad. Borrado desde listados de búsqueda (sin menú propio).
 
@@ -132,7 +132,7 @@ Crear una copia de una actividad con las mismas fechas, plazas y demás datos.
 ### Permisos
 
 - No exige permiso para duplicar actividades de la propia dl (control en la UI:
-- El permiso oficina `des` (`$_SESSION['oPerm']`) solo amplia el origen permitido
+- El permiso oficina `pffe` (`$_SESSION['oPerm']`) solo amplia el origen permitido
 
 ### Referencias Internas
 
@@ -248,7 +248,7 @@ Buscar actividades de otra delegación o región, elegir una o varias e importar
 
 - Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
 - Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
-- **Legacy:** dre/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
+- **Legacy:** pffe/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
 - **Pills2:** ACTIVIDADES > Buscar actividad > Importar crt/cv/ca n/agd de otras r/dl; ESTUDIOS >
 - Semestres de invierno > Importar.
 
@@ -311,7 +311,7 @@ Al elegir el tipo de actividad, rellenar solo el nivel STGR habitual.
 ### Donde Entrar
 
 - Generar actividades del nuevo curso (frontend/actividades/controller/actividad_nuevo_curso.php)
-- **Legacy:** dre > Nuevo calendario > nuevo curso.
+- **Legacy:** pffe > Nuevo calendario > nuevo curso.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Generar nuevo curso.
 
 ### Tareas Habituales
@@ -378,8 +378,8 @@ Buscar actividades que aún no están publicadas y publicarlas de golpe.
 
 - Buscar actividad (filtros) (frontend/actividades/controller/actividad_que.php)
 - Resultados buscar actividad (frontend/actividades/controller/actividad_select.php)
-- **Legacy:** dre/Calendario > actividades > publicar activ.
-- **Pills2:** dre/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
+- **Legacy:** pffe/Calendario > actividades > publicar activ.
+- **Pills2:** pffe/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
 - publicar activ.
 
 ### Tareas Habituales
@@ -645,7 +645,7 @@ Sacar listados del calendario de actividades por oficina o por casas, en un peri
 ### Donde Entrar
 
 - Listados calendario (casas/oficinas) (frontend/actividades/controller/calendario_listas.php)
-- **Legacy:** adl/dre/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
+- **Legacy:** adl/pffe/Calendario > Nuevo calendario > listados (por oficinas, casas comunes, etc.).
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Activ. nuevo calendario por oficina /
 - casas comunes / oficina propia / casas sv (según `que`).
 
@@ -679,7 +679,7 @@ Ver la tabla de actividades después de enviar los filtros del formulario de bú
 ### Donde Entrar
 
 - Filtros listados SR/SG (frontend/actividades/controller/lista_activ_que.php)
-- **Legacy:** dre/Calendario > actividades > listas sg (vía `lista_activ_que`).
+- **Legacy:** pffe/Calendario > actividades > listas sg (vía `lista_activ_que`).
 - **Pills2:** ACTIVIDADES > Listados > Listas asistentes sg.
 
 ### Tareas Habituales
@@ -696,7 +696,7 @@ Ver la tabla de actividades después de enviar los filtros del formulario de bú
 
 ### Permisos
 
-- El controller lee `$_SESSION['oPerm']` para calcular flags de oficina (`vcsd`, `des`, `sg`, `admin`)
+- El controller lee `$_SESSION['oPerm']` para calcular flags de oficina (`vcsd`, `pffe`, `sg`, `admin`)
 
 ### Referencias Internas
 

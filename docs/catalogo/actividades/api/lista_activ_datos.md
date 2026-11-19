@@ -33,9 +33,9 @@ Construye el listado de actividades filtrando por status, tipo de actividad (com
 `ssfsv`/`sasistentes`/`sactividad` o `id_tipo_activ`), ubicación, periodo/fechas y `dl_org`. Las columnas
 visibles dependen del modo `que` y de los permisos de oficina del usuario:
 
-- `ver_hora` (hora ini/fin) se activa en modos completos/sg/sr o con permiso `vcsd`/`des`.
+- `ver_hora` (hora ini/fin) se activa en modos completos/sg/sr o con permiso `vcsd`/`pffe`.
 - `ver_tarifa` y `ver_sacd` se ocultan para `sg` sin `admin` en modo `list_activ_inv_sg`.
-- La columna sf/sv solo aparece con permiso `vcsd`/`des`.
+- La columna sf/sv solo aparece con permiso `vcsd`/`pffe`.
 - Cada fila añade (salvo en DMZ) un enlace "ver asistentes" (`link_spec` a `lista_asistentes.php`).
 
 ## Endpoint
@@ -76,7 +76,7 @@ visibles dependen del modo `que` y de los permisos de oficina del usuario:
 
 ## Permisos
 
-- El controller lee `$_SESSION['oPerm']` para calcular flags de oficina (`vcsd`, `des`, `sg`, `admin`)
+- El controller lee `$_SESSION['oPerm']` para calcular flags de oficina (`vcsd`, `pffe`, `sg`, `admin`)
   que solo condicionan las columnas visibles, no bloquean el endpoint. La autorización real se resuelve
   en el frontend y en `$_SESSION['oPerm']`. En DMZ (`is_dmz`) se omite la columna de acciones.
 

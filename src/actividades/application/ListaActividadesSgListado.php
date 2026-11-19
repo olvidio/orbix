@@ -200,7 +200,7 @@ final class ListaActividadesSgListado
             $isfsv = $oTipoActividad->getSfsvId();
             $ssfsv = $oTipoActividad->getSfsvText();
             $oPerm = $_SESSION['oPerm'] ?? null;
-            if ($mi_sfsv !== $isfsv && !($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
+            if ($mi_sfsv !== $isfsv && !($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))) {
                 $sactividadOtra = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividadOtra";
             }

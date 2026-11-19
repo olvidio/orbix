@@ -123,8 +123,8 @@ Cambiar de fase varias actividades a la vez.
 ### Donde Entrar
 
 - Fases Activ Cambio (frontend/procesos/controller/fases_activ_cambio.php)
-- **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
-- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
+- **Legacy:** Calendario > actividades > cambiar de fase; pffe > actividades > cambiar de fase
+- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; pffe > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
 
 ### Tareas Habituales
 
@@ -158,8 +158,8 @@ Mostrar el selector de tipo de actividad en la pantalla de cambio de fase masivo
 ### Donde Entrar
 
 - Fases Activ Cambio (frontend/procesos/controller/fases_activ_cambio.php)
-- **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
-- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
+- **Legacy:** Calendario > actividades > cambiar de fase; pffe > actividades > cambiar de fase
+- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; pffe > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
 
 ### Tareas Habituales
 
@@ -174,7 +174,7 @@ Mostrar el selector de tipo de actividad en la pantalla de cambio de fase masivo
 
 ### Permisos
 
-- No llama a `perm_*` explícito; restringe tipos visibles según oficinas `vcsd`/`des`/`calendario`
+- No llama a `perm_*` explícito; restringe tipos visibles según oficinas `vcsd`/`pffe`/`calendario`
 
 ### Referencias Internas
 
@@ -542,7 +542,7 @@ Dar de alta o modificar un permiso de actividades de un usuario: tipo de activid
 
 ### Permisos
 
-- `perm_jefe` según `is_jefeCalendario`, oficinas `des`/`vcsd` (con SFSV=1) o `calendario` en
+- `perm_jefe` según `is_jefeCalendario`, oficinas `pffe`/`vcsd` (con SFSV=1) o `calendario` en
 
 ### Referencias Internas
 

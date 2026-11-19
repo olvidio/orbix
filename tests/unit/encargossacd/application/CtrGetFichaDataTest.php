@@ -219,7 +219,7 @@ final class CtrGetFichaDataTest extends TestCase
         $out = $this->useCase->execute(1001, 5);
 
         $this->assertSame(
-            ['mod', 'tipo_centro', 'num_enc', 'chk_prelatura', 'chk_de_paso', 'chk_sssc', 'opciones_sacd', 'opciones_sacd_sssc', 'encargos', 'perm_des', 'ctx_guardar'],
+            ['mod', 'tipo_centro', 'num_enc', 'chk_prelatura', 'chk_de_paso', 'chk_sssc', 'opciones_sacd', 'opciones_sacd_sssc', 'encargos', 'perm_pffe', 'ctx_guardar'],
             array_keys($out)
         );
         $this->assertSame(['10011' => 'Perez, A', '10012' => 'Gil, B'], $out['opciones_sacd']);
@@ -483,7 +483,7 @@ final class CtrGetFichaDataTest extends TestCase
     /**
      * @dataProvider oficinasProvider
      */
-    public function test_perm_des_segun_las_oficinas_del_usuario(?string $oficina, bool $esperado): void
+    public function test_perm_pffe_segun_las_oficinas_del_usuario(?string $oficina, bool $esperado): void
     {
         $this->encargos->method('matching')->willReturn([]);
         if ($oficina !== null) {
@@ -492,7 +492,7 @@ final class CtrGetFichaDataTest extends TestCase
             $_SESSION['oPerm'] = $perm;
         }
 
-        $this->assertSame($esperado, $this->useCase->execute(1001, 0)['perm_des']);
+        $this->assertSame($esperado, $this->useCase->execute(1001, 0)['perm_pffe']);
     }
 
     /**
@@ -500,7 +500,7 @@ final class CtrGetFichaDataTest extends TestCase
      */
     public static function oficinasProvider(): iterable
     {
-        yield 'des' => [MenuDlPermissionBits::DES, true];
+        yield 'pffe' => [MenuDlPermissionBits::PFFE, true];
         yield 'vcsd' => [MenuDlPermissionBits::VCSD, true];
         yield 'agd' => [MenuDlPermissionBits::AGD, false];
         yield 'sin permisos en sesión' => [null, false];

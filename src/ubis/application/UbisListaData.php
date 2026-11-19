@@ -44,7 +44,7 @@ class UbisListaData
             case 1:
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 $puedeVerSf = $oPerm instanceof XPermisos
-                    && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES));
+                    && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE));
                 if (!$puedeVerSf) {
                     $criteriaCasa = $criteriaCasa->andWhere(Filter::eq(CasaF::Sv, true));
                 }

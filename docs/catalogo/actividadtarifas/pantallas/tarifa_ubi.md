@@ -73,6 +73,6 @@ Mutaciones `update`/`eliminar`/`copiar` requieren cápsula `HashB` válida.
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Nuevo calendario >
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/pffe/exterior > Nuevo calendario >
   Tarifas > tarifas por casa y año.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.

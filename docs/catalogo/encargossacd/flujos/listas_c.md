@@ -21,7 +21,7 @@ Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
+Menú **pffe > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 

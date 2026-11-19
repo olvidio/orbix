@@ -57,7 +57,7 @@ Ninguno (solo enlaces y confirms).
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > propuestas
+- **Legacy:** pffe > Encargos > propuestas
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > propuestas
 
 Nota: `menus.csv` apunta aún a `apps/encargossacd/controller/propuestas_menu.php`; el runtime

@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 Prepara la configuración del widget de búsqueda de tipo de actividad (`ActividadTipo`) para la pantalla de cambio
 masivo de fases. El modo extendido se activa si `sactividad2` no viene vacío. El alcance de tipos
-visibles depende de permisos de oficina (`vcsd`, `des`, `calendario`) o del SFSV de sesión.
+visibles depende de permisos de oficina (`vcsd`, `pffe`, `calendario`) o del SFSV de sesión.
 
 ## Endpoint
 
@@ -60,7 +60,7 @@ El controller pasa `$_POST` completo al caso de uso.
 
 ## Permisos
 
-- No llama a `perm_*` explícito; restringe tipos visibles según oficinas `vcsd`/`des`/`calendario`
+- No llama a `perm_*` explícito; restringe tipos visibles según oficinas `vcsd`/`pffe`/`calendario`
   en `$_SESSION['oPerm']`, o limita a SV/SF de la sesión si no tiene esos permisos.
 
 ## Casos De Uso

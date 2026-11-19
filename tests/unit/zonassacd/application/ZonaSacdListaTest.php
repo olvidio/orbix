@@ -198,7 +198,7 @@ final class ZonaSacdListaTest extends TestCase
         $this->assertStringContainsString('999', $first[1]);
     }
 
-    public function test_con_sel_solo_con_permiso_des_o_vcsd(): void
+    public function test_con_sel_solo_con_permiso_pffe_o_vcsd(): void
     {
         $lista = new ZonaSacdLista(
             $this->createStub(PersonaSacdRepositoryInterface::class),
@@ -208,7 +208,7 @@ final class ZonaSacdListaTest extends TestCase
         $this->assertFalse($lista->execute('')['con_sel']);
         $this->assertSame([], $lista->execute('')['a_botones']);
 
-        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $_SESSION['oPerm'] = $this->oPermStub(['pffe' => true]);
         $this->assertTrue($lista->execute('')['con_sel']);
     }
 

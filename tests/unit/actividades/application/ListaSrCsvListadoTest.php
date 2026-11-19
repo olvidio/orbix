@@ -190,7 +190,7 @@ final class ListaSrCsvListadoTest extends myTest
         $this->assertSame('Listado de actividades', $out['titulo']);
     }
 
-    public function test_sg_vcsd_o_des_no_ven_sin_especificar_salvo_los_administradores(): void
+    public function test_sg_vcsd_o_pffe_no_ven_sin_especificar_salvo_los_administradores(): void
     {
         $this->actividadesPor(fn (): array => [$this->actividad(10)]);
         $this->permisos(['sg'], false);

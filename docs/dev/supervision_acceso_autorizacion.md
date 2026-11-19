@@ -187,12 +187,12 @@ El menú visible **no** es un fichero de configuración. Se compone en tres piez
 2. **Árbol por layout** (etiquetas y orden; Legacy vs Pills2, distinto por esquema).
 3. **Filtro de autorización:**
    - el rol debe tener el **grupmenu** de esa rama;
-   - cada ítem tiene `menu_perm` (máscara de bits de **oficina**: `des`, `est`, `scdl`, `sacd`, `ctr`, `admin_sv`, …);
+   - cada ítem tiene `menu_perm` (máscara de bits de **oficina**: `pffe`, `est`, `scdl`, `sacd`, `ctr`, `admin_sv`, …);
    - `PermisoMenu::visible($menu_perm)` compara esa máscara con los bits del usuario en sesión (`iPermMenus`).
 
 Un usuario puede “tener el rol correcto” y aun así no ver una entrada si su oficina no está en la máscara del ítem.
 
-Los bits de menú son históricos y **no** coinciden 1:1 con los permisos de actividad. Oficinas típicas: adl, agd, des, est, scdl, sg, sm, sr, sacd, ctr, jefeZona, admin_sf, admin_sv, calendario, etc.
+Los bits de menú son históricos y **no** coinciden 1:1 con los permisos de actividad. Oficinas típicas: adl, agd, pffe, est, scdl, sg, sm, sr, sacd, ctr, jefeZona, admin_sf, admin_sv, calendario, etc.
 
 ---
 
@@ -246,7 +246,7 @@ Además:
 - Distinto si la actividad es **de la DL** o de otras (`aPermDl` / `aPermOtras`).
 - El tipo de actividad se busca de **más específico a más genérico** (`sv n crt o-fl` → `sv n crt` → `sv n` → `sv`). El primer acierto gana.
 - Los permisos se asignan a **usuario** o a **grupo de usuarios**. El usuario gana sobre el grupo. Entre grupos la prioridad no está ordenada de forma estable: hay que evitar solapes contradictorios.
-- Solo la oficina responsable de una fase puede marcarla/desmarcarla (si está en blanco, cualquiera). El paso de estado proyecto → actual está reservado a la oficina `des`.
+- Solo la oficina responsable de una fase puede marcarla/desmarcarla (si está en blanco, cualquiera). El paso de estado proyecto → actual está reservado a la oficina `pffe`.
 
 ```mermaid
 flowchart TD
@@ -318,7 +318,7 @@ Ninguna de esas respuestas está en un único “ACL REST”.
 1. **Unificar menú y permiso de actividad.** Hoy se puede ver la entrada y no poder editar, o al revés según cómo se haya configurado. Es flexible y difícil de auditar.
 2. **Permisos por fase vs. máquina de estados.** El modelo no lineal (varias fases a la vez, una inflexión por ámbito) es potente para oficinas paralelas; es opaco para un revisor externo.
 3. **Un rol vs. varios roles / grupos.** Un usuario = un rol; los grupos de usuarios entran en la matriz de actividades. La prioridad entre grupos no es determinista si se pisan.
-4. **Bits de oficina históricos** (`des`, `scdl`, `vcsd`, …) vs. un catálogo de permisos nominado y versionado.
+4. **Bits de oficina históricos** (`pffe`, `scdl`, `vcsd`, …) vs. un catálogo de permisos nominado y versionado.
 5. **Sesión PHP + password en sesión + Hash MD5** vs. IdP / OAuth / tokens de API. Afecta al móvil y a cualquier integración futura.
 6. **2FA TOTP local** vs. 2FA del IdP corporativo.
 7. **Algoritmo de password (Whirlpool)** vs. Argon2id, con plan de rehash al login.

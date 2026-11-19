@@ -285,7 +285,7 @@ Abrir la ventana para definir operador, valor y alcance de un campo vigilado.
 
 ### Permisos
 
-- Filtro de casas: rol `PAU_CDC` (solo sus ubicaciones), permisos oficina `des`/`vcsd` (todas
+- Filtro de casas: rol `PAU_CDC` (solo sus ubicaciones), permisos oficina `pffe`/`vcsd` (todas
 
 ### Referencias Internas
 
@@ -354,7 +354,7 @@ Configurar un aviso de cambios: qué se vigila, en qué actividades y cómo se a
 
 ### Permisos
 
-- `perm_jefe` según: `is_jefeCalendario()`, permisos oficina `des`/`vcsd` (sv), rol `PAU_CDC`/`PAU_SACD`,
+- `perm_jefe` según: `is_jefeCalendario()`, permisos oficina `pffe`/`vcsd` (sv), rol `PAU_CDC`/`PAU_SACD`,
 - Sin control propio; formulario `usuario_avisos_pref` + `$_SESSION['oPerm']`.
 - Sin control propio; segundo paso de `fnjs_grabar_todo` en `usuario_avisos_pref`.
 - Sin control propio; invocado desde el modal de condición antes de grabar el conjunto.

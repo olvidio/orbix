@@ -25,7 +25,7 @@ final class ZonaCtrPageTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_devuelve_opciones_y_perm_des_false_sin_permisos(): void
+    public function test_devuelve_opciones_y_perm_pffe_false_sin_permisos(): void
     {
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->expects($this->once())
@@ -37,22 +37,22 @@ final class ZonaCtrPageTest extends TestCase
 
         $this->assertSame([
             'a_opciones' => [1 => 'Centro', 2 => 'Norte'],
-            'perm_des' => false,
+            'perm_pffe' => false,
         ], $page->getData());
     }
 
-    public function test_perm_des_true_si_tiene_permiso_des(): void
+    public function test_perm_pffe_true_si_tiene_permiso_pffe(): void
     {
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('getArrayZonas')->willReturn([]);
 
-        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $_SESSION['oPerm'] = $this->oPermStub(['pffe' => true]);
         $page = new ZonaCtrPage($zonaRepo);
 
-        $this->assertTrue($page->getData()['perm_des']);
+        $this->assertTrue($page->getData()['perm_pffe']);
     }
 
-    public function test_perm_des_true_si_tiene_permiso_vcsd(): void
+    public function test_perm_pffe_true_si_tiene_permiso_vcsd(): void
     {
         $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
         $zonaRepo->method('getArrayZonas')->willReturn([]);
@@ -60,7 +60,7 @@ final class ZonaCtrPageTest extends TestCase
         $_SESSION['oPerm'] = $this->oPermStub(['vcsd' => true]);
         $page = new ZonaCtrPage($zonaRepo);
 
-        $this->assertTrue($page->getData()['perm_des']);
+        $this->assertTrue($page->getData()['perm_pffe']);
     }
 
     /**

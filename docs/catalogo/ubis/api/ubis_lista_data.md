@@ -55,7 +55,7 @@ Busca casas y centros activos por nombre para el autocompletado de lista.
 
 ## Permisos
 
-have_perm_oficina(vcsd|des): ver sf en sfsv=1 sin filtrar sv.
+have_perm_oficina(vcsd|pffe): ver sf en sfsv=1 sin filtrar sv.
 
 ## Casos De Uso
 

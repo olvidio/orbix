@@ -65,7 +65,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Permisos
 
 - Sin control de permisos que bloquee el endpoint. Lee `$_SESSION['oPerm']` para ocultar el nombre de
-  tipo "(sin especificar)" a `sg`/`vcsd`/`des` sin `admin`. La autorización se resuelve en el frontend.
+  tipo "(sin especificar)" a `sg`/`vcsd`/`pffe` sin `admin`. La autorización se resuelve en el frontend.
 
 ## Casos De Uso
 

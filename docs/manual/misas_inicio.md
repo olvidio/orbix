@@ -73,9 +73,9 @@ Debe verse el menú **ATENCIÓN SACD**. Si no aparece, el usuario no es `p-sacd`
 
 El plan de misas se elabora **por zona**. La zona es el mapa: qué centros y qué sacerdotes pertenecen a un territorio, y quién es el **jefe** que puede organizar ese calendario.
 
-Eso se gestiona en **ATENCIÓN SACD > Gestión de zonas** (menú antiguo: **dre > zonas**), no en **Gestión de misas**.
+Eso se gestiona en **ATENCIÓN SACD > Gestión de zonas** (menú antiguo: **pffe > zonas**), no en **Gestión de misas**.
 
-Conviene tenerlo listo **antes** de encargos, plantilla o un plan nuevo. Cambiar asignaciones (mover centros o sacerdotes) suele exigir permiso de oficina (`des` o `vcsd`); sin ese permiso se puede **consultar** el listado, pero no reasignar. El jefe de zona puede organizar las misas de su zona aunque no sea él quien mueve a la gente de zona.
+Conviene tenerlo listo **antes** de encargos, plantilla o un plan nuevo. Cambiar asignaciones (mover centros o sacerdotes) suele exigir permiso de oficina (`pffe` o `vcsd`); sin ese permiso se puede **consultar** el listado, pero no reasignar. El jefe de zona puede organizar las misas de su zona aunque no sea él quien mueve a la gente de zona.
 
 ### 3.1. Qué hay que dejar claro
 
@@ -150,7 +150,7 @@ No necesita ser jefe de zona. Sí necesita el usuario `p-sacd` (apartado 1).
 
 ### 4.1. Ver el plan propio
 
-**Plan sacerdote** (menú antiguo: **dre > Misas > Plan sacerdote**).
+**Plan sacerdote** (menú antiguo: **pffe > Misas > Plan sacerdote**).
 
 1. En **Sacerdote** suele aparecer ya el propio nombre. Quien no es jefe de zona **solo se ve a sí mismo**. Un jefe de zona puede elegir a los sacerdotes de su zona.
 2. Elegir el **periodo**:
@@ -171,7 +171,7 @@ Los días sin nada salen igual, con encargo vacío.
 
 ### 4.2. Ver el plan de un centro
 
-**Plan ctr** (menú antiguo: **dre > Misas > Plan centro**).
+**Plan ctr** (menú antiguo: **pffe > Misas > Plan centro**).
 
 Sirve para ver **quién cubre cada encargo de un centro** esos días.
 
@@ -204,7 +204,7 @@ Las pantallas de elaborar el plan (plantilla, nuevo plan, modificar plan, cambia
 
 ## 5. Caso B — el sacerdote que organiza
 
-Monta el calendario de la zona: encargos, plantilla, asignaciones y comunicación. Trabaja en **ATENCIÓN SACD > Gestión de misas** (menú antiguo: **dre > Misas**).
+Monta el calendario de la zona: encargos, plantilla, asignaciones y comunicación. Trabaja en **ATENCIÓN SACD > Gestión de misas** (menú antiguo: **pffe > Misas**).
 
 Orden recomendado: **zonas** ya listas (apartado 3) → **datos fijos** de misas (5.2) → **ciclo de cada periodo** (5.3).
 
@@ -330,7 +330,7 @@ Secuencia habitual: trabajar en propuesta → visible sacd → cuando esté cerr
 | Qué ocurre | Qué comprobar |
 |------------|----------------|
 | **No tiene permiso para ver esta página** / sin zonas | No es **jefe zona** de ninguna (apartado 3.2), ni jefe de calendario / oficial. |
-| No aparecen botones para mover centros o sacerdotes | Falta permiso de oficina (`des` / `vcsd`). Se consulta, pero no se reasigna. |
+| No aparecen botones para mover centros o sacerdotes | Falta permiso de oficina (`pffe` / `vcsd`). Se consulta, pero no se reasigna. |
 | Cuadrícula vacía al preparar | Faltan **encargos** de la zona o la **plantilla** no tiene filas. |
 | No aparecen sacerdotes en el desplegable de la celda | No están en **Zonas-sacd**, o el filtro (zona / dl / de paso) no los incluye. |
 | Avisos de «no está en la zona» | Faltan los **días** en **Zonas-sacd** → **modificar**. |

@@ -75,5 +75,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros > nombres de actividades particulares
+- **Legacy:** pffe > Pasarela > parámetros > nombres de actividades particulares
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > nombres de actividades particulares

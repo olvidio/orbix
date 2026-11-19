@@ -6,7 +6,7 @@ use src\permisos\domain\XPermisos;
 use src\permisos\domain\MenuDlPermissionBits;
 
 /**
- * Configuración del selector de tipo de actividad de fases_activ_cambio: con permiso de des, vcsd o calendario,
+ * Configuración del selector de tipo de actividad de fases_activ_cambio: con permiso de pffe, vcsd o calendario,
  * modo jefe y todas las secciones; si no, la sección propia (sv/sf). El widget lo pinta
  * `frontend/procesos/controller/fases_activ_cambio.php` con `ActividadTipo::htmlDesdeConfig()`.
  */
@@ -21,15 +21,15 @@ final class FasesActivCambioTipoActividadData
     {
         $extendida = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sactividad2') !== '';
 
-        $permiso_des = false;
+        $permiso_pffe = false;
         $ssfsv = '';
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
             && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)
-                || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)
                 || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
-            $permiso_des = true;
+            $permiso_pffe = true;
             $ssfsv = '';
         } else {
             $sessionAuth = $_SESSION['session_auth'] ?? null;
@@ -46,7 +46,7 @@ final class FasesActivCambioTipoActividadData
         }
 
         return ['actividad_tipo' => [
-            'perm_jefe' => $permiso_des,
+            'perm_jefe' => $permiso_pffe,
             'sfsv' => $ssfsv,
             'id_tipo_activ' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'id_tipo_activ'),
             'asistentes' => \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'sasistentes'),

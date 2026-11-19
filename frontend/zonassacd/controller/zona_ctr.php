@@ -33,7 +33,7 @@ $a_campos = [
     'url_ajax_lista' => $url_ajax_lista,
     'url_ajax_update' => $url_ajax_update,
     'h_ctr' => $h_ctr,
-    'perm_des' => $page['perm_des'],
+    'perm_pffe' => $page['perm_pffe'],
     'oDesplZonas' => $oDesplZonas,
 ];
 

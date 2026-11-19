@@ -54,17 +54,17 @@ No se han detectado capacidades relacionadas.
 
 ## Ruta de menú
 
-- **Legacy:** dre > ausencias > sacd
+- **Legacy:** pffe > ausencias > sacd
 - **Pills2:** sin entrada de menú en el índice
 
 ## Ruta de menú
 
-- **Legacy:** dre > ausencias > sacd
+- **Legacy:** pffe > ausencias > sacd
 - **Pills2:** sin entrada de menú en el índice
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > ausencias > sacd
+- **Legacy:** pffe > ausencias > sacd
 - **Pills2:** sin entrada de menú en el índice
 

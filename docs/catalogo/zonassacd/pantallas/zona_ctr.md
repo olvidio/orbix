@@ -16,7 +16,7 @@ estado_revision: "revisado"
 
 # Zona Ctr
 
-Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_des.
+Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_pffe.
 
 ## Tipo
 
@@ -30,7 +30,7 @@ Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf 
 | Listar centros de una zona | `fnjs_busca_ctrs()` (onchange del desplegable) | `zona_ctr_lista_ajax.php` | `id_zona` (`int` / `'no'` / `'no_sf'`) |
 | Asignar centros a zona | `fnjs_guardar(form)` (boton asignar) | `zona_ctr_update_ajax.php` | `id_zona_new` (`int` / `'no'`), `sel[]` |
 
-La opcion `'no_sf'` del desplegable solo aparece con `perm_des`. Los centros sf
+La opcion `'no_sf'` del desplegable solo aparece con `perm_pffe`. Los centros sf
 se muestran con clase `tono2`.
 
 ## Vistas Relacionadas
@@ -65,5 +65,5 @@ se muestran con clase `tono2`.
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > zonas-ctr
+- **Legacy:** pffe > zonas > zonas-ctr
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr

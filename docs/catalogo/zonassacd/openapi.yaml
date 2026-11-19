@@ -17,7 +17,7 @@ paths:
       operationId: "post_zonassacd_zona_ctr"
       summary: "Zona Ctr"
       description: |
-        Datos iniciales de Zonas-ctr: desplegable de zonas y perm_des (activa opción no_sf, checkboxes y botón asignar).
+        Datos iniciales de Zonas-ctr: desplegable de zonas y perm_pffe (activa opción no_sf, checkboxes y botón asignar).
         
         Operacion: `form_data`.
         
@@ -87,7 +87,7 @@ paths:
       operationId: "post_zonassacd_zona_ctr_lista"
       summary: "Zona Ctr Lista"
       description: |
-        Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
+        Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_pffe.
         
         Operacion: `lista_data`.
         
@@ -356,7 +356,7 @@ components:
         a_opciones:
           type: array
           items: {}
-        perm_des:
+        perm_pffe:
           type: "boolean"
     zonassacd_ZonaCtrPageDataResponse:
       allOf:
@@ -374,7 +374,7 @@ components:
         a_opciones:
           type: array
           items: {}
-        perm_des:
+        perm_pffe:
           type: "boolean"
     zonassacd_ZonaSacdPageDataResponse:
       allOf:

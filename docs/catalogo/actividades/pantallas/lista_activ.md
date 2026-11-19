@@ -48,7 +48,7 @@ Ver [`manual/actividades.md`](../../../manual/actividades.md). Flujo habitual:
 No tiene entrada directa: se alcanza como **destino del formulario** de búsqueda
 (`actividad_que` con `que=list_activ`) o desde `lista_activ_que` (p. ej. listas SG/SR).
 
-- **Legacy:** dre > actividades > buscar activ (resultado); Calendario > actividades >
+- **Legacy:** pffe > actividades > buscar activ (resultado); Calendario > actividades >
   listas sg (vía `lista_activ_que`).
 - **Pills2:** ACTIVIDADES > Listados > Listas asistentes sg (vía `lista_activ_que`);
   resto de búsquedas heredan la ruta de `actividad_que`.

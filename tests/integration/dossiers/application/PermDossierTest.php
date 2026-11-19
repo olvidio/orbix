@@ -76,7 +76,7 @@ final class PermDossierTest extends myTest
     public function test_escritura_sobre_una_persona_exige_la_oficina_de_su_tipo(): void
     {
         $_SESSION['iPermMenus'] = 4;
-        $casos = ['n' => 'sm', 'x' => 'nax', 'a' => 'agd', 's' => 'sg', 'sssc' => 'des', 'pn' => 'sm', 'px' => 'nax', 'pa' => 'agd', 'psssc' => 'des'];
+        $casos = ['n' => 'sm', 'x' => 'nax', 'a' => 'agd', 's' => 'sg', 'sssc' => 'pffe', 'pn' => 'sm', 'px' => 'nax', 'pa' => 'agd', 'psssc' => 'pffe'];
         foreach ($casos as $idTabla => $oficina) {
             $this->persona($idTabla);
             $this->oficinas('otra');
@@ -142,7 +142,7 @@ final class PermDossierTest extends myTest
 
     public function test_tipos_de_actividad_solo_los_que_existen(): void
     {
-        $this->oficinas('des');
+        $this->oficinas('pffe');
         foreach (array_keys((new PermDossier())->perm_activ_pers('sssc')) as $tipo) {
             $this->assertMatchesRegularExpression('/^\d{3}$/', (string) $tipo);
         }
@@ -163,7 +163,7 @@ final class PermDossierTest extends myTest
 
     public function test_tipos_de_persona_se_suman_entre_oficinas(): void
     {
-        $this->oficinas('sm', 'des');
+        $this->oficinas('sm', 'pffe');
         $ambas = self::conPermiso((new PermDossier())->perm_pers_activ(112000));
         $this->oficinas('sm');
         $sm = self::conPermiso((new PermDossier())->perm_pers_activ(112000));

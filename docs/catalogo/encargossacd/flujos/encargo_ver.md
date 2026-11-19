@@ -21,7 +21,7 @@ Crear, ver, modificar o eliminar un encargo (atención de un centro, zona, etc.)
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
+Menú **pffe > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 10:22+0100\n"
+"POT-Creation-Date: 2026-11-19 12:08+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -273,7 +273,7 @@ msgstr "Can it be agd?"
 #: src/profesores/domain/entity/ProfesorPublicacion.php:426
 #: src/ubis/application/DireccionesTablaData.php:68
 #: src/ubis/domain/entity/TelecoUbi.php:464
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:67
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:70
 msgid "observaciones"
 msgstr "observations"
 
@@ -941,7 +941,7 @@ msgstr "id"
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:315
 #: src/pasarela/application/ExportarActividadesData.php:125
 #: src/ubiscamas/application/HabitacionesCamaLista.php:98
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:63
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:66
 msgid "nombre"
 msgstr "first name"
 
@@ -5809,7 +5809,7 @@ msgstr "groupMenu"
 #: frontend/misas/controller/modificar_encargos.php:19
 #: src/actividades/domain/entity/NivelStgr.php:249
 #: src/actividadescentro/domain/entity/CentroEncargado.php:145
-#: src/menus/domain/entity/GrupMenu.php:125
+#: src/menus/domain/entity/GrupMenu.php:124
 #: src/misas/application/ModificarEncargosData.php:47
 #: src/ubis/domain/entity/DescTeleco.php:375
 #: src/zonassacd/domain/entity/Zona.php:152
@@ -5987,8 +5987,8 @@ msgstr "dagd"
 #: frontend/menus/view/traducir_menu.phtml:17
 #: src/encargossacd/application/ListasAData.php:142
 #: src/encargossacd/application/ListasAData.php:151
-msgid "dre"
-msgstr "dre"
+msgid "pffe"
+msgstr "pffe"
 
 #: frontend/menus/view/traducir_menu.phtml:18
 #: src/ubiscamas/domain/value_objects/TipoLavabo.php:19
@@ -6919,8 +6919,8 @@ msgid "casas comunes"
 msgstr "common houses"
 
 #: frontend/menus/view/traducir_menu.phtml:250
-msgid "casas comunes (des)"
-msgstr "common houses (dl)"
+msgid "casas comunes (pffe)"
+msgstr "common houses (pffe)"
 
 #: frontend/menus/view/traducir_menu.phtml:251
 msgid "casas comunes sf"
@@ -7742,8 +7742,8 @@ msgid "tipos de texto"
 msgstr "text types"
 
 #: frontend/menus/view/traducir_menu.phtml:462
-msgid "todas casas (des)"
-msgstr "All houses (designated)"
+msgid "todas casas (pffe)"
+msgstr "all houses (pffe)"
 
 #: frontend/menus/view/traducir_menu.phtml:463
 msgid "todas casas sf"
@@ -10125,10 +10125,10 @@ msgstr ""
 #: frontend/shared/view/ayuda_index.phtml:105
 msgid ""
 "En el caso de los procesos es más rígido. En las actividades, quien tiene el "
-"control es dre. Sólo entrando como dre se pueden borrar actividades."
+"control es pffe. Sólo entrando como pffe se pueden borrar actividades."
 msgstr ""
 "In the case of processes, it is more rigid. In activities, who has control "
-"is dre. Only by entering as dre can activities be deleted."
+"is pffe. Only by entering as pffe can activities be deleted."
 
 #: frontend/shared/view/ayuda_index.phtml:106
 msgid "Salir"
@@ -11294,7 +11294,7 @@ msgstr "Are you sure you want to delete the room?"
 msgid "relación de habitaciones"
 msgstr "List of rooms"
 
-#: frontend/ubiscamas/view/select_habitaciones_cdc.phtml:52
+#: frontend/ubiscamas/view/select_habitaciones_cdc.phtml:53
 msgid "crear una nueva habitación"
 msgstr "Create a new room"
 
@@ -12517,7 +12517,7 @@ msgid "esto también borrará a esta persona de la lista de asistentes"
 msgstr "this will also erase this person from the list of attendees"
 
 #: src/actividadcargos/application/Select_cargos_de_actividad.php:231
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:192
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:203
 #, php-format
 msgid "añadir %s"
 msgstr "add %s"
@@ -17052,7 +17052,7 @@ msgstr "Are you sure you want to eliminate this metamenu?"
 msgid "buscar un metamenú por descripción"
 msgstr "search for a meta-menu by description"
 
-#: src/menus/domain/entity/GrupMenu.php:113
+#: src/menus/domain/entity/GrupMenu.php:112
 msgid "Grup Menu"
 msgstr "Menu Group"
 
@@ -18693,9 +18693,9 @@ msgstr "You do not have permission to mark or unmark this phase."
 #: src/procesos/application/ProcesoActividadService.php:154
 msgid ""
 "no se puede cambiar el status de la actividad a 'actual', porque debe "
-"hacerlo dre"
+"hacerlo pffe"
 msgstr ""
-"The activity status cannot be changed to 'current' because dre must do it"
+"The activity status cannot be changed to 'current' because pffe must do it"
 
 #: src/procesos/application/ProcesoActividadService.php:158
 #: src/procesos/application/ProcesoActividadService.php:171
@@ -20007,12 +20007,12 @@ msgid "Habitación no válida"
 msgstr "Invalid room"
 
 #: src/ubiscamas/application/HabitacionesCamaLista.php:99
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:64
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:67
 msgid "planta"
 msgstr "plant"
 
 #: src/ubiscamas/application/HabitacionesCamaLista.php:100
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:65
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:68
 msgid "adaptada"
 msgstr "adapted"
 
@@ -20025,7 +20025,7 @@ msgid "sillón"
 msgstr "armchair"
 
 #: src/ubiscamas/application/HabitacionesCamaLista.php:103
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:68
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:71
 msgid "despacho"
 msgstr "office"
 
@@ -20054,19 +20054,19 @@ msgstr "Attendance not found for id_nom %d and id_activ %d."
 msgid "Error al guardar la asignación de la cama"
 msgstr "Error saving bed assignment"
 
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:54
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:57
 msgid "modificar habitación"
 msgstr "Edit room"
 
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:55
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:58
 msgid "borrar habitación"
 msgstr "Delete room"
 
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:66
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:69
 msgid "sillon"
 msgstr "armchair"
 
-#: src/ubiscamas/domain/Select_habitaciones_cdc.php:69
+#: src/ubiscamas/domain/Select_habitaciones_cdc.php:72
 msgid "tipoLavabo"
 msgstr "Washbasin type"
 

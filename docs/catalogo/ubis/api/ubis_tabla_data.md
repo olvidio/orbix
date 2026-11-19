@@ -80,7 +80,7 @@ Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla nave
 
 ## Permisos
 
-have_perm_oficina(scl): botón eliminar. have_perm_oficina(vcsd|des): tablas sf.
+have_perm_oficina(scl): botón eliminar. have_perm_oficina(vcsd|pffe): tablas sf.
 
 ## Casos De Uso
 

@@ -139,7 +139,7 @@ final class ListasAData
                             switch ((int)$modo) {
                                 case 2:
                                     if ($tipo_ctr === '^njce') {
-                                        $sacd_titular = sprintf('%s (%s)', $nom_ap, _("dre"));
+                                        $sacd_titular = sprintf('%s (%s)', $nom_ap, _("pffe"));
                                     } else {
                                         $sacd_titular = $nom_ap;
                                     }
@@ -148,7 +148,7 @@ final class ListasAData
                                     $parentesis = $tipo_ctr === '^ss' ? _("confesor") : _("no cl");
                                     if ($sf === 1) {
                                         if ($tipo_ctr === '^njce') {
-                                            $sacd_titular = sprintf('%s (%s)', $nom_ap, _("dre"));
+                                            $sacd_titular = sprintf('%s (%s)', $nom_ap, _("pffe"));
                                         } else {
                                             $sacd_titular = $nom_ap;
                                         }

@@ -42,11 +42,11 @@ if (is_file($menusFile)) {
         $url = trim($m[1]);
         $legacyRaw = trim(preg_replace('/<br>/', "\n", $m[2]));
         $pills2Raw = trim($m[3]);
-        // Preferir ruta dre en Legacy; primera ATENCIÓN SACD > Gestión de misas en Pills2
+        // Preferir ruta pffe en Legacy; primera ATENCIÓN SACD > Gestión de misas en Pills2
         $legacy = $legacyRaw;
         foreach (preg_split('/\n+/', $legacyRaw) as $part) {
             $part = trim($part);
-            if (str_starts_with($part, 'dre >')) {
+            if (str_starts_with($part, 'pffe >')) {
                 $legacy = $part;
                 break;
             }

@@ -45,7 +45,7 @@ de entrada.
 Destino habitual de `actividad_que` (`que=ver`); también accesos directos con
 `id_tipo_activ` prefijado (submenús *buscar activ*):
 
-- **Legacy:** dre/Calendario > actividades > buscar activ (y subentradas sv/sf);
+- **Legacy:** pffe/Calendario > actividades > buscar activ (y subentradas sv/sf);
   entradas por colectivo (vsm, vsg, vsr, dagd, vest…).
 - **Pills2:** ACTIVIDADES > Buscar actividad > crt/cv/ca n/agd/s/sss+; ESTUDIOS >
   Buscar actividades (`que=ver` genérico).

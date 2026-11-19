@@ -73,7 +73,7 @@ final class ListasCData
         $permiso_sf = '';
         $oPerm = $_SESSION['oPerm'] ?? null;
         if (is_object($oPerm) && method_exists($oPerm, 'have_perm_oficina')
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))
         ) {
             $permiso_sf = 'si';
         }

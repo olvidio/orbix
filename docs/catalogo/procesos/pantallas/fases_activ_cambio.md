@@ -78,5 +78,5 @@ No se han detectado acciones.
 
 ## Ruta de menú
 
-- **Legacy:** Calendario > actividades > cambiar de fase; dre > actividades > cambiar de fase
-- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; dre > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades
+- **Legacy:** Calendario > actividades > cambiar de fase; pffe > actividades > cambiar de fase
+- **Pills2:** ATENCIÓN SACD > Actividades > cambiar de fase; pffe > actividades > cambiar de fase; Calendario > actividades > cambiar de fase; ACTIVIDADES > Herramientas de calendario > Cambio de fase actividades

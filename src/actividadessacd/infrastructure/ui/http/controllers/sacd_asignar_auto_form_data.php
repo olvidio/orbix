@@ -2,7 +2,7 @@
 
 /**
  * Endpoint backend: emite `ctx_asignar_auto` (HashB) y la fecha ISO de
- * inicio de curso des que autoriza `sacd_asignar_auto`.
+ * inicio de curso pffe que autoriza `sacd_asignar_auto`.
  */
 
 use src\actividadessacd\application\SacdAsignarAutoFormData;

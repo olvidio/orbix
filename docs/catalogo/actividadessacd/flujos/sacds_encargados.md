@@ -61,5 +61,5 @@ No se han documentado errores en la capacidad.
 
 Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
 
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).

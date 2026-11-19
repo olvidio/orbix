@@ -62,7 +62,7 @@ Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos 
 
 ## Permisos
 
-have_perm_oficina(vcsd|des): filtro sv en casas. have_perm_oficina(admin_sv): botón trasladar.
+have_perm_oficina(vcsd|pffe): filtro sv en casas. have_perm_oficina(admin_sv): botón trasladar.
 
 ## Casos De Uso
 

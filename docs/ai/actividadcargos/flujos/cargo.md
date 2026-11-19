@@ -46,7 +46,7 @@ Referencias tecnicas para verificar la respuesta:
 
 1. En la relación de cargos, marcar **una sola fila**.
 2. Pulsar **quitar cargo**.
-3. Leer el aviso de confirmación; puede avisar de que también se borra al asistente si se trata del tipo s o sg y el usuario es de des o vcsd.
+3. Leer el aviso de confirmación; puede avisar de que también se borra al asistente si se trata del tipo s o sg y el usuario es de pffe o vcsd.
 4. Confirmar. El listado se actualiza solo.
 
 Referencias tecnicas para verificar la respuesta:

@@ -20,7 +20,7 @@ public static function havePermCalendario(): bool
 {
     return SessionPerm::havePermOficina(PermisoOficina::CALENDARIO)
         || SessionPerm::havePermOficina(PermisoOficina::VCSD)
-        || SessionPerm::havePermOficina(PermisoOficina::DES);
+        || SessionPerm::havePermOficina(PermisoOficina::PFFE);
 }
 
 /**

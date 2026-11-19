@@ -80,7 +80,7 @@ No se han documentado errores en la capacidad.
 
 Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
 
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
   agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
   asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.

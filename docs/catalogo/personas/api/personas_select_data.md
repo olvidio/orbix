@@ -81,7 +81,7 @@ El controller pasa `$_POST` completo al caso de uso.
 ## Permisos
 
 - `permiso=3` si `$_SESSION['oPerm']->have_perm_oficina(...)` según colectivo: `sm` (n),
-  `agd` (agd), `sg` (s), `des` (sssc), `nax` (nax), o cualquiera de `sm|agd|des|sg|est` en de paso.
+  `agd` (agd), `sg` (s), `pffe` (sssc), `nax` (nax), o cualquiera de `sm|agd|pffe|sg|est` en de paso.
 - Resto: `permiso=1`. Sin `perm_*` propio en el caso de uso.
 
 ## Errores conocidos

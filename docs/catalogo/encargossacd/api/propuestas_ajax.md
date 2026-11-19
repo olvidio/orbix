@@ -99,7 +99,7 @@ Opera sobre tablas staging `propuesta_*` (encargos SACD propuestos para el nuevo
 
 ## Permisos
 
-Sin control propio en el caso de uso; autorización vía frontend + `$_SESSION['oPerm']` / menú Encargos. Pendiente: confirmar si hace falta `des`/`vcsd` explícito.
+Sin control propio en el caso de uso; autorización vía frontend + `$_SESSION['oPerm']` / menú Encargos. Pendiente: confirmar si hace falta `pffe`/`vcsd` explícito.
 
 ## Casos De Uso
 

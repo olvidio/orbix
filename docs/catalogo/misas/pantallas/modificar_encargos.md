@@ -52,5 +52,5 @@ Entry point para CRUD de encargos de zona (grupo ZONAS_MISAS). Selectores zona/o
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos

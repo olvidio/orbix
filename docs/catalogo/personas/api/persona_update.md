@@ -57,7 +57,7 @@ El controller pasa `$_POST` completo al caso de uso.
 ## Permisos
 
 - Sin `perm_*` en el caso de uso. El frontend solo muestra botón guardar si `ok=1` según
-  `have_perm_oficina` del colectivo (`sm`, `agd`, `sg`, `des`, `vcsd`, `est`).
+  `have_perm_oficina` del colectivo (`sm`, `agd`, `sg`, `pffe`, `vcsd`, `est`).
 
 ## Errores conocidos
 

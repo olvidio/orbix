@@ -53,5 +53,5 @@ Variantes en `_referencia_menus.md`:
 | `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > planning > persona dl` | `ACTIVIDADES > Herramientas de calendario > Plannig por personas` |
 | `obj_pau=PersonaEx&na=a` | `scdl > planning > agd de paso` | `scdl > planning > agd de paso` |
 | `obj_pau=PersonaEx&na=n` | `scdl > planning > num de paso` | `scdl > planning > num de paso` |
-| `obj_pau=PersonaSacd` | `dre > planning > sacd r/dl` | — |
+| `obj_pau=PersonaSacd` | `pffe > planning > sacd r/dl` | — |
 | `obj_pau=PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > Herramientas de calendario > Plannig por personas sacd` |

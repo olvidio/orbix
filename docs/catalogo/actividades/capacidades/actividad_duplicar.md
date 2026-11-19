@@ -18,7 +18,7 @@ Propuesta generada automaticamente a partir de endpoints con prefijo comun `acti
 
 ## Objetivo Funcional
 
-Gestiona ActividadDuplicar. Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso des).
+Gestiona ActividadDuplicar. Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso pffe).
 
 ## Acciones Detectadas
 
@@ -38,7 +38,7 @@ No se han detectado casos de uso de aplicacion.
 
 ## Pistas Desde Endpoints
 
-- Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso `des`).
+- Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de la propia delegacion (o de la sf si el usuario tiene permiso `pffe`).
 
 ## Errores Conocidos
 

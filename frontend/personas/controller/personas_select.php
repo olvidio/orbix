@@ -201,7 +201,7 @@ if (PersonasPayload::havePermOficina(PermisoOficina::EST) || PersonasPayload::ha
     $script['fnjs_publicar'] = 1;
 }
 
-if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina(PermisoOficina::DES)) {
+if (AppInstalled::is('actividadessacd') && PersonasPayload::havePermOficina(PermisoOficina::PFFE)) {
     $a_botones[] = ['txt' => _("atención actividades"), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }

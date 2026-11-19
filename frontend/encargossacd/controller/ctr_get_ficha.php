@@ -38,7 +38,7 @@ $chk_sssc = $ficha['chk_sssc'];
 $aOpcionesSacd = $ficha['opciones_sacd'];
 $aOpcionesSacdSssc = $ficha['opciones_sacd_sssc'];
 $encargos = $ficha['encargos'];
-$perm_des = $ficha['perm_des'];
+$perm_pffe = $ficha['perm_pffe'];
 
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setBlanco(true);
@@ -137,7 +137,7 @@ $fase = 'AAA';
 $a_campos = [
     'oPosicion' => $oPosicion,
     'num_enc' => $num_enc,
-    'perm_des' => $perm_des,
+    'perm_pffe' => $perm_pffe,
     'a_Hash' => $a_Hash,
     'tipo_centro' => $tipo_centro,
     'fase' => $fase,

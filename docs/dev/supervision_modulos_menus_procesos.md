@@ -130,7 +130,7 @@ flowchart TB
 |-------|------------|------------|
 | **Metamenú** | `comun.public.aux_metamenus` | Destino: URL del controller frontend, módulo, parámetros. **Igual en todos los layouts.** |
 | **Menú por layout** | `sv-e."<esquema>".aux_menus` | Árbol: etiqueta, `orden` (array de ruta jerárquica), grupmenu, `menu_perm`. |
-| **Grupmenu** | `aux_grupmenu` | Bloque raíz (p. ej. “sistema”, “stgr”, “dre”). |
+| **Grupmenu** | `aux_grupmenu` | Bloque raíz (p. ej. “sistema”, “stgr”, “pffe”). |
 | **Rol ↔ grupmenu** | `aux_grupmenu_rol` | Qué bloques ve el rol. |
 
 Layouts documentados: **Legacy** (esquema `H-dlbv`) y **Pills2** (esquema `H-dlpv`). Misma pantalla, distinta etiqueta y sitio en el árbol. Referencia generada: [`docs/guias/_referencia_menus.md`](../guias/_referencia_menus.md).
@@ -225,7 +225,7 @@ Casi toda la oficina gira alrededor de una **actividad** (curso, retiro, encuent
 ```mermaid
 flowchart LR
   Buscar[Buscar / crear / importar / duplicar] --> Proyecto[Estado proyecto]
-  Proyecto -->|oficina des| Actual[Estado actual — fase aprobada]
+  Proyecto -->|oficina pffe| Actual[Estado actual — fase aprobada]
   Actual --> Trabajo[Asistentes, cargos, plazas, SACD, matrículas]
   Trabajo --> Fases[Marcar fases en paralelo]
   Fases --> Cierre[Estado terminada]

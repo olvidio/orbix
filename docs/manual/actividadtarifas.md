@@ -22,7 +22,7 @@ Decidir qué tipo de tarifa corresponde a cada tipo de actividad.
 ### Donde Entrar
 
 - Tarifa Tipo Actividad (frontend/actividadtarifas/controller/tarifa_tipo_actividad.php)
-- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; pffe/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.
 
 ### Tareas Habituales
@@ -64,7 +64,7 @@ Consultar y mantener las tarifas de una casa para un año: importes por tipo de 
 ### Donde Entrar
 
 - Tarifa Ubi (frontend/actividadtarifas/controller/tarifa_ubi.php)
-- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Tarifas > tarifas por casa y año.
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/pffe/exterior > Tarifas > tarifas por casa y año.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.
 
 ### Tareas Habituales
@@ -120,7 +120,7 @@ Mantener el catálogo de tipos de tarifa: cada uno con su letra, su modo y obser
 ### Donde Entrar
 
 - Tarifa (frontend/actividadtarifas/controller/tarifa.php)
-- **Legacy:** adl > Tarifas > definir tarifa; dre/Calendario/exterior > Tarifas > definir tarifa.
+- **Legacy:** adl > Tarifas > definir tarifa; pffe/Calendario/exterior > Tarifas > definir tarifa.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.
 
 ### Tareas Habituales

@@ -18,7 +18,7 @@ use frontend\shared\helpers\PayloadCoercion;
  * `/src/encargossacd/encargo_select_data`; aqui solo armamos la `frontend\shared\web\Lista`.
  *
  * @package    delegacion
- * @subpackage    des
+ * @subpackage    pffe
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************

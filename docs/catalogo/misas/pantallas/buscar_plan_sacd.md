@@ -54,5 +54,5 @@ Buscador de plan por sacerdote: desplegable sacd filtrado por rol y rango de fec
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Plan sacerdote
+- **Legacy:** pffe > Misas > Plan sacerdote
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote

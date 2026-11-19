@@ -124,7 +124,7 @@ final class ZonaCtrListaTest extends TestCase
         $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
         $zonaRepo->method('findById')->with(9)->willReturn($this->zonaStub('Zona 9'));
 
-        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $_SESSION['oPerm'] = $this->oPermStub(['pffe' => true]);
         $out = (new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona))->execute('9');
 
         $this->assertCount(2, $out['a_valores']);
@@ -135,7 +135,7 @@ final class ZonaCtrListaTest extends TestCase
         $this->assertSame('tono2', $vals[1]['clase']);
     }
 
-    public function test_con_sel_solo_con_permiso_des_o_vcsd(): void
+    public function test_con_sel_solo_con_permiso_pffe_o_vcsd(): void
     {
         $zonaCtr = $this->createStub(ZonaCtrRepositoryInterface::class);
         $zonaCtr->method('idUbisDeZona')->willReturn([1042]);
@@ -151,7 +151,7 @@ final class ZonaCtrListaTest extends TestCase
         $lista = new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona);
         $this->assertFalse($lista->execute('9')['con_sel']);
 
-        $_SESSION['oPerm'] = $this->oPermStub(['des' => true]);
+        $_SESSION['oPerm'] = $this->oPermStub(['pffe' => true]);
         $this->assertTrue((new ZonaCtrLista($centroDlRepo, $centroEllasRepo, $zonaRepo, $centrosDeZona))->execute('9')['con_sel']);
     }
 

@@ -172,7 +172,7 @@ final class CtrGetFichaData
             'opciones_sacd' => self::arrayStringKeyed($aOpcionesSacd),
             'opciones_sacd_sssc' => $aOpcionesSacdSssc !== null ? self::arrayStringKeyed($aOpcionesSacdSssc) : null,
             'encargos' => $encargos,
-            'perm_des' => self::tienePermDes(),
+            'perm_pffe' => self::tienePermPffe(),
             'ctx_guardar' => HashB::sign('ctr_ficha_update', ['id_ubi' => $id_ubi]),
         ];
     }
@@ -449,7 +449,7 @@ final class CtrGetFichaData
         return $out;
     }
 
-    private function tienePermDes(): bool
+    private function tienePermPffe(): bool
     {
         if (empty($_SESSION['oPerm'])) {
             return false;
@@ -459,6 +459,6 @@ final class CtrGetFichaData
             return false;
         }
 
-        return $oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD);
+        return $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD);
     }
 }

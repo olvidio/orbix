@@ -191,10 +191,10 @@ switch ($Qobj_pau) {
         }
         break;
     case 'PersonaSSSC':
-        if (PersonasPayload::havePermOficina(PermisoOficina::DES) || PersonasPayload::havePermOficina(PermisoOficina::VCSD)) {
+        if (PersonasPayload::havePermOficina(PermisoOficina::PFFE) || PersonasPayload::havePermOficina(PermisoOficina::VCSD)) {
             $ok = 1;
         }
-        $autorizado = PersonasPayload::havePermOficina(PermisoOficina::DES)
+        $autorizado = PersonasPayload::havePermOficina(PermisoOficina::PFFE)
             || PersonasPayload::havePermOficina(PermisoOficina::VCSD)
             || PersonasPayload::havePermOficina(PermisoOficina::DTOR);
         $presentacion = $autorizado ? 'persona_sss_form.phtml' : 'p_public_personas.phtml';
@@ -207,7 +207,7 @@ switch ($Qobj_pau) {
         if (
             PersonasPayload::havePermOficina(PermisoOficina::AGD)
             || PersonasPayload::havePermOficina(PermisoOficina::SM)
-            || PersonasPayload::havePermOficina(PermisoOficina::DES)
+            || PersonasPayload::havePermOficina(PermisoOficina::PFFE)
             || PersonasPayload::havePermOficina(PermisoOficina::EST)
         ) {
             $ok = 1;

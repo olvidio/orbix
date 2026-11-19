@@ -45,7 +45,7 @@ Ficha de encargos de un SACD: tareas, horarios, observaciones, avisos. Sucesor d
 
 ## Permisos
 
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 - Permiso oficina `vcsd`
 
 ## Casos De Uso

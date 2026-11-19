@@ -62,7 +62,7 @@ sublistas y especificaciones de enlace firmadas que el frontend convierte con `D
 - `tipo=n` → `have_perm_oficina('sm')`
 - `tipo=a` → `have_perm_oficina('agd')`
 - `tipo=s` → `have_perm_oficina('sg')`
-- `tipo=sssc` → `have_perm_oficina('des')`
+- `tipo=sssc` → `have_perm_oficina('pffe')`
 - Vía `$_SESSION['oPerm']` (`XPermisos`).
 
 ## Casos De Uso

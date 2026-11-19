@@ -31,7 +31,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 ## Modificar una entrada de menú
 
-1. Entrar en **seleccionar** y elegir el **grupo** (vsm, scdl, dre, sistema…). Se muestra el árbol de entradas con su orden (por ejemplo 10,50,40), el nombre, «[ok]» y los roles que lo ven entre paréntesis.
+1. Entrar en **seleccionar** y elegir el **grupo** (vsm, scdl, pffe, sistema…). Se muestra el árbol de entradas con su orden (por ejemplo 10,50,40), el nombre, «[ok]» y los roles que lo ven entre paréntesis.
 2. Pulsar una entrada para editarla: **orden**, **es ok?**, **texto menu**, **meta** (la pantalla a la que lleva), **parametros** y los **permisos** (una casilla por rol; **todos** y **ninguno** marcan o desmarcan todas).
 3. Pulsar **guardar**, o **cancelar** para salir.
 4. Con **eliminar** se borra la entrada; con **nuevo** se crea otra en el grupo elegido (si no hay grupo avisa «debe seleccionar un grupo de menu para poder añadir un menu»); **mover a** y **copiar en** la pasan o copian a otro grupo.

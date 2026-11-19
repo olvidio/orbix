@@ -61,5 +61,5 @@ Editor de plantilla semanal (-1): centros/tareas/horarios por zona. Grid plantil
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

@@ -70,7 +70,7 @@ if ($miRolePau === 'ctr') { // PauType::PAU_CTR
             $filtro['tipo_ctr'] = 'seccion_no_s';
         }
     } else {
-        if (ActividadesPermSupport::havePermOficina(PermisoOficina::DES) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
             $oForm->setCentros('all');
         } else {
             if (OrbixRuntime::miSfsv() === 1) {

@@ -49,7 +49,7 @@ Sucesor de `apps/actividadessacd/controller/asignar_sacd_auto.php` + `apps/activ
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `f_ini_iso` | `string` | controller (`inputString`) | No | Fecha ISO (`YYYY-MM-DD`) de inicio de curso des; sin valor no procesa nada |
+| `f_ini_iso` | `string` | controller (`inputString`) | No | Fecha ISO (`YYYY-MM-DD`) de inicio de curso pffe; sin valor no procesa nada |
 
 El controller construye `$input` con `f_ini_iso`.
 

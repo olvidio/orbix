@@ -23,9 +23,9 @@ Preparar la pantalla de asignación de centros encargados antes de mostrar los f
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -58,9 +58,9 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -97,9 +97,9 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -135,9 +135,9 @@ El usuario quita un centro de la lista de encargados de una actividad.
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -172,9 +172,9 @@ Ver los centros candidatos para asignar como encargados de una actividad.
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -208,9 +208,9 @@ Refrescar la lista de centros encargados de una actividad tras asignar, reordena
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales
@@ -243,9 +243,9 @@ Ver las actividades de un periodo con los centros encargados actuales.
 
 - Activ Ctr (frontend/actividadescentro/controller/activ_ctr.php)
 - Se accede desde la pantalla `activ_ctr` (colectivo según `tipo`):
-- **Legacy:** dre > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
+- **Legacy:** pffe > actividades > asignar centros (y variantes por tipo: activ sg, activ sr, sv n y
 - agd, sf s y sg, sf sr, sf n, nax y agd, sss+); también Calendario > actividades > asignar centros.
-- **Pills2:** dre > actividades > asignar centros (mismas variantes); Calendario > actividades >
+- **Pills2:** pffe > actividades > asignar centros (mismas variantes); Calendario > actividades >
 - asignar centros; ACTIVIDADES > Listados > Asignar ctr organizadores sg / sr.
 
 ### Tareas Habituales

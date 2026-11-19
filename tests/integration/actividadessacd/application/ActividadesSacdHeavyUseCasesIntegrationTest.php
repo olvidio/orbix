@@ -102,7 +102,7 @@ class ActividadesSacdHeavyUseCasesIntegrationTest extends myTest
             $this->assertArrayHasKey('fin_iso', $out);
             $this->assertArrayHasKey('texto_fase_ok_sacd', $out);
             $this->assertArrayHasKey('mostrar_nota_falta_sacd', $out);
-            $this->assertArrayHasKey('perm_des', $out);
+            $this->assertArrayHasKey('perm_pffe', $out);
             $this->assertArrayHasKey('filas', $out);
             $this->assertSame('tipo_inexistente', $out['tipo']);
             $this->assertFalse($out['mostrar_nota_falta_sacd']);

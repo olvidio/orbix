@@ -361,7 +361,7 @@ final class DbexternPantallasDataTest extends myTest
         yield 'numerarios' => ['n', MenuDlPermissionBits::SM];
         yield 'agregados' => ['a', MenuDlPermissionBits::AGD];
         yield 'supernumerarios' => ['s', MenuDlPermissionBits::SG];
-        yield 'sssc' => ['sssc', MenuDlPermissionBits::DES];
+        yield 'sssc' => ['sssc', MenuDlPermissionBits::PFFE];
     }
 
     public function test_el_indice_clasifica_unidas_traslados_desaparecidas_y_no_unidas(): void

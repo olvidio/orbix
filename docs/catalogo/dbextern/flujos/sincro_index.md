@@ -47,5 +47,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** vsm/dagd/vsg/dre > … > Actualizar datos desde BDU (según `tipo`)
+- **Legacy:** vsm/dagd/vsg/pffe > … > Actualizar datos desde BDU (según `tipo`)
 - **Pills2:** PERSONAS > Numerarios / Agregados / Supernumerarios > Actualizar datos desde BDU

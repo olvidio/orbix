@@ -21,7 +21,7 @@ Guardar los cambios hechos en un encargo.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
+Menú **pffe > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 

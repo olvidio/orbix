@@ -44,7 +44,7 @@ Referencias tecnicas para verificar la respuesta:
 
 ## Objetivo
 
-El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado a las actividades sr/sg actuales posteriores al inicio de curso des que aún no tienen sacd. Devuelve cuántas se han asignado y cuántas quedan sin asignar; las asignadas quedan con observaciones `auto`.
+El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado a las actividades sr/sg actuales posteriores al inicio de curso pffe que aún no tienen sacd. Devuelve cuántas se han asignado y cuántas quedan sin asignar; las asignadas quedan con observaciones `auto`.
 
 ## Limites De La Respuesta
 

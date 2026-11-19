@@ -25,7 +25,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Listado «d» (ref. cr 9/20, 10): dedicación por zona. Oculta datos si no `vcsd`/`des`.
+Listado «d» (ref. cr 9/20, 10): dedicación por zona. Oculta datos si no `vcsd`/`pffe`.
 
 ## Endpoint
 
@@ -48,7 +48,7 @@ Listado «d» (ref. cr 9/20, 10): dedicación por zona. Oculta datos si no `vcsd
 ## Permisos
 
 - Permiso oficina `vcsd`
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 
 ## Casos De Uso
 

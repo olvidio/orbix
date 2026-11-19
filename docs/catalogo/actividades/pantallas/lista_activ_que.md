@@ -26,7 +26,7 @@ Formulario de **filtros para listados especiales** de SR/SG. Según `que`:
 
 El POST del formulario va a `lista_activ.php`, que consume `lista_activ_datos`.
 Campos: secciones, estados, periodo, tipos de actividad (`c_activ`), asistentes
-(`asist`), título de grupo (`tit_list_grupo`). Con permiso `des` se amplían opciones.
+(`asist`), título de grupo (`tit_list_grupo`). Con permiso `pffe` se amplían opciones.
 
 ## Tipo
 
@@ -40,5 +40,5 @@ aparece en `lista_activ`.
 
 ## Ruta de menú
 
-- **Legacy:** Calendario > actividades > listas sg; dre > actividades > listas sg.
+- **Legacy:** Calendario > actividades > listas sg; pffe > actividades > listas sg.
 - **Pills2:** ACTIVIDADES > Listados > Listas asistentes sg (`que=list_activ_inv_sg`).

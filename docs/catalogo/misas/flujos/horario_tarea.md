@@ -66,5 +66,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

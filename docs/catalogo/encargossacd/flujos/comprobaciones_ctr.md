@@ -21,7 +21,7 @@ Limpiar los encargos ligados a centros que ya no existen.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
+Menú **pffe > Encargos > listados** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Listados).
 
 ## Fragmentos O Pantallas Auxiliares
 

@@ -24,7 +24,7 @@ use Tests\support\DescribeCriteria;
  * Marcar y desmarcar fases del proceso de una actividad: dependencias previas
  * (se marcan solas si hay permiso), dependientes que impiden desmarcar,
  * referencias circulares, permiso de la oficina responsable y cambio del
- * status de la actividad (solo dre pasa a/desde actual; otra dl no se toca).
+ * status de la actividad (solo pffe pasa a/desde actual; otra dl no se toca).
  *
  * Proceso de prueba (tipo 7): fase 1 (status 1) ← fase 2 (status 1) ← fase 5 (status 2, «aprobada»).
  */
@@ -239,7 +239,7 @@ final class ProcesoActividadServiceTest extends TestCase
     public function test_desmarcar_sin_dependientes_recalcula_el_status(): void
     {
         $this->actividad(StatusId::ACTUAL, 'dlb');
-        $this->permisos('des');
+        $this->permisos('pffe');
         $this->estado = ['1#0' => true, '2#0' => false, '5#0' => true];
         $this->apt->method('Guardar')->willReturn(true);
         $this->actividades->expects($this->once())->method('Guardar')->willReturnCallback(function (ActividadAll $a): bool {
@@ -250,7 +250,7 @@ final class ProcesoActividadServiceTest extends TestCase
         $this->assertSame(['5#0=off'], $this->marcadas);
     }
 
-    public function test_pasar_a_actual_solo_lo_puede_hacer_dre(): void
+    public function test_pasar_a_actual_solo_lo_puede_hacer_pffe(): void
     {
         $this->actividad(1, 'dlb');
         $this->estado = ['1#0' => true, '2#0' => true, '5#0' => false];
@@ -258,14 +258,14 @@ final class ProcesoActividadServiceTest extends TestCase
         $this->actividades->expects($this->never())->method('Guardar');
         $svc = $this->svc();
         $this->assertFalse($svc->guardar($this->tarea(5, true)));
-        $this->assertStringContainsString('debe hacerlo dre', $svc->getErrorTxt());
+        $this->assertStringContainsString('debe hacerlo pffe', $svc->getErrorTxt());
     }
 
-    public function test_dre_pasa_a_actual_y_marca_la_fase_aprobada_en_sf(): void
+    public function test_pffe_pasa_a_actual_y_marca_la_fase_aprobada_en_sf(): void
     {
         $this->actividad(1, 'dlb');
         $this->estado = ['1#0' => true, '2#0' => true, '5#0' => false];
-        $this->permisos('des');
+        $this->permisos('pffe');
         $tablas = [];
         $this->apt->method('setNomTabla')->willReturnCallback(function (string $t) use (&$tablas): void {
             $tablas[] = $t;
@@ -288,7 +288,7 @@ final class ProcesoActividadServiceTest extends TestCase
     {
         // La fase 2 (status proyecto) no tiene dependencias y se quedó sin marcar; la actividad ya
         // es actual por la 5. Antes tomaba el status de la fase marcada: intentaba volver a proyecto
-        // y, sin ser dre, abortaba con «debe hacerlo dre».
+        // y, sin ser pffe, abortaba con «debe hacerlo pffe».
         $this->actividad(StatusId::ACTUAL, 'dlb');
         $this->estado = ['1#0' => true, '2#0' => false, '5#0' => true];
         $this->permisos('est');

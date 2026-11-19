@@ -66,6 +66,6 @@ El enlace modificar solo aparece con permiso oficina `adl` y sección coincident
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > definir tarifa; dre > Nuevo calendario > Tarifas > definir tarifa;
+- **Legacy:** adl > Tarifas > definir tarifa; pffe > Nuevo calendario > Tarifas > definir tarifa;
   exterior > Tarifas > definir tarifa (también como activ -> tarifa en algunos menús).
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.

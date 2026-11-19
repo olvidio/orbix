@@ -87,7 +87,7 @@ el sacd elegido. El listado y el envío se cargan por AJAX contra `comunicacion_
 
 ## Ruta de menú
 
-- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Legacy:** pffe > actividades > comunic. sacd · exterior > sacd > atención actividades
 - **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
 
-Con `propuesta=true` (lista de propuestas): Legacy y Pills2 → dre > propuestas > lista activ. sacd.
+Con `propuesta=true` (lista de propuestas): Legacy y Pills2 → pffe > propuestas > lista activ. sacd.

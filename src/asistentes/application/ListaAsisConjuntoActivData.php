@@ -154,7 +154,7 @@ final class ListaAsisConjuntoActivData
                 /** @var ListaPlazasConjuntoActividades $oListaPlazasOtras */
                 $oListaPlazasOtras = $this->container->get(ListaPlazasConjuntoActividades::class);
             }
-            // «Solo sacd» (menú de dre) vale también para las actividades de otras dl.
+            // «Solo sacd» (menú de pffe) vale también para las actividades de otras dl.
             $oListaPlazasOtras->setSacd($Qque === 'list_cjto_sacd');
             $oListaPlazasOtras->setMi_dele($mi_dele);
             $oListaPlazasOtras->setCriteria($criteriaOt);

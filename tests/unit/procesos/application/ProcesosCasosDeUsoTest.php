@@ -158,10 +158,10 @@ final class ProcesosCasosDeUsoTest extends myTest
         $this->apt->method('matching')->willReturn([$this->tarea(1, 5, 10, 20)]);
         $this->fases->method('findById')->willReturn($this->fase('Fase A'));
         $this->tareas->method('findById')->willReturn($this->tareaDef('Tarea X'));
-        $this->tareasProceso->method('matching')->willReturn([$this->tareaProceso('des')]);
+        $this->tareasProceso->method('matching')->willReturn([$this->tareaProceso('pffe')]);
 
         $sin = $this->get()->execute(['id_activ' => 1])['a_rows'][0]['puede_editar'];
-        $this->permiso(['des']);
+        $this->permiso(['pffe']);
         $con = $this->get()->execute(['id_activ' => 1])['a_rows'][0]['puede_editar'];
         $this->permiso(['sm']);
         $otra = $this->get()->execute(['id_activ' => 1])['a_rows'][0]['puede_editar'];
@@ -292,7 +292,7 @@ final class ProcesosCasosDeUsoTest extends myTest
     {
         $t = $this->conIds();
         $this->apt->method('matching')->willReturn([$t]);
-        $this->tareasProceso->method('matching')->willReturn([$this->tareaProceso('des')]);
+        $this->tareasProceso->method('matching')->willReturn([$this->tareaProceso('pffe')]);
         $t->expects($this->never())->method('setCompletado');
         $this->servicio->expects($this->never())->method('guardar');
 

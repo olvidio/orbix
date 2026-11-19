@@ -19,7 +19,7 @@ Mostrar, día a día, las misas asignadas a un sacerdote en un periodo.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Plan sacerdote** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote).
+Menú **pffe > Misas > Plan sacerdote** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan sacerdote).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -57,5 +57,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Plan sacerdote
+- **Legacy:** pffe > Misas > Plan sacerdote
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote

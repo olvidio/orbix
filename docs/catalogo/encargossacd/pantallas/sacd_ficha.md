@@ -51,17 +51,17 @@ No se han detectado capacidades relacionadas.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 

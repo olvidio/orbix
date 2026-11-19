@@ -62,5 +62,5 @@ Formulario para crear un nuevo plan de misas: zona, orden, tipo plantilla y peri
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas >  Nuevo plan
+- **Legacy:** pffe > Misas >  Nuevo plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

@@ -22,7 +22,7 @@ Elegir zona, centro y periodo para ver el plan de misas de un centro.
 ### Donde Entrar
 
 - Buscar Plan Ctr (frontend/misas/controller/buscar_plan_ctr.php)
-- **Legacy:** dre > Misas > Plan centro
+- **Legacy:** pffe > Misas > Plan centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr
 
 ### Tareas Habituales
@@ -52,7 +52,7 @@ Elegir sacerdote y periodo para ver su plan de misas.
 ### Donde Entrar
 
 - Buscar Plan Sacd (frontend/misas/controller/buscar_plan_sacd.php)
-- **Legacy:** dre > Misas > Plan sacerdote
+- **Legacy:** pffe > Misas > Plan sacerdote
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote
 
 ### Tareas Habituales
@@ -81,8 +81,8 @@ Cambiar el estado del plan de misas de una zona y periodo: propuesta, visible pa
 ### Donde Entrar
 
 - Cambiar Status (frontend/misas/controller/cambiar_status.php)
-- **Legacy:** dre > Misas > Cambiar estado
-- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
+- **Legacy:** pffe > Misas > Cambiar estado
+- **Pills2:** pffe > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
 
 ### Tareas Habituales
 
@@ -112,7 +112,7 @@ Crear el plan de misas de un periodo nuevo a partir de la plantilla y mostrarlo 
 ### Donde Entrar
 
 - Crear Nuevo Periodo (frontend/misas/controller/crear_nuevo_periodo.php)
-- **Legacy:** dre > Misas >  Nuevo plan
+- **Legacy:** pffe > Misas >  Nuevo plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan
 
 ### Tareas Habituales
@@ -145,7 +145,7 @@ Asignar, cambiar o borrar el sacerdote de una celda del plan de misas; preparar 
 - modificar_plan_de_misas
 - preparar_plan_de_misas
 - modificar_plantilla
-- **Legacy:** dre > Misas > Modificar plan / Preparar / Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plan / Preparar / Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > …
 
 ### Tareas Habituales
@@ -175,7 +175,7 @@ Ofrecer los encargos de la zona elegida en la ventana de encargo-centro.
 ### Donde Entrar
 
 - Ver Encargos Centros (frontend/misas/controller/ver_encargos_centros.php)
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
@@ -232,7 +232,7 @@ Quitar un encargo de la vista de un centro.
 ### Donde Entrar
 
 - Ver Encargos Centros (frontend/misas/controller/ver_encargos_centros.php)
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
@@ -262,7 +262,7 @@ Eliminar un encargo de zona.
 ### Donde Entrar
 
 - Ver Encargos Zona (frontend/misas/controller/ver_encargos_zona.php)
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
@@ -291,7 +291,7 @@ Hacer visible un encargo de zona en un centro, o cambiarlo.
 ### Donde Entrar
 
 - Ver Encargos Centros (frontend/misas/controller/ver_encargos_centros.php)
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
@@ -320,7 +320,7 @@ Crear o actualizar un encargo de zona.
 ### Donde Entrar
 
 - Ver Encargos Zona (frontend/misas/controller/ver_encargos_zona.php)
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
@@ -379,7 +379,7 @@ Ver y fijar la hora de inicio y fin de una tarea (encargo) en la plantilla.
 ### Donde Entrar
 
 - Horario Tarea (frontend/misas/controller/horario_tarea.php)
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
@@ -411,7 +411,7 @@ Copiar las asignaciones de una plantilla a otra de la misma zona.
 ### Donde Entrar
 
 - Importar Plantilla (frontend/misas/controller/importar_plantilla.php)
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
@@ -441,7 +441,7 @@ Elegir la zona para crear y modificar sus encargos (tareas de misa).
 ### Donde Entrar
 
 - Modificar Encargos (frontend/misas/controller/modificar_encargos.php)
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
@@ -474,7 +474,7 @@ Elegir la zona para decidir qué encargos ve cada centro.
 ### Donde Entrar
 
 - Modificar Encargos Centros (frontend/misas/controller/modificar_encargos_centros.php)
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
@@ -504,7 +504,7 @@ Elegir la zona cuyas iniciales de sacerdotes se quieren editar.
 ### Donde Entrar
 
 - Modificar Iniciales Sacd Zona (frontend/misas/controller/modificar_iniciales_sacd_zona.php)
-- **Legacy:** dre > Misas > Iniciales sacd
+- **Legacy:** pffe > Misas > Iniciales sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
@@ -532,7 +532,7 @@ Editar la plantilla de una zona: las tareas que se repiten cada semana o mes y q
 ### Donde Entrar
 
 - Modificar Plantilla (frontend/misas/controller/modificar_plantilla.php)
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
@@ -567,8 +567,8 @@ Aplicar el nuevo estado a todas las misas de una zona en un rango de fechas.
 ### Donde Entrar
 
 - Cambiar Status (frontend/misas/controller/cambiar_status.php)
-- **Legacy:** dre > Misas > Cambiar estado
-- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
+- **Legacy:** pffe > Misas > Cambiar estado
+- **Pills2:** pffe > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
 
 ### Tareas Habituales
 
@@ -597,7 +597,7 @@ Cargar las zonas, el orden y los tipos de plantilla que ofrecen las pantallas de
 - Modificar Plan De Misas (frontend/misas/controller/modificar_plan_de_misas.php)
 - Preparar Plan De Misas (frontend/misas/controller/preparar_plan_de_misas.php)
 - Ver Plan De Misas (frontend/misas/controller/ver_plan_de_misas.php)
-- **Legacy:** dre > Misas >  Nuevo plan
+- **Legacy:** pffe > Misas >  Nuevo plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan
 
 ### Tareas Habituales
@@ -627,7 +627,7 @@ Quitar el horario asignado a una tarea de la plantilla.
 ### Donde Entrar
 
 - Horario Tarea (frontend/misas/controller/horario_tarea.php)
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla
 
 ### Tareas Habituales
@@ -657,7 +657,7 @@ Guardar las iniciales y el color de un sacerdote.
 ### Donde Entrar
 
 - Ver Iniciales Zona (frontend/misas/controller/ver_iniciales_zona.php)
-- **Legacy:** dre > Misas > Iniciales sacd
+- **Legacy:** pffe > Misas > Iniciales sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
@@ -685,7 +685,7 @@ Mostrar la cuadrícula del plan de misas de una zona (encargos en filas, días e
 ### Donde Entrar
 
 - Ver Cuadricula Zona (frontend/misas/controller/ver_cuadricula_zona.php)
-- **Legacy:** dre > Misas > Modificar plan
+- **Legacy:** pffe > Misas > Modificar plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan
 
 ### Tareas Habituales
@@ -716,7 +716,7 @@ Ver y modificar qué encargos de la zona aparecen en el plan de cada centro.
 ### Donde Entrar
 
 - Ver Encargos Centros (frontend/misas/controller/ver_encargos_centros.php)
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr
 
 ### Tareas Habituales
@@ -746,7 +746,7 @@ Ver, crear, modificar y eliminar los encargos de una zona.
 ### Donde Entrar
 
 - Ver Encargos Zona (frontend/misas/controller/ver_encargos_zona.php)
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos
 
 ### Tareas Habituales
@@ -776,7 +776,7 @@ Ver y cambiar las iniciales y el color de cada sacerdote de la zona, que se usan
 ### Donde Entrar
 
 - Ver Iniciales Zona (frontend/misas/controller/ver_iniciales_zona.php)
-- **Legacy:** dre > Misas > Iniciales sacd
+- **Legacy:** pffe > Misas > Iniciales sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd
 
 ### Tareas Habituales
@@ -835,7 +835,7 @@ Mostrar el plan de misas de un centro: encargos en filas y días en columnas, co
 ### Donde Entrar
 
 - Ver Plan Ctr (frontend/misas/controller/ver_plan_ctr.php)
-- **Legacy:** dre > Misas > Plan centro
+- **Legacy:** pffe > Misas > Plan centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr
 
 ### Tareas Habituales
@@ -864,7 +864,7 @@ Mostrar, día a día, las misas asignadas a un sacerdote en un periodo.
 ### Donde Entrar
 
 - Ver Plan Sacd (frontend/misas/controller/ver_plan_sacd.php)
-- **Legacy:** dre > Misas > Plan sacerdote
+- **Legacy:** pffe > Misas > Plan sacerdote
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan sacerdote
 
 ### Tareas Habituales

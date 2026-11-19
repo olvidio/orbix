@@ -62,6 +62,6 @@ Crear: `debe seleccionar un tipo de actividad`, `No tiene permiso para crear…`
 
 ## Ruta de menú
 
-- **Legacy:** dre/Calendario > actividades > nueva activ (crear).
+- **Legacy:** pffe/Calendario > actividades > nueva activ (crear).
 - **Pills2:** ACTIVIDADES > Buscar actividad > Nueva actividad; ATENCIÓN SACD >
   Actividades > Nueva actividad. Borrado desde listados de búsqueda (sin menú propio).

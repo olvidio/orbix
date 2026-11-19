@@ -57,5 +57,5 @@ Consulta del plan de misas de una zona en modo solo lectura (cuadrícula sin edi
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Ver plan zona
+- **Legacy:** pffe > Misas > Ver plan zona
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Ver plan zona

@@ -120,13 +120,13 @@ class ActividadTipo
         if (ActividadesPermSupport::havePermOficina(PermisoOficina::SG)) {
             $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
-        if (ActividadesPermSupport::havePermOficina(PermisoOficina::DES)) {
+        if (ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE)) {
             if ($this->status === ActividadStatusId::ACTUAL) {
-                $array_des = $oTipoActiv->getAsistentesPosibles();
+                $array_pffe = $oTipoActiv->getAsistentesPosibles();
             } else {
-                $array_des = [6 => 'sssc'];
+                $array_pffe = [6 => 'sssc'];
             }
-            $array2 = array_merge($array2, $array_des);
+            $array2 = array_merge($array2, $array_pffe);
         }
         if (ActividadesPermSupport::havePermOficina(PermisoOficina::SR)) {
             $array2 = array_merge($array2, [7 => 'sr']);

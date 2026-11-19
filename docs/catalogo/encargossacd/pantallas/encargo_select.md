@@ -72,17 +72,17 @@ Listado/búsqueda de encargos con acciones ver, modificar, horario y borrar. Los
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 

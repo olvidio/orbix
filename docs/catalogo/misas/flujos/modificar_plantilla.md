@@ -19,7 +19,7 @@ Editar la plantilla de una zona: las tareas que se repiten cada semana o mes y q
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
+Menú **pffe > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -73,5 +73,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

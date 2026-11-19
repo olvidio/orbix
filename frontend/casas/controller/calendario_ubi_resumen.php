@@ -44,7 +44,7 @@ $oPosicion->nav()->enter(
 );
 
 $filtro = ['active' => '1'];
-if (!ActividadesPermSupport::havePermOficina(PermisoOficina::DES) && !ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
+if (!ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE) && !ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
     $miSfsv = OrbixRuntime::miSfsv();
     if ($miSfsv === 1) {
         $filtro['sv'] = '1';

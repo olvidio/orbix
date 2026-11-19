@@ -41,7 +41,7 @@ class BorrarActividad
         $dl_org = $oActividad->getDl_org() ?? '';
         $id_tabla = $oActividad->getId_tabla();
 
-        // para des => dl y dlf:
+        // para pffe => dl y dlf:
         $dl_org_no_f = (string) preg_replace('/(\.*)f$/', '\1', $dl_org);
         $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
 

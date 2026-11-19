@@ -21,7 +21,7 @@ Desde la pantalla de propuestas: volver a crear la tabla de trabajo, aprobar los
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > propuestas**.
+Menú **pffe > Encargos > propuestas**.
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -74,5 +74,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > propuestas
+- **Legacy:** pffe > Encargos > propuestas
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > propuestas

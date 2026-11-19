@@ -33,7 +33,7 @@ Da pasos cortos y orientados a usuario. Si falta ruta de menu, dilo como pendien
 
 1. Entrar en **ficha sacd**; la pantalla se titula «fase real».
 2. Elegir el **tipo** (n, agd, sss+, cp) y luego el sacerdote en **Sacd:**.
-3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial dre»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
+3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial pffe»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
 4. Para añadir otro encargo, elegir en **añadir encargo** (estudio, descanso, retiro, otros).
 5. Escribir o cambiar las **observaciones** si hace falta y pulsar **Guardar**.
 

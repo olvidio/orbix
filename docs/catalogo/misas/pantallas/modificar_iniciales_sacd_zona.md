@@ -51,5 +51,5 @@ Entry point para editar iniciales y color de sacerdotes por zona. Selector de zo
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Iniciales sacd
+- **Legacy:** pffe > Misas > Iniciales sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

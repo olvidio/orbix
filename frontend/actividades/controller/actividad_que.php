@@ -81,7 +81,7 @@ $oPosicion->nav()->enter(
 
 $isfsv = OrbixRuntime::miSfsv();
 $ssfsv = '';
-if (!ActividadesPermSupport::permDes()) {
+if (!ActividadesPermSupport::permPffe()) {
     if ($isfsv === 1) {
         $ssfsv = 'sv';
     }

@@ -354,7 +354,7 @@ final class ActividadesControllersContractTest extends myTest
         $json = $this->ejecutar('lista_activ_datos.php', ['que' => 'list_activ', 'seccion' => ['1']]);
         [$input, $opts] = $caso->args('execute');
         $this->assertSame(['list_activ', ['1']], [$input['que'], $input['seccion']]);
-        $this->assertSame(['mi_sfsv', 'perm_vcsd', 'perm_des', 'perm_sg', 'perm_admin', 'is_dmz'], array_keys($opts));
+        $this->assertSame(['mi_sfsv', 'perm_vcsd', 'perm_pffe', 'perm_sg', 'perm_admin', 'is_dmz'], array_keys($opts));
         $this->assertSame(['ok' => 1], self::data($json));
     }
 

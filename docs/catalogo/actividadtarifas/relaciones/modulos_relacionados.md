@@ -14,7 +14,7 @@ estado_revision: revisado
 | actividades | Tipos de actividad (dominio) | La relación tarifa ↔ tipo actividad referencia `id_tipo_activ` |
 | ubis / casas | Casas en tarifa_ubi | Desplegable de casa y año en tarifas por ubi |
 | casas | `frontend/casas/controller/calendario_ubi_resumen.php` | Llama `/src/actividadtarifas/tarifa_ubi_update_inc` (incremento masivo) |
-| permisos | `have_perm_oficina(adl\|pr\|calendario\|des\|vcsd)` | Listados y acciones |
+| permisos | `have_perm_oficina(adl\|pr\|calendario\|pffe\|vcsd)` | Listados y acciones |
 
 ## Dependientes (otros modulos consumen actividadtarifas)
 

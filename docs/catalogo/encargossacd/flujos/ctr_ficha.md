@@ -21,7 +21,7 @@ Ver y modificar la atención sacerdotal de un centro: sacerdote titular, suplent
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
+Menú **pffe > Encargos > ficha ctr** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -67,12 +67,12 @@ No se han documentado errores en la capacidad.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 

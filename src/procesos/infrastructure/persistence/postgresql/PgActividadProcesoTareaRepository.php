@@ -513,9 +513,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 // cambiar el status de la actividad para que se ajuste al de la fase.
                 $dl_org = $oActividad->getDl_org() ?? '';
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-                // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
+                // El status solo se puede guardar si la actividad es de la propia dl (o pffe desde sv).
                 $oPerm = $_SESSION['oPerm'] ?? null;
-                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $oPerm instanceof \src\permisos\domain\XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
+                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $oPerm instanceof \src\permisos\domain\XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)) {
                     $oActividad->setStatusVo((int) $statusNew);
                     $this->actividadAllRepository->Guardar($oActividad, false); // registrarCambios=false, para que no anote el cambio.
                 }

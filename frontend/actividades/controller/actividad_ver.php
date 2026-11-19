@@ -79,7 +79,7 @@ $aQuery = array(
 array_walk($aQuery, [\frontend\shared\helpers\FuncTablasSupport::class, 'ponerEmptyOnNull']);
 $godossiers = HashF::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
-$permiso_des = ActividadesPermSupport::permDes();
+$permiso_pffe = ActividadesPermSupport::permPffe();
 
 $alt = '';
 $dos = '';
@@ -193,7 +193,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $isfsv = (integer)substr($id_tipo_activ, 0, 1);
         $calc_tarifa_inicial = true;
     }
-    if (\frontend\shared\helpers\FuncTablasSupport::isTrue($permiso_des)) {
+    if (\frontend\shared\helpers\FuncTablasSupport::isTrue($permiso_pffe)) {
         if (empty($id_tipo_activ)) {
             // valor por defecto. Si esta vacio dira que no tiene permiso.
             $id_tipo_activ = '1';
@@ -363,7 +363,7 @@ $h = $oHash1->linkSinVal();
 
 $extendida = ($Qmod !== 'cambiar_tipo') && (strlen(PayloadCoercion::string($id_tipo_activ)) > 3);
 $actividad_tipo_html = ActividadTipo::htmlDesdeConfig(ActividadTipo::configDesdeParametros([
-    'perm_jefe' => $permiso_des ? 't' : 'f',
+    'perm_jefe' => $permiso_pffe ? 't' : 'f',
     'id_tipo_activ' => PayloadCoercion::string($id_tipo_activ),
     'que' => 'buscar',
     'sfsv' => $ssfsv,
@@ -386,7 +386,7 @@ $a_campos = [
     'alt' => $alt,
     'dos' => $dos,
     'oPermActiv' => $oPermActiv,
-    'permiso_des' => $permiso_des,
+    'permiso_pffe' => $permiso_pffe,
     'sasistentes' => $sasistentes,
     'sactividad' => $sactividad,
     'snom_tipo' => $snom_tipo,

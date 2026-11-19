@@ -136,7 +136,7 @@ class ProcesoActividadService
             // OJO si la actividad no es de la dl, no puedo cambiarla.
             $dl_org = $oActividad->getDl_org() ?? '';
             $id_tabla = $oActividad->getIdTablaVo()?->value() ?? '';
-            // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
+            // Sólo pffe puede aprobar (pasar de proyecto a actual) las actividades
             // ojo marcha atrás tampoco debería poderse.
             if (($statusProceso == StatusId::ACTUAL && $statusActividad < StatusId::ACTUAL)
                 || ($statusActividad == StatusId::ACTUAL && $statusProceso < StatusId::ACTUAL)) {
@@ -144,14 +144,14 @@ class ProcesoActividadService
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', (string) $dl_org);
                 $oPerm = $_SESSION['oPerm'] ?? null;
                 if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
-                    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
+                    if ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)) {
                         $oActividad->setStatusVo($statusProceso);
                         $this->actividadAllRepository->Guardar($oActividad);
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.
                         $this->marcarFaseEnSf($id_activ, $statusProceso, $statusActividad);
                     } else {
                         // No echo: corrompe la respuesta JSON del cambio en lote.
-                        $this->abort(_("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo dre"));
+                        $this->abort(_("no se puede cambiar el status de la actividad a 'actual', porque debe hacerlo pffe"));
                     }
                 } else { // para el resto.
                     if ($id_tabla === 'dl') {

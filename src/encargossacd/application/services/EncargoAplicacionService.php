@@ -147,7 +147,7 @@ class EncargoAplicacionService
             '5' => 'cgi/oc',
             '8' => 'zonas',
         ];
-        if ($this->havePermOficina(MenuDlPermissionBits::DES) || $this->havePermOficina(MenuDlPermissionBits::VCSD)) {
+        if ($this->havePermOficina(MenuDlPermissionBits::PFFE) || $this->havePermOficina(MenuDlPermissionBits::VCSD)) {
             return $this->stringKeyedSeccion($seccion);
         }
 

@@ -180,7 +180,7 @@ final class ListaActividadesSacdData
         }
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $perm_des = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES);
+        $perm_pffe = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE);
 
         return [
             'titulo' => ucfirst(_("listado de actividades")),
@@ -189,7 +189,7 @@ final class ListaActividadesSacdData
             'fin_iso' => $finIso,
             'texto_fase_ok_sacd' => $txt_fase_ok_sacd,
             'mostrar_nota_falta_sacd' => $tipo === 'falta_sacd',
-            'perm_des' => $perm_des,
+            'perm_pffe' => $perm_pffe,
             'filas' => $filas,
         ];
     }

@@ -44,7 +44,7 @@ padre; el HTML resultante muestra la tabla de actividades agrupadas.
 
 Múltiples entradas según `que` (ejemplos):
 
-- **Legacy:** dre/Calendario/adl > Nuevo calendario > listados > listado por oficinas
+- **Legacy:** pffe/Calendario/adl > Nuevo calendario > listados > listado por oficinas
   (`o_todas`); casas comunes (`c_comunes`); oficina propia (`o_actual`); todas casas
   sf/sv; etc.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Activ. nuevo calendario por

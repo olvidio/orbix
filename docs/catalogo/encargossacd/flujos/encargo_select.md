@@ -21,7 +21,7 @@ Buscar los encargos existentes y acceder a su ficha, o crear uno nuevo.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
+Menú **pffe > Encargos > ver encargo** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -84,12 +84,12 @@ No se han documentado errores en la capacidad.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 

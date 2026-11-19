@@ -56,5 +56,5 @@ No se han detectado controladores frontend relacionados.
 Pantalla revisada contra `frontend/asistentes/`.
 ## Ruta de menú
 
-- **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
+- **Legacy:** vsm/vest/dagd/pffe > pendientes según `sactividad` y `tipo_personas`
 - **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt

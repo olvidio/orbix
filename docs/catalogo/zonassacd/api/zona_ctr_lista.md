@@ -19,7 +19,7 @@ errores: []
 
 # Zona Ctr Lista
 
-Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
+Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_pffe.
 
 Linaje: Case get_lista del legacy zona_ctr_ajax.php.
 
@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_des.
+Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_sf). Centros sf solo visibles con perm_pffe.
 
 ## Endpoint
 
@@ -59,7 +59,7 @@ Centros activos de una zona (id numérico), sin zona dl (no) o sin zona sf (no_s
 
 ## Permisos
 
-con_sel y centros sf requieren perm_des.
+con_sel y centros sf requieren perm_pffe.
 
 ## Casos De Uso
 

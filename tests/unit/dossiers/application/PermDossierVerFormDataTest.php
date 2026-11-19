@@ -200,7 +200,7 @@ final class PermDossierVerFormDataTest extends TestCase
         yield 'administrador sv (-1)' => [$bits['admin_sv'], true];
         yield 'administrador sf' => [$bits['admin_sf'], true];
         yield 'usuario de agd' => [$bits['agd'], false];
-        yield 'usuario de des' => [$bits['des'], false];
+        yield 'usuario de pffe' => [$bits['pffe'], false];
         yield 'varias oficinas sin ser admin' => [$bits['agd'] | $bits['sg'] | $bits['ctr'], false];
         yield 'casi admin_sf (le falta un bit)' => [$bits['admin_sf'] & ~$bits['agd'], false];
         yield 'sin permisos' => [0, false];

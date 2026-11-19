@@ -149,7 +149,7 @@ final class PersonasSelectData
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
                 $cPersonas = $this->personaSSSCRepository->matching($criterioPersona);
-                if ($tienePermOficina('des')) {
+                if ($tienePermOficina('pffe')) {
                     $permiso = 3;
                 }
                 break;
@@ -199,7 +199,7 @@ final class PersonasSelectData
                 if (
                     $tienePermOficina('sm')
                     || $tienePermOficina('agd')
-                    || $tienePermOficina('des')
+                    || $tienePermOficina('pffe')
                     || $tienePermOficina('sg')
                     || $tienePermOficina('est')
                 ) {

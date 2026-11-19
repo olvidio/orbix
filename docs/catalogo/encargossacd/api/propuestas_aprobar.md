@@ -68,7 +68,7 @@ Ningún mensaje `_()` de fallo en el caso de uso; fallos de repositorio no se pr
 ## Permisos
 
 Sin control propio; acceso vía menú Encargos > propuestas + confirm JS. Pendiente: confirmar
-restricción `des`/`vcsd` u oficina.
+restricción `pffe`/`vcsd` u oficina.
 
 ## Casos De Uso
 

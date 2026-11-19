@@ -19,7 +19,7 @@ final class PermisoOficina
     public const PR = MenuDlPermissionBits::PR;
     public const AGD = MenuDlPermissionBits::AGD;
     public const AOP = MenuDlPermissionBits::AOP;
-    public const DES = MenuDlPermissionBits::DES;
+    public const PFFE = MenuDlPermissionBits::PFFE;
     public const EST = MenuDlPermissionBits::EST;
     public const SCDL = MenuDlPermissionBits::SCDL;
     public const SCR = MenuDlPermissionBits::SCR;

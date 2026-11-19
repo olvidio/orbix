@@ -6,15 +6,15 @@
  * `/src/actividadessacd/sacd_asignar_auto`. Pinta el mensaje resultado
  * en el propio contenedor sin recargar la pagina.
  *
- * @var string $inicurs_des      Inicio de curso des (formato local).
- * @var string $inicurs_des_iso  Inicio de curso des (YYYY-MM-DD).
+ * @var string $inicurs_pffe      Inicio de curso pffe (formato local).
+ * @var string $inicurs_pffe_iso  Inicio de curso pffe (YYYY-MM-DD).
  * @var string $ctx_asignar_auto Cápsula HashB de la mutación.
  * @var string $url_asignar_auto URL firmada del endpoint.
  */
 
 $i18n = [
     'desc_1' => ucfirst(_("esto asignará el sacd titular del centro a las actividades que tengan un centro encargado")),
-    'desc_2' => ucfirst(sprintf(_("limitado a las actividades de sr y sg a partir de %s y marcadas como actuales"), $inicurs_des)),
+    'desc_2' => ucfirst(sprintf(_("limitado a las actividades de sr y sg a partir de %s y marcadas como actuales"), $inicurs_pffe)),
     'desc_3' => ucfirst(_("en el campo observaciones aparece la palabra 'auto' para indicar la asignación automática")),
     'continuar' => _("continuar"),
     'procesando' => _("procesando..."),

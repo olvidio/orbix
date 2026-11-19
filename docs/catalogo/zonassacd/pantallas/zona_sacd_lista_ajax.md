@@ -49,5 +49,5 @@ No se han detectado acciones.
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > lista sacd-zona
+- **Legacy:** pffe > zonas > lista sacd-zona
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona

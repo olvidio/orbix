@@ -194,7 +194,7 @@ class Select_actividades_de_una_persona
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
-            if ($mi_sfsv != $isfsv && !$oPerm->have_perm_oficina(MenuDlPermissionBits::DES)) {
+            if ($mi_sfsv != $isfsv && !$oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)) {
                 $ssfsv = $oTipoActividad->getSfsvText();
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";

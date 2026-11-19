@@ -24,7 +24,7 @@ $oPosicion = FrontBootstrap::boot();
 // Sólo quiero ver las casas comunes (active + sv + sf).
 $oForm = new frontend\shared\web\CasasQue();
 $oForm->setFiltroCasas(['active' => true, 'sv' => true, 'sf' => true]);
-if (ActividadesPermSupport::havePermOficina(PermisoOficina::DES) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
+if (ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE) || ActividadesPermSupport::havePermOficina(PermisoOficina::VCSD)) {
     $oForm->setCasas('all');
 } else {
     $oForm->setCasas('sv');

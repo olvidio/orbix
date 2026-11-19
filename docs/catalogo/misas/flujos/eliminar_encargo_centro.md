@@ -19,7 +19,7 @@ Quitar un encargo de la vista de un centro.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
+Menú **pffe > Misas > Encargos centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Encargos ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -64,5 +64,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

@@ -35,5 +35,5 @@ guardar.
 
 sin entrada de menú en el índice (popup desde planning):
 
-- **Legacy / Pills2:** Calendario/dre/adl/… > planning > por casas o *nuevo planing*
+- **Legacy / Pills2:** Calendario/pffe/adl/… > planning > por casas o *nuevo planing*
   en estudio (`planning_casa_que.php`).

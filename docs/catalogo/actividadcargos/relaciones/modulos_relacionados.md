@@ -15,7 +15,7 @@ estado_revision: revisado
 | personas | `id_pau` = persona | Dossier 1302 (cargos de persona); desplegable personas en form |
 | asistentes | Dossiers 3101/1301 | Alta/baja de asistente al marcar **¿asiste?** o al eliminar cargo |
 | actividades | `TiposActividades`, permisos | `perm_pers_activ` / `perm_activ_pers` para enlaces de alta |
-| permisos | `des`, `vcsd` | Aviso y borrado de asistente al quitar cargo |
+| permisos | `pffe`, `vcsd` | Aviso y borrado de asistente al quitar cargo |
 
 ## Dependientes (otros modulos consumen actividadcargos)
 

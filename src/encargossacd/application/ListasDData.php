@@ -82,7 +82,7 @@ final class ListasDData
         if ($sf === 1
             && is_object($oPerm)
             && method_exists($oPerm, 'have_perm_oficina')
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))
         ) {
             $permiso_sf = 'si';
         }

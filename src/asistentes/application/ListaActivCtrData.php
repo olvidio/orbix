@@ -66,7 +66,7 @@ final class ListaActivCtrData
             /** @var XPermisos $oPerm */
             $oPerm = $_SESSION['oPerm'];
             if ($Qssfsv === 'sf'
-                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES))) {
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD) || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE))) {
                 $ssfsv = 'sf';
             } else {
                 $ssfsv = 'sv';

@@ -50,7 +50,7 @@ Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vac�
   - `tipo`: tabla
   - `id_tabla`: zona_sacd_ajax
   - `a_cabeceras`: sacd, zona, propia, L..D
-  - `a_botones`: modificar si perm_des
+  - `a_botones`: modificar si perm_pffe
   - `con_sel`: boolean
   - `a_valores`: filas con sel=id_nom
   - `error`: string vacío
@@ -61,7 +61,7 @@ Tabla de sacd de una zona (id_zona numérico), sacd sin zona (id_zona=no) o vac�
 
 ## Permisos
 
-con_sel y botón modificar solo con perm_des (des/vcsd).
+con_sel y botón modificar solo con perm_pffe (pffe/vcsd).
 
 ## Casos De Uso
 

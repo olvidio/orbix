@@ -23,7 +23,7 @@ final class PermisoDossierBits
         }
         $permissions['agd'] = 1 << 1;
         $permissions['aop'] = 1 << 2;
-        $permissions['des'] = 1 << 3;
+        $permissions['pffe'] = 1 << 3;
         $permissions['est'] = 1 << 4;
         $permissions['scdl'] = 1 << 5;
         $permissions['scr'] = 1 << 5;

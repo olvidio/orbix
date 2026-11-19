@@ -33,7 +33,7 @@ construye el `<select>` con `fnjs_construir_desplegable`.
 
 | `salida` | `entrada` | Devuelve | Notas |
 |----------|-----------|----------|-------|
-| `asistentes` | `isfsv` (1 digito) | asistentes posibles (`iasistentes_val`) | `blanco=true` solo con perm oficina `des` o `calendario`. |
+| `asistentes` | `isfsv` (1 digito) | asistentes posibles (`iasistentes_val`) | `blanco=true` solo con perm oficina `pffe` o `calendario`. |
 | `actividad` | `isfsv+iasistentes` | actividades posibles (`iactividad_val`) | `extendida='t'` ⇒ codigos de 2 digitos (blanco `..`). |
 | `nom_tipo` | `isfsv+iasistentes+iactividad` | tipos posibles (`inom_tipo_val`) | `modo='buscar'` ⇒ onchange `fnjs_id_activ()`; otro ⇒ `fnjs_act_id_activ()`. |
 | `lugar` | `filtro_lugar` (dl o region) | casas posibles (`id_ubi`) | Usa tambien `isfsv`, `ssfsv`, `opcion_sel`. |

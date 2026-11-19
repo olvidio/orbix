@@ -47,7 +47,7 @@ if (is_file($menusFile)) {
         $legacy = $legacyRaw;
         foreach (preg_split('/\n+/', $legacyRaw) as $part) {
             $part = trim($part);
-            if (str_starts_with($part, 'dre >')) {
+            if (str_starts_with($part, 'pffe >')) {
                 $legacy = $part;
                 break;
             }
@@ -66,8 +66,8 @@ if (is_file($menusFile)) {
 }
 
 $pantallaResumen = [
-    'zona_sacd' => 'Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_des para mutaciones.',
-    'zona_ctr' => 'Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_des.',
+    'zona_sacd' => 'Pantalla Zonas-sacd: listar sacd por zona, reasignar zonas (propia/iglesia) y modal de días L–D (vía misas/zona_sacd_datos_*). Requiere perm_pffe para mutaciones.',
+    'zona_ctr' => 'Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_pffe.',
     'zona_sacd_lista_ajax' => 'Fragmento AJAX: tabla sacd (`id_zona`) desde zona_sacd, o listado global si `que=get_lista_tot` (menú Lista sacd-zona).',
     'zona_sacd_update_ajax' => 'Proxy JSON POST a `/src/zonassacd/zona_sacd_update` desde fnjs_guardar en zona_sacd.',
     'zona_ctr_lista_ajax' => 'Fragmento AJAX: renderiza tabla de centros vía zona_ctr_lista (fnjs_busca_ctrs).',
@@ -377,19 +377,19 @@ foreach (glob($catalogo . '/flujos/*.md') as $path) {
         $newBody .= "1. Abrir Zonas-sacd desde el menú.\n";
         $newBody .= "2. Elegir zona (o «sin asignar zona») en el desplegable → carga AJAX `zona_sacd_lista`.\n";
         $newBody .= "3. Revisar tabla: sacd, zona, propia, días L–D.\n\n";
-        $newBody .= "### Cambiar asignación de zona (perm_des)\n\n";
+        $newBody .= "### Cambiar asignación de zona (perm_pffe)\n\n";
         $newBody .= "1. Marcar sacd en la tabla.\n";
         $newBody .= "2. Elegir zona destino y pulsar «cambiar asignación zona» (`acumular=1`) o «añadir asignación iglesia/cgi» (`acumular=2`).\n";
         $newBody .= "3. Validaciones cliente: zona destino y al menos un sacd marcado.\n\n";
-        $newBody .= "### Editar días de atención (perm_des)\n\n";
+        $newBody .= "### Editar días de atención (perm_pffe)\n\n";
         $newBody .= "1. Marcar un solo sacd → botón «modificar» → modal.\n";
         $newBody .= "2. GET `/src/misas/zona_sacd_datos_get`; grabar con PUT `/src/misas/zona_sacd_datos_put`.\n\n";
     } elseif ($name === 'zona_ctr') {
         $newBody .= "## Escenarios\n\n";
         $newBody .= "### Consultar centros de una zona\n\n";
         $newBody .= "1. Abrir Zonas-ctr.\n";
-        $newBody .= "2. Elegir zona (`int`, `no`, o `no_sf` con perm_des) → AJAX `zona_ctr_lista`.\n\n";
-        $newBody .= "### Reasignar centros (perm_des)\n\n";
+        $newBody .= "2. Elegir zona (`int`, `no`, o `no_sf` con perm_pffe) → AJAX `zona_ctr_lista`.\n\n";
+        $newBody .= "### Reasignar centros (perm_pffe)\n\n";
         $newBody .= "1. Marcar centros, elegir zona destino (o «sin asignar zona»).\n";
         $newBody .= "2. Pulsar «asignar» → `zona_ctr_update`.\n\n";
     } elseif ($name === 'zona_sacd_lista_tot') {

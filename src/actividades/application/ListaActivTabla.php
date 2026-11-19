@@ -43,7 +43,7 @@ class ListaActivTabla
      *   year, dl_org, empiezamin, empiezamax, c_activ (array), asist (array),
      *   seccion (array), ssfsv, sasistentes, sactividad, snom_tipo, titulo.
      * @param array<string, mixed> $opts Opciones de entorno. Claves:
-     *   mi_sfsv (int), perm_vcsd (bool), perm_des (bool), perm_sg (bool),
+     *   mi_sfsv (int), perm_vcsd (bool), perm_pffe (bool), perm_sg (bool),
      *   perm_admin (bool), is_dmz (bool).
      * @return array{
      *   titulo: string,
@@ -75,7 +75,7 @@ class ListaActivTabla
 
         $mi_sfsv = \src\shared\domain\helpers\FuncTablasSupport::inputInt($opts, 'mi_sfsv');
         $perm_vcsd = (bool)($opts['perm_vcsd'] ?? false);
-        $perm_des = (bool)($opts['perm_des'] ?? false);
+        $perm_pffe = (bool)($opts['perm_pffe'] ?? false);
         $perm_sg = (bool)($opts['perm_sg'] ?? false);
         $perm_admin = (bool)($opts['perm_admin'] ?? false);
         $is_dmz = (bool)($opts['is_dmz'] ?? false);
@@ -178,7 +178,7 @@ class ListaActivTabla
             || $Qque === 'list_activ_inv_sg'
             || $Qque === 'list_activ_sr'
             || $perm_vcsd
-            || $perm_des
+            || $perm_pffe
         ) {
             $ver_hora = 1;
         }
@@ -203,7 +203,7 @@ class ListaActivTabla
         if ($ver_hora === 1) {
             $a_cabeceras[] = ucfirst(_("hora fin"));
         }
-        if ($perm_vcsd || $perm_des) {
+        if ($perm_vcsd || $perm_pffe) {
             $a_cabeceras[] = 'sf/sv';
         }
         $a_cabeceras[] = ucfirst(_("activ."));
@@ -263,7 +263,7 @@ class ListaActivTabla
             $sactividadTxt = $oTipoActivRow->getActividadText();
             $snom_tipoTxt = $oTipoActivRow->getNom_tipoText();
 
-            if (($perm_sg || $perm_vcsd || $perm_des) && !$perm_admin) {
+            if (($perm_sg || $perm_vcsd || $perm_pffe) && !$perm_admin) {
                 if ($snom_tipoTxt === '(sin especificar)') {
                     $snom_tipoTxt = '';
                 }
@@ -279,7 +279,7 @@ class ListaActivTabla
                 $a_valores[$i][3] = $h_ini;
                 $a_valores[$i][5] = $h_fin;
             }
-            if ($perm_vcsd || $perm_des) {
+            if ($perm_vcsd || $perm_pffe) {
                 $a_valores[$i][6] = $ssfsv;
             }
             $a_valores[$i][7] = $sactividadTxt;

@@ -15,7 +15,7 @@ estado_revision: "generado"
 
 ## Resumen
 
-Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_des.
+Pantalla Zonas-ctr: listar centros por zona y reasignarlos. Opción sin zona sf solo con perm_pffe.
 
 ## Uso En Ayuda
 

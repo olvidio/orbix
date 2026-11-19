@@ -246,7 +246,7 @@
         "errores": [],
         "salida": {"success_data": {"opciones_loc": "desplegable ubicación", "opciones_que_lista": "filtros tipo lista", "a_cabeceras": "cabeceras tabla", "a_valores": "filas centros/casas", "a_botones": "modificar y opcional trasladar"}},
         "objetivo_funcional": "Lista centros y casas filtrados por delegación/exterior y tipo, con teléfonos y enlaces a ficha.",
-        "permisos": ["have_perm_oficina(vcsd|des): filtro sv en casas.", "have_perm_oficina(admin_sv): botón trasladar."],
+        "permisos": ["have_perm_oficina(vcsd|pffe): filtro sv en casas.", "have_perm_oficina(admin_sv): botón trasladar."],
         "casos_uso": ["ListCtrData"]
     },
     "lista_ctrs_data": {
@@ -386,7 +386,7 @@
         "errores": ["opción no definida en switch en %s, linea %s"],
         "salida": {"success_data": {"a_cabeceras": "cabeceras tabla", "a_valores": "filas casas y centros activos"}},
         "objetivo_funcional": "Busca casas y centros activos por nombre para el autocompletado de lista.",
-        "permisos": ["have_perm_oficina(vcsd|des): ver sf en sfsv=1 sin filtrar sv."],
+        "permisos": ["have_perm_oficina(vcsd|pffe): ver sf en sfsv=1 sin filtrar sv."],
         "casos_uso": ["UbisListaData"]
     },
     "ubis_tabla_data": {
@@ -396,7 +396,7 @@
         "errores": ["debe poner algún criterio de búsqueda"],
         "salida": {"success_data": {"titulo": "título tabla", "nueva_ficha": "nueva|aviso|especificar", "pagina_link_spec": "enlace alta", "a_cabeceras": "cabeceras", "a_valores": "filas con links", "a_botones": "modificar/eliminar", "go_back": "estado navegación", "hash_hidden": "filtros serializados"}},
         "objetivo_funcional": "Busca ubis por nombre y/o dirección con filtros tipo/loc y construye tabla navegable.",
-        "permisos": ["have_perm_oficina(scl): botón eliminar.", "have_perm_oficina(vcsd|des): tablas sf."],
+        "permisos": ["have_perm_oficina(scl): botón eliminar.", "have_perm_oficina(vcsd|pffe): tablas sf."],
         "casos_uso": ["UbisTablaData"]
     }
 }

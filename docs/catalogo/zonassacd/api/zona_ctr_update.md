@@ -54,7 +54,7 @@ Reasigna centros marcados (sel=id_ubi) a id_zona_new. Primer dígito del id_ubi 
 
 ## Permisos
 
-Sin validación en caso de uso; UI restringe a perm_des.
+Sin validación en caso de uso; UI restringe a perm_pffe.
 
 ## Casos De Uso
 

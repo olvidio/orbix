@@ -63,5 +63,5 @@ No se han documentado errores en la capacidad.
 Se accede desde la pantalla `activ_sacd` con `tipo=solape` (sin entrada dedicada en el índice; se
 abre desde la misma entrada "Asignar sacd" con el tipo correspondiente):
 
-- **Legacy:** dre > propuestas > asignar sacd
+- **Legacy:** pffe > propuestas > asignar sacd
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades

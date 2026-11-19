@@ -41,7 +41,7 @@ si `plaza < ASIGNADA`. Incluye tipos extra (agd cv, sr crt) según colectivo.
 
 | Campo | Tipo | Origen | Obligatorio | Notas |
 |-------|------|--------|-------------|-------|
-| `ssfsv` | `string` | application | No | Puede forzarse a `sf` si permisos `vcsd`/`des` y `mi_sfsv=1` |
+| `ssfsv` | `string` | application | No | Puede forzarse a `sf` si permisos `vcsd`/`pffe` y `mi_sfsv=1` |
 | `sasistentes` | `string` | application | No | Colectivo asistentes |
 | `sactividad` | `string` | application | No | `ca`, `crt`, `cv`, … |
 | `n_agd` | `string` | application | No | `n`, `a`, `nm`, `nj`, `sssc`, `c` (centro concreto) |

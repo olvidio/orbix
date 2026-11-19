@@ -86,7 +86,7 @@ final class PermisoTablaGenericaTest extends TestCase
 
     public function test_catalogo_sin_el_permiso_de_su_menu(): void
     {
-        $this->usuario('sm', 'des');
+        $this->usuario('sm', 'pffe');
 
         $this->assertFalse($this->servicio()->puedeModificar(self::CATALOGO, null, 0));
         $this->assertFalse($this->servicio()->puedeModificar('src\\ubis\\domain\\InfoRegiones', null, 0));

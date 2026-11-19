@@ -485,7 +485,7 @@ class Select_asistentes_a_una_actividad
 
                 $oTipoActiv = new TiposActividades($this->id_tipo_activ);
                 $sasistentes = $oTipoActiv->getAsistentesText();
-                if (($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+                if (($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                     && ($sasistentes === 's' || $sasistentes === 'sg')) {
                     $eliminar = 2;
                 } else {

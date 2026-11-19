@@ -22,9 +22,9 @@ Elegir de qué casas se quiere ver el calendario de ocupación y en qué periodo
 ### Donde Entrar
 
 - Planning por casas (filtros) (frontend/planning/controller/planning_casa_que.php)
-- **Legacy (actual):** `dre/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Legacy (actual):** `pffe/Calendario/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
 - **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual`
-- **Legacy (propuesta):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Legacy (propuesta):** `adl|Calendario|pffe > Nuevo Calendario > nuevo planing`
 - **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`
 
 ### Tareas Habituales
@@ -43,7 +43,7 @@ Elegir de qué casas se quiere ver el calendario de ocupación y en qué periodo
 
 ### Permisos
 
-- La lógica de alcance está en el caso de uso: rol `PAU_CDC`, `have_perm_oficina('des'|'vcsd')` y
+- La lógica de alcance está en el caso de uso: rol `PAU_CDC`, `have_perm_oficina('pffe'|'vcsd')` y
 
 ### Referencias Internas
 
@@ -93,7 +93,7 @@ Ver el calendario de actividades de las personas de un centro (o de todos los ce
 ### Donde Entrar
 
 - Planning por centro (filtros) (frontend/planning/controller/planning_ctr_que.php)
-- **Legacy:** `dre/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
+- **Legacy:** `pffe/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`
 
 ### Tareas Habituales
@@ -135,7 +135,7 @@ Buscar personas de la dl y ver su calendario de actividades.
 - |--------|--------|--------|
 - | `obj_pau=PersonaDl` | `… > planning > persona r/dl` · `scdl > persona dl` | `ACTIVIDADES > … > Plannig por personas` |
 - | `PersonaEx&na=a|n` | `scdl > planning > agd/num de paso` | igual |
-- | `PersonaSacd` | `dre > planning > sacd r/dl` | — |
+- | `PersonaSacd` | `pffe > planning > sacd r/dl` | — |
 - | `PersonaSacd&es_sacd=1` | — | `ACTIVIDADES > … > Plannig por personas sacd` |
 
 ### Tareas Habituales
@@ -202,9 +202,9 @@ Elegir la zona de sacerdotes y el trimestre o mes del planning.
 ### Donde Entrar
 
 - Planning por zonas SACD (filtros) (frontend/planning/controller/planning_zones_que.php)
-- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
+- **Legacy:** `pffe > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
-- Propuesta: `dre > propuestas > planing zonas`
+- Propuesta: `pffe > propuestas > planing zonas`
 
 ### Tareas Habituales
 

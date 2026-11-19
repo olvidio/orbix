@@ -21,7 +21,7 @@ Rellenar el desplegable de sacerdotes según el tipo elegido.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
+Menú **pffe > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 

@@ -19,7 +19,7 @@ Ofrecer las delegaciones a las que se pueden trasladar los centros o casas marca
 
 ## Punto De Entrada
 
-Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
+Menú **scdl > direcciones > listados** (también Calendario o pffe > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 

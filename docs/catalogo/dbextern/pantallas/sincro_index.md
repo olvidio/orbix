@@ -57,6 +57,6 @@ Los enlaces «ver» usan `fnjs_update_div` hacia controladores frontend firmados
 La misma pantalla se abre con `tipo` distinto según colectivo:
 
 - **Legacy:** vsm > buscar n > Actualizar datos desde BDU (`tipo=n`); dagd > buscar agd > … (`tipo=a`);
-  vsg > buscar > … (`tipo=s`); dre > personas > … (`tipo=sssc`).
+  vsg > buscar > … (`tipo=s`); pffe > personas > … (`tipo=sssc`).
 - **Pills2:** PERSONAS > Numerarios / Agregados / Supernumerarios > Actualizar datos desde BDU
   (`tipo=n`/`a`/`s`); sin entrada Pills2 explícita para `sssc`.

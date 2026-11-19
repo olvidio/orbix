@@ -19,7 +19,7 @@ Elegir la zona cuyas iniciales de sacerdotes se quieren editar.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Iniciales sacd** (Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd).
+Menú **pffe > Misas > Iniciales sacd** (Pills2: ATENCIÓN SACD > Gestión de misas > Iniciales sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -54,5 +54,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Iniciales sacd
+- **Legacy:** pffe > Misas > Iniciales sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Iniciales sacd

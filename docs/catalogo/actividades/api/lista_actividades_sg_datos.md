@@ -73,7 +73,7 @@ enlaces continuar/volver) en lugar de las filas.
 
 - No hay control de permisos que bloquee el endpoint. La visibilidad de cada actividad depende de
   `$_SESSION['oPermActividades']` (permisos por actividad, módulo `procesos`) y de `$_SESSION['oPerm']`
-  (p. ej. permiso `des` para ver nombres de otro sf/sv). No inferir permisos concretos aquí.
+  (p. ej. permiso `pffe` para ver nombres de otro sf/sv). No inferir permisos concretos aquí.
 
 ## Casos De Uso
 

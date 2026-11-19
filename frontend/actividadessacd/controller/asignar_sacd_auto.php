@@ -4,7 +4,7 @@
  *
  * Muestra un mensaje de confirmacion describiendo el criterio de
  * asignacion (sacd titular del centro encargado, actividades sr/sg
- * `status = ACTUAL` posteriores al inicio de curso des) y un boton
+ * `status = ACTUAL` posteriores al inicio de curso pffe) y un boton
  * "continuar" que dispara un POST al endpoint
  * `/src/actividadessacd/sacd_asignar_auto`. El resultado (`asignadas`,
  * `sin_asignar`) se pinta en el propio div sin recargar la pagina.
@@ -25,7 +25,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
 $formData = PostRequest::getDataFromUrl('/src/actividadessacd/sacd_asignar_auto_form_data', []);
-$inicurs_des_iso = \frontend\shared\helpers\PayloadCoercion::string($formData['f_ini_iso'] ?? '');
+$inicurs_pffe_iso = \frontend\shared\helpers\PayloadCoercion::string($formData['f_ini_iso'] ?? '');
 $ctx_asignar_auto = \frontend\shared\helpers\PayloadCoercion::string($formData['ctx_asignar_auto'] ?? '');
 
 $idioma = ActividadessacdSession::sessionIdioma();
@@ -35,11 +35,11 @@ $sep = '/';
 $fmtLocal = ($code_lng === 'en_US')
     ? 'n' . $sep . 'j' . $sep . 'Y'
     : 'j' . $sep . 'n' . $sep . 'Y';
-$inicurs_des = $inicurs_des_iso;
-if ($inicurs_des_iso !== '') {
-    $oF = \DateTime::createFromFormat('Y-m-d', $inicurs_des_iso);
+$inicurs_pffe = $inicurs_pffe_iso;
+if ($inicurs_pffe_iso !== '') {
+    $oF = \DateTime::createFromFormat('Y-m-d', $inicurs_pffe_iso);
     if ($oF instanceof \DateTime) {
-        $inicurs_des = $oF->format($fmtLocal);
+        $inicurs_pffe = $oF->format($fmtLocal);
     }
 }
 
@@ -57,8 +57,8 @@ $url_asignar_auto = $buildHashedUrl(
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'inicurs_des' => $inicurs_des,
-    'inicurs_des_iso' => $inicurs_des_iso,
+    'inicurs_pffe' => $inicurs_pffe,
+    'inicurs_pffe_iso' => $inicurs_pffe_iso,
     'ctx_asignar_auto' => $ctx_asignar_auto,
     'url_asignar_auto' => $url_asignar_auto,
 ];

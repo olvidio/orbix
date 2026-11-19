@@ -19,7 +19,7 @@ Pasar los centros o casas seleccionados a otra delegación.
 
 ## Punto De Entrada
 
-Menú **scdl > direcciones > listados** (también Calendario o dre > centros y casas > listados).
+Menú **scdl > direcciones > listados** (también Calendario o pffe > centros y casas > listados).
 
 ## Fragmentos O Pantallas Auxiliares
 

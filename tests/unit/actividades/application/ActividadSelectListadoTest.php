@@ -184,7 +184,7 @@ final class ActividadSelectListadoTest extends myTest
     {
         $this->devolver([]);
         $this->apps(['actividadcargos', 'asistentes', 'actividadplazas', 'procesos', 'asignaturas', 'ubiscamas']);
-        $this->oficinas(['des', 'est']);
+        $this->oficinas(['pffe', 'est']);
         $out = $this->uc()->ejecutar([], 0);
         $this->assertSame([
             'datos', 'duplicar', 'borrar', 'cambiar tipo', 'cargos', 'lista cl', 'asistentes', 'otras peticiones', 'lista',
@@ -280,11 +280,11 @@ final class ActividadSelectListadoTest extends myTest
         $this->assertSame(['3#act 3', '2#act 2', '4#act 4', '1#act 1'], $sel);
     }
 
-    public function test_actividad_de_la_otra_seccion_muestra_solo_el_tipo_salvo_a_des(): void
+    public function test_actividad_de_la_otra_seccion_muestra_solo_el_tipo_salvo_a_pffe(): void
     {
         $this->devolver([$this->actividad(10, 212021, '2027-03-01', nom: 'nombre sf')]);
         $this->assertSame('10#sf ca', $this->uc()->ejecutar([], 0)['a_valores'][0]['sel']);
-        $this->oficinas(['des']);
+        $this->oficinas(['pffe']);
         $this->assertSame('10#nombre sf', $this->uc()->ejecutar([], 0)['a_valores'][0]['sel']);
     }
 

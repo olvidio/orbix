@@ -254,7 +254,7 @@ final class ListaActivCtrDataTest extends myTest
     public static function sfsvProvider(): iterable
     {
         yield 'sv sin permiso pide sf: sigue en sv' => [1, 'sf', [], '1'];
-        yield 'sv con des pide sf: ve sf' => [1, 'sf', [MenuDlPermissionBits::DES], '2'];
+        yield 'sv con pffe pide sf: ve sf' => [1, 'sf', [MenuDlPermissionBits::PFFE], '2'];
         yield 'sv con vcsd pide sf' => [1, 'sf', [MenuDlPermissionBits::VCSD], '2'];
         yield 'sf siempre ve sf' => [2, 'sv', [], '2'];
     }

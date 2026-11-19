@@ -55,7 +55,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$perm_des = ActividadesPermSupport::havePermOficina(PermisoOficina::DES);
+$perm_pffe = ActividadesPermSupport::havePermOficina(PermisoOficina::PFFE);
 
 // Por cada endpoint AJAX, construir la URL firmada (`url + linkSinVal()`):
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.
@@ -111,7 +111,7 @@ $a_campos = [
     'oHash' => $oHash,
     'oFormP' => $oFormP,
     'tipo' => $Qtipo,
-    'perm_des' => $perm_des,
+    'perm_pffe' => $perm_pffe,
     'url_lista' => $url_lista,
     'url_solapes' => $url_solapes,
     'url_encargados' => $url_encargados,

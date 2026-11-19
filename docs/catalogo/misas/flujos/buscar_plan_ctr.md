@@ -19,7 +19,7 @@ Elegir zona, centro y periodo para ver el plan de misas de un centro.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Plan centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr).
+Menú **pffe > Misas > Plan centro** (Pills2: ATENCIÓN SACD > Gestión de misas > Plan ctr).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -62,5 +62,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Plan centro
+- **Legacy:** pffe > Misas > Plan centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr

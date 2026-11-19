@@ -21,7 +21,7 @@ Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 
 ## Punto De Entrada
 
-Menú **dre > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
+Menú **pffe > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -34,7 +34,7 @@ Menú **dre > Encargos > ficha sacd** (Pills2: ATENCIÓN SACD > Encargos sacd (c
 Pasos propuestos:
 1. Entrar en **ficha sacd**; la pantalla se titula «fase real».
 2. Elegir el **tipo** (n, agd, sss+, cp) y luego el sacerdote en **Sacd:**.
-3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial dre»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
+3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial pffe»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
 4. Para añadir otro encargo, elegir en **añadir encargo** (estudio, descanso, retiro, otros).
 5. Escribir o cambiar las **observaciones** si hace falta y pulsar **Guardar**.
 
@@ -79,12 +79,12 @@ No se han documentado errores en la capacidad.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 

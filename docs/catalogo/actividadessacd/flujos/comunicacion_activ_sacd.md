@@ -63,7 +63,7 @@ No se han documentado errores en la capacidad.
 
 Se accede desde la pantalla `com_sacd_activ_periodo`:
 
-- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Legacy:** pffe > actividades > comunic. sacd · exterior > sacd > atención actividades
 - **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
 
-Con `propuesta=true`: dre > propuestas > lista activ. sacd.
+Con `propuesta=true`: pffe > propuestas > lista activ. sacd.

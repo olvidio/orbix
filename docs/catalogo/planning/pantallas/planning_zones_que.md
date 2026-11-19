@@ -51,6 +51,6 @@ Revisado contra `frontend/planning/` y `src/planning/`. Plantilla PHTML (sin Twi
 
 Variantes según `propuesta` en `_referencia_menus.md`:
 
-- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
-- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas` · `dre/vsr/exterior > … > por zonas`
-- Con `propuesta=true`: `dre > propuestas > planing zonas`
+- **Legacy:** `pffe > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
+- **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas` · `pffe/vsr/exterior > … > por zonas`
+- Con `propuesta=true`: `pffe > propuestas > planing zonas`

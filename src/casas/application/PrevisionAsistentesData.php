@@ -95,7 +95,7 @@ final class PrevisionAsistentesData
             case 'sg':
                 $patronTipo = '^' . $mi_sfsv . '[45]';
                 break;
-            case 'des':
+            case 'pffe':
                 $patronTipo = '^(16|1141|1125|1341)';
                 break;
             case 'sr':

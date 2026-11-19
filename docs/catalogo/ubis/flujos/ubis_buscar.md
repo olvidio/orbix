@@ -19,7 +19,7 @@ Buscar un centro o una casa por nombre, población, región o país, y llegar a 
 
 ## Punto De Entrada
 
-Menú **scdl > direcciones > buscar** (Calendario o dre > centros y casas > buscar; exterior > casas > buscar).
+Menú **scdl > direcciones > buscar** (Calendario o pffe > centros y casas > buscar; exterior > casas > buscar).
 
 ## Fragmentos O Pantallas Auxiliares
 

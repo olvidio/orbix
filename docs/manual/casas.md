@@ -369,7 +369,7 @@ Ver la previsión de asistentes de las casas.
 ### Permisos
 
 - `permitido: false` si oficina desconocida y `oConfig.gestionCalendario !== 'central'`.
-- Filtro de tipos de actividad según oficina (p. ej. `des` → `^(16|1141|1125|1341)`).
+- Filtro de tipos de actividad según oficina (p. ej. `pffe` → `^(16|1141|1125|1341)`).
 
 ### Referencias Internas
 

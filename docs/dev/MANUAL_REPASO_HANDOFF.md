@@ -174,7 +174,7 @@ Tras A: marcar `estado_revision: revisado_parcial` o `revisado` en front matter 
 ## Dudas para el humano
 
 1. ¿Excepción formal para `shared` nav/ayuda y `devel_codegen`?
-2. ¿Propuestas encargossacd visibles en menú producción? (hub dre > Encargos > propuestas documentado)
+2. ¿Propuestas encargossacd visibles en menú producción? (hub pffe > Encargos > propuestas documentado)
 3. ¿OK el stub de `avisos_generar_tabla`? (menú legacy puede seguir apuntando a CLI)
 4. Destino `*` (todas las DL) en `PersonaPublicar` no está en el desplegable FE — ¿solo API o falta UI?
 5. ¿Borrar o redirigir `asistente_observ` si está muerto?

@@ -21,7 +21,7 @@ Saber quién tiene pendiente hacer el ca o el crt.
 
 ## Punto De Entrada
 
-Menú **vest > ca n > pendientes** (también vsm > crt > pendientes, dagd > cv > pendientes, dre > personas > ca pendientes / crt pendientes).
+Menú **vest > ca n > pendientes** (también vsm > crt > pendientes, dagd > cv > pendientes, pffe > personas > ca pendientes / crt pendientes).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -61,5 +61,5 @@ No se han documentado errores en la capacidad.
 
 ## Ruta de menú
 
-- **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
+- **Legacy:** vsm/vest/dagd/pffe > pendientes según `sactividad` y `tipo_personas`
 - **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt

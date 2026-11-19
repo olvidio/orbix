@@ -22,7 +22,7 @@ Ver qué centros pertenecen a cada zona de sacerdotes y pasarlos de una zona a o
 ### Donde Entrar
 
 - Zona Ctr (frontend/zonassacd/controller/zona_ctr.php)
-- **Legacy:** dre > zonas > zonas-ctr
+- **Legacy:** pffe > zonas > zonas-ctr
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr
 
 ### Tareas Habituales
@@ -80,7 +80,7 @@ Ver los sacerdotes de cada zona, los días de la semana que atienden, y cambiarl
 ### Donde Entrar
 
 - Zona Sacd (frontend/zonassacd/controller/zona_sacd.php)
-- **Legacy:** dre > zonas > zonas-sacd
+- **Legacy:** pffe > zonas > zonas-sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd
 
 ### Tareas Habituales
@@ -143,7 +143,7 @@ Ver todos los sacerdotes con la zona o zonas que tienen asignadas.
 ### Donde Entrar
 
 - Zona Sacd Lista Ajax (frontend/zonassacd/controller/zona_sacd_lista_ajax.php)
-- **Legacy:** dre > zonas > lista sacd-zona
+- **Legacy:** pffe > zonas > lista sacd-zona
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona
 
 ### Tareas Habituales

@@ -194,7 +194,7 @@ final class ListaAsisConjuntoActivDataFiltrosTest extends TestCase
     }
 
     /**
-     * Con «solo sacd» (`list_cjto_sacd`, menú de dre) se filtran los sacd en los dos bloques, también en el de
+     * Con «solo sacd» (`list_cjto_sacd`, menú de pffe) se filtran los sacd en los dos bloques, también en el de
      * otras dl (antes, al clonar la lista de la dl, se ponía `setSacd(false)` y salían todos).
      */
     public function test_solo_sacd_filtra_el_bloque_de_la_dl_y_el_de_otras(): void

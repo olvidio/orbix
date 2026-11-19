@@ -19,7 +19,7 @@ Ver qué centros pertenecen a cada zona de sacerdotes y pasarlos de una zona a o
 
 ## Punto De Entrada
 
-Menú **dre > zonas > zonas-ctr** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-ctr).
+Menú **pffe > zonas > zonas-ctr** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-ctr).
 
 ## Escenarios Inferidos
 
@@ -53,5 +53,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > zonas-ctr
+- **Legacy:** pffe > zonas > zonas-ctr
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-ctr

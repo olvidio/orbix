@@ -131,7 +131,7 @@ public static function payloadData(mixed $raw): array
  *         actual_id_sacd_suplente: int,
  *         colaboradores: array<int, array<string, mixed>>,
  *     }>,
- *     perm_des: bool,
+ *     perm_pffe: bool,
  * }
  */
 public static function ctrGetFichaFromPayload(array $payload): array
@@ -148,7 +148,7 @@ public static function ctrGetFichaFromPayload(array $payload): array
         'opciones_sacd' => self::desplegableOpciones($payload['opciones_sacd'] ?? []),
         'opciones_sacd_sssc' => is_array($opcionesSssc) ? self::desplegableOpciones($opcionesSssc) : null,
         'encargos' => self::encargosFromPayload($payload['encargos'] ?? null),
-        'perm_des' => !empty($payload['perm_des']),
+        'perm_pffe' => !empty($payload['perm_pffe']),
     ];
 }
 

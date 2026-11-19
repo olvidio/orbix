@@ -221,7 +221,7 @@ final class UsuarioAvisosPrefFormData
         if (
             ($oConfig instanceof ConfigSnapshot && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && $mi_sfsv === 1)
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_CDC))
             || ($grupo === false && $oRole->isRolePau(PauType::PAU_SACD))

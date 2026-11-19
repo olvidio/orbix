@@ -19,7 +19,7 @@ Copiar las asignaciones de una plantilla a otra de la misma zona.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
+Menú **pffe > Misas > Modificar plantilla** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar plantilla).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -58,5 +58,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plantilla

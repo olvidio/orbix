@@ -87,5 +87,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros > Contribución no duerme
+- **Legacy:** pffe > Pasarela > parámetros > Contribución no duerme
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > Contribución no duerme

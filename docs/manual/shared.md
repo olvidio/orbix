@@ -186,7 +186,7 @@ Consultar y mantener los registros de tablas de configuración que se abren desd
 
 - Mantenimiento genérico de tablas (listado) (frontend/shared/controller/tablaDB_lista_ver.php)
 - Variante según `clase_info` — ver `docs/guias/_referencia_menus.md` (entradas `tablaDB_lista_ver.php`).
-- Ejemplos: `global > estudios > asignaturas`, `sistema > menus > meta menus`, `dre > zonas > zonas`.
+- Ejemplos: `global > estudios > asignaturas`, `sistema > menus > meta menus`, `pffe > zonas > zonas`.
 
 ### Tareas Habituales
 

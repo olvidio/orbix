@@ -19,7 +19,7 @@ Consultar las misas de una zona en un rango de fechas, sin poder modificarlas.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Ver plan zona).
+Menú **pffe > Misas > Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Ver plan zona).
 
 ## Fragmentos O Pantallas Auxiliares
 

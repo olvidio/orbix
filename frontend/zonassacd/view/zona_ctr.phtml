@@ -27,13 +27,13 @@ fnjs_left_side_hide();
 <select class=contenido id="lst_zonas" onchange="fnjs_busca_ctrs()">
     <option></option>
     <option value="no"><?= _("sin asignar zona") ?></option>
-    <?php if ($perm_des) { ?><option value="no_sf"><?= _("sin asignar zona sf") ?></option><?php } ?>
+    <?php if ($perm_pffe) { ?><option value="no_sf"><?= _("sin asignar zona sf") ?></option><?php } ?>
     <?= $oDesplZonas->options() ?>
 </select></th></tr>
 </thead>
 <tbody>
 <tr><td colspan=4><div class=contenido id="lst_ctrs"></div></td></tr>
-<?php if ($perm_des) { ?>
+<?php if ($perm_pffe) { ?>
     <tr>
     <th class=titulo_inv colspan=3><?= _("asignar los centros marcados a la zona") ?>:&nbsp;&nbsp;&nbsp;
     <select class=contenido id="id_zona_new" name="id_zona_new" >

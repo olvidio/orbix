@@ -20,7 +20,7 @@ final class PermisoMenuBits
             'pr' => 1,
             'agd' => 1 << 1,
             'aop' => 1 << 2,
-            'des' => 1 << 3,
+            'pffe' => 1 << 3,
             'est' => 1 << 4,
             'scdl' => 1 << 5,
             'scr' => 1 << 5,

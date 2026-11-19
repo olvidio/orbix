@@ -19,7 +19,7 @@ Ver, crear, modificar y eliminar los encargos de una zona.
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Modificar encargos** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos).
+Menú **pffe > Misas > Modificar encargos** (Pills2: ATENCIÓN SACD > Gestión de misas > Modificar encargos).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -70,5 +70,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar encargos
+- **Legacy:** pffe > Misas > Modificar encargos
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar encargos

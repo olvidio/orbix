@@ -90,7 +90,7 @@ final class ListaActivTablaFilasTest extends myTest
         return $a;
     }
 
-    private const OPTS = ['mi_sfsv' => 1, 'perm_vcsd' => false, 'perm_des' => false, 'perm_sg' => false, 'perm_admin' => false, 'is_dmz' => false];
+    private const OPTS = ['mi_sfsv' => 1, 'perm_vcsd' => false, 'perm_pffe' => false, 'perm_sg' => false, 'perm_admin' => false, 'is_dmz' => false];
 
     public function test_varios_estados_se_filtran_con_in(): void
     {

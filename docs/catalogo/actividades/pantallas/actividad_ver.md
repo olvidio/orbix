@@ -78,8 +78,8 @@ Ver [`manual/actividades.md`](../../../manual/actividades.md), seccion
 
 ## Ruta de menú
 
-- **Legacy:** dre > actividades > nueva activ; Calendario > actividades > nueva activ.
-- **Pills2:** Calendario > actividades > nueva activ; dre > actividades > nueva activ;
+- **Legacy:** pffe > actividades > nueva activ; Calendario > actividades > nueva activ.
+- **Pills2:** Calendario > actividades > nueva activ; pffe > actividades > nueva activ;
   ATENCIÓN SACD > Actividades > Nueva actividad; ACTIVIDADES > Buscar actividad >
   Nueva actividad.
 

@@ -46,6 +46,6 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
+- **Legacy:** pffe/Calendario > actividades > importar activ; variantes dagd/vsm/vest (crt, cv, ca…).
 - **Pills2:** ACTIVIDADES > Buscar actividad > Importar crt/cv/ca n/agd de otras r/dl; ESTUDIOS >
   Semestres de invierno > Importar.

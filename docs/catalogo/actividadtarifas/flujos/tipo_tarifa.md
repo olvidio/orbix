@@ -84,5 +84,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > definir tarifa; dre/Calendario/exterior > Tarifas > definir tarifa.
+- **Legacy:** adl > Tarifas > definir tarifa; pffe/Calendario/exterior > Tarifas > definir tarifa.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Definir tarifa.

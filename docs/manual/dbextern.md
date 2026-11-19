@@ -184,7 +184,7 @@ Al abrir la pantalla de sincronización, ver los contadores de la situación ent
 ### Donde Entrar
 
 - Sincronizar con los datos de Listas (frontend/dbextern/controller/sincro_index.php)
-- **Legacy:** vsm/dagd/vsg/dre > … > Actualizar datos desde BDU (según `tipo`)
+- **Legacy:** vsm/dagd/vsg/pffe > … > Actualizar datos desde BDU (según `tipo`)
 - **Pills2:** PERSONAS > Numerarios / Agregados / Supernumerarios > Actualizar datos desde BDU
 
 ### Tareas Habituales
@@ -206,7 +206,7 @@ Al abrir la pantalla de sincronización, ver los contadores de la situación ent
 - tipo=n` → `have_perm_oficina('sm')
 - tipo=a` → `have_perm_oficina('agd')
 - tipo=s` → `have_perm_oficina('sg')
-- tipo=sssc` → `have_perm_oficina('des')
+- tipo=sssc` → `have_perm_oficina('pffe')
 - Vía `$_SESSION['oPerm']` (`XPermisos`).
 
 ### Referencias Internas

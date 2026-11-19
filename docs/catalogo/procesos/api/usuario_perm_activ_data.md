@@ -67,7 +67,7 @@ El controller pasa `$_POST` completo al caso de uso.
 
 ## Permisos
 
-- `perm_jefe` según `is_jefeCalendario`, oficinas `des`/`vcsd` (con SFSV=1) o `calendario` en
+- `perm_jefe` según `is_jefeCalendario`, oficinas `pffe`/`vcsd` (con SFSV=1) o `calendario` en
   `$_SESSION['oPerm']`; no bloquea la petición si no cumple.
 
 ## Casos De Uso

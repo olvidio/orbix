@@ -38,7 +38,7 @@ Devuelve el mapa id→etiqueta de sección de centros:
 | `5` | cgi/oc |
 | `8` | zonas |
 
-Si el usuario **no** tiene `have_perm_oficina('des')` ni `have_perm_oficina('vcsd')`, se
+Si el usuario **no** tiene `have_perm_oficina('pffe')` ni `have_perm_oficina('vcsd')`, se
 elimina la clave `2` (sf).
 
 ## Endpoint
@@ -63,7 +63,7 @@ Ninguno.
 
 ## Permisos
 
-Filtro implícito de opciones vía `EncargoAplicacionService::havePermOficina('des'|'vcsd')`
+Filtro implícito de opciones vía `EncargoAplicacionService::havePermOficina('pffe'|'vcsd')`
 (oculta sf sin esos permisos). No bloquea el endpoint; solo cambia el catálogo. Resto:
 frontend + `$_SESSION['oPerm']`.
 

@@ -48,10 +48,10 @@ Al añadir una fase al proceso hay que especificar:
 5. mensaje requisito. Es el mensaje de error que sale cuando se intenta marcar una fase y la fase previa no está
    marcada.
 
-- Sólo la oficina de "des" tiene permiso para pasar de estado proyecto a actual.
+- Sólo la oficina de "pffe" tiene permiso para pasar de estado proyecto a actual.
 - Excepto la primera fase del proceso, el resto debería tener una fase previa. Por ejemplo todas las fases que
   correspondan al estado "actual" de la actividad deberían tener como fase previa (si son independientes) la fase de "
-  Aprobada" que es la que pasa la actividad de proyecto a actual y sólo puede "des".
+  Aprobada" que es la que pasa la actividad de proyecto a actual y sólo puede "pffe".
 
 ## Permisos
 

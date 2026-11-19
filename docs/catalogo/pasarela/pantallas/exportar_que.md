@@ -45,5 +45,5 @@ Filtros (tipo, periodo, casas) y lanzamiento de la exportación de actividades h
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > exportar actividades
-- **Pills2:** dre > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades
+- **Legacy:** pffe > Pasarela > exportar actividades
+- **Pills2:** pffe > Pasarela > exportar actividades; ACTIVIDADES > Pasarela > exportar actividades

@@ -34,7 +34,7 @@ class PermDossier
 				2. Si el permiso es de lectura y
 				3. Si el permiso es de lectura/escritura.
 			Los bits de las oficinas son los mismos que para el phplib (definidos en local.inc):
-				adl(1),agd(2),des(8),est(16),scl(32),sg(64),sm(128),soi(256),sr(512),ss(1024),dtor(2048),ocs(4096)
+				adl(1),agd(2),pffe(8),est(16),scl(32),sg(64),sm(128),soi(256),sr(512),ss(1024),dtor(2048),ocs(4096)
 
 		28.10.02	añado:  (para que tenga en cuenta la oficina)
 			$depende = t o f (true, false) si se debe comprobar la oficina
@@ -87,7 +87,7 @@ class PermDossier
                     }
                     break;
                 case "sssc":
-                    if (!self::havePermOficina(MenuDlPermissionBits::DES)) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                         return 2;
                     }
                     break;
@@ -107,7 +107,7 @@ class PermDossier
                     }
                     break;
                 case "psssc":
-                    if (!self::havePermOficina(MenuDlPermissionBits::DES)) {
+                    if (!self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                         return 2;
                     }
                     break;
@@ -276,7 +276,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
@@ -360,7 +360,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
@@ -464,7 +464,7 @@ class PermDossier
                     );
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_est);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
@@ -477,13 +477,13 @@ class PermDossier
                 }
                 // est solo ve las actividades de los supernumerarios (se listan igual), no las apunta:
                 // no suma ninguna tabla. (Recibía la de sr; en el legacy, `$ref_perm_est` no existía.)
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
                 break;
             case "psssc":
             case "sssc": //------------------------- sss+ -------------------
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
             default;
@@ -529,7 +529,7 @@ class PermDossier
 
         switch ($asistentes) {
             case "sss+" :
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -581,7 +581,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 0),
@@ -643,7 +643,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -718,7 +718,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -780,7 +780,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -842,7 +842,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),
@@ -918,7 +918,7 @@ class PermDossier
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
                 }
-                if (self::havePermOficina(MenuDlPermissionBits::DES)) {
+                if (self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm_of = array(
                         "n" => array('nom' => "n", 'obj' => "PersonaN", 'perm' => 1),
                         "a" => array('nom' => "agd", 'obj' => "PersonaAgd", 'perm' => 1),

@@ -123,5 +123,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/dre/exterior > Tarifas > tarifas por casa y año.
+- **Legacy:** adl > Tarifas > tarifas por casa y año; Calendario/pffe/exterior > Tarifas > tarifas por casa y año.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifas por casa y año.

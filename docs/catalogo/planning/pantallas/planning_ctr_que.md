@@ -47,5 +47,5 @@ Revisado contra `frontend/planning/` y `src/planning/`. Linaje `apps/planning/co
 
 ## Ruta de menú
 
-- **Legacy:** `dre/Calendario/vest/vsm/… > planning > por centro` · `vsr/scdl > planning > por ctr`
+- **Legacy:** `pffe/Calendario/vest/vsm/… > planning > por centro` · `vsr/scdl > planning > por ctr`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

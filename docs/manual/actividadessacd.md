@@ -24,9 +24,9 @@ Cada apartado describe una tarea de usuario. Las rutas Legacy/Pills2 vienen del 
 
 - Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
 - Se accede desde la pantalla `com_sacd_activ_periodo`:
-- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Legacy:** pffe > actividades > comunic. sacd · exterior > sacd > atención actividades
 - **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
-- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
+- Con `propuesta=true`: pffe > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -59,9 +59,9 @@ El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por c
 
 - Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
 - Se accede desde la pantalla `com_sacd_activ_periodo`:
-- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Legacy:** pffe > actividades > comunic. sacd · exterior > sacd > atención actividades
 - **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
-- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
+- Con `propuesta=true`: pffe > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -95,9 +95,9 @@ El usuario selecciona un periodo y pulsa **buscar**: el sistema construye, por c
 
 - Com Sacd Activ Periodo (frontend/actividadessacd/controller/com_sacd_activ_periodo.php)
 - Se accede desde la pantalla `com_sacd_activ_periodo`:
-- **Legacy:** dre > actividades > comunic. sacd · exterior > sacd > atención actividades
+- **Legacy:** pffe > actividades > comunic. sacd · exterior > sacd > atención actividades
 - **Pills2:** ATENCIÓN SACD > Actividades > Comunicación a los sacd
-- Con `propuesta=true`: dre > propuestas > lista activ. sacd.
+- Con `propuesta=true`: pffe > propuestas > lista activ. sacd.
 
 ### Tareas Habituales
 
@@ -130,7 +130,7 @@ El usuario elige un periodo y pulsa **buscar**: el sistema muestra la tabla de a
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes: activ sv sg, activ sv sr, activ sv n y
+- **Legacy:** pffe > propuestas > asignar sacd (variantes: activ sv sg, activ sv sr, activ sv n y
 - agd, activ sf sg, activ sf sr, activ sf n,nax y agd, activ sss+, sf).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
@@ -198,7 +198,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
@@ -236,7 +236,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
@@ -267,7 +267,7 @@ Al abrir el fragmento de edición de textos, el sistema carga la lista de idioma
 
 ### Para Que Sirve
 
-- El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado a las actividades sr/sg actuales posteriores al inicio de curso des que aún no tienen sacd.
+- El usuario confirma la asignación automática: el sistema asigna el sacd titular del centro encargado a las actividades sr/sg actuales posteriores al inicio de curso pffe que aún no tienen sacd.
 - Devuelve cuántas se han asignado y cuántas quedan sin asignar; las asignadas quedan con observaciones `auto`.
 
 ### Donde Entrar
@@ -307,7 +307,7 @@ El usuario sube o baja la prioridad de un sacd ya asignado intercambiando su pos
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
@@ -343,7 +343,7 @@ Antes de asignar un sacd, el usuario abre el popup de candidatos: el sistema dev
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
@@ -376,7 +376,7 @@ Tras asignar, reordenar o borrar un sacd, el sistema refresca la celda de sacd d
 
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` (tipo según parámetro `tipo`):
-- **Legacy:** dre > propuestas > asignar sacd (variantes por tipo de actividad).
+- **Legacy:** pffe > propuestas > asignar sacd (variantes por tipo de actividad).
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades (mismas variantes por `tipo`).
 
 ### Tareas Habituales
@@ -410,7 +410,7 @@ Con el tipo de menú `solape`, el usuario elige un periodo y pulsa **buscar**: e
 - Activ Sacd (frontend/actividadessacd/controller/activ_sacd.php)
 - Se accede desde la pantalla `activ_sacd` con `tipo=solape` (sin entrada dedicada en el índice; se
 - abre desde la misma entrada "Asignar sacd" con el tipo correspondiente):
-- **Legacy:** dre > propuestas > asignar sacd
+- **Legacy:** pffe > propuestas > asignar sacd
 - **Pills2:** ATENCIÓN SACD > Actividades > Asignar sacd a actividades
 
 ### Tareas Habituales

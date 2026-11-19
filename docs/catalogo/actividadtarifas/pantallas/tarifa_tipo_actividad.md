@@ -64,6 +64,6 @@ en el formulario (no HashB).
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Nuevo
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; pffe/Calendario/exterior > Nuevo
   calendario > Tarifas > tarifa <-> tipo actividad.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.

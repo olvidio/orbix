@@ -19,7 +19,7 @@ Ver todos los sacerdotes con la zona o zonas que tienen asignadas.
 
 ## Punto De Entrada
 
-Menú **dre > zonas > lista sacd-zona**.
+Menú **pffe > zonas > lista sacd-zona**.
 
 ## Escenarios Inferidos
 
@@ -46,5 +46,5 @@ No se han detectado fragmentos AJAX relacionados.
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > lista sacd-zona
+- **Legacy:** pffe > zonas > lista sacd-zona
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Lista sacd-zona

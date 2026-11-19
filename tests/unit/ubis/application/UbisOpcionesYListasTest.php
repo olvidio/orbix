@@ -376,7 +376,7 @@ final class UbisOpcionesYListasTest extends myTest
     {
         yield 'sv sin permiso solo ve casas sv' => [1, [], '', ['sv eq true', 'active eq true'], ['sf eq true']];
         yield 'sv con vcsd ve también sf' => [1, [MenuDlPermissionBits::VCSD], '', ['active eq true'], ['sv eq true', 'sf eq true']];
-        yield 'sv con des ve también sf' => [1, [MenuDlPermissionBits::DES], '', ['active eq true'], ['sv eq true']];
+        yield 'sv con pffe ve también sf' => [1, [MenuDlPermissionBits::PFFE], '', ['active eq true'], ['sv eq true']];
         yield 'sf solo casas sf' => [2, [], '', ['sf eq true', 'active eq true'], ['sv eq true']];
         yield 'con nombre se añade la búsqueda sin acentos' => [1, [], 'ari+', ['nombre_ubi'], []];
     }

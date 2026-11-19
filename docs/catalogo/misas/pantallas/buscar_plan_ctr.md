@@ -59,5 +59,5 @@ Buscador de plan por centro: zona y centro según rol (ctr/sacd/jefe).
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Plan centro
+- **Legacy:** pffe > Misas > Plan centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Plan ctr

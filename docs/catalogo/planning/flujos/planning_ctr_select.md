@@ -50,5 +50,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** `dre/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
+- **Legacy:** `pffe/Calendario/… > planning > por centro` · `vsr/scdl > planning > por ctr`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > Planning por ctr`

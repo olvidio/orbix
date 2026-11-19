@@ -13,7 +13,7 @@ estado_revision: revisado_parcial
 | personas | Repositorio `PersonaSacd` en listados |
 | misas | `zona_sacd_datos_get` / `zona_sacd_datos_put` — dias semana SACD en modal |
 | shared | Mantenimiento tablas `InfoZona` via `tablaDB_lista_ver` |
-| permisos | Escritura: `des`, `vcsd` |
+| permisos | Escritura: `pffe`, `vcsd` |
 
 ## Dependientes
 

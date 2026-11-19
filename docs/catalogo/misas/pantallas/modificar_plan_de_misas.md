@@ -57,5 +57,5 @@ Formulario para editar plan existente: zona, orden y rango de fechas. Carga cuad
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plan
+- **Legacy:** pffe > Misas > Modificar plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Modificar plan

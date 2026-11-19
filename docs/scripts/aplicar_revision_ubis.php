@@ -256,7 +256,7 @@ function titleFromName(string $name): string
     return ucwords($t);
 }
 
-$permDefault = 'Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|des|admin_sv)` y frontend + `$_SESSION[\'oPerm\']`.';
+$permDefault = 'Sin control de permisos propio en casos de uso; autorización vía `UbiPermisos` (`puedeModificarPorObjeto`, `dlPerteneceAMiDelegacion`), `have_perm_oficina(scdl|scl|vcsd|pffe|admin_sv)` y frontend + `$_SESSION[\'oPerm\']`.';
 
 // ========== API ==========
 $apiCount = 0;

@@ -40,6 +40,6 @@ Las actividades nuevas quedan en estado *proyecto*.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Nuevo calendario > nuevo curso.
-- **Pills2:** dre > Nuevo calendario > nuevo curso; ACTIVIDADES > Herramientas de
+- **Legacy:** pffe > Nuevo calendario > nuevo curso.
+- **Pills2:** pffe > Nuevo calendario > nuevo curso; ACTIVIDADES > Herramientas de
   calendario > Generar nuevo curso.

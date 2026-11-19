@@ -29,7 +29,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 Calcula qué casas puede ver el usuario en el formulario de planning por casas:
 
 - **Rol casa (`PAU_CDC`)**: restringe a las ubis del usuario (`filtro.id_ubi_in`) y `modo_casas: casa`.
-- **Permiso `des` o `vcsd`**: todas las casas activas (`modo_casas: all`).
+- **Permiso `pffe` o `vcsd`**: todas las casas activas (`modo_casas: all`).
 - **`mi_sfsv` = 1 o 2**: filtra por `sv` o `sf` respectivamente.
 - **Resto**: todas las casas activas.
 
@@ -57,7 +57,7 @@ Sin parámetros POST. El controller invoca el caso de uso sin argumentos.
 
 ## Permisos
 
-- La lógica de alcance está en el caso de uso: rol `PAU_CDC`, `have_perm_oficina('des'|'vcsd')` y
+- La lógica de alcance está en el caso de uso: rol `PAU_CDC`, `have_perm_oficina('pffe'|'vcsd')` y
   `ConfigGlobal::mi_sfsv()`. El frontend (`planning_casa_que.php`) solo consume el payload.
 
 ## Errores conocidos

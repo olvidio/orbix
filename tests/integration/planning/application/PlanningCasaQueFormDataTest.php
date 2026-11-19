@@ -122,9 +122,9 @@ class PlanningCasaQueFormDataTest extends myTest
         $this->assertSame([], $r['filtro']['id_ubi_in'], 'lista vacía: debe interpretarse como «ninguna», no como «todas»');
     }
 
-    public function test_el_rol_de_casa_manda_aunque_tenga_permisos_de_des(): void
+    public function test_el_rol_de_casa_manda_aunque_tenga_permisos_de_pffe(): void
     {
-        $this->sesion($this->usuario($this->idRoleCdc, '12'), 1, MenuDlPermissionBits::map()[MenuDlPermissionBits::DES]);
+        $this->sesion($this->usuario($this->idRoleCdc, '12'), 1, MenuDlPermissionBits::map()[MenuDlPermissionBits::PFFE]);
 
         $this->assertSame('casa', $this->ejecutar()['modo_casas']);
     }
@@ -132,7 +132,7 @@ class PlanningCasaQueFormDataTest extends myTest
     /**
      * @dataProvider oficinasDeTodasLasCasasProvider
      */
-    public function test_des_y_vcsd_ven_todas_las_casas(string $oficina): void
+    public function test_pffe_y_vcsd_ven_todas_las_casas(string $oficina): void
     {
         $this->sesion($this->usuario($this->idRoleNoPau), 1, MenuDlPermissionBits::map()[$oficina]);
 
@@ -147,7 +147,7 @@ class PlanningCasaQueFormDataTest extends myTest
      */
     public static function oficinasDeTodasLasCasasProvider(): iterable
     {
-        yield 'des' => [MenuDlPermissionBits::DES];
+        yield 'pffe' => [MenuDlPermissionBits::PFFE];
         yield 'vcsd' => [MenuDlPermissionBits::VCSD];
     }
 
@@ -171,9 +171,9 @@ class PlanningCasaQueFormDataTest extends myTest
         $this->assertSame(['active' => true, 'sf' => true], $r['filtro']);
     }
 
-    public function test_des_tiene_prioridad_sobre_la_seccion(): void
+    public function test_pffe_tiene_prioridad_sobre_la_seccion(): void
     {
-        $this->sesion($this->usuario($this->idRoleNoPau), 2, MenuDlPermissionBits::map()[MenuDlPermissionBits::DES]);
+        $this->sesion($this->usuario($this->idRoleNoPau), 2, MenuDlPermissionBits::map()[MenuDlPermissionBits::PFFE]);
 
         $this->assertSame('all', $this->ejecutar()['modo_casas']);
     }

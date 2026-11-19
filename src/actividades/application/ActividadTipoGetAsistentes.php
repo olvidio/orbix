@@ -30,7 +30,7 @@ class ActividadTipoGetAsistentes
         $blanco = false;
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $blanco = true;
         }

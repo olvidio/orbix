@@ -27,7 +27,7 @@ final class ExportarQueActividadTipoData
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
             && ($oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)
-                || $oPerm->have_perm_oficina(MenuDlPermissionBits::DES)
+                || $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE)
                 || $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {
             $ssfsv = '';
@@ -45,7 +45,7 @@ final class ExportarQueActividadTipoData
         $perm_jefe = false;
         if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && ConfigGlobal::mi_sfsv() === 1)
             || ($oPerm instanceof XPermisos
                 && $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF)

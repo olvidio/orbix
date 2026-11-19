@@ -71,9 +71,9 @@ importar / buscar actividades de mi dl para publicar.
 
 ## Permisos
 
-- `perm_jefe` (jefe calendario, o `des`/`vcsd` en sv, o `admin_sf` en sf):
+- `perm_jefe` (jefe calendario, o `pffe`/`vcsd` en sv, o `admin_sf` en sf):
   amplia los asistentes visibles en la cascada.
-- Sin permiso `des`: la cascada queda restringida a la seccion propia (sv/sf).
+- Sin permiso `pffe`: la cascada queda restringida a la seccion propia (sv/sf).
 - Roles de centro (`isRolePau('ctr')`): no ven el bloque de filtros extra.
 
 ## Manual De Usuario
@@ -85,8 +85,8 @@ Ver [`manual/actividades.md`](../../../manual/actividades.md), secciones
 
 Múltiples entradas según parámetros (`que`, `modo`, colectivo). Ejemplos:
 
-- **Legacy:** dre/Calendario > actividades > buscar activ; importar activ; publicar
-  activ; entradas por colectivo (vsm, vsg, vsr, dagd, vest, dre > sssc…).
+- **Legacy:** pffe/Calendario > actividades > buscar activ; importar activ; publicar
+  activ; entradas por colectivo (vsm, vsg, vsr, dagd, vest, pffe > sssc…).
 - **Pills2:** ACTIVIDADES > Buscar actividad / Listado de actividades (crt, cv, ca…);
   ATENCIÓN SACD > Actividades > publicar activ; ESTUDIOS > Semestres de invierno >
   Buscar/Importar.

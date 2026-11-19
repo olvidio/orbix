@@ -4,7 +4,7 @@ use src\shared\domain\helpers\FilterPostGet;
 
 /**
  * Endpoint backend AJAX: duplica la primera actividad seleccionada dentro de
- * la propia delegacion (o de la sf si el usuario tiene permiso `des`).
+ * la propia delegacion (o de la sf si el usuario tiene permiso `pffe`).
  * `sel[]` son cápsulas HashB (`actividad_duplicar`, `{id_activ}`).
  *
  * Extraido del antiguo dispatcher actividad_update.php (case 'duplicar').

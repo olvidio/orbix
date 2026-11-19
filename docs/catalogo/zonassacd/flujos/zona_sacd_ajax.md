@@ -19,7 +19,7 @@ Cargar la lista de sacerdotes de la zona elegida y guardar los cambios de días 
 
 ## Punto De Entrada
 
-Menú **dre > zonas > zonas-sacd** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd).
+Menú **pffe > zonas > zonas-sacd** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd).
 
 ## Fragmentos O Pantallas Auxiliares
 

@@ -478,10 +478,10 @@ final class SelectAsistentesAUnaActividadTest extends myTest
         $this->assertSame('2.-', $valores[2][1]);
     }
 
-    public function test_en_actividades_de_s_con_des_o_vcsd_quitar_el_cargo_borra_tambien_la_asistencia(): void
+    public function test_en_actividades_de_s_con_pffe_o_vcsd_quitar_el_cargo_borra_tambien_la_asistencia(): void
     {
         $this->apps(['asistentes', 'actividadcargos']);
-        $this->oficinas([MenuDlPermissionBits::DES]);
+        $this->oficinas([MenuDlPermissionBits::PFFE]);
         $this->actividad(self::TIPO_CRT_S);
         $this->persona(20001, 'Vidal, Pere');
         $this->cargo(20001, 1, 501);

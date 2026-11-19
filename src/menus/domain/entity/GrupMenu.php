@@ -29,7 +29,6 @@ class GrupMenu
      * @var array<string, string>
      */
     private array $aEquivalencias = [
-        'dre' => 'der',
         'vest' => 'dle',
         'scdl' => 'scr',
         'vcd' => 'vcr',

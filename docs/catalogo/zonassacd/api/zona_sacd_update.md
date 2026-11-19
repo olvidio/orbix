@@ -57,7 +57,7 @@ Mueve, crea o elimina asignaciones sacd↔zona para sel[]. acumular=1 cambia zon
 
 ## Permisos
 
-Sin validación en caso de uso; UI restringe a perm_des.
+Sin validación en caso de uso; UI restringe a perm_pffe.
 
 ## Casos De Uso
 

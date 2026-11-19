@@ -25,7 +25,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Lectura de la ficha de atención sacerdotal de un centro: encargos (tipos 1/2/3), horarios, sacds titular/suplente, opciones de desplegables y flags (`perm_des`, `mod`). Sucesor de `frontend/encargossacd/controller/ctr_get_ficha.php`.
+Lectura de la ficha de atención sacerdotal de un centro: encargos (tipos 1/2/3), horarios, sacds titular/suplente, opciones de desplegables y flags (`perm_pffe`, `mod`). Sucesor de `frontend/encargossacd/controller/ctr_get_ficha.php`.
 
 ## Endpoint
 
@@ -44,12 +44,12 @@ Lectura de la ficha de atención sacerdotal de un centro: encargos (tipos 1/2/3)
 ## Salida
 
 - Helper: `ContestarJson::enviar`.
-- Payload grande: `encargos[]`, `aOpcionesSacd`, `perm_des`, `mod`, etc. (doble `JSON.parse`).
+- Payload grande: `encargos[]`, `aOpcionesSacd`, `perm_pffe`, `mod`, etc. (doble `JSON.parse`).
 
 
 ## Permisos
 
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 - Permiso oficina `vcsd`
 
 ## Casos De Uso

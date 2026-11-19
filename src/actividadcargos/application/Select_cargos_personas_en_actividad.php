@@ -151,7 +151,7 @@ class Select_cargos_personas_en_actividad
         $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
         ) {
             $this->txt_eliminar .= "\n" . _("esto también borrará a esta persona de la lista de asistentes");
             $elim_asis_default = 2;

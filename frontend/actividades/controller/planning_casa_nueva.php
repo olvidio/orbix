@@ -34,7 +34,7 @@ $oPosicion = FrontBootstrap::boot();
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
 $Qid_ubi = \frontend\shared\helpers\PayloadCoercion::int(filter_input(INPUT_POST, 'id_ubi'));
 
-$permiso_des = ActividadesPermSupport::permDes();
+$permiso_pffe = ActividadesPermSupport::permPffe();
 
 $id_tipo_activ = '';
 $isfsv_input = OrbixRuntime::miSfsv();
@@ -124,7 +124,7 @@ $a_campos = [
     'oHash' => $oHash,
     'h' => $h,
     'obj' => $obj,
-    'permiso_des' => $permiso_des,
+    'permiso_pffe' => $permiso_pffe,
     'accion' => $accion,
     'titulo' => $titulo,
     'sasistentes' => $sasistentes,

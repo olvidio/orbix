@@ -86,5 +86,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros > fecha de activación
+- **Legacy:** pffe > Pasarela > parámetros > fecha de activación
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > fecha de activación

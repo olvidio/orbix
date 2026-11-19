@@ -86,5 +86,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; dre/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
+- **Legacy:** adl > Tarifas > tarifa <-> tipo de actividad; pffe/Calendario/exterior > Tarifas > tarifa <-> tipo actividad.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Tarifas > Tarifa-tipo actividad.

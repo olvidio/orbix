@@ -65,7 +65,7 @@ class UsuarioPermActivData
         }
         if ((is_object($oConfig) && method_exists($oConfig, 'is_jefeCalendario') && $oConfig->is_jefeCalendario())
             || ($oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
                 && $miSfsv === 1)
             || ($oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::CALENDARIO))
         ) {

@@ -37,7 +37,7 @@ final class PermisoHerramientasBdTest extends TestCase
 
     public function test_una_oficina_sin_administracion_no_puede_nada(): void
     {
-        $perm = self::bit('sm') | self::bit('des') | self::bit('casa') | self::bit('jefeZona');
+        $perm = self::bit('sm') | self::bit('pffe') | self::bit('casa') | self::bit('jefeZona');
 
         $this->assertFalse(PermisoHerramientasBd::puedeEsquemas($perm));
         $this->assertFalse(PermisoHerramientasBd::puedeMigraciones($perm));

@@ -60,5 +60,5 @@ La pantalla es solo un índice y no genera errores propios.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros
+- **Legacy:** pffe > Pasarela > parámetros
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros

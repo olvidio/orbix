@@ -19,7 +19,7 @@ use frontend\shared\FrontBootstrap;
  * `/src/encargossacd/ctr_ficha_data`.
  *
  * @package    delegacion
- * @subpackage    des
+ * @subpackage    pffe
  * @author    Daniel Serrabou
  * @since        12/12/06.
  */

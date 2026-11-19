@@ -19,7 +19,7 @@ Crear el plan de misas de un periodo nuevo a partir de la plantilla y mostrarlo 
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Nuevo plan** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan).
+Menú **pffe > Misas > Nuevo plan** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -63,5 +63,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas >  Nuevo plan
+- **Legacy:** pffe > Misas >  Nuevo plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

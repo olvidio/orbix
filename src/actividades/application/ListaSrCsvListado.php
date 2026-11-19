@@ -194,7 +194,7 @@ final class ListaSrCsvListado
             // «admin» no es un permiso de oficina (siempre daba falso): los administradores son admin_sv/admin_sf.
             $esAdmin = $oPerm instanceof XPermisos
                 && ($oPerm->only_perm(MenuDlPermissionBits::ADMIN_SV) || $oPerm->only_perm(MenuDlPermissionBits::ADMIN_SF));
-            if (($permOficina(MenuDlPermissionBits::SG) || $permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES)) && !$esAdmin) {
+            if (($permOficina(MenuDlPermissionBits::SG) || $permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::PFFE)) && !$esAdmin) {
                 if ($snom_tipo === "(sin especificar)") {
                     $snom_tipo = "";
                 }

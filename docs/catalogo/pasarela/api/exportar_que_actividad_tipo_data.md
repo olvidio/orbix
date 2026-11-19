@@ -30,7 +30,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 
 ## Objetivo funcional
 
-Monta `ActividadTipo` con permisos `des`/`vcsd`/`calendario` o jefe calendario según sesión.
+Monta `ActividadTipo` con permisos `pffe`/`vcsd`/`calendario` o jefe calendario según sesión.
 
 ## Endpoint
 

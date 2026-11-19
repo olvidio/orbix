@@ -22,7 +22,7 @@ Saber quién tiene pendiente hacer el ca o el crt.
 ### Donde Entrar
 
 - Activ Pendientes Select (frontend/asistentes/controller/activ_pendientes_select.php)
-- **Legacy:** vsm/vest/dagd/dre > pendientes según `sactividad` y `tipo_personas`
+- **Legacy:** vsm/vest/dagd/pffe > pendientes según `sactividad` y `tipo_personas`
 - **Pills2:** ACTIVIDADES > Listados > Listado de personas sin ca/crt
 
 ### Tareas Habituales
@@ -429,7 +429,7 @@ Elegir de qué centros se quiere ver las actividades de sus personas y en qué p
 ### Donde Entrar
 
 - Que Ctr Lista (frontend/asistentes/controller/que_ctr_lista.php)
-- **Legacy:** Varias entradas según `lista`/`sactividad` (vsm/vest/dagd > crt/ca/cv > list por ctr; dre > personas > pendientes)
+- **Legacy:** Varias entradas según `lista`/`sactividad` (vsm/vest/dagd > crt/ca/cv > list por ctr; pffe > personas > pendientes)
 - **Pills2:** ACTIVIDADES > Listados > Listado de asistentes ca/crt por ctr, Mejores ca para n/agd, Listado de personas sin ca/crt
 
 ### Tareas Habituales

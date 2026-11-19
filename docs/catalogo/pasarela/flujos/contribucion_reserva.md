@@ -87,5 +87,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros > Contribución reserva
+- **Legacy:** pffe > Pasarela > parámetros > Contribución reserva
 - **Pills2:** ACTIVIDADES > Pasarela > parámetros > Contribución reserva

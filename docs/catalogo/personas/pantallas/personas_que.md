@@ -52,4 +52,4 @@ Variantes según parámetros `tabla`/`na`/`es_sacd` en `_referencia_menus.md`. E
 - **Legacy:** `vsm > buscar n > n de paso` · `vsm > buscar n > n r/dl`
 - **Pills2:** `PERSONAS > Numerarios > Buscar n de paso` · `PERSONAS > Numerarios > Buscar n de la r/dl`
 
-Otras entradas: agd/s/sssc/nax por colectivo (`vest`, `vsg`, `dagd`, `stgr`, `dre`, `vnax`, etc.).
+Otras entradas: agd/s/sssc/nax por colectivo (`vest`, `vsg`, `dagd`, `stgr`, `pffe`, `vnax`, etc.).

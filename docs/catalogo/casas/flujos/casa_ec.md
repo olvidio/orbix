@@ -26,8 +26,8 @@ Menú **estadística por años** (Gestión casas / Estadística económica). Abr
 Casas que ofrece el selector según quien entra:
 
 - usuario de una casa: solo su(s) casa(s);
-- oficinas **des** o **vcsd**: todas las casas activas;
-- oficina **adl** (equivale al perfil de des): todas las casas activas;
+- oficinas **pffe** o **vcsd**: todas las casas activas;
+- oficina **adl** (equivale al perfil de pffe): todas las casas activas;
 - resto: las casas activas de su sección (sv o sf).
 
 ## Fragmentos O Pantallas Auxiliares

@@ -58,17 +58,17 @@ Ficha de atencion sacerdotal de un centro.
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 
 ## Ruta de menú
 
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 

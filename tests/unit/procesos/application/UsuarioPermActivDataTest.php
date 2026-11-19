@@ -154,9 +154,9 @@ final class UsuarioPermActivDataTest extends myTest
     public static function jefesProvider(): iterable
     {
         yield 'sin permisos' => [[], 1, false];
-        yield 'des en sv' => [[MenuDlPermissionBits::DES], 1, true];
+        yield 'pffe en sv' => [[MenuDlPermissionBits::PFFE], 1, true];
         yield 'vcsd en sv' => [[MenuDlPermissionBits::VCSD], 1, true];
-        yield 'des en sf no basta' => [[MenuDlPermissionBits::DES], 2, false];
+        yield 'pffe en sf no basta' => [[MenuDlPermissionBits::PFFE], 2, false];
         yield 'calendario en cualquiera' => [[MenuDlPermissionBits::CALENDARIO], 2, true];
     }
 

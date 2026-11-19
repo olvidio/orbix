@@ -52,7 +52,7 @@ propiedad es `id_ubi`, añade `aOpcionesCasas` filtradas por rol/permisos de ofi
 
 ## Permisos
 
-- Filtro de casas: rol `PAU_CDC` (solo sus ubicaciones), permisos oficina `des`/`vcsd` (todas
+- Filtro de casas: rol `PAU_CDC` (solo sus ubicaciones), permisos oficina `pffe`/`vcsd` (todas
   activas), o restricción `sv`/`sf` según `mi_sfsv()`.
 
 ## Casos De Uso

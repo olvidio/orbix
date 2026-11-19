@@ -115,12 +115,12 @@ final class ZonaSacdLista
     private function buildTablaResponse(array $a_valores): array
     {
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $tienePermDes = $oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
+        $tienePermPffe = $oPerm instanceof XPermisos
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD));
 
         // El botón "modificar" abre el modal de días de la semana (fnjs_modificar
-        // en zona_sacd.phtml). Sin perm_des no hay checkboxes, así que se omite.
-        $a_botones = $tienePermDes
+        // en zona_sacd.phtml). Sin perm_pffe no hay checkboxes, así que se omite.
+        $a_botones = $tienePermPffe
             ? [['txt' => _("modificar"), 'click' => 'fnjs_modificar(this.form)']]
             : [];
 
@@ -129,7 +129,7 @@ final class ZonaSacdLista
             'id_tabla' => 'zona_sacd_ajax',
             'a_cabeceras' => [_("sacd"), _("zona"), _("propia"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S"), _("D")],
             'a_botones' => $a_botones,
-            'con_sel' => $tienePermDes,
+            'con_sel' => $tienePermPffe,
             'a_valores' => $a_valores,
             'error' => '',
         ];

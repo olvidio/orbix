@@ -19,7 +19,7 @@ Ver los sacerdotes de cada zona, los días de la semana que atienden, y cambiarl
 
 ## Punto De Entrada
 
-Menú **dre > zonas > zonas-sacd** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd).
+Menú **pffe > zonas > zonas-sacd** (Pills2: ATENCIÓN SACD > Gestión de zonas > Zonas-sacd).
 
 ## Escenarios Inferidos
 
@@ -64,5 +64,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > zonas > zonas-sacd
+- **Legacy:** pffe > zonas > zonas-sacd
 - **Pills2:** ATENCIÓN SACD > Gestión de zonas > Zonas-sacd

@@ -21,7 +21,7 @@ Ver el calendario de los sacerdotes de una zona.
 
 ## Punto De Entrada
 
-Resultado de **dre > planning > por zonas** tras pulsar **planning vista tabla**.
+Resultado de **pffe > planning > por zonas** tras pulsar **planning vista tabla**.
 
 ## Escenarios Inferidos
 

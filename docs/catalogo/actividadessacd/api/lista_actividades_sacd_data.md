@@ -10,7 +10,7 @@ entrada: ["post.tipo:string", "post.year:string", "post.periodo:string", "post.e
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "actividadessacd_ListaActividadesSacdDataData"
-respuesta_data: ["titulo:string", "tipo:string", "inicio_iso:string", "fin_iso:string", "texto_fase_ok_sacd:string", "mostrar_nota_falta_sacd:boolean", "perm_des:boolean", "filas:array"]
+respuesta_data: ["titulo:string", "tipo:string", "inicio_iso:string", "fin_iso:string", "texto_fase_ok_sacd:string", "mostrar_nota_falta_sacd:boolean", "perm_pffe:boolean", "filas:array"]
 requiere_hashb: false
 frontend_referencias: ["frontend/actividadessacd/controller/activ_sacd.php", "frontend/actividadessacd/view/activ_sacd.phtml"]
 casos_uso: ["src\\actividadessacd\\application\\ListaActividadesSacdData"]
@@ -66,7 +66,7 @@ El controller construye `$input` con estos cinco campos.
   - `inicio_iso` / `fin_iso` (`string`): rango del periodo resuelto.
   - `texto_fase_ok_sacd` (`string`): descripción de la fase `FASE_OK_SACD`.
   - `mostrar_nota_falta_sacd` (`boolean`): `true` en modo `falta_sacd`.
-  - `perm_des` (`boolean`): permiso de oficina `des`.
+  - `perm_pffe` (`boolean`): permiso de oficina `pffe`.
   - `filas` (`array`): actividades, cada una `{id_activ, nom_activ, f_ini, f_fin, clase, perm_modificar, perm_crear, sacds}`,
     donde `sacds` es lista de `{id_nom, id_cargo, ap_nom}`.
 
@@ -74,8 +74,8 @@ El controller construye `$input` con estos cinco campos.
 
 - Por fila usa `$_SESSION['oPermActividades']` (si `procesos` está instalado):
   `getPermisoActual('datos'|'ctr'|'sacd')` → `have_perm_activ(...)`; si no, `PermisosActividadesTrue`.
-  El permiso de oficina `des` proviene de `$_SESSION['oPerm']` (`XPermisos::have_perm_oficina('des')`)
-  y viaja como `perm_des`.
+  El permiso de oficina `pffe` proviene de `$_SESSION['oPerm']` (`XPermisos::have_perm_oficina('pffe')`)
+  y viaja como `perm_pffe`.
 
 ## Casos De Uso
 

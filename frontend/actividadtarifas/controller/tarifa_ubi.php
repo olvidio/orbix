@@ -36,7 +36,7 @@ if (OrbixRuntime::miRolePau() === 'cdc') {
     $id_pau = CasasPayload::miUsuarioCsvIdPau();
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
-} elseif (SessionPerm::havePermOficina(PermisoOficina::DES) || SessionPerm::havePermOficina(PermisoOficina::VCSD)) {
+} elseif (SessionPerm::havePermOficina(PermisoOficina::PFFE) || SessionPerm::havePermOficina(PermisoOficina::VCSD)) {
     $oForm->setCasas('all');
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');

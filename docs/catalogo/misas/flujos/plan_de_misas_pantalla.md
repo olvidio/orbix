@@ -19,7 +19,7 @@ Cargar las zonas, el orden y los tipos de plantilla que ofrecen las pantallas de
 
 ## Punto De Entrada
 
-Menú **dre > Misas > Nuevo plan / Modificar plan / Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan, Modificar plan, Ver plan zona).
+Menú **pffe > Misas > Nuevo plan / Modificar plan / Ver plan zona** (Pills2: ATENCIÓN SACD > Gestión de misas > Nuevo plan, Modificar plan, Ver plan zona).
 
 ## Fragmentos O Pantallas Auxiliares
 
@@ -68,5 +68,5 @@ Acciones JavaScript:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas >  Nuevo plan
+- **Legacy:** pffe > Misas >  Nuevo plan
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Nuevo plan

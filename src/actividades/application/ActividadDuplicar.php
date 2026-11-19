@@ -38,7 +38,7 @@ final class ActividadDuplicar
         $dl = $oActividadAll->getDl_org();
 
         $oPerm = $_SESSION['oPerm'] ?? null;
-        $tienePermOficina = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::DES);
+        $tienePermOficina = $oPerm instanceof XPermisos && $oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE);
 
         if ($dl !== ConfigGlobal::mi_delef()
             && !($tienePermOficina && $dl === ConfigGlobal::mi_dele() . 'f')

@@ -264,13 +264,13 @@ final class SelectCargosPersonasEnActividadTest extends myTest
     // ---- borrar también la asistencia --------------------------------------------------------------------
 
     /**
-     * A diferencia de la lista 3102, aquí no se mira el tipo de actividad: des/vcsd
+     * A diferencia de la lista 3102, aquí no se mira el tipo de actividad: pffe/vcsd
      * avisan siempre (el caso de uso solo borra la asistencia si la actividad es de s/sg).
      *
      * @dataProvider oficinasProvider
      * @param list<string> $oficinas
      */
-    public function test_des_y_vcsd_avisan_de_que_tambien_se_borra_la_asistencia(array $oficinas, bool $avisa): void
+    public function test_pffe_y_vcsd_avisan_de_que_tambien_se_borra_la_asistencia(array $oficinas, bool $avisa): void
     {
         $this->permiso($oficinas);
         $this->hayPersona();
@@ -287,12 +287,12 @@ final class SelectCargosPersonasEnActividadTest extends myTest
     /** @return array<string, array{list<string>, bool}> */
     public static function oficinasProvider(): array
     {
-        return ['des' => [['des'], true], 'vcsd' => [['vcsd'], true], 'sm' => [['sm'], false], 'ninguna' => [[], false]];
+        return ['pffe' => [['pffe'], true], 'vcsd' => [['vcsd'], true], 'sm' => [['sm'], false], 'ninguna' => [[], false]];
     }
 
-    public function test_des_marca_las_filas_para_borrar_tambien_la_asistencia(): void
+    public function test_pffe_marca_las_filas_para_borrar_tambien_la_asistencia(): void
     {
-        $this->permiso(['des', 'sm']);
+        $this->permiso(['pffe', 'sm']);
         $this->hayPersona('n');
         $this->hayUnCargo(self::TIPO_N);
 

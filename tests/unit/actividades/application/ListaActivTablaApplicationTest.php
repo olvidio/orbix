@@ -57,7 +57,7 @@ final class ListaActivTablaApplicationTest extends TestCase
             [
                 'mi_sfsv' => 1,
                 'perm_vcsd' => false,
-                'perm_des' => false,
+                'perm_pffe' => false,
                 'perm_sg' => false,
                 'perm_admin' => false,
                 'is_dmz' => true,
@@ -146,7 +146,7 @@ final class ListaActivTablaApplicationTest extends TestCase
             [
                 'mi_sfsv' => 1,
                 'perm_vcsd' => false,
-                'perm_des' => false,
+                'perm_pffe' => false,
                 'perm_sg' => false,
                 'perm_admin' => true,
                 'is_dmz' => true,
@@ -195,7 +195,7 @@ final class ListaActivTablaApplicationTest extends TestCase
             [
                 'mi_sfsv' => 1,
                 'perm_vcsd' => false,
-                'perm_des' => false,
+                'perm_pffe' => false,
                 'perm_sg' => false,
                 'perm_admin' => false,
                 'is_dmz' => true,

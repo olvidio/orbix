@@ -52,7 +52,7 @@ final class MenuDlPermissionBitsTest extends TestCase
         foreach ($map as $nom => $num) {
             $this->assertSame($num, $map['admin_sv'] & $num, "admin_sv incluye $nom");
         }
-        foreach (['des', 'vcsd', 'vcsr'] as $faltante) {
+        foreach (['pffe', 'vcsd', 'vcsr'] as $faltante) {
             $this->assertSame(0, $map['admin_sf'] & $map[$faltante], "admin_sf no incluye $faltante");
         }
         foreach (['adl', 'agd', 'aop', 'sg', 'ctr', 'casa'] as $incluido) {
@@ -103,7 +103,7 @@ final class MenuDlPermissionBitsTest extends TestCase
         $this->assertContains('agd', $partes);
         $this->assertContains('adl', $partes);
         $this->assertNotContains('admin_sv', $partes);
-        $this->assertNotContains('des', $partes);
+        $this->assertNotContains('pffe', $partes);
         $this->assertNotContains('vcsd', $partes);
     }
 }

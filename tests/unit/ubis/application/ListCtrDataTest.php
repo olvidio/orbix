@@ -188,7 +188,7 @@ final class ListCtrDataTest extends myTest
     public static function permisosCasasProvider(): iterable
     {
         yield 'vcsd' => [[MenuDlPermissionBits::VCSD], false];
-        yield 'des' => [[MenuDlPermissionBits::DES], false];
+        yield 'pffe' => [[MenuDlPermissionBits::PFFE], false];
         yield 'otro permiso' => [[MenuDlPermissionBits::SM], true];
     }
 

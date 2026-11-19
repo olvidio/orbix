@@ -61,7 +61,7 @@ permiso y especificaciones `hash_*`/`paths` para los sub-endpoints AJAX.
 
 ## Permisos
 
-- `perm_jefe` según: `is_jefeCalendario()`, permisos oficina `des`/`vcsd` (sv), rol `PAU_CDC`/`PAU_SACD`,
+- `perm_jefe` según: `is_jefeCalendario()`, permisos oficina `pffe`/`vcsd` (sv), rol `PAU_CDC`/`PAU_SACD`,
   permiso oficina `calendario`. Sin bloqueo duro en el caso de uso.
 
 ## Casos De Uso

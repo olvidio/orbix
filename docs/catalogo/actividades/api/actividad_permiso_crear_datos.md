@@ -31,7 +31,7 @@ Forma de `data`:
 
 ```json
 {
-  "permiso_crear": { "of_responsable_txt": "des", "status": 1 },
+  "permiso_crear": { "of_responsable_txt": "pffe", "status": 1 },
   "aviso": ""
 }
 ```

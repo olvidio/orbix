@@ -21,7 +21,7 @@ Elegir la zona de sacerdotes y el trimestre o mes del planning.
 
 ## Punto De Entrada
 
-Menú **dre > planning > por zonas** (también **propuestas > planing zonas**).
+Menú **pffe > planning > por zonas** (también **propuestas > planing zonas**).
 
 ## Escenarios Inferidos
 
@@ -47,6 +47,6 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** `dre > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
+- **Legacy:** `pffe > planning > por zonas` · `vsr > planning > por zonas` · `exterior > sacd > Misas > Planning zonas`
 - **Pills2:** `ACTIVIDADES > Herramientas de calendario > por zonas`
-- Propuesta: `dre > propuestas > planing zonas`
+- Propuesta: `pffe > propuestas > planing zonas`

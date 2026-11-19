@@ -12,13 +12,13 @@ final class ZonassacdPayload
 {
     /**
      * @param array<int|string, mixed> $payload
-     * @return array{a_opciones: array<int|string, string>, perm_des: bool}
+     * @return array{a_opciones: array<int|string, string>, perm_pffe: bool}
      */
     public static function pageFromPayload(array $payload): array
     {
         return [
             'a_opciones' => NotasFormSupport::desplegableOpciones($payload['a_opciones'] ?? []),
-            'perm_des' => !empty($payload['perm_des']),
+            'perm_pffe' => !empty($payload['perm_pffe']),
         ];
     }
 

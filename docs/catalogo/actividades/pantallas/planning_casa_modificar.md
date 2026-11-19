@@ -35,5 +35,5 @@ Desde el planning por casas: clic en actividad → editar campos → guardar cam
 
 sin entrada de menú en el índice (popup desde planning):
 
-- **Legacy / Pills2:** acceso vía Calendario/dre/… > planning > por casas
+- **Legacy / Pills2:** acceso vía Calendario/pffe/… > planning > por casas
   (`planning_casa_que.php`).

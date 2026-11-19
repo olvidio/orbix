@@ -43,5 +43,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Nuevo calendario > nuevo curso.
+- **Legacy:** pffe > Nuevo calendario > nuevo curso.
 - **Pills2:** ACTIVIDADES > Herramientas de calendario > Generar nuevo curso.

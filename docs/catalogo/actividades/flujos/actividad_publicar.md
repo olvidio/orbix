@@ -46,6 +46,6 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre/Calendario > actividades > publicar activ.
-- **Pills2:** dre/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
+- **Legacy:** pffe/Calendario > actividades > publicar activ.
+- **Pills2:** pffe/Calendario > actividades > publicar activ; ATENCIÓN SACD > Actividades >
   publicar activ.

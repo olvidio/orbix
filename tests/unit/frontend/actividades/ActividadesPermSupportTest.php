@@ -81,11 +81,11 @@ final class ActividadesPermSupportTest extends myTest
         yield 'sin permisos' => [0];
     }
 
-    public function test_en_sv_manda_des_o_vcsd_y_no_el_administrador_sf(): void
+    public function test_en_sv_manda_pffe_o_vcsd_y_no_el_administrador_sf(): void
     {
         $bits = MenuDlPermissionBits::map();
 
-        $this->conAcceso($bits['des'], 1);
+        $this->conAcceso($bits['pffe'], 1);
         $this->assertTrue(ActividadesPermSupport::permJefeTipoActiv());
 
         $this->conAcceso($bits['vcsd'], 1);

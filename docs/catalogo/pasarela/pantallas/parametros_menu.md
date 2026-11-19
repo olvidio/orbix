@@ -44,5 +44,5 @@ Ninguno directo (solo enlaces a subpantallas).
 
 ## Ruta de menú
 
-- **Legacy:** dre > Pasarela > parámetros
-- **Pills2:** dre > Pasarela > parámetros; ACTIVIDADES > Pasarela > parámetros
+- **Legacy:** pffe > Pasarela > parámetros
+- **Pills2:** pffe > Pasarela > parámetros; ACTIVIDADES > Pasarela > parámetros

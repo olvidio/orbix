@@ -19,7 +19,7 @@ estado_revision: "revisado"
 Alta (`nuevo=1`) o edición de persona. Plantilla según colectivo y permiso:
 
 - `persona_form.phtml` — N, Agd, Nax, S (con permiso oficina o `dtor`)
-- `persona_sss_form.phtml` — SSSC (`des`/`vcsd`/`dtor`)
+- `persona_sss_form.phtml` — SSSC (`pffe`/`vcsd`/`dtor`)
 - `persona_de_paso.phtml` — PersonaEx
 - `p_public_personas.phtml` — solo lectura pública
 

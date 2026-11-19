@@ -24,7 +24,7 @@ Asignar, cambiar o borrar el sacerdote de una celda del plan de misas; preparar 
 
 ## Punto De Entrada
 
-Menú **dre > Misas** (Pills2: ATENCIÓN SACD > Gestión de misas).
+Menú **pffe > Misas** (Pills2: ATENCIÓN SACD > Gestión de misas).
 
 ## 1. Guardar celda → `POST /src/misas/cuadricula_update`
 
@@ -163,5 +163,5 @@ Endpoints asociados:
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Modificar plan / Preparar / Modificar plantilla
+- **Legacy:** pffe > Misas > Modificar plan / Preparar / Modificar plantilla
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > …

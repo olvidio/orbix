@@ -17,7 +17,7 @@ estado_revision: "revisado"
 # Asignar Sacd Auto
 
 Pantalla auxiliar "Auto asignar sacd a actividades": muestra el criterio de asignación automática
-(sacd titular del centro encargado a actividades sr/sg actuales posteriores al inicio de curso des)
+(sacd titular del centro encargado a actividades sr/sg actuales posteriores al inicio de curso pffe)
 y un botón **continuar** que dispara el endpoint `/src/actividadessacd/sacd_asignar_auto` y pinta el
 resultado (`asignadas`, `sin_asignar`) sin recargar.
 
@@ -54,7 +54,7 @@ No se han detectado campos de formulario.
 ## Manual De Usuario
 
 1. Leer el texto que describe qué hará la asignación automática (sacd titular del centro a las
-   actividades sr/sg con centro encargado, actuales y a partir del inicio de curso des).
+   actividades sr/sg con centro encargado, actuales y a partir del inicio de curso pffe).
 2. Pulsar **continuar**: el sistema procesa y muestra cuántas actividades se han asignado y cuántas
    quedan sin asignar. En las asignadas automáticamente, el campo observaciones queda con `auto`.
 

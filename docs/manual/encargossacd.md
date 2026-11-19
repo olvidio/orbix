@@ -51,7 +51,7 @@ Ver y modificar la atención sacerdotal de un centro: sacerdote titular, suplent
 ### Donde Entrar
 
 - Ctr Ficha (frontend/encargossacd/controller/ctr_ficha.php)
-- **Legacy:** dre > Encargos > ficha ctr
+- **Legacy:** pffe > Encargos > ficha ctr
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha ctr
 
 ### Tareas Habituales
@@ -103,7 +103,7 @@ Cargar la ficha de atención sacerdotal del centro elegido.
 
 ### Permisos
 
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 - Permiso oficina `vcsd`
 
 ### Referencias Internas
@@ -205,7 +205,7 @@ Buscar los encargos existentes y acceder a su ficha, o crear uno nuevo.
 ### Donde Entrar
 
 - Encargo Select (frontend/encargossacd/controller/encargo_select.php)
-- **Legacy:** dre > Encargos > ver encargo
+- **Legacy:** pffe > Encargos > ver encargo
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ver encargos
 
 ### Tareas Habituales
@@ -509,7 +509,7 @@ Sacar el listado de encargos por sacerdote (cr 1/14, 10,d).
 ### Permisos
 
 - Permiso oficina `vcsd`
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 
 ### Referencias Internas
 
@@ -630,7 +630,7 @@ Sacar la tabla por sacerdote (cr 9/20, 10), para sv o sf.
 ### Permisos
 
 - Permiso oficina `vcsd`
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 
 ### Referencias Internas
 
@@ -779,7 +779,7 @@ Sacar el listado de las exigencias de atención sacerdotal de cada centro o igle
 ### Donde Entrar
 
 - Propuestas Menu (frontend/encargossacd/controller/propuestas_menu.php)
-- **Legacy:** dre > Encargos > propuestas
+- **Legacy:** pffe > Encargos > propuestas
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > propuestas
 
 ### Tareas Habituales
@@ -819,7 +819,7 @@ Guardar o modificar las ausencias y otras tareas de un sacerdote.
 ### Donde Entrar
 
 - Sacd Ausencias (frontend/encargossacd/controller/sacd_ausencias.php)
-- **Legacy:** dre > ausencias > sacd
+- **Legacy:** pffe > ausencias > sacd
 - **Pills2:** sin entrada de menú en el índice
 
 ### Tareas Habituales
@@ -908,7 +908,7 @@ Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 ### Donde Entrar
 
 - Sacd Ficha (frontend/encargossacd/controller/sacd_ficha.php)
-- **Legacy:** dre > Encargos > ficha sacd
+- **Legacy:** pffe > Encargos > ficha sacd
 - **Pills2:** ATENCIÓN SACD > Encargos sacd (ctr, etc.) > Ficha sacd
 
 ### Tareas Habituales
@@ -917,7 +917,7 @@ Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 
 1. Entrar en **ficha sacd**; la pantalla se titula «fase real».
 2. Elegir el **tipo** (n, agd, sss+, cp) y luego el sacerdote en **Sacd:**.
-3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial dre»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
+3. Aparecen sus encargos agrupados en **titular**, **titular (no cl)**, **suplente** y **colaborador** (por ejemplo «Atención de un ctr (Raset)», «descanso», «estudio», «oficial pffe»). Cada uno tiene tres casillas numéricas: **mañanas**, **tarde 1ª hora** y **tarde 2ª hora**. El número es la cantidad de días (a la semana) que el sacerdote cubre esa franja.
 4. Para añadir otro encargo, elegir en **añadir encargo** (estudio, descanso, retiro, otros).
 5. Escribir o cambiar las **observaciones** si hace falta y pulsar **Guardar**.
 
@@ -930,7 +930,7 @@ Ver y modificar los encargos de un sacerdote y su dedicación en cada uno.
 
 ### Permisos
 
-- Permiso oficina `des`
+- Permiso oficina `pffe`
 - Permiso oficina `vcsd`
 
 ### Referencias Internas

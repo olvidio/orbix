@@ -208,7 +208,7 @@ final class ActividadSelectListado
                 $a_botones = [['txt' => _("datos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")"]];
             } else {
                 $a_botones[] = ['txt' => _("datos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")"];
-                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES) || $permOficina(MenuDlPermissionBits::CALENDARIO)) {
+                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::PFFE) || $permOficina(MenuDlPermissionBits::CALENDARIO)) {
                     $a_botones[] = ['txt' => _("duplicar"), 'click' => "jsForm.update(\"#seleccionados\",\"duplicar\")"];
                     $a_botones[] = ['txt' => _("borrar"), 'click' => "fnjs_borrar(\"#seleccionados\",\"eliminar\")"];
                     $a_botones[] = ['txt' => _("cambiar tipo"), 'click' => "jsForm.mandar(\"#seleccionados\",\"cambiar_tipo\")"];
@@ -253,7 +253,7 @@ final class ActividadSelectListado
             ['name' => _("hora ini"), 'width' => 40, 'class' => 'fecha'],
             ['name' => _("hora fin"), 'width' => 40, 'class' => 'fecha'],
         ];
-        if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES)) {
+        if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::PFFE)) {
             $a_cabeceras[] = ['name' => _("sf/sv"), 'width' => 40];
         }
         $a_cabeceras[] = ['name' => _("tar."), 'width' => 40];
@@ -392,7 +392,7 @@ final class ActividadSelectListado
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
             $ssfsv = $oTipoActividad->getSfsvText();
-            if ($mi_sfsv !== $isfsv && !$permOficina(MenuDlPermissionBits::DES)) {
+            if ($mi_sfsv !== $isfsv && !$permOficina(MenuDlPermissionBits::PFFE)) {
                 $sactividad = $oTipoActividad->getActividadText();
                 $nom_activ = "$ssfsv $sactividad";
             }
@@ -410,7 +410,7 @@ final class ActividadSelectListado
                 $a_valores[$i][3] = sprintf(_("ocupado %s (%s-%s)"), $ssfsv, $f_ini, $f_fin);
                 $a_valores[$i][4] = '';
                 $a_valores[$i][5] = '';
-                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES)) {
+                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::PFFE)) {
                     $a_valores[$i][6] = $ssfsv;
                 }
                 $a_valores[$i][7] = '';
@@ -501,7 +501,7 @@ final class ActividadSelectListado
                 }
                 $a_valores[$i][4] = $h_ini;
                 $a_valores[$i][5] = $h_fin;
-                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::DES)) {
+                if ($permOficina(MenuDlPermissionBits::VCSD) || $permOficina(MenuDlPermissionBits::PFFE)) {
                     $a_valores[$i][6] = $ssfsv;
                 }
                 $a_valores[$i][7] = $tarifa_letra;

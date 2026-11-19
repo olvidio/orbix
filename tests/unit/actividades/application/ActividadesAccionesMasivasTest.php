@@ -166,10 +166,10 @@ final class ActividadesAccionesMasivasTest extends myTest
         $this->assertSame('', $uc->execute(['sel' => ['3001#x']]));
     }
 
-    public function test_con_permiso_des_se_puede_duplicar_la_de_sf_de_mi_dl(): void
+    public function test_con_permiso_pffe_se_puede_duplicar_la_de_sf_de_mi_dl(): void
     {
         $perm = $this->createMock(XPermisos::class);
-        $perm->method('have_perm_oficina')->willReturnCallback(fn (string $o): bool => $o === MenuDlPermissionBits::DES);
+        $perm->method('have_perm_oficina')->willReturnCallback(fn (string $o): bool => $o === MenuDlPermissionBits::PFFE);
         $_SESSION['oPerm'] = $perm;
         $a = $this->createMock(ActividadAll::class);
         $a->method('getDl_org')->willReturn('dlbf');

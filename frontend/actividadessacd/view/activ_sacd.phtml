@@ -3,7 +3,7 @@
  * Vista principal de `actividadessacd`.
  *
  * Renderiza el formulario de filtros (periodo) + checkboxes de seleccion
- * (solo para tipo `des`) y expone los helpers JS que consumen los
+ * (solo para tipo `pffe`) y expone los helpers JS que consumen los
  * endpoints `/src/actividadessacd/*` devolviendo JSON. El HTML de la tabla
  * principal, la de solapes y el de los desplegables laterales se
  * construye en cliente a partir del JSON, no llega nunca desde el backend.
@@ -11,7 +11,7 @@
  * @var frontend\shared\web\PeriodoQue $oFormP
  * @var HashF      $oHash
  * @var string         $tipo
- * @var bool           $perm_des
+ * @var bool           $perm_pffe
  * @var string         $url_lista
  * @var string         $url_solapes
  * @var string         $url_encargados
@@ -136,7 +136,7 @@ $i18n = [
     var URL_REORDENAR = <?= json_encode($url_reordenar) ?>;
     var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
     var TIPO = <?= json_encode($tipo) ?>;
-    var PERM_DES = <?= json_encode((bool)$perm_des) ?>;
+    var PERM_PFFE = <?= json_encode((bool)$perm_pffe) ?>;
     var I18N = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
     // Extrae `data` del patron `ContestarJson::enviar`.
@@ -211,7 +211,7 @@ $i18n = [
             var id_activ = fila.id_activ;
             var txt_sacd = fnjs_construir_celda_sacds(fila);
             var nuevo_txt = '';
-            if (PERM_DES && fila.perm_crear === true) {
+            if (PERM_PFFE && fila.perm_crear === true) {
                 var onclickNuevo = 'fnjs_nuevo_sacd(event,' + id_activ
                     + ',' + JSON.stringify(fila.f_ini || '')
                     + ',' + JSON.stringify(fila.f_fin || '') + ')';
@@ -475,7 +475,7 @@ $i18n = [
         <?= $oHash->getCamposHtml() ?>
         <?= $oFormP->getHtml() ?>
     </form>
-    <?php if ($perm_des): ?>
+    <?php if ($perm_pffe): ?>
         <p><?= _("Selección de sacd") ?>:
             <input id="sacd_na" type="checkbox" value="2" checked><?= _("prelatura") ?>
             <input id="sacd_p" type="checkbox" value="4"><?= _("de paso") ?>

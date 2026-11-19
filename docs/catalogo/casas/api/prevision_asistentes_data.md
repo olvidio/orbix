@@ -27,7 +27,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Objetivo funcional
 
 Sucesor del listado de `apps/casas/controller/prevision_asistentes.php`. Filtra actividades según
-oficina (`mi_of`: `sm`, `nax`, `agd`, `sg`, `des`, `sr` o gestión central) y periodo. Devuelve filas
+oficina (`mi_of`: `sm`, `nax`, `agd`, `sg`, `pffe`, `sr` o gestión central) y periodo. Devuelve filas
 para `TablaEditable` con plazas de casa, mínimas y previstas editables. Si la oficina no está
 autorizada (`permitido: false`), devuelve tabla vacía.
 
@@ -56,7 +56,7 @@ autorizada (`permitido: false`), devuelve tabla vacía.
 ## Permisos
 
 - `permitido: false` si oficina desconocida y `oConfig.gestionCalendario !== 'central'`.
-- Filtro de tipos de actividad según oficina (p. ej. `des` → `^(16|1141|1125|1341)`).
+- Filtro de tipos de actividad según oficina (p. ej. `pffe` → `^(16|1141|1125|1341)`).
 
 ## Casos De Uso
 

@@ -14,7 +14,7 @@ final class ZonaSacdPage
     }
 
     /**
-     * @return array{a_opciones: array<int|string, string>, perm_des: bool}
+     * @return array{a_opciones: array<int|string, string>, perm_pffe: bool}
      */
     public function getData(): array
     {
@@ -22,8 +22,8 @@ final class ZonaSacdPage
 
         return [
             'a_opciones' => $this->zonaRepository->getArrayZonas(),
-            'perm_des' => $oPerm instanceof XPermisos
-                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)),
+            'perm_pffe' => $oPerm instanceof XPermisos
+                && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD)),
         ];
     }
 }

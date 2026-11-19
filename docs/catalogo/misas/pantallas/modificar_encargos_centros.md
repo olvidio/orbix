@@ -51,5 +51,5 @@ Entry point para vincular encargos de zona con centros (EncargoCtr). Selector de
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Encargos centro
+- **Legacy:** pffe > Misas > Encargos centro
 - **Pills2:** ATENCIÓN SACD > Gestión de misas > Encargos ctr

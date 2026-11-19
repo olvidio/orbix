@@ -42,7 +42,7 @@ Al cargar llama a `planning_casa_que_data` para filtrar el selector de casas seg
 Alcance del selector vía `planning_casa_que_data`:
 
 - Rol `PAU_CDC` → `modo_casas=casa` y `filtro.id_ubi_in`
-- Permiso `des`/`vcsd` → `modo_casas=all`
+- Permiso `pffe`/`vcsd` → `modo_casas=all`
 - `mi_sfsv` 1 → `sv`; 2 → `sf`
 - Resto → `all`
 
@@ -61,7 +61,7 @@ Pantalla revisada contra `frontend/planning/` y `src/planning/`. Linaje `apps/pl
 
 Variantes según `propuesta_calendario` en `_referencia_menus.md`:
 
-- **Legacy (actual):** `dre/Calendario/scdl/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
+- **Legacy (actual):** `pffe/Calendario/scdl/… > planning > por casas` · `adl > Gestión casas > Planing Casas`
 - **Pills2 (actual):** `ACTIVIDADES > Herramientas de calendario > Planning calendario actual` · `CASAS Y CTR > Gestión casas > Planing Casas`
-- **Legacy (propuesta `propuesta_calendario=1`):** `adl|Calendario|dre > Nuevo Calendario > nuevo planing`
+- **Legacy (propuesta `propuesta_calendario=1`):** `adl|Calendario|pffe > Nuevo Calendario > nuevo planing`
 - **Pills2 (propuesta):** `ACTIVIDADES > Herramientas de calendario > Planning calendario en estudio`

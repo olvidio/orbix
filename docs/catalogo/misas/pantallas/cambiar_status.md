@@ -63,5 +63,5 @@ Pantalla para cambio masivo de estado de encargos en un rango de fechas (`cambia
 
 ## Ruta de menú
 
-- **Legacy:** dre > Misas > Cambiar estado
-- **Pills2:** dre > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado
+- **Legacy:** pffe > Misas > Cambiar estado
+- **Pills2:** pffe > ?110 > Cambiar estado<br>ATENCIÓN SACD > Gestión de misas > Cambiar estado

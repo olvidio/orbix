@@ -318,7 +318,7 @@ class ConfigGlobal extends ServerConf
      * Quizá se debería hacer en la función de mi_dele(),
      * pero de momento vamos a ir cambiando poco a poco
      * (de momento he cambiado todo lo que  tiene que ver con dl_org de actividades)
-     * Añado el parámetro: isfsv, para el caso de des, poder acceder a sf.
+     * Añado el parámetro: isfsv, para el caso de pffe, poder acceder a sf.
      *
      * @param string $isfsv
      * @return string

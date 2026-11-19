@@ -10,7 +10,7 @@ entrada: []
 entrada_obligatoria: []
 respuesta: "standard_envelope_string_data"
 respuesta_data_schema: "zonassacd_ZonaSacdPageData"
-respuesta_data: ["a_opciones:array", "perm_des:boolean"]
+respuesta_data: ["a_opciones:array", "perm_pffe:boolean"]
 requiere_hashb: false
 frontend_referencias: ["frontend/zonassacd/controller/zona_sacd.php", "frontend/zonassacd/controller/zona_sacd_lista_ajax.php", "frontend/zonassacd/controller/zona_sacd_update_ajax.php"]
 casos_uso: ["src\\zonassacd\\application\\ZonaSacdPage"]
@@ -50,7 +50,7 @@ Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y f
 - Forma: `standard_envelope_string_data`.
 - Claves en `data` (doble `JSON.parse` salvo vacío):
   - `a_opciones`: map id_zona=>nombre para desplegable
-  - `perm_des`: boolean permiso oficina des o vcsd
+  - `perm_pffe`: boolean permiso oficina pffe o vcsd
 
 ## Errores conocidos
 
@@ -58,7 +58,7 @@ Datos iniciales de la pantalla Zonas-sacd: opciones del desplegable de zonas y f
 
 ## Permisos
 
-perm_des vía have_perm_oficina('des'|'vcsd') en sesión; sin validación en caso de uso.
+perm_pffe vía have_perm_oficina('pffe'|'vcsd') en sesión; sin validación en caso de uso.
 
 ## Casos De Uso
 

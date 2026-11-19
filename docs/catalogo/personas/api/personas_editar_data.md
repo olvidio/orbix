@@ -65,7 +65,7 @@ Convenciones generales: [`_convenciones_api.md`](../_convenciones_api.md).
 ## Permisos
 
 - Sin control en el caso de uso. El frontend activa edición/guardado con `have_perm_oficina`
-  (`sm`, `agd`, `sg`, `des`, `vcsd`, `est`, `dtor` según colectivo).
+  (`sm`, `agd`, `sg`, `pffe`, `vcsd`, `est`, `dtor` según colectivo).
 
 ## Errores conocidos
 

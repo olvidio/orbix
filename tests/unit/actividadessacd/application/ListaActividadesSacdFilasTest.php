@@ -170,7 +170,7 @@ final class ListaActividadesSacdFilasTest extends myTest
         $this->assertSame('', $fila['sacds'][1]['ap_nom'], 'persona no encontrada');
         $this->assertSame(['id_activ' => 10, 'id_nom' => 20, 'id_cargo' => 35], HashB::open($fila['sacds'][0]['ctx_eliminar'], 'sacd_eliminar'));
         $this->assertSame(['id_activ' => 10, 'id_nom' => 20], HashB::open($fila['sacds'][0]['ctx_reordenar'], 'sacd_reordenar'));
-        $this->assertTrue($out['perm_des']);
+        $this->assertTrue($out['perm_pffe']);
         $this->assertFalse($out['mostrar_nota_falta_sacd']);
     }
 

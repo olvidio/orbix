@@ -26,7 +26,7 @@ Listado de personas con cargo en una actividad. Widget del dossier **3102**, ren
 ## Acciones usuario
 
 - **modificar cargo** — una fila seleccionada → form modo `editar` (`fnjs_mod_cargo`)
-- **quitar cargo** — confirmación; puede borrar asistente (permisos `des`/`vcsd`, tipos `s`/`sg`)
+- **quitar cargo** — confirmación; puede borrar asistente (permisos `pffe`/`vcsd`, tipos `s`/`sg`)
 - Enlaces **añadir …** — alta según tipo de persona permitido (`perm_pers_activ` del tipo de actividad)
 - Refresco del dossier tras eliminar (`fnjs_actualizar` → `dossiers_ver.php` con `refresh=1`)
 
@@ -38,7 +38,7 @@ Columnas: cargo, nombre y apellidos, ¿Puede ser agd?, observaciones. Token `sel
 
 - Botones **modificar cargo** / **quitar cargo**: ocultos en ámbito `rstgr`.
 - Enlaces de alta: según permisos por colectivo de persona en el tipo de actividad.
-- Aviso de borrado de asistente al eliminar: usuarios con permiso oficina `des` o `vcsd`.
+- Aviso de borrado de asistente al eliminar: usuarios con permiso oficina `pffe` o `vcsd`.
 
 ## Modulo relacionado
 

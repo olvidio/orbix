@@ -27,7 +27,7 @@ use src\permisos\domain\MenuDlPermissionBits;
  * `src/<app>/application/Select_<codigo>.php` tras haber comprobado `apps/`).
  *
  * Sucesor de `apps/actividadcargos/model/Select3102.php` y de su shim
- * `Select_cargos_de_actividad.php`. Los casos `des`/`vcsd` activan el flag
+ * `Select_cargos_de_actividad.php`. Los casos `pffe`/`vcsd` activan el flag
  * `elim_asis` para que al eliminar el cargo tambien se borre la asistencia.
  */
 class Select_cargos_de_actividad
@@ -129,7 +129,7 @@ class Select_cargos_de_actividad
         $elim_asis_default = 1;
         $oPerm = $_SESSION['oPerm'] ?? null;
         if ($oPerm instanceof XPermisos
-            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::DES) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
+            && ($oPerm->have_perm_oficina(MenuDlPermissionBits::PFFE) || $oPerm->have_perm_oficina(MenuDlPermissionBits::VCSD))
         ) {
             $oTipoActiv = new TiposActividades($id_tipo_activ);
             $sasistentes = $oTipoActiv->getAsistentesText();

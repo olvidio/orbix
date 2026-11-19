@@ -18,7 +18,7 @@ final class MenuDlPermissionBits
     public const PR = 'pr';
     public const AGD = 'agd';
     public const AOP = 'aop';
-    public const DES = 'des';
+    public const PFFE = 'pffe';
     public const EST = 'est';
     public const SCDL = 'scdl';
     public const SCR = 'scr';
@@ -53,7 +53,7 @@ final class MenuDlPermissionBits
             self::PR => 1,
             self::AGD => 1 << 1,
             self::AOP => 1 << 2,
-            self::DES => 1 << 3,
+            self::PFFE => 1 << 3,
             self::EST => 1 << 4,
             self::SCDL => 1 << 5,
             self::SCR => 1 << 5,
