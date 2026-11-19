@@ -45,7 +45,8 @@ class GestorErrores
     function __construct(bool $test = FALSE)
     {
         if ($test) {
-            $this->filename = '/home/dani/orbix_local/orbix/log/errores.log';
+            // Raíz del repo: vale en el host y en el contenedor (/var/www/orbix); una ruta fija del host no existía dentro.
+            $this->filename = dirname(__DIR__, 4) . '/log/errores.log';
         } else {
             $this->filename = ConfigGlobal::$directorio . '/log/errores.log';
         }
