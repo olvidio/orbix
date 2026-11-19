@@ -10,6 +10,12 @@ use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+// Los roles son comunes a todas las delegaciones: solo los modifica el superadministrador.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteModificarRoles()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 try {
     $ctx = HashB::open(
         (string)\src\shared\domain\helpers\FilterPostGet::post('ctx_guardar'),

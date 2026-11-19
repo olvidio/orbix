@@ -244,10 +244,23 @@ final class AccesoRolPau
         @file_put_contents($fichero, $linea, FILE_APPEND | LOCK_EX);
     }
 
-    /** Ruta sin el prefijo de la instalación ni el esquema: desde `frontend/` o `src/`, o el nombre del fichero. */
+    /**
+     * Ruta sin el prefijo de la instalación ni el esquema: desde `frontend/` o `src/`, o el nombre del fichero.
+     * Es la ruta que va a despachar el enrutador, no la que aparenta la URL: un `r=/src/...` en la query
+     * manda sobre el path (como en `public/index.php`; si hay varios, el último, como en PHP) y los `.` y
+     * `..` se resuelven antes de comparar con los patrones.
+     */
     public static function ruta(string $requestUri): string
     {
-        $path = (string) parse_url($requestUri, PHP_URL_PATH);
+        $query = parse_url($requestUri, PHP_URL_QUERY);
+        if (is_string($query) && $query !== '') {
+            parse_str($query, $parametros);
+            $r = $parametros['r'] ?? null;
+            if (is_string($r) && str_starts_with($r, '/src/')) {
+                return ltrim(self::sinPuntos($r), '/');
+            }
+        }
+        $path = self::sinPuntos(rawurldecode((string) parse_url($requestUri, PHP_URL_PATH)));
         foreach (['/frontend/', '/src/'] as $raiz) {
             $pos = strpos($path, $raiz);
             if ($pos !== false) {
@@ -256,5 +269,20 @@ final class AccesoRolPau
         }
 
         return basename($path);
+    }
+
+    /** Resuelve los segmentos `.` y `..` de una ruta, como hace el servidor web antes de servirla. */
+    private static function sinPuntos(string $path): string
+    {
+        $segmentos = [];
+        foreach (explode('/', str_replace('\\', '/', $path)) as $segmento) {
+            if ($segmento === '..') {
+                array_pop($segmentos);
+            } elseif ($segmento !== '.') {
+                $segmentos[] = $segmento;
+            }
+        }
+
+        return implode('/', $segmentos);
     }
 }

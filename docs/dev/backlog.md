@@ -50,18 +50,6 @@ Formato sugerido por ítem:
 - **Por qué no ahora:** Mientras haya controladores HTTP con lógica mezclada (`$_POST`, `echo`, `exit`, headers, validación de hash, `ContestarJson`, etc.), no es seguro saltarse HTTP de forma general. Incluir controladores PHP como atajo acoplaría la ejecución a efectos laterales de la capa HTTP.
 - **Notas:** Requisito previo para cada endpoint candidato: controlador `src/.../infrastructure/ui/http/controllers/*.php` fino, que solo lea request, invoque un caso de uso/servicio de `application/` y responda con `ContestarJson::enviar`. El futuro dispatcher interno debería ser progresivo: si una ruta está registrada y preparada, llama al caso de uso; si no, fallback a HTTP. No poner esta decisión en `ContestarJson`, cuya responsabilidad debe seguir siendo solo envolver la respuesta JSON.
 
-### Proteger el endpoint web de resincronización de cargos
-
-- **Qué:** `/src/actividadcargos/cargos_activ_resincronizar` (GET o POST) incluye el script CLI `src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php`. Con `aplicar=1` reescribe `cd_cargos_activ_dl` en los esquemas de todas las dl, y lo puede lanzar cualquier usuario autenticado: no pide token `HashB` ni rol (solo exige estar en el interior sv y no ser DMZ). Además devuelve HTML desde `src/`. Opciones: exigir rol de administrador y token, o quitar la ruta web y dejarlo solo como CLI.
-- **Por qué no ahora:** decisión del 12-11-2026 de dejarlo como está de momento.
-- **Notas:** detectado en el paso 2.4 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 20, «Pendiente de decisión»).
-
-### Proteger el endpoint web de resincronización de sacd
-
-- **Qué:** `/src/personas/sacd_resincronizar` (GET o POST) incluye el script CLI `src/personas/infrastructure/cli/sacd_resincronizar.php` (reconciliación de `cp_sacd` en comun). Con `aplicar=1` escribe en todos los esquemas sin token `HashB` ni comprobación de rol. Mismo caso y mismas opciones que el de cargos.
-- **Por qué no ahora:** se aplica por analogía la decisión del 12-11-2026 sobre el de cargos; pendiente de confirmar (plan, «Dudas pendientes para el usuario»).
-- **Notas:** detectado en el paso 2.5 de [`revision_tests_plan.md`](revision_tests_plan.md) (sección 21).
-
 ### Tests del DDL de esquemas: lo que queda
 
 Con las BD de pruebas (2026-11-15) ya hay un test de las operaciones reales: `tests/integration/devel_db_admin/application/EsquemaCicloDeVidaTest.php` (crear usuarios y esquema, copiar datos, renombrar, verificar y corregir un renombre a medias, eliminar, absorber una dl en otra y mover una tabla de sv a sv-e), que solo corre con `WEBDIR=pruebas` y sobre una copia temporal de los ficheros de contraseñas.
@@ -102,7 +90,7 @@ Controladores de `src/` que escriben y no abren ninguna cápsula (fase 6.5 del p
 - **Hecho (2026-11-15), `asistentes`:** `asistente_guardar`, `asistente_eliminar`, `asistente_plaza_asignar` (`AsistenteMutationCtx`).
 - **Hecho (2026-11-15), `certificados`:** `certificado_emitido_pdf_upload`, `certificado_recibido_pdf_upload` (la cápsula del formulario que guarda el certificado), `certificado_emitido_enviar` (cápsula de la fila), `certificado_emitido_guardar_pdf` (cápsula que devuelve `certificado_emitido_guardar`).
 - **Hecho (2026-11-15), `procesos` y `menus`:** `actividad_proceso_generar`, `menus_exportar`, `menus_exportar_ref_a_ficheros`.
-- **Pendiente:** los dos de resincronización (anotados arriba). `menus/menus_generar_txt` se retiró el 2026-11-16.
+- **Hecho (2026-11-19), resincronizaciones web** (`sacd_resincronizar`, `cargos_activ_resincronizar`, `centros_resincronizar`): exigen el permiso de menú `admin_sv` (`PermisoHerramientasBdGuard`); siguen sin cápsula las de sacd y cargos, que no tienen pantalla que la firme. `menus/menus_generar_txt` se retiró el 2026-11-16.
 - **No lo necesitan:** `actividades/tipo_activ_form_nuevo`, `inventario/lista_docs_asignar_ctr` y `_dlb` (pintan un formulario y firman ellos la cápsula), `usuarios/restablecer_password_guardar` y `recuperar_2fa_mail` (flujo anónimo con enlace firmado).
 - `notas/acta_imprimir_presentacion_data` marca el acta como impresa al pedir los datos para imprimirla: es una lectura que escribe, a propósito; no entra en el test-guardia porque sin acta no hace nada.
 

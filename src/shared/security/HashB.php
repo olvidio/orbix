@@ -29,25 +29,17 @@ use InvalidArgumentException;
  *   s: session_id en el momento de la firma
  *   x: timestamp unix de caducidad; 0 = sin caducidad
  *
- *   md5_sig = md5(base64url_payload . session_id() . SALT)
+ *   firma = hash_hmac('sha256', base64url_payload . "\0" . session_id(), clave de la sesión)
  *
- * **Fase 1** (actual): secreto derivado de la sesión PHP (igual que
- * `HashF`, pero con salt distinta para desacoplar firmas). Esto permite
- * migrar sin introducir dependencias nuevas.
- *
- * **Fase posterior**: sustituir `SALT` por un secreto backend-only
- * (env var / `ConfigGlobal`). La firma dejará de variar entre sesiones
- * y la ligadura al usuario recaerá enteramente en el campo `s` del
- * payload. La API pública no cambia.
+ * La clave es aleatoria, se crea al empezar la sesión y vive solo en el servidor
+ * (`$_SESSION[HashB::CLAVE_SESION]`). El usuario conoce su PHPSESSID y el código, pero no la clave:
+ * no puede fabricar cápsulas. Aun así, abrir una cápsula no sustituye a comprobar el permiso de quien
+ * la envía: el endpoint que la recibe comprueba también el rol o el permiso que corresponda.
  */
 final class HashB
 {
-    /**
-     * Salt distinta de la firma de UI internamente
-     * (`"a+a+"`), para que compartir el `session_id()` no implique
-     * compartir firmas entre capas.
-     */
-    private const SALT = 'b+b+back+';
+    /** Clave de `$_SESSION` donde vive la clave de firma de la sesión. */
+    public const CLAVE_SESION = 'hashb_clave';
 
     /** Segundos de validez por defecto si no se especifica TTL. */
     public const DEFAULT_TTL = 3600;
@@ -193,7 +185,32 @@ final class HashB
 
     private static function signature(string $encodedPayload): string
     {
-        return md5($encodedPayload . self::sessionId() . self::SALT);
+        return hash_hmac('sha256', $encodedPayload . "\0" . self::sessionId(), self::clave());
+    }
+
+    /**
+     * Crea la clave de firma de la sesión si no existe. Lo llaman los arranques de la petición justo
+     * después de `session_start()`: una clave creada después de `session_write_close()` no se guardaría
+     * y las cápsulas firmadas con ella no se abrirían en la petición siguiente.
+     */
+    public static function asegurarClave(): void
+    {
+        self::clave();
+    }
+
+    /**
+     * Clave aleatoria de la sesión. Vive solo en el servidor (`$_SESSION`): el usuario conoce su
+     * PHPSESSID y el código, pero no esta clave, así que no puede fabricar cápsulas.
+     */
+    private static function clave(): string
+    {
+        $clave = $_SESSION[self::CLAVE_SESION] ?? null;
+        if (!is_string($clave) || strlen($clave) < 64) {
+            $clave = bin2hex(random_bytes(32));
+            $_SESSION[self::CLAVE_SESION] = $clave;
+        }
+
+        return $clave;
     }
 
     private static function sessionId(): string

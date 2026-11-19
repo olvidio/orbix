@@ -76,6 +76,8 @@ final class FrontBootstrap
         self::ensureAuthenticated();
         self::ensureBackendBootstrap();
         self::ensureCrStgrMaterializedViews();
+        // Clave de firma de las cápsulas HashB: antes de cerrar la sesión, para que se guarde.
+        \src\shared\security\HashB::asegurarClave();
         session_write_close();
         \src\shared\infrastructure\ui\http\AccesoRolPau::comprobarPeticionActual();
         self::validateRequestHash();

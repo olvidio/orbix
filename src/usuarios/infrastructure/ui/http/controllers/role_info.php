@@ -15,6 +15,12 @@ use src\usuarios\domain\value_objects\PauType;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
 
 $error_txt = '';
@@ -92,7 +98,9 @@ if (!empty($Qid_role)) {
 
         $grup_menu = $oGrupMenu->getGrup_menu($ambito);
 
-        $a_valores[$i]['sel'] = HashB::sign('role_grupmenu_del', ['id_item' => $id_item]);
+        $a_valores[$i]['sel'] = \src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteCambiarGruposDeMenuDeRol()
+            ? HashB::sign('role_grupmenu_del', ['id_item' => $id_item])
+            : '';
         $a_valores[$i][1] = $grup_menu;
     }
 } else {
@@ -123,7 +131,10 @@ $data['a_cabeceras'] = $a_cabeceras;
 $data['a_botones'] = $a_botones;
 $data['a_valores'] = $a_valores;
 $data['aOpcionesPau'] = PauType::getArrayPau();
-$data['ctx_guardar'] = HashB::sign('role_guardar', ['id_role' => $Qid_role]);
+// La cápsula para guardar el rol, solo para quien puede modificarlo (el superadministrador).
+$data['ctx_guardar'] = \src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteModificarRoles()
+    ? HashB::sign('role_guardar', ['id_role' => $Qid_role])
+    : '';
 
 ContestarJson::enviar($error_txt, $data);
 

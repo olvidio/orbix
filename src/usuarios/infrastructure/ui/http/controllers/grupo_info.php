@@ -5,6 +5,12 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qid_usuario = \src\shared\domain\helpers\FuncTablasSupport::inputInt($_POST, 'id_usuario');
 
 $nombre = '';

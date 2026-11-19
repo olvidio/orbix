@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Busca llamadas a funciones que exigen string cuyo primer argumento (u otros
  * configurados) puede ser null — p. ej. mb_substr($persona->getNom(), 0, 1)

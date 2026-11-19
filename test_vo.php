@@ -1,4 +1,9 @@
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
 
 spl_autoload_register(function ($class) {
     $file = __DIR__ . '/' . str_replace('\\', '/', $class) . '.php';

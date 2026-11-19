@@ -168,6 +168,10 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 - `DossierFichaSelectRunnerTest::test_todos_los_widgets_con_segmento_declaran_su_tipo` (dossiers): todo widget de dossier con `getSegmentData()` devuelve `'segment_tipo' => …`; el frontend elige cómo pintar el bloque por ese tipo y, sin él, `DossierFichaSelectRunner` lanza `LogicException`.
 - `tests/unit/shared/infrastructure/MensajesSinRutaDelServidorTest`: ningún mensaje que puede ver el usuario lleva la ruta de un fichero del servidor (`__FILE__` concatenado o pasado a un `sprintf(_(...))`). Para identificar una rama imposible, `basename(__FILE__)`; como argumento de las llamadas al log, `__FILE__` sigue permitido.
 - `HerramientasBdSoloAdministracionTest::test_cada_controlador_comprueba_el_permiso_lo_primero` (devel_db_admin): todo controlador de `src/devel_db_admin` llama a `PermisoHerramientasBdGuard` antes de leer la petición o abrir la cápsula.
+- `AdministracionDeUsuariosSoloAdministradoresTest` (usuarios): todo controlador de `src/usuarios` está clasificado como de administración (y entonces llama a `PermisoAdministrarUsuariosGuard` antes de leer la petición, abrir o firmar una cápsula) o como propio del usuario o sin sesión, con su motivo. Un controlador nuevo se apunta en una de las dos listas.
+- `OtrasHerramientasSoloAdministracionTest` (devel_db_admin): las herramientas sobre todos los esquemas que viven en otros módulos (resincronizaciones, estructura de tablas) comprueban `PermisoHerramientasBdGuard::permiteEsquemas()` lo primero.
+- `tests/unit/shared/infrastructure/ScriptsSoloLineaDeOrdenesTest`: todo script PHP de la raíz, `tools/`, `proves/` y `docs/scripts/` (sin `namespace`) empieza cortando si no se lanza desde la terminal (`PHP_SAPI !== 'cli'`).
+- `tests/unit/shared/infrastructure/ui/http/RutaControladorSrcTest`: el enrutador solo carga por ruta de fichero controladores HTTP de un módulo.
 - `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
 
 ## Escapar el HTML que se monta en `src/`

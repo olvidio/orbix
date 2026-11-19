@@ -1,5 +1,11 @@
 #!/usr/bin/env php
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Script para corregir automáticamente los métodos setXxxVo en entidades.
  *

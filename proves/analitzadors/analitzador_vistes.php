@@ -1,4 +1,10 @@
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 function extreure_rutes_de_vista($ruta_completa_vista, $contingut_php_controlador) {
     if (!file_exists($ruta_completa_vista)) return [];
 

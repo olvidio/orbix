@@ -3,6 +3,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = dirname(__DIR__, 2);
 $json = json_decode(shell_exec('php ' . escapeshellarg($root . '/tools/audit/audit_posicion_nav_migration.php') . ' --only=recordar_sin_post_limpio --json 2>/dev/null') ?: '{}', true);
 $files = $json['recordar_sin_post_limpio'] ?? [];

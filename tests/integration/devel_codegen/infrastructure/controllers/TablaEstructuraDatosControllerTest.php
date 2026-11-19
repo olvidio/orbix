@@ -17,15 +17,22 @@ final class TablaEstructuraDatosControllerTest extends myTest
     /** @var array<string, mixed> */
     private array $postAnterior = [];
 
+    /** @var array<string, mixed> */
+    private array $sesionPrevia = [];
+
     public function setUp(): void
     {
         parent::setUp();
         $this->postAnterior = $_POST;
+        $this->sesionPrevia = $_SESSION;
+        // El generador de código es una herramienta de administración (permiso de menú admin_sv).
+        $_SESSION['iPermMenus'] = \src\menus\domain\PermisoMenuBits::map()['admin_sv'];
     }
 
     public function tearDown(): void
     {
         $_POST = $this->postAnterior;
+        $_SESSION = $this->sesionPrevia;
         parent::tearDown();
     }
 

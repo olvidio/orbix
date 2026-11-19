@@ -1,4 +1,10 @@
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Script para renombrar fromNullable a fromNullableInt en StatusId
  * Similar al refactoring Shift+F6 de IntelliJ

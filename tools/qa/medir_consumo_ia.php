@@ -23,6 +23,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = dirname(__DIR__, 2);
 $dir = null;
 $session = null;

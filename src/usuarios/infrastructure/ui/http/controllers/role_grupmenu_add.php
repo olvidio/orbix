@@ -11,6 +11,12 @@ use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+// Los grupos de menú de un rol los cambian el superadministrador y el administrador.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteCambiarGruposDeMenuDeRol()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $a_sel = (array)\src\shared\domain\helpers\FilterPostGet::post('sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';

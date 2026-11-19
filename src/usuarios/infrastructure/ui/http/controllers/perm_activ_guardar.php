@@ -12,6 +12,12 @@ use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
+
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 // FIN de  Cabecera global de URL de controlador **********
 
 $error_txt = '';

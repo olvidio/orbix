@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Auditoría post-migración PSR-4: detecta restos procedurales, callbacks inválidos
  * y clases cuyo fichero no coincide con PSR-4 (autoload roto).

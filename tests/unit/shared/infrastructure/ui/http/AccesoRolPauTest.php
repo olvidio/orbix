@@ -99,6 +99,38 @@ final class AccesoRolPauTest extends TestCase
         $this->assertFileExists($this->dir . '/' . AccesoRolPau::REGISTRO_DENEGADO);
     }
 
+    /**
+     * La ruta que cuenta es la que va a despachar el enrutador, no la que aparenta la URL (revisión de
+     * seguridad del 2026-11-19, AUT-04): `?r=/src/...` manda sobre el path, y los `..` se resuelven antes
+     * de comparar con los patrones.
+     *
+     * @dataProvider rutasDisfrazadas
+     */
+    public function test_una_ruta_disfrazada_de_permitida_no_pasa(string $uri): void
+    {
+        $this->assertFalse(AccesoRolPau::decidir($this->dir, 'cdc', 'POST', $uri, [], true), $uri);
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function rutasDisfrazadas(): iterable
+    {
+        yield 'r= sobre public/index.php' => ['/orbix/public/index.php?r=/src/usuarios/usuario_grupo_lst'];
+        yield 'r= sobre index.php' => ['/orbix/index.php?r=/src/usuarios/usuario_grupo_lst'];
+        yield 'segundo r en una ruta permitida' => ['/orbix/src/usuarios/usuario_preferencias?r=/src/usuarios/usuario_grupo_lst'];
+        yield 'r= codificado' => ['/orbix/public/index.php?r=%2Fsrc%2Fusuarios%2Fusuario_grupo_lst'];
+        yield '.. desde un patrón con comodín (src)' => ['/orbix/src/casas/../usuarios/usuario_grupo_lst'];
+        yield '.. desde un patrón con comodín (frontend)' => ['/orbix/frontend/casas/controller/../../usuarios/controller/usuario_lista.php'];
+        yield '.. codificado' => ['/orbix/src/casas/%2e%2e/usuarios/usuario_grupo_lst'];
+    }
+
+    public function test_la_ruta_de_r_permitida_sigue_pasando(): void
+    {
+        $this->assertTrue(AccesoRolPau::decidir($this->dir, 'cdc', 'POST', '/orbix/public/index.php?r=/src/usuarios/usuario_preferencias', [], true));
+        $this->assertSame('src/usuarios/usuario_preferencias', AccesoRolPau::ruta('/orbix/public/index.php?dir=orbix&r=/src/usuarios/usuario_preferencias&x=1'));
+        $this->assertSame('src/usuarios/usuario_grupo_lst', AccesoRolPau::ruta('/orbix/src/casas/../usuarios/usuario_grupo_lst'));
+        $this->assertSame('index.php', AccesoRolPau::ruta('/orbix/index.php?a=1'));
+    }
+
     public function test_lo_permitido_no_se_apunta(): void
     {
         $this->assertTrue(AccesoRolPau::decidir($this->dir, 'ctr', 'POST', '/orbix/frontend/misas/controller/ver_plan_ctr.php', [], true));

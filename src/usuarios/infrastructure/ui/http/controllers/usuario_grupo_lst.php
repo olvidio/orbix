@@ -13,6 +13,12 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 use src\shared\security\HashB;
 
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $sfsv = ConfigGlobal::mi_sfsv();
 
 $Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');

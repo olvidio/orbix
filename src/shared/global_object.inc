@@ -48,6 +48,9 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 require_once('frontend/usuarios/controller/login.php');
 
+// Clave de firma de las cápsulas HashB: se crea con la sesión abierta para que se guarde.
+\src\shared\security\HashB::asegurarClave();
+
 $_SESSION['oGestorErrores'] = new GestorErrores();
 
 $connectionBootstrap = ConnectionBootstrap::buildFromSession();

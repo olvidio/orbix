@@ -6,6 +6,12 @@ use src\usuarios\application\GruposLista;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\shared\web\ContestarJson;
 
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qusername = \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'username');
 
 $error_txt = '';

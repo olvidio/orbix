@@ -16,8 +16,19 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\security\HashB;
+
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 $Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 $Qquien = (string)\src\shared\domain\helpers\FilterPostGet::post('quien');
+// A un superadministrador solo lo ve y lo modifica otro superadministrador.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteSobreUsuario($Qid_usuario)) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());

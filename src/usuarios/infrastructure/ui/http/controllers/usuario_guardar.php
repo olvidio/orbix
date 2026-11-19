@@ -14,6 +14,12 @@ use src\usuarios\domain\value_objects\Password;
 use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
 use src\shared\web\ContestarJson;
+
+// Administración de usuarios, grupos y permisos: solo los roles de administración.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permite()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 $ctxRaw = (string)\src\shared\domain\helpers\FilterPostGet::post('ctx');
 try {
     $opened = HashB::open($ctxRaw, 'usuario_guardar');
@@ -58,6 +64,12 @@ $Qcasas = (array)\src\shared\domain\helpers\FilterPostGet::post('casas', FILTER_
 
 $Qcambio_password = (bool)\src\shared\domain\helpers\FilterPostGet::post('cambio_password');
 $Qhas_2fa = (bool)\src\shared\domain\helpers\FilterPostGet::post('has_2fa');
+
+// A un superadministrador solo lo modifica otro superadministrador, y solo él asigna ese rol.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteAsignarRol($Qid_role) || !\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteSobreUsuario((int)$Qid_usuario)) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
 
 $RoleRepository = DependencyResolver::get(RoleRepositoryInterface::class);
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);

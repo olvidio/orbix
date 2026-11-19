@@ -1,4 +1,9 @@
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
 
 $csv_file = __DIR__ . '/aux_metamenus.csv';
 $generar_mapa_script = __DIR__ . '/generar_mapa.php';

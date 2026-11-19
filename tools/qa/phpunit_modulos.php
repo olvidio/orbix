@@ -13,6 +13,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $rutas = array_slice($argv, 1);
 if ($rutas === []) {
     fwrite(STDERR, "Uso: php tools/qa/phpunit_modulos.php <ruta de tests>...\n");

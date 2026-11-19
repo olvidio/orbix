@@ -36,6 +36,7 @@ function bootstrapAnonymousSrcRequest(): void
     if (!isset($_SESSION['oGestorErrores'])) {
         $_SESSION['oGestorErrores'] = new GestorErrores();
     }
+    \src\shared\security\HashB::asegurarClave();
 
     DiContainerBootstrap::ensureBuilt();
 }
@@ -169,9 +170,9 @@ if ($legacyR === null) {
 }
 
 if (is_string($legacyR) && str_starts_with($legacyR, '/src/')) {
-    // Construir ruta absoluta y validar que está dentro del proyecto
-    $candidate = realpath($projectRoot . '/' . ltrim($legacyR, '/'));
-    if ($candidate && is_file($candidate) && str_starts_with($candidate, $projectRoot . DIRECTORY_SEPARATOR)) {
+    // Solo controladores HTTP de un módulo de src/: nunca otro fichero del proyecto (ni con `..`).
+    $candidate = \src\shared\infrastructure\ui\http\RutaControladorSrc::resolver($projectRoot, $legacyR);
+    if ($candidate !== null) {
         require $candidate;
         return; // Evita seguir al router
     }

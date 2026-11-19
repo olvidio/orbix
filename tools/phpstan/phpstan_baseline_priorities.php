@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Clasifica entradas de phpstan-baseline.neon por severidad aproximada (A/B/C/D) y genera CSV.
  *

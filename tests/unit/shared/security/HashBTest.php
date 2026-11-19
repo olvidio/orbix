@@ -15,14 +15,32 @@ use src\shared\security\HashBInvalidException;
  */
 class HashBTest extends TestCase
 {
-    /** Igual que el salt privado de HashB (`HashB` → `private const SALT`). */
-    private const SALT = 'b+b+back+';
+    /** @var array<string, mixed>|null */
+    private ?array $sesionPrevia = null;
 
     protected function setUp(): void
     {
         // Fijamos session_id conocido para todos los tests. PHP permite
         // session_id(...) siempre que no haya session_start() activa.
         session_id('test-session-alpha');
+        $this->sesionPrevia = $_SESSION ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->sesionPrevia === null) {
+            unset($_SESSION);
+        } else {
+            $_SESSION = $this->sesionPrevia;
+        }
+    }
+
+    /** Firma como lo hace HashB, para fabricar cápsulas que la API pública no permite (caducadas, incompletas). */
+    private function firmar(string $encoded): string
+    {
+        HashB::sign('preparar_clave');
+
+        return hash_hmac('sha256', $encoded . "\0" . session_id(), (string) $_SESSION[HashB::CLAVE_SESION]);
     }
 
     /* ---------------------------------------------------------------
@@ -161,6 +179,42 @@ class HashBTest extends TestCase
         }
     }
 
+    /**
+     * La firma no se puede calcular con lo que conoce el usuario (su PHPSESSID y el código, que es
+     * público): antes era md5(payload . session_id() . constante) y cualquier usuario con sesión podía
+     * fabricarse la cápsula de cualquier acción (revisión de seguridad del 2026-11-19, AUT-02).
+     */
+    public function test_una_capsula_fabricada_con_el_id_de_sesion_y_el_codigo_no_se_abre(): void
+    {
+        $payload = ['a' => 'usuario_guardar', 'c' => ['id_usuario' => 1], 's' => session_id(), 'x' => 0];
+        $encoded = $this->base64UrlEncode(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+        foreach ([
+            md5($encoded . session_id() . 'b+b+back+'),
+            hash_hmac('sha256', $encoded, (string) session_id()),
+            hash_hmac('sha256', $encoded . "\0" . session_id(), ''),
+        ] as $firma) {
+            $this->assertThrowsReason(
+                fn() => HashB::open($encoded . '.' . $firma, 'usuario_guardar'),
+                HashBInvalidException::SIGNATURE_MISMATCH
+            );
+        }
+    }
+
+    public function test_la_clave_de_firma_es_aleatoria_y_propia_de_cada_sesion(): void
+    {
+        unset($_SESSION[HashB::CLAVE_SESION]);
+        $capsula = HashB::sign('foo', ['id' => 5], 0);
+        $clave = $_SESSION[HashB::CLAVE_SESION] ?? null;
+        $this->assertIsString($clave);
+        $this->assertGreaterThanOrEqual(64, strlen($clave));
+
+        // Otra sesión (otra clave), aunque el id de sesión fuera el mismo: la cápsula no vale.
+        unset($_SESSION[HashB::CLAVE_SESION]);
+        $this->assertThrowsReason(fn() => HashB::open($capsula, 'foo'), HashBInvalidException::SIGNATURE_MISMATCH);
+        $this->assertNotSame($clave, $_SESSION[HashB::CLAVE_SESION]);
+    }
+
     public function test_open_with_different_session_fails(): void
     {
         $capsule = HashB::sign('foo', ['id' => 5]);
@@ -196,7 +250,7 @@ class HashBTest extends TestCase
             'x' => time() + 3600,
         ];
         $encoded = $this->base64UrlEncode(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        $sig = md5($encoded . session_id() . self::SALT);
+        $sig = $this->firmar($encoded);
         $capsule = $encoded . '.' . $sig;
 
         try {
@@ -222,7 +276,7 @@ class HashBTest extends TestCase
             'x' => time() - 10,
         ];
         $encoded = $this->base64UrlEncode(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        $sig = md5($encoded . session_id() . self::SALT);
+        $sig = $this->firmar($encoded);
         $capsule = $encoded . '.' . $sig;
 
         try {
@@ -279,7 +333,7 @@ class HashBTest extends TestCase
     {
         // Payload que decodifica a JSON válido pero no es un array asociativo.
         $encoded = $this->base64UrlEncode('"just-a-string"');
-        $sig = md5($encoded . session_id() . self::SALT);
+        $sig = $this->firmar($encoded);
         $this->assertThrowsReason(
             fn() => HashB::open($encoded . '.' . $sig, 'foo'),
             HashBInvalidException::MALFORMED
@@ -289,7 +343,7 @@ class HashBTest extends TestCase
     public function test_open_with_missing_payload_fields_throws_malformed(): void
     {
         $encoded = $this->base64UrlEncode(json_encode(['a' => 'foo'])); // faltan c, s, x
-        $sig = md5($encoded . session_id() . self::SALT);
+        $sig = $this->firmar($encoded);
         $this->assertThrowsReason(
             fn() => HashB::open($encoded . '.' . $sig, 'foo'),
             HashBInvalidException::MALFORMED

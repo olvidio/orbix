@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Funciones puras para montar `frontend/menus/view/traducir_menu.phtml`: un fichero PHP que solo
  * contiene `_("…")` con los textos que la aplicación traduce en tiempo de ejecución (`_($menu)`,

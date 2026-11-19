@@ -11,6 +11,12 @@ use src\shared\domain\helpers\FilterPostGet;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
+// Herramienta sobre todos los esquemas: solo quien ve las herramientas de base de datos en el menú.
+if (!\src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard::permiteEsquemas()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qdb = (string)FilterPostGet::post('db');
 $Qtabla = (string)FilterPostGet::post('tabla');
 if ($Qdb === '' || $Qtabla === '') {

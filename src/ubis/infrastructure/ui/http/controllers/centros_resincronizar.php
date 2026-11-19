@@ -16,6 +16,12 @@ use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\shared\web\ContestarJson;
 
+// Herramienta sobre todos los esquemas: solo quien ve las herramientas de base de datos en el menú.
+if (!\src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard::permiteEsquemas()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 try {
     HashB::open(
         \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_resincronizar'),

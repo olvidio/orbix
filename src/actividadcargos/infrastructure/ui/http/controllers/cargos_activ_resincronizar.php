@@ -11,4 +11,10 @@ declare(strict_types=1);
  * La lógica y las guardas viven en el driver compartido con el cron.
  */
 
+// Herramienta sobre todos los esquemas: solo quien ve las herramientas de base de datos en el menú.
+if (!\src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard::permiteEsquemas()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 require __DIR__ . '/../../../cli/cargos_activ_resincronizar.php';

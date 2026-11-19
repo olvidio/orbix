@@ -12,6 +12,12 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\shared\security\HashB;
 use src\shared\web\ContestarJson;
 
+// Los grupos de menú de un rol los cambian el superadministrador y el administrador.
+if (!\src\usuarios\infrastructure\ui\http\PermisoAdministrarUsuariosGuard::permiteCambiarGruposDeMenuDeRol()) {
+    \src\shared\web\ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
 
 $error_txt = '';

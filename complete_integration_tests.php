@@ -1,4 +1,10 @@
 <?php
+// Script de línea de órdenes: no hace nada si se pide por el servidor web.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 /**
  * Script para completar tests de integración incompletos
  * Analiza las entidades y genera código de test funcional con datos de prueba
