@@ -45,6 +45,7 @@
     <?= $oHashSelect->getCamposHtml() ?>
     <?= $oTabla->mostrar_tabla() ?>
 </form>
+<?php if (!empty($url_nuevo)) { ?>
 <br>
 <table class=botones>
     <tr class=botones>
@@ -54,3 +55,4 @@
         </td>
     </tr>
 </table>
+<?php } ?>

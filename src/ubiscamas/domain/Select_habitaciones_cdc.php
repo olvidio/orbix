@@ -37,7 +37,10 @@ class Select_habitaciones_cdc
     private string $pau = '';
     private string $obj_pau = '';
     private int $id_pau = 0;
+    /** Permiso del dossier sobre esta casa: 1 sin permiso, 2 lectura, 3 lectura y escritura. */
     private int $permiso = 1;
+
+    private const PERMISO_ESCRITURA = 3;
 
     /** @var int|string|null */
     private $Qid_sel;
@@ -110,9 +113,11 @@ class Select_habitaciones_cdc
             $tipoLavabo_txt = $tiposLavabo[$tipoLavabo ?? 0] ?? '';
 
             $a_valores[$c]['sel'] = "$id_habitacion#$id_ubi#$orden";
-            $a_valores[$c]['ctx_eliminar'] = HashB::sign('habitacion_delete', [
-                'id_habitacion' => (string)$id_habitacion,
-            ]);
+            if ($this->puedeModificar()) {
+                $a_valores[$c]['ctx_eliminar'] = HashB::sign('habitacion_delete', [
+                    'id_habitacion' => (string)$id_habitacion,
+                ]);
+            }
             $a_valores[$c][1] = $nombre;
             $a_valores[$c][2] = $planta;
             $a_valores[$c][3] = $adaptada_txt;
@@ -151,7 +156,7 @@ class Select_habitaciones_cdc
                     'obj_pau' => $this->obj_pau,
                     'queSel' => $this->queSel,
                     'id_dossier' => $this->id_dossier,
-                    'permiso' => 3,
+                    'permiso' => $this->permiso,
                     'bloque' => $this->bloque,
                     'scroll_id' => $this->Qscroll_id,
                     'id_sel' => $this->Qid_sel,
@@ -160,21 +165,27 @@ class Select_habitaciones_cdc
             'tabla' => [
                 'id_tabla' => 'select2006',
                 'cabeceras' => $this->getCabeceras(),
-                'botones' => $this->getBotones(),
+                'botones' => $this->puedeModificar() ? $this->getBotones() : [],
                 'valores' => $this->getValores(),
             ],
-            'url_nuevo_spec' => [
+            // Sin permiso de escritura en el dossier no hay «nueva habitación» (ni botones ni borrado).
+            'url_nuevo_spec' => $this->puedeModificar() ? [
                 'path' => 'frontend/ubiscamas/controller/habitacion_form.php',
                 'query' => $aQueryNuevo,
-            ],
+            ] : null,
             'a_links_dl_specs' => $this->a_links_dl_specs,
         ];
+    }
+
+    private function puedeModificar(): bool
+    {
+        return $this->permiso === self::PERMISO_ESCRITURA;
     }
 
     private function setLinksInsert(): void
     {
         $this->a_links_dl_specs = [];
-        if ($this->a_ref_perm === [] || ConfigGlobal::mi_ambito() === 'rstgr') {
+        if (!$this->puedeModificar() || $this->a_ref_perm === [] || ConfigGlobal::mi_ambito() === 'rstgr') {
             return;
         }
         foreach ($this->a_ref_perm as $val) {

@@ -12,7 +12,7 @@ use frontend\shared\security\HashF;
 use frontend\shared\web\Lista;
 
 /**
- * Compone el bloque dossier 3102 (habitaciones CDC) en frontend: HashF + URLs firmadas.
+ * Compone el bloque dossier 2006 (habitaciones CDC) en frontend: HashF + URLs firmadas.
  *
  * @see \src\ubiscamas\domain\Select_habitaciones_cdc::getSegmentData()
  */

@@ -39,7 +39,46 @@ final class SelectHabitacionesCdcTest extends TestCase
     public function test_getSegmentData_monta_tabla_desde_repositorio(): void
     {
         $hid = Uuid::uuid4()->toString();
+        $data = $this->segmento($hid, 3);
 
+        $this->assertSame('select2006', $data['tabla']['id_tabla']);
+        $this->assertCount(1, $data['tabla']['valores']);
+        $this->assertSame("$hid#12#10", $data['tabla']['valores'][1]['sel']);
+        $this->assertSame('Norte', $data['tabla']['valores'][1][1]);
+        $this->assertSame(_("NO"), $data['tabla']['valores'][1][7]);
+        $this->assertSame(['nuevo' => 1, 'id_ubi' => 12], $data['url_nuevo_spec']['query']);
+    }
+
+    public function test_con_permiso_de_escritura_ofrece_modificar_borrar_y_crear(): void
+    {
+        $data = $this->segmento(Uuid::uuid4()->toString(), 3);
+
+        $this->assertCount(2, $data['tabla']['botones']);
+        $this->assertArrayHasKey('ctx_eliminar', $data['tabla']['valores'][1]);
+        $this->assertNotNull($data['url_nuevo_spec']);
+        $this->assertSame(3, $data['hash']['campos_hidden']['permiso']);
+    }
+
+    /**
+     * Con solo lectura (2) la tabla se ve, pero sin botones, sin cápsula de borrado y sin «nueva habitación».
+     */
+    public function test_con_solo_lectura_no_ofrece_ninguna_escritura(): void
+    {
+        $data = $this->segmento(Uuid::uuid4()->toString(), 2);
+
+        $this->assertCount(1, $data['tabla']['valores']);
+        $this->assertSame('Norte', $data['tabla']['valores'][1][1]);
+        $this->assertSame([], $data['tabla']['botones']);
+        $this->assertArrayNotHasKey('ctx_eliminar', $data['tabla']['valores'][1]);
+        $this->assertNull($data['url_nuevo_spec']);
+        $this->assertSame(2, $data['hash']['campos_hidden']['permiso']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function segmento(string $hid, int $permiso): array
+    {
         $hab = $this->createMock(Habitacion::class);
         $hab->method('getId_habitacion')->willReturn($hid);
         $hab->method('getId_ubi')->willReturn(12);
@@ -70,16 +109,9 @@ final class SelectHabitacionesCdcTest extends TestCase
         $sel->setPau('cdc');
         $sel->setObj_pau('CasaDl');
         $sel->setId_dossier(3102);
-        $sel->setPermiso(3);
+        $sel->setPermiso($permiso);
         $sel->setQueSel('sel2006');
 
-        $data = $sel->getSegmentData();
-
-        $this->assertSame('select2006', $data['tabla']['id_tabla']);
-        $this->assertCount(1, $data['tabla']['valores']);
-        $this->assertSame("$hid#12#10", $data['tabla']['valores'][1]['sel']);
-        $this->assertSame('Norte', $data['tabla']['valores'][1][1]);
-        $this->assertSame(_("NO"), $data['tabla']['valores'][1][7]);
-        $this->assertSame(['nuevo' => 1, 'id_ubi' => 12], $data['url_nuevo_spec']['query']);
+        return $sel->getSegmentData();
     }
 }
