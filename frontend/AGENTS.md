@@ -54,7 +54,7 @@ fnjs_guardar = function (formulario) {
     .done(function (respuesta) {
         if (respuesta.success) {
             // Acción tras éxito (ej. volver atrás)
-            <?= $oPosicion->js_atras(1); ?>
+            <?= $oPosicion->jsNavAtras(1) ?>
         } else {
             // Mostrar mensaje de error enviado por el backend
             alert(respuesta.mensaje || 'Error desconocido');

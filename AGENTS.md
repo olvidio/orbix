@@ -571,18 +571,24 @@ final class BañoTipo {
 
 ## Manejo de Navegación y Estado ($oPosicion)
 
+Arquitectura vigente: pila de navegación v2. Documento normativo: [`docs/dev/arquitectura_navegacion_v2.md`](docs/dev/arquitectura_navegacion_v2.md). La pila antigua (`$_SESSION['position']`, `recordar()`, `goStack()`, `olvidar()`, `getStack()`, `js_atras()`, `mostrar_left_slide()`) ya no existe: no usar esos métodos ni enviar `stack` / `Gstack` en formularios o hashes. [`docs/dev/posicion_nav_post_frontbootstrap.md`](docs/dev/posicion_nav_post_frontbootstrap.md) describe aquel modelo y queda como histórico.
+
 ### Conceptos Clave
-- **$oPosicion**: Objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre páginas. Se define en `frontend\shared\web\Posicion` y se instancia con `FrontBootstrap::boot()`. Usa `$_SESSION['position']` como backing store.
-- **js_atras(n)**: Método fundamental para retornar `n` pasos en el historial. Genera el código JS necesario para la navegación.
-- **addParametro($key, $valor, $fila)** / **setParametros($aVars, $fila)**: Permiten persistir datos en una fila concreta de la pila. Si `$fila = 1`, el parámetro se guarda en la posición anterior, facilitando su recuperación al volver atrás. `setParametros` además persiste en sesión (`guardar()`).
+- **$oPosicion**: contexto de la petición frontend (`frontend\shared\web\Posicion`), que devuelve `FrontBootstrap::boot()`. Da acceso a la pila con **`$oPosicion->nav()`** (`frontend\shared\web\NavStack`), guardada en `$_SESSION['nav']`.
+- **El servidor es la única fuente de verdad de la pila.** El cliente no envía índices de pila.
+- **Identidad ≠ estado.** Cada entrada separa `identity` (qué instancia de página es: URL + ids primarios, p. ej. `id_activ`) y `state` (cómo estaba: filtros, `id_sel`, `scroll_id`).
+- **`nav()->enter($url, $bloque, $identity, $state)`**: la llama una vez cada pantalla que entra en la pila. Si la página (URL + identidad) ya está en la pila, se trunca lo que hay por encima y se actualiza su estado; si no, se apila. No hay `push` / `replace` explícitos.
+- **`nav()->updateState($patch)`** / **`nav()->updateStateAt($n, $patch)`**: actualizan el estado de la entrada actual o de la que está `n` posiciones por debajo.
+- **Volver atrás:** en la vista, `<?= $oPosicion->mostrarNavAtras(1) ?>` (activa la flecha del shell); en un callback JS (p. ej. tras guardar), `<?= $oPosicion->jsNavAtras(1) ?>`, que emite `fnjs_nav_atras(1);`. Los dos devuelven cadena vacía si no hay destino. El destino lo calcula `nav()->backTarget($n)`: URL + `identity` + `state` de esa entrada, firmados con `HashF`.
+- **`nav=reset`**: lo añaden las entradas de menú (`fnjs_link_submenu`) y vacía la pila.
 
 ### Responsabilidad exclusiva del frontend
-`$oPosicion` y `$_SESSION['position']` son responsabilidad exclusiva de `frontend/`:
+`$oPosicion` y `$_SESSION['nav']` son responsabilidad exclusiva de `frontend/`:
 
-- `src/domain/` y `src/application/` **no pueden** importar `frontend\shared\web\Posicion` ni tocar `$_SESSION['position']` (ni directa ni indirectamente).
-- La única ubicación autorizada que accede a `$_SESSION['position']` es `frontend/shared/web/Posicion.php`.
-- Si un builder/caso de uso en `src/` necesita un valor derivado del historial (clave de stack, parámetros restaurados, etc.), el controller frontend lo resuelve con `$oPosicion` y lo pasa como `$input` al builder (p. ej. `stack_actual`, `restored_id_sel`, `restored_scroll_id`).
-- El HTML de navegación (`js_atras`, `mostrar_left_slide`, `mostrar_back_arrow`) se emite desde vistas `.phtml`/`.twig` en `frontend/` o desde `src/.../view/*.phtml` **recibiendo `$oPosicion` como parámetro de vista**, nunca generado desde `domain/`/`application/`.
+- `src/domain/` y `src/application/` **no pueden** importar `frontend\shared\web\Posicion` ni `NavStack`, ni tocar `$_SESSION['nav']` (ni directa ni indirectamente).
+- La única clase que lee y escribe `$_SESSION['nav']` es `frontend/shared/web/NavStack.php`.
+- Si un builder/caso de uso en `src/` necesita un valor del estado de navegación (selección o scroll restaurados, filtros), el controller frontend lo lee de la petición y lo pasa como `$input` al builder. Al volver atrás, el estado guardado llega como parámetros normales del POST: no hay que consultarlo en la pila.
+- El HTML de navegación (`mostrarNavAtras`, `jsNavAtras`) se emite desde vistas `.phtml`/`.twig` en `frontend/` **recibiendo `$oPosicion` como parámetro de vista**, nunca generado desde `domain/`/`application/`.
 
 ### Patrón canónico en controllers frontend
 ```php
@@ -590,25 +596,34 @@ final class BañoTipo {
 require_once 'frontend/shared/FrontBootstrap.php';
 
 $oPosicion = FrontBootstrap::boot();
-$oPosicion->recordar((int)filter_input(INPUT_POST, 'refresh'));
 
-// Resolver aquí cualquier estado de navegación que el builder necesite:
-$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
-if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
-    $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
-    $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
-    $oPosicion->olvidar($stackFromPost);
-}
-$campos['stack_actual'] = $oPosicion->getStack(0);
+// Filtros y selección: llegan en el POST, también al volver atrás (los repone la pila).
+$campos = [
+    'id_activ' => (int) filter_input(INPUT_POST, 'id_activ'),
+    'filtro'   => (string) filter_input(INPUT_POST, 'filtro'),
+    'id_sel'   => (string) filter_input(INPUT_POST, 'id_sel'),
+];
+
+$oPosicion->nav()->enter(
+    (string) ($_SERVER['PHP_SELF'] ?? ''),
+    '#main',                                  // o el bloque que corresponda
+    ['id_activ' => $campos['id_activ']],      // identity: solo ids de instancia; [] en un listado raíz
+    ['filtro' => $campos['filtro'], 'id_sel' => $campos['id_sel']], // state: lista explícita de campos
+);
 
 // El builder en src/ recibe datos planos; no toca sesión.
 $data = PostRequest::getDataFromUrl('/src/<modulo>/<endpoint>', $campos);
 ```
 
+- **`identity` por tipo de pantalla:** formulario de búsqueda (`*_que.php`) → `[]`; listado → los parámetros que definen qué lista es (los filtros no son identidad); ficha o formulario → el id del registro.
+- **`state`:** lista explícita de campos del controlador. Prohibido volcar `$_POST` entero; los campos efímeros (`h`, `hh`, `hhc`, `hpos`, `nav`, `PHPSESSID`…) los quita `NavStack`.
+- **No llaman a `enter()`:** popups (`#div_modificar`) y bloques fuera de `#main`, ni las pantallas que no deben quedar en la pila.
+- Referencia: `frontend/usuarios/controller/usuario_lista.php`.
+
 ### Estrategia de Persistencia Híbrida
 Para una experiencia de usuario fluida, combinamos el estado del backend con el estado del frontend:
 
-1.  **Estado de navegación ($oPosicion en frontend)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver". Vive sólo en `frontend/`.
+1.  **Estado de navegación (`$oPosicion->nav()` en frontend)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`), filtros, selección y la lógica de "volver". Vive sólo en `frontend/`.
 2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en** `frontend/AGENTS.md`.
 
 ### Permisos de actividad en sesión (`PermisosActividades`) — caché vs. backend
@@ -635,7 +650,7 @@ Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash 
    En POST internos desde `frontend/`, revisar que los metadatos de navegación/hash que no pertenecen al formulario destino (p. ej. **`hpos`**) se normalicen en `PostRequest` para que la URL firmada coincida con la que valida el endpoint; si no, errores de hash o redirecciones (302) inesperadas.
 
 3. **Includes de tema después de `echo`**  
-   Tras cualquier salida (`mostrar_left_slide`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `FrontBootstrap::boot()` si eso imprime HTML o cierra sesión antes de servir CSS.
+   Tras cualquier salida (`mostrarNavAtras`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `FrontBootstrap::boot()` si eso imprime HTML o cierra sesión antes de servir CSS.
 
 
 ## Comunicación Frontend-Backend (AJAX y JSON)
