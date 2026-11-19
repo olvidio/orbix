@@ -23,6 +23,8 @@
     .ayuda-preguntar .ayuda-hit h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
     .ayuda-preguntar .ayuda-meta { color: #57606a; font-size: 0.9rem; margin-bottom: 0.35rem; }
     .ayuda-preguntar .ayuda-excerpt { margin: 0; }
+    .ayuda-preguntar .ayuda-pasos { white-space: pre-wrap; margin-top: 0.4rem; }
+    .ayuda-preguntar details summary { cursor: pointer; color: #0969da; margin-top: 0.35rem; }
     .ayuda-preguntar .ayuda-aviso { background: #fff8e1; border: 1px solid #ffe082; padding: 0.55rem 0.75rem; margin-bottom: 0.75rem; }
     .ayuda-preguntar .ayuda-error { color: #b00020; font-weight: bold; }
 </style>
@@ -124,6 +126,8 @@
         var labelManual = <?= json_encode(_("Manual")) ?>;
         var labelAi = <?= json_encode(_("Ayuda IA")) ?>;
         var labelAbrir = <?= json_encode(_("Abrir en el manual")) ?>;
+        var labelGuia = <?= json_encode(_("Guía")) ?>;
+        var labelPasos = <?= json_encode(_("Ver los pasos")) ?>;
         for (var i = 0; i < resultados.length; i++) {
             var r = resultados[i] || {};
             var hit = document.createElement('article');
@@ -133,7 +137,7 @@
             hit.appendChild(h3);
             var meta = document.createElement('div');
             meta.className = 'ayuda-meta';
-            meta.textContent = (r.tipo === 'manual' ? labelManual : labelAi)
+            meta.textContent = (r.tipo === 'manual' ? labelManual : (r.tipo === 'guia' ? labelGuia : labelAi))
                 + ' · ' + (r.modulo || '')
                 + ' · ' + (r.fuente || '');
             hit.appendChild(meta);
@@ -141,6 +145,22 @@
             excerpt.className = 'ayuda-excerpt';
             excerpt.textContent = r.excerpt || '';
             hit.appendChild(excerpt);
+            if (r.tipo === 'guia' && r.pasos) {
+                // Los pasos completos del apartado de la guía (texto, sin las marcas de Markdown).
+                var det = document.createElement('details');
+                var sum = document.createElement('summary');
+                sum.textContent = labelPasos;
+                det.appendChild(sum);
+                var pasos = document.createElement('div');
+                pasos.className = 'ayuda-pasos';
+                pasos.textContent = r.pasos.toString()
+                    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+                    .replace(/\*\*|`/g, '')
+                    .replace(/\*([^*\n]+)\*/g, '$1')
+                    .replace(/^>\s?/gm, '');
+                det.appendChild(pasos);
+                hit.appendChild(det);
+            }
             if (r.tipo === 'manual' && r.modulo) {
                 var p = document.createElement('p');
                 var a = document.createElement('a');
@@ -182,7 +202,7 @@
 
     <h1 class="titulo"><?= _("Preguntar a la documentación") ?></h1>
     <div class="ayuda-aviso comentario">
-        <?= _("Busca en la documentación instalada en el servidor (manuales y fichas de ayuda). No usa inteligencia artificial ni conexión a internet.") ?>
+        <?= _("Busca en la documentación instalada en el servidor (guías de proceso, manuales y fichas de ayuda). No usa inteligencia artificial ni conexión a internet.") ?>
     </div>
 
     <form class="ayuda-form" onsubmit="return fnjs_ayuda_preguntar();">

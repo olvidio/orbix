@@ -1,0 +1,80 @@
+# Preguntas de usuario con las que se comprueba la ayuda (php tools/audit/ayuda_preguntas.php).
+# Columnas separadas por tabulador: pregunta, guía que debe responder (ruta bajo docs/guias, sin .md)
+# y, opcional, un trozo del título del apartado que debe salir.
+# Escribirlas como las diría alguien de la oficina, no con las palabras de la guía.
+como doy de alta a una persona a una actividad	actividades/gestionar_asistentes	Apuntar
+como apunto a alguien a un curso anual	actividades/gestionar_asistentes	Apuntar
+como añado un asistente a una actividad	actividades/gestionar_asistentes	Apuntar
+como apunto a una persona de otra dl a mi actividad	actividades/gestionar_asistentes	otra delegación
+como apunto a una persona de paso	actividades/gestionar_asistentes	de paso
+como quito a alguien de una actividad	actividades/gestionar_asistentes	baja
+como cambio a un asistente de actividad	actividades/gestionar_asistentes	Mover
+como apunto a alguien desde su ficha	actividades/gestionar_asistentes	ficha de la persona
+no me deja modificar un asistente	actividades/gestionar_asistentes
+que significa propio en un asistente	actividades/gestionar_asistentes
+como matriculo de una asignatura en una actividad	formacion/matricular_alumnos	a mano
+como matriculo a un alumno	formacion/matricular_alumnos
+como matriculo a todos los alumnos a la vez	formacion/matricular_alumnos	masiva
+como matriculo a un alumno de otra dl	formacion/matricular_alumnos	otra delegación
+como borro una matricula	formacion/matricular_alumnos
+que matriculas faltan por poner nota	formacion/matricular_alumnos	Pendientes
+tiene asignado más de un ca	formacion/matricular_alumnos	Errores
+como creo el ca de este año	formacion/alta_curso_anual
+como nombro el consejo local	formacion/alta_curso_anual	cargos
+como pongo las asignaturas de un ca	formacion/asignaturas_y_profesores	asignaturas
+como pongo profesor a una asignatura	formacion/asignaturas_y_profesores	profesores
+como saco el e43	formacion/asignaturas_y_profesores	E43
+como hago un acta	formacion/actas
+como pongo las notas de un curso	formacion/actas	notas
+como subo el acta firmada	formacion/actas	firmada
+me he equivocado en un acta ya firmada	formacion/actas	convocatoria
+como pongo una nota a una persona	formacion/notas_y_pendientes	nota nueva
+como corrijo una nota	formacion/notas_y_pendientes	Modificar una nota
+que asignaturas le faltan a un alumno	formacion/notas_y_pendientes	pendientes
+como imprimo la tessera	formacion/notas_y_pendientes	tessera
+como hago un certificado de estudios	formacion/certificados	Emitir
+como envio un certificado a otra delegacion	formacion/certificados	Enviar
+me ha llegado un certificado de otra region	formacion/certificados	recibido
+como creo una actividad	actividades/crear_actividad	Crear
+como busco una actividad	actividades/crear_actividad	Buscar
+como borro una actividad	actividades/crear_actividad	Eliminar
+como copio una actividad	actividades/crear_actividad	Duplicar
+como pongo un cargo en una actividad	actividades/cargos_de_actividad	Añadir
+como quito un cargo	actividades/cargos_de_actividad	Quitar
+como pido plazas para mi delegacion	actividades/gestionar_plazas	Pedir
+como cedo plazas a otra dl	actividades/gestionar_plazas	Ceder
+como marco una fase de una actividad	actividades/fases_de_proceso	Marcar
+como paso una actividad a actual	actividades/fases_de_proceso	Estado
+no me deja marcar una fase	actividades/fases_de_proceso	dependencias
+como preparo las actividades del curso que viene	actividades/nuevo_curso_rollover
+como publico una actividad	actividades/publicar_e_importar	Publicar
+como veo las actividades de otra dl	actividades/publicar_e_importar	Importar
+como me entero de los cambios en las actividades	actividades/avisos_de_cambios
+como veo lo que ingresa una casa	actividades/estadistica_economica_casas
+como pongo un encargo a un sacd	sacd/encargos	encargo
+como apunto una ausencia de un sacd	sacd/encargos	Ausencias
+como veo el planning de un sacd	sacd/planning	persona
+como veo la ocupacion de una casa	sacd/planning	casa
+como preparo el plan de misas del mes	sacd/plan_de_misas	periodo
+como cambio el sacd de una misa	sacd/plan_de_misas	cuadrícula
+como asigno un sacd a una actividad	sacd/sacd_en_actividades	Asignar
+como aviso al sacd de sus actividades	sacd/sacd_en_actividades	comunicación
+como busco a una persona	personas/ficha_persona	Buscar
+como cambio los datos de una persona	personas/ficha_persona	Editar
+como traslado a una persona a otro centro	personas/traslados_y_stgr	Trasladar
+como cambio el nivel stgr de un alumno	personas/traslados_y_stgr	STGR
+donde miro los datos de contacto de un centro para un viaje	personas/cartas_presentacion
+como sincronizo con la bdu	personas/sincronizacion_bdu
+como creo un usuario nuevo	administracion/alta_usuario	Dar de alt
+un usuario ha olvidado la contraseña	administracion/alta_usuario	contraseña
+como quito el 2fa a un usuario	administracion/alta_usuario	2FA
+como borro un usuario	administracion/alta_usuario	Baja
+como doy permisos a un usuario	administracion/permisos
+como añado una opcion al menu	administracion/menus	entradas
+como defino las fases de un tipo de actividad	administracion/definir_procesos
+como activo un modulo	administracion/gestionar_modulos	instalar
+como creo una casa nueva	administracion/centros_y_casas
+como pongo la tarifa de una casa	administracion/tarifas_de_casas
+como cambio los permisos de un dossier	administracion/dossiers_y_permisos	permisos
+como configuro la pasarela	administracion/parametros_pasarela
+como preparo los equipajes	inventario/preparar_equipajes
