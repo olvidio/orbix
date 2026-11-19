@@ -33,7 +33,7 @@ final class PgPersonaDePasoDatosRepositoryTest extends myTest
     public static function origenes(): iterable
     {
         // Las asistencias de una persona de paso se graban en `restov.d_asistentes_ex`; solo se mira ahí.
-        yield 'asistencia de paso' => [Datos::ASISTENCIAS, 'oDBE_Select', 'restov.d_asistentes_ex'];
+        yield 'asistencia de paso' => [Datos::ASISTENCIAS, 'oDBER_Select', 'restov.d_asistentes_ex'];
         yield 'cargo' => [Datos::CARGOS, 'oDBE_Select', 'global.d_cargos_activ'];
         yield 'encargo' => [Datos::ENCARGOS, 'oDBE_Select', 'global.encargos_sacd'];
         yield 'nota' => [Datos::NOTAS, 'oDB', 'publicv.e_notas'];
@@ -46,18 +46,22 @@ final class PgPersonaDePasoDatosRepositoryTest extends myTest
      * En producción las dl no leen las madres de asistencias (`global.d_asistentes_dl`, y por si acaso
      * tampoco se cuenta con `publicv.d_asistentes_all`): la consulta va directa a `restov.d_asistentes_ex`.
      */
-    public function test_las_asistencias_se_buscan_solo_en_d_asistentes_ex(): void
+    /**
+     * Con la conexión de `restov` (`oDBER_Select`), que es la que usa la aplicación para esa tabla: en
+     * producción el usuario de la dl (`oDBE_Select`) no puede leerla.
+     */
+    public function test_las_asistencias_se_buscan_solo_en_d_asistentes_ex_con_la_conexion_de_resto(): void
     {
         $origenes = (new \ReflectionClassConstant($this->repo, 'ORIGENES'))->getValue();
         $this->assertIsArray($origenes);
         $tablas = [];
         foreach ($origenes as $origen) {
             if (is_array($origen) && ($origen[0] ?? null) === Datos::ASISTENCIAS) {
-                $tablas[] = $origen[2] ?? null;
+                $tablas[] = [$origen[1] ?? null, $origen[2] ?? null];
             }
         }
 
-        $this->assertSame(['resto{s}.d_asistentes_ex'], $tablas);
+        $this->assertSame([['oDBER_Select', 'resto{s}.d_asistentes_ex']], $tablas);
     }
 
     #[DataProvider('origenes')]

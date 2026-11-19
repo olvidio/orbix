@@ -23,18 +23,45 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
     use StoresPdoErrorTxt;
 
     private PDO $oDbl;
+    private PDO $oDblEx;
 
     public function __construct()
     {
         $this->oDbl = GlobalPdo::get('oDBE');
+        $this->oDblEx = GlobalPdo::get('oDBER_Select');
     }
 
     /**
-     * Asistencias de las personas de paso: tabla común a todas las dl, fuera del esquema de la conexión.
+     * Asistencias de una persona de paso (`id_nom` negativo): están en `resto{v|f}.d_asistentes_ex`, tabla
+     * común a todas las dl. Se leen con la conexión de `resto` (como `PgAsistenteExRepository`), no con la
+     * de la dl: en producción el usuario de la dl no tiene permiso sobre esa tabla. Las personas de la dl
+     * (`id_nom` positivo) no tienen filas ahí.
+     *
+     * @return list<array{id_activ: int, propio: bool, id_cargo: int}>
      */
-    private function tablaAsistentesEx(): string
+    private function asistenciasEx(int $id_nom): array
     {
-        return (ConfigGlobal::mi_sfsv() === 2 ? 'restof' : 'restov') . '.d_asistentes_ex';
+        if ($id_nom >= 0) {
+            return [];
+        }
+        $tabla = (ConfigGlobal::mi_sfsv() === 2 ? 'restof' : 'restov') . '.d_asistentes_ex';
+        $stmt = $this->pdoQuery($this->oDblEx, "SELECT id_activ, propio FROM $tabla WHERE id_nom=$id_nom", __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return [];
+        }
+        $filas = [];
+        foreach ($stmt as $aDades) {
+            if (!is_array($aDades) || !isset($aDades['id_activ']) || !is_numeric($aDades['id_activ'])) {
+                continue;
+            }
+            $filas[] = [
+                'id_activ' => (int) $aDades['id_activ'],
+                'propio' => \src\shared\domain\helpers\FuncTablasSupport::isTrue($aDades['propio'] ?? false) ?? false,
+                'id_cargo' => 0,
+            ];
+        }
+
+        return $filas;
     }
 
     /**
@@ -45,12 +72,9 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
         $oDbl = $this->oDbl;
 
         $oCargoOAsistenteSet = new Set();
-        $tablaEx = $this->tablaAsistentesEx();
         $sQuery = "SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_dl WHERE id_nom=$iid_nom
 					UNION ALL
 		        SELECT id_activ,propio,0 as id_cargo FROM d_asistentes_out WHERE id_nom=$iid_nom
-					UNION ALL
-		        SELECT id_activ,propio,0 as id_cargo FROM $tablaEx WHERE id_nom=$iid_nom
 					UNION ALL
 				SELECT id_activ,'f' as propio,id_cargo FROM d_cargos_activ_dl WHERE id_nom=$iid_nom
 				ORDER BY 1,2 DESC";
@@ -60,9 +84,15 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
             return [];
         }
 
+        // Las de `d_asistentes_ex` llegan por otra conexión: se mezclan aquí con el mismo orden que la
+        // consulta (actividad, y dentro de ella primero la asistencia propia y el cargo al final).
+        $filas = array_merge($stmt->fetchAll(PDO::FETCH_ASSOC), $this->asistenciasEx($iid_nom));
+        $esTrue = static fn (mixed $v): bool => \src\shared\domain\helpers\FuncTablasSupport::isTrue($v) ?? false;
+        usort($filas, static fn (array $a, array $b): int => [(int) $a['id_activ'], $esTrue($b['propio']), (int) $a['id_cargo']] <=> [(int) $b['id_activ'], $esTrue($a['propio']), (int) $b['id_cargo']]);
+
         $aRepe = [];
         $c = 0;
-        foreach ($stmt as $aDades) {
+        foreach ($filas as $aDades) {
             if (!is_array($aDades) || !isset($aDades['id_activ'])) {
                 continue;
             }
@@ -103,7 +133,6 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
     {
         $oDbl = $this->oDbl;
 
-        $tablaEx = $this->tablaAsistentesEx();
         $tabla_tmp = 'tmp_activ_solape';
         $tabla_p_tmp = 'tmp_sacd_solape';
 
@@ -133,6 +162,8 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
 
         $sql = "INSERT INTO $tabla_tmp (id_activ, f_ini, f_fin, id_ubi) VALUES (:id_activ, :f_ini, :f_fin, :id_ubi);";
         $sentencia_1 = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        /** @var array<int, array{f_ini: string, f_fin: string, id_ubi: int|null}> $aActividades */
+        $aActividades = [];
         if ($sentencia_1 instanceof PDOStatement) {
             foreach ($cActividades as $oActividad) {
                 $fIni = $oActividad->getF_ini();
@@ -147,6 +178,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                     'id_ubi' => $oActividad->getId_ubi(),
                 ];
                 $this->pdoExecute($sentencia_1, $aDadesActiv, __METHOD__, __FILE__, __LINE__);
+                $aActividades[(int) $aDadesActiv['id_activ']] = $aDadesActiv;
             }
         }
 
@@ -160,9 +192,6 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                         UNION ALL
                     SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
                         FROM d_asistentes_out d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
-                        UNION ALL
-                    SELECT d.id_activ, d.propio, 0 as id_cargo, a.f_ini, a.f_fin, a.id_ubi
-                        FROM $tablaEx d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
                         UNION ALL
                     SELECT d.id_activ, 'f' as propio, d.id_cargo, a.f_ini, a.f_fin, a.id_ubi 
                         FROM d_cargos_activ_dl d JOIN $tabla_tmp a USING (id_activ) WHERE id_nom=$id_nom
@@ -190,6 +219,21 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
                         'id_ubi' => $aDades['id_ubi'] ?? null,
                     ];
                     $this->pdoExecute($sentencia_2, $aDadesSacd, __METHOD__, __FILE__, __LINE__);
+                    $aRepe[] = $id_activ;
+                }
+                // Las de `d_asistentes_ex` (otra conexión), solo de las actividades pedidas.
+                foreach ($this->asistenciasEx((int) $id_nom) as $aEx) {
+                    $id_activ = $aEx['id_activ'];
+                    if (!isset($aActividades[$id_activ]) || in_array($id_activ, $aRepe, true)) {
+                        continue;
+                    }
+                    $this->pdoExecute($sentencia_2, [
+                        'id_nom' => $id_nom,
+                        'id_activ' => $id_activ,
+                        'f_ini' => $aActividades[$id_activ]['f_ini'],
+                        'f_fin' => $aActividades[$id_activ]['f_fin'],
+                        'id_ubi' => $aActividades[$id_activ]['id_ubi'],
+                    ], __METHOD__, __FILE__, __LINE__);
                     $aRepe[] = $id_activ;
                 }
             }

@@ -15,7 +15,8 @@ use src\shared\infrastructure\GlobalPdo;
  *
  *   - asistencias: `resto{s}.d_asistentes_ex` (`{s}` es `v` o `f`), que es donde se graban las de las
  *     personas de paso. No se leen las madres (`global.d_asistentes_dl`, `{p}.d_asistentes_all`): en
- *     producción las dl no pueden. Las asistencias de sacd de paso anteriores al
+ *     producción las dl no pueden. Se lee con la conexión de `resto{s}` (`oDBER_Select`), como
+ *     `PgAsistenteExRepository`: el usuario de la dl tampoco puede leer `d_asistentes_ex`. Las asistencias de sacd de paso anteriores al
  *     2026-11-18 quedaron en `d_asistentes_dl` y aquí no se ven; ver `docs/dev/backlog.md`.
  *   - cargos: `global.d_cargos_activ`; encargos: `global.encargos_sacd` (solo sv)
  *   - notas: `{p}.e_notas`; matrículas: `{p}.d_matriculas_activ`; docencia: `global.d_docencia_stgr`
@@ -27,7 +28,7 @@ final class PgPersonaDePasoDatosRepository implements Datos
 {
     /** @var list<array{0: string, 1: string, 2: string}> tipo, conexión global, tabla */
     private const ORIGENES = [
-        [Datos::ASISTENCIAS, 'oDBE_Select', 'resto{s}.d_asistentes_ex'],
+        [Datos::ASISTENCIAS, 'oDBER_Select', 'resto{s}.d_asistentes_ex'],
         [Datos::CARGOS, 'oDBE_Select', 'global.d_cargos_activ'],
         [Datos::ENCARGOS, 'oDBE_Select', 'global.encargos_sacd'],
         [Datos::NOTAS, 'oDB', '{p}.e_notas'],

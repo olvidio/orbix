@@ -45,7 +45,8 @@ final class PgCargoOAsistenteTest extends myTest
     private function limpiar(): void
     {
         $noms = self::NOM . ',' . self::NOM2 . ',' . self::PASO;
-        $this->db->exec("DELETE FROM restov.d_asistentes_ex WHERE id_nom IN ($noms)");
+        // Con la conexión de `restov`: en producción el usuario de la dl no puede leer ni escribir esa tabla.
+        GlobalPdo::get('oDBER')->exec("DELETE FROM restov.d_asistentes_ex WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_asistentes_dl WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_asistentes_out WHERE id_nom IN ($noms)");
         $this->db->exec("DELETE FROM d_cargos_activ_dl WHERE id_nom IN ($noms)");
@@ -53,7 +54,8 @@ final class PgCargoOAsistenteTest extends myTest
 
     private function asiste(string $tabla, int $activ, bool $propio, int $nom = self::NOM): void
     {
-        $st = $this->db->prepare("INSERT INTO $tabla (id_activ, id_nom, propio) VALUES (?, ?, ?)");
+        $db = str_starts_with($tabla, 'restov.') ? GlobalPdo::get('oDBER') : $this->db;
+        $st = $db->prepare("INSERT INTO $tabla (id_activ, id_nom, propio) VALUES (?, ?, ?)");
         $st->execute([self::A + $activ, $nom, $propio ? 't' : 'f']);
     }
 
