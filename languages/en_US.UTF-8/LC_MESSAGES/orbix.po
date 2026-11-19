@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 13:57+0100\n"
+"POT-Creation-Date: 2026-11-19 15:56+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -1079,7 +1079,7 @@ msgstr "Are you sure you want to delete this type of activity?"
 #: frontend/encargossacd/controller/encargo_select.php:60
 #: frontend/inventario/controller/documentos_form.php:30
 #: frontend/menus/controller/grupmenu_lista.php:41
-#: frontend/menus/view/traducir_menu.phtml:370
+#: frontend/menus/view/traducir_menu.phtml:371
 #: frontend/notas/controller/acta_select.php:69
 #: frontend/notas/controller/acta_select.php:74
 #: frontend/procesos/controller/procesos_get_listado.php:24
@@ -1236,7 +1236,7 @@ msgstr "most frequent"
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:45
 #: frontend/inventario/controller/equipajes_movimientos_que.php:30
 #: frontend/inventario/controller/equipajes_ver_docs.php:34
-#: frontend/menus/view/traducir_menu.phtml:433
+#: frontend/menus/view/traducir_menu.phtml:434
 msgid "seleccionar"
 msgstr "select"
 
@@ -1584,7 +1584,7 @@ msgstr "Title: nom_tipo"
 #: frontend/encargossacd/view/sacd_ausencias.phtml:40
 #: frontend/encargossacd/view/sacd_ausencias_jefe_zona.phtml:38
 #: frontend/encargossacd/view/sacd_ficha.phtml:58
-#: frontend/menus/view/traducir_menu.phtml:427
+#: frontend/menus/view/traducir_menu.phtml:428
 #: frontend/personas/view/p_public_personas.phtml:75
 #: frontend/personas/view/persona_de_paso.phtml:95
 #: frontend/personas/view/persona_form.phtml:94
@@ -1675,7 +1675,7 @@ msgstr "visiting"
 
 #: frontend/actividadessacd/view/activ_sacd.phtml:482
 #: frontend/encargossacd/view/ctr_get_ficha.phtml:58
-#: frontend/menus/view/traducir_menu.phtml:444
+#: frontend/menus/view/traducir_menu.phtml:445
 #: frontend/personas/view/persona_de_paso.phtml:31
 #: frontend/ubis/view/ubis_buscar.phtml:113
 #: frontend/ubis/view/ubis_buscar.phtml:139
@@ -2295,7 +2295,7 @@ msgid "matricular"
 msgstr "enroll"
 
 #: frontend/actividadestudios/view/matricular_confirmar.phtml:2
-#: frontend/menus/view/traducir_menu.phtml:366
+#: frontend/menus/view/traducir_menu.phtml:367
 msgid "matricular a todos"
 msgstr "enroll everyone"
 
@@ -2649,7 +2649,7 @@ msgid "€"
 msgstr "€"
 
 #: frontend/asistentes/view/activ_pendientes.phtml:6
-#: frontend/menus/view/traducir_menu.phtml:396
+#: frontend/menus/view/traducir_menu.phtml:397
 #: src/notas/application/ResiduoOtraRegionComprobarData.php:122
 msgid "personas"
 msgstr "people"
@@ -2739,7 +2739,7 @@ msgid "relación de asistentes"
 msgstr "list of attendees"
 
 #: frontend/asistentes/view/lista_asistentes.phtml:20
-#: frontend/menus/view/traducir_menu.phtml:298
+#: frontend/menus/view/traducir_menu.phtml:299
 msgid "estudios"
 msgstr "studies"
 
@@ -3187,7 +3187,7 @@ msgid "añadir aviso"
 msgstr "add notice"
 
 #: frontend/cartaspresentacion/controller/cartas_presentacion.php:22
-#: frontend/menus/view/traducir_menu.phtml:419
+#: frontend/menus/view/traducir_menu.phtml:420
 #: src/ubis/domain/InfoRegiones.php:19
 msgid "regiones"
 msgstr "regions"
@@ -4434,7 +4434,7 @@ msgstr "sv"
 #: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:216
 #: frontend/devel_db_admin/view/db_crear_esquema_que.phtml:94
 #: frontend/devel_db_admin/view/db_eliminar_esquema_que.phtml:40
-#: frontend/menus/view/traducir_menu.phtml:435
+#: frontend/menus/view/traducir_menu.phtml:436
 #: frontend/ubis/controller/calendario_periodos_form_periodo.php:28
 #: frontend/ubis/controller/calendario_periodos_get.php:50
 #: frontend/ubis/controller/calendario_periodos_nuevo.php:30
@@ -5087,7 +5087,7 @@ msgid "grupo"
 msgstr "group"
 
 #: frontend/encargossacd/view/encargo_ver.phtml:237
-#: frontend/menus/view/traducir_menu.phtml:466
+#: frontend/menus/view/traducir_menu.phtml:467
 msgid "tipo encargo"
 msgstr "Assignment type"
 
@@ -5940,7 +5940,7 @@ msgid "Escoger menus de referencia"
 msgstr "Select reference menus"
 
 #: frontend/menus/view/menus_importar_form.phtml:34
-#: frontend/menus/view/traducir_menu.phtml:318
+#: frontend/menus/view/traducir_menu.phtml:319
 #: src/actividades/application/ActividadSelectListado.php:197
 msgid "importar"
 msgstr "import"
@@ -6978,888 +6978,892 @@ msgid "config esquema"
 msgstr "schema configuration"
 
 #: frontend/menus/view/traducir_menu.phtml:262
+msgid "consultas a la ayuda"
+msgstr "help inquiries"
+
+#: frontend/menus/view/traducir_menu.phtml:263
 msgid "corresponde ir a cv ad"
 msgstr "should go to cv ad"
 
-#: frontend/menus/view/traducir_menu.phtml:263
+#: frontend/menus/view/traducir_menu.phtml:264
 msgid "corresponde ir a cv joves"
 msgstr "should go to cv joves"
 
-#: frontend/menus/view/traducir_menu.phtml:264
+#: frontend/menus/view/traducir_menu.phtml:265
 msgid "corresponde ir a cv jóvenes"
 msgstr "due to attend cv for young people"
 
-#: frontend/menus/view/traducir_menu.phtml:265
+#: frontend/menus/view/traducir_menu.phtml:266
 msgid "cp & as.ecles"
 msgstr "cp & as.ecles"
 
-#: frontend/menus/view/traducir_menu.phtml:266
+#: frontend/menus/view/traducir_menu.phtml:267
 msgid "crt"
 msgstr "crt"
 
-#: frontend/menus/view/traducir_menu.phtml:267
+#: frontend/menus/view/traducir_menu.phtml:268
 msgid "crt agd"
 msgstr "crt agd"
 
-#: frontend/menus/view/traducir_menu.phtml:268
+#: frontend/menus/view/traducir_menu.phtml:269
 msgid "crt n"
 msgstr "crt n"
 
-#: frontend/menus/view/traducir_menu.phtml:269
+#: frontend/menus/view/traducir_menu.phtml:270
 msgid "crt nax"
 msgstr "crt nax"
 
-#: frontend/menus/view/traducir_menu.phtml:270
+#: frontend/menus/view/traducir_menu.phtml:271
 msgid "crt pendientes"
 msgstr "pending crt"
 
-#: frontend/menus/view/traducir_menu.phtml:271
+#: frontend/menus/view/traducir_menu.phtml:272
 msgid "crt s y cp"
 msgstr "crt s and cp"
 
-#: frontend/menus/view/traducir_menu.phtml:272
+#: frontend/menus/view/traducir_menu.phtml:273
 msgid "crt sr"
 msgstr "crt sr"
 
-#: frontend/menus/view/traducir_menu.phtml:273
+#: frontend/menus/view/traducir_menu.phtml:274
 msgid "crt sss+"
 msgstr "crt sss+"
 
-#: frontend/menus/view/traducir_menu.phtml:274
+#: frontend/menus/view/traducir_menu.phtml:275
 #: src/profesores/domain/value_objects/CongresoTipo.php:18
 msgid "cv"
 msgstr "cv"
 
-#: frontend/menus/view/traducir_menu.phtml:275
+#: frontend/menus/view/traducir_menu.phtml:276
 msgid "cv agd"
 msgstr "cv agd"
 
-#: frontend/menus/view/traducir_menu.phtml:276
+#: frontend/menus/view/traducir_menu.phtml:277
 msgid "cv s"
 msgstr "cv s"
 
-#: frontend/menus/view/traducir_menu.phtml:277
+#: frontend/menus/view/traducir_menu.phtml:278
 msgid "cv sr"
 msgstr "cv sr"
 
-#: frontend/menus/view/traducir_menu.phtml:278
+#: frontend/menus/view/traducir_menu.phtml:279
 msgid "cv sss+"
 msgstr "cv sss+"
 
-#: frontend/menus/view/traducir_menu.phtml:279
+#: frontend/menus/view/traducir_menu.phtml:280
 msgid "cve"
 msgstr "cve"
 
-#: frontend/menus/view/traducir_menu.phtml:280
+#: frontend/menus/view/traducir_menu.phtml:281
 msgid "de cada ctr"
 msgstr "of each ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:281
+#: frontend/menus/view/traducir_menu.phtml:282
 msgid "de centros o dlb"
 msgstr "from centers or dlb"
 
-#: frontend/menus/view/traducir_menu.phtml:282
+#: frontend/menus/view/traducir_menu.phtml:283
 msgid "de la r/dl"
 msgstr "of the r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:283
+#: frontend/menus/view/traducir_menu.phtml:284
 msgid "definir módulos"
 msgstr "define modules"
 
-#: frontend/menus/view/traducir_menu.phtml:284
+#: frontend/menus/view/traducir_menu.phtml:285
 msgid "definir tarifa"
 msgstr "set rate"
 
-#: frontend/menus/view/traducir_menu.phtml:285
+#: frontend/menus/view/traducir_menu.phtml:286
 #: frontend/ubis/view/ubis_buscar.phtml:124
 #: frontend/ubis/view/ubis_buscar.phtml:322
 #: src/ubis/domain/InfoDelegaciones.php:19
 msgid "delegaciones"
 msgstr "delegations"
 
-#: frontend/menus/view/traducir_menu.phtml:286
+#: frontend/menus/view/traducir_menu.phtml:287
 #: src/asignaturas/domain/InfoDepartamentos.php:19
 msgid "departamentos"
 msgstr "departments"
 
-#: frontend/menus/view/traducir_menu.phtml:287
+#: frontend/menus/view/traducir_menu.phtml:288
 msgid "dic latin"
 msgstr "dic latin"
 
-#: frontend/menus/view/traducir_menu.phtml:288
+#: frontend/menus/view/traducir_menu.phtml:289
 msgid "direcciones"
 msgstr "addresses"
 
-#: frontend/menus/view/traducir_menu.phtml:289
+#: frontend/menus/view/traducir_menu.phtml:290
 #: src/inventario/domain/InfoDocsxCtr.php:24
 #: src/inventario/domain/InfoDocsxSigla.php:24
 msgid "documentos"
 msgstr "documents"
 
-#: frontend/menus/view/traducir_menu.phtml:290
+#: frontend/menus/view/traducir_menu.phtml:291
 msgid "el curso pasado"
 msgstr "Last academic year"
 
-#: frontend/menus/view/traducir_menu.phtml:291
+#: frontend/menus/view/traducir_menu.phtml:292
 msgid "eliminar equipajes"
 msgstr "delete luggage"
 
-#: frontend/menus/view/traducir_menu.phtml:292
+#: frontend/menus/view/traducir_menu.phtml:293
 msgid "eliminar esquema"
 msgstr "delete schema"
 
-#: frontend/menus/view/traducir_menu.phtml:293
+#: frontend/menus/view/traducir_menu.phtml:294
 msgid "equipajes"
 msgstr "luggage"
 
-#: frontend/menus/view/traducir_menu.phtml:294
+#: frontend/menus/view/traducir_menu.phtml:295
 msgid "estadística  por casas"
 msgstr "Statistics by House"
 
-#: frontend/menus/view/traducir_menu.phtml:295
+#: frontend/menus/view/traducir_menu.phtml:296
 msgid "estadística por años"
 msgstr "Statistics by Year"
 
-#: frontend/menus/view/traducir_menu.phtml:296
+#: frontend/menus/view/traducir_menu.phtml:297
 msgid "estadística por casas"
 msgstr "statistics by houses"
 
-#: frontend/menus/view/traducir_menu.phtml:297
+#: frontend/menus/view/traducir_menu.phtml:298
 msgid "este curso"
 msgstr "This academic year"
 
-#: frontend/menus/view/traducir_menu.phtml:299
+#: frontend/menus/view/traducir_menu.phtml:300
 msgid "estudios x ctr"
 msgstr "studies x ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:300
+#: frontend/menus/view/traducir_menu.phtml:301
 msgid "exportar"
 msgstr "export"
 
-#: frontend/menus/view/traducir_menu.phtml:301
+#: frontend/menus/view/traducir_menu.phtml:302
 msgid "exportar a ficheros"
 msgstr "Export to files"
 
-#: frontend/menus/view/traducir_menu.phtml:302
+#: frontend/menus/view/traducir_menu.phtml:303
 msgid "exportar actividades"
 msgstr "Export activities"
 
-#: frontend/menus/view/traducir_menu.phtml:303
+#: frontend/menus/view/traducir_menu.phtml:304
 msgid "falta sacd"
 msgstr "Missing sacd"
 
-#: frontend/menus/view/traducir_menu.phtml:304
+#: frontend/menus/view/traducir_menu.phtml:305
 msgid "fases"
 msgstr "phases"
 
-#: frontend/menus/view/traducir_menu.phtml:305
+#: frontend/menus/view/traducir_menu.phtml:306
 msgid "fases-tareas"
 msgstr "phases-tasks"
 
-#: frontend/menus/view/traducir_menu.phtml:306
+#: frontend/menus/view/traducir_menu.phtml:307
 msgid "ficha ctr"
 msgstr "ctr record"
 
-#: frontend/menus/view/traducir_menu.phtml:307
+#: frontend/menus/view/traducir_menu.phtml:308
 msgid "ficha sacd"
 msgstr "sacd record"
 
-#: frontend/menus/view/traducir_menu.phtml:308
+#: frontend/menus/view/traducir_menu.phtml:309
 msgid "gastos casa"
 msgstr "House expenses"
 
-#: frontend/menus/view/traducir_menu.phtml:309
+#: frontend/menus/view/traducir_menu.phtml:310
 msgid "gastos casas"
 msgstr "House Expenses"
 
-#: frontend/menus/view/traducir_menu.phtml:310
+#: frontend/menus/view/traducir_menu.phtml:311
 msgid "generar tabla avisos"
 msgstr "generate notice table"
 
-#: frontend/menus/view/traducir_menu.phtml:311
+#: frontend/menus/view/traducir_menu.phtml:312
 msgid "gestión Tipos actividades"
 msgstr "Activity Types management"
 
-#: frontend/menus/view/traducir_menu.phtml:312
+#: frontend/menus/view/traducir_menu.phtml:313
 msgid "gestión de plazas"
 msgstr "places management"
 
-#: frontend/menus/view/traducir_menu.phtml:313
+#: frontend/menus/view/traducir_menu.phtml:314
 msgid "grup menu"
 msgstr "grup menu"
 
-#: frontend/menus/view/traducir_menu.phtml:314
+#: frontend/menus/view/traducir_menu.phtml:315
 #: frontend/usuarios/view/usuario_grupo.phtml:53
 msgid "grupos"
 msgstr "groups"
 
-#: frontend/menus/view/traducir_menu.phtml:315
+#: frontend/menus/view/traducir_menu.phtml:316
 msgid "hacer equipajes"
 msgstr "create luggage"
 
-#: frontend/menus/view/traducir_menu.phtml:316
+#: frontend/menus/view/traducir_menu.phtml:317
 msgid "historicos"
 msgstr "historical"
 
-#: frontend/menus/view/traducir_menu.phtml:317
+#: frontend/menus/view/traducir_menu.phtml:318
 msgid "históricos"
 msgstr "historical records"
 
-#: frontend/menus/view/traducir_menu.phtml:319
+#: frontend/menus/view/traducir_menu.phtml:320
 msgid "importar activ"
 msgstr "import activ"
 
-#: frontend/menus/view/traducir_menu.phtml:320
+#: frontend/menus/view/traducir_menu.phtml:321
 #: frontend/shared/view/ayuda_index.phtml:121
 msgid "importar ca"
 msgstr "import ca"
 
-#: frontend/menus/view/traducir_menu.phtml:321
+#: frontend/menus/view/traducir_menu.phtml:322
 msgid "importar crt"
 msgstr "import crt"
 
-#: frontend/menus/view/traducir_menu.phtml:322
+#: frontend/menus/view/traducir_menu.phtml:323
 msgid "importar cv"
 msgstr "import cv"
 
-#: frontend/menus/view/traducir_menu.phtml:323
+#: frontend/menus/view/traducir_menu.phtml:324
 msgid "importar cve"
 msgstr "import cve"
 
-#: frontend/menus/view/traducir_menu.phtml:324
+#: frontend/menus/view/traducir_menu.phtml:325
 msgid "importar desde ficheros"
 msgstr "import from files"
 
-#: frontend/menus/view/traducir_menu.phtml:325
+#: frontend/menus/view/traducir_menu.phtml:326
 msgid "imprimir equipajes"
 msgstr "print luggage"
 
-#: frontend/menus/view/traducir_menu.phtml:326
+#: frontend/menus/view/traducir_menu.phtml:327
 msgid "instalar módulos"
 msgstr "install modules"
 
-#: frontend/menus/view/traducir_menu.phtml:327
+#: frontend/menus/view/traducir_menu.phtml:328
 msgid "inventarios"
 msgstr "inventories"
 
-#: frontend/menus/view/traducir_menu.phtml:328
+#: frontend/menus/view/traducir_menu.phtml:329
 msgid "list por centros"
 msgstr "list by centers"
 
-#: frontend/menus/view/traducir_menu.phtml:329
+#: frontend/menus/view/traducir_menu.phtml:330
 msgid "list por ctr"
 msgstr "list by ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:330
+#: frontend/menus/view/traducir_menu.phtml:331
 msgid "list varias cv"
 msgstr "list several cv"
 
-#: frontend/menus/view/traducir_menu.phtml:331
+#: frontend/menus/view/traducir_menu.phtml:332
 msgid "list varios crt"
 msgstr "list several crt"
 
-#: frontend/menus/view/traducir_menu.phtml:332
+#: frontend/menus/view/traducir_menu.phtml:333
 msgid "lista activ. sacd"
 msgstr "sacd activity list"
 
-#: frontend/menus/view/traducir_menu.phtml:333
+#: frontend/menus/view/traducir_menu.phtml:334
 msgid "lista actividades"
 msgstr "Activity list"
 
-#: frontend/menus/view/traducir_menu.phtml:334
+#: frontend/menus/view/traducir_menu.phtml:335
 msgid "lista cargos"
 msgstr "list of positions"
 
-#: frontend/menus/view/traducir_menu.phtml:335
+#: frontend/menus/view/traducir_menu.phtml:336
 msgid "lista ctr i nº s"
 msgstr "ctr list and s no."
 
-#: frontend/menus/view/traducir_menu.phtml:336
+#: frontend/menus/view/traducir_menu.phtml:337
 msgid "lista ctr y nº s"
 msgstr "ctr list and nº s"
 
-#: frontend/menus/view/traducir_menu.phtml:337
+#: frontend/menus/view/traducir_menu.phtml:338
 msgid "lista de cambios"
 msgstr "Change list"
 
-#: frontend/menus/view/traducir_menu.phtml:338
+#: frontend/menus/view/traducir_menu.phtml:339
 msgid "lista de roles"
 msgstr "list of roles"
 
-#: frontend/menus/view/traducir_menu.phtml:339
+#: frontend/menus/view/traducir_menu.phtml:340
 msgid "lista dl"
 msgstr "dl list"
 
-#: frontend/menus/view/traducir_menu.phtml:340
+#: frontend/menus/view/traducir_menu.phtml:341
 msgid "lista docs con observ."
 msgstr "list of documents with remarks"
 
-#: frontend/menus/view/traducir_menu.phtml:341
+#: frontend/menus/view/traducir_menu.phtml:342
 msgid "lista docs pendientes"
 msgstr "list of pending documents"
 
-#: frontend/menus/view/traducir_menu.phtml:342
+#: frontend/menus/view/traducir_menu.phtml:343
 msgid "lista docs perdidos"
 msgstr "list of lost documents"
 
-#: frontend/menus/view/traducir_menu.phtml:343
+#: frontend/menus/view/traducir_menu.phtml:344
 msgid "lista grupos"
 msgstr "group list"
 
-#: frontend/menus/view/traducir_menu.phtml:344
+#: frontend/menus/view/traducir_menu.phtml:345
 msgid "lista por casas"
 msgstr "List by houses"
 
-#: frontend/menus/view/traducir_menu.phtml:345
+#: frontend/menus/view/traducir_menu.phtml:346
 msgid "lista por ctr"
 msgstr "list by ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:346
+#: frontend/menus/view/traducir_menu.phtml:347
 msgid "lista sacd-zona"
 msgstr "sacd-zone list"
 
-#: frontend/menus/view/traducir_menu.phtml:347
+#: frontend/menus/view/traducir_menu.phtml:348
 msgid "lista todo"
 msgstr "full list"
 
-#: frontend/menus/view/traducir_menu.phtml:348
+#: frontend/menus/view/traducir_menu.phtml:349
 msgid "lista usuarios"
 msgstr "list users"
 
-#: frontend/menus/view/traducir_menu.phtml:349
+#: frontend/menus/view/traducir_menu.phtml:350
 msgid "lista varias activ"
 msgstr "list multiple activities"
 
-#: frontend/menus/view/traducir_menu.phtml:350
+#: frontend/menus/view/traducir_menu.phtml:351
 msgid "lista varias cv"
 msgstr "multiple cv list"
 
-#: frontend/menus/view/traducir_menu.phtml:351
+#: frontend/menus/view/traducir_menu.phtml:352
 msgid "lista varias cve"
 msgstr "list several cve"
 
-#: frontend/menus/view/traducir_menu.phtml:352
+#: frontend/menus/view/traducir_menu.phtml:353
 msgid "lista varios ca"
 msgstr "list several ca"
 
-#: frontend/menus/view/traducir_menu.phtml:353
+#: frontend/menus/view/traducir_menu.phtml:354
 msgid "listado actas"
 msgstr "grade records list"
 
-#: frontend/menus/view/traducir_menu.phtml:354
+#: frontend/menus/view/traducir_menu.phtml:355
 msgid "listado csv"
 msgstr "CSV list"
 
-#: frontend/menus/view/traducir_menu.phtml:355
+#: frontend/menus/view/traducir_menu.phtml:356
 msgid "listado gerentes"
 msgstr "managers list"
 
-#: frontend/menus/view/traducir_menu.phtml:356
+#: frontend/menus/view/traducir_menu.phtml:357
 msgid "listado oficina propia"
 msgstr "own office list"
 
-#: frontend/menus/view/traducir_menu.phtml:357
+#: frontend/menus/view/traducir_menu.phtml:358
 msgid "listado por oficinas"
 msgstr "List by Offices"
 
-#: frontend/menus/view/traducir_menu.phtml:358
+#: frontend/menus/view/traducir_menu.phtml:359
 msgid "listados"
 msgstr "listings"
 
-#: frontend/menus/view/traducir_menu.phtml:359
+#: frontend/menus/view/traducir_menu.phtml:360
 msgid "listados de todas las casas"
 msgstr "Lists of All Houses"
 
-#: frontend/menus/view/traducir_menu.phtml:360
+#: frontend/menus/view/traducir_menu.phtml:361
 msgid "listas activ"
 msgstr "activ lists"
 
-#: frontend/menus/view/traducir_menu.phtml:361
+#: frontend/menus/view/traducir_menu.phtml:362
 msgid "listas actividades"
 msgstr "Activity lists"
 
-#: frontend/menus/view/traducir_menu.phtml:362
+#: frontend/menus/view/traducir_menu.phtml:363
 msgid "listas gerentes"
 msgstr "Managers lists"
 
-#: frontend/menus/view/traducir_menu.phtml:363
+#: frontend/menus/view/traducir_menu.phtml:364
 msgid "listas sg"
 msgstr "sg lists"
 
-#: frontend/menus/view/traducir_menu.phtml:364
+#: frontend/menus/view/traducir_menu.phtml:365
 msgid "lugares"
 msgstr "locations"
 
-#: frontend/menus/view/traducir_menu.phtml:365
+#: frontend/menus/view/traducir_menu.phtml:366
 msgid "mantenimiento"
 msgstr "maintenance"
 
-#: frontend/menus/view/traducir_menu.phtml:367
+#: frontend/menus/view/traducir_menu.phtml:368
 msgid "menus"
 msgstr "menus"
 
-#: frontend/menus/view/traducir_menu.phtml:368
+#: frontend/menus/view/traducir_menu.phtml:369
 msgid "menus a texto"
 msgstr "menus to text"
 
-#: frontend/menus/view/traducir_menu.phtml:369
+#: frontend/menus/view/traducir_menu.phtml:370
 msgid "meta menus"
 msgstr "meta menus"
 
-#: frontend/menus/view/traducir_menu.phtml:371
+#: frontend/menus/view/traducir_menu.phtml:372
 msgid "modificar centros"
 msgstr "modify centers"
 
-#: frontend/menus/view/traducir_menu.phtml:372
+#: frontend/menus/view/traducir_menu.phtml:373
 msgid "modificar plantilla"
 msgstr "Modify template"
 
-#: frontend/menus/view/traducir_menu.phtml:373
+#: frontend/menus/view/traducir_menu.phtml:374
 msgid "mover tabla a otra DB"
 msgstr "move table to another DB"
 
-#: frontend/menus/view/traducir_menu.phtml:374
+#: frontend/menus/view/traducir_menu.phtml:375
 msgid "mover y cambiar nombre dl"
 msgstr "Move and rename dl"
 
-#: frontend/menus/view/traducir_menu.phtml:375
+#: frontend/menus/view/traducir_menu.phtml:376
 msgid "movimientos maletas"
 msgstr "luggage movements"
 
-#: frontend/menus/view/traducir_menu.phtml:376
+#: frontend/menus/view/traducir_menu.phtml:377
 msgid "n de paso"
 msgstr "visiting n"
 
-#: frontend/menus/view/traducir_menu.phtml:377
+#: frontend/menus/view/traducir_menu.phtml:378
 msgid "n de paso "
 msgstr "visiting n "
 
-#: frontend/menus/view/traducir_menu.phtml:378
+#: frontend/menus/view/traducir_menu.phtml:379
 msgid "n r/dl"
 msgstr "n r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:379
+#: frontend/menus/view/traducir_menu.phtml:380
 msgid "nax de paso"
 msgstr "visiting nax"
 
-#: frontend/menus/view/traducir_menu.phtml:380
+#: frontend/menus/view/traducir_menu.phtml:381
 msgid "nax r/dl"
 msgstr "nax r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:381
+#: frontend/menus/view/traducir_menu.phtml:382
 msgid "nueva activ"
 msgstr "new activ"
 
-#: frontend/menus/view/traducir_menu.phtml:382
+#: frontend/menus/view/traducir_menu.phtml:383
 msgid "nuevo curso"
 msgstr "new course"
 
-#: frontend/menus/view/traducir_menu.phtml:383
+#: frontend/menus/view/traducir_menu.phtml:384
 msgid "nuevo equipaje"
 msgstr "new luggage"
 
-#: frontend/menus/view/traducir_menu.phtml:384
+#: frontend/menus/view/traducir_menu.phtml:385
 msgid "nuevo esquema"
 msgstr "new schema"
 
-#: frontend/menus/view/traducir_menu.phtml:385
+#: frontend/menus/view/traducir_menu.phtml:386
 msgid "nuevo planing"
 msgstr "New Planning"
 
-#: frontend/menus/view/traducir_menu.phtml:386
+#: frontend/menus/view/traducir_menu.phtml:387
 msgid "nuevo planning"
 msgstr "new planning"
 
-#: frontend/menus/view/traducir_menu.phtml:387
+#: frontend/menus/view/traducir_menu.phtml:388
 msgid "num de paso"
 msgstr "visiting num"
 
-#: frontend/menus/view/traducir_menu.phtml:388
+#: frontend/menus/view/traducir_menu.phtml:389
 msgid "nº alum. por asignatura"
 msgstr "No. of students per subject"
 
-#: frontend/menus/view/traducir_menu.phtml:389
+#: frontend/menus/view/traducir_menu.phtml:390
 msgid "opcionales"
 msgstr "optional"
 
-#: frontend/menus/view/traducir_menu.phtml:390
+#: frontend/menus/view/traducir_menu.phtml:391
 msgid "parámetros"
 msgstr "Parameters"
 
-#: frontend/menus/view/traducir_menu.phtml:391
+#: frontend/menus/view/traducir_menu.phtml:392
 msgid "pendientes"
 msgstr "pending"
 
-#: frontend/menus/view/traducir_menu.phtml:392
+#: frontend/menus/view/traducir_menu.phtml:393
 msgid "pendientes cv"
 msgstr "pending cv"
 
-#: frontend/menus/view/traducir_menu.phtml:393
+#: frontend/menus/view/traducir_menu.phtml:394
 msgid "perm_dossiers"
 msgstr "perm_dossiers"
 
-#: frontend/menus/view/traducir_menu.phtml:394
+#: frontend/menus/view/traducir_menu.phtml:395
 msgid "persona dl"
 msgstr "dl person"
 
-#: frontend/menus/view/traducir_menu.phtml:395
+#: frontend/menus/view/traducir_menu.phtml:396
 msgid "persona r/dl"
 msgstr "person r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:397
+#: frontend/menus/view/traducir_menu.phtml:398
 msgid "plan ctr"
 msgstr "ctr plan"
 
-#: frontend/menus/view/traducir_menu.phtml:398
+#: frontend/menus/view/traducir_menu.phtml:399
 msgid "planing zonas"
 msgstr "zone planning"
 
-#: frontend/menus/view/traducir_menu.phtml:399
+#: frontend/menus/view/traducir_menu.phtml:400
 msgid "planning"
 msgstr "planning"
 
-#: frontend/menus/view/traducir_menu.phtml:400
+#: frontend/menus/view/traducir_menu.phtml:401
 msgid "planning "
 msgstr "planning "
 
-#: frontend/menus/view/traducir_menu.phtml:401
+#: frontend/menus/view/traducir_menu.phtml:402
 msgid "planning por casas"
 msgstr "planning by houses"
 
-#: frontend/menus/view/traducir_menu.phtml:402
+#: frontend/menus/view/traducir_menu.phtml:403
 msgid "planning zonas"
 msgstr "planning zones"
 
-#: frontend/menus/view/traducir_menu.phtml:403
+#: frontend/menus/view/traducir_menu.phtml:404
 msgid "por casas"
 msgstr "by houses"
 
-#: frontend/menus/view/traducir_menu.phtml:404
+#: frontend/menus/view/traducir_menu.phtml:405
 msgid "por centro"
 msgstr "by center"
 
-#: frontend/menus/view/traducir_menu.phtml:405
+#: frontend/menus/view/traducir_menu.phtml:406
 msgid "por centros"
 msgstr "by centers"
 
-#: frontend/menus/view/traducir_menu.phtml:406
+#: frontend/menus/view/traducir_menu.phtml:407
 msgid "por ctr"
 msgstr "by ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:407
+#: frontend/menus/view/traducir_menu.phtml:408
 msgid "por sigla"
 msgstr "by acronym"
 
-#: frontend/menus/view/traducir_menu.phtml:408
+#: frontend/menus/view/traducir_menu.phtml:409
 msgid "por zonas"
 msgstr "by zones"
 
-#: frontend/menus/view/traducir_menu.phtml:409
+#: frontend/menus/view/traducir_menu.phtml:410
 #: frontend/personas/controller/personas_select.php:150
 msgid "posibles ca"
 msgstr "possible ca"
 
-#: frontend/menus/view/traducir_menu.phtml:410
+#: frontend/menus/view/traducir_menu.phtml:411
 msgid "posibles idiomas"
 msgstr "Possible languages"
 
-#: frontend/menus/view/traducir_menu.phtml:411
+#: frontend/menus/view/traducir_menu.phtml:412
 msgid "preferencias"
 msgstr "preferences"
 
-#: frontend/menus/view/traducir_menu.phtml:412
+#: frontend/menus/view/traducir_menu.phtml:413
 msgid "previsión asistentes"
 msgstr "expected attendees"
 
-#: frontend/menus/view/traducir_menu.phtml:413
+#: frontend/menus/view/traducir_menu.phtml:414
 #: frontend/procesos/controller/tipo_activ_proceso_lst_posibles.php:25
 msgid "procesos"
 msgstr "processes"
 
-#: frontend/menus/view/traducir_menu.phtml:414
+#: frontend/menus/view/traducir_menu.phtml:415
 msgid "procesos activ."
 msgstr "activ. processes"
 
-#: frontend/menus/view/traducir_menu.phtml:415
+#: frontend/menus/view/traducir_menu.phtml:416
 msgid "profesor para asignatura"
 msgstr "professor for subject"
 
-#: frontend/menus/view/traducir_menu.phtml:416
+#: frontend/menus/view/traducir_menu.phtml:417
 msgid "propuesta cl cv"
 msgstr "proposal cl cv"
 
-#: frontend/menus/view/traducir_menu.phtml:417
+#: frontend/menus/view/traducir_menu.phtml:418
 msgid "propuestas"
 msgstr "proposals"
 
-#: frontend/menus/view/traducir_menu.phtml:418
+#: frontend/menus/view/traducir_menu.phtml:419
 msgid "publicar activ"
 msgstr "publish activ"
 
-#: frontend/menus/view/traducir_menu.phtml:420
+#: frontend/menus/view/traducir_menu.phtml:421
 msgid "resumen pendientes"
 msgstr "pending summary"
 
-#: frontend/menus/view/traducir_menu.phtml:421
+#: frontend/menus/view/traducir_menu.phtml:422
 msgid "resúmenes"
 msgstr "summaries"
 
-#: frontend/menus/view/traducir_menu.phtml:422
+#: frontend/menus/view/traducir_menu.phtml:423
 msgid "s de la r/dl"
 msgstr "s of the r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:423
+#: frontend/menus/view/traducir_menu.phtml:424
 msgid "s que han de hacer crt interno"
 msgstr "s that must perform internal crt"
 
-#: frontend/menus/view/traducir_menu.phtml:424
+#: frontend/menus/view/traducir_menu.phtml:425
 msgid "s que han de hacer el crt de cel"
 msgstr "s that must perform the cel crt"
 
-#: frontend/menus/view/traducir_menu.phtml:425
+#: frontend/menus/view/traducir_menu.phtml:426
 msgid "s que no han ido a la cv"
 msgstr "s who have not gone to the cv"
 
-#: frontend/menus/view/traducir_menu.phtml:426
+#: frontend/menus/view/traducir_menu.phtml:427
 msgid "s que no han ido al crt"
 msgstr "s who have not attended the crt"
 
-#: frontend/menus/view/traducir_menu.phtml:428
+#: frontend/menus/view/traducir_menu.phtml:429
 msgid "sacd agd"
 msgstr "sacd agd"
 
-#: frontend/menus/view/traducir_menu.phtml:429
+#: frontend/menus/view/traducir_menu.phtml:430
 msgid "sacd num"
 msgstr "sacd num"
 
-#: frontend/menus/view/traducir_menu.phtml:430
+#: frontend/menus/view/traducir_menu.phtml:431
 msgid "sacd r/dl"
 msgstr "sacd r/dl"
 
-#: frontend/menus/view/traducir_menu.phtml:431
+#: frontend/menus/view/traducir_menu.phtml:432
 msgid "sacd sssc"
 msgstr "sacd sssc"
 
-#: frontend/menus/view/traducir_menu.phtml:432
+#: frontend/menus/view/traducir_menu.phtml:433
 #: src/asignaturas/domain/InfoSectores.php:19
 msgid "sectores"
 msgstr "sectors"
 
-#: frontend/menus/view/traducir_menu.phtml:434
+#: frontend/menus/view/traducir_menu.phtml:435
 msgid "sem inv."
 msgstr "sem inv."
 
-#: frontend/menus/view/traducir_menu.phtml:436
+#: frontend/menus/view/traducir_menu.phtml:437
 msgid "sf agd"
 msgstr "sf agd"
 
-#: frontend/menus/view/traducir_menu.phtml:437
+#: frontend/menus/view/traducir_menu.phtml:438
 msgid "sf n"
 msgstr "sf n"
 
-#: frontend/menus/view/traducir_menu.phtml:438
+#: frontend/menus/view/traducir_menu.phtml:439
 msgid "sf n, nax y agd"
 msgstr "sf n, nax and agd"
 
-#: frontend/menus/view/traducir_menu.phtml:439
+#: frontend/menus/view/traducir_menu.phtml:440
 msgid "sf nax"
 msgstr "sf nax"
 
-#: frontend/menus/view/traducir_menu.phtml:440
+#: frontend/menus/view/traducir_menu.phtml:441
 msgid "sf s y sg"
 msgstr "sf s and sg"
 
-#: frontend/menus/view/traducir_menu.phtml:441
+#: frontend/menus/view/traducir_menu.phtml:442
 msgid "sf sr"
 msgstr "sf sr"
 
-#: frontend/menus/view/traducir_menu.phtml:442
+#: frontend/menus/view/traducir_menu.phtml:443
 msgid "sf sr,sr-nax,sr-agd"
 msgstr "sf sr, sr-nax, sr-agd"
 
-#: frontend/menus/view/traducir_menu.phtml:443
+#: frontend/menus/view/traducir_menu.phtml:444
 #: src/actividades/application/ActividadNuevoCursoEjecutar.php:95
 msgid "solapes"
 msgstr "Overlaps"
 
-#: frontend/menus/view/traducir_menu.phtml:445
+#: frontend/menus/view/traducir_menu.phtml:446
 msgid "sssc"
 msgstr "sssc"
 
-#: frontend/menus/view/traducir_menu.phtml:446
+#: frontend/menus/view/traducir_menu.phtml:447
 msgid "sssc de paso"
 msgstr "sssc visiting"
 
-#: frontend/menus/view/traducir_menu.phtml:447
+#: frontend/menus/view/traducir_menu.phtml:448
 msgid "sv  n"
 msgstr "sv n"
 
-#: frontend/menus/view/traducir_menu.phtml:448
+#: frontend/menus/view/traducir_menu.phtml:449
 msgid "sv agd"
 msgstr "sv agd"
 
-#: frontend/menus/view/traducir_menu.phtml:449
+#: frontend/menus/view/traducir_menu.phtml:450
 msgid "sv n"
 msgstr "sv n"
 
-#: frontend/menus/view/traducir_menu.phtml:450
+#: frontend/menus/view/traducir_menu.phtml:451
 msgid "sv n y agd"
 msgstr "sv n and agd"
 
-#: frontend/menus/view/traducir_menu.phtml:451
+#: frontend/menus/view/traducir_menu.phtml:452
 msgid "sv s y sg"
 msgstr "sv s and sg"
 
-#: frontend/menus/view/traducir_menu.phtml:452
+#: frontend/menus/view/traducir_menu.phtml:453
 msgid "sv sr"
 msgstr "sv sr"
 
-#: frontend/menus/view/traducir_menu.phtml:453
+#: frontend/menus/view/traducir_menu.phtml:454
 msgid "tabla alumnos-asignaturas"
 msgstr "table students-subjects"
 
-#: frontend/menus/view/traducir_menu.phtml:454
+#: frontend/menus/view/traducir_menu.phtml:455
 msgid "tabla de crt"
 msgstr "crt table"
 
-#: frontend/menus/view/traducir_menu.phtml:455
+#: frontend/menus/view/traducir_menu.phtml:456
 msgid "tabla de cv"
 msgstr "cv table"
 
-#: frontend/menus/view/traducir_menu.phtml:456
+#: frontend/menus/view/traducir_menu.phtml:457
 msgid "tarifa <-> tipo actividad"
 msgstr "Rate <-> Activity type"
 
-#: frontend/menus/view/traducir_menu.phtml:457
+#: frontend/menus/view/traducir_menu.phtml:458
 msgid "tarifa <-> tipo de actividad"
 msgstr "rate <-> activity type"
 
-#: frontend/menus/view/traducir_menu.phtml:458
+#: frontend/menus/view/traducir_menu.phtml:459
 msgid "tarifa <-> tipos actividad"
 msgstr "rate <-> activity types"
 
-#: frontend/menus/view/traducir_menu.phtml:459
+#: frontend/menus/view/traducir_menu.phtml:460
 msgid "tarifa <-> tipos de actividad"
 msgstr "rate <-> activity types"
 
-#: frontend/menus/view/traducir_menu.phtml:460
+#: frontend/menus/view/traducir_menu.phtml:461
 msgid "tarifa <-> tipus dactivitat"
 msgstr "rate <-> activity types"
 
-#: frontend/menus/view/traducir_menu.phtml:461
+#: frontend/menus/view/traducir_menu.phtml:462
 msgid "tarifas por casa y año"
 msgstr "rates by house and year"
 
-#: frontend/menus/view/traducir_menu.phtml:462
+#: frontend/menus/view/traducir_menu.phtml:463
 msgid "tarifes per casa i any"
 msgstr "rates by house and year"
 
-#: frontend/menus/view/traducir_menu.phtml:463
+#: frontend/menus/view/traducir_menu.phtml:464
 msgid "tipo activ - proceso"
 msgstr "activity type - process"
 
-#: frontend/menus/view/traducir_menu.phtml:464
+#: frontend/menus/view/traducir_menu.phtml:465
 #: frontend/ubis/view/cdc_form.phtml:90
 #: frontend/ubis/view/ubis_buscar.phtml:269
 #: src/ubis/domain/entity/TipoCasa.php:322
 msgid "tipo de casa"
 msgstr "type of house"
 
-#: frontend/menus/view/traducir_menu.phtml:465
+#: frontend/menus/view/traducir_menu.phtml:466
 msgid "tipo de ctr"
 msgstr "type of ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:467
+#: frontend/menus/view/traducir_menu.phtml:468
 msgid "tipos de documentos"
 msgstr "document types"
 
-#: frontend/menus/view/traducir_menu.phtml:468
+#: frontend/menus/view/traducir_menu.phtml:469
 msgid "tipos de procesos"
 msgstr "process types"
 
-#: frontend/menus/view/traducir_menu.phtml:469
+#: frontend/menus/view/traducir_menu.phtml:470
 msgid "tipos de texto"
 msgstr "text types"
 
-#: frontend/menus/view/traducir_menu.phtml:470
+#: frontend/menus/view/traducir_menu.phtml:471
 msgid "todas casas (pffe)"
 msgstr "all houses (pffe)"
 
-#: frontend/menus/view/traducir_menu.phtml:471
+#: frontend/menus/view/traducir_menu.phtml:472
 msgid "todas casas sf"
 msgstr "all sf houses"
 
-#: frontend/menus/view/traducir_menu.phtml:472
+#: frontend/menus/view/traducir_menu.phtml:473
 msgid "todas casas sv"
 msgstr "all sv houses"
 
-#: frontend/menus/view/traducir_menu.phtml:473
+#: frontend/menus/view/traducir_menu.phtml:474
 msgid "traducciones"
 msgstr "translations"
 
-#: frontend/menus/view/traducir_menu.phtml:474
+#: frontend/menus/view/traducir_menu.phtml:475
 msgid "traslado de doc"
 msgstr "document transfer"
 
-#: frontend/menus/view/traducir_menu.phtml:475
+#: frontend/menus/view/traducir_menu.phtml:476
 #: src/inventario/domain/InfoUbiInventario.php:19
 msgid "ubis"
 msgstr "ubis"
 
-#: frontend/menus/view/traducir_menu.phtml:476
+#: frontend/menus/view/traducir_menu.phtml:477
 msgid "usuarios web"
 msgstr "web users"
 
-#: frontend/menus/view/traducir_menu.phtml:477
+#: frontend/menus/view/traducir_menu.phtml:478
 msgid "ver docencia"
 msgstr "view teaching"
 
-#: frontend/menus/view/traducir_menu.phtml:478
+#: frontend/menus/view/traducir_menu.phtml:479
 msgid "ver encargo"
 msgstr "view assignment"
 
-#: frontend/menus/view/traducir_menu.phtml:479
+#: frontend/menus/view/traducir_menu.phtml:480
 msgid "ver lista cambios"
 msgstr "view change list"
 
-#: frontend/menus/view/traducir_menu.phtml:480
+#: frontend/menus/view/traducir_menu.phtml:481
 msgid "ver plan centro"
 msgstr "view center plan"
 
-#: frontend/menus/view/traducir_menu.phtml:481
+#: frontend/menus/view/traducir_menu.phtml:482
 #: src/personas/application/PersonaEliminar.php:113
 msgid "zonas"
 msgstr "zones"
 
-#: frontend/menus/view/traducir_menu.phtml:482
+#: frontend/menus/view/traducir_menu.phtml:483
 msgid "zonas geogr."
 msgstr "geogr. zones"
 
-#: frontend/menus/view/traducir_menu.phtml:483
+#: frontend/menus/view/traducir_menu.phtml:484
 msgid "zonas-ctr"
 msgstr "zones-ctr"
 
-#: frontend/menus/view/traducir_menu.phtml:484
+#: frontend/menus/view/traducir_menu.phtml:485
 msgid "zonas-sacd"
 msgstr "zones-sacd"
 
-#: frontend/menus/view/traducir_menu.phtml:487
+#: frontend/menus/view/traducir_menu.phtml:488
 msgid "Entre semana"
 msgstr "Weekday"
 
-#: frontend/menus/view/traducir_menu.phtml:488
+#: frontend/menus/view/traducir_menu.phtml:489
 msgid "Fin de semana"
 msgstr "Weekend"
 
-#: frontend/menus/view/traducir_menu.phtml:489
+#: frontend/menus/view/traducir_menu.phtml:490
 msgid "No se repite"
 msgstr "Does not repeat"
 
-#: frontend/menus/view/traducir_menu.phtml:490
+#: frontend/menus/view/traducir_menu.phtml:491
 msgid "Semana Santa"
 msgstr "Easter"
 
-#: frontend/menus/view/traducir_menu.phtml:491
+#: frontend/menus/view/traducir_menu.phtml:492
 msgid "día fijo (Verano, Navidad)"
 msgstr "fixed day (Summer, Christmas)"
 
@@ -19270,7 +19274,7 @@ msgstr "Insufficient terms for search. Try different keywords."
 msgid "No se encuentra la carpeta de documentación en el servidor."
 msgstr "Documentation folder not found on the server."
 
-#: src/shared/application/AyudaPreguntar.php:583
+#: src/shared/application/AyudaPreguntar.php:584
 #, php-format
 msgid ""
 "No se han encontrado pasajes claros para «%s». Pruebe con el nombre del "
@@ -19279,34 +19283,34 @@ msgstr ""
 "No clear passages found for '%s'. Try using the name of the module or screen "
 "(grade record, planning, assignments…)."
 
-#: src/shared/application/AyudaPreguntar.php:593
+#: src/shared/application/AyudaPreguntar.php:594
 msgid "Según la documentación local (sin IA generativa):"
 msgstr "According to local documentation (without generative AI):"
 
-#: src/shared/application/AyudaPreguntar.php:602
+#: src/shared/application/AyudaPreguntar.php:603
 msgid "Abra el manual del módulo o refine la pregunta para más detalle."
 msgstr "Open the module manual or refine the question for more detail."
 
-#: src/shared/application/AyudaPreguntar.php:621
+#: src/shared/application/AyudaPreguntar.php:622
 #, php-format
 msgid "Según la guía «%s» (documentación local, sin IA generativa):"
 msgstr "According to the guide “%s” (local documentation, no generative AI):"
 
-#: src/shared/application/AyudaPreguntar.php:631
+#: src/shared/application/AyudaPreguntar.php:632
 msgid "También puede interesarle:"
 msgstr "You may also be interested in:"
 
-#: src/shared/application/AyudaPreguntar.php:642
+#: src/shared/application/AyudaPreguntar.php:643
 #, php-format
 msgid "Manual · %s"
 msgstr "Manual · %s"
 
-#: src/shared/application/AyudaPreguntar.php:643
+#: src/shared/application/AyudaPreguntar.php:644
 #, php-format
 msgid "Guía · %s"
 msgstr "Guide · %s"
 
-#: src/shared/application/AyudaPreguntar.php:644
+#: src/shared/application/AyudaPreguntar.php:645
 #, php-format
 msgid "Ayuda · %s"
 msgstr "Help · %s"
@@ -19422,7 +19426,7 @@ msgstr ""
 "Missing maintenance user/password in import (%1$s, template «%2$s»). Review "
 "default and %3$s."
 
-#: src/shared/infrastructure/persistence/DBConnection.php:98
+#: src/shared/infrastructure/persistence/DBConnection.php:100
 msgid "Error de configuración: faltan parámetros para conectar con la BDU."
 msgstr "Configuration error: missing parameters to connect to BDU."
 
@@ -20664,25 +20668,25 @@ msgstr "personal"
 msgid "aniversarios"
 msgstr "anniversaries"
 
-#: src/utils_database/domain/entity/DBAbstract.php:494
+#: src/utils_database/domain/entity/DBAbstract.php:508
 msgid "Sin conexión a base de datos para ejecutar SQL."
 msgstr "No connection to database to execute SQL."
 
-#: src/utils_database/domain/entity/DBAbstract.php:505
+#: src/utils_database/domain/entity/DBAbstract.php:519
 msgid "Error ejecutando SQL en base de datos."
 msgstr "Error executing SQL in database."
 
-#: src/utils_database/domain/entity/DBAbstract.php:518
+#: src/utils_database/domain/entity/DBAbstract.php:532
 #, php-format
 msgid "Clave de réplica no soportada: %s"
 msgstr "Replica key not supported: %s"
 
-#: src/utils_database/domain/entity/DBAbstract.php:562
+#: src/utils_database/domain/entity/DBAbstract.php:576
 #, php-format
 msgid "No se pudo resolver nombre de tabla para: %s"
 msgstr "Could not resolve table name for: %s"
 
-#: src/utils_database/domain/entity/DBAbstract.php:580
+#: src/utils_database/domain/entity/DBAbstract.php:594
 #, php-format
 msgid "infoTable no implementado para la tabla: %s"
 msgstr "infoTable not implemented for table: %s"
