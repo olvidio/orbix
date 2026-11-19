@@ -138,7 +138,9 @@
             } else {
                 pie.appendChild(enlace(T.manual, URL_MANUAL, ''));
             }
-            pie.appendChild(enlace(T.preguntar, URL_PREGUNTAR, ''));
+            // La pantalla desde la que se pregunta: al abrir la ayuda `refe` pasa a ser la de la ayuda.
+            var pantalla = (refe().match(/frontend\/[a-z][a-z0-9_]*\/controller\/[A-Za-z0-9_]+\.php/) || [''])[0];
+            pie.appendChild(enlace(T.preguntar, URL_PREGUNTAR, pantalla ? 'pantalla=' + encodeURIComponent(pantalla) : ''));
         }
 
         function pintarError() {

@@ -1,0 +1,187 @@
+<?php
+/**
+ * @var \frontend\shared\web\Posicion $oPosicion
+ * @var string $aviso_txt
+ * @var list<array<string, mixed>> $grupos
+ * @var int $total_consultas
+ * @var string $tsv
+ * @var list<array{texto: string, actual: bool, enlace: array{href: string, full_url: string, parametros: string}}> $enlacesEstado
+ * @var list<array{texto: string, actual: bool, enlace: array{href: string, full_url: string, parametros: string}}> $enlacesVer
+ * @var array{href: string, full_url: string, parametros: string} $enlaceActual
+ * @var array{href: string, full_url: string, parametros: string} $enlacePreguntar
+ * @var string $urlEstado
+ * @var string $hashEstado
+ */
+$e = static fn (mixed $v): string => htmlspecialchars(is_scalar($v) ? (string) $v : '', ENT_QUOTES, 'UTF-8');
+$js = static fn (mixed $v): string => (string) json_encode($v, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+/** @param array{href: string, full_url: string, parametros: string} $enlace */
+$onclick = static fn (array $enlace): string => $e(
+    'return fnjs_ayuda_consultas_nav(' . $js($enlace['full_url']) . ', ' . $js($enlace['parametros']) . ', ' . $js($enlace['href']) . ');'
+);
+?>
+<style>
+    .ayuda-consultas { max-width: 72rem; }
+    .ayuda-consultas table { border-collapse: collapse; width: 100%; margin-top: 0.75rem; }
+    .ayuda-consultas th, .ayuda-consultas td { border: 1px solid #d8dee4; padding: 0.4rem 0.55rem; vertical-align: top; text-align: left; }
+    .ayuda-consultas th { background: #f6f8fa; }
+    .ayuda-consultas .ayuda-filtros { margin: 0.5rem 0; }
+    .ayuda-consultas .ayuda-actual { font-weight: bold; }
+    .ayuda-consultas .ayuda-no-sirvio { color: #b00020; font-weight: bold; }
+    .ayuda-consultas .ayuda-comentario { margin: 0.25rem 0 0; font-style: italic; }
+    .ayuda-consultas .ayuda-meta { color: #57606a; font-size: 0.9rem; }
+    .ayuda-consultas textarea { width: 100%; min-height: 8rem; font-family: monospace; }
+    .ayuda-consultas .ayuda-aviso { background: #fff8e1; border: 1px solid #ffe082; padding: 0.55rem 0.75rem; }
+    .ayuda-consultas .ayuda-error { color: #b00020; font-weight: bold; }
+</style>
+<script type="application/javascript">
+    fnjs_ayuda_consultas_nav = function (fullUrl, parametros, hrefFallback) {
+        if (typeof fnjs_link_submenu === 'function' && document.getElementById('main')) {
+            fnjs_link_submenu(fullUrl, parametros);
+            return false;
+        }
+        if (hrefFallback) {
+            window.location.href = hrefFallback;
+        }
+        return false;
+    };
+
+    // Cambia el estado de las consultas de una fila; la cápsula lleva cuáles y a qué estado.
+    fnjs_ayuda_consultas_estado = function (ctx) {
+        var estado = document.getElementById('ayuda_consultas_estado');
+        var body = new URLSearchParams();
+        var hashParts = { <?= $hashEstado ?> };
+        Object.keys(hashParts).forEach(function (k) {
+            body.append(k, hashParts[k]);
+        });
+        body.append('ctx_estado', ctx);
+
+        fetch(<?= $js($urlEstado) ?>, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            body: body.toString(),
+            credentials: 'same-origin'
+        }).then(function (resp) {
+            return resp.json();
+        }).then(function (rta) {
+            if (!rta || rta.success !== true) {
+                throw new Error((rta && rta.mensaje) ? rta.mensaje : <?= $js(_("Error desconocido")) ?>);
+            }
+            fnjs_ayuda_consultas_nav(<?= $js($enlaceActual['full_url']) ?>, <?= $js($enlaceActual['parametros']) ?>, <?= $js($enlaceActual['href']) ?>);
+        }).catch(function (err) {
+            if (estado) {
+                estado.className = 'comentario ayuda-error';
+                estado.textContent = <?= $js(_("respuesta")) ?> + ': ' + ((err && err.message) ? err.message : '');
+            }
+        });
+        return false;
+    };
+</script>
+<?= $oPosicion->mostrarNavAtras(1) ?>
+<div class="ayuda-consultas">
+    <p>
+        <a class="link nohref" href="<?= $e($enlacePreguntar['href']) ?>" onclick="<?= $onclick($enlacePreguntar) ?>">
+            ← <?= _("Preguntar a la documentación") ?>
+        </a>
+    </p>
+    <h1 class="titulo"><?= _("Consultas a la ayuda") ?></h1>
+
+<?php if ($aviso_txt !== '') { ?>
+    <div class="ayuda-aviso comentario"><?= $e($aviso_txt) ?></div>
+<?php } else { ?>
+    <p class="comentario">
+        <?= _("Lo que se ha preguntado en «Preguntar a la documentación», sin el nombre de quien pregunta. La misma pregunta hecha varias veces sale en una sola fila.") ?>
+        <?= _("Primero las que alguien marcó como «no me ha servido», después las que no tuvieron respuesta.") ?>
+    </p>
+    <p class="ayuda-filtros">
+        <?= _("Estado") ?>:
+<?php foreach ($enlacesEstado as $opcion) { ?>
+        <a class="link nohref<?= $opcion['actual'] ? ' ayuda-actual' : '' ?>" href="<?= $e($opcion['enlace']['href']) ?>"
+           onclick="<?= $onclick($opcion['enlace']) ?>"><?= $e($opcion['texto']) ?></a>
+<?php } ?>
+        &nbsp;·&nbsp; <?= _("Ver") ?>:
+<?php foreach ($enlacesVer as $opcion) { ?>
+        <a class="link nohref<?= $opcion['actual'] ? ' ayuda-actual' : '' ?>" href="<?= $e($opcion['enlace']['href']) ?>"
+           onclick="<?= $onclick($opcion['enlace']) ?>"><?= $e($opcion['texto']) ?></a>
+<?php } ?>
+    </p>
+    <p id="ayuda_consultas_estado" class="comentario" aria-live="polite"></p>
+
+<?php if ($grupos === []) { ?>
+    <p><?= _("No hay consultas que revisar.") ?></p>
+<?php } else { ?>
+    <table id="ayuda_consultas_tabla">
+        <thead>
+        <tr>
+            <th><?= _("Pregunta") ?></th>
+            <th><?= _("Veces") ?></th>
+            <th><?= _("Última vez") ?></th>
+            <th><?= _("Qué respondió la ayuda") ?></th>
+            <th><?= _("Desde dónde") ?></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+<?php foreach ($grupos as $g) {
+    $comentarios = is_array($g['comentarios'] ?? null) ? $g['comentarios'] : [];
+    $esquemas = array_filter(is_array($g['esquemas'] ?? null) ? $g['esquemas'] : [], 'is_string');
+    $pantallas = is_array($g['pantallas'] ?? null) ? $g['pantallas'] : [];
+    $noSirvio = is_numeric($g['no_sirvio'] ?? null) ? (int) $g['no_sirvio'] : 0;
+    $sirvio = is_numeric($g['sirvio'] ?? null) ? (int) $g['sirvio'] : 0;
+    $nResultados = is_numeric($g['n_resultados'] ?? null) ? (int) $g['n_resultados'] : 0;
+    ?>
+        <tr>
+            <td>
+                <?= $e($g['pregunta'] ?? '') ?>
+<?php if ($noSirvio > 0) { ?>
+                <div class="ayuda-no-sirvio"><?= $e(sprintf(_("No sirvió: %d"), $noSirvio)) ?></div>
+<?php } ?>
+<?php if ($sirvio > 0) { ?>
+                <div class="ayuda-meta"><?= $e(sprintf(_("Sirvió: %d"), $sirvio)) ?></div>
+<?php } ?>
+<?php foreach ($comentarios as $comentario) { ?>
+                <p class="ayuda-comentario">«<?= $e($comentario) ?>»</p>
+<?php } ?>
+            </td>
+            <td><?= $e($g['veces'] ?? '') ?></td>
+            <td><?= $e($g['ultima'] ?? '') ?></td>
+            <td>
+<?php if ($nResultados === 0) { ?>
+                <span class="ayuda-no-sirvio"><?= _("Sin respuesta") ?></span>
+<?php } else { ?>
+                <?= $e($g['titulo'] ?? '') ?>
+                <div class="ayuda-meta"><?= $e($g['fuente'] ?? '') ?> · <?= $e(sprintf(_("puntuación %s"), is_numeric($g['puntuacion'] ?? null) ? (string) $g['puntuacion'] : '-')) ?></div>
+<?php } ?>
+            </td>
+            <td class="ayuda-meta">
+                <?= $e(implode(', ', $esquemas)) ?>
+<?php foreach ($pantallas as $pantalla) { ?>
+                <div><?= $e($pantalla) ?></div>
+<?php } ?>
+            </td>
+            <td>
+<?php if (($g['ctx_resolver'] ?? '') !== '') { ?>
+                <button type="button" class="btn" name="resolver"
+                        onclick="<?= $e('return fnjs_ayuda_consultas_estado(' . $js($g['ctx_resolver']) . ');') ?>"><?= _("Resuelta") ?></button>
+<?php } ?>
+<?php if (($g['ctx_descartar'] ?? '') !== '') { ?>
+                <button type="button" class="btn" name="descartar"
+                        onclick="<?= $e('return fnjs_ayuda_consultas_estado(' . $js($g['ctx_descartar']) . ');') ?>"><?= _("Descartar") ?></button>
+<?php } ?>
+<?php if (($g['ctx_reabrir'] ?? '') !== '') { ?>
+                <button type="button" class="btn" name="reabrir"
+                        onclick="<?= $e('return fnjs_ayuda_consultas_estado(' . $js($g['ctx_reabrir']) . ');') ?>"><?= _("Volver a pendiente") ?></button>
+<?php } ?>
+            </td>
+        </tr>
+<?php } ?>
+        </tbody>
+    </table>
+    <p class="ayuda-meta"><?= $e(sprintf(_("Consultas leídas en este estado: %d"), $total_consultas)) ?></p>
+
+    <h2 class="subtitulo"><?= _("Para el fichero de preguntas de comprobación") ?></h2>
+    <p class="comentario"><?= _("Las preguntas de la tabla en el formato de tools/audit/ayuda_preguntas.tsv (pregunta, guía, apartado). La guía es la que salió: corríjala si debía contestar otra.") ?></p>
+    <label class="oculto" for="ayuda_consultas_tsv"><?= _("Preguntas en formato TSV") ?></label>
+    <textarea id="ayuda_consultas_tsv" readonly><?= $e($tsv) ?></textarea>
+<?php } ?>
+<?php } ?>
+</div>

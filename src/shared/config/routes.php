@@ -17,6 +17,15 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/shared/ayuda_preguntar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_preguntar.php';
     });
+    $r->addRoute(['GET','POST'], '/src/shared/ayuda_consulta_valorar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_consulta_valorar.php';
+    });
+    $r->addRoute(['GET','POST'], '/src/shared/ayuda_consultas_lista_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_consultas_lista_data.php';
+    });
+    $r->addRoute(['GET','POST'], '/src/shared/ayuda_consultas_estado_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php';
+    });
     $r->addRoute(['GET','POST'], '/src/shared/tablaDB_buscar_datos', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tablaDB_buscar_datos.php';
     });

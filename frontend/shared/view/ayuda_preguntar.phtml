@@ -3,6 +3,10 @@
  * @var \frontend\shared\web\Posicion $oPosicion
  * @var string $urlPreguntar
  * @var string $hashPreguntar
+ * @var string $urlValorar
+ * @var string $hashValorar
+ * @var string $pantalla
+ * @var array{href: string, full_url: string, parametros: string}|null $enlaceRevisar
  * @var string $manualBase
  * @var array{href: string, full_url: string, parametros: string} $enlaceAyuda
  * @var array{href: string, full_url: string, parametros: string} $enlaceManual
@@ -27,6 +31,11 @@
     .ayuda-preguntar details summary { cursor: pointer; color: #0969da; margin-top: 0.35rem; }
     .ayuda-preguntar .ayuda-aviso { background: #fff8e1; border: 1px solid #ffe082; padding: 0.55rem 0.75rem; margin-bottom: 0.75rem; }
     .ayuda-preguntar .ayuda-error { color: #b00020; font-weight: bold; }
+    .ayuda-preguntar .ayuda-valorar {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+        border-top: 1px solid #d8dee4; margin: 1rem 0; padding-top: 0.75rem;
+    }
+    .ayuda-preguntar .ayuda-valorar textarea { flex: 1 1 100%; min-height: 4rem; padding: 0.4rem 0.55rem; }
 </style>
 <script type="application/javascript">
     fnjs_ayuda_nav = function (fullUrl, parametros, hrefFallback) {
@@ -81,6 +90,7 @@
         });
         body.append('pregunta', pregunta);
         body.append('limite', '8');
+        body.append('pantalla', <?= json_encode($pantalla, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
 
         fetch(<?= json_encode($urlPreguntar) ?>, {
             method: 'POST',
@@ -93,7 +103,9 @@
             if (estado) {
                 estado.textContent = '';
             }
-            fnjs_ayuda_pintar(fnjs_ayuda_parse_rta(rta));
+            var data = fnjs_ayuda_parse_rta(rta);
+            fnjs_ayuda_pintar(data);
+            fnjs_ayuda_pintar_valorar((data.ctx_valorar || '').toString());
         }).catch(function (err) {
             if (estado) {
                 estado.className = 'comentario ayuda-error';
@@ -103,6 +115,94 @@
             }
         });
         return false;
+    };
+
+    // «¿Le ha servido?»: envía la valoración de la respuesta (y, si no sirvió, qué se buscaba).
+    fnjs_ayuda_valorar = function (ctx, util, comentario, zona) {
+        var body = new URLSearchParams();
+        var hashParts = { <?= $hashValorar ?> };
+        Object.keys(hashParts).forEach(function (k) {
+            body.append(k, hashParts[k]);
+        });
+        body.append('ctx_valorar', ctx);
+        body.append('util', util);
+        body.append('comentario', comentario);
+
+        fetch(<?= json_encode($urlValorar, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            body: body.toString(),
+            credentials: 'same-origin'
+        }).then(function (resp) {
+            return resp.json();
+        }).then(function (rta) {
+            fnjs_ayuda_parse_rta(rta);
+            zona.textContent = (util === '1')
+                ? <?= json_encode(_("Gracias.")) ?>
+                : <?= json_encode(_("Gracias. Queda anotado para revisar la documentación.")) ?>;
+        }).catch(function (err) {
+            var p = document.createElement('p');
+            p.className = 'comentario ayuda-error';
+            p.textContent = (err && err.message) ? err.message : <?= json_encode(_("No se ha podido guardar la valoración.")) ?>;
+            zona.appendChild(p);
+        });
+    };
+
+    fnjs_ayuda_pintar_valorar = function (ctx) {
+        var box = document.getElementById('ayuda_preguntar_resultados');
+        if (!box || ctx === '') {
+            return;
+        }
+        var zona = document.createElement('div');
+        zona.className = 'ayuda-valorar';
+        zona.id = 'ayuda_valorar';
+
+        var texto = document.createElement('span');
+        texto.textContent = <?= json_encode(_("¿Le ha servido la respuesta?")) ?>;
+        zona.appendChild(texto);
+
+        var btnSi = document.createElement('button');
+        btnSi.type = 'button';
+        btnSi.className = 'btn';
+        btnSi.id = 'ayuda_valorar_si';
+        btnSi.textContent = <?= json_encode(_("Sí")) ?>;
+        btnSi.addEventListener('click', function () {
+            fnjs_ayuda_valorar(ctx, '1', '', zona);
+        });
+        zona.appendChild(btnSi);
+
+        var btnNo = document.createElement('button');
+        btnNo.type = 'button';
+        btnNo.className = 'btn';
+        btnNo.id = 'ayuda_valorar_no';
+        btnNo.textContent = <?= json_encode(_("No")) ?>;
+        btnNo.addEventListener('click', function () {
+            // Queda anotado ya; el comentario es opcional y se añade después.
+            fnjs_ayuda_valorar(ctx, '0', '', document.createElement('div'));
+            btnSi.remove();
+            btnNo.remove();
+            texto.textContent = <?= json_encode(_("Anotado. Si quiere, explique qué buscaba:")) ?>;
+
+            var area = document.createElement('textarea');
+            area.id = 'ayuda_valorar_comentario';
+            area.maxLength = 1000;
+            area.setAttribute('aria-label', <?= json_encode(_("Qué buscaba")) ?>);
+            zona.appendChild(area);
+
+            var btnEnviar = document.createElement('button');
+            btnEnviar.type = 'button';
+            btnEnviar.className = 'btn';
+            btnEnviar.id = 'ayuda_valorar_enviar';
+            btnEnviar.textContent = <?= json_encode(_("Enviar comentario")) ?>;
+            btnEnviar.addEventListener('click', function () {
+                fnjs_ayuda_valorar(ctx, '0', area.value.toString().trim(), zona);
+            });
+            zona.appendChild(btnEnviar);
+            area.focus();
+        });
+        zona.appendChild(btnNo);
+
+        box.appendChild(zona);
     };
 
     fnjs_ayuda_pintar = function (data) {
@@ -198,11 +298,19 @@
            onclick="return fnjs_ayuda_nav(<?= json_encode($enlaceManual['full_url']) ?>, <?= json_encode($enlaceManual['parametros']) ?>, <?= json_encode($enlaceManual['href']) ?>);">
             <?= _("Manual de usuario") ?>
         </a>
+<?php if ($enlaceRevisar !== null) { ?>
+        ·
+        <a class="link nohref" href="<?= htmlspecialchars($enlaceRevisar['href'], ENT_QUOTES, 'UTF-8') ?>"
+           onclick="return fnjs_ayuda_nav(<?= json_encode($enlaceRevisar['full_url']) ?>, <?= json_encode($enlaceRevisar['parametros']) ?>, <?= json_encode($enlaceRevisar['href']) ?>);">
+            <?= _("Revisar las consultas") ?>
+        </a>
+<?php } ?>
     </p>
 
     <h1 class="titulo"><?= _("Preguntar a la documentación") ?></h1>
     <div class="ayuda-aviso comentario">
         <?= _("Busca en la documentación instalada en el servidor (guías de proceso, manuales y fichas de ayuda). No usa inteligencia artificial ni conexión a internet.") ?>
+        <?= _("Las preguntas se anotan sin el nombre de quien las hace, para mejorar la documentación.") ?>
     </div>
 
     <form class="ayuda-form" onsubmit="return fnjs_ayuda_preguntar();">

@@ -78,3 +78,6 @@ como pongo la tarifa de una casa	administracion/tarifas_de_casas
 como cambio los permisos de un dossier	administracion/dossiers_y_permisos	permisos
 como configuro la pasarela	administracion/parametros_pasarela
 como preparo los equipajes	inventario/preparar_equipajes
+la ayuda no me responde lo que busco como aviso	administracion/usar_la_ayuda	no le ha servido
+donde veo lo que la gente pregunta a la ayuda	administracion/usar_la_ayuda	Revisar
+como pregunto a la ayuda como se hace algo	administracion/usar_la_ayuda	Preguntar

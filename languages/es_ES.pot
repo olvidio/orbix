@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 12:58+0100\n"
+"POT-Creation-Date: 2026-11-19 13:57+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -150,6 +150,7 @@ msgstr ""
 #: frontend/personas/view/stgr_cambio.phtml:13
 #: frontend/personas/view/traslado_form.phtml:32
 #: frontend/shared/helpers/DatosTablaScript.php:27
+#: frontend/shared/view/ayuda_consultas_lista.phtml:73
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
 #: frontend/shared/web/TablaEditable.php:872
@@ -564,6 +565,9 @@ msgstr ""
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/shared/infrastructure/ui/http/AccesoRolPau.php:63
+#: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:21
+#: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:23
+#: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:27
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:33
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:44
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:28
@@ -4089,6 +4093,7 @@ msgstr ""
 
 #: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:47
 #: frontend/misas/view/modificar_cuadricula_zona.phtml:156
+#: frontend/shared/view/ayuda_consultas_lista.phtml:96
 msgid "Estado"
 msgstr ""
 
@@ -5445,7 +5450,8 @@ msgid "ver las casas donde se realizan las actividades"
 msgstr ""
 
 #: frontend/inventario/view/equipajes_ver.phtml:6
-#: frontend/shared/view/ayuda_preguntar.phtml:45
+#: frontend/shared/view/ayuda_consultas_lista.phtml:67
+#: frontend/shared/view/ayuda_preguntar.phtml:54
 #: src/inventario/view/buscarDocsxSigla.phtml:153
 msgid "Error desconocido"
 msgstr ""
@@ -5850,7 +5856,7 @@ msgstr ""
 #: frontend/shared/view/ayuda_contextual.phtml:36
 #: frontend/shared/view/ayuda_contextual.phtml:39
 #: frontend/shared/view/ayuda_contextual.phtml:53
-#: frontend/shared/view/ayuda_preguntar.phtml:194
+#: frontend/shared/view/ayuda_preguntar.phtml:294
 #: frontend/shared/view/manual.phtml:61 frontend/shared/view/manual.phtml:83
 msgid "Ayuda"
 msgstr ""
@@ -5889,7 +5895,7 @@ msgstr ""
 
 #: frontend/menus/view/traducir_menu.phtml:65
 #: frontend/notas/controller/asignaturas_pendientes.php:63
-#: frontend/shared/view/ayuda_preguntar.phtml:213
+#: frontend/shared/view/ayuda_preguntar.phtml:321
 msgid "Buscar"
 msgstr ""
 
@@ -7934,6 +7940,7 @@ msgid "firmada"
 msgstr ""
 
 #: frontend/notas/controller/acta_select.php:98
+#: frontend/shared/view/ayuda_preguntar.phtml:168
 #: frontend/ubiscamas/view/habitacion_form.phtml:178
 #: frontend/ubiscamas/view/habitacion_form.phtml:179
 #: src/certificados/domain/CertificadoEmitidoSelect.php:107
@@ -7987,6 +7994,7 @@ msgstr ""
 #: frontend/notas/controller/asignaturas_pendientes.php:73
 #: frontend/notas/view/tesera_ver.phtml:82
 #: src/profesores/domain/entity/ProfesorPublicacion.php:391
+#: src/shared/domain/value_objects/AyudaConsultaEstado.php:24
 msgid "pendiente"
 msgstr ""
 
@@ -9390,13 +9398,23 @@ msgstr ""
 msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
 msgstr ""
 
-#: frontend/shared/controller/ayuda_preguntar.php:52
+#: frontend/shared/controller/ayuda_consultas_lista.php:59
+msgid "sin respuesta o que no sirvieron"
+msgstr ""
+
+#: frontend/shared/controller/ayuda_consultas_lista.php:59
+#: src/actividades/application/ActividadQueFiltrosBloque.php:99
+msgid "todas"
+msgstr ""
+
+#: frontend/shared/controller/ayuda_preguntar.php:73
+#: frontend/shared/view/ayuda_consultas_lista.phtml:83
 #: frontend/shared/view/ayuda_index.phtml:52
-#: frontend/shared/view/ayuda_preguntar.phtml:203
+#: frontend/shared/view/ayuda_preguntar.phtml:310
 msgid "Preguntar a la documentación"
 msgstr ""
 
-#: frontend/shared/controller/ayuda_preguntar.php:57
+#: frontend/shared/controller/ayuda_preguntar.php:78
 #: frontend/shared/controller/manual.php:161
 #: frontend/shared/view/ayuda_index.phtml:30
 msgid "Entorno de pruebas"
@@ -9511,6 +9529,95 @@ msgstr ""
 
 #: frontend/shared/security/HashF.php:390
 msgid "página con seguridad desactivada"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:86
+msgid "Consultas a la ayuda"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:92
+msgid "Lo que se ha preguntado en «Preguntar a la documentación», sin el nombre de quien pregunta. La misma pregunta hecha varias veces sale en una sola fila."
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:93
+msgid "Primero las que alguien marcó como «no me ha servido», después las que no tuvieron respuesta."
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:101
+msgid "Ver"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:110
+msgid "No hay consultas que revisar."
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:115
+#: frontend/shared/view/ayuda_preguntar.phtml:317
+msgid "Pregunta"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:116
+msgid "Veces"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:117
+msgid "Última vez"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:118
+msgid "Qué respondió la ayuda"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:119
+msgid "Desde dónde"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:136
+#, php-format
+msgid "No sirvió: %d"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:139
+#, php-format
+msgid "Sirvió: %d"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:149
+msgid "Sin respuesta"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:152
+#, php-format
+msgid "puntuación %s"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:164
+msgid "Resuelta"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:168
+msgid "Descartar"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:172
+msgid "Volver a pendiente"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:179
+#, php-format
+msgid "Consultas leídas en este estado: %d"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:181
+msgid "Para el fichero de preguntas de comprobación"
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:182
+msgid "Las preguntas de la tabla en el formato de tools/audit/ayuda_preguntas.tsv (pregunta, guía, apartado). La guía es la que salió: corríjala si debía contestar otra."
+msgstr ""
+
+#: frontend/shared/view/ayuda_consultas_lista.phtml:183
+msgid "Preguntas en formato TSV"
 msgstr ""
 
 #: frontend/shared/view/ayuda_contextual.phtml:40
@@ -9786,53 +9893,94 @@ msgstr ""
 msgid "Crear/modificar un nuevo centro"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:66
+#: frontend/shared/view/ayuda_preguntar.phtml:75
 msgid "Escriba una pregunta."
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:70
+#: frontend/shared/view/ayuda_preguntar.phtml:79
 msgid "Buscando…"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:102
+#: frontend/shared/view/ayuda_preguntar.phtml:114
 msgid "Error al consultar la documentación."
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:126
+#: frontend/shared/view/ayuda_preguntar.phtml:141
+msgid "Gracias."
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:142
+msgid "Gracias. Queda anotado para revisar la documentación."
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:146
+#: src/shared/application/AyudaConsultaValorar.php:39
+msgid "No se ha podido guardar la valoración."
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:161
+msgid "¿Le ha servido la respuesta?"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:178
+#: frontend/ubiscamas/view/habitacion_form.phtml:178
+#: frontend/ubiscamas/view/habitacion_form.phtml:179
+#: src/certificados/domain/CertificadoEmitidoSelect.php:107
+#: src/certificados/domain/Select_certificados_de_una_persona.php:112
+msgid "No"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:184
+msgid "Anotado. Si quiere, explique qué buscaba:"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:189
+msgid "Qué buscaba"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:196
+msgid "Enviar comentario"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:226
 #: frontend/shared/view/manual.phtml:57
 msgid "Manual"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:127
+#: frontend/shared/view/ayuda_preguntar.phtml:227
 msgid "Ayuda IA"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:128
+#: frontend/shared/view/ayuda_preguntar.phtml:228
 msgid "Abrir en el manual"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:129
+#: frontend/shared/view/ayuda_preguntar.phtml:229
 msgid "Guía"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:130
+#: frontend/shared/view/ayuda_preguntar.phtml:230
 msgid "Ver los pasos"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:199
+#: frontend/shared/view/ayuda_preguntar.phtml:299
 #: frontend/shared/view/manual.phtml:88 frontend/shared/view/manual.phtml:112
 msgid "Manual de usuario"
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:205
+#: frontend/shared/view/ayuda_preguntar.phtml:305
+msgid "Revisar las consultas"
+msgstr ""
+
+#: frontend/shared/view/ayuda_preguntar.phtml:312
 msgid "Busca en la documentación instalada en el servidor (guías de proceso, manuales y fichas de ayuda). No usa inteligencia artificial ni conexión a internet."
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:209
-msgid "Pregunta"
+#: frontend/shared/view/ayuda_preguntar.phtml:313
+msgid "Las preguntas se anotan sin el nombre de quien las hace, para mejorar la documentación."
 msgstr ""
 
-#: frontend/shared/view/ayuda_preguntar.phtml:211
+#: frontend/shared/view/ayuda_preguntar.phtml:319
 msgid "Ej.: cómo añadir un alumno al acta"
 msgstr ""
 
@@ -10805,13 +10953,6 @@ msgstr ""
 #: frontend/ubiscamas/view/habitacion_form.phtml:171
 #: frontend/ubiscamas/view/habitacion_form.phtml:213
 msgid "Acciones"
-msgstr ""
-
-#: frontend/ubiscamas/view/habitacion_form.phtml:178
-#: frontend/ubiscamas/view/habitacion_form.phtml:179
-#: src/certificados/domain/CertificadoEmitidoSelect.php:107
-#: src/certificados/domain/Select_certificados_de_una_persona.php:112
-msgid "No"
 msgstr ""
 
 #: frontend/ubiscamas/view/habitacion_form.phtml:182
@@ -12138,10 +12279,6 @@ msgstr ""
 
 #: src/actividades/application/ActividadQueFiltrosBloque.php:96
 msgid "publicada"
-msgstr ""
-
-#: src/actividades/application/ActividadQueFiltrosBloque.php:99
-msgid "todas"
 msgstr ""
 
 #: src/actividades/application/ActividadSelectListado.php:200
@@ -13497,6 +13634,7 @@ msgstr ""
 #: src/misas/infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php:22
 #: src/misas/infrastructure/ui/http/controllers/ver_plan_sacd_data.php:10
 #: src/profesores/infrastructure/ui/http/controllers/profesor_asignatura_ajax.php:11
+#: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:27
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php:12
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php:8
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:13
@@ -18047,55 +18185,71 @@ msgstr ""
 msgid "reunión"
 msgstr ""
 
+#: src/shared/application/AyudaConsultaValorar.php:29
+msgid "No se encuentra la consulta que se quiere valorar."
+msgstr ""
+
+#: src/shared/application/AyudaConsultasCambiarEstado.php:28
+msgid "El estado indicado no existe."
+msgstr ""
+
+#: src/shared/application/AyudaConsultasCambiarEstado.php:40
+msgid "No se ha podido guardar el estado de la consulta."
+msgstr ""
+
+#: src/shared/application/AyudaConsultasCambiarEstado.php:45
+msgid "No se encuentra ninguna de las consultas indicadas."
+msgstr ""
+
 #: src/shared/application/AyudaPantallaData.php:109
 msgid "No hay ayuda específica para esta pantalla."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:89
+#: src/shared/application/AyudaPreguntar.php:92
 msgid "Escriba una pregunta sobre Orbix (por ejemplo: «cómo crear un acta»)."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:99
+#: src/shared/application/AyudaPreguntar.php:102
 msgid "No hay términos suficientes para buscar. Pruebe con otras palabras."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:109
+#: src/shared/application/AyudaPreguntar.php:112
 msgid "No se encuentra la carpeta de documentación en el servidor."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:602
+#: src/shared/application/AyudaPreguntar.php:583
 #, php-format
 msgid "No se han encontrado pasajes claros para «%s». Pruebe con el nombre del módulo o de la pantalla (acta, planning, encargos…)."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:612
+#: src/shared/application/AyudaPreguntar.php:593
 msgid "Según la documentación local (sin IA generativa):"
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:621
+#: src/shared/application/AyudaPreguntar.php:602
 msgid "Abra el manual del módulo o refine la pregunta para más detalle."
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:640
+#: src/shared/application/AyudaPreguntar.php:621
 #, php-format
 msgid "Según la guía «%s» (documentación local, sin IA generativa):"
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:650
+#: src/shared/application/AyudaPreguntar.php:631
 msgid "También puede interesarle:"
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:661
+#: src/shared/application/AyudaPreguntar.php:642
 #, php-format
 msgid "Manual · %s"
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:662
+#: src/shared/application/AyudaPreguntar.php:643
 #, php-format
 msgid "Guía · %s"
 msgstr ""
 
-#: src/shared/application/AyudaPreguntar.php:663
+#: src/shared/application/AyudaPreguntar.php:644
 #, php-format
 msgid "Ayuda · %s"
 msgstr ""
@@ -18141,6 +18295,14 @@ msgstr ""
 #: src/shared/domain/DatosUpdateRepo.php:167
 #, php-format
 msgid "No se puede desactivar el módulo: los módulos activos %s lo requieren obligatoriamente. Desactive primero esos módulos o resuelva la incompatibilidad."
+msgstr ""
+
+#: src/shared/domain/value_objects/AyudaConsultaEstado.php:25
+msgid "resuelta"
+msgstr ""
+
+#: src/shared/domain/value_objects/AyudaConsultaEstado.php:26
+msgid "descartada"
 msgstr ""
 
 #: src/shared/infrastructure/ConnectionBootstrap.php:228
@@ -18418,6 +18580,10 @@ msgstr ""
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:135
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:145
 msgid "No se ha recibido el archivo."
+msgstr ""
+
+#: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_lista_data.php:17
+msgid "Las consultas a la ayuda las revisa un administrador."
 msgstr ""
 
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:72
