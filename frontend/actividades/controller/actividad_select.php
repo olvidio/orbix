@@ -56,10 +56,10 @@ $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qextendida = (string)filter_input(INPUT_POST, 'extendida');
 
 $Qmodo = (string)filter_input(INPUT_POST, 'modo');
-$Qstatus = (integer)filter_input(INPUT_POST, 'status');
+$Qstatus = (int)filter_input(INPUT_POST, 'status');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
@@ -68,7 +68,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
+$Qpublicado = (int)filter_input(INPUT_POST, 'publicado');
 
 if (empty($Qperiodo)) {
     $Qperiodo = 'actual';

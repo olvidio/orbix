@@ -57,10 +57,10 @@ class Verify2fa
 
         // Extraer 4 bytes basados en el offset
         $offset = ord(substr($hash, -1)) & 0x0F;
-        $value = ((ord(substr($hash, $offset)) & 0x7F) << 24) |
-            ((ord(substr($hash, $offset + 1)) & 0xFF) << 16) |
-            ((ord(substr($hash, $offset + 2)) & 0xFF) << 8) |
-            (ord(substr($hash, $offset + 3)) & 0xFF);
+        $value = ((ord($hash[$offset]) & 0x7F) << 24) |
+            ((ord($hash[$offset + 1]) & 0xFF) << 16) |
+            ((ord($hash[$offset + 2]) & 0xFF) << 8) |
+            (ord($hash[$offset + 3]) & 0xFF);
 
         // Generar código de 6 dígitos
         $modulo = pow(10, 6);

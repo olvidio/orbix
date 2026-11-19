@@ -37,10 +37,10 @@ $Qid_sel = ListNavSupport::idSelFromPost();
 $Qscroll_id = ListNavSupport::scrollIdFromPost();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
-$Qstatus = (integer)filter_input(INPUT_POST, 'status');
+$Qstatus = (int)filter_input(INPUT_POST, 'status');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');

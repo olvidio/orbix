@@ -24,7 +24,7 @@ use frontend\shared\FrontBootstrap;
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
-$Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
+$Qid_ctr_num = (int)filter_input(INPUT_POST, 'id_ctr_num');
 $Qa_id_ctr = (array)filter_input(INPUT_POST, 'id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');

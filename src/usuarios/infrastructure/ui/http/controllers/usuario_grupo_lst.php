@@ -15,7 +15,7 @@ use src\shared\security\HashB;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);

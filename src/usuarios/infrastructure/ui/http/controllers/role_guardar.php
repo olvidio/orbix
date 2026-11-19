@@ -22,10 +22,10 @@ try {
 
 $Qrole = (string)\src\shared\domain\helpers\FilterPostGet::post('role');
 $Qid_role = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_role');
-$Qsf = (integer)\src\shared\domain\helpers\FilterPostGet::post('sf');
-$Qsv = (integer)\src\shared\domain\helpers\FilterPostGet::post('sv');
+$Qsf = (int)\src\shared\domain\helpers\FilterPostGet::post('sf');
+$Qsv = (int)\src\shared\domain\helpers\FilterPostGet::post('sv');
 $Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');
-$Qdmz = (integer)\src\shared\domain\helpers\FilterPostGet::post('dmz');
+$Qdmz = (int)\src\shared\domain\helpers\FilterPostGet::post('dmz');
 
 $error_txt = '';
 

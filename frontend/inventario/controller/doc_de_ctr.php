@@ -17,7 +17,7 @@ $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
-$Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
+$Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 
 /** @var array<string, mixed> $aGoBack */
 $aGoBack = [

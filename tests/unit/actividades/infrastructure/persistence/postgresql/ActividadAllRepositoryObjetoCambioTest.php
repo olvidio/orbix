@@ -19,11 +19,9 @@ final class ActividadAllRepositoryObjetoCambioTest extends TestCase
         $repo = $ref->newInstanceWithoutConstructor();
 
         $setNomTabla = $ref->getMethod('setNomTabla');
-        $setNomTabla->setAccessible(true);
         $setNomTabla->invoke($repo, $tabla);
 
         $getObjetoCambio = $ref->getMethod('getObjetoCambio');
-        $getObjetoCambio->setAccessible(true);
 
         $this->assertSame($objetoEsperado, $getObjetoCambio->invoke($repo));
     }

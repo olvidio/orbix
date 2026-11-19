@@ -70,15 +70,12 @@ function calendario_hash_expected_field_names(HashF $oHash): array
 {
     $ref = new ReflectionClass($oHash);
     $addHidden = $ref->getMethod('addHiddenToForm');
-    $addHidden->setAccessible(true);
     $addHidden->invoke($oHash);
 
     $getCamposForm = $ref->getMethod('getCamposForm');
-    $getCamposForm->setAccessible(true);
     $sCamposForm = (string) $getCamposForm->invoke($oHash);
 
     $getCamposNo = $ref->getMethod('getCamposNo');
-    $getCamposNo->setAccessible(true);
     $camposNo = explode('!', (string) $getCamposNo->invoke($oHash));
 
     $fields = array_filter(explode('!', $sCamposForm));
@@ -175,7 +172,6 @@ function calendario_hash_validate_report(array $aPOST): array
     }
     $ref = new ReflectionClass(HashF::class);
     $getHashArray = $ref->getMethod('getHashArray');
-    $getHashArray->setAccessible(true);
     $h2hh = $getHashArray->invoke(null, $aCamposHh);
     if ($hh !== $h2hh['hash']) {
         $hhOk = false;

@@ -170,8 +170,8 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
     $pag_ini = '';
 }
 
-$Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
-$id_grupmenu = (integer)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu);
+$Qid_grupmenu = (int)filter_input(INPUT_GET, 'id_grupmenu');
+$id_grupmenu = (int)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu);
 
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
 if ($oPreferencia !== null) {

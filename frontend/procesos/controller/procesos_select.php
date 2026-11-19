@@ -13,7 +13,7 @@ use frontend\shared\helpers\PayloadCoercion;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $restored = ListNavSupport::restoreSelectionFromStackPost();
 
 /** @var string|list<string> $Qid_sel */

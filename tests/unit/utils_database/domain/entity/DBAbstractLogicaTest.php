@@ -137,7 +137,7 @@ final class DBAbstractLogicaTest extends TestCase
     {
         $this->assertFalse($this->db(null)->existe('"H-dlb".t'), 'sin conexión');
 
-        foreach (['"H-dlb".t' => true, null => false, 'otra' => false] as $devuelto => $esperado) {
+        foreach (['"H-dlb".t' => true, '' => false, 'otra' => false] as $devuelto => $esperado) {
             $stmt = $this->createMock(PDOStatement::class);
             $stmt->method('fetch')->willReturn(['to_regclass' => $devuelto === '' ? null : $devuelto]);
             $pdo = $this->createMock(PDO::class);

@@ -117,7 +117,7 @@ switch ($Qque) {
         $oView->renderizar('activacion_form.html.twig', $a_campos);
         AjaxJsonSupport::html((string) ob_get_clean());
     case 'form_nuevo':
-        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_tipo_activ = (int)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');

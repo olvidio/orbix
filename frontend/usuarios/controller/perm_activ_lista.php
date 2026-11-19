@@ -12,7 +12,7 @@ use frontend\shared\helpers\PayloadCoercion;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qolvidar = (string)filter_input(INPUT_POST, 'olvidar');
 

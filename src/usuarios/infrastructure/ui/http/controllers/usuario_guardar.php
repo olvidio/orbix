@@ -46,14 +46,14 @@ if (empty($Qusuario)) {
 
 $Qid_usuario = ($que_user === 'nuevo') ? 0 : $id_usuario_ctx;
 $Qperm_activ = (array)\src\shared\domain\helpers\FilterPostGet::post('perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qid_role = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_role');
+$Qid_role = (int)\src\shared\domain\helpers\FilterPostGet::post('id_role');
 $Qemail = (string)\src\shared\domain\helpers\FilterPostGet::post('email', FILTER_VALIDATE_EMAIL);
 
 $Qnom_usuario = (string)\src\shared\domain\helpers\FilterPostGet::post('nom_usuario');
 $Qpassword = (string)\src\shared\domain\helpers\FilterPostGet::post('password');
 $Qpass = (string)\src\shared\domain\helpers\FilterPostGet::post('pass');
-$Qid_nom = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_nom');
-$Qid_ctr = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_ctr');
+$Qid_nom = (int)\src\shared\domain\helpers\FilterPostGet::post('id_nom');
+$Qid_ctr = (int)\src\shared\domain\helpers\FilterPostGet::post('id_ctr');
 $Qcasas = (array)\src\shared\domain\helpers\FilterPostGet::post('casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $Qcambio_password = (bool)\src\shared\domain\helpers\FilterPostGet::post('cambio_password');

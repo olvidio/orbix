@@ -65,7 +65,6 @@ final class AvisosGenerarTablaSinProcesosTest extends TestCase
         int $esperado,
     ): void {
         $method = new ReflectionMethod(AvisosGenerarTabla::class, 'evaluarFaseCorrectaSinProcesos');
-        $method->setAccessible(true);
 
         $resultado = $method->invoke(null, $statusActual, $idFaseRef, $avisoOn, $avisoOff);
 
@@ -82,7 +81,6 @@ final class AvisosGenerarTablaSinProcesosTest extends TestCase
 
         $useCase = $this->createUseCase($allRepository);
         $method = new ReflectionMethod(AvisosGenerarTabla::class, 'statusActividadParaMatching');
-        $method->setAccessible(true);
 
         $resultado = $method->invoke($useCase, 42, StatusId::PROYECTO);
 
@@ -96,7 +94,6 @@ final class AvisosGenerarTablaSinProcesosTest extends TestCase
 
         $useCase = $this->createUseCase($allRepository);
         $method = new ReflectionMethod(AvisosGenerarTabla::class, 'statusActividadParaMatching');
-        $method->setAccessible(true);
 
         $resultado = $method->invoke($useCase, 0, StatusId::TERMINADA);
 
@@ -109,7 +106,6 @@ final class AvisosGenerarTablaSinProcesosTest extends TestCase
 
         $useCase = $this->createUseCase($allRepository);
         $method = new ReflectionMethod(AvisosGenerarTabla::class, 'statusActividadParaMatching');
-        $method->setAccessible(true);
 
         $resultado = $method->invoke($useCase, 0, 0);
 
@@ -130,7 +126,6 @@ final class AvisosGenerarTablaSinProcesosTest extends TestCase
 
         $useCase = $this->createUseCase($this->createMock(ActividadAllRepositoryInterface::class));
         $method = new ReflectionMethod(AvisosGenerarTabla::class, 'statusDeFaseReferencia');
-        $method->setAccessible(true);
 
         $resultado = $method->invoke(
             $useCase,

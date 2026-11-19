@@ -4,8 +4,8 @@ use frontend\shared\config\OrbixRuntime;
 
 $_POST = $_GET;
 
-$id_nom = (integer)filter_input(INPUT_GET, 'id_nom');
-$id_activ = (integer)filter_input(INPUT_GET, 'id_activ');
+$id_nom = (int)filter_input(INPUT_GET, 'id_nom');
+$id_activ = (int)filter_input(INPUT_GET, 'id_activ');
 $nom = '';
 
 ob_start();

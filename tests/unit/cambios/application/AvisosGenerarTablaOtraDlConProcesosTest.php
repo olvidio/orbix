@@ -63,9 +63,7 @@ final class AvisosGenerarTablaOtraDlConProcesosTest extends TestCase
 
         $useCase = $this->createUseCase();
         $statusDeFase = new ReflectionMethod(AvisosGenerarTabla::class, 'statusDeFaseReferencia');
-        $statusDeFase->setAccessible(true);
         $evaluar = new ReflectionMethod(AvisosGenerarTabla::class, 'evaluarFaseCorrectaSinProcesos');
-        $evaluar->setAccessible(true);
 
         $statusReferencia = $statusDeFase->invoke(
             $useCase,

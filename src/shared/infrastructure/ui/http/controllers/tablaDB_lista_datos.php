@@ -17,8 +17,8 @@ if ((string)$Qclase_info_encoded === '') {
 }
 $Qk_buscar = (string)\src\shared\domain\helpers\FilterPostGet::post('k_buscar');
 $Qpau = (string)\src\shared\domain\helpers\FilterPostGet::post('pau');
-$Qid_pau = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_pau');
-$Qobj_pau = (integer)\src\shared\domain\helpers\FilterPostGet::post('obj_pau');
+$Qid_pau = (int)\src\shared\domain\helpers\FilterPostGet::post('id_pau');
+$Qobj_pau = (int)\src\shared\domain\helpers\FilterPostGet::post('obj_pau');
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

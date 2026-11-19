@@ -21,9 +21,9 @@ require_once("src/shared/global_object.inc");
 // si vengo de actualizar tengo el valor en POST,
 // SINO: ES un include de index.php, tengo todas sus variables...
 if (empty($id_grupmenu)) {
-    $id_grupmenu =  (integer)filter_input(INPUT_POST, 'id_grupmenu');
+    $id_grupmenu =  (int)filter_input(INPUT_POST, 'id_grupmenu');
     if (empty($id_grupmenu)) {
-        $id_grupmenu =  (integer)filter_input(INPUT_GET, 'id_grupmenu');
+        $id_grupmenu =  (int)filter_input(INPUT_GET, 'id_grupmenu');
         // puede venir de la presentación 'burger', 'pills' o 'pills2'
         if (empty($id_grupmenu)) {
             $grupmenu =  (string)filter_input(INPUT_POST, 'grupmenu');

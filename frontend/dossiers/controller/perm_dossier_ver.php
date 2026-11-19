@@ -19,7 +19,7 @@ FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
-$Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
+$Qid_tipo_dossier = (int)filter_input(INPUT_POST, 'id_tipo_dossier');
 $data = PostRequest::getDataFromUrl('/src/dossiers/perm_dossier_ver_data', [
     'tipo' => $Qtipo,
     'id_tipo_dossier' => $Qid_tipo_dossier,

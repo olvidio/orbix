@@ -50,10 +50,10 @@ foreach ([
 }
 
 if (empty($a_sel)) {
-    $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
-    $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
+    $Qid_ctr_agd = (int)filter_input(INPUT_POST, 'id_ctr_agd');
+    $Qid_ctr_n = (int)filter_input(INPUT_POST, 'id_ctr_n');
     $Qna = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'na'));
-    $Qyear = (integer)filter_input(INPUT_POST, 'year');
+    $Qyear = (int)filter_input(INPUT_POST, 'year');
     $Qperiodo = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'periodo'));
     $Qempiezamin = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamin'));
     $Qempiezamax = \frontend\shared\helpers\PayloadCoercion::string(filter_input(INPUT_POST, 'empiezamax'));

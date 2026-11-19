@@ -126,7 +126,7 @@ final class ActividadesAccionesMasivasTest extends myTest
 
     // ---- duplicar ----------------------------------------------------------------------
 
-    private function duplicar(?ActividadAll $actividad, ActividadDlRepositoryInterface &$repo = null): ActividadDuplicar
+    private function duplicar(?ActividadAll $actividad, ?ActividadDlRepositoryInterface &$repo = null): ActividadDuplicar
     {
         $repo = $this->createMock(ActividadDlRepositoryInterface::class);
         $repo->method('findById')->willReturn($actividad);

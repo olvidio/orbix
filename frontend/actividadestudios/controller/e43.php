@@ -14,7 +14,7 @@ use frontend\shared\helpers\ListNavSupport;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qid_activ = (int)filter_input(INPUT_POST, 'id_pau');
 $Qid_nom = ActividadestudiosPostInput::idNom()['id_nom'];
 
 $navState = ListNavSupport::buildE43ParentReturnParametros();

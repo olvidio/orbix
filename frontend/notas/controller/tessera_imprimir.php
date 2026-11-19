@@ -136,7 +136,7 @@ if ($a_sel !== []) { //vengo de un checkbox
     $tokTabla = strtok('#');
     $id_tabla = is_string($tokTabla) ? $tokTabla : '';
 } else {
-    $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
     $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 }
 

@@ -267,7 +267,7 @@ foreach ($columnas as $row) {
             break;
         case 'date':
         case 'timestamp':
-        case 'timestamptz';
+        case 'timestamptz':
             $a_use_txt['DateTimeLocal'] = "use src\shared\domain\value_objects\DateTimeLocal";
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
@@ -360,7 +360,7 @@ foreach ($columnas as $row) {
             break;
         case 'date':
         case 'timestamp':
-        case 'timestamptz';
+        case 'timestamptz':
             $tipo_db = 'DateTimeLocal';
             $tip = 'd';
             $tip_val = '';
@@ -484,7 +484,7 @@ foreach ($columnas as $row) {
             break;
         case 'date':
         case 'timestamp':
-        case 'timestamptz';
+        case 'timestamptz':
             $metodo_get = 'get' . $NomCamp . '()';
             $gets .= '
 	/**
@@ -562,7 +562,7 @@ foreach ($columnas as $row) {
                 break;
             case 'date':
             case 'timestamp':
-            case 'timestamptz';
+            case 'timestamptz':
                 $gets .= '
 	/**
 	 * 
@@ -634,8 +634,8 @@ foreach ($columnas as $row) {
             break;
         case 'date':
         case 'timestamp':
-        case 'timestamptz';
-        case 'time';
+        case 'timestamptz':
+        case 'time':
             $exists .= "\n\t\t" . 'if (array_key_exists(\'' . $nomcamp . '\',$aDatos))';
             $exists .= "\n\t\t{";
             $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '($aDatos[\'' . $nomcamp . '\']);';

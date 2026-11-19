@@ -10,7 +10,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 
 $data = UsuariosPayload::postData(PostRequest::getDataFromUrl('/src/usuarios/usuario_grupo_lst', ['id_usuario' => $Qid_usuario]));
 $lista = UsuariosPayload::listaFromPayload($data);

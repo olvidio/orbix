@@ -7,7 +7,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 $Qusuario = (string)\src\shared\domain\helpers\FilterPostGet::post('usuario');
 $Qpassword = (string)\src\shared\domain\helpers\FilterPostGet::post('password');
 

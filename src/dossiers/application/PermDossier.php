@@ -111,7 +111,7 @@ class PermDossier
                         return 2;
                     }
                     break;
-                default;
+                default:
             }
         }
         return $rta;
@@ -486,7 +486,7 @@ class PermDossier
                 if (self::havePermOficina(MenuDlPermissionBits::VCSD) || self::havePermOficina(MenuDlPermissionBits::PFFE)) {
                     $ref_perm = $this->addPerm($ref_perm, $ref_perm_ss);
                 }
-            default;
+            default:
         }
 
         //$ref_perm = $ref_perm_sg;

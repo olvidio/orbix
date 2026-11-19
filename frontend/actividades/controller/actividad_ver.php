@@ -190,7 +190,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
 
     if (!empty($id_tipo_activ)) {
-        $isfsv = (integer)substr($id_tipo_activ, 0, 1);
+        $isfsv = (int)substr($id_tipo_activ, 0, 1);
         $calc_tarifa_inicial = true;
     }
     if (\frontend\shared\helpers\FuncTablasSupport::isTrue($permiso_pffe)) {

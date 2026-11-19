@@ -14,7 +14,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
 $Qinventario = (string)filter_input(INPUT_POST, 'inventario');
-$Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
+$Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 
 $aGoBack = [
     'inventario' => $Qinventario,

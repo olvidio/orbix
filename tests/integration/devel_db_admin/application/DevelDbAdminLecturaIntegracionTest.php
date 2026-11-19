@@ -76,13 +76,11 @@ final class DevelDbAdminLecturaIntegracionTest extends myTest
         $pdo = (new \src\shared\infrastructure\persistence\DBConnection((new \src\shared\infrastructure\persistence\ConfigDB('importar'))->getEsquema('public')))->getPDO();
         $pdo->exec('SET search_path TO public');
         $existe = new \ReflectionMethod($verificador, 'existeTabla');
-        $existe->setAccessible(true);
 
         $this->assertTrue($existe->invoke($verificador, $pdo, 'public.du_camas'));
         $this->assertFalse($existe->invoke($verificador, $pdo, 'public.tabla_que_no_existe_tst'));
 
         $assert = new \ReflectionMethod($verificador, 'assertTablas');
-        $assert->setAccessible(true);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('public.tabla_que_no_existe_tst');
         $assert->invoke($verificador, $pdo, ['public.du_camas', 'public.tabla_que_no_existe_tst'], 'comun');

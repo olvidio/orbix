@@ -51,10 +51,8 @@ final class PermisosActividadesTipoTxtLookupTest extends TestCase
         $perm = new PermisosActividadesHarness();
         $ref = new \ReflectionClass(PermisosActividades::class);
         $propDl = $ref->getProperty('aPermDl');
-        $propDl->setAccessible(true);
         $propDl->setValue($perm, ['17' => $resto]);
         $propOtras = $ref->getProperty('aPermOtras');
-        $propOtras->setAccessible(true);
         $propOtras->setValue($perm, ['17' => $resto]);
 
         $perm->setActividad(42, '171001', 'dlb');
@@ -120,15 +118,12 @@ final class PermisosActividadesHarness extends PermisosActividades
     {
         $ref = new \ReflectionClass(PermisosActividades::class);
         $method = $ref->getMethod('restoreXRestoMap');
-        $method->setAccessible(true);
         $normalized = $method->invoke(null, $map);
 
         $propDl = $ref->getProperty('aPermDl');
-        $propDl->setAccessible(true);
         $propDl->setValue($this, $normalized);
 
         $propOtras = $ref->getProperty('aPermOtras');
-        $propOtras->setAccessible(true);
         $propOtras->setValue($this, $normalized);
     }
 

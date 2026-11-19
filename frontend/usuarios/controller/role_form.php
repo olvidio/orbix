@@ -15,7 +15,7 @@ use frontend\shared\helpers\PayloadCoercion;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 

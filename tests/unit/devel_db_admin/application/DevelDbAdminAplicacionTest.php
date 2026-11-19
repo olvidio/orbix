@@ -54,10 +54,11 @@ final class DevelDbAdminAplicacionTest extends myTest
 
     public function tearDown(): void
     {
-        foreach (glob($this->tmpDir . '/*') ?: [] as $f) {
-            unlink($f);
-        }
-        if (is_dir($this->tmpDir)) {
+        // Si parent::setUp() falla, tmpDir sigue vacío y glob('/*') listaría la raíz del sistema.
+        if ($this->tmpDir !== '' && is_dir($this->tmpDir)) {
+            foreach (glob($this->tmpDir . '/*') ?: [] as $f) {
+                unlink($f);
+            }
             rmdir($this->tmpDir);
         }
         if ($this->configAnterior === null) {
@@ -249,7 +250,6 @@ final class DevelDbAdminAplicacionTest extends myTest
     public function test_las_contrasenas_de_los_roles_tienen_11_caracteres_y_varian(): void
     {
         $m = new \ReflectionMethod(CrearUsuarios::class, 'generarPassword');
-        $m->setAccessible(true);
 
         $a = $m->invoke(null, 11);
         $b = $m->invoke(null, 11);

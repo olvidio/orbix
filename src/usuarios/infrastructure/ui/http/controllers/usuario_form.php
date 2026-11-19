@@ -16,7 +16,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use src\shared\security\HashB;
-$Qid_usuario = (integer)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
+$Qid_usuario = (int)\src\shared\domain\helpers\FilterPostGet::post('id_usuario');
 $Qquien = (string)\src\shared\domain\helpers\FilterPostGet::post('quien');
 
 $UsuarioRepository = DependencyResolver::get(UsuarioRepositoryInterface::class);

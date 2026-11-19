@@ -15,8 +15,8 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-$Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
+$Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+$Qid_lugar = (int)filter_input(INPUT_POST, 'id_lugar');
 
 $navState = ListNavSupport::mergeSelectionIntoReturnParametros(
     array_filter([

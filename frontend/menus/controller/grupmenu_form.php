@@ -13,9 +13,9 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
-$Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
+$Qid_grupmenu = (int)filter_input(INPUT_POST, 'id_grupmenu');
 
 $restored = ListNavSupport::restoreSelectionFromStackPost();
 $Qscroll_id = $restored['scroll_id'] !== '' ? $restored['scroll_id'] : ListNavSupport::scrollIdFromPost();

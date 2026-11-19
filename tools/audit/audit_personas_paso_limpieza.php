@@ -303,7 +303,7 @@ function leerParesMarcados(string $path): array
         if ($line === '' || str_starts_with(ltrim($line), '#')) {
             continue;
         }
-        $cols = str_getcsv($line, "\t");
+        $cols = str_getcsv($line, "\t", "\"", "\\");
         if (!$headerDone) {
             $headerDone = true;
             $lower = array_map(static fn($c) => mb_strtolower(trim((string) $c)), $cols);

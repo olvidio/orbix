@@ -37,13 +37,13 @@ if (empty($Qinom_tipo_val)) {
 }
 
 $datosActividad = [
-    'id_tipo_activ' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ'),
-    'id_ubi' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
-    'num_asistentes' => (integer)\src\shared\domain\helpers\FilterPostGet::post('num_asistentes'),
-    'status' => (integer)\src\shared\domain\helpers\FilterPostGet::post('status'),
-    'id_repeticion' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_repeticion'),
-    'plazas' => (integer)\src\shared\domain\helpers\FilterPostGet::post('plazas'),
-    'tarifa' => (integer)\src\shared\domain\helpers\FilterPostGet::post('id_tarifa'),
+    'id_tipo_activ' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_tipo_activ'),
+    'id_ubi' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_ubi'),
+    'num_asistentes' => (int)\src\shared\domain\helpers\FilterPostGet::post('num_asistentes'),
+    'status' => (int)\src\shared\domain\helpers\FilterPostGet::post('status'),
+    'id_repeticion' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_repeticion'),
+    'plazas' => (int)\src\shared\domain\helpers\FilterPostGet::post('plazas'),
+    'tarifa' => (int)\src\shared\domain\helpers\FilterPostGet::post('id_tarifa'),
     // Sin FILTER_SANITIZE_NUMBER_FLOAT: borraba la coma decimal («350,50» → 35050). Dinero::fromInput valida.
     'precio' => (string)\src\shared\domain\helpers\FilterPostGet::post('precio'),
     'dl_org' => (string)\src\shared\domain\helpers\FilterPostGet::post('dl_org'),

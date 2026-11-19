@@ -60,7 +60,7 @@ $Qfin = (string)filter_input(INPUT_POST, 'fin');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
-$Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
+$Qcdc_sel = (int)filter_input(INPUT_POST, 'cdc_sel');
 $Qid_cdc_mas = (string)filter_input(INPUT_POST, 'id_cdc_mas');
 $Qid_cdc_num = (string)filter_input(INPUT_POST, 'id_cdc_num');
 

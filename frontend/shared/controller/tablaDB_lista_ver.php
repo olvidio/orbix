@@ -104,7 +104,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 // Crea los objetos de uso global **********************************************
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 
 $a_sel_raw = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $a_sel = is_array($a_sel_raw) ? $a_sel_raw : [];
@@ -118,7 +118,7 @@ if ($Qmod === 'eliminar') {
 //Si vengo por medio de Posicion, borro la última
 $restored = ListNavSupport::restoreSelectionFromStackPost();
 $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
+$Qscroll_id = (int)filter_input(INPUT_POST, 'scroll_id');
 if (!ListNavSupport::idSelIsEmpty($restored['id_sel'])) {
     $Qid_sel = is_array($restored['id_sel'])
         ? PayloadCoercion::string($restored['id_sel'][0] ?? '')
@@ -162,14 +162,14 @@ if ($Qk_buscar !== null) {
     $Qk_buscar = urldecode($Qk_buscar);
 }
 
-$Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
+$Qpermiso = (int)filter_input(INPUT_POST, 'permiso');
 if (empty($Qpermiso)) {
     $Qpermiso = 3;
 }
 
 // si paso parámetros, definir la colección
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qid_pau = (int)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 

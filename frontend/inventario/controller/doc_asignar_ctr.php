@@ -13,7 +13,7 @@ use frontend\shared\helpers\PayloadCoercion;
 require_once 'frontend/shared/FrontBootstrap.php';
 $oPosicion = FrontBootstrap::boot();
 
-$Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
+$Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $str_selected_id = rawurlencode((string)json_encode($a_sel));

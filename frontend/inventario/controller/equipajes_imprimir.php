@@ -10,7 +10,7 @@ use frontend\inventario\helpers\InventarioPayload;
 require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
-$Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
+$Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 
 $html = '';
 if ($Qid_equipaje === 0) {

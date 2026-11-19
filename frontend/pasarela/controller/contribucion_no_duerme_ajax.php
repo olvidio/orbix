@@ -116,7 +116,7 @@ switch ($Qque) {
         break;
     case 'form_nuevo':
         $txt = _("Contribución si no duerme en %");
-        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_tipo_activ = (int)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');

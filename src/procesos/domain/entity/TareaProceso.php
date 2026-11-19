@@ -39,6 +39,9 @@ class TareaProceso
         // para crear el array id_oficina => oficina_txt. Uso los de los menus
         $aOpcionesOficinas = PermisoMenuBits::valueToLabel();
         $id_of_responsable = $this->getId_of_responsable();
+        if ($id_of_responsable === null) {
+            return '';
+        }
         $of_responsable_txt = empty($aOpcionesOficinas[$id_of_responsable]) ? '' : $aOpcionesOficinas[$id_of_responsable];
         return $of_responsable_txt;
     }

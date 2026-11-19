@@ -10,7 +10,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 
-$Qid_activ = (integer)filter_input(INPUT_GET, 'id_activ');
+$Qid_activ = (int)filter_input(INPUT_GET, 'id_activ');
 
 $url_backend = '/src/ubiscamas/actividad_habitaciones_lista';
 $a_campos_backend = ['id_activ' => $Qid_activ];

@@ -64,7 +64,7 @@ if ($fh === false) {
     fwrite(STDERR, "No se pudo abrir el CSV del mapa.\n");
     exit(1);
 }
-while (($row = fgetcsv($fh)) !== false) {
+while (($row = fgetcsv($fh, null, ",", "\"", "\\")) !== false) {
     if (!isset($row[0], $row[1]) || $row[0] === '' || $row[0] === 'pref') {
         continue;
     }

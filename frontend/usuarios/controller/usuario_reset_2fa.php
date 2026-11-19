@@ -9,7 +9,7 @@ require_once 'frontend/shared/FrontBootstrap.php';
 FrontBootstrap::boot();
 
 $id_usuario = UsuariosPostInput::sessionAuthInt('id_usuario');
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 
 if ($id_usuario !== $Qid_usuario) {
     $_SESSION['msg_2fa'] = _("Error: No tiene permiso para realizar esta acción");

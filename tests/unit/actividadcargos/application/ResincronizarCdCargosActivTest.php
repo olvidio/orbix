@@ -28,7 +28,6 @@ final class ResincronizarCdCargosActivTest extends TestCase
     private function protegido(object $o, string $metodo, mixed ...$args): mixed
     {
         $m = new \ReflectionMethod($o, $metodo);
-        $m->setAccessible(true);
 
         return $m->invoke($o, ...$args);
     }

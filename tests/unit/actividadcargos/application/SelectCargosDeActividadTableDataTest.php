@@ -121,7 +121,7 @@ final class SelectCargosDeActividadTableDataTest extends TestCase
     {
         $fila = $this->actividadCargoFila(1, 14, 204, 6, false, null);
         $repo = $this->cargoRepoStub([6 => $this->cargoEntity(6, 'd', 'R')]);
-        $persona = $this->personaMock('P', 'C', null);
+        $persona = $this->personaMock('P', 'C', 'n');
 
         $out = SelectCargosDeActividadTableData::buildValorRows(
             1,
@@ -205,13 +205,13 @@ final class SelectCargosDeActividadTableDataTest extends TestCase
         };
     }
 
-    private function personaMock(string $nom, string $ctr, ?string $idTabla): object
+    private function personaMock(string $nom, string $ctr, string $idTabla): object
     {
         return new class($nom, $ctr, $idTabla) {
             public function __construct(
                 private readonly string $nom,
                 private readonly string $ctr,
-                private readonly ?string $id_tabla,
+                private readonly string $id_tabla,
             ) {}
 
             public function getPrefApellidosNombre(): string
@@ -222,7 +222,7 @@ final class SelectCargosDeActividadTableDataTest extends TestCase
             {
                 return $this->ctr;
             }
-            public function getId_tabla(): ?string
+            public function getId_tabla(): string
             {
                 return $this->id_tabla;
             }
