@@ -374,7 +374,8 @@ final class AyudaPreguntar
             foreach ($lineasApartado as $linea) {
                 if (preg_match('/^\s*<!--\s*preguntas:\s*(.*?)\s*-->\s*$/', $linea, $p) === 1) {
                     foreach (explode('|', $p[1]) as $q) {
-                        $q = trim($q, " \t\"«»");
+                        // Por caracteres y no por bytes: `trim()` con «» se llevaba medio «¿» inicial.
+                        $q = preg_replace('/^[\s"«»]+|[\s"«»]+$/u', '', $q) ?? '';
                         if ($q !== '') {
                             $preguntas[] = $q;
                         }

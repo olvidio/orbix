@@ -248,4 +248,21 @@ MD);
         }
         rmdir($dir);
     }
+
+    /**
+     * Las preguntas declaradas bajo un apartado empiezan por «¿»: al quitarles las comillas no se
+     * puede cortar el carácter por la mitad. Con el texto roto la respuesta entera no se podía
+     * codificar a JSON y la pantalla de la ayuda no pintaba nada.
+     */
+    public function test_las_preguntas_de_un_apartado_conservan_el_signo_de_apertura_y_la_respuesta_es_json(): void
+    {
+        $r = (new AyudaPreguntar($this->docsRoot))->execute(['pregunta' => 'como doy de alta a una persona en una actividad']);
+
+        $this->assertSame('guia', $r['resultados'][0]['tipo']);
+        $this->assertSame(
+            ['¿Cómo doy de alta a una persona en una actividad?', '¿Cómo apunto a alguien a un curso?'],
+            $r['resultados'][0]['preguntas']
+        );
+        $this->assertNotFalse(json_encode($r), json_last_error_msg());
+    }
 }
