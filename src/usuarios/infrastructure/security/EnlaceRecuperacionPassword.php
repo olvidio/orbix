@@ -87,7 +87,7 @@ final class EnlaceRecuperacionPassword
 
     private static function clave(): string
     {
-        $env = getenv(self::ENV_SECRET);
+        $env = $_ENV[self::ENV_SECRET] ?? getenv(self::ENV_SECRET);
         if (is_string($env) && $env !== '') {
             return $env;
         }

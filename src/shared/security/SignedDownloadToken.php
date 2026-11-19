@@ -45,7 +45,7 @@ final class SignedDownloadToken
 
     private static function signingKey(): string
     {
-        $fromEnv = getenv(self::ENV_SECRET);
+        $fromEnv = $_ENV[self::ENV_SECRET] ?? getenv(self::ENV_SECRET);
         if (is_string($fromEnv) && $fromEnv !== '') {
             return $fromEnv;
         }
