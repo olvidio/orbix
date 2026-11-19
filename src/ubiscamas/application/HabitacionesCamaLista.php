@@ -75,6 +75,8 @@ class HabitacionesCamaLista
         $asistentesSinCama = [];
         $camasConAsistentes = [];
 
+        // $cAsistentes ya viene ordenado por apellidos; `orden` guarda esa posición para el listado por nombres.
+        $orden = 0;
         foreach ($cAsistentes as $apellidos => $oAsistente) {
             $camaId = $oAsistente->getCamaVo()?->value();
             $ctxUpdateCama = HashB::sign('update_cama_asistente', [
@@ -83,7 +85,8 @@ class HabitacionesCamaLista
             ]);
             if (!empty($camaId)) {
                 $camasConAsistentes[$camaId] = [
-                    'apellidos' => $apellidos,
+                    'apellidos' => (string) $apellidos,
+                    'orden' => $orden++,
                     'ctx_update_cama' => $ctxUpdateCama,
                 ];
             } else {

@@ -162,7 +162,8 @@ public static function nombresListaFromPayload(array $data): array
         return [];
     }
     $camasAsistentes = is_array($camasAsistentesRaw) ? $camasAsistentesRaw : [];
-    $aLista = [];
+    /** @var list<array{orden: int, fila: array{nombre: string, planta: string, habitacion: string}}> $aOrdenados */
+    $aOrdenados = [];
     foreach ($habitacionesRaw as $roomData) {
         if (!is_array($roomData)) {
             continue;
@@ -185,27 +186,37 @@ public static function nombresListaFromPayload(array $data): array
                 continue;
             }
             $nombrePersona = '';
+            $orden = PHP_INT_MAX;
             $asistenteRaw = $camasAsistentes[$idCama] ?? null;
             if (is_array($asistenteRaw)) {
                 $nombrePersona = \frontend\shared\helpers\PayloadCoercion::string($asistenteRaw['apellidos'] ?? '');
+                if (isset($asistenteRaw['orden']) && is_numeric($asistenteRaw['orden'])) {
+                    $orden = (int) $asistenteRaw['orden'];
+                }
             }
             if ($nombrePersona === '') {
                 continue;
             }
-            $aLista[] = [
-                'nombre' => $nombrePersona,
-                'planta' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['planta'] ?? ''),
-                'habitacion' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['nombre'] ?? ''),
+            $aOrdenados[] = [
+                'orden' => $orden,
+                'fila' => [
+                    'nombre' => $nombrePersona,
+                    'planta' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['planta'] ?? ''),
+                    'habitacion' => \frontend\shared\helpers\PayloadCoercion::string($aHabitacionRaw['nombre'] ?? ''),
+                ],
             ];
         }
     }
 
+    // `orden` es la posición del asistente en el orden por apellidos del backend: con la preferencia
+    // «Nombre Apellidos» el texto empieza por el nombre de pila y no sirve para ordenar.
     usort(
-        $aLista,
-        static fn (array $a, array $b): int => strcasecmp($a['nombre'], $b['nombre'])
+        $aOrdenados,
+        static fn (array $a, array $b): int => ($a['orden'] <=> $b['orden'])
+            ?: strcasecmp($a['fila']['nombre'], $b['fila']['nombre'])
     );
 
-    return $aLista;
+    return array_map(static fn (array $o): array => $o['fila'], $aOrdenados);
 }
 
 /**

@@ -53,6 +53,27 @@ final class UbiscamasPayloadTest extends TestCase
         );
     }
 
+    /**
+     * Con la preferencia «Nombre Apellidos» el texto empieza por el nombre de pila: el orden lo marca `orden`
+     * (posición del asistente en el orden por apellidos del backend), no el texto.
+     */
+    public function test_nombres_lista_respeta_el_orden_del_backend_y_no_el_texto(): void
+    {
+        $data = self::payload();
+        $data['camas_con_asistentes'] = [
+            self::CAMA_1 => ['apellidos' => 'Ana Zubiri', 'orden' => 1, 'ctx_update_cama' => 'x'],
+            self::CAMA_2 => ['apellidos' => 'Juan Alonso', 'orden' => 0, 'ctx_update_cama' => 'y'],
+        ];
+
+        self::assertSame(
+            [
+                ['nombre' => 'Juan Alonso', 'planta' => '2', 'habitacion' => 'Santa María'],
+                ['nombre' => 'Ana Zubiri', 'planta' => '1', 'habitacion' => 'San José'],
+            ],
+            UbiscamasPayload::nombresListaFromPayload($data)
+        );
+    }
+
     public function test_nombres_lista_vacia_sin_asistentes(): void
     {
         $data = self::payload();

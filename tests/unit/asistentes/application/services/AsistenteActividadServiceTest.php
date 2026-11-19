@@ -317,6 +317,25 @@ final class AsistenteActividadServiceTest extends myTest
         $this->assertSame($repos, $this->consultasConjunto[0][0]);
     }
 
+    /**
+     * Con la preferencia «Nombre Apellidos» la clave es el nombre de pila delante, pero el orden tiene que seguir
+     * siendo por apellidos, como en el listado de asistentes (OrdenPorApellidos).
+     */
+    public function test_con_preferencia_nombre_apellidos_se_ordena_por_apellidos(): void
+    {
+        $_SESSION['session_auth']['ordenApellidos'] = 'nom_ap';
+        $this->actividad(3001, 'dlb');
+        $this->personaDl(10011, 'Zamora')->setNom('Ana');
+        $this->personaDl(10012, 'Bosch')->setNom('Pedro');
+        $this->personaDl(10013, 'Álvarez')->setNom('Zoe');
+        $this->asistentesConjunto = [$this->asistente(3001, 10011), $this->asistente(3001, 10012), $this->asistente(3001, 10013)];
+
+        $r = $this->sut()->getAsistentesDeActividad(3001);
+
+        $this->assertSame([10013, 10012, 10011], array_map(static fn (Asistente $a): int => $a->getId_nom(), array_values($r)));
+        $this->assertStringStartsWith('Zoe', array_key_first($r));
+    }
+
     /** Dos personas que se llaman igual salen las dos; la segunda lleva su id_nom en la clave para distinguirla. */
     public function test_dos_asistentes_con_el_mismo_nombre_salen_los_dos(): void
     {

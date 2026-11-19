@@ -14,6 +14,7 @@ use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\criteria\AsistenteField;
 use src\asistentes\domain\entity\Asistente;
+use src\personas\domain\OrdenPorApellidos;
 use src\shared\domain\criteria\Criteria;
 use src\shared\domain\criteria\Filter;
 use src\personas\application\services\PersonaFinderService;
@@ -292,6 +293,8 @@ class AsistenteActividadService
         $cAsistentes = $this->asistenteRepository->matchingConjunto($repos, $criteria);
 
         $cAsistentesOk = [];
+        /** @var array<int|string, array{0: string, 1: string, 2: string}> $aOrden */
+        $aOrden = [];
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
             $oPersona = $this->personaFinderService->findPersonaEnGlobalODePaso($id_nom);
@@ -303,9 +306,15 @@ class AsistenteActividadService
             // Dos personas con el mismo nombre: la segunda lleva su id_nom para no pisar a la primera.
             $clave = isset($cAsistentesOk[$apellidos]) ? "$apellidos ($id_nom)" : $apellidos;
             $cAsistentesOk[$clave] = $oAsistente;
+            $aOrden[$clave] = OrdenPorApellidos::campos($oPersona);
         }
 
-        uksort($cAsistentesOk, [\src\shared\domain\helpers\FuncTablasSupport::class, 'strsinacentocmp']);
+        // Por apellidos aunque la clave (nombre mostrado) empiece por el nombre de pila (preferencia «nom_ap»).
+        uksort(
+            $cAsistentesOk,
+            static fn (int|string $a, int|string $b): int => OrdenPorApellidos::comparar($aOrden[$a], $aOrden[$b])
+                ?: \src\shared\domain\helpers\FuncTablasSupport::strsinacentocmp((string) $a, (string) $b)
+        );
 
         if (!empty($msg_err)) {
             error_log($msg_err);
