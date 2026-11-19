@@ -61,8 +61,8 @@ final class TipoDossierGuardarTest extends TestCase
             'app' => 'mimod',
             'class' => 'MiClase',
             'codigo' => '  mi_slug  ',
-            'Permiso_lectura' => [1, 4],
-            'Permiso_escritura' => [2],
+            'permiso_lectura' => ['1', '4'],
+            'permiso_escritura' => ['2'],
         ]);
 
         $this->assertSame('', $msg);
@@ -77,6 +77,49 @@ final class TipoDossierGuardarTest extends TestCase
         $this->assertSame('mi_slug', $tipo->getCodigo());
         $this->assertSame(5, $tipo->getPermiso_lectura());
         $this->assertSame(2, $tipo->getPermiso_escritura());
+    }
+
+    /**
+     * Dos oficinas comparten bit (scdl/scr, vcsd/vcsr): el formulario envía el mismo valor dos veces
+     * y no debe sumarse dos veces (32 + 32 = 64 sería el permiso de sg).
+     */
+    public function test_bits_repetidos_no_se_suman_dos_veces(): void
+    {
+        $tipo = $this->tipoMinimo(8);
+
+        $repo = $this->createMock(TipoDossierRepositoryInterface::class);
+        $repo->method('findById')->willReturn($tipo);
+        $repo->method('Guardar')->willReturn(true);
+
+        (new TipoDossierGuardar($repo))->execute([
+            'id_tipo_dossier' => 8,
+            'tabla_from' => 'u',
+            'permiso_lectura' => ['2', '32', '32'],
+            'permiso_escritura' => ['32', '32'],
+        ]);
+
+        $this->assertSame(34, $tipo->getPermiso_lectura());
+        $this->assertSame(32, $tipo->getPermiso_escritura());
+    }
+
+    /** Sin ninguna casilla marcada el navegador no envía el campo: el permiso queda a 0. */
+    public function test_sin_casillas_marcadas_quita_los_permisos(): void
+    {
+        $tipo = $this->tipoMinimo(9);
+        $tipo->setPermiso_lectura(18);
+        $tipo->setPermiso_escritura(2);
+
+        $repo = $this->createMock(TipoDossierRepositoryInterface::class);
+        $repo->method('findById')->willReturn($tipo);
+        $repo->method('Guardar')->willReturn(true);
+
+        (new TipoDossierGuardar($repo))->execute([
+            'id_tipo_dossier' => 9,
+            'tabla_from' => 'u',
+        ]);
+
+        $this->assertSame(0, $tipo->getPermiso_lectura());
+        $this->assertSame(0, $tipo->getPermiso_escritura());
     }
 
     private function tipoMinimo(int $id): TipoDossier

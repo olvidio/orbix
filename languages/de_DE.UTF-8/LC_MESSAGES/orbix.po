@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-18 17:28+0100\n"
+"POT-Creation-Date: 2026-11-19 10:22+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -98,6 +98,7 @@ msgstr "unbekannter Fehler"
 #: frontend/dbextern/view/ver_orbix.phtml:35
 #: frontend/dbextern/view/ver_orbix_otradl.phtml:26
 #: frontend/dbextern/view/ver_traslados.phtml:26
+#: frontend/dossiers/view/perm_dossier_pres.phtml:36
 #: frontend/encargossacd/view/encargo_horario_select.phtml:17
 #: frontend/encargossacd/view/encargo_horario_select.phtml:32
 #: frontend/encargossacd/view/encargo_select.phtml:43
@@ -560,6 +561,7 @@ msgstr "Aktivität"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:63
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:33
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php:44
 #: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:28
@@ -1003,7 +1005,7 @@ msgstr "Wirtschaftliche Zusammenfassung"
 #: frontend/casas/controller/casas_resumen.php:79
 #: frontend/casas/controller/prevision_asistentes.php:87
 #: frontend/certificados/view/certificado_emitido_lista.phtml:132
-#: frontend/encargossacd/view/encargo_select.phtml:82
+#: frontend/encargossacd/view/encargo_select.phtml:83
 #: frontend/inventario/view/traslado_doc_que.phtml:157
 #: frontend/menus/view/traducir_menu.phtml:225
 #: frontend/notas/controller/acta_listado_anual.php:54
@@ -1355,7 +1357,7 @@ msgstr "speichern"
 #: frontend/cambios/view/avisos_generar_lista.phtml:26
 #: frontend/cambios/view/usuario_avisos_pref_condicion.phtml:63
 #: frontend/casas/controller/casa_ingreso_form.php:56
-#: frontend/dossiers/view/perm_dossier_pres.phtml:108
+#: frontend/dossiers/view/perm_dossier_pres.phtml:115
 #: frontend/encargossacd/controller/encargo_horario_select.php:71
 #: frontend/encargossacd/controller/encargo_select.php:61
 #: frontend/menus/view/menus_get.phtml:73
@@ -3799,7 +3801,7 @@ msgstr "erforderlich apps"
 
 #: frontend/configuracion/view/modulos_form.phtml:112
 #: frontend/devel_codegen/controller/factory_form.php:25
-#: frontend/dossiers/view/perm_dossier_pres.phtml:104
+#: frontend/dossiers/view/perm_dossier_pres.phtml:111
 #: frontend/personas/view/_persona_form_botones.phtml:22
 #: frontend/ubis/view/cdc_form.phtml:103
 #: frontend/ubis/view/ctrdl_form.phtml:124
@@ -4680,48 +4682,62 @@ msgid "dossier modificable"
 msgstr "Dossier bearbeitbar"
 
 #: frontend/dossiers/view/perm_dossier_pres.phtml:21
-#: frontend/dossiers/view/perm_dossier_pres.phtml:40
+#: frontend/dossiers/view/perm_dossier_pres.phtml:42
 msgid "error de comunicacion con el servidor"
 msgstr "Fehler bei der Kommunikation mit dem Server"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:49
+#: frontend/dossiers/view/perm_dossier_pres.phtml:39
+#: frontend/notas/view/acta_ver.phtml:74 frontend/notas/view/acta_ver.phtml:77
+#: src/inventario/view/buscarDocsxSigla.phtml:155
+msgid "guardado"
+msgstr "gespeichert"
+
+#: frontend/dossiers/view/perm_dossier_pres.phtml:51
 msgid "permisos de acceso a dossier seleccionado"
 msgstr "Berechtigung zum ausgewählten Dossier"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:53
+#: frontend/dossiers/view/perm_dossier_pres.phtml:54
+msgid ""
+"Atención: estos permisos son comunes a todos los esquemas. Lo que se guarde "
+"aquí afecta a todas las delegaciones."
+msgstr ""
+"Hinweis: Diese Berechtigungen gelten für alle Schemata. Was hier gespeichert "
+"wird, betrifft alle Delegationen."
+
+#: frontend/dossiers/view/perm_dossier_pres.phtml:60
 msgid "id_tipo_dossier"
 msgstr "id_tipo_dossier"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:56
+#: frontend/dossiers/view/perm_dossier_pres.phtml:63
 #: src/dossiers/domain/entity/TipoDossier.php:456
 msgid "id_tipo_dossier_rel"
 msgstr "id _ tipo _ dossier _ rel"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:61
+#: frontend/dossiers/view/perm_dossier_pres.phtml:68
 #: src/dossiers/domain/entity/TipoDossier.php:420
 msgid "tabla_from"
 msgstr "tabla _ from"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:63
+#: frontend/dossiers/view/perm_dossier_pres.phtml:70
 #: src/dossiers/domain/entity/TipoDossier.php:432
 msgid "tabla_to"
 msgstr "tabla _ to"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:64
+#: frontend/dossiers/view/perm_dossier_pres.phtml:71
 #: src/dossiers/domain/entity/TipoDossier.php:444
 msgid "campo_to"
 msgstr "campo _ to"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:67
+#: frontend/dossiers/view/perm_dossier_pres.phtml:74
 #: src/dossiers/domain/entity/TipoDossier.php:503
 msgid "app"
 msgstr "app"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:68
+#: frontend/dossiers/view/perm_dossier_pres.phtml:75
 msgid "clase"
 msgstr "clase"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:73
+#: frontend/dossiers/view/perm_dossier_pres.phtml:80
 #: frontend/encargossacd/controller/encargo_select.php:66
 #: frontend/encargossacd/view/encargo_ver.phtml:265
 #: frontend/ubis/view/teleco_form.phtml:23
@@ -4737,16 +4753,16 @@ msgstr "clase"
 msgid "descripción"
 msgstr "Beschreibung"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:77
+#: frontend/dossiers/view/perm_dossier_pres.phtml:84
 #: src/dossiers/domain/entity/TipoDossier.php:539
 msgid "código (slug ficheros)"
 msgstr "Datei-Code (Fichier-Bezeichner)"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:81
+#: frontend/dossiers/view/perm_dossier_pres.phtml:88
 msgid "depende_modificar"
 msgstr "depende _ modificar"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:82
+#: frontend/dossiers/view/perm_dossier_pres.phtml:89
 msgid ""
 "depende_modificar activo implica que sólo podrá modificar la oficina "
 "correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers "
@@ -4756,11 +4772,11 @@ msgstr ""
 "vornehmen kann: agd für agd, sm für n, sg für s, in Dossiers, die mehrere "
 "Personentypen betreffen"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:85
+#: frontend/dossiers/view/perm_dossier_pres.phtml:92
 msgid "permisos de lectura"
 msgstr "Leseberechtigung"
 
-#: frontend/dossiers/view/perm_dossier_pres.phtml:91
+#: frontend/dossiers/view/perm_dossier_pres.phtml:98
 msgid "permisos de escritura"
 msgstr "Schreibeberechtigung"
 
@@ -5068,11 +5084,11 @@ msgstr "Anforderungen vom ctr"
 msgid "añadir horario"
 msgstr "Tagesplan hinzufügen"
 
-#: frontend/encargossacd/view/encargo_select.phtml:78
+#: frontend/encargossacd/view/encargo_select.phtml:79
 msgid "buscar un encargo"
 msgstr "einen Auftrag suchen"
 
-#: frontend/encargossacd/view/encargo_select.phtml:98
+#: frontend/encargossacd/view/encargo_select.phtml:99
 #: frontend/encargossacd/view/sacd_ficha_ajax_ficha.phtml:131
 msgid "añadir encargo"
 msgstr "Auftrag hinzufügen"
@@ -7810,7 +7826,7 @@ msgid "ver plan centro"
 msgstr "Zentrumsplan anzeigen"
 
 #: frontend/menus/view/traducir_menu.phtml:473
-#: src/personas/application/PersonaEliminar.php:108
+#: src/personas/application/PersonaEliminar.php:113
 msgid "zonas"
 msgstr "Zonen"
 
@@ -8452,11 +8468,6 @@ msgstr "Sie müssen ein Fach auswählen"
 msgid "El número de acta debe tener el formato num/aa (ej. 12/26)"
 msgstr ""
 "Die Nummer des Notenprotokolls muss das Format num/jj haben (z. B. 12/26)"
-
-#: frontend/notas/view/acta_ver.phtml:74 frontend/notas/view/acta_ver.phtml:77
-#: src/inventario/view/buscarDocsxSigla.phtml:155
-msgid "guardado"
-msgstr "gespeichert"
 
 #: frontend/notas/view/acta_ver.phtml:97
 msgid "Esta acta ya está firmada (tiene PDF adjunto) y no se puede modificar."
@@ -10535,7 +10546,7 @@ msgstr "und"
 #: src/actividadestudios/application/MatriculaNueva.php:118
 #: src/actividadplazas/application/GestionPlazasUpdate.php:75
 #: src/actividadplazas/application/GestionPlazasUpdate.php:100
-#: src/actividadplazas/application/PeticionesIncorporar.php:170
+#: src/actividadplazas/application/PeticionesIncorporar.php:174
 #: src/actividadplazas/application/PlazasCeder.php:86
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
 #: src/actividadtarifas/application/TarifaUbiCopiar.php:63
@@ -10636,7 +10647,7 @@ msgstr "und"
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:47
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:52
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:29
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:127
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:128
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:36
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:49
 #: src/zonassacd/application/ZonaSacdUpdate.php:51
@@ -12519,7 +12530,7 @@ msgstr "id_item fehlt"
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php:36
 #: src/notas/application/ActaEliminar.php:49
 #: src/notas/application/support/ActaTribunalSync.php:36
-#: src/personas/application/PersonaEliminar.php:91
+#: src/personas/application/PersonaEliminar.php:96
 #: src/procesos/application/ProcesosEliminar.php:31
 #: src/ubis/application/CalendarioPeriodoEliminar.php:25
 #: src/ubis/application/UbisEliminar.php:22
@@ -12611,7 +12622,7 @@ msgstr "%s hinzufügen"
 #: src/actividadcargos/domain/InfoCargo.php:19
 #: src/actividades/application/ActividadSelectListado.php:217
 #: src/actividades/application/ListaActividadesSgListado.php:118
-#: src/personas/application/PersonaEliminar.php:103
+#: src/personas/application/PersonaEliminar.php:108
 msgid "cargos"
 msgstr "Ämter"
 
@@ -12639,7 +12650,7 @@ msgstr "Resynchronisation ist nur vom internen sv aus möglich (STANDORT=%s)"
 
 #: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:122
 #: src/personas/infrastructure/cli/sacd_resincronizar.php:123
-#: src/shared/infrastructure/cli/copias_resincronizar.php:98
+#: src/shared/infrastructure/cli/copias_resincronizar.php:101
 #: src/ubis/infrastructure/cli/centros_resincronizar.php:131
 msgid "Sólo se puede resincronizar desde el interior (esta instalación es DMZ)"
 msgstr "Resynchronisation ist nur intern möglich (diese Installation ist DMZ)"
@@ -13144,7 +13155,7 @@ msgstr ""
 "Ein Fehler ist aufgetreten, das zuständige Zentrum wurde nicht gespeichert"
 
 #: src/actividadescentro/application/CentroEncargadoEliminar.php:29
-#: src/actividadessacd/application/SacdEliminar.php:33
+#: src/actividadessacd/application/SacdEliminar.php:39
 msgid "no se sabe cual borrar"
 msgstr "Es ist nicht bekannt, welches zu löschen ist"
 
@@ -13203,36 +13214,37 @@ msgstr "Zentrum suchen"
 msgid "falta determinar un periodo"
 msgstr "Ein Zeitraum muss bestimmt werden"
 
-#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:185
+#: src/actividadessacd/application/ComunicacionActividadesSacdData.php:186
 #, php-format
 msgid "atención actividades para el periodo %s"
 msgstr "Achtung Aktivitäten für den Zeitraum %s"
 
-#: src/actividadessacd/application/SacdAsignar.php:49
+#: src/actividadessacd/application/SacdAsignar.php:53
 #: src/actividadessacd/application/SacdReordenar.php:33
 #: src/asistentes/application/AsistenteEliminar.php:54
 #: src/asistentes/application/AsistenteGuardar.php:88
 msgid "faltan parametros id_activ / id_nom"
 msgstr "Parameter fehlen: id_activ / id_nom"
 
-#: src/actividadessacd/application/SacdAsignar.php:56
+#: src/actividadessacd/application/SacdAsignar.php:60
 msgid "No puede haber tantos cargos de sacd en una actividad"
 msgstr ""
 "In einer Aktivität können nicht so viele Ämter von sacd vergeben werden"
 
-#: src/actividadessacd/application/SacdAsignar.php:65
+#: src/actividadessacd/application/SacdAsignar.php:69
 msgid "hay un error, no se ha guardado el cargo"
 msgstr "Es liegt ein Fehler vor, das Amt wurde nicht gespeichert"
 
-#: src/actividadessacd/application/SacdAsignar.php:79
+#: src/actividadessacd/application/SacdAsignar.php:86
 msgid "hay un error, no se ha guardado la asistencia"
 msgstr "Es gibt einen Fehler, die Teilnahme wurde nicht gespeichert"
 
-#: src/actividadessacd/application/SacdEliminar.php:45
+#: src/actividadessacd/application/SacdEliminar.php:51
 msgid "hay un error, no se ha eliminado el cargo"
 msgstr "Es liegt ein Fehler vor, das Amt wurde nicht gelöscht"
 
-#: src/actividadessacd/application/SacdEliminar.php:54
+#: src/actividadessacd/application/SacdEliminar.php:60
+#: src/actividadessacd/application/SacdEliminar.php:67
 msgid "hay un error, no se ha eliminado la asistencia"
 msgstr "Es gibt einen Fehler, die Teilnahme wurde nicht gelöscht"
 
@@ -13833,7 +13845,7 @@ msgstr "Ein Fehler ist aufgetreten, das Löschen war nicht möglich"
 msgid "hay un error, no se han guardado todas las peticiones"
 msgstr "Ein Fehler ist aufgetreten, nicht alle Anfragen wurden gespeichert"
 
-#: src/actividadplazas/application/PeticionesIncorporar.php:177
+#: src/actividadplazas/application/PeticionesIncorporar.php:181
 #, php-format
 msgid ""
 "no se incorporán las peticiones si la persona ya tiene una actividad como "
@@ -14823,7 +14835,7 @@ msgid "No hay conexión a la base de datos."
 msgstr "Keine Verbindung zur Datenbank."
 
 #: src/cambios/domain/AvisoObjetoCatalog.php:43
-#: src/personas/application/PersonaEliminar.php:102
+#: src/personas/application/PersonaEliminar.php:107
 msgid "asistencias"
 msgstr "Teilnahme"
 
@@ -14943,7 +14955,7 @@ msgstr "Sie können die Daten einer anderen dl nicht ändern"
 #: src/casas/application/CasaEcGastosGuardar.php:86
 #: src/casas/application/CasaIngresoUpdate.php:74
 #: src/casas/application/GrupoCasaUpdate.php:54
-#: src/dossiers/application/TipoDossierGuardar.php:78
+#: src/dossiers/application/TipoDossierGuardar.php:59
 #: src/ubis/application/CentrosUpdate.php:52
 msgid "Hay un error, no se ha guardado."
 msgstr "Es gibt einen Fehler, er wurde nicht gespeichert."
@@ -15527,7 +15539,7 @@ msgstr "Option nicht definiert für Personentyp %s"
 #: src/dbextern/application/VerTrasladosData.php:39
 #: src/dbextern/domain/SincroDB.php:462
 #: src/personas/application/HomePersonaData.php:60
-#: src/personas/application/PersonaEliminar.php:59
+#: src/personas/application/PersonaEliminar.php:62
 #: src/personas/application/PersonaUpdate.php:53
 #: src/personas/application/PersonaUpdate.php:100
 #: src/personas/application/PersonasEditarData.php:64
@@ -18424,7 +18436,7 @@ msgstr ""
 "Die %s ist abgeschlossen, aber Sie haben keine Berechtigung, sie zu sehen"
 
 #: src/personas/application/HomePersonaData.php:67
-#: src/personas/application/PersonaEliminar.php:64
+#: src/personas/application/PersonaEliminar.php:67
 #: src/personas/application/PersonaPublicarFormData.php:51
 #: src/personas/application/PersonaPublicarFormData.php:73
 #: src/personas/application/PersonasEditarData.php:136
@@ -18434,13 +18446,13 @@ msgstr ""
 msgid "No se encuentra la persona"
 msgstr "Person nicht gefunden"
 
-#: src/personas/application/PersonaEliminar.php:44
+#: src/personas/application/PersonaEliminar.php:47
 #: src/personas/application/PersonaUpdate.php:42
 #: src/personas/application/PersonasEditarData.php:131
 msgid "No se ha pasado el id_nom"
 msgstr "Die id_nom wurde nicht übergeben"
 
-#: src/personas/application/PersonaEliminar.php:75
+#: src/personas/application/PersonaEliminar.php:80
 #, php-format
 msgid ""
 "No se ha eliminado: no se ha podido comprobar si la persona de paso tiene "
@@ -18449,28 +18461,28 @@ msgstr ""
 "Nicht gelöscht: Es konnte nicht überprüft werden, ob die Person auf der "
 "Durchreise Daten hat (%s)"
 
-#: src/personas/application/PersonaEliminar.php:81
+#: src/personas/application/PersonaEliminar.php:86
 #, php-format
 msgid "No se ha eliminado: esta persona de paso tiene %s"
 msgstr "Nicht gelöscht: Diese Person auf der Durchreise hat %s"
 
-#: src/personas/application/PersonaEliminar.php:87
+#: src/personas/application/PersonaEliminar.php:92
 msgid "No se ha eliminado, porque no es de mi dl"
 msgstr "Wurde nicht gelöscht, weil es nicht zu meiner dl gehört"
 
-#: src/personas/application/PersonaEliminar.php:104
+#: src/personas/application/PersonaEliminar.php:109
 msgid "encargos"
 msgstr "Aufträge"
 
-#: src/personas/application/PersonaEliminar.php:105
+#: src/personas/application/PersonaEliminar.php:110
 msgid "notas"
 msgstr "Noten"
 
-#: src/personas/application/PersonaEliminar.php:106
+#: src/personas/application/PersonaEliminar.php:111
 msgid "matrículas"
 msgstr "Einschreibungen"
 
-#: src/personas/application/PersonaEliminar.php:107
+#: src/personas/application/PersonaEliminar.php:112
 #: src/profesores/application/ProfesoresAsignaturaLista.php:40
 msgid "docencia"
 msgstr "Lehre"
@@ -19342,7 +19354,7 @@ msgstr ""
 msgid "No puedo conectar con la base de datos de listas"
 msgstr "Verbindung zur Listen-Datenbank nicht möglich"
 
-#: src/shared/infrastructure/cli/copias_resincronizar.php:108
+#: src/shared/infrastructure/cli/copias_resincronizar.php:111
 msgid "Ya hay una resincronización de copias en marcha"
 msgstr "Eine Resynchronisation von Kopien läuft bereits"
 

@@ -32,9 +32,11 @@
             data: $('#frm2').serialize()
         })
             .done(function (rta) {
-                if (rta && rta.success === false && rta.mensaje) {
-                    alert(rta.mensaje);
+                if (!rta || rta.success !== true) {
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + (rta && rta.mensaje ? rta.mensaje : ''));
+                    return;
                 }
+                alert(<?= json_encode(_("guardado")) ?>);
             })
             .fail(function () {
                 alert(<?= json_encode(_("error de comunicacion con el servidor")) ?>);
@@ -47,6 +49,11 @@
 
     <table>
         <th align="left" colspan="5"><?= ucfirst(_("permisos de acceso a dossier seleccionado")); ?></th>
+        <tr>
+            <td colspan="5" role="alert" style="padding: 0.5rem 0.75rem; border: 1px solid #c9a227; background: #fffbea; color: #3d3500;">
+                <?= _("Atención: estos permisos son comunes a todos los esquemas. Lo que se guarde aquí afecta a todas las delegaciones.") ?>
+            </td>
+        </tr>
 
         <?php if ($perm_admin) { ?>
             <tr>

@@ -41,13 +41,6 @@ final class TipoDossierGuardar
         $Qapp = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'app');
         $Qclass = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'class');
         $Qcodigo = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'codigo');
-        $aPermiso_lectura = isset($input['Permiso_lectura']) && is_array($input['Permiso_lectura'])
-            ? $input['Permiso_lectura']
-            : [];
-        $aPermiso_escritura = isset($input['Permiso_escritura']) && is_array($input['Permiso_escritura'])
-            ? $input['Permiso_escritura']
-            : [];
-
         $oTipoDossier->setDescripcion($Qdescripcion);
         $oTipoDossier->setTabla_from($Qtabla_from);
         $oTipoDossier->setTabla_to($Qtabla_to);
@@ -59,24 +52,33 @@ final class TipoDossierGuardar
         $oTipoDossier->setCodigo(trim($Qcodigo) !== '' ? trim($Qcodigo) : null);
         $oTipoDossier->setDb(1);
 
-        if ($aPermiso_lectura !== []) {
-            $byte = 0;
-            foreach ($aPermiso_lectura as $bit) {
-                $byte += is_numeric($bit) ? (int) $bit : 0;
-            }
-            $oTipoDossier->setPermiso_lectura($byte);
-        }
-        if ($aPermiso_escritura !== []) {
-            $byte = 0;
-            foreach ($aPermiso_escritura as $bit) {
-                $byte += is_numeric($bit) ? (int) $bit : 0;
-            }
-            $oTipoDossier->setPermiso_escritura($byte);
-        }
+        $oTipoDossier->setPermiso_lectura(self::sumaDeBits($input['permiso_lectura'] ?? null));
+        $oTipoDossier->setPermiso_escritura(self::sumaDeBits($input['permiso_escritura'] ?? null));
 
         if ($this->tipoDossierRepository->Guardar($oTipoDossier) === false) {
             return _("Hay un error, no se ha guardado.");
         }
         return '';
+    }
+
+    /**
+     * Casillas marcadas de `permiso_lectura[]` / `permiso_escritura[]` → número de permiso.
+     *
+     * Sin ninguna casilla marcada el campo no llega y el permiso es 0. Se combinan con OR y no sumando:
+     * hay oficinas que comparten bit (scdl/scr, vcsd/vcsr) y el mismo valor llega dos veces.
+     */
+    private static function sumaDeBits(mixed $casillas): int
+    {
+        if (!is_array($casillas)) {
+            return 0;
+        }
+        $permiso = 0;
+        foreach ($casillas as $bit) {
+            if (is_numeric($bit)) {
+                $permiso |= (int) $bit;
+            }
+        }
+
+        return $permiso;
     }
 }
