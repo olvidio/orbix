@@ -132,6 +132,9 @@ for (const rol of ROLES) {
 
     const desde = Math.floor(Date.now() / 1000) * 1000;
     const p = await entrar(browser, baseURL, usuario);
+    // Grupos de menú del rol en todas las plantillas (`ref_grupmenu_rol`: una fila por plantilla, por eso
+    // DISTINCT), no solo los de esta dl (`aux_grupmenu_rol`): cada dl puede partir de otra plantilla y la
+    // lista de `acceso_rol_pau.php` tiene que valer para todas.
     const grupos = sqlDev('comun', `SELECT string_agg(DISTINCT id_grupmenu::text, ',') FROM public.ref_grupmenu_rol WHERE id_role = ${rol.id}`)
       .split(',')
       .filter((g) => g !== '');
