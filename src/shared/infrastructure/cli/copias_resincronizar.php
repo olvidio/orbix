@@ -32,6 +32,9 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $root = dirname(__DIR__, 4);
+// El .env antes de leer ORBIX_CRON_SESION (la sesión se aplica antes de global_header.inc).
+require_once $root . '/libs/vendor/autoload.php';
+require_once $root . '/src/shared/load_env.php';
 $aplicar = false;
 $soloEsquema = '';
 $sesionRuta = '';
