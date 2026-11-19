@@ -6,6 +6,7 @@ namespace Tests\integration\usuarios\infrastructure\controllers;
 
 use src\shared\infrastructure\InProcessSrcDispatch;
 use src\shared\security\HashB;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use Tests\myTest;
 
@@ -91,6 +92,53 @@ final class UsuariosControllersRespuestaTest extends myTest
         foreach (['' => 'Se requiere un código de verificación para activar 2FA', '000000' => 'Código de verificación inválido'] as $codigo => $mensaje) {
             $json = $this->ejecutar('usuario_2fa_update.php', ['ctx_2fa_update' => $ctx, 'enable_2fa' => '1', 'verification_code' => (string) $codigo, 'secret_2fa' => 'JBSWY3DPEHPK3PXP']);
             $this->assertFalse($json['success'], "código «{$codigo}»");
+        }
+    }
+
+    /**
+     * Las casas de un usuario de casa (`csv_id_pau`) solo guardan ids numéricos: el formulario manda los de
+     * un desplegable, pero `casas[]` llegaba tal cual y se guardaba cualquier texto (la lectura ya filtra).
+     * Revisión de seguridad del 2026-11-18 (sección 38). Si no queda ninguna casa válida no se toca el pau
+     * (antes, con todas vacías, `IdPau('')` lanzaba una excepción).
+     */
+    public function test_las_casas_de_un_usuario_de_casa_solo_guardan_ids_numericos(): void
+    {
+        /** @var RoleRepositoryInterface $roles */
+        $roles = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+        $idRole = array_search('cdc', $roles->getArrayRolesPau(), true);
+        if ($idRole === false) {
+            $this->markTestSkipped('Sin rol de casa');
+        }
+        /** @var UsuarioRepositoryInterface $usuarios */
+        $usuarios = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+        $login = 'e2e_casas_' . bin2hex(random_bytes(3));
+        $guardar = fn (array $casas): array => $this->ejecutar('usuario_guardar.php', [
+            'ctx' => HashB::sign('usuario_guardar', ['que_user' => 'nuevo', 'id_usuario' => 0, 'quien' => 'usuario']),
+            'usuario' => $login,
+            'id_role' => (string) $idRole,
+            'casas' => $casas,
+        ]);
+        $creado = function () use ($usuarios, $login): ?\src\usuarios\domain\entity\Usuario {
+            $c = $usuarios->matching(\src\shared\domain\criteria\Criteria::create()->where(\src\shared\domain\criteria\Filter::eq(\src\usuarios\domain\criteria\UsuarioField::Usuario, $login)));
+            return $c === [] ? null : $c[array_key_first($c)];
+        };
+        try {
+            $json = $guardar(['101', "102) OR (1=1", '', 'abc', ' 103 ', '-5']);
+            $this->assertTrue($json['success'], $json['mensaje'] ?? '');
+            $this->assertSame('101,103', $creado()?->getCsvIdPauAsString());
+        } finally {
+            if (($u = $creado()) !== null) {
+                $usuarios->Eliminar($u);
+            }
+        }
+        try {
+            $json = $guardar(['', 'abc']);
+            $this->assertTrue($json['success'], $json['mensaje'] ?? '');
+            $this->assertNull($creado()?->getCsvIdPauAsString());
+        } finally {
+            if (($u = $creado()) !== null) {
+                $usuarios->Eliminar($u);
+            }
         }
     }
 

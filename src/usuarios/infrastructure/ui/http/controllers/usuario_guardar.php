@@ -110,17 +110,18 @@ if (($pau === 'sacd' || $pau === 'nom') && !empty($Qid_nom)) {
 if (($pau === 'ctr') && !empty($Qid_ctr)) {
     $oUsuario->setCsvIdPauVo(new IdPau((string)$Qid_ctr));
 }
-// casas
-if ($pau === 'cdc' && !empty($Qcasas)) {
-    $txt_casa = '';
-    $i = 0;
+// casas: solo ids numéricos (llegan de un desplegable; lo demás se descarta)
+if ($pau === 'cdc') {
+    $a_casas = [];
     foreach ($Qcasas as $id_ubi) {
-        if (empty($id_ubi)) continue;
-        $i++;
-        if ($i > 1) $txt_casa .= ',';
-        $txt_casa .= $id_ubi;
+        $id_ubi = trim((string)$id_ubi);
+        if (ctype_digit($id_ubi) && (int)$id_ubi > 0) {
+            $a_casas[] = (string)(int)$id_ubi;
+        }
     }
-    $oUsuario->setCsvIdPauVo(new IdPau($txt_casa));
+    if ($a_casas !== []) {
+        $oUsuario->setCsvIdPauVo(new IdPau(implode(',', $a_casas)));
+    }
 }
 
 if ($UsuarioRepository->Guardar($oUsuario) === false) {
