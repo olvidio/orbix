@@ -45,4 +45,29 @@ class ActividadObservTest extends myTest
         $this->assertNull($actividadObserv);
     }
 
+    public function test_tabuladores_interiores_se_cambian_por_un_espacio()
+    {
+        // Texto pegado de una hoja de cálculo: celdas separadas por tabuladores.
+        $vo = new ActividadObserv("Na Baště (Praga)\t\t08.08-30.08\tRepaso\t");
+        $this->assertSame('Na Baště (Praga) 08.08-30.08 Repaso', $vo->value());
+    }
+
+    public function test_fromNullableString_con_tabuladores_no_lanza_excepcion()
+    {
+        $vo = ActividadObserv::fromNullableString("Genova\t13.08-30.08");
+        $this->assertSame('Genova 13.08-30.08', $vo?->value());
+    }
+
+    public function test_saltos_de_linea_interiores_se_cambian_por_un_espacio()
+    {
+        // Varias filas pegadas de una hoja de cálculo (Windows: \r\n).
+        $vo = new ActividadObserv("Genova\t13.08-30.08\r\nPraga\n\n08.08-30.08\r\n");
+        $this->assertSame('Genova 13.08-30.08 Praga 08.08-30.08', $vo->value());
+    }
+
+    public function test_otros_caracteres_de_control_siguen_rechazandose()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new ActividadObserv("texto\x01raro");
+    }
 }

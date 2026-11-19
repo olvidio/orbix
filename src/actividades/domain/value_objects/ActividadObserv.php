@@ -8,7 +8,8 @@ final class ActividadObserv
 
     public function __construct(string $value)
     {
-        $value = trim($value);
+        // Texto pegado de una hoja de cálculo: cada grupo de tabuladores o saltos de línea pasa a ser un espacio.
+        $value = trim(preg_replace('/[\t\r\n]+/', ' ', $value));
         $this->validate($value);
         $this->value = $value;
     }
