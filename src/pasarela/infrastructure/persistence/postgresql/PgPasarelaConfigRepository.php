@@ -40,7 +40,8 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
         $conv = new PgCriteriaConverter(PasarelaConfigField::class, self::COLUMNAS);
         $result = [];
         foreach ($this->rowsMatching($criteria, $conv) as $aDatos) {
-            $aDatos['json_valor'] = (new ConverterJson($aDatos['json_valor'], false))->fromPg();
+            $json = $aDatos['json_valor'] ?? null;
+            $aDatos['json_valor'] = (new ConverterJson(is_string($json) ? $json : null, false))->fromPg();
             $result[] = PasarelaConfig::fromArray($aDatos);
         }
 
