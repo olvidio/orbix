@@ -45,7 +45,7 @@ use frontend\shared\web\Desplegable;
         <tr>
             <td class="etiqueta">
                 <!--  <?= ucfirst(_("tipo de ubi")) ?> -->
-                <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+                <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= htmlspecialchars((string) $tipo_ubi, ENT_QUOTES, 'UTF-8') ?>" size="5">
                 <?= ucfirst(_("región o delegación")) ?>
                 <?php $_d = Desplegable::desdeOpciones($opciones_dl, 'dl'); $_d->setOpcion_sel($dl); echo $_d->desplegable(); ?>
                 <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="active" <?= $chk ?>>
@@ -55,7 +55,7 @@ use frontend\shared\web\Desplegable;
         </tr>
         <tr>
             <td class="etiqueta"><?= ucfirst(_("nombre del centro")) ?>
-                <input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+                <input class="contenido" name="nombre_ubi" size="35" value="<?= htmlspecialchars((string) $nombre_ubi, ENT_QUOTES, 'UTF-8') ?>">
                 <?= ucfirst(_("¿puede ser cdc?")) ?>
                 <input class="contenido" type="Checkbox" name="cdc" <?= $chk_cdc ?>>
             </td>
@@ -79,7 +79,7 @@ use frontend\shared\web\Desplegable;
             <td>
                 <?= ucfirst(_("observaciones")) ?>
                 <textarea name="observ" rows="3"
-                          style="height: 40px; width: 300px; text-align: left;"><?= $observ ?></textarea>
+                          style="height: 40px; width: 300px; text-align: left;"><?= htmlspecialchars((string) $observ, ENT_QUOTES, 'UTF-8') ?></textarea>
             </td>
         </tr>
         <tr>
@@ -96,21 +96,21 @@ use frontend\shared\web\Desplegable;
         <tr>
             <td class="etiqueta">
                 <?= ucfirst(_("nº ejemplares pi")) ?>
-                <input class="contenido" name="num_pi" size="3" value="<?= $num_pi ?>">
+                <input class="contenido" name="num_pi" size="3" value="<?= htmlspecialchars((string) $num_pi, ENT_QUOTES, 'UTF-8') ?>">
                 <?= ucfirst(_("nº cartas")) ?>
-                <input class="contenido" name="num_cartas" size="3" value="<?= $num_cartas ?>">
+                <input class="contenido" name="num_cartas" size="3" value="<?= htmlspecialchars((string) $num_cartas, ENT_QUOTES, 'UTF-8') ?>">
                 <?= ucfirst(_("nº cartas mensuales")) ?>
-                <input class="contenido" name="num_cartas_mensuales" size="3" value="<?= $num_cartas_mensuales ?>">
+                <input class="contenido" name="num_cartas_mensuales" size="3" value="<?= htmlspecialchars((string) $num_cartas_mensuales, ENT_QUOTES, 'UTF-8') ?>">
             </td>
         </tr>
         <tr>
             <td class="etiqueta">
                 <?= ucfirst(_("nº de buzón")) ?>
-                <input class="contenido" name="n_buzon" size="5" value="<?= $n_buzon ?>">
+                <input class="contenido" name="n_buzon" size="5" value="<?= htmlspecialchars((string) $n_buzon, ENT_QUOTES, 'UTF-8') ?>">
                 <?= ucfirst(_("habitaciones individuales")) ?>
-                <input class="contenido" name="num_habit_indiv" size="3" value="<?= $num_habit_indiv ?>">
+                <input class="contenido" name="num_habit_indiv" size="3" value="<?= htmlspecialchars((string) $num_habit_indiv, ENT_QUOTES, 'UTF-8') ?>">
                 <?= ucfirst(_("plazas")) ?>
-                <input class="contenido" name="plazas" size="3" value="<?= $plazas ?>">
+                <input class="contenido" name="plazas" size="3" value="<?= htmlspecialchars((string) $plazas, ENT_QUOTES, 'UTF-8') ?>">
             </td>
         </tr>
     </table>

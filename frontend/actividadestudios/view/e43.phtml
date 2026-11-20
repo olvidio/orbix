@@ -14,7 +14,7 @@ use frontend\shared\config\AppUrlConfig;
         </td>
         <td align="center"></td>
         <td align="center"><span class=link
-                                 onclick='window.open("<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/actividadestudios/controller/e43_2_mpdf.php?id_nom=<?= $id_nom ?>&id_activ=<?= $id_activ ?><?= $h ?>", "sele");'>
+                                 onclick='window.open("<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/actividadestudios/controller/e43_2_mpdf.php?id_nom=<?= htmlspecialchars((string) $id_nom, ENT_QUOTES, 'UTF-8') ?>&id_activ=<?= htmlspecialchars((string) $id_activ, ENT_QUOTES, 'UTF-8') ?><?= htmlspecialchars((string) $h, ENT_QUOTES, 'UTF-8') ?>", "sele");'>
 <?= _("PDF"); ?></span></td>
     </tr>
 </table>
@@ -25,23 +25,23 @@ use frontend\shared\config\AppUrlConfig;
     <div class="A4">
         <table>
             <tr>
-                <td><?= $dl_destino ?></td>
-                <td class="derecha"><?= $dl_origen ?></td>
+                <td><?= htmlspecialchars((string) $dl_destino, ENT_QUOTES, 'UTF-8') ?></td>
+                <td class="derecha"><?= htmlspecialchars((string) $dl_origen, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
         </table>
         <br><br>
         <table style="width: 80%">
             <tr>
                 <td><?= ucfirst(_("nombre y apellidos")); ?>:</td>
-                <td><?= $nom ?></td>
+                <td><?= htmlspecialchars((string) $nom, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
             <tr>
                 <td><?= ucfirst(_("lugar y fecha de nacimiento")); ?>:</td>
-                <td><?= $txt_nacimiento ?></td>
+                <td><?= htmlspecialchars((string) $txt_nacimiento, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
             <tr>
                 <td><?= ucfirst(_("fecha y lugar del sem, ca o cv")); ?>:</td>
-                <td><?= $txt_actividad ?></td>
+                <td><?= htmlspecialchars((string) $txt_actividad, ENT_QUOTES, 'UTF-8') ?></td>
             </tr>
         </table>
         <br>

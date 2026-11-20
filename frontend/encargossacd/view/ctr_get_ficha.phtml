@@ -58,8 +58,8 @@
            <?= $chk_sssc ?>><?= _("sss+") ?>
 </p>
 <?php for ($e = 1; $e <= $num_enc; $e++): ?>
-    <form id="datos_ctr_<?= $e ?>" action="" method="post">
-        <input type="hidden" id="sacd_num_<?= $e ?>" name="sacd_num" value="<?= htmlspecialchars((string)$sacd_num[$e], ENT_QUOTES, 'UTF-8') ?>">
+    <form id="datos_ctr_<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>" action="" method="post">
+        <input type="hidden" id="sacd_num_<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>" name="sacd_num" value="<?= htmlspecialchars((string)$sacd_num[$e], ENT_QUOTES, 'UTF-8') ?>">
         <?= $a_Hash[$e]->getCamposHtml() ?>
         <table border=1>
             <tr>
@@ -78,7 +78,7 @@
             <tr>
                 <td class=etiqueta><?= _("dedicación") ?></td>
                 <?php if ($mod_horario[$e] == 3): ?>
-                <td colspan=3><span class="link" onclick="fnjs_crear_horario(<?= $e ?>);"><?= $dedic_sacd[$e][0] ?></span>
+                <td colspan=3><span class="link" onclick="fnjs_crear_horario(<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>);"><?= htmlspecialchars((string) $dedic_sacd[$e][0], ENT_QUOTES, 'UTF-8') ?></span>
                 </td>
                 <?php else: ?>
                 <td><input type=text size=1 name=dedic_m[0] value=<?= htmlspecialchars((string)$dedic_m[$e][0], ENT_QUOTES, 'UTF-8') ?>> <?= _("mañanas") ?></td>
@@ -97,11 +97,11 @@
                 </td>
             </tr>
                 <?php endif; ?>
-            <?= $otros_sacd[$e] ?>
-            <tr id="fin_sacd_<?= $e ?>"></tr>
+            <?= htmlspecialchars((string) $otros_sacd[$e], ENT_QUOTES, 'UTF-8') ?>
+            <tr id="fin_sacd_<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>"></tr>
             <tr>
                 <td><span class="link"
-                          onclick="fnjs_añadir_sacd(<?= $e ?>);"><?= _("añadir sacd colaborador") ?></span></td>
+                          onclick="fnjs_añadir_sacd(<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>);"><?= _("añadir sacd colaborador") ?></span></td>
             </tr>
             <tr>
                 <td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50
@@ -110,7 +110,7 @@
             <tr>
                 <td class=etiqueta><?= _("exigencias del ctr") ?></td>
                 <?php if ($mod_horario[$e] == 3): ?>
-                <td colspan=3><span class="link" onclick="fnjs_crear_horario(<?= $e ?>);"><?= $dedic_ctr[$e] ?></span></td>
+                <td colspan=3><span class="link" onclick="fnjs_crear_horario(<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>);"><?= htmlspecialchars((string) $dedic_ctr[$e], ENT_QUOTES, 'UTF-8') ?></span></td>
                 <?php else: ?>
                 <td><input type=text size=1 name=dedic_ctr_m value=<?= htmlspecialchars((string)$dedic_ctr_m[$e], ENT_QUOTES, 'UTF-8') ?>> <?= _("mañanas") ?></td>
                 <td><input type=text size=1 name=dedic_ctr_t value=<?= htmlspecialchars((string)$dedic_ctr_t[$e], ENT_QUOTES, 'UTF-8') ?>> <?= _("tarde 1ª hora") ?>
@@ -122,7 +122,7 @@
 
             <?php if (!empty($perm_pffe)): ?>
                 <tr>
-                    <td colspan=5><input type="button" name="ok" onclick="fnjs_guardar(<?= $e ?>);"
+                    <td colspan=5><input type="button" name="ok" onclick="fnjs_guardar(<?= htmlspecialchars((string) $e, ENT_QUOTES, 'UTF-8') ?>);"
                                          value="<?= _("guardar") ?>"></td>
                 </tr>
             <?php endif; ?>

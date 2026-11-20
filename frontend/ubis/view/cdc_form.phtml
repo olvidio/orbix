@@ -59,7 +59,7 @@ use frontend\shared\web\Desplegable;
         <tr>
             <td class="etiqueta">
                 <!-- <?= ucfirst(_("tipo de ubi")) ?> -->
-                <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+                <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= htmlspecialchars((string) $tipo_ubi, ENT_QUOTES, 'UTF-8') ?>" size="5">
                 <?= ucfirst(_("región o delegación")) ?>
                 <?php $_d = Desplegable::desdeOpciones($opciones_dl, 'dl'); $_d->setOpcion_sel($dl); echo $_d->desplegable(); ?>
                 <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="active" <?= $chk ?>>
@@ -70,17 +70,17 @@ use frontend\shared\web\Desplegable;
         <tr>
             <td class="etiqueta">
                 <?= ucfirst(_("nombre del centro")) ?>
-                <input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+                <input class="contenido" name="nombre_ubi" size="35" value="<?= htmlspecialchars((string) $nombre_ubi, ENT_QUOTES, 'UTF-8') ?>">
             </td>
         </tr>
         <tr>
             <td>
                 <?= ucfirst(_("plazas")) ?>
-                <input class="contenido" name="plazas" value="<?= $plazas ?>" size="3">
+                <input class="contenido" name="plazas" value="<?= htmlspecialchars((string) $plazas, ENT_QUOTES, 'UTF-8') ?>" size="3">
                 <?= ucfirst(_("minimo asistentes")) ?>
-                <input class="contenido" name="plazas_min" value="<?= $plazas_min ?>" size="3">
+                <input class="contenido" name="plazas_min" value="<?= htmlspecialchars((string) $plazas_min, ENT_QUOTES, 'UTF-8') ?>" size="3">
                 <?= ucfirst(_("nº máximo de sacd")) ?>
-                <input class="contenido" name="num_sacd" value="<?= $num_sacd ?>" size="3">
+                <input class="contenido" name="num_sacd" value="<?= htmlspecialchars((string) $num_sacd, ENT_QUOTES, 'UTF-8') ?>" size="3">
                 <?= _("sv") ?><input type="checkbox" id="sv" name="sv" <?= $sv_chk ?>>
                 <?= _("sf") ?><input type="checkbox" id="sf" name="sf" <?= $sf_chk ?>>
             </td>

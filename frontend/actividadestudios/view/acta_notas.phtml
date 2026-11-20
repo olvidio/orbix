@@ -72,7 +72,7 @@ use function frontend\shared\helpers\is_true;
 <?= $oPosicion->mostrarNavAtrasToDossiersParent(); ?>
 <form id="f_1303" name="f_1303" action="" method="POST">
     <?= $oHashNotas->getCamposHtml(); ?>
-    <input type="Hidden" id="que" name="que" value="<?= $Qque ?>">
+    <input type="Hidden" id="que" name="que" value="<?= htmlspecialchars((string) $Qque, ENT_QUOTES, 'UTF-8') ?>">
     <table>
         <thead>
         <tr>
@@ -134,32 +134,32 @@ use function frontend\shared\helpers\is_true;
             $oDesplActas->setAction("fnjs_nota($i)");
             ?>
             <tr>
-                <td><?= $nom ?></td>
+                <td><?= htmlspecialchars((string) $nom, ENT_QUOTES, 'UTF-8') ?></td>
                 <td>
                     <?php if ($editable) { ?>
-                    <input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= $id_nom ?>">
+                    <input type="Hidden" id="id_nom[]" name="id_nom[]" value="<?= htmlspecialchars((string) $id_nom, ENT_QUOTES, 'UTF-8') ?>">
                     <select id="form_preceptor[]" name="form_preceptor[]" onchange="javascript:fnjs_guardar_nota()">
                         <option></option>
                         <option value="p" <?= $chk_tipo ?> ><?= _("preceptor") ?></option>
                     </select>
                 </td>
                 <td class=contenido>
-                    <input type="text" id="nota_num<?= $i ?>" name="nota_num[]" value="<?= $nota_num ?>" size="2"
-                           onchange="fnjs_nota(<?= $i ?>)">
+                    <input type="text" id="nota_num<?= htmlspecialchars((string) $i, ENT_QUOTES, 'UTF-8') ?>" name="nota_num[]" value="<?= htmlspecialchars((string) $nota_num, ENT_QUOTES, 'UTF-8') ?>" size="2"
+                           onchange="fnjs_nota(<?= htmlspecialchars((string) $i, ENT_QUOTES, 'UTF-8') ?>)">
                     <?= _("sobre") ?>
-                    <input type="text" id="nota_max<?= $i ?>" name="nota_max[]" value="<?= $nota_max ?>" size="2"
-                           onchange="fnjs_nota(<?= $i ?>)">
+                    <input type="text" id="nota_max<?= htmlspecialchars((string) $i, ENT_QUOTES, 'UTF-8') ?>" name="nota_max[]" value="<?= htmlspecialchars((string) $nota_max, ENT_QUOTES, 'UTF-8') ?>" size="2"
+                           onchange="fnjs_nota(<?= htmlspecialchars((string) $i, ENT_QUOTES, 'UTF-8') ?>)">
                 </td>
                 <td><?= $oDesplActas->desplegable(); ?>
                     <?php } else { ?>
-                    <?= $tipo_txt ?>
+                    <?= htmlspecialchars((string) $tipo_txt, ENT_QUOTES, 'UTF-8') ?>
                 </td>
                 <td class=contenido>
-                    <?= $nota_num_txt ?>
+                    <?= htmlspecialchars((string) $nota_num_txt, ENT_QUOTES, 'UTF-8') ?>
                     <?= _("sobre") ?>
-                    <?= $nota_max_txt ?>
+                    <?= htmlspecialchars((string) $nota_max_txt, ENT_QUOTES, 'UTF-8') ?>
                 </td>
-                <td><?= $acta_txt ?>
+                <td><?= htmlspecialchars((string) $acta_txt, ENT_QUOTES, 'UTF-8') ?>
                     <?php } ?>
                 </td>
             </tr>
@@ -170,7 +170,7 @@ use function frontend\shared\helpers\is_true;
     </table>
 </form>
 <?php if ($permiso == 3) { ?>
-    <br><input id='dani' type="button" value="<?= strtoupper(_("grabar notas en tessera")); ?>"
+    <br><input id='dani' type="button" value="<?= htmlspecialchars((string) (strtoupper(_("grabar notas en tessera"))), ENT_QUOTES, 'UTF-8') ?>"
                onclick="fnjs_guardar_tessera('#frm_acta')">
-    <br><input type="button" value="<?= strtoupper(_("imprimir")); ?>" onclick="fnjs_imprimir('#frm_acta')">
+    <br><input type="button" value="<?= htmlspecialchars((string) (strtoupper(_("imprimir"))), ENT_QUOTES, 'UTF-8') ?>" onclick="fnjs_imprimir('#frm_acta')">
 <?php } ?>

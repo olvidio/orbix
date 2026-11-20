@@ -1,58 +1,58 @@
 <ul>
     <?php if ($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::EST)) { ?>
         <li><span class="link"
-                  onclick="fnjs_update_div('#main','<?= $go['comprobar_n'] ?>');"><?= _("comprobar los datos del fichero de notas para numerarios") ?></span>
+                  onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['comprobar_n'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("comprobar los datos del fichero de notas para numerarios") ?></span>
         </li>
         <li><span class="link"
-                  onclick="fnjs_update_div('#main','<?= $go['comprobar_a'] ?>');"><?= _("comprobar los datos del fichero de notas para agregados") ?></span>
+                  onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['comprobar_a'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("comprobar los datos del fichero de notas para agregados") ?></span>
         </li>
     <?php }
     if (($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::EST)) || ($_SESSION['oPerm']->have_perm_oficina(\frontend\shared\session\PermisoOficina::DTOR))) { ?>
         <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("numerarios")) ?>
             <ul>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['n_listado'] ?>');"><?= _("con listados") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['n_listado'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("con listados") ?></span>
                 </li>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['n_numeros'] ?>');"><?= _("sólo números") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['n_numeros'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("sólo números") ?></span>
                 </li>
             </ul>
         </li>
         <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("agregados")) ?>
             <ul>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['agd_listado'] ?>');"><?= _("con listados") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['agd_listado'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("con listados") ?></span>
                 </li>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['agd_numeros'] ?>');"><?= _("sólo números") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['agd_numeros'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("sólo números") ?></span>
                 </li>
             </ul>
         </li>
         <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("profesores")) ?>
             <ul>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['profesores_listado'] ?>');"><?= _("con listados") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['profesores_listado'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("con listados") ?></span>
                 </li>
                 <li><span class="link"
-                          onclick="fnjs_update_div('#main','<?= $go['profesores_numeros'] ?>');"><?= _("sólo números") ?></span>
+                          onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['profesores_numeros'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("sólo números") ?></span>
                 </li>
             </ul>
         </li>
         <br><br>
         <li><span class="link"
-                  onclick="fnjs_update_div('#main','<?= $go['asig_faltan'] ?>');"><?= _("listar por asignaturas que faltan (no se incluyen las cursadas sin examinar)") ?></span>
+                  onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['asig_faltan'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("listar por asignaturas que faltan (no se incluyen las cursadas sin examinar)") ?></span>
         </li>
     <?php } ?>
 </ul>
 <?php if ($rstgr) { ?>
-    <input type="button" onclick="fnjs_update_div('#main','<?= $go['filtro'] ?>');"
+    <input type="button" onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['filtro'], ENT_QUOTES, 'UTF-8') ?>');"
            value="<?= _("filtrar por delegaciones") ?>">
 <?php } ?>
 <?php if (!empty($es_admin)) { ?>
     <h2 class="titulo"><?= _("Residuo de notas de otras regiones") ?></h2>
     <ul>
         <li><span class="link"
-                  onclick="fnjs_update_div('#main','<?= $go['residuo_otra_region'] ?>');"><?= _("comprobar e_notas_otra_region_stgr antes de borrarlo") ?></span>
+                  onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go['residuo_otra_region'], ENT_QUOTES, 'UTF-8') ?>');"><?= _("comprobar e_notas_otra_region_stgr antes de borrarlo") ?></span>
         </li>
     </ul>
 <?php } ?>

@@ -14,11 +14,11 @@
         <tr>
             <td>
                 <input type="button" id="okay" name="okay" value="<?= _("inventario de centros") ?>"
-                       onclick="fnjs_go('<?= $url_ctr ?>')">
+                       onclick="fnjs_go('<?= htmlspecialchars((string) $url_ctr, ENT_QUOTES, 'UTF-8') ?>')">
             </td>
             <td>
                 <input type="button" id="okay2" name="okay2" value="<?= _("inventario de dlb/casa") ?>"
-                       onclick="fnjs_go('<?= $url_dlb ?>')">
+                       onclick="fnjs_go('<?= htmlspecialchars((string) $url_dlb, ENT_QUOTES, 'UTF-8') ?>')">
             </td>
         </tr>
     </table>

@@ -14,37 +14,37 @@ use frontend\shared\config\OrbixRuntime;
         <tr>
             <td class="esquerra" nowrap></td>
             <td>
-                <span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')">
+                <span class="link" onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $godossiers, ENT_QUOTES, 'UTF-8') ?>')">
                     <img src="<?= htmlspecialchars(OrbixRuntime::getWebIcons(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>/dossiers.gif" border="0" width="40" height="40"
                          alt="<?= _("ver dossiers") ?>">(<?= _("dossiers") ?>)
                 </span>
             <td class="titulo">
-                <span class="link" onclick="fnjs_update_div('#main','<?= $gohome ?>')"><?= $titulo ?></span>
+                <span class="link" onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $gohome, ENT_QUOTES, 'UTF-8') ?>')"><?= htmlspecialchars((string) $titulo, ENT_QUOTES, 'UTF-8') ?></span>
             </td>
-            <td class="contenido">(<?= $dl ?> - <?= $ctr ?>)</td>
+            <td class="contenido">(<?= htmlspecialchars((string) $dl, ENT_QUOTES, 'UTF-8') ?> - <?= htmlspecialchars((string) $ctr, ENT_QUOTES, 'UTF-8') ?>)</td>
         </tr>
     </table>
     <table border="1">
         <tr>
             <td class="etiqueta">nacimiento</td>
-            <td class="contenido"><?= $f_nacimiento ?></td>
+            <td class="contenido"><?= htmlspecialchars((string) $f_nacimiento, ENT_QUOTES, 'UTF-8') ?></td>
             <td class="etiqueta">santo</td>
-            <td class="contenido"><?= $santo ?></td>
+            <td class="contenido"><?= htmlspecialchars((string) $santo, ENT_QUOTES, 'UTF-8') ?></td>
             <td class="etiqueta">celebra</td>
-            <td class="contenido"><?= $celebra ?></td>
+            <td class="contenido"><?= htmlspecialchars((string) $celebra, ENT_QUOTES, 'UTF-8') ?></td>
         </tr>
         <tr>
             <td class="etiqueta">profesion</td>
-            <td class="contenido" colspan="3"><?= $profesion ?></td>
+            <td class="contenido" colspan="3"><?= htmlspecialchars((string) $profesion, ENT_QUOTES, 'UTF-8') ?></td>
             <td class="etiqueta">stgr</td>
-            <td class="contenido"><?= $stgr ?></td>
+            <td class="contenido"><?= htmlspecialchars((string) $stgr, ENT_QUOTES, 'UTF-8') ?></td>
         </tr>
         <tr>
-            <td colspan="2">telfs: <?= $telfs ?></td>
-            <td colspan="4">e-mail: <?= $mails ?></td>
+            <td colspan="2">telfs: <?= htmlspecialchars((string) $telfs, ENT_QUOTES, 'UTF-8') ?></td>
+            <td colspan="4">e-mail: <?= htmlspecialchars((string) $mails, ENT_QUOTES, 'UTF-8') ?></td>
         </tr>
         <tr class="tab">
-            <td colspan="6" onclick="fnjs_update_div('#main','<?= $go_ficha ?>');"><?= _("editar") ?></td>
+            <td colspan="6" onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_ficha, ENT_QUOTES, 'UTF-8') ?>');"><?= _("editar") ?></td>
         </tr>
     </table>
 </div>

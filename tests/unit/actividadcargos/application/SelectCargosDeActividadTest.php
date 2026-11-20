@@ -307,7 +307,7 @@ final class SelectCargosDeActividadTest extends myTest
         $this->assertSame(2, substr_count($html, 'links-insert-btn'), 'sm en actividad de n: n y n de paso');
         $this->assertMatchesRegularExpression(
             "~fnjs_update_div\\('#ficha_activ','[^']*/frontend/actividadcargos/controller/form_cargos_de_actividad\\.php\\?id_dossier=3102&id_pau=3001&mod=nuevo&obj_pau=PersonaN&pau=a&h=[0-9a-f]{64}'\\);\">añadir n</span>~",
-            $html
+            str_replace('&amp;', '&', $html) // el enlace va escapado dentro del atributo
         );
         $this->assertStringContainsString('añadir n de paso</span>', $html);
         $this->assertStringNotContainsString('añadir agd', $html);

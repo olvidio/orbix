@@ -80,7 +80,7 @@
 <?= $oPosicion->mostrarNavAtrasToDossiersParent(); ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
     <?= $oHash->getCamposHtml(); ?>
-    <input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">
+    <input type="Hidden" id="mod" name="mod" value="<?= htmlspecialchars((string) $mod, ENT_QUOTES, 'UTF-8') ?>">
     <table>
         <tr class=tab>
             <th class=titulo_inv colspan=5><?= ucfirst(_("asignatura de una actividad")); ?></th>
@@ -88,7 +88,7 @@
         <?php if (!empty($id_asignatura)) { ?>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
-                <td class=contenido><?= $nombre_corto ?></td>
+                <td class=contenido><?= htmlspecialchars((string) $nombre_corto, ENT_QUOTES, 'UTF-8') ?></td>
         <?php } else { ?>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
@@ -124,15 +124,15 @@
         <tr>
             <td class=etiqueta><?= _("inicio clases") ?></td>
             <td>
-                <input id='f_ini' name='f_ini' type="text" class="fecha" size="11" value="<?= $f_ini ?>"
-                       onchange="fnjs_comprobar_fecha('#f_ini',<?= $locale_us ?>)">
+                <input id='f_ini' name='f_ini' type="text" class="fecha" size="11" value="<?= htmlspecialchars((string) $f_ini, ENT_QUOTES, 'UTF-8') ?>"
+                       onchange="fnjs_comprobar_fecha('#f_ini',<?= htmlspecialchars((string) $locale_us, ENT_QUOTES, 'UTF-8') ?>)">
             </td>
         </tr>
         <tr>
             <td class=etiqueta><?= _("fin clases") ?></td>
             <td>
-                <input id='f_fin' name='f_fin' type="text" class="fecha" size="11" value="<?= $f_fin ?>"
-                       onchange="fnjs_comprobar_fecha('#f_fin',<?= $locale_us ?>)">
+                <input id='f_fin' name='f_fin' type="text" class="fecha" size="11" value="<?= htmlspecialchars((string) $f_fin, ENT_QUOTES, 'UTF-8') ?>"
+                       onchange="fnjs_comprobar_fecha('#f_fin',<?= htmlspecialchars((string) $locale_us, ENT_QUOTES, 'UTF-8') ?>)">
             </td>
         </tr>
     </table>

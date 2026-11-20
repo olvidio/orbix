@@ -316,11 +316,11 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         $miDl = \src\shared\config\ConfigGlobal::mi_delef();
         $this->assertMatchesRegularExpression(
             "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&que_dl=" . preg_quote($miDl, '~') . "&h=[0-9a-f]{64}'\\);\">\\+ crt n</span>~",
-            $html
+            str_replace('&amp;', '&', $html) // el enlace va escapado dentro del atributo
         );
         $this->assertMatchesRegularExpression(
             "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&h=[0-9a-f]{64}'\\);\">\\+ crt n</span>~",
-            $html
+            str_replace('&amp;', '&', $html) // el enlace va escapado dentro del atributo
         );
         $this->assertStringNotContainsString('>+ crt sss+</span>', $html, 'sm no gestiona sss+');
     }

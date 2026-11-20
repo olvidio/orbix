@@ -43,7 +43,7 @@
 </script>
 <form id="modifica" name="modifica" action="frontend/actividadestudios/controller/ca_posibles.php" method="POST">
     <?= $oHash->getCamposHtml(); ?>
-    <input type="hidden" id="na" name="na" value="<?= $na ?>">
+    <input type="hidden" id="na" name="na" value="<?= htmlspecialchars((string) $na, ENT_QUOTES, 'UTF-8') ?>">
     <!-- Selección de centros -->
     <table>
         <tr>
@@ -106,7 +106,7 @@
         <tr>
             <td colspan=4>
                 <input type="radio" name="grupo_estudios"
-                       value=<?= $grupo_estudios ?> <?= $chk_grupo ?>><?= $mi_grupo ?>
+                       value=<?= $grupo_estudios ?> <?= $chk_grupo ?>><?= htmlspecialchars((string) $mi_grupo, ENT_QUOTES, 'UTF-8') ?>
                 <input type="radio" name="grupo_estudios" value="todos" <?= $chk_todos ?>><?= _("todos") ?></td>
         </tr>
         <tr>
@@ -116,7 +116,7 @@
             <th colspan=5><?= _("formato del cuadro"); ?></th>
         </tr>
         <tr>
-            <td><?= ucfirst(_("escrito de referencia")) . ":"; ?><input type="text" name="ref" value="<?= $ref ?>"></td>
+            <td><?= ucfirst(_("escrito de referencia")) . ":"; ?><input type="text" name="ref" value="<?= htmlspecialchars((string) $ref, ENT_QUOTES, 'UTF-8') ?>"></td>
         </tr>
         <tr>
             <td><input type="Radio" name="texto" value="text"><?= ucfirst(_("texto cabecera horizontal (excel)")); ?>

@@ -22,7 +22,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
 <table>
     <tr>
         <td><h1>profesor de stgr</h1></td>
-        <td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['print'] ?>')" class=link>[imprimir]</span></td>
+        <td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['print'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[imprimir]</span></td>
     </tr>
     <table>
         <table>
@@ -30,18 +30,18 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
             <col width="60%">
             <col width="10%">
             <col width="15%">
-            <tr><td>Nombre:</td><td><?= $nom_ap ?></td><td class=derecha>ctr:</td><td><?= $nombre_ubi ?></td></tr>
+            <tr><td>Nombre:</td><td><?= htmlspecialchars((string) $nom_ap, ENT_QUOTES, 'UTF-8') ?></td><td class=derecha>ctr:</td><td><?= htmlspecialchars((string) $nombre_ubi, ENT_QUOTES, 'UTF-8') ?></td></tr>
             <tr><td></td><td></td><td class=derecha>dl:</td><td><?= OrbixRuntime::miDelef() ?></td></tr>
-            <tr><td>Departamento:</td><td><?= $dep ?></td><td class=derecha>n:</td><td><?= $num_txt ?></td></tr>
-            <tr><td></td><td></td><td class=derecha>agd:</td><td><?= $agd_txt ?></td></tr>
-            <tr><td></td><td></td><td class=derecha>sacd:</td><td><?= $sacd_txt ?></td></tr>
+            <tr><td>Departamento:</td><td><?= htmlspecialchars((string) $dep, ENT_QUOTES, 'UTF-8') ?></td><td class=derecha>n:</td><td><?= htmlspecialchars((string) $num_txt, ENT_QUOTES, 'UTF-8') ?></td></tr>
+            <tr><td></td><td></td><td class=derecha>agd:</td><td><?= htmlspecialchars((string) $agd_txt, ENT_QUOTES, 'UTF-8') ?></td></tr>
+            <tr><td></td><td></td><td class=derecha>sacd:</td><td><?= htmlspecialchars((string) $sacd_txt, ENT_QUOTES, 'UTF-8') ?></td></tr>
         </table>
         <br>
         <?php if ($aPerm['curriculum'] > 1) { ?>
             <table>
                 <tr>
                     <td><h3>Curriculum</h3></td>
-                    <?php if ($aPerm['curriculum'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['curriculum'] ?>')" class=link>[modificar]</span></td><?php } ?>
+                    <?php if ($aPerm['curriculum'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['curriculum'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?>
                 </tr>
             </table>
             <table class=lst>
@@ -54,7 +54,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
             <table>
                 <tr>
                     <td><h3>Nombramientos</h3></td>
-                    <?php if ($aPerm['nombramientos'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['nombramientos'] ?>')" class=link>[modificar]</span></td><?php } ?>
+                    <?php if ($aPerm['nombramientos'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['nombramientos'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?>
                 </tr>
             </table>
             <table class=lst>
@@ -67,7 +67,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
             <table>
                 <tr>
                     <td><h3>Director de departamento</h3></td>
-                    <?php if ($aPerm['director'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['director'] ?>')" class=link>[modificar]</span></td><?php } ?>
+                    <?php if ($aPerm['director'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['director'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?>
                 </tr>
             </table>
             <table class=lst>
@@ -80,7 +80,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
             <table>
                 <tr>
                     <td><h3>Ampliación de docencia</h3></td>
-                    <?php if ($aPerm['ampliacion'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['ampliacion'] ?>')" class=link>[modificar]</span></td><?php } ?>
+                    <?php if ($aPerm['ampliacion'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['ampliacion'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?>
                 </tr>
             </table>
             <table class=lst>
@@ -90,15 +90,15 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
         <?php } ?>
         <br>
         <?php if ($aPerm['latin'] > 1) { ?>
-            <table><tr><td><h3>Profesor de latín:</h3></td><td><?= $latin_txt ?></td><?php if ($aPerm['latin'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['latin'] ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
+            <table><tr><td><h3>Profesor de latín:</h3></td><td><?= htmlspecialchars((string) $latin_txt, ENT_QUOTES, 'UTF-8') ?></td><?php if ($aPerm['latin'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['latin'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
         <?php } ?>
         <br>
         <?php if ($aPerm['juramento'] > 1) { ?>
-            <table><tr><td><h3>Fecha profesión de fe:</h3></td><td><?= $f_juramento ?></td><?php if ($aPerm['juramento'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['juramento'] ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
+            <table><tr><td><h3>Fecha profesión de fe:</h3></td><td><?= htmlspecialchars((string) $f_juramento, ENT_QUOTES, 'UTF-8') ?></td><?php if ($aPerm['juramento'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['juramento'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
         <?php } ?>
         <br>
         <?php if ($aPerm['congresos'] > 1) { ?>
-            <table><tr><td><h3>Convivencias y congresos</h3></td><?php if ($aPerm['congresos'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['congresos'] ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
+            <table><tr><td><h3>Convivencias y congresos</h3></td><?php if ($aPerm['congresos'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['congresos'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
             <table class=lst>
                 <tr><td class=cabecera>tipo</td><td class=cabecera>tema</td><td class=cabecera>lugar</td><td class=cabecera>inicio</td><td class=cabecera>fin</td><td class=cabecera>organiza</td></tr>
                 <?php foreach ($a_congresos as $row) { echo "<tr><td>{$row['tipo']}</td><td>{$row['congreso']}</td><td>{$row['lugar']}</td><td>{$row['f_ini']}</td><td>{$row['f_fin']}</td><td>{$row['organiza']}</td></tr>"; } ?>
@@ -106,7 +106,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
         <?php } ?>
         <br>
         <?php if ($aPerm['publicaciones'] > 1) { ?>
-            <table><tr><td><h3>Publicaciones</h3></td><?php if ($aPerm['publicaciones'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['publicaciones'] ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
+            <table><tr><td><h3>Publicaciones</h3></td><?php if ($aPerm['publicaciones'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['publicaciones'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
             <table class=lst>
                 <tr><td class=cabecera>tipo</td><td class=cabecera>titulo</td><td class=cabecera>editorial</td><td class=cabecera>revista o colección</td><td class=cabecera>fecha publicación</td><td class=cabecera>pendiente</td><td class=cabecera>referencia</td><td class=cabecera>lugar</td><td class=cabecera>observaciones</td></tr>
                 <?php foreach ($a_publicaciones as $row) { $pendiente_txt = is_true($row['pendiente']) ? _("sí") : _("no"); echo "<tr><td>{$row['tipo_publicacion']}</td><td>{$row['titulo']}</td><td>{$row['editorial']}</td><td>{$row['coleccion']}</td><td>{$row['f_publicacion']}</td><td>$pendiente_txt</td><td>{$row['referencia']}</td><td>{$row['lugar']}</td><td>{$row['observ']}</td></tr>"; } ?>
@@ -114,7 +114,7 @@ include_once(OrbixRuntime::dir_estilos() . '/colores.php');
         <?php } ?>
         <br>
         <?php if ($aPerm['docencia'] > 1) { ?>
-            <table><tr><td><h3>Actividad docente</h3></td><?php if ($aPerm['docencia'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= $go_cosas['docencia'] ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
+            <table><tr><td><h3>Actividad docente</h3></td><?php if ($aPerm['docencia'] > 2) { ?><td class=derecha><span onclick="fnjs_update_div('#main','<?= htmlspecialchars((string) $go_cosas['docencia'], ENT_QUOTES, 'UTF-8') ?>')" class=link>[modificar]</span></td><?php } ?></tr></table>
             <table class=lst>
                 <tr><td class=cabecera>curso</td><td class=cabecera>asignatura</td><td class=cabecera>modo</td><td class=cabecera>acta</td></tr>
                 <?php foreach ($a_docencias as $row) { echo "<tr><td>{$row['curso_inicio']} - {$row['curso_fin']}</td><td>{$row['nombre_corto']}</td><td>{$row['modo']}</td><td>{$row['acta']}</td></tr>"; } ?>
