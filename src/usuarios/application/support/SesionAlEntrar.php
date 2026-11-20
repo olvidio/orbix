@@ -40,6 +40,8 @@ final class SesionAlEntrar
                 $_SESSION[$clave]['expire'] = '';
             }
         }
+        // Esta sesión sigue; las demás del usuario, abiertas con la contraseña anterior, se cerrarán.
+        \src\shared\infrastructure\ui\http\SesionVigencia::olvidarHuella();
         if ($reabrir) {
             session_write_close();
         }

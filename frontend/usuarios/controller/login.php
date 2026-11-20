@@ -93,6 +93,9 @@ if ($esquema_web_str !== '') {
     }
 }
 
+// Sesión caducada (por inactividad o por tiempo total): queda vacía y se trata como sin autenticar.
+LoginBridge::comprobarVigenciaDeLaSesion();
+
 if (!isset($_SESSION['session_auth'])) {
     orbix_marcar_respuesta_ajax_sin_sesion();
     $idioma = '';
@@ -152,6 +155,7 @@ if (!isset($_SESSION['session_auth'])) {
         \frontend\shared\FrontBootstrap::renovarSesionAlEntrar();
         $_SESSION['session_auth'] = $loginSession['session_auth'];
         $_SESSION['config'] = $loginSession['session_config'];
+        LoginBridge::sesionRecienIniciada();
 
         UsuariosPayload::cambiarIdioma();
 

@@ -198,23 +198,23 @@ $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
                 </tr>
                 <tr>
                     <td></td>
-                    <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI: <?= $nom ?></td>
+                    <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI: <?= htmlspecialchars((string) ($nom), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
                 </tr>
                 <?php
                 foreach ($filas as $fila) {
                     tessera_mpdf_titulo($fila['id_nivel']);
-                    $nombre = strtr($fila['nombre'], $replace);
+                    $nombre = strtr(htmlspecialchars((string) ($fila['nombre']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $replace);
                     $claseOpcional = $fila['opcional'] ? ' class="opcional"' : '';
                     $claseDato = $fila['opcional'] ? ' class="dato opcional"' : ' class="dato"';
                     ?>
                         <tr>
                             <td></td>
                             <td<?= $claseOpcional ?>><?= $nombre ?>&nbsp;</td>
-                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : $fila['nota'] ?>&nbsp;</td>
+                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : htmlspecialchars((string) ($fila['nota']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
                             <td>&nbsp;</td>
-                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : $fila['fecha_local'] ?>&nbsp;</td>
+                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : htmlspecialchars((string) ($fila['fecha_local']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
                             <td>&nbsp;</td>
-                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : $fila['acta'] ?>&nbsp;</td>
+                            <td<?= $claseDato ?>><?= $fila['pendiente'] ? '' : htmlspecialchars((string) ($fila['acta']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
                             <td></td>
                         </tr>
                     <?php

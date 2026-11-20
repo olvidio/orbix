@@ -39,6 +39,9 @@ BootstrapPdoGlobals::register($connectionBootstrap->userSfsv, $connectionBootstr
 
 DiContainerBootstrap::ensureBuilt();
 
+// El usuario sigue existiendo, con la misma contraseña y el mismo rol (se mira cada pocos minutos).
+\src\shared\infrastructure\ui\http\SesionVigencia::revalidarUsuarioDeLaSesion();
+
 (new RefreshCrStgrMaterializedViews())->executeIfNeeded(
     $connectionBootstrap->userSfsv,
     $connectionBootstrap->esquema,

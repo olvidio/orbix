@@ -33,6 +33,12 @@ if ($oUsuario === null) {
     return;
 }
 
+// Ya está activo: no se sustituye la clave (para cambiarla hay que desactivarlo o restablecerlo antes).
+if ($Qenable_2fa && $oUsuario->isHas_2fa()) {
+    ContestarJson::enviar('', ['success' => true]);
+    return;
+}
+
 // Si se está activando 2FA, verificar el código
 if ($Qenable_2fa) {
     // Verificar que se haya proporcionado un código de verificación

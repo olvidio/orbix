@@ -73,13 +73,39 @@ class DBConnection
             $str_conexio = '?' . $str_conexio;
         }
 
-        $password_encoded = urlencode($password);
-        $dsn = "postgresql://$user:$password_encoded@$host:$port/" . $dbname . $str_conexio;
         if ($host === '/var/run/postgresql') {
-            $dsn = "postgresql:///$dbname?host=$host";
+            return "postgresql:///$dbname?host=$host";
         }
+        // La contraseña no va en la URI (acabaría en la línea de órdenes de psql/pg_dump, a la vista de
+        // cualquier proceso, y en los mensajes de error): va en un fichero de claves propio.
+        self::anotarEnPgpass($host, $port, $user, $password);
 
-        return $dsn;
+        return "postgresql://$user@$host:$port/" . $dbname . $str_conexio;
+    }
+
+    /** Fichero `PGPASSFILE` de este proceso (se borra al terminar). */
+    private static ?string $pgpass = null;
+
+    private static function anotarEnPgpass(string $host, string $port, string $user, string $password): void
+    {
+        if ($password === '') {
+            return;
+        }
+        if (self::$pgpass === null || !is_file(self::$pgpass)) {
+            $fichero = tempnam(sys_get_temp_dir(), 'orbix_pgpass_');
+            if ($fichero === false) {
+                throw new \RuntimeException('No se ha podido crear el fichero de claves de PostgreSQL');
+            }
+            chmod($fichero, 0600);
+            self::$pgpass = $fichero;
+            putenv('PGPASSFILE=' . $fichero);
+            register_shutdown_function(static function () use ($fichero): void {
+                @unlink($fichero);
+            });
+        }
+        $esc = static fn (string $v): string => str_replace(['\\', ':'], ['\\\\', '\\:'], $v);
+        $linea = implode(':', [$esc($host), $port !== '' ? $port : '*', '*', $esc($user), $esc($password)]) . "\n";
+        file_put_contents(self::$pgpass, $linea, FILE_APPEND | LOCK_EX);
     }
 
     public function getPDOListas(): PDO

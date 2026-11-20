@@ -69,10 +69,10 @@ $acta = $presentacion['acta'] !== '' ? $presentacion['acta'] : $acta;
 		if ($i > $alum_cara_A) { continue;}
 		?>
 		<tr class="alumno">
-		<td class="alumno"><?= $nom; ?>
+		<td class="alumno"><?= htmlspecialchars((string) ($nom), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class="nota"><?= $nota; ?></td>
+		<td class="nota"><?= htmlspecialchars((string) ($nota), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
 		</tr>
 		<?php
 	}
@@ -100,12 +100,12 @@ if ($tribunal !== 0) {
 </div>
 <div class="pie">
 <div class="libro">
-<b>Reg.</b> <?= $reg_stgr ?> &nbsp;
-<b>lib.</b> <?= $libro; ?> &nbsp;
-<b>pág.</b>  <?= $pagina; ?>
-<b> n.</b> <?= $linea; ?>
+<b>Reg.</b> <?= htmlspecialchars((string) ($reg_stgr), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?> &nbsp;
+<b>lib.</b> <?= htmlspecialchars((string) ($libro), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?> &nbsp;
+<b>pág.</b>  <?= htmlspecialchars((string) ($pagina), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
+<b> n.</b> <?= htmlspecialchars((string) ($linea), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
 </div>
-<div class="acta">(N. <?= $acta; ?>)</div>
+<div class="acta">(N. <?= htmlspecialchars((string) ($acta), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>)</div>
 </div>
 <div class="f7">F7</div>
 <?php
@@ -124,10 +124,10 @@ if ($alum_cara_B > 0) {
 		if ($i <= $lin_max_cara_A) { continue; }
 		?>
 		<tr class="alumno">
-		<td class="alumno"><?= $nom; ?>
+		<td class="alumno"><?= htmlspecialchars((string) ($nom), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
 		</td>
 		<td>&nbsp;</td>
-		<td class="nota"><?= $nota; ?></td>
+		<td class="nota"><?= htmlspecialchars((string) ($nota), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
 		</tr>
 		<?php
 	}

@@ -84,7 +84,7 @@ final class LoginProcesar
         }
 
         $oCrypt = new PasswordHasher();
-        if (!hash_equals($encontrado['password_db'], $oCrypt->encode($password, $encontrado['password_db']))) {
+        if (!$oCrypt->verify($password, $encontrado['password_db'])) {
             $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return ['ok' => false, 'error' => 1];
         }
@@ -124,6 +124,10 @@ final class LoginProcesar
         $resultado = $this->completarSesion($row, $MiUsuario, $oDB_Select, $username, $esquema, $sfsv, $expire);
         if ($resultado['ok']) {
             $this->intentos->anotarAcierto($esquema, $sfsv, $idUsuario);
+            // Contraseña guardada con el formato antiguo: se regraba con el algoritmo actual.
+            if ($oCrypt->needsRehash($encontrado['password_db'])) {
+                $this->intentos->actualizarHashPassword($esquema, $sfsv, $idUsuario, $oCrypt->encode($password));
+            }
         }
 
         return $resultado;

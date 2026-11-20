@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 12:10+0100\n"
+"POT-Creation-Date: 2026-11-20 12:44+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -174,7 +174,7 @@ msgstr "error desconegut"
 #: frontend/usuarios/view/role_grupmenu.phtml:18
 #: frontend/usuarios/view/role_lista.phtml:22
 #: frontend/usuarios/view/role_lista.phtml:35
-#: frontend/usuarios/view/usuario_form_2fa.phtml:104
+#: frontend/usuarios/view/usuario_form_2fa.phtml:108
 #: frontend/usuarios/view/usuario_form_mail.phtml:12
 #: frontend/usuarios/view/usuario_form_pwd.phtml:78
 #: frontend/usuarios/view/usuario_grupo.phtml:29
@@ -3067,7 +3067,7 @@ msgstr "ha d'indicar on s'ha d'avisar"
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:64
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:70
 msgid "Hay un error, no se ha guardado"
 msgstr "Hi ha un error, no s'ha guardat"
 
@@ -6293,7 +6293,7 @@ msgid "Con números"
 msgstr "Amb números"
 
 #: frontend/menus/view/traducir_menu.phtml:85
-#: frontend/usuarios/view/usuario_form_2fa.phtml:171
+#: frontend/usuarios/view/usuario_form_2fa.phtml:180
 msgid "Configuración"
 msgstr "Configuració"
 
@@ -11605,11 +11605,11 @@ msgstr "guardar dades usuari"
 msgid "¿Está seguro que desea quitar este permiso?"
 msgstr "Esteu segur que voleu treure aquest permís?"
 
-#: frontend/usuarios/controller/usuario_form_2fa.php:65
+#: frontend/usuarios/controller/usuario_form_2fa.php:67
 msgid "guardar configuración"
 msgstr "desar la configuració"
 
-#: frontend/usuarios/controller/usuario_form_2fa.php:66
+#: frontend/usuarios/controller/usuario_form_2fa.php:68
 msgid "se ha actualizado la configuración de 2FA"
 msgstr "la configuració de 2FA s'ha actualitzat"
 
@@ -12254,27 +12254,43 @@ msgstr "té doble factor activat?"
 msgid "email"
 msgstr "email"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:58
+#: frontend/usuarios/view/usuario_form_2fa.phtml:55
+msgid "La autenticación de dos factores ya está activa."
+msgstr "L'autenticació de dos factors ja està activa."
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:62
 msgid "Error: Debe ingresar un código de verificación para activar 2FA"
 msgstr "Error: heu d'introduir un codi de verificació per activar 2FA"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:78
+#: frontend/usuarios/view/usuario_form_2fa.phtml:82
 msgid "Error: Código de verificación inválido"
 msgstr "Error: Codi de verificació invàlid"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:151
+#: frontend/usuarios/view/usuario_form_2fa.phtml:155
 msgid "Configuración de autenticación de dos factores (2FA)"
 msgstr "Configuració d'autenticació de dos factors (2FA)"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:166
+#: frontend/usuarios/view/usuario_form_2fa.phtml:170
 msgid "Activar autenticación de dos factores"
 msgstr "Activa l'autenticació de dos factors"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:173
+#: frontend/usuarios/view/usuario_form_2fa.phtml:175
+msgid "La autenticación de dos factores está activa."
+msgstr "L'autenticació de dos factors està activa."
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:176
+msgid ""
+"La clave ya no se muestra. Para configurar otro dispositivo, desactívela (o "
+"restablézcala) y actívela de nuevo."
+msgstr ""
+"La clau ja no es mostra. Per configurar un altre dispositiu, desactiveu-la "
+"(o restabliu-la) i activeu-la de nou."
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:182
 msgid "Para configurar la autenticación de dos factores, siga estos pasos:"
 msgstr "Per configurar l'autenticació de dos factors, seguiu aquests passos:"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:175
+#: frontend/usuarios/view/usuario_form_2fa.phtml:184
 msgid ""
 "Descargue una aplicación de autenticación como Google Authenticator, "
 "Microsoft Authenticator o Authy en su dispositivo móvil."
@@ -12282,14 +12298,14 @@ msgstr ""
 "Descarregueu una aplicació d'autenticació com Google Authenticator, "
 "Microsoft Authenticator o Authy al dispositiu mòbil."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:176
+#: frontend/usuarios/view/usuario_form_2fa.phtml:185
 msgid ""
 "Escanee el código QR con la aplicación o ingrese la clave secreta "
 "manualmente."
 msgstr ""
 "Escanegeu el codi QR amb l'aplicació o introduïu la clau secreta manualment."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:177
+#: frontend/usuarios/view/usuario_form_2fa.phtml:186
 msgid ""
 "Ingrese el código de verificación generado por la aplicación para confirmar "
 "la configuración."
@@ -12297,19 +12313,19 @@ msgstr ""
 "Introduïu el codi de verificació generat per l'aplicació per confirmar la "
 "configuració."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:178
+#: frontend/usuarios/view/usuario_form_2fa.phtml:187
 msgid "Guarde la configuración."
 msgstr "Desa la configuració."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:182
+#: frontend/usuarios/view/usuario_form_2fa.phtml:191
 msgid "Código QR"
 msgstr "Codi QR"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:187
+#: frontend/usuarios/view/usuario_form_2fa.phtml:196
 msgid "Clave secreta"
 msgstr "Clau secreta"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:188
+#: frontend/usuarios/view/usuario_form_2fa.phtml:197
 msgid ""
 "Si no puede escanear el código QR, ingrese esta clave secreta en su "
 "aplicación de autenticación:"
@@ -12317,11 +12333,11 @@ msgstr ""
 "Si no podeu escanejar el codi QR, introduïu aquesta clau secreta a la vostra "
 "aplicació d'autenticació:"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:193
+#: frontend/usuarios/view/usuario_form_2fa.phtml:202
 msgid "Verificación"
 msgstr "Verificació"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:194
+#: frontend/usuarios/view/usuario_form_2fa.phtml:203
 msgid ""
 "Ingrese el código de verificación generado por su aplicación de "
 "autenticación:"
@@ -12329,15 +12345,15 @@ msgstr ""
 "Introduïu el codi de verificació generat per la vostra aplicació "
 "d'autenticació:"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:196
+#: frontend/usuarios/view/usuario_form_2fa.phtml:205
 msgid "Código de verificación"
 msgstr "Codi de verificació"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:208
+#: frontend/usuarios/view/usuario_form_2fa.phtml:218
 msgid "¿Ha perdido acceso a su aplicación de autenticación?"
 msgstr "Heu perdut accés a la vostra aplicació d'autenticació?"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:209
+#: frontend/usuarios/view/usuario_form_2fa.phtml:219
 msgid ""
 "Si ha perdido acceso a su aplicación de autenticación (por ejemplo, si ha "
 "borrado la aplicación o cambiado de dispositivo), puede restablecer su "
@@ -12347,11 +12363,11 @@ msgstr ""
 "suprimit l'aplicació o heu canviat de dispositiu), podeu restablir la "
 "configuració de 2FA."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:213
+#: frontend/usuarios/view/usuario_form_2fa.phtml:223
 msgid "Restablecer configuración 2FA"
 msgstr "Restableix la configuració de 2FA"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:215
+#: frontend/usuarios/view/usuario_form_2fa.phtml:225
 msgid ""
 "Nota: Al restablecer su configuración de 2FA, se desactivará temporalmente "
 "la autenticación de dos factores para su cuenta. Deberá configurarla "
@@ -12361,15 +12377,15 @@ msgstr ""
 "l'autenticació de dos factors per al vostre compte. Haureu de tornar-la a "
 "configurar per activar-la de nou."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:216
+#: frontend/usuarios/view/usuario_form_2fa.phtml:226
 msgid "Más información sobre cómo restablecer 2FA"
 msgstr "Obteniu informació sobre com restablir 2FA"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:221
+#: frontend/usuarios/view/usuario_form_2fa.phtml:231
 msgid "Información importante"
 msgstr "Informació important"
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:223
+#: frontend/usuarios/view/usuario_form_2fa.phtml:233
 msgid ""
 "La autenticación de dos factores añade una capa adicional de seguridad a su "
 "cuenta."
@@ -12377,7 +12393,7 @@ msgstr ""
 "L'autenticació de dos factors afegeix una capa addicional de seguretat al "
 "vostre compte."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:224
+#: frontend/usuarios/view/usuario_form_2fa.phtml:234
 msgid ""
 "Cada vez que inicie sesión, necesitará ingresar su contraseña y un código de "
 "verificación generado por su aplicación de autenticación."
@@ -12385,7 +12401,7 @@ msgstr ""
 "Cada vegada que inicieu sessió, haureu d'introduir la contrasenya i un codi "
 "de verificació generat per la vostra aplicació d'autenticació."
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:225
+#: frontend/usuarios/view/usuario_form_2fa.phtml:235
 msgid ""
 "Guarde su clave secreta en un lugar seguro. La necesitará si pierde acceso a "
 "su dispositivo."
@@ -19478,7 +19494,7 @@ msgstr ""
 "Falten user/password de manteniment en importar (%1$s, plantilla «%2$s»). "
 "Reviseu el per defecte i %3$s."
 
-#: src/shared/infrastructure/persistence/DBConnection.php:100
+#: src/shared/infrastructure/persistence/DBConnection.php:126
 msgid "Error de configuración: faltan parámetros para conectar con la BDU."
 msgstr "Error de configuració: falten paràmetres per connectar amb la BDU."
 
@@ -19760,6 +19776,10 @@ msgstr "L'arxiu supera la mida màxima permesa pel servidor (aprox. %s MB)."
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:145
 msgid "No se ha recibido el archivo."
 msgstr "No s'ha rebut el fitxer."
+
+#: src/shared/infrastructure/ui/http/SesionVigencia.php:152
+msgid "La sesión se ha cerrado. Vuelva a entrar."
+msgstr "La sessió s'ha tancat. Torneu a entrar."
 
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_lista_data.php:17
 msgid "Las consultas a la ayuda las revisa un administrador."
@@ -20485,19 +20505,19 @@ msgstr "idiomes possibles per a l'aplicació"
 msgid "idioma a buscar"
 msgstr "idioma a cercar"
 
-#: src/usuarios/domain/PasswordHasher.php:76
+#: src/usuarios/domain/PasswordHasher.php:105
 msgid "No se pueden usar las comillas en el password"
 msgstr "Les cometes no es poden utilitzar a la contrasenya"
 
-#: src/usuarios/domain/PasswordHasher.php:82
+#: src/usuarios/domain/PasswordHasher.php:111
 msgid "El nombre de usuario No puede estar en el password"
 msgstr "El nom d'usuari no pot estar a la contrasenya"
 
-#: src/usuarios/domain/PasswordHasher.php:88
+#: src/usuarios/domain/PasswordHasher.php:117
 msgid "Debe tener más de 8 caracteres"
 msgstr "Ha de tenir més de 8 caràcters"
 
-#: src/usuarios/domain/PasswordHasher.php:113
+#: src/usuarios/domain/PasswordHasher.php:142
 msgid ""
 "Debe incluir como mínimo una letra mayúscula, un número y un caracter "
 "especial"
@@ -20505,7 +20525,7 @@ msgstr ""
 "Ha d'incloure com a mínim una lletra majúscula, un número i un caràcter "
 "especial"
 
-#: src/usuarios/domain/PasswordHasher.php:154
+#: src/usuarios/domain/PasswordHasher.php:183
 msgid "Bien, pero poco fuerte: quizá demasiado corto o un palíndromo"
 msgstr "Bé, però poc fort: potser massa curt o un palíndrom"
 
@@ -20652,11 +20672,11 @@ msgstr "grup de menús"
 msgid "Id de usuario no válido"
 msgstr "Identificador d'usuari no vàlid"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:40
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:46
 msgid "Se requiere un código de verificación para activar 2FA"
 msgstr "Cal un codi de verificació per activar 2FA"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:47
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:53
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php:21
 msgid "Código de verificación inválido"
 msgstr "Codi de verificació invàlid"

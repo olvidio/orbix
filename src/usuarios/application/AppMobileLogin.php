@@ -120,7 +120,7 @@ final class AppMobileLogin
         }
 
         $oCrypt = new PasswordHasher();
-        if (!hash_equals($password_db, $oCrypt->encode($password, $password_db))) {
+        if (!$oCrypt->verify($password, $password_db)) {
             $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return [
                 'ok' => false,
@@ -287,6 +287,10 @@ final class AppMobileLogin
             'samesite' => 'Lax',
         ];
         $this->intentos->anotarAcierto($esquema, $sfsv, $idUsuario);
+        // Contraseña guardada con el formato antiguo: se regraba con el algoritmo actual.
+        if ($oCrypt->needsRehash($password_db)) {
+            $this->intentos->actualizarHashPassword($esquema, $sfsv, $idUsuario, $oCrypt->encode($password));
+        }
 
         setcookie('esquema', $esquema, $arr_cookie_options);
         setcookie('idioma', $idioma, $arr_cookie_options);

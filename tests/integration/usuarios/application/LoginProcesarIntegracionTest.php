@@ -468,6 +468,19 @@ class LoginProcesarIntegracionTest extends myTest
         $this->assertSame(1, $r['session_auth']['expire']);
     }
 
+    public function test_al_entrar_con_un_hash_antiguo_se_regraba_con_el_algoritmo_actual(): void
+    {
+        $sal = str_repeat('ab', 100);
+        $this->crearUsuario(['password' => $sal . hash('whirlpool', $sal . self::CLAVE)]);
+
+        $this->assertFalse($this->login(['password' => 'mala'])['ok']);
+        $this->assertStringStartsWith($sal, $this->hashGuardado(), 'un intento fallido no migra nada');
+
+        $this->assertTrue($this->login()['ok']);
+        $this->assertStringStartsWith('$argon2id$', $this->hashGuardado());
+        $this->assertTrue($this->login()['ok'], 'y sigue entrando con la misma contraseña');
+    }
+
     // ------------------------------------------------------------------ 2FA
 
     public function test_2fa_activado_sin_secreto_redirige_a_la_ayuda(): void

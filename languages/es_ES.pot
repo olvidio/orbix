@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 12:10+0100\n"
+"POT-Creation-Date: 2026-11-20 12:44+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -176,7 +176,7 @@ msgstr ""
 #: frontend/usuarios/view/role_grupmenu.phtml:18
 #: frontend/usuarios/view/role_lista.phtml:22
 #: frontend/usuarios/view/role_lista.phtml:35
-#: frontend/usuarios/view/usuario_form_2fa.phtml:104
+#: frontend/usuarios/view/usuario_form_2fa.phtml:108
 #: frontend/usuarios/view/usuario_form_mail.phtml:12
 #: frontend/usuarios/view/usuario_form_pwd.phtml:78
 #: frontend/usuarios/view/usuario_grupo.phtml:29
@@ -2976,7 +2976,7 @@ msgstr ""
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:64
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:70
 msgid "Hay un error, no se ha guardado"
 msgstr ""
 
@@ -6010,7 +6010,7 @@ msgid "Con números"
 msgstr ""
 
 #: frontend/menus/view/traducir_menu.phtml:85
-#: frontend/usuarios/view/usuario_form_2fa.phtml:171
+#: frontend/usuarios/view/usuario_form_2fa.phtml:180
 msgid "Configuración"
 msgstr ""
 
@@ -11125,11 +11125,11 @@ msgstr ""
 msgid "¿Está seguro que desea quitar este permiso?"
 msgstr ""
 
-#: frontend/usuarios/controller/usuario_form_2fa.php:65
+#: frontend/usuarios/controller/usuario_form_2fa.php:67
 msgid "guardar configuración"
 msgstr ""
 
-#: frontend/usuarios/controller/usuario_form_2fa.php:66
+#: frontend/usuarios/controller/usuario_form_2fa.php:68
 msgid "se ha actualizado la configuración de 2FA"
 msgstr ""
 
@@ -11684,99 +11684,111 @@ msgstr ""
 msgid "email"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:58
+#: frontend/usuarios/view/usuario_form_2fa.phtml:55
+msgid "La autenticación de dos factores ya está activa."
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:62
 msgid "Error: Debe ingresar un código de verificación para activar 2FA"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:78
+#: frontend/usuarios/view/usuario_form_2fa.phtml:82
 msgid "Error: Código de verificación inválido"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:151
+#: frontend/usuarios/view/usuario_form_2fa.phtml:155
 msgid "Configuración de autenticación de dos factores (2FA)"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:166
+#: frontend/usuarios/view/usuario_form_2fa.phtml:170
 msgid "Activar autenticación de dos factores"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:173
-msgid "Para configurar la autenticación de dos factores, siga estos pasos:"
-msgstr ""
-
 #: frontend/usuarios/view/usuario_form_2fa.phtml:175
-msgid "Descargue una aplicación de autenticación como Google Authenticator, Microsoft Authenticator o Authy en su dispositivo móvil."
+msgid "La autenticación de dos factores está activa."
 msgstr ""
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:176
-msgid "Escanee el código QR con la aplicación o ingrese la clave secreta manualmente."
-msgstr ""
-
-#: frontend/usuarios/view/usuario_form_2fa.phtml:177
-msgid "Ingrese el código de verificación generado por la aplicación para confirmar la configuración."
-msgstr ""
-
-#: frontend/usuarios/view/usuario_form_2fa.phtml:178
-msgid "Guarde la configuración."
+msgid "La clave ya no se muestra. Para configurar otro dispositivo, desactívela (o restablézcala) y actívela de nuevo."
 msgstr ""
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:182
-msgid "Código QR"
+msgid "Para configurar la autenticación de dos factores, siga estos pasos:"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:184
+msgid "Descargue una aplicación de autenticación como Google Authenticator, Microsoft Authenticator o Authy en su dispositivo móvil."
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:185
+msgid "Escanee el código QR con la aplicación o ingrese la clave secreta manualmente."
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:186
+msgid "Ingrese el código de verificación generado por la aplicación para confirmar la configuración."
 msgstr ""
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:187
-msgid "Clave secreta"
+msgid "Guarde la configuración."
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:188
-msgid "Si no puede escanear el código QR, ingrese esta clave secreta en su aplicación de autenticación:"
-msgstr ""
-
-#: frontend/usuarios/view/usuario_form_2fa.phtml:193
-msgid "Verificación"
-msgstr ""
-
-#: frontend/usuarios/view/usuario_form_2fa.phtml:194
-msgid "Ingrese el código de verificación generado por su aplicación de autenticación:"
+#: frontend/usuarios/view/usuario_form_2fa.phtml:191
+msgid "Código QR"
 msgstr ""
 
 #: frontend/usuarios/view/usuario_form_2fa.phtml:196
+msgid "Clave secreta"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:197
+msgid "Si no puede escanear el código QR, ingrese esta clave secreta en su aplicación de autenticación:"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:202
+msgid "Verificación"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:203
+msgid "Ingrese el código de verificación generado por su aplicación de autenticación:"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_2fa.phtml:205
 msgid "Código de verificación"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:208
+#: frontend/usuarios/view/usuario_form_2fa.phtml:218
 msgid "¿Ha perdido acceso a su aplicación de autenticación?"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:209
+#: frontend/usuarios/view/usuario_form_2fa.phtml:219
 msgid "Si ha perdido acceso a su aplicación de autenticación (por ejemplo, si ha borrado la aplicación o cambiado de dispositivo), puede restablecer su configuración de 2FA."
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:213
+#: frontend/usuarios/view/usuario_form_2fa.phtml:223
 msgid "Restablecer configuración 2FA"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:215
+#: frontend/usuarios/view/usuario_form_2fa.phtml:225
 msgid "Nota: Al restablecer su configuración de 2FA, se desactivará temporalmente la autenticación de dos factores para su cuenta. Deberá configurarla nuevamente para volver a activarla."
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:216
+#: frontend/usuarios/view/usuario_form_2fa.phtml:226
 msgid "Más información sobre cómo restablecer 2FA"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:221
+#: frontend/usuarios/view/usuario_form_2fa.phtml:231
 msgid "Información importante"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:223
+#: frontend/usuarios/view/usuario_form_2fa.phtml:233
 msgid "La autenticación de dos factores añade una capa adicional de seguridad a su cuenta."
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:224
+#: frontend/usuarios/view/usuario_form_2fa.phtml:234
 msgid "Cada vez que inicie sesión, necesitará ingresar su contraseña y un código de verificación generado por su aplicación de autenticación."
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_2fa.phtml:225
+#: frontend/usuarios/view/usuario_form_2fa.phtml:235
 msgid "Guarde su clave secreta en un lugar seguro. La necesitará si pierde acceso a su dispositivo."
 msgstr ""
 
@@ -18403,7 +18415,7 @@ msgstr ""
 msgid "Faltan user/password de mantenimiento en importar (%1$s, plantilla «%2$s»). Revise default y %3$s."
 msgstr ""
 
-#: src/shared/infrastructure/persistence/DBConnection.php:100
+#: src/shared/infrastructure/persistence/DBConnection.php:126
 msgid "Error de configuración: faltan parámetros para conectar con la BDU."
 msgstr ""
 
@@ -18636,6 +18648,10 @@ msgstr ""
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:135
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:145
 msgid "No se ha recibido el archivo."
+msgstr ""
+
+#: src/shared/infrastructure/ui/http/SesionVigencia.php:152
+msgid "La sesión se ha cerrado. Vuelva a entrar."
 msgstr ""
 
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_lista_data.php:17
@@ -19297,23 +19313,23 @@ msgstr ""
 msgid "idioma a buscar"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:76
+#: src/usuarios/domain/PasswordHasher.php:105
 msgid "No se pueden usar las comillas en el password"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:82
+#: src/usuarios/domain/PasswordHasher.php:111
 msgid "El nombre de usuario No puede estar en el password"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:88
+#: src/usuarios/domain/PasswordHasher.php:117
 msgid "Debe tener más de 8 caracteres"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:113
+#: src/usuarios/domain/PasswordHasher.php:142
 msgid "Debe incluir como mínimo una letra mayúscula, un número y un caracter especial"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:154
+#: src/usuarios/domain/PasswordHasher.php:183
 msgid "Bien, pero poco fuerte: quizá demasiado corto o un palíndromo"
 msgstr ""
 
@@ -19436,11 +19452,11 @@ msgstr ""
 msgid "Id de usuario no válido"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:40
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:46
 msgid "Se requiere un código de verificación para activar 2FA"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:47
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:53
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php:21
 msgid "Código de verificación inválido"
 msgstr ""

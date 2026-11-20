@@ -56,8 +56,9 @@ final class SesionAlEntrarTest extends myTest
         foreach (['src/usuarios/application/LoginProcesar.php', 'src/usuarios/application/AppMobileLogin.php'] as $f) {
             $codigo = $this->fuente($f);
             $this->assertStringContainsString('SesionAlEntrar::usuarioSinCredenciales(', $codigo, $f);
-            $this->assertStringContainsString('hash_equals(', $codigo, $f);
+            $this->assertStringContainsString('->verify($password, ', $codigo, $f);
             $this->assertDoesNotMatchRegularExpression('/->encode\([^)]*\)\s*!==/', $codigo, $f);
+            $this->assertStringContainsString('->needsRehash(', $codigo, $f);
         }
         $this->assertStringContainsString('SesionAlEntrar::iniciarLimpia(', $this->fuente('src/usuarios/application/AppMobileLogin.php'));
     }
@@ -93,5 +94,17 @@ final class SesionAlEntrarTest extends myTest
     public function test_la_ayuda_de_acceso_no_monta_enlaces_con_la_cabecera_host(): void
     {
         $this->assertStringNotContainsString('UrlBaseProject', $this->fuente('frontend/usuarios/controller/ayuda_acceso.php'));
+    }
+
+    public function test_la_clave_de_un_2fa_ya_activo_no_se_vuelve_a_ensenar_ni_se_sustituye(): void
+    {
+        $info = $this->fuente('src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php');
+        $this->assertStringContainsString("\$data['secret_2fa'] = \$has_2fa ? '' :", $info);
+
+        $update = $this->fuente('src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php');
+        $this->assertStringContainsString('if ($Qenable_2fa && $oUsuario->isHas_2fa()) {', $update);
+
+        $vista = $this->fuente('frontend/usuarios/view/usuario_form_2fa.phtml');
+        $this->assertStringContainsString('<?php if (!$has_2fa): ?>', $vista);
     }
 }

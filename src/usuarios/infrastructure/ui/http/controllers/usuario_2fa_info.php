@@ -26,7 +26,8 @@ if (empty($Qid_usuario)) {
     $secret_2fa = $oUsuario->getSecret2faVo()?->value();
 
     $data['has_2fa'] = $has_2fa;
-    $data['secret_2fa'] = $secret_2fa;
+    // La clave de un 2FA ya activo no se devuelve: quien tenga la sesión podría clonar el segundo factor.
+    $data['secret_2fa'] = $has_2fa ? '' : $secret_2fa;
     $data['ctx_2fa_update'] = HashB::sign('usuario_2fa_update', ['id_usuario' => $Qid_usuario]);
     }
 }

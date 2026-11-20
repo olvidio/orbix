@@ -106,7 +106,7 @@ final class RecuperacionPasswordTest extends TestCase
 
         $hasher = new PasswordHasher();
         $hash = $this->password(7);
-        $this->assertSame($hash, $hasher->encode('Nueva-Clave.Larga!9', $hash), 'guarda la contraseña nueva');
+        $this->assertTrue($hasher->verify('Nueva-Clave.Larga!9', $hash), 'guarda la contraseña nueva');
         $this->assertSame(0, (int) $this->pdo->query('SELECT cambio_password FROM aux_usuarios WHERE id_usuario = 7')->fetchColumn());
 
         $this->assertFalse($svc->comprobar($tk)['success'], 'un solo uso');

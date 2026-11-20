@@ -173,6 +173,7 @@ final class FrontBootstrap
         BootstrapPdoGlobals::register($connectionBootstrap->userSfsv, $connectionBootstrap->connections);
         DiContainerBootstrap::ensureBuilt();
         self::$backendBootstrapReady = true;
+        \src\shared\infrastructure\ui\http\SesionVigencia::revalidarUsuarioDeLaSesion();
     }
 
     /**

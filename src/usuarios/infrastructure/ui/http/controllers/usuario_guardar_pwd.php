@@ -37,7 +37,7 @@ if (!empty($Qpassword)) {
     // Cambiarla exige saber la actual: una sesión abierta (o robada) no basta.
     $Qpassword_actual = (string) FilterPostGet::post('password_actual');
     $hashActual = (string) $oUsuario->getPasswordAsString();
-    if ($Qpassword_actual === '' || $hashActual === '' || !hash_equals($hashActual, $oCrypt->encode($Qpassword_actual, $hashActual))) {
+    if ($Qpassword_actual === '' || $hashActual === '' || !$oCrypt->verify($Qpassword_actual, $hashActual)) {
         ContestarJson::enviar(_("La contraseña actual no es correcta"), 'none');
         return;
     }

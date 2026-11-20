@@ -34,6 +34,18 @@ final class LoginBridge
     }
 
     /** HTML del &lt;select&gt; de esquemas (mismo contrato que DBPropiedades::posibles_esquemas). */
+    /** Sesión caducada (inactividad o tiempo total): queda vacía, como la de quien no ha entrado. */
+    public static function comprobarVigenciaDeLaSesion(): void
+    {
+        \src\shared\infrastructure\ui\http\SesionVigencia::alArrancar();
+    }
+
+    /** Tras entrar: las marcas de vigencia empiezan de nuevo. */
+    public static function sesionRecienIniciada(): void
+    {
+        unset($_SESSION[\src\shared\infrastructure\ui\http\SesionVigencia::CLAVE]);
+    }
+
     public static function desplegableEsquemas(string $esquema): string
     {
         $oDBPropiedades = new \src\shared\infrastructure\persistence\postgresql\DBPropiedades();

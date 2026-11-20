@@ -85,6 +85,11 @@ final class PgLoginIntentosRepository implements LoginIntentosRepositoryInterfac
         );
     }
 
+    public function actualizarHashPassword(string $esquema, int $sfsv, int $idUsuario, string $hash): void
+    {
+        $this->ejecutar($esquema, $sfsv, 'UPDATE aux_usuarios SET password = :hash WHERE id_usuario = :id', [':hash' => $hash, ':id' => $idUsuario]);
+    }
+
     public function aceptarPasoTotp(string $esquema, int $sfsv, int $idUsuario, int $paso): bool
     {
         // Un solo UPDATE condicionado: dos peticiones simultáneas con el mismo código no pueden aceptarlo las dos.
@@ -101,7 +106,7 @@ final class PgLoginIntentosRepository implements LoginIntentosRepositoryInterfac
     }
 
     /**
-     * @param array<string, int> $params
+     * @param array<string, int|string> $params
      * @return int|bool|null filas afectadas (UPDATE), el valor leído (SELECT) o null si falla
      */
     private function ejecutar(string $esquema, int $sfsv, string $sql, array $params, bool $leer = false): int|bool|null

@@ -24,5 +24,8 @@ interface LoginIntentosRepositoryInterface
      * Acepta el paso de tiempo de un código 2FA válido si es posterior al último aceptado, y lo guarda.
      * False si ese código (o uno posterior) ya se usó.
      */
+    /** Regraba el hash de la contraseña (migración al algoritmo actual tras un login correcto). */
+    public function actualizarHashPassword(string $esquema, int $sfsv, int $idUsuario, string $hash): void;
+
     public function aceptarPasoTotp(string $esquema, int $sfsv, int $idUsuario, int $paso): bool;
 }

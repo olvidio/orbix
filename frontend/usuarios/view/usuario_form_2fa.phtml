@@ -51,6 +51,10 @@ $url_jquery = $url_jquery ?? (AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/d
         // Verificar el código si se está activando 2FA
         var enable_2fa = $('#enable_2fa').is(':checked');
 
+        if (enable_2fa && <?= json_encode((bool) $has_2fa) ?>) {
+            alert(<?= json_encode(_("La autenticación de dos factores ya está activa.")) ?>);
+            return false;
+        }
         if (enable_2fa) {
             var verification_code = $('#verification_code').val().trim();
 
@@ -167,7 +171,12 @@ $url_jquery = $url_jquery ?? (AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/d
         </label>
     </div>
 
-    <div id="config_2fa_section" style="margin-top: 20px; <?= $has_2fa ? '' : 'display: none;' ?>">
+    <?php if ($has_2fa): ?>
+    <p><strong><?= _("La autenticación de dos factores está activa.") ?></strong>
+        <?= _("La clave ya no se muestra. Para configurar otro dispositivo, desactívela (o restablézcala) y actívela de nuevo.") ?></p>
+    <?php endif; ?>
+    <?php if (!$has_2fa): ?>
+    <div id="config_2fa_section" style="margin-top: 20px; display: none;">
         <h3><?= _("Configuración") ?></h3>
 
         <p><?= _("Para configurar la autenticación de dos factores, siga estos pasos:") ?></p>
@@ -196,6 +205,7 @@ $url_jquery = $url_jquery ?? (AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/d
                    placeholder="<?= _("Código de verificación") ?>">
         </div>
     </div>
+    <?php endif; ?>
 
     <div style="margin-top: 20px;">
         <input type="button" onclick="fnjs_guardar(this.form);" id="btn_ok" name="btn_ok"  value="<?= $txt_guardar ?>"

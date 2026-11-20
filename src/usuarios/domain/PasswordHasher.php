@@ -6,7 +6,8 @@ use src\usuarios\domain\value_objects\Username;
 
 /**
  * Utilidad de dominio para:
- *  - hashear passwords (whirlpool + salt).
+ *  - hashear passwords (Argon2id; los guardados con el formato antiguo, sal + whirlpool, se siguen
+ *    verificando y se regraban al entrar).
  *  - validar la fuerza de un password (cracklib-check / pwscore si existen,
  *    reglas internas en otro caso).
  *
@@ -15,18 +16,46 @@ use src\usuarios\domain\value_objects\Username;
 class PasswordHasher
 {
     /**
-     * Encripta el password con salt + whirlpool. Si se pasa un hash previo se
-     * reutiliza su salt (para verificar contra el almacenado).
+     * Hash para guardar una contraseña nueva: Argon2id (`password_hash`), lento a propósito.
+     *
+     * Con un hash previo en el formato antiguo (sal + whirlpool) recalcula ese formato con su sal; solo
+     * sirve para comprobar contraseñas guardadas antes del cambio ({@see verify()}).
      */
     public function encode(string $clear, ?string $hashed = null): string
     {
-        $salt_len = 100;
         if ($hashed === null || $hashed === '') {
-            for ($salt = '', $x = 0; $x++ < $salt_len; $salt .= bin2hex(chr(random_int(0, 255)))) ;
-        } else {
-            $salt = substr($hashed, 0, $salt_len * 2);
+            return password_hash($clear, PASSWORD_ARGON2ID);
         }
+        $salt = substr($hashed, 0, self::SAL_ANTIGUA);
+
         return $salt . \hash('whirlpool', $salt . $clear);
+    }
+
+    /** Longitud de la sal (en hexadecimal) del formato antiguo. */
+    private const SAL_ANTIGUA = 200;
+
+    /** ¿Es esta la contraseña del hash guardado? Admite el formato actual y el antiguo. */
+    public function verify(string $clear, string $guardado): bool
+    {
+        if ($guardado === '' || $clear === '') {
+            return false;
+        }
+        if (self::esFormatoActual($guardado)) {
+            return password_verify($clear, $guardado);
+        }
+
+        return hash_equals($guardado, $this->encode($clear, $guardado));
+    }
+
+    /** El hash guardado conviene regrabarlo (formato antiguo, o parámetros de coste anteriores). */
+    public function needsRehash(string $guardado): bool
+    {
+        return !self::esFormatoActual($guardado) || password_needs_rehash($guardado, PASSWORD_ARGON2ID);
+    }
+
+    private static function esFormatoActual(string $guardado): bool
+    {
+        return str_starts_with($guardado, '$');
     }
 
     /**

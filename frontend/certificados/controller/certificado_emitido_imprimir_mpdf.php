@@ -102,7 +102,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
                 $j++;
             }
             while (($oAsignatura['id_nivel'] < $row['id_nivel_asig']) && ($row['id_nivel'] < 2434)) {
-                $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
+                $nombre_asignatura = strtr(htmlspecialchars((string) ($oAsignatura['nombre_asignatura']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
                 CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels, $planEstudios);
                 ?>
@@ -120,25 +120,25 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
             if ($oAsignatura['id_nivel'] === $row['id_nivel_asig']) {
                 CertificadosMpdfRender::titulo($oAsignatura['id_nivel'], $mpdfLabels, $planEstudios);
                 if ($row['id_asignatura'] > 3000 && $row['id_asignatura'] < 9000) {
-                    $nombre_asignatura = strtr($row['nombre_asignatura'], $replace);
-                    $algo = $oAsignatura['nombre_asignatura'] . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombre_asignatura;
+                    $nombre_asignatura = strtr(htmlspecialchars((string) ($row['nombre_asignatura']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $replace);
+                    $algo = htmlspecialchars((string) ($oAsignatura['nombre_asignatura']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $nombre_asignatura;
                     ?>
                     <tr class="opcional" style="vertical-align: text-bottom">
                         <td></td>
                         <td><?= $algo ?>&nbsp;</td>
-                        <td class="dato"><?= $row['creditos'] ?>&nbsp;</td>
-                        <td class="dato"><?= $row['nota_txt'] ?>&nbsp;</td>
+                        <td class="dato"><?= htmlspecialchars((string) ($row['creditos']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
+                        <td class="dato"><?= htmlspecialchars((string) ($row['nota_txt']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
                         <td></td>
                     </tr>
                     <?php
                 } else {
-                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
+                    $nombre_asignatura = strtr(htmlspecialchars((string) ($oAsignatura['nombre_asignatura']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $replace);
                     ?>
                     <tr>
                         <td></td>
                         <td><?= $nombre_asignatura ?>&nbsp;</td>
-                        <td class="dato"><?= $row['creditos'] ?>&nbsp;</td>
-                        <td class="dato"><?= $row['nota_txt'] ?>&nbsp;</td>
+                        <td class="dato"><?= htmlspecialchars((string) ($row['creditos']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
+                        <td class="dato"><?= htmlspecialchars((string) ($row['nota_txt']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>&nbsp;</td>
                         <td></td>
                     </tr>
                     <?php
@@ -149,7 +149,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
                 || ($j === $num_asig)
                 || $oAsignatura['id_nivel'] > $row['id_nivel_asig']
             ) {
-                $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
+                $nombre_asignatura = strtr(htmlspecialchars((string) ($oAsignatura['nombre_asignatura']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $replace);
                 $etcs = number_format(($oAsignatura['creditos'] * 2), 0);
                 CertificadosMpdfRender::titulo($oAsignatura['id_asignatura'], $mpdfLabels, $planEstudios);
                 ?>
@@ -173,7 +173,7 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
         </tr>
     </table>
     <div class="pie">
-        <div class="fecha"><?= $lugar_fecha ?></div>
+        <div class="fecha"><?= htmlspecialchars((string) ($lugar_fecha), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></div>
         <table class="g_sello">
             <tr>
                 <td class="sello"><?= $mpdf['sello'] ?></td>
@@ -189,10 +189,10 @@ $rowEmpty = CertificadosMpdfRender::emptyAprobadaRow();
 <div class="g_libro">
     <table>
         <tr>
-            <td class="libro"><?= $mpdf['reg_num'] ?> (<?= $certificado ?>)</td>
+            <td class="libro"><?= $mpdf['reg_num'] ?> (<?= htmlspecialchars((string) ($certificado), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>)</td>
             <td class="libro"></td>
             <td class="libro"></td>
-            <td class="secretario"><?= $vstgr ?></td>
+            <td class="secretario"><?= htmlspecialchars((string) ($vstgr), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></td>
         </tr>
     </table>
 </div>

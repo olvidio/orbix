@@ -29,7 +29,8 @@ $has_2fa = $faData['has_2fa'];
 $secret_2fa = $faData['secret_2fa'];
 $ctx_2fa_update = $faData['ctx_2fa_update'];
 
-if ($secret_2fa === '') {
+// Con el 2FA ya activo no hay clave que enseñar ni que cambiar (el backend no la devuelve).
+if (!$has_2fa && $secret_2fa === '') {
     $secret_2fa = generate_secret_key();
 }
 
@@ -43,12 +44,13 @@ if (!OrbixRuntime::isDmz()) {
 if (preg_match('/(.*?)\.docker/', OrbixRuntime::servidor())) {
     $appName .= '-docker';
 }
-$qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
+$qr_url = $has_2fa ? '' : get_qr_code_data($usuario, $secret_2fa, $appName);
 
 $oHashUpdate = new HashF();
 $url_2fa_update = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_2fa_update');
 $oHashUpdate->setUrl($url_2fa_update);
-$oHashUpdate->setCamposForm('enable_2fa!verification_code');
+// Con el 2FA activo el formulario no lleva el campo del código (ver la vista).
+$oHashUpdate->setCamposForm($has_2fa ? 'enable_2fa' : 'enable_2fa!verification_code');
 $oHashUpdate->setCamposNo('enable_2fa');
 $oHashUpdate->setArraycamposHidden([
     'id_usuario' => $id_usuario,
