@@ -272,6 +272,10 @@ $oHash->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/usuarios/preferencias_guard
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinValParams();
 
+// Formulario de exportar (lo rellena scripts/exportar.js.php).
+$oHashExport = new HashF();
+$oHashExport->setCamposForm('frm_export_orientation!frm_export_ref!frm_export_titulo!frm_export_modo!frm_export_tipo!frm_export_enc!frm_export_ex');
+
 ////////////// antes de enviar headers
 ob_start();
 if (!defined('ORBIX_INDEX_EMBED')) {
@@ -417,7 +421,8 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
         <?= _("Cargando...") ?>
     </div>
     <div id="iframe_export" style="display: none;">
-        <form id="frm_export" method="POST" action="libs/export/export.php">
+        <form id="frm_export" method="POST" action="frontend/shared/controller/exportar.php">
+            <?= $oHashExport->getCamposHtml() ?>
             <input type="hidden" id="frm_export_orientation" name="frm_export_orientation"/>
             <input type="hidden" id="frm_export_ref" name="frm_export_ref"/>
             <input type="hidden" id="frm_export_titulo" name="frm_export_titulo"/>
