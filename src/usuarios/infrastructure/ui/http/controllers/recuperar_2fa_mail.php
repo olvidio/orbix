@@ -1,162 +1,60 @@
 <?php
 
-use src\shared\infrastructure\logging\GestorErrores;
+/**
+ * Recuperar el segundo factor (anónimo): envía al correo del usuario un enlace de un solo uso, con
+ * caducidad, que desactiva su 2FA (`frontend/usuarios/controller/recovery.php`) para que configure uno
+ * nuevo. Nunca se envía el secreto, y la respuesta es siempre la misma: no dice si el usuario existe, si
+ * tiene correo ni cuál es.
+ */
+
+use src\shared\domain\helpers\FilterPostGet;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-use src\usuarios\domain\entity\Usuario;
 use src\shared\web\ContestarJson;
-use src\shared\domain\helpers\FilterPostGet;
+use src\usuarios\infrastructure\security\ColaMailSinSesion;
 
-$Qusername = (string)\src\shared\domain\helpers\FilterPostGet::post('username');
-$Qubicacion = (string)\src\shared\domain\helpers\FilterPostGet::post('ubicacion');
-$Qesquema = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema');
-$Qesquema_web = (string)\src\shared\domain\helpers\FilterPostGet::post('esquema_web');
-// La base del enlace del correo sale de la configuración del servidor, nunca de la
-// petición (anónima): con un url_base ajeno el token de recuperación se enviaría
-// a otro servidor.
+$Qusername = (string) FilterPostGet::post('username');
+$Qesquema = (string) FilterPostGet::post('esquema');
+$Qesquema_web = (string) FilterPostGet::post('esquema_web');
+$esquema = $Qesquema !== '' ? $Qesquema : $Qesquema_web;
+// La base del enlace del correo sale de la configuración del servidor, nunca de la petición.
 $urlBaseEnlace = \src\shared\config\ConfigGlobal::publicAppBaseUrl() . '/';
 
-$aWhere = array('usuario' => $Qusername);
-$esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
-$oDB = null;
-if (substr($esquema, -1) === 'v') {
-    $sfsv = 1;
-    $oConfigDB = new ConfigDB('sv-e');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB = $oConexion->getPDO();
+$respuesta = ['error_txt' => '', 'success' => true, 'email' => ''];
 
-}
-if (substr($esquema, -1) === 'f') {
-    $sfsv = 2;
-    $oConfigDB = new ConfigDB('sf-e');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB = $oConexion->getPDO();
-}
-
-if (!($oDB instanceof \PDO)) {
-    ContestarJson::enviar(_("Esquema no válido"), ['error_txt' => _("Esquema no válido"), 'success' => false, 'email' => '????']);
-    return;
-}
-
-// Buscar el usuario en la base de datos
-$query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
-$oDBSt = $oDB->prepare($query);
-if ($oDBSt === false) {
-    $sClauError = 'recuperar_password.prepare';
-    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
-        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
-    }
-    return false;
-}
-
-if ($oDBSt->execute($aWhere) === false) {
-    $sClauError = 'recuperar_password.execute';
-    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
-        $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, (string)__LINE__, __FILE__);
-    }
-    return false;
-}
-
-$error_txt = '';
-$success = false;
-$email = '????';
-$message = '';
-
-$row = $oDBSt->fetch(\PDO::FETCH_ASSOC);
-if (is_array($row)) {
-    // para los bytea: (resources)
-    $handle = $row['password'] ?? null;
-    if (is_resource($handle)) {
-        $contents = stream_get_contents($handle);
-        fclose($handle);
-        $password = is_string($contents) ? $contents : '';
-        $row['password'] = $password;
-    }
-    $MiUsuario = Usuario::fromArray($row);
-    $id_usuario = $MiUsuario->getId_usuario();
-    $email = $MiUsuario->getEmailAsString();
-
-    if (empty($email)) {
-        $error_txt = _("No hay email asociado a este usuario");
-    } else {
-        // Recuperar código de seguridad
-        $codigo = $MiUsuario->getSecret2faVo()?->value();
-        if ($codigo === null) {
-
-            // 1. Generar un token aleatorio seguro
+try {
+    $base = match (substr($esquema, -1)) {
+        'v' => 'sv-e',
+        'f' => 'sf-e',
+        default => null,
+    };
+    if ($base !== null && $Qusername !== '') {
+        $oDB = (new DBConnection((new ConfigDB($base))->getEsquema($esquema)))->getPDO();
+        $st = $oDB->prepare('SELECT id_usuario, email FROM aux_usuarios WHERE usuario = :usuario');
+        $st->execute(['usuario' => $Qusername]);
+        $row = $st->fetch(\PDO::FETCH_ASSOC);
+        $email = is_array($row) && is_string($row['email'] ?? null) ? trim($row['email']) : '';
+        if (is_array($row) && $email !== '') {
+            $id_usuario = (int) $row['id_usuario'];
+            // El token se guarda como hash y caduca a los 15 minutos (UTC, como lo compara recovery.php).
             $token_bruto = bin2hex(random_bytes(32));
-            // 2. Hashearlo para guardarlo en la DB (nunca guardes el token plano)
-            $token_hash = hash('sha256', $token_bruto);
-            // 3. Definir expiración (ej: 15 minutos) en UTC — recovery compara con (now() AT TIME ZONE 'utc')
-            $expiracion = gmdate('Y-m-d H:i:s', time() + 15 * 60);
-
-            // 4. Update en la DB
-            // UPDATE "H-dlbv".aux_usuarios SET token_recuperacion_2fa = '$token_hash', token_expiracion_2fa = '$expiracion' WHERE id_usuario = ...
-
-            try {
-                // 1. Definimos la consulta (Ojo: usa el esquema "H-dlbv" si es necesario)
-                $sql = "UPDATE aux_usuarios SET token_recuperacion_2fa = :token_hash, token_expiracion_2fa = :expiracion 
-                            WHERE id_usuario = :id_usuario";
-
-                // 2. Preparamos la sentencia
-                if (($oDBSt1 = $oDB->prepare($sql)) === false) {
-                    throw new Exception("Error preparing SQL statement");
-                }
-
-                // 3. Generamos los datos
-                $token_bruto = bin2hex(random_bytes(32));
-                $token_hash = hash('sha256', $token_bruto);
-
-                // UTC, alineado con recovery.php: (now() AT TIME ZONE 'utc')
-                $expiracion = gmdate('Y-m-d H:i:s', time() + 15 * 60);
-
-                // 4. Vinculamos parámetros
-                $oDBSt1->bindParam(':token_hash', $token_hash, PDO::PARAM_STR);
-                $oDBSt1->bindParam(':expiracion', $expiracion, PDO::PARAM_STR);
-
-                // Asumo que $Qid_usuario es el ID numérico del usuario
-                $oDBSt1->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-
-                if ($oDBSt1->execute() === false) {
-                    $sClauError = 'DBRol.delGrupo.execute';
-                    if (isset($_SESSION['oGestorErrores']) && $_SESSION['oGestorErrores'] instanceof GestorErrores) {
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt1, $sClauError, (string)__LINE__, __FILE__);
-                    }
-                    return false;
-                }
-                // 5. Construimos el enlace para el email
-                $url = $urlBaseEnlace . 'frontend/usuarios/controller/recovery.php';
-                $link_recuperacion = $url . '?' . http_build_query(['token' => $token_bruto, 'esquema' => $esquema, 'id_usuario' => $id_usuario]);
-
-                $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Haz clik en el link: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $link_recuperacion);
-            } catch (Exception $e) {
-                error_log($e->getMessage());
-                // Manejar el error para el usuario
+            $st = $oDB->prepare('UPDATE aux_usuarios SET token_recuperacion_2fa = :token_hash, token_expiracion_2fa = :expiracion WHERE id_usuario = :id_usuario');
+            $st->execute([
+                'token_hash' => hash('sha256', $token_bruto),
+                'expiracion' => gmdate('Y-m-d H:i:s', time() + 15 * 60),
+                'id_usuario' => $id_usuario,
+            ]);
+            $enlace = $urlBaseEnlace . 'frontend/usuarios/controller/recovery.php?'
+                . http_build_query(['token' => $token_bruto, 'esquema' => $esquema, 'id_usuario' => $id_usuario]);
+            $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Haz clik en el link: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $enlace);
+            if (!ColaMailSinSesion::encolar($email, _("Recuperación de código de seguridad"), $message, 'system')) {
+                error_log('recuperar_2fa_mail: no se ha podido encolar el correo del usuario ' . $id_usuario);
             }
-        } else {
-            $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $codigo);
-
-        }
-        if ($message !== '') {
-        // Enviar email con la nueva contraseña
-        $subject = _("Recuperación de código de seguridad");
-
-        if (\src\usuarios\infrastructure\security\ColaMailSinSesion::encolar($email, $subject, $message, 'system')) {
-            $success = true;
-        } else {
-            $error_txt = _("Error al enviar el correo electrónico");
-        }
         }
     }
-} else {
-    $error_txt = _("No se encontró ningún usuario con ese nombre");
+} catch (\Throwable $e) {
+    // Esquema desconocido, sin conexión...: al registro, y la misma respuesta.
+    error_log('recuperar_2fa_mail: ' . $e->getMessage());
 }
 
-$data['error_txt'] = $error_txt;
-$data['success'] = $success;
-// Petición anónima: el correo se devuelve enmascarado, nunca entero.
-$data['email'] = ($email === null || $email === '????') ? '' : \src\shared\domain\helpers\OfuscarEmail::ofuscarEmailParcial($email, 3, 2);
-
-ContestarJson::enviar('', $data);
+ContestarJson::enviar('', $respuesta);

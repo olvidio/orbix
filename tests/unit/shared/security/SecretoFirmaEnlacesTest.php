@@ -13,7 +13,7 @@ use src\usuarios\infrastructure\security\EnlaceRecuperacionPassword;
  * `load_env.php` lo carga con `Dotenv::createImmutable`, que lo deja en `$_ENV` pero no en `getenv()`;
  * antes `SignedDownloadToken` y `EnlaceRecuperacionPassword` solo miraban `getenv()` y, con el secreto en
  * el `.env`, seguían firmando con la clave de respaldo (derivada de la ruta del proyecto, predecible).
- * Sin secreto, se sigue usando esa clave de respaldo.
+ * Sin secreto, las descargas siguen usando esa clave de respaldo; los enlaces de restablecer la contraseña, no.
  */
 final class SecretoFirmaEnlacesTest extends TestCase
 {
@@ -59,9 +59,10 @@ final class SecretoFirmaEnlacesTest extends TestCase
         $this->assertNull(EnlaceRecuperacionPassword::abrir($tk), 'firmado con el secreto, no con la clave de respaldo');
     }
 
-    public function test_sin_secreto_se_usa_la_clave_de_respaldo(): void
+    public function test_sin_secreto_la_descarga_usa_la_clave_de_respaldo_y_el_enlace_de_contrasena_no_vale(): void
     {
         $this->assertNotNull(SignedDownloadToken::parse(SignedDownloadToken::tokenCertificadoEmitido(5)));
-        $this->assertNotNull(EnlaceRecuperacionPassword::abrir(EnlaceRecuperacionPassword::emitir(7, 'H-dlbv', 'hash')));
+        // El enlace de restablecer la contraseña no admite clave de respaldo (era deducible): sin secreto no vale.
+        $this->assertNull(EnlaceRecuperacionPassword::abrir(EnlaceRecuperacionPassword::emitir(7, 'H-dlbv', 'hash')));
     }
 }

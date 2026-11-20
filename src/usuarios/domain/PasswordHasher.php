@@ -72,19 +72,19 @@ class PasswordHasher
         $txt_err = '';
 
         if (strpos($lower_pwd, '"') !== false) {
-            $txt_err = "$username: password($password) ";
+            $txt_err = '';
             $txt_err .= _("No se pueden usar las comillas en el password");
         }
 
         if (strpos($lower_pwd, $lower_user) !== false) {
             $txt_err .= $txt_err === '' ? '' : "\n";
-            $txt_err .= "$username: password($password) ";
+            $txt_err .= '';
             $txt_err .= _("El nombre de usuario No puede estar en el password");
         }
 
         if (strlen($password) <= 8) {
             $txt_err .= $txt_err === '' ? '' : "\n";
-            $txt_err .= "$username: password($password) ";
+            $txt_err .= '';
             $txt_err .= _("Debe tener más de 8 caracteres");
         }
 
@@ -109,7 +109,7 @@ class PasswordHasher
 
         if (!$uppercase || !$number || !$specialChars) {
             $txt_err .= $txt_err === '' ? '' : "\n";
-            $txt_err .= "$username: password($password) ";
+            $txt_err .= '';
             $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un caracter especial");
         }
         if (empty($txt_err)) {
@@ -127,8 +127,10 @@ class PasswordHasher
      */
     private function is_valid_password_2(string $username, string $pw, int $score_ref = 55): array
     {
-        $CRACKLIB = shell_exec(sprintf("command -v cracklib-check"));
-        $PWSCORE = shell_exec(sprintf("command -v pwscore")) . ' ' . $username;
+        // Rutas sin el salto de línea final y el usuario como un único argumento: antes el salto partía
+        // la orden en dos y el nombre de usuario se ejecutaba.
+        $CRACKLIB = escapeshellarg(trim((string) shell_exec('command -v cracklib-check')));
+        $PWSCORE = escapeshellarg(trim((string) shell_exec('command -v pwscore'))) . ' ' . escapeshellarg($username);
 
         // prevent UTF-8 characters being stripped by escapeshellarg
         $localePrev = setlocale(LC_ALL, '0');

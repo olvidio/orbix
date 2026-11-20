@@ -2,6 +2,7 @@
 
 namespace src\usuarios\application;
 
+use src\usuarios\application\support\SesionAlEntrar;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
@@ -119,7 +120,7 @@ final class AppMobileLogin
         }
 
         $oCrypt = new PasswordHasher();
-        if ($oCrypt->encode($password, $password_db) !== $password_db) {
+        if (!hash_equals($password_db, $oCrypt->encode($password, $password_db))) {
             $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return [
                 'ok' => false,
@@ -237,7 +238,8 @@ final class AppMobileLogin
 
         $session_auth = [
             'id_usuario' => $id_usuario,
-            'MiUsuario' => $MiUsuario,
+            // Sin hash de contraseña ni secreto 2FA: no deben quedar en el almacén de sesiones.
+            'MiUsuario' => SesionAlEntrar::usuarioSinCredenciales($MiUsuario),
             'sfsv' => $sfsv,
             'id_role' => $id_role,
             'role_pau' => $role_pau,
@@ -252,7 +254,9 @@ final class AppMobileLogin
             'ordenApellidos' => $ordenApellidos,
             'mi_id_schema' => $id_schema,
         ];
-        // La sesión solo se toca al entrar: un rechazo no deja nada en la del visitante.
+        // La sesión solo se toca al entrar: un rechazo no deja nada en la del visitante. Y se empieza de
+        // cero: si la cookie traía la sesión de otro usuario, no se heredan sus permisos en caché.
+        SesionAlEntrar::iniciarLimpia();
         $_SESSION['sfsv'] = $ubicacion;
         $_SESSION['private'] = $private;
         $_SESSION['session_auth'] = $session_auth;

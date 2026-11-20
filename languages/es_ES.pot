@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 10:00+0100\n"
+"POT-Creation-Date: 2026-11-20 11:22+0100\n"
 "PO-Revision-Date: 2018-06-08 09:00+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -567,7 +567,7 @@ msgstr ""
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/usuario_perm_activ_data.php:9
-#: src/shared/infrastructure/ui/http/AccesoRolPau.php:94
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:99
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:21
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:23
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:27
@@ -2976,7 +2976,7 @@ msgstr ""
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:63
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:64
 msgid "Hay un error, no se ha guardado"
 msgstr ""
 
@@ -9458,6 +9458,14 @@ msgstr ""
 msgid "Entorno de pruebas"
 msgstr ""
 
+#: frontend/shared/controller/exportar.php:36
+msgid "Tipo de exportación no admitido"
+msgstr ""
+
+#: frontend/shared/controller/exportar.php:40
+msgid "No se ha podido generar el fichero"
+msgstr ""
+
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:34
 #: src/shared/domain/value_objects/DateTimeLocal.php:214
@@ -10356,7 +10364,7 @@ msgstr ""
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:35
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:140
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:36
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:49
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:56
 #: src/zonassacd/application/ZonaSacdUpdate.php:51
 #: src/zonassacd/application/ZonaSacdUpdate.php:62
 #: src/zonassacd/application/ZonaSacdUpdate.php:76
@@ -11074,7 +11082,7 @@ msgid "Sesión no autenticada"
 msgstr ""
 
 #: frontend/usuarios/controller/login.php:91
-#: src/usuarios/application/AppMobileLogin.php:43
+#: src/usuarios/application/AppMobileLogin.php:44
 #, php-format
 msgid "No existe este equema: %s"
 msgstr ""
@@ -11332,7 +11340,7 @@ msgid "Código de verificación 2FA inválido"
 msgstr ""
 
 #: frontend/usuarios/view/login_form.phtml:370
-#: src/usuarios/application/AppMobileLogin.php:117
+#: src/usuarios/application/AppMobileLogin.php:118
 msgid "Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."
 msgstr ""
 
@@ -11506,7 +11514,7 @@ msgid "Inicie sesión con su contraseña y configure un doble factor nuevo en su
 msgstr ""
 
 #: frontend/usuarios/view/recovery.phtml:71
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:136
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:138
 msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
 msgstr ""
 
@@ -11531,8 +11539,8 @@ msgid "Correo enviado"
 msgstr ""
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:66
-#, php-format
-msgid "Se ha enviado a %s."
+#: frontend/usuarios/view/recuperar_password.phtml:67
+msgid "Si el usuario existe y tiene un correo asociado, se le ha enviado un mensaje. Si no lo recibe en unos minutos, póngase en contacto con el administrador."
 msgstr ""
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:67
@@ -11555,7 +11563,7 @@ msgstr ""
 
 #: frontend/usuarios/view/recuperar_password.phtml:4
 #: frontend/usuarios/view/recuperar_password.phtml:51
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:85
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:88
 msgid "Recuperación de contraseña"
 msgstr ""
 
@@ -11566,11 +11574,6 @@ msgstr ""
 
 #: frontend/usuarios/view/recuperar_password.phtml:56
 msgid "Su contraseña actual no cambia hasta que use el enlace."
-msgstr ""
-
-#: frontend/usuarios/view/recuperar_password.phtml:67
-#, php-format
-msgid "Se ha enviado un enlace para elegir una contraseña nueva a %s."
 msgstr ""
 
 #: frontend/usuarios/view/recuperar_password.phtml:68
@@ -11659,7 +11662,7 @@ msgid "role"
 msgstr ""
 
 #: frontend/usuarios/view/usuario_form.phtml:59
-#: frontend/usuarios/view/usuario_form_pwd.phtml:112
+#: frontend/usuarios/view/usuario_form_pwd.phtml:113
 msgid "password"
 msgstr ""
 
@@ -11797,43 +11800,47 @@ msgstr ""
 msgid "deberías cambiar el password"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:113
+#: frontend/usuarios/view/usuario_form_pwd.phtml:112
+msgid "contraseña actual"
+msgstr ""
+
+#: frontend/usuarios/view/usuario_form_pwd.phtml:114
 msgid "confirma password"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:116
+#: frontend/usuarios/view/usuario_form_pwd.phtml:117
 msgid "deberá volver a entrar"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:120
+#: frontend/usuarios/view/usuario_form_pwd.phtml:121
 msgid "Requerimientos del password"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:122
+#: frontend/usuarios/view/usuario_form_pwd.phtml:123
 msgid "Los passwords no pueden contener el valor del \"login\" o de cualquiera de las palabras del \"nombre\". (no tiene en cuenta mayúsculas/minúsculas)"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:125
+#: frontend/usuarios/view/usuario_form_pwd.phtml:126
 msgid "El password ha de tener más de 8 caracteres"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:126
+#: frontend/usuarios/view/usuario_form_pwd.phtml:127
 msgid "El password ha de tener como mínimo 3 de los sigientes grupos de caracteres"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:128
+#: frontend/usuarios/view/usuario_form_pwd.phtml:129
 msgid "Mayúsculas ('A' a 'Z')"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:129
+#: frontend/usuarios/view/usuario_form_pwd.phtml:130
 msgid "Minúsculas ('a' a 'z')"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:130
+#: frontend/usuarios/view/usuario_form_pwd.phtml:131
 msgid "Números ('0' a '9')"
 msgstr ""
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:131
+#: frontend/usuarios/view/usuario_form_pwd.phtml:132
 msgid "Caracteres especiales válidos (no pueden ser comillas dobles):"
 msgstr ""
 
@@ -18586,6 +18593,10 @@ msgstr ""
 msgid "Conexión DBView no válida: %s"
 msgstr ""
 
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:86
+msgid "Debe cambiar la contraseña antes de continuar."
+msgstr ""
+
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:55
 msgid "El tamaño total de la petición supera el límite configurado en el servidor (post_max_size)."
 msgstr ""
@@ -18767,12 +18778,10 @@ msgid "No se han seleccionado ubis."
 msgstr ""
 
 #: src/ubis/application/TrasladarUbis.php:35
-#: src/usuarios/application/AppMobileLogin.php:78
-#: src/usuarios/application/AppMobileLogin.php:93
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
+#: src/usuarios/application/AppMobileLogin.php:79
+#: src/usuarios/application/AppMobileLogin.php:94
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:41
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:39
 msgid "Esquema no válido"
 msgstr ""
 
@@ -19219,36 +19228,36 @@ msgstr ""
 msgid "Error al eliminar la habitación"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:57
+#: src/usuarios/application/AppMobileLogin.php:58
 msgid "Usuario y contraseña obligatorios"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:67
+#: src/usuarios/application/AppMobileLogin.php:68
 msgid "Esquema no indicado"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:101
-#: src/usuarios/application/AppMobileLogin.php:127
+#: src/usuarios/application/AppMobileLogin.php:102
+#: src/usuarios/application/AppMobileLogin.php:128
 msgid "Usuario o contraseña incorrectos"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:150
+#: src/usuarios/application/AppMobileLogin.php:151
 msgid "Debe completar la configuración 2FA"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:160
+#: src/usuarios/application/AppMobileLogin.php:161
 msgid "Código 2FA requerido"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:170
+#: src/usuarios/application/AppMobileLogin.php:171
 msgid "Código 2FA inválido"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:187
+#: src/usuarios/application/AppMobileLogin.php:188
 msgid "Error de servidor"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:191
+#: src/usuarios/application/AppMobileLogin.php:192
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:28
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:43
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:54
@@ -19257,7 +19266,7 @@ msgstr ""
 msgid "Rol no encontrado"
 msgstr ""
 
-#: src/usuarios/application/AppMobileLogin.php:201
+#: src/usuarios/application/AppMobileLogin.php:202
 msgid "Acceso no permitido"
 msgstr ""
 
@@ -19299,7 +19308,7 @@ msgstr ""
 msgid "Debe incluir como mínimo una letra mayúscula, un número y un caracter especial"
 msgstr ""
 
-#: src/usuarios/domain/PasswordHasher.php:152
+#: src/usuarios/domain/PasswordHasher.php:154
 msgid "Bien, pero poco fuerte: quizá demasiado corto o un palíndromo"
 msgstr ""
 
@@ -19319,18 +19328,7 @@ msgstr ""
 msgid "nombre de idioma"
 msgstr ""
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:77
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:154
-msgid "No se encontró ningún usuario con ese nombre"
-msgstr ""
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:80
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:82
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
-msgid "No hay email asociado a este usuario"
-msgstr ""
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:86
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19344,16 +19342,11 @@ msgid ""
 "El equipo de administración"
 msgstr ""
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:149
-msgid "Error al enviar el correo electrónico"
-msgstr ""
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:118
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:120
 msgid "Las dos contraseñas no coinciden"
 msgstr ""
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:128
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:130
 msgid "Error al actualizar la contraseña"
 msgstr ""
 
@@ -19407,7 +19400,7 @@ msgstr ""
 msgid "Permiso de menú no encontrado"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:133
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:49
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -19418,18 +19411,7 @@ msgid ""
 "El equipo de administración"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:139
-#, php-format
-msgid ""
-"Hola %s,\n"
-"\n"
-"Has solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n"
-"\n"
-"Saludos,\n"
-"El equipo de administración"
-msgstr ""
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:144
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:50
 msgid "Recuperación de código de seguridad"
 msgstr ""
 
@@ -19462,11 +19444,15 @@ msgstr ""
 msgid "Código de verificación o clave secreta no válidos"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:65
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:63
 msgid "Debe ingresar un nombre de usuario válido"
 msgstr ""
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:94
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:70
+msgid "No hay email asociado a este usuario"
+msgstr ""
+
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:92
 msgid "El administrador de esta circunscripción no tiene email asociado"
 msgstr ""
 
@@ -19476,6 +19462,10 @@ msgstr ""
 
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:96
 msgid "Ese nombre de usuario ya está en uso, elija otro"
+msgstr ""
+
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:41
+msgid "La contraseña actual no es correcta"
 msgstr ""
 
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:46

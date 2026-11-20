@@ -370,7 +370,9 @@ class AppMobileLoginIntegracionTest extends myTest
         $this->assertArrayNotHasKey('password', $_SESSION['session_auth']);
         $this->assertArrayNotHasKey('password', $_SESSION['config']);
         $this->assertStringNotContainsString(self::CLAVE, serialize([$_SESSION['session_auth'], $_SESSION['config']]));
-        $this->assertSame($this->hashGuardado(), $_SESSION['session_auth']['MiUsuario']->getPasswordAsString());
+        // Tampoco el hash: el usuario de la sesión va sin credenciales.
+        $this->assertNull($_SESSION['session_auth']['MiUsuario']->getPasswordAsString());
+        $this->assertStringNotContainsString($this->hashGuardado(), serialize($_SESSION['session_auth']));
     }
 
     public function test_rol_con_pau_se_copia_a_la_sesion(): void

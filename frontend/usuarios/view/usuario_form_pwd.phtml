@@ -109,6 +109,7 @@
 <br>
 <form id="frm_usuario" name="frm_usuario" action="" method="post" onsubmit="fnjs_guardar(event,this);">
     <?= $oHash->getCamposHtml() ?>
+    <?= ucfirst(_("contraseña actual")) ?>:<input type="password" id="password_actual" name="password_actual" autocomplete="current-password" required><br>
     <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password"><br>
     <?= ucfirst(_("confirma password")) ?>:<input type="password" id="password1" name="password1"><br>
     <br>

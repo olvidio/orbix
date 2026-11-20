@@ -34,6 +34,13 @@ $usuario = $oUsuario->getUsuarioVo();
 
 if (!empty($Qpassword)) {
     $oCrypt = new PasswordHasher();
+    // Cambiarla exige saber la actual: una sesión abierta (o robada) no basta.
+    $Qpassword_actual = (string) FilterPostGet::post('password_actual');
+    $hashActual = (string) $oUsuario->getPasswordAsString();
+    if ($Qpassword_actual === '' || $hashActual === '' || !hash_equals($hashActual, $oCrypt->encode($Qpassword_actual, $hashActual))) {
+        ContestarJson::enviar(_("La contraseña actual no es correcta"), 'none');
+        return;
+    }
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
 
     if ($jsondata['success'] === false) {
@@ -48,6 +55,8 @@ if (!empty($Qpassword)) {
     if ($UsuarioRepository->Guardar($oUsuario) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();
+    } else {
+        \src\usuarios\application\support\SesionAlEntrar::cambioDePasswordHecho();
     }
 }
 

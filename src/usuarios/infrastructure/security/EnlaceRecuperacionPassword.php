@@ -92,8 +92,12 @@ final class EnlaceRecuperacionPassword
             return $env;
         }
 
-        // Respaldo de desarrollo (como SignedDownloadToken): no sustituye a un secreto explícito.
-        return hash('sha256', self::PREFIJO . '|' . dirname(__DIR__, 4), true);
+        // Sin secreto no hay enlaces válidos: una clave al azar que no sale de esta petición, de modo que
+        // lo que se emita no se puede abrir después ni nadie lo puede fabricar. (Antes se derivaba de la
+        // ruta del proyecto, que es deducible.)
+        error_log('EnlaceRecuperacionPassword: falta ' . self::ENV_SECRET . '; los enlaces de restablecer no funcionarán');
+
+        return random_bytes(32);
     }
 
     private static function b64(string $raw): string

@@ -22,20 +22,18 @@ if (empty($esquema)) {
     return;
 }
 $oDB_Select = null;
-if (substr($esquema, -1) === 'v') {
-    $sfsv = 1;
-    $oConfigDB = new ConfigDB('sv-e_select');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB_Select = $oConexion->getPDO();
-
-}
-if (substr($esquema, -1) === 'f') {
-    $sfsv = 2;
-    $oConfigDB = new ConfigDB('sf-e');
-    $config = $oConfigDB->getEsquema($esquema);
-    $oConexion = new DBConnection($config);
-    $oDB_Select = $oConexion->getPDO();
+// Un esquema que no está en la configuración es un esquema no válido, no un error del servidor.
+try {
+    if (substr($esquema, -1) === 'v') {
+        $sfsv = 1;
+        $oDB_Select = (new DBConnection((new ConfigDB('sv-e_select'))->getEsquema($esquema)))->getPDO();
+    }
+    if (substr($esquema, -1) === 'f') {
+        $sfsv = 2;
+        $oDB_Select = (new DBConnection((new ConfigDB('sf-e'))->getEsquema($esquema)))->getPDO();
+    }
+} catch (\Throwable) {
+    $oDB_Select = null;
 }
 if (!($oDB_Select instanceof \PDO)) {
     ContestarJson::enviar(_("Esquema no válido"), 'none');

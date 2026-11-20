@@ -6,7 +6,6 @@ namespace src\usuarios\infrastructure\security;
 
 use Closure;
 use PDO;
-use src\shared\domain\helpers\OfuscarEmail;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\usuarios\domain\PasswordHasher;
@@ -68,28 +67,31 @@ final class RecuperacionPassword
      */
     public function solicitar(string $username, string $esquema): array
     {
-        $pdo = ($this->pdoParaEsquema)($esquema);
+        // La respuesta es siempre la misma: una petición anónima no puede saber por ella si el usuario
+        // existe, si tiene correo ni cuál es. Lo que falle queda en el registro.
+        $generica = $this->resultado('', true);
+        try {
+            $pdo = ($this->pdoParaEsquema)($esquema);
+        } catch (\Throwable) {
+            return $generica;
+        }
         if (!$pdo instanceof PDO) {
-            return $this->resultado(_("Esquema no válido"));
+            return $generica;
         }
         $fila = $this->fila($pdo, 'usuario = :v', $username);
-        if ($fila === null) {
-            return $this->resultado(_("No se encontró ningún usuario con ese nombre"));
-        }
-        if ($fila['email'] === '') {
-            return $this->resultado(_("No hay email asociado a este usuario"));
+        if ($fila === null || $fila['email'] === '') {
+            return $generica;
         }
 
         $tk = EnlaceRecuperacionPassword::emitir($fila['id_usuario'], $esquema, $fila['password']);
         $enlace = $this->urlBase . 'frontend/usuarios/controller/restablecer_password.php?' . http_build_query(['tk' => $tk]);
         $asunto = _("Recuperación de contraseña");
         $mensaje = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu contraseña. Para elegir una nueva, abre este enlace (caduca en 30 minutos):\n%s\n\nSi no lo has pedido tú, ignora este correo: tu contraseña no ha cambiado.\n\nSaludos,\nEl equipo de administración"), $fila['usuario'], $enlace);
-        $emailOfuscado = OfuscarEmail::ofuscarEmailParcial($fila['email'], 3, 2);
         if (!($this->encolarMail)($fila['email'], $asunto, $mensaje)) {
-            return $this->resultado(_("Error al enviar el correo electrónico"), false, $emailOfuscado);
+            error_log('RecuperacionPassword: no se ha podido encolar el correo del usuario ' . $fila['id_usuario']);
         }
 
-        return $this->resultado('', true, $emailOfuscado);
+        return $generica;
     }
 
     /**

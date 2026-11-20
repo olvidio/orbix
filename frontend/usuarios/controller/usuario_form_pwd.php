@@ -34,7 +34,7 @@ $dataCtx = $id_usuario > 0
 $ctx_guardar = \frontend\shared\helpers\PayloadCoercion::string($dataCtx['ctx_guardar'] ?? '');
 
 $oHash = new HashF();
-$oHash->setCamposForm('password!password1');
+$oHash->setCamposForm('password_actual!password!password1');
 $oHash->setArraycamposHidden(['id_usuario' => $id_usuario, 'ctx_guardar' => $ctx_guardar]);
 
 $url_usuario_guardar = AppUrlConfig::srcBrowserUrl('/src/usuarios/usuario_guardar_pwd');

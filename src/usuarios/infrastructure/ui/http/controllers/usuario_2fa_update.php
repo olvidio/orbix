@@ -55,7 +55,8 @@ if ($Qenable_2fa) {
 } else {
     // Desactivar 2FA
     $oUsuario->setHas_2fa(false);
-    // Mantener la clave secreta para una posible reactivación
+    // El secreto no se conserva: al reactivar se genera uno nuevo.
+    $oUsuario->setSecret2faVo(null);
 }
 
 // Guardar los cambios

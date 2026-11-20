@@ -65,20 +65,34 @@ final class RecuperacionPasswordTest extends TestCase
     {
         $r = $this->svc()->solicitar('pepe', self::ESQUEMA);
 
-        $this->assertSame(['success' => true, 'error_txt' => '', 'email' => 'pep********@ex*****.org'], $r);
+        $this->assertSame(['success' => true, 'error_txt' => '', 'email' => ''], $r);
         $this->assertSame('pepe.garcia@example.org', $this->correos[0][0]);
         $this->assertStringNotContainsString('Antigua', $this->correos[0][2]);
         $this->assertSame($this->hashInicial, $this->password(7), 'la contraseña actual sigue valiendo');
         $this->assertNotNull(EnlaceRecuperacionPassword::abrir($this->enlaceDelCorreo()));
     }
 
-    public function test_errores_al_pedirlo_sin_enviar_correo(): void
+    public function test_la_respuesta_no_dice_si_el_usuario_existe_ni_cual_es_su_correo(): void
     {
         $svc = $this->svc();
-        $this->assertSame(['success' => false, 'error_txt' => 'Esquema no válido', 'email' => ''], $svc->solicitar('pepe', 'H-otra'));
-        $this->assertSame('No se encontró ningún usuario con ese nombre', $svc->solicitar('nadie', self::ESQUEMA)['error_txt']);
-        $this->assertSame('No hay email asociado a este usuario', $svc->solicitar('sinmail', self::ESQUEMA)['error_txt']);
+        $generica = ['success' => true, 'error_txt' => '', 'email' => ''];
+
+        $this->assertSame($generica, $svc->solicitar('nadie', self::ESQUEMA));
+        $this->assertSame($generica, $svc->solicitar('sinmail', self::ESQUEMA));
+        $this->assertSame($generica, $svc->solicitar('pepe', 'H-otra'));
         $this->assertSame([], $this->correos);
+
+        $this->assertSame($generica, $svc->solicitar('pepe', self::ESQUEMA));
+        $this->assertCount(1, $this->correos);
+    }
+
+    public function test_la_recuperacion_de_2fa_nunca_envia_el_secreto_ni_distingue_usuarios(): void
+    {
+        $codigo = (string) file_get_contents(__DIR__ . '/../../../../src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php');
+
+        $this->assertStringNotContainsString('Tu código de seguridad', $codigo);
+        $this->assertStringNotContainsString('No se encontró ningún usuario', $codigo);
+        $this->assertStringNotContainsString('ofuscarEmail', $codigo);
     }
 
     public function test_con_el_enlace_se_elige_la_contrasena_nueva_y_el_enlace_ya_no_vale(): void

@@ -86,6 +86,31 @@ final class UsuariosControllersRespuestaTest extends myTest
         $this->assertNotSame('', $json['mensaje']);
     }
 
+    public function test_cambiar_la_contrasena_exige_la_actual(): void
+    {
+        /** @var \src\usuarios\domain\contracts\UsuarioRepositoryInterface $repo */
+        $repo = $GLOBALS['container']->get(\src\usuarios\domain\contracts\UsuarioRepositoryInterface::class);
+        $antes = $repo->findById($this->idUsuario())?->getPasswordAsString();
+        $ctx = HashB::sign('usuario_guardar_pwd', ['id_usuario' => $this->idUsuario()]);
+
+        try {
+            foreach ([[], ['password_actual' => 'no-es-esta']] as $extra) {
+                $json = $this->ejecutar('usuario_guardar_pwd.php', ['ctx_guardar' => $ctx, 'password' => 'Zx9!kq#Lm2vT-nueva'] + $extra);
+
+                $this->assertFalse($json['success']);
+                $this->assertSame('La contraseña actual no es correcta', $json['mensaje']);
+            }
+            $this->assertSame($antes, $repo->findById($this->idUsuario())?->getPasswordAsString(), 'la contraseña no ha cambiado');
+        } finally {
+            // Si el control fallara, la contraseña del usuario de la BD de pruebas habría cambiado: se repone.
+            $u = $repo->findById($this->idUsuario());
+            if ($u !== null && is_string($antes) && $u->getPasswordAsString() !== $antes) {
+                $u->setPasswordVo(new \src\usuarios\domain\value_objects\Password($antes));
+                $repo->Guardar($u);
+            }
+        }
+    }
+
     public function test_activar_2fa_sin_codigo_o_con_codigo_invalido(): void
     {
         $ctx = HashB::sign('usuario_2fa_update', ['id_usuario' => $this->idUsuario()]);

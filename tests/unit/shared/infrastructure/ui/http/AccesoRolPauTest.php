@@ -165,4 +165,27 @@ final class AccesoRolPauTest extends TestCase
         $this->assertStringContainsString('AccesoRolPau::fijarRutaDespachada($src)', $proxy);
         $this->assertStringContainsString('AccesoRolPau::comprobarPeticionActual()', $proxy);
     }
+
+    public function test_con_el_cambio_de_contrasena_pendiente_solo_se_puede_cambiarla(): void
+    {
+        foreach ([
+            'index.php', '', 'orbix',
+            'frontend/usuarios/controller/usuario_form_pwd.php',
+            'src/usuarios/usuario_guardar_pwd',
+            'src/usuarios/usuario_guardar_pwd_form_data',
+            'src/usuarios/usuario_check_pwd',
+            'src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php',
+        ] as $ruta) {
+            $this->assertTrue(AccesoRolPau::permitidaConCambioDePasswordPendiente($ruta), $ruta);
+        }
+        foreach ([
+            'frontend/usuarios/controller/usuario_lista.php',
+            'src/usuarios/usuario_2fa_info',
+            'src/usuarios/usuario_guardar',
+            'src/personas/personas_select_datos',
+            'src/usuarios/usuario_guardar_pwd/../usuario_guardar',
+        ] as $ruta) {
+            $this->assertFalse(AccesoRolPau::permitidaConCambioDePasswordPendiente($ruta), $ruta);
+        }
+    }
 }

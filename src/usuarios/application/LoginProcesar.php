@@ -2,6 +2,7 @@
 
 namespace src\usuarios\application;
 
+use src\usuarios\application\support\SesionAlEntrar;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
@@ -83,7 +84,7 @@ final class LoginProcesar
         }
 
         $oCrypt = new PasswordHasher();
-        if ($oCrypt->encode($password, $encontrado['password_db']) !== $encontrado['password_db']) {
+        if (!hash_equals($encontrado['password_db'], $oCrypt->encode($password, $encontrado['password_db']))) {
             $this->anotarFallo($esquema, $sfsv, $idUsuario);
             return ['ok' => false, 'error' => 1];
         }
@@ -293,7 +294,8 @@ final class LoginProcesar
 
         $session_auth = [
             'id_usuario' => $id_usuario,
-            'MiUsuario' => $MiUsuario,
+            // Sin hash de contraseña ni secreto 2FA: no deben quedar en el almacén de sesiones.
+            'MiUsuario' => SesionAlEntrar::usuarioSinCredenciales($MiUsuario),
             'sfsv' => $sfsv,
             'id_role' => $id_role,
             'role_pau' => $role_pau,

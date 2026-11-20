@@ -4,7 +4,7 @@ use frontend\usuarios\helpers\UsuariosPayload;
 use frontend\shared\helpers\PayloadCoercion;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\web\UrlBaseProject;
+use frontend\shared\config\AppUrlConfig;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
@@ -17,8 +17,9 @@ if (empty($Qusername)) {
     exit (_("Debe ingresar un nombre de usuario"));
 }
 
-$url_base = UrlBaseProject::getUrlBase();
-$url_backend = $url_base . 'src/usuarios/usuario_ayuda_info';
+// La base sale de la configuración, no de la cabecera Host de la petición.
+$url_base = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/';
+$url_backend = '/src/usuarios/usuario_ayuda_info';
 
 $a_cosas = ['url_base' => $url_base, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMailPasswd = 'frontend/usuarios/controller/recuperar_password.php?' . http_build_query($a_cosas);

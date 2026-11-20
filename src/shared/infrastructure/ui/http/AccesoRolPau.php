@@ -79,6 +79,12 @@ final class AccesoRolPau
             return;
         }
         $auth = $_SESSION['session_auth'] ?? null;
+        // Contraseña provisional o caducada: hasta que la cambie, el usuario solo puede cambiarla.
+        if (is_array($auth) && ($auth['expire'] ?? '') === 1
+            && !self::permitidaConCambioDePasswordPendiente(self::rutaEfectiva(self::ruta($uri)))
+        ) {
+            self::responderNoAutorizada($uri, _("Debe cambiar la contraseña antes de continuar."));
+        }
         $pau = is_array($auth) && is_string($auth['role_pau'] ?? null) ? $auth['role_pau'] : '';
         if ($pau === '') {
             return;
@@ -90,8 +96,12 @@ final class AccesoRolPau
         if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::exigir(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
             return;
         }
+        self::responderNoAutorizada($uri, _("Operación no autorizada"));
+    }
+
+    private static function responderNoAutorizada(string $uri, string $mensaje): never
+    {
         http_response_code(403);
-        $mensaje = _("Operación no autorizada");
         if (str_starts_with(self::rutaEfectiva(self::ruta($uri)), 'src/')) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'mensaje' => $mensaje, 'data' => 'none'], JSON_UNESCAPED_UNICODE);
@@ -99,6 +109,26 @@ final class AccesoRolPau
             echo htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8');
         }
         exit;
+    }
+
+    /**
+     * Rutas que puede pedir un usuario con el cambio de contraseña pendiente (`session_auth.expire`): la
+     * portada, que le pinta el formulario, y lo que ese formulario usa.
+     */
+    public static function permitidaConCambioDePasswordPendiente(string $ruta): bool
+    {
+        // Lo que no es una pantalla ni un endpoint es la portada (`index.php`, o el directorio de la instalación).
+        if (!str_starts_with($ruta, 'frontend/') && !str_starts_with($ruta, 'src/')) {
+            return true;
+        }
+        $corta = preg_replace('~^src/([^/]+)/infrastructure/ui/http/controllers/([^/]+)\.php$~', 'src/$1/$2', $ruta);
+
+        return in_array(is_string($corta) ? $corta : $ruta, [
+            'frontend/usuarios/controller/usuario_form_pwd.php',
+            'src/usuarios/usuario_guardar_pwd',
+            'src/usuarios/usuario_guardar_pwd_form_data',
+            'src/usuarios/usuario_check_pwd',
+        ], true);
     }
 
     /**

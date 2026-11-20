@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 10:00+0100\n"
+"POT-Creation-Date: 2026-11-20 11:22+0100\n"
 "PO-Revision-Date: 2026-07-10 18:08+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -565,7 +565,7 @@ msgstr "activitat"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/usuario_perm_activ_data.php:9
-#: src/shared/infrastructure/ui/http/AccesoRolPau.php:94
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:99
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:21
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:23
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:27
@@ -3067,7 +3067,7 @@ msgstr "ha d'indicar on s'ha d'avisar"
 #: src/cambios/application/legacy/Avisos.php:173
 #: src/cambios/application/legacy/Avisos.php:209
 #: src/casas/application/IngresoPlazasPrevistasUpdate.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:63
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:64
 msgid "Hay un error, no se ha guardado"
 msgstr "Hi ha un error, no s'ha guardat"
 
@@ -9833,6 +9833,14 @@ msgstr "Consultar la documentació"
 msgid "Entorno de pruebas"
 msgstr "Entorn de proves"
 
+#: frontend/shared/controller/exportar.php:36
+msgid "Tipo de exportación no admitido"
+msgstr "Tipus d'exportació no admes"
+
+#: frontend/shared/controller/exportar.php:40
+msgid "No se ha podido generar el fichero"
+msgstr "No s'ha pogut generar el fitxer"
+
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:209
 #: src/encargossacd/domain/EncargoConstants.php:34
 #: src/shared/domain/value_objects/DateTimeLocal.php:214
@@ -10830,7 +10838,7 @@ msgstr "i"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:35
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:140
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:36
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:49
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:56
 #: src/zonassacd/application/ZonaSacdUpdate.php:51
 #: src/zonassacd/application/ZonaSacdUpdate.php:62
 #: src/zonassacd/application/ZonaSacdUpdate.php:76
@@ -11554,7 +11562,7 @@ msgid "Sesión no autenticada"
 msgstr "Sessió no autenticada"
 
 #: frontend/usuarios/controller/login.php:91
-#: src/usuarios/application/AppMobileLogin.php:43
+#: src/usuarios/application/AppMobileLogin.php:44
 #, php-format
 msgid "No existe este equema: %s"
 msgstr "No existeix aquest esquema: %s"
@@ -11864,7 +11872,7 @@ msgid "Código de verificación 2FA inválido"
 msgstr "Codi de verificació 2FA invàlid"
 
 #: frontend/usuarios/view/login_form.phtml:370
-#: src/usuarios/application/AppMobileLogin.php:117
+#: src/usuarios/application/AppMobileLogin.php:118
 msgid ""
 "Demasiados intentos fallidos. Vuelva a intentarlo dentro de unos minutos."
 msgstr "Massa intents fallits. Torneu-ho a provar d'aquí a uns minuts."
@@ -12048,7 +12056,7 @@ msgstr ""
 "les vostres preferències."
 
 #: frontend/usuarios/view/recovery.phtml:71
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:136
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:138
 msgid "El enlace ha caducado o es inválido. Por favor, solicita uno nuevo"
 msgstr "L'enllaç ha caducat o és invàlid. Si us plau, sol·licita'n un de nou"
 
@@ -12077,9 +12085,14 @@ msgid "Correo enviado"
 msgstr "Correu enviat"
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:66
-#, php-format
-msgid "Se ha enviado a %s."
-msgstr "S'ha enviat a %s."
+#: frontend/usuarios/view/recuperar_password.phtml:67
+msgid ""
+"Si el usuario existe y tiene un correo asociado, se le ha enviado un "
+"mensaje. Si no lo recibe en unos minutos, póngase en contacto con el "
+"administrador."
+msgstr ""
+"Si l'usuari existeix i té un correu associat, se li ha enviat un missatge. "
+"Si no el rep en uns minuts, poseu-vos en contacte amb l'administrador."
 
 #: frontend/usuarios/view/recuperar_2fa.phtml:67
 msgid "Por favor, revise su bandeja de entrada y siga las instrucciones."
@@ -12105,7 +12118,7 @@ msgstr "Tornar a l'inici"
 
 #: frontend/usuarios/view/recuperar_password.phtml:4
 #: frontend/usuarios/view/recuperar_password.phtml:51
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:85
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:88
 msgid "Recuperación de contraseña"
 msgstr "Recuperació de contrasenya"
 
@@ -12122,11 +12135,6 @@ msgstr ""
 msgid "Su contraseña actual no cambia hasta que use el enlace."
 msgstr ""
 "La vostra contrasenya actual no canvia fins que no feu servir l'enllaç."
-
-#: frontend/usuarios/view/recuperar_password.phtml:67
-#, php-format
-msgid "Se ha enviado un enlace para elegir una contraseña nueva a %s."
-msgstr "S'ha enviat un enllaç per triar una contrasenya nova a %s."
 
 #: frontend/usuarios/view/recuperar_password.phtml:68
 msgid "El enlace caduca en 30 minutos y solo se puede usar una vez."
@@ -12224,7 +12232,7 @@ msgid "role"
 msgstr "role"
 
 #: frontend/usuarios/view/usuario_form.phtml:59
-#: frontend/usuarios/view/usuario_form_pwd.phtml:112
+#: frontend/usuarios/view/usuario_form_pwd.phtml:113
 msgid "password"
 msgstr "password"
 
@@ -12405,19 +12413,23 @@ msgstr "contrasenya desada"
 msgid "deberías cambiar el password"
 msgstr "hauries de canviar la contrasenya"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:113
+#: frontend/usuarios/view/usuario_form_pwd.phtml:112
+msgid "contraseña actual"
+msgstr "contrasenya actual"
+
+#: frontend/usuarios/view/usuario_form_pwd.phtml:114
 msgid "confirma password"
 msgstr "confirma password"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:116
+#: frontend/usuarios/view/usuario_form_pwd.phtml:117
 msgid "deberá volver a entrar"
 msgstr "hauràs de tornar a entrar"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:120
+#: frontend/usuarios/view/usuario_form_pwd.phtml:121
 msgid "Requerimientos del password"
 msgstr "Requisits de contrasenya"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:122
+#: frontend/usuarios/view/usuario_form_pwd.phtml:123
 msgid ""
 "Los passwords no pueden contener el valor del \"login\" o de cualquiera de "
 "las palabras del \"nombre\". (no tiene en cuenta mayúsculas/minúsculas)"
@@ -12425,28 +12437,28 @@ msgstr ""
 "Les contrasenyes no poden contenir el valor del login ni cap de les paraules "
 "del nom. (no distingeix entre majúscules i minúscules)"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:125
+#: frontend/usuarios/view/usuario_form_pwd.phtml:126
 msgid "El password ha de tener más de 8 caracteres"
 msgstr "La contrasenya ha de tenir més de 8 caràcters"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:126
+#: frontend/usuarios/view/usuario_form_pwd.phtml:127
 msgid ""
 "El password ha de tener como mínimo 3 de los sigientes grupos de caracteres"
 msgstr "La contrasenya ha de tenir almenys 3 dels grups de caràcters següents"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:128
+#: frontend/usuarios/view/usuario_form_pwd.phtml:129
 msgid "Mayúsculas ('A' a 'Z')"
 msgstr "Majúscules ('A' a 'Z')"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:129
+#: frontend/usuarios/view/usuario_form_pwd.phtml:130
 msgid "Minúsculas ('a' a 'z')"
 msgstr "Minúscules ('a' a 'z')"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:130
+#: frontend/usuarios/view/usuario_form_pwd.phtml:131
 msgid "Números ('0' a '9')"
 msgstr "Números ('0' a '9')"
 
-#: frontend/usuarios/view/usuario_form_pwd.phtml:131
+#: frontend/usuarios/view/usuario_form_pwd.phtml:132
 msgid "Caracteres especiales válidos (no pueden ser comillas dobles):"
 msgstr "Caràcters especials vàlids (no poden ser cometes dobles):"
 
@@ -19699,6 +19711,10 @@ msgstr "no s'ha guardat la teleco del ctr"
 msgid "Conexión DBView no válida: %s"
 msgstr "Connexió DBView no vàlida: %s"
 
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:86
+msgid "Debe cambiar la contraseña antes de continuar."
+msgstr "Heu de canviar la contrasenya abans de continuar."
+
 #: src/shared/infrastructure/ui/http/MultipartUploadGuard.php:55
 msgid ""
 "El tamaño total de la petición supera el límite configurado en el servidor "
@@ -19889,12 +19905,10 @@ msgid "No se han seleccionado ubis."
 msgstr "No s'han seleccionat ubis."
 
 #: src/ubis/application/TrasladarUbis.php:35
-#: src/usuarios/application/AppMobileLogin.php:78
-#: src/usuarios/application/AppMobileLogin.php:93
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:73
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:39
+#: src/usuarios/application/AppMobileLogin.php:79
+#: src/usuarios/application/AppMobileLogin.php:94
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:41
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:39
 msgid "Esquema no válido"
 msgstr "Esquema no vàlid"
 
@@ -20401,36 +20415,36 @@ msgstr "hi ha un error, no s'ha eliminat l'habitació"
 msgid "Error al eliminar la habitación"
 msgstr "Error en eliminar l'habitació"
 
-#: src/usuarios/application/AppMobileLogin.php:57
+#: src/usuarios/application/AppMobileLogin.php:58
 msgid "Usuario y contraseña obligatorios"
 msgstr "Usuari i contrasenya obligatoris"
 
-#: src/usuarios/application/AppMobileLogin.php:67
+#: src/usuarios/application/AppMobileLogin.php:68
 msgid "Esquema no indicado"
 msgstr "Esquema no indicat"
 
-#: src/usuarios/application/AppMobileLogin.php:101
-#: src/usuarios/application/AppMobileLogin.php:127
+#: src/usuarios/application/AppMobileLogin.php:102
+#: src/usuarios/application/AppMobileLogin.php:128
 msgid "Usuario o contraseña incorrectos"
 msgstr "Usuari o contrasenya incorrectes"
 
-#: src/usuarios/application/AppMobileLogin.php:150
+#: src/usuarios/application/AppMobileLogin.php:151
 msgid "Debe completar la configuración 2FA"
 msgstr "Ha de completar la configuració de 2FA"
 
-#: src/usuarios/application/AppMobileLogin.php:160
+#: src/usuarios/application/AppMobileLogin.php:161
 msgid "Código 2FA requerido"
 msgstr "Codi 2FA requerit"
 
-#: src/usuarios/application/AppMobileLogin.php:170
+#: src/usuarios/application/AppMobileLogin.php:171
 msgid "Código 2FA inválido"
 msgstr "Codi de verificació (2FA) invàlid"
 
-#: src/usuarios/application/AppMobileLogin.php:187
+#: src/usuarios/application/AppMobileLogin.php:188
 msgid "Error de servidor"
 msgstr "Error de servidor"
 
-#: src/usuarios/application/AppMobileLogin.php:191
+#: src/usuarios/application/AppMobileLogin.php:192
 #: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:28
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:43
 #: src/usuarios/infrastructure/ui/http/controllers/role_info.php:54
@@ -20439,7 +20453,7 @@ msgstr "Error de servidor"
 msgid "Rol no encontrado"
 msgstr "Rol no trobat"
 
-#: src/usuarios/application/AppMobileLogin.php:201
+#: src/usuarios/application/AppMobileLogin.php:202
 msgid "Acceso no permitido"
 msgstr "Accés no permès"
 
@@ -20486,7 +20500,7 @@ msgstr ""
 "Ha d'incloure com a mínim una lletra majúscula, un número i un caràcter "
 "especial"
 
-#: src/usuarios/domain/PasswordHasher.php:152
+#: src/usuarios/domain/PasswordHasher.php:154
 msgid "Bien, pero poco fuerte: quizá demasiado corto o un palíndromo"
 msgstr "Bé, però poc fort: potser massa curt o un palíndrom"
 
@@ -20506,18 +20520,7 @@ msgstr "sigla d'idioma"
 msgid "nombre de idioma"
 msgstr "nom de l'idioma"
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:77
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:154
-msgid "No se encontró ningún usuario con ese nombre"
-msgstr "No s'ha trobat cap usuari amb aquest nom"
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:80
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:82
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:72
-msgid "No hay email asociado a este usuario"
-msgstr "No hi ha cap correu electrònic associat amb aquest usuari"
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:86
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -20543,16 +20546,11 @@ msgstr ""
 "Salutacions,\n"
 "L'equip d'administració"
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:89
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:149
-msgid "Error al enviar el correo electrónico"
-msgstr "Error en enviar el correu electrònic"
-
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:118
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:120
 msgid "Las dos contraseñas no coinciden"
 msgstr "Les dues contrasenyes no coincideixen"
 
-#: src/usuarios/infrastructure/security/RecuperacionPassword.php:128
+#: src/usuarios/infrastructure/security/RecuperacionPassword.php:130
 msgid "Error al actualizar la contraseña"
 msgstr "S'ha produït un error en actualitzar la contrasenya"
 
@@ -20610,7 +20608,7 @@ msgstr "permís on"
 msgid "Permiso de menú no encontrado"
 msgstr "Permís de menú no trobat"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:133
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:49
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -20629,26 +20627,7 @@ msgstr ""
 "Salutacions,\n"
 "L'equip d'administració"
 
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:139
-#, php-format
-msgid ""
-"Hola %s,\n"
-"\n"
-"Has solicitado recuperar tu sistema autentificación de 2 factores. Tu código "
-"de seguridad para la aplicación es: %s\n"
-"\n"
-"Saludos,\n"
-"El equipo de administración"
-msgstr ""
-"Hola %s,\n"
-"\n"
-"Has sol·licitat recuperar el teu sistema d'autenticació de 2 factors. El teu "
-"codi de seguretat per a l'aplicació és: %s\n"
-"\n"
-"Salutacions,\n"
-"L'equip d'administració"
-
-#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:144
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:50
 msgid "Recuperación de código de seguridad"
 msgstr "Recuperació del codi de seguretat"
 
@@ -20681,11 +20660,15 @@ msgstr "Codi de verificació invàlid"
 msgid "Código de verificación o clave secreta no válidos"
 msgstr "Codi de verificació o clau secreta no vàlids"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:65
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:63
 msgid "Debe ingresar un nombre de usuario válido"
 msgstr "Heu d'introduir un nom d'usuari vàlid"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:94
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:70
+msgid "No hay email asociado a este usuario"
+msgstr "No hi ha cap correu electrònic associat amb aquest usuari"
+
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:92
 msgid "El administrador de esta circunscripción no tiene email asociado"
 msgstr ""
 "L'administrador d'aquesta circumscripció no té correu electrònic associat"
@@ -20697,6 +20680,10 @@ msgstr "acció"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:96
 msgid "Ese nombre de usuario ya está en uso, elija otro"
 msgstr "Aquest nom d'usuari ja està en ús, esculli'n un altre"
+
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:41
+msgid "La contraseña actual no es correcta"
+msgstr "La contrasenya actual no és correcta"
 
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:46
 msgid "personal"
@@ -21425,6 +21412,38 @@ msgstr "permís off (sense marcar)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permís on (marcat)"
+
+#, php-format
+#~ msgid "Se ha enviado a %s."
+#~ msgstr "S'ha enviat a %s."
+
+#, php-format
+#~ msgid "Se ha enviado un enlace para elegir una contraseña nueva a %s."
+#~ msgstr "S'ha enviat un enllaç per triar una contrasenya nova a %s."
+
+#~ msgid "No se encontró ningún usuario con ese nombre"
+#~ msgstr "No s'ha trobat cap usuari amb aquest nom"
+
+#~ msgid "Error al enviar el correo electrónico"
+#~ msgstr "Error en enviar el correu electrònic"
+
+#, php-format
+#~ msgid ""
+#~ "Hola %s,\n"
+#~ "\n"
+#~ "Has solicitado recuperar tu sistema autentificación de 2 factores. Tu "
+#~ "código de seguridad para la aplicación es: %s\n"
+#~ "\n"
+#~ "Saludos,\n"
+#~ "El equipo de administración"
+#~ msgstr ""
+#~ "Hola %s,\n"
+#~ "\n"
+#~ "Has sol·licitat recuperar el teu sistema d'autenticació de 2 factors. El "
+#~ "teu codi de seguretat per a l'aplicació és: %s\n"
+#~ "\n"
+#~ "Salutacions,\n"
+#~ "L'equip d'administració"
 
 #~ msgid "página con seguridad desactivada"
 #~ msgstr "pàgina amb seguretat desactivada"

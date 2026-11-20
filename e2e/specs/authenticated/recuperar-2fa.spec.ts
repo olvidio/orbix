@@ -37,7 +37,9 @@ test('recuperar el 2FA: el enlace lo desactiva pero no abre sesión', async ({ b
   await expect(p.locator('.message.success')).toBeVisible();
   const pagina = await p.content();
   expect(pagina).not.toContain(EMAIL);
-  expect(pagina).toContain('@ex*****.invalid');
+  // La respuesta es la misma exista o no el usuario, y no enseña el correo ni enmascarado.
+  expect(pagina).not.toContain('.invalid');
+  expect(pagina).toContain('Si el usuario existe');
 
   const enlace = /(\S*recovery\.php\?\S+)/.exec(correos('message'))?.[1] ?? '';
   expect(enlace).not.toBe('');

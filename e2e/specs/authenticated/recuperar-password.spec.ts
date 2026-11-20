@@ -43,7 +43,9 @@ test('recuperar la contraseña con el enlace del correo', async ({ browser, base
   await expect(p.locator('.message.success')).toBeVisible();
   const pagina = await p.content();
   expect(pagina).not.toContain(EMAIL);
-  expect(pagina).toContain('@ex*****.invalid');
+  // La respuesta es la misma exista o no el usuario, y no enseña el correo ni enmascarado.
+  expect(pagina).not.toContain('.invalid');
+  expect(pagina).toContain('Si el usuario existe');
   expect(usuario('password'), 'la contraseña actual sigue valiendo').toBe(hashInicial);
 
   // 3. El enlace del correo.

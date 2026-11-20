@@ -370,7 +370,9 @@ class LoginProcesarIntegracionTest extends myTest
         $this->assertArrayNotHasKey('password', $r['session_auth']);
         $this->assertArrayNotHasKey('password', $r['session_config']);
         $this->assertStringNotContainsString(self::CLAVE, serialize([$r['session_auth'], $r['session_config']]));
-        $this->assertSame($this->hashGuardado(), $r['session_auth']['MiUsuario']->getPasswordAsString());
+        // Tampoco el hash: el usuario de la sesión va sin credenciales.
+        $this->assertNull($r['session_auth']['MiUsuario']->getPasswordAsString());
+        $this->assertStringNotContainsString($this->hashGuardado(), serialize($r['session_auth']));
     }
 
     // ------------------------------------------------------------------ login con ticket (procesos CLI)
