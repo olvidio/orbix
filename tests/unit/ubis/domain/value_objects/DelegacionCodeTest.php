@@ -34,7 +34,14 @@ class DelegacionCodeTest extends myTest
 
     public static function siglasConCaracteresDeSql(): array
     {
-        return [["d'l"], ['d"l'], ['dl;'], ['d\\l'], ['dl b'], ['dl/*']];
+        return [["d'l"], ['d"l'], ['dl;'], ['d\\l']];
+    }
+
+    public function test_admite_las_siglas_que_ya_hay_en_los_datos()
+    {
+        foreach (['dlm(M)', '?', 'crs+', 'dlmE'] as $sigla) {
+            $this->assertSame($sigla, (new DelegacionCode($sigla))->value());
+        }
     }
 
     public function test_equals_returns_true_for_same_delegacionCode()
