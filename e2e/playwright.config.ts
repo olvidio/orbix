@@ -7,6 +7,8 @@ import { getPlaywrightBaseUrl } from './get-playwright-base-url';
 
 /** Variables locales (no commitear `e2e/.env`). Lo ya exportado en shell o CI tiene prioridad. */
 dotenv.config({ path: path.resolve(__dirname, '.env'), override: false });
+// El `.env` de la raíz trae `ORBIX_E2E_FIRMADOR`, el secreto del firmador de URL de la suite.
+dotenv.config({ path: path.resolve(__dirname, '../.env'), override: false });
 
 const baseURL = getPlaywrightBaseUrl();
 

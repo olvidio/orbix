@@ -14,15 +14,17 @@ use src\shared\infrastructure\persistence\postgresql\DBRol;
  */
 final class CrearUsuarios
 {
+    public const LARGO_PASSWORD = 24;
+
     public function ejecutar(string $region, string $dl, bool $sessionEsSf): CrearUsuariosResult
     {
         SiglasEsquema::validarSiglas($region, $dl);
         $esquema = "$region-$dl";
-        $esquema_pwd = self::generarPassword(11);
+        $esquema_pwd = self::generarPassword(self::LARGO_PASSWORD);
         $esquemav = $esquema . 'v';
-        $esquemav_pwd = self::generarPassword(11);
+        $esquemav_pwd = self::generarPassword(self::LARGO_PASSWORD);
         $esquemaf = $esquema . 'f';
-        $esquemaf_pwd = self::generarPassword(11);
+        $esquemaf_pwd = self::generarPassword(self::LARGO_PASSWORD);
 
         $oConfigDB = new ConfigDB('importar');
         $config = $oConfigDB->getEsquema('public');
@@ -121,8 +123,7 @@ final class CrearUsuarios
         $limite = strlen($cadena_base) - 1;
 
         for ($i = 0; $i < $largo; $i++) {
-            $password .= $cadena_base[rand(0, $limite)];
-            $cadena_base = str_shuffle($cadena_base);
+            $password .= $cadena_base[random_int(0, $limite)];
         }
 
         return $password;

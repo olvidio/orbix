@@ -6,8 +6,9 @@ declare(strict_types=1);
  * Firma una URL de pantalla para la suite E2E, que abre pantallas por su cuenta (`abrirPantalla()`,
  * entradas de menú leídas de la BD) y no puede calcular la firma `h`: la clave solo la tiene el servidor.
  *
- * Solo existe en la instancia de pruebas (`WEBDIR=pruebas`, parámetro del servidor web); en cualquier
- * otra responde 404. Firma como el menú ({@see \frontend\shared\security\HashF::add_hash()}), para la
+ * Solo existe en la instancia de pruebas (`WEBDIR=pruebas`, parámetro del servidor web) que tiene definido
+ * el secreto `ORBIX_E2E_FIRMADOR`, y para quien lo presenta en la cabecera `X-Orbix-E2E`; en cualquier
+ * otro caso responde 404. Firma como el menú ({@see \frontend\shared\security\HashF::add_hash()}), para la
  * sesión de quien lo pide.
  *
  * POST `ruta` (path de un controlador de `frontend/`, p. ej. `/orbix/frontend/x/controller/y.php`) y
@@ -16,13 +17,15 @@ declare(strict_types=1);
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\FrontBootstrap;
+use frontend\shared\security\FirmadorE2e;
 use frontend\shared\security\HashF;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
 FrontBootstrap::boot();
 
-if (!OrbixRuntime::webdirIsPruebas()) {
+$presentado = $_SERVER[FirmadorE2e::CABECERA] ?? '';
+if (!FirmadorE2e::permitido(OrbixRuntime::webdirIsPruebas(), FirmadorE2e::secreto(), is_string($presentado) ? $presentado : '')) {
     http_response_code(404);
     exit;
 }

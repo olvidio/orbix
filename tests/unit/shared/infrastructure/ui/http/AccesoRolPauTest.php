@@ -188,4 +188,29 @@ final class AccesoRolPauTest extends TestCase
             $this->assertFalse(AccesoRolPau::permitidaConCambioDePasswordPendiente($ruta), $ruta);
         }
     }
+
+    public function test_por_defecto_se_corta_y_solo_con_aviso_se_deja_pasar(): void
+    {
+        $previo = $_ENV['ORBIX_ACCESO_PAU'] ?? null;
+        try {
+            unset($_ENV['ORBIX_ACCESO_PAU']);
+            putenv('ORBIX_ACCESO_PAU');
+            $this->assertTrue(AccesoRolPau::seCorta(), 'sin la variable');
+            $_ENV['ORBIX_ACCESO_PAU'] = 'exijir';
+            $this->assertTrue(AccesoRolPau::seCorta(), 'con un valor mal escrito');
+            $_ENV['ORBIX_ACCESO_PAU'] = 'aviso';
+            $this->assertFalse(AccesoRolPau::seCorta());
+        } finally {
+            if ($previo === null) {
+                unset($_ENV['ORBIX_ACCESO_PAU']);
+            } else {
+                $_ENV['ORBIX_ACCESO_PAU'] = $previo;
+            }
+        }
+    }
+
+    public function test_el_firmador_de_la_suite_e2e_lo_puede_pedir_un_pau(): void
+    {
+        $this->assertTrue(AccesoRolPau::permite('cdc', 'frontend/shared/controller/e2e_firmar.php'));
+    }
 }

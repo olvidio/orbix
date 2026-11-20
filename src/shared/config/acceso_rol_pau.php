@@ -25,6 +25,8 @@ return [
         'frontend/shared/controller/manual.php',
         'frontend/shared/controller/nav_atras.php',
         'frontend/shared/controller/nav_state.php',
+        // Firmador de la suite E2E: fuera de su instancia de pruebas responde 404
+        'frontend/shared/controller/e2e_firmar.php',
         // Preferencias, contraseña, correo y 2FA del propio usuario
         'frontend/usuarios/controller/preferencias.php',
         'frontend/usuarios/controller/usuario_form_2fa.php',

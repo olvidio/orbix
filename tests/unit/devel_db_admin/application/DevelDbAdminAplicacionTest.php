@@ -270,6 +270,15 @@ final class DevelDbAdminAplicacionTest extends myTest
         $this->assertDoesNotMatchRegularExpression("/['\"\\\\\\s;]/", $a, 'sin comillas, barra invertida, espacios ni punto y coma');
     }
 
+    public function test_las_contrasenas_de_los_roles_son_largas_y_salen_de_un_generador_seguro(): void
+    {
+        $codigo = (string) file_get_contents((string) (new \ReflectionClass(CrearUsuarios::class))->getFileName());
+
+        $this->assertDoesNotMatchRegularExpression('/\b(rand|mt_rand|str_shuffle)\(/', $codigo);
+        $this->assertSame(3, preg_match_all('/generarPassword\(self::LARGO_PASSWORD\)/', $codigo));
+        $this->assertGreaterThanOrEqual(24, CrearUsuarios::LARGO_PASSWORD);
+    }
+
     // ---- apptables ----------------------------------------------------------------------
 
     /**

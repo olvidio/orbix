@@ -125,3 +125,5 @@ __pycache__/
 
 # Lock del script tools/qa/ejecutar_plan_ia.php
 docs/dev/reports/.ejecutar_plan_ia.lock
+/.vscode
+/.output.txt

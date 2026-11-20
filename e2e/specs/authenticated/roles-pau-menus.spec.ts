@@ -13,8 +13,8 @@ import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, parametrosFirma
  * limpio, se inicia sesión con él y se abren todas las entradas de todos sus grupos de menú:
  * - ninguna acaba en un error del servidor;
  * - ninguna petición queda fuera de la lista (`log/acceso_pau_denegado.log` no gana líneas de ese pau);
- * - una pantalla de oficina pedida directamente sí queda fuera (se apunta; sin `ORBIX_ACCESO_PAU=exigir`
- *   no se corta, por eso el spec mira el registro y no la respuesta);
+ * - una pantalla de oficina pedida directamente sí queda fuera (se apunta y se rechaza con 403; con
+ *   `ORBIX_ACCESO_PAU=aviso` en el servidor solo se apunta: lanzar entonces con `E2E_ACCESO_PAU_AVISO=1`);
  * - la casa: pedir en una de sus pantallas todas las casas sv (`cdc_sel=4`) también queda fuera (el id
  *   tiene que ser de sus casas; el registro añade el nombre del parámetro).
  *
@@ -180,8 +180,8 @@ for (const rol of ROLES) {
     // Una pantalla de oficina pedida directamente queda fuera.
     const oficina = await p.request.post(OFICINA, { form: { PHPSESSID: '1' }, failOnStatusCode: false });
     expect(denegadas(rol.pau, desde), 'se apunta la pantalla de oficina').toContain(`POST ${OFICINA}`);
-    if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
-      // Con `ORBIX_ACCESO_PAU=exigir` en el servidor, además se corta.
+    if (process.env.E2E_ACCESO_PAU_AVISO !== '1') {
+      // Además se corta, salvo que el servidor esté con `ORBIX_ACCESO_PAU=aviso` (`E2E_ACCESO_PAU_AVISO=1`).
       expect(oficina.status(), 'la pantalla de oficina se niega').toBe(403);
     }
     if (rol.pau === 'cdc') {
@@ -191,7 +191,7 @@ for (const rol of ROLES) {
         failOnStatusCode: false,
       });
       expect(denegadas(rol.pau, desde), 'se apunta pedir todas las casas').toContain(`POST ${CASAS_RESUMEN} cdc_sel`);
-      if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
+      if (process.env.E2E_ACCESO_PAU_AVISO !== '1') {
         expect(todas.status(), 'todas las casas se niegan').toBe(403);
       }
     }

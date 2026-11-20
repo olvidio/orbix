@@ -93,7 +93,7 @@ final class AccesoRolPau
         $parametros = $_POST !== [] ? $_POST : $_GET;
         $dirLog = dirname(__DIR__, 5) . '/log';
         self::registrar($dirLog, $pau, $metodo, $uri, $parametros);
-        if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::exigir(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
+        if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::seCorta(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
             return;
         }
         self::responderNoAutorizada($uri, _("Operación no autorizada"));
@@ -263,10 +263,13 @@ final class AccesoRolPau
         return false;
     }
 
-    /** `ORBIX_ACCESO_PAU=exigir` en `.env` (o en el entorno). */
-    private static function exigir(): bool
+    /**
+     * Lo que queda fuera de la lista se corta, salvo con `ORBIX_ACCESO_PAU=aviso` en `.env` (o en el
+     * entorno), que solo lo apunta: sirve para completar la lista en una instalación antes de exigirla.
+     */
+    public static function seCorta(): bool
     {
-        return ($_ENV['ORBIX_ACCESO_PAU'] ?? getenv('ORBIX_ACCESO_PAU')) === 'exigir';
+        return ($_ENV['ORBIX_ACCESO_PAU'] ?? getenv('ORBIX_ACCESO_PAU')) !== 'aviso';
     }
 
     /** Por el proxy AJAX cuenta el endpoint al que se llama. */

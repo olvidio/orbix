@@ -44,7 +44,7 @@ $ctype = 'application/octet-stream';
 
 header('Content-Description: File Transfer');
 header('Content-Transfer-Encoding: binary');
-header('Cache-Control: public, must-revalidate, max-age=0');
+header('Cache-Control: private, must-revalidate, max-age=0');
 header('Pragma: public');
 header('Expires: 0');
 header('Cache-Control: private', false);

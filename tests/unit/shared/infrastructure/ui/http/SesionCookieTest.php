@@ -78,4 +78,18 @@ class SesionCookieTest extends myTest
         $this->assertContains('X-Frame-Options: SAMEORIGIN', $cabeceras);
         $this->assertContains("Content-Security-Policy: frame-ancestors 'self'", $cabeceras);
     }
+
+    public function test_las_respuestas_no_se_reinterpretan_ni_filtran_la_url(): void
+    {
+        $cabeceras = SesionCookie::cabecerasDeSeguridad();
+
+        $this->assertContains('X-Content-Type-Options: nosniff', $cabeceras);
+        $this->assertContains('Referrer-Policy: same-origin', $cabeceras);
+        $this->assertSame([], preg_grep('/^Strict-Transport-Security/', $cabeceras), 'por http no se anuncia HSTS');
+    }
+
+    public function test_por_https_se_anuncia_hsts(): void
+    {
+        $this->assertContains('Strict-Transport-Security: max-age=31536000', SesionCookie::cabecerasDeSeguridad(['HTTPS' => 'on']));
+    }
 }

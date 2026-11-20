@@ -45,7 +45,7 @@ class myTest extends TestCase
         $id_role = 1;
         $role_pau = 'u';
         $_POST['username'] = 'dani';
-        $_POST['password'] = 'massavolssaber';
+        $_POST['password'] = 'no-es-una-password';
         $esquema = 'H-dlbv';
         $perms_activ = '';
         $mi_oficina = '';

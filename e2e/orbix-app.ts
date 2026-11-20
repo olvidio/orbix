@@ -60,7 +60,8 @@ const pilaNueva = new WeakSet<Page>();
 /**
  * Parámetros firmados (`h`) para pedir una pantalla de `frontend/` con esos parámetros, como los firma el
  * menú. La firma solo la puede calcular el servidor: la da `frontend/shared/controller/e2e_firmar.php`,
- * que solo existe en la instancia de pruebas. Sin parámetros no hace falta firma.
+ * que solo existe en la instancia de pruebas y pide el secreto `ORBIX_E2E_FIRMADOR` del `.env` de la raíz
+ * (cabecera `X-Orbix-E2E`). Sin parámetros no hace falta firma.
  */
 export async function parametrosFirmados(page: Page, ruta: string, parametros: string): Promise<string> {
   if (parametros === '') {
@@ -69,7 +70,10 @@ export async function parametrosFirmados(page: Page, ruta: string, parametros: s
   const base = new URL('.', page.url());
   const res = await page.request.post(new URL('frontend/shared/controller/e2e_firmar.php', base).href, {
     form: { ruta: new URL(ruta, base).pathname, parametros },
+    headers: { 'X-Orbix-E2E': process.env.ORBIX_E2E_FIRMADOR ?? '' },
+    failOnStatusCode: false,
   });
+  expect(res.status(), 'el firmador E2E responde (¿falta ORBIX_E2E_FIRMADOR en el .env de la raíz?)').toBe(200);
   const { query } = (await res.json()) as { query: string };
   expect(query, `firma de ${ruta}?${parametros}`).not.toBe('');
   return query;

@@ -41,23 +41,33 @@ final class SesionCookie
         foreach (self::directivas($_SERVER) as $directiva => $valor) {
             ini_set($directiva, $valor);
         }
-        foreach (self::cabecerasDeSeguridad() as $cabecera) {
+        foreach (self::cabecerasDeSeguridad($_SERVER) as $cabecera) {
             header($cabecera);
         }
     }
 
     /**
      * Cabeceras que acompañan a toda respuesta de la aplicación: ninguna página se puede incrustar en
-     * un marco de otro sitio (clickjacking). Las de los ficheros estáticos las pone el servidor web.
+     * un marco de otro sitio (clickjacking), el navegador no adivina el tipo del contenido, la URL (con
+     * ids y firmas) no sale en el `Referer` hacia otros sitios y, por https, se le dice que no vuelva a
+     * http. Las de los ficheros estáticos las pone el servidor web.
      *
+     * @param array<string, mixed> $server
      * @return list<string>
      */
-    public static function cabecerasDeSeguridad(): array
+    public static function cabecerasDeSeguridad(array $server = []): array
     {
-        return [
+        $cabeceras = [
             'X-Frame-Options: SAMEORIGIN',
             "Content-Security-Policy: frame-ancestors 'self'",
+            'X-Content-Type-Options: nosniff',
+            'Referrer-Policy: same-origin',
         ];
+        if (self::esHttps($server)) {
+            $cabeceras[] = 'Strict-Transport-Security: max-age=31536000';
+        }
+
+        return $cabeceras;
     }
 
     /**
