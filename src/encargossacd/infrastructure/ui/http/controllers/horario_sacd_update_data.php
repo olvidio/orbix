@@ -11,7 +11,7 @@ try {
     if ($mod === 'eliminar') {
         $ctx = HashB::open(
             \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_eliminar'),
-            'horario_sacd_update_data'
+            'horario_sacd_eliminar'
         );
         $_POST['id_item'] = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_item');
     } else {

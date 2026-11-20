@@ -14,6 +14,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
     //$file = $line = null; headers_sent($file, $line); die("$file:$line");
 
+    \src\shared\infrastructure\ui\http\SesionCookie::configurar();
     if (!empty($_COOKIE["PHPSESSID"])) {
         session_id($_COOKIE['PHPSESSID']);
         session_start();
@@ -22,26 +23,6 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
             session_regenerate_id(true);
         }
     } else {
-        // Configure timeout to 30 minutes
-        $timeout = 1800;
-        $maxlifetime = time() + $timeout;
-
-        // Set the maxlifetime of session
-        ini_set("session.gc_maxlifetime", $timeout);
-
-        // Also set the session cookie timeout
-        ini_set("session.cookie_lifetime", $timeout);
-
-        //$domain = ConfigGlobal::getDomain();
-        // Now start the session
-        session_set_cookie_params([
-            'lifetime' => $timeout,
-            'path' => '/',
-            'secure' => false,
-            'httponly' => true,
-            'samesite' => 'Lax',
-            //'Domain' => $domain
-        ]);
         session_start();
     }
 }

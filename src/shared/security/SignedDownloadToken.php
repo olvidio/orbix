@@ -8,6 +8,7 @@ namespace src\shared\security;
  * Token HMAC (`tk`) con caducidad para descargas GET de binarios servidos desde `src/` (PDF de acta o certificado).
  * Lo emite el frontend al montar la URL ({@see \frontend\shared\helpers\SignedDownloadToken}) y lo valida
  * el controlador de descarga con {@see self::parse()}; la validación es idempotente (no consume el token).
+ * El token va ligado a la sesión que lo pidió: no sirve en otra.
  *
  * Producción: definir `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` (cadena suficientemente larga y aleatoria).
  */
@@ -43,17 +44,23 @@ final class SignedDownloadToken
         return $bin === false ? '' : $bin;
     }
 
+    /**
+     * Clave de firma: el secreto de la instalación mezclado con la clave aleatoria de la sesión
+     * ({@see HashB::claveDeSesion()}). Así el token solo vale en la sesión que lo pidió y no se puede
+     * fabricar aunque se conozca el secreto (o falte y se use el de reserva, que es deducible).
+     */
     private static function signingKey(): string
     {
         $fromEnv = $_ENV[self::ENV_SECRET] ?? getenv(self::ENV_SECRET);
         if (is_string($fromEnv) && $fromEnv !== '') {
-            return $fromEnv;
+            $base = $fromEnv;
+        } else {
+            /** @var non-falsy-string $root */
+            $root = dirname(__DIR__, 3);
+            $base = hash('sha256', self::SIGN_PREFIX . '|' . $root, true);
         }
 
-        /** @var non-falsy-string $root */
-        $root = dirname(__DIR__, 3);
-
-        return hash('sha256', self::SIGN_PREFIX . '|' . $root, true);
+        return hash_hmac('sha256', $base, HashB::claveDeSesion(), true);
     }
 
     /** @param array<string, int|string> $claims Debe incluir identificadores (p. ej. `a`, `id`) sin `s` ni `e`. */

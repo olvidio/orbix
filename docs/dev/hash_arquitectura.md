@@ -9,10 +9,23 @@ Referencia cruzada: `AGENTS.md` — *Hash al mover endpoints AJAX (`HashF::getCa
 La implementación de presentación actual es `HashF`:
 
 - Vive en `frontend/shared/security/HashF.php`, namespace `frontend\shared\security`.
-- Firma con `md5(strOrdenado + session_id() + "a+front+")`. El "secreto" es el `session_id` + una sal constante.
+- Firma con `hash_hmac('sha256', modo + strOrdenado + listas, clave de la sesión)`. La clave es la aleatoria de `HashB` (`$_SESSION['hashb_clave']`), que no sale del servidor; antes era `md5(str + session_id() + sal)`, que el propio usuario podía calcular.
+- Dentro de lo firmado van el **modo** (formulario, ocultos, url sin valores, url con valores, vuelta atrás) y las **listas** que acompañan a la firma (`hno`, `hchk`, `hhc`): el cliente no puede añadir campos nombrándolos en `hno`, ni sacar un oculto de `hhc`, ni presentar una firma de un modo como si fuera de otro. Las comparaciones usan `hash_equals`.
+- `getCamposHtml()` publica en `data-hc` del campo `h` la lista de campos firmados (no es secreta ni se envía): la lee la auditoría E2E de formularios (`e2e/form-hash-audit.ts`), que ya no puede recalcular la firma.
+- **La firma es obligatoria** (2026-11, AUT-11): una petición que trae datos y no trae `h` se rechaza con un 403 («Petición sin firma»). La regla está en `frontend/shared/security/HashFSinFirma.php`; sin firma solo se admite:
+  - la petición sin parámetros, o solo con los de la interfaz (`PHPSESSID`, `nav`, selección y scroll);
+  - la que solo trae cápsulas `ctx*`, o trae una cápsula `HashB` firmada para esta sesión junto a los campos de su formulario (la acción la autoriza la cápsula);
+  - la descarga con el token `tk`;
+  - la portada (`index.php`: entrar, salir, cambiar de grupo de menú) y el menú `udm4`;
+  - los endpoints `/src` que la app móvil llama directamente (`HashFSinFirma::RUTAS_CLIENTE_MOVIL`, la misma lista de `docs/catalogo/_endpoints_cliente_movil.md`; un test las compara).
+  `ORBIX_HASHF_SIN_FIRMA=aviso` en `.env` deja de cortar y solo apunta (en el log de errores de PHP y, con la bandera `log/hashf_registrar_sin_h`, en `log/hashf_sin_h.log`).
+- **Firma en la URL con los datos en el cuerpo** (`$url . $oHash->linkSinVal()` y un POST): se validan juntos (`HashF::datosDeLaPeticion()`). Antes el validador solo miraba el POST y esa firma no se comprobaba.
+- **Firma que no coincide:** 403 («Firma no válida»), sin tocar la sesión. Antes se destruía la sesión y se redirigía a la portada.
+- **Suite E2E:** los atajos que abren pantallas por su cuenta piden la firma a `frontend/shared/controller/e2e_firmar.php` (`parametrosFirmados()` / `urlFirmada()` en `e2e/orbix-app.ts`). Ese controlador solo existe en la instancia de pruebas (`WEBDIR=pruebas`); en otra responde 404.
+- Lo que la firma de un formulario **no** fija: la URL de destino (el `action` se cambia en JavaScript en muchas pantallas) ni la query string cuando el POST ya va firmado. La autorización no depende de la firma: va en las cápsulas `HashB` y en las guardas de permiso.
 - Se usa tanto para **emitir** tokens (métodos `getCamposHtml`, `linkSinVal`, `linkConVal`, `HashF::link`, `HashF::add_hash`, `HashF::cmdCon/SinParametros`, `getParamAjax*`) como para **validar** los que llegan (`validatePost`).
 - La validación se invoca en `frontend\shared\FrontBootstrap` y en `frontend/shared/bootstrap/after_global_object.inc`, incluido por el bootstrap que atiende `/src/...`.
-- Como `frontend/` y `src/` son el mismo monolito PHP con la misma cookie `PHPSESSID`, el mismo `session_id()` sirve de secreto a ambos lados. Es una **coincidencia del monolito**, no una decisión arquitectónica.
+- Como `frontend/` y `src/` son el mismo monolito PHP con la misma cookie `PHPSESSID`, la misma clave de sesión sirve de secreto a ambos lados. Es una **coincidencia del monolito**, no una decisión arquitectónica.
 
 Cuatro síntomas del problema conceptual:
 
@@ -247,7 +260,7 @@ Los usos de `HashF` en `frontend/` se clasifican en tres patrones durante la mig
 - **Sigue habiendo sesión PHP con `PHPSESSID`.** El esquema de auth del usuario (login, 2FA) no se toca.
 - **`AGENTS.md` sigue siendo la referencia** para el reparto de capas, naming (`*Data`, `*Service`, etc.), `ContestarJson::enviar`, y el resto de convenciones. Este documento solo fija *el modelo de seguridad de requests*.
 - **Los parámetros `h`, `hh`, `hno`, `hchk`, `hnov`, `horig`, `hpos`, `hhorig`** siguen existiendo mientras `HashF` conserve el protocolo actual. Son internos de `HashF`.
-- **No hay cambio criptográfico** en esta primera fase: ambos hash usan `md5(str + session_id() + sal)`. Lo único que cambia es la organización y el modelo de confianza.
+- **Cambio criptográfico (2026-11):** los dos hash son ya HMAC-SHA256 con la clave aleatoria de la sesión (`HashB` desde la revisión de seguridad AUT-02; `HashF` desde FIR-06).
 
 ## 9. Orden sugerido de migración (alto nivel)
 

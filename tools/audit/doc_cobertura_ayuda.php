@@ -33,10 +33,10 @@ $root = dirname(__DIR__, 2);
 $docs = $root . '/docs';
 
 // Módulos internos de desarrollo sin documentación de usuario.
-$EXCLUIR_MODULOS = ['devel_codegen'];
+$EXCLUIR_MODULOS = [];
 // Controllers de infraestructura (navegación, proxies) que no son pantallas de usuario.
 $EXCLUIR_CONTROLLERS = [
-    'shared/nav_atras', 'shared/nav_state', 'shared/src_ajax',
+    'shared/nav_atras', 'shared/nav_state', 'shared/src_ajax', 'shared/e2e_firmar',
 ];
 
 $args = array_slice($argv, 1);

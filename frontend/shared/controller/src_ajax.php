@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 use frontend\shared\FrontBootstrap;
 use frontend\shared\PostRequest;
+use src\shared\infrastructure\ui\http\AccesoRolPau;
 
 require_once 'frontend/shared/FrontBootstrap.php';
 
@@ -28,6 +29,12 @@ if ($src === null) {
     echo 'ruta src inválida';
     exit(1);
 }
+
+// La restricción por rol se comprueba sobre la ruta que se va a despachar, no sobre la URL del proxy.
+AccesoRolPau::fijarRutaDespachada($src);
+AccesoRolPau::comprobarPeticionActual();
+// La firma `h`: si la petición no la trae, tiene que ser de las que se admiten sin ella para esta ruta.
+\frontend\shared\security\HashF::exigirFirmaEnRuta($src);
 
 header('Content-Type: application/json; charset=UTF-8');
 $payload = PostRequest::requestPayloadForHash();

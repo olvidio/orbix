@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\integration\devel_codegen\infrastructure;
+namespace Tests\integration\tools\codegen;
 
 use InvalidArgumentException;
 use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
-use src\devel_codegen\infrastructure\persistence\TablaEstructuraPg;
 use src\shared\infrastructure\GlobalPdo;
 use Tests\myTest;
+use tools\codegen\TablaEstructuraPg;
+
+require_once dirname(__DIR__, 4) . '/tools/codegen/TablaEstructuraPg.php';
 
 /**
  * El lector de la estructura de una tabla da lo mismo que las consultas que hacía
- * `frontend/devel_codegen/controller/factory.php` (copiadas abajo tal cual, con `query()` y el
- * nombre de la tabla en el SQL) antes de pasar a `src/devel_codegen`.
+ * el generador de código (copiadas abajo tal cual, con `query()` y el nombre de la tabla en el SQL)
+ * cuando era una pantalla (`frontend/devel_codegen/controller/factory.php`).
  */
 final class TablaEstructuraPgTest extends myTest
 {

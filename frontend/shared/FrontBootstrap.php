@@ -85,11 +85,24 @@ final class FrontBootstrap
         self::$infrastructureReady = true;
     }
 
+    /**
+     * Al autenticarse: id de sesión nuevo y clave de firma nueva. Lo que hubiera antes de entrar (un id
+     * fijado por otro, cápsulas firmadas) deja de valer.
+     */
+    public static function renovarSesionAlEntrar(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+            session_regenerate_id(true);
+        }
+        \src\shared\security\HashB::renovarClave();
+    }
+
     private static function ensureSession(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             return;
         }
+        \src\shared\infrastructure\ui\http\SesionCookie::configurar();
 
         // Tras session_write_close() en el mismo request (p. ej. global_object /
         // after_global_object), session_id() sigue disponible: reabrir esa sesión
@@ -110,13 +123,6 @@ final class FrontBootstrap
         $sidFromRequest = '';
         if (!empty($_COOKIE[$sessionName]) && is_string($_COOKIE[$sessionName])) {
             $sidFromRequest = $_COOKIE[$sessionName];
-        } elseif (
-            !empty($_POST[$sessionName])
-            && is_string($_POST[$sessionName])
-            && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName])
-        ) {
-            // fnjs_link_submenu / fnjs_update_div envían PHPSESSID en el POST AJAX.
-            $sidFromRequest = $_POST[$sessionName];
         }
 
         if ($sidFromRequest !== '') {
@@ -130,18 +136,6 @@ final class FrontBootstrap
             return;
         }
 
-        $timeout = 1800;
-        $maxlifetime = time() + $timeout;
-
-        ini_set('session.gc_maxlifetime', (string) $timeout);
-        ini_set('session.cookie_lifetime', (string) $timeout);
-
-        session_set_cookie_params([
-            'lifetime' => $maxlifetime,
-            'Secure' => false,
-            'HttpOnly' => true,
-            'SameSite' => 'Strict',
-        ]);
         session_start();
     }
 
@@ -220,8 +214,6 @@ final class FrontBootstrap
 
     private static function validateRequestHash(): void
     {
-        $oValidator = new HashF();
-        $aData = $_POST !== [] ? $_POST : (isset($_GET['h']) ? $_GET : []);
-        $oValidator->validatePost($aData);
+        (new HashF())->validatePost(HashF::datosDeLaPeticion());
     }
 }

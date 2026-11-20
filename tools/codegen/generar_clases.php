@@ -1,36 +1,68 @@
+#!/usr/bin/env php
 <?php
 
-namespace frontend\devel_codegen\controller;
-
-use frontend\devel_codegen\helpers\DevelCodegenSupport;
-use frontend\shared\FrontBootstrap;
-use frontend\shared\config\OrbixRuntime;
-use frontend\shared\helpers\PayloadCoercion;
-use frontend\shared\PostRequest;
-use RuntimeException;
-use frontend\shared\helpers\FuncTablasSupport;
+declare(strict_types=1);
 
 /**
- * programa per generar les classes a partir de la taula
+ * Genera el esqueleto de un módulo a partir de una tabla: entidad, repositorio `Pg*`, interfaz,
+ * enum de `Criteria` y la línea de `config/dependencies.php`, bajo `src/<grupo>/`.
+ * Lo generado hay que revisarlo contra las reglas de AGENTS.md.
  *
+ * Solo línea de órdenes (escribe ficheros PHP en el repositorio: no es una pantalla de la aplicación):
+ *
+ *   php tools/codegen/generar_clases.php --db=comun --tabla=H-dlb.u_cdc_dl --clase=Casa \
+ *       [--clase-plural=Casas] [--grupo=ubis] [--aplicacion=orbix]
+ *
+ *   --db            base de datos de ConfigDB: comun, sv, sf, sv-e (tramity, davical)
+ *   --tabla         `tabla` o `esquema.tabla` (sin esquema: `public`)
+ *   --clase         nombre de la clase (por defecto, el de la tabla)
+ *   --clase-plural  plural de la clase (por defecto, clase + s/es)
+ *   --grupo         módulo de `src/` donde se escribe (por defecto, actividades)
+ *   --aplicacion    texto del comentario de cabecera (por defecto, delegación)
  */
-/**
- * Para asegurar que inicia la sesión, y poder acceder a los permisos
- */
-// INICIO Cabecera global de URL de controlador *********************************
-require_once 'frontend/shared/FrontBootstrap.php';
-FrontBootstrap::boot();
-// FIN de  Cabecera global de URL de controlador ********************************
 
-$Q_db = (string)filter_input(INPUT_POST, 'db');
-$Q_tabla = (string)filter_input(INPUT_POST, 'tabla');
-$Q_clase = (string)filter_input(INPUT_POST, 'clase');
-$Q_clase_plural = (string)filter_input(INPUT_POST, 'clase_plural');
-$Q_grupo = (string)filter_input(INPUT_POST, 'grupo');
-$Q_aplicacion = (string)filter_input(INPUT_POST, 'aplicacion');
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use tools\codegen\DevelCodegenSupport;
+use tools\codegen\TablaEstructuraPg;
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
+require dirname(__DIR__, 2) . '/src/shared/global_header.inc';
+require_once __DIR__ . '/DevelCodegenSupport.php';
+require_once __DIR__ . '/TablaEstructuraPg.php';
+
+/** Corta con un mensaje por la salida de errores. */
+$salir = static function (string $mensaje): never {
+    fwrite(STDERR, $mensaje . "\n");
+    exit(1);
+};
+
+$opciones = getopt('', ['db:', 'tabla:', 'clase:', 'clase-plural:', 'grupo:', 'aplicacion:', 'help']);
+if ($opciones === false || isset($opciones['help'])) {
+    fwrite(STDOUT, "Uso: php tools/codegen/generar_clases.php --db=comun --tabla=esquema.tabla --clase=Clase"
+        . " [--clase-plural=Clases] [--grupo=modulo] [--aplicacion=texto]\n");
+    exit(isset($opciones['help']) ? 0 : 2);
+}
+$opcion = static function (string $nombre) use ($opciones): string {
+    $valor = $opciones[$nombre] ?? '';
+
+    return is_string($valor) ? trim($valor) : '';
+};
+$Q_db = $opcion('db');
+$Q_tabla = $opcion('tabla');
+$Q_clase = $opcion('clase');
+$Q_clase_plural = $opcion('clase-plural');
+$Q_grupo = $opcion('grupo');
+$Q_aplicacion = $opcion('aplicacion');
+$dirRaiz = dirname(__DIR__, 2);
 
 if (empty($Q_tabla)) {
-    exit("Ha de dir quina taula");
+    $salir("Falta --tabla");
 }
 // si la tabla tiene el schema, hay que separalo:
 $schemaParts = DevelCodegenSupport::schemaTableParts($Q_tabla);
@@ -39,7 +71,7 @@ $tabla = $schemaParts['tabla'];
 $schema = $schemaParts['schema'];
 
 if ($Q_db === '') {
-    exit("Ha de dir quina base de dades");
+    $salir("Falta --db o no se conoce (comun, sv, sf, sv-e, tramity, davical)");
 }
 switch ($Q_db) {
         case "tramity":
@@ -103,7 +135,7 @@ switch ($Q_db) {
             }
             break;
         default:
-            exit("Ha de dir quina base de dades");
+            $salir("Falta --db o no se conoce (comun, sv, sf, sv-e, tramity, davical)");
 }
 
 
@@ -122,88 +154,31 @@ if (!empty($Q_clase_plural)) {
 $grupo = !empty($Q_grupo) ? $Q_grupo : "actividades";
 $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 
-// crear el directorio legacy si no existe
-$dir_legacy = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy';
-if (!is_dir($dir_legacy) && !mkdir($dir_legacy, 0777, true) && !is_dir($dir_legacy)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_legacy));
-}
-
-/* rename file of class to old if exists */
-$grupo = !empty($Q_grupo) ? $Q_grupo : "actividades";
-$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/' . $Q_clase . '.php';
-$filenameOld = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy/zz' . $Q_clase . 'Old.php';
-if (file_exists($filename)) {
-    rename($filename, $filenameOld);
-    /* rename class if exists */
-    $content = DevelCodegenSupport::fileContents($filenameOld);
-    if ($content === '') {
-        echo "Cannot read file ($filenameOld)";
-        die();
-    }
-    $pattern = '/^class\s+' . $Q_clase . '/im';
-    $replacement = 'class zzz' . $Q_clase . 'Old';
-    $new_content = DevelCodegenSupport::pregReplace($pattern, $replacement, $content);
-    // también el namespace:
-    $pattern2 = '/^namespace\s+(.*)/im';
-    $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = DevelCodegenSupport::pregReplace($pattern2, $replacement2, $new_content);
-
-    if (file_put_contents($filenameOld, $new_content2) === false) {
-        echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
-        die();
+// Con estos datos se montan rutas de ficheros y código PHP: solo se admiten identificadores.
+foreach (['clase' => $clase, 'clase_plural' => $clase_plural, 'grupo' => $grupo] as $campo => $valor) {
+    if (!DevelCodegenSupport::esIdentificador($valor)) {
+        $salir("El campo «{$campo}» solo admite letras, números y «_»");
     }
 }
-/* rename file of gestor to old if exists */
-$gestor = "Gestor" . ucfirst($Q_clase);
-$filename = OrbixRuntime::dir() . '/apps/' . $grupo . '/model/entity/Gestor' . $Q_clase . '.php';
-$filenameOld = OrbixRuntime::dir() . '/apps/' . $grupo . '/legacy/zzzGestor' . $Q_clase . 'Old.php';
-if (file_exists($filename)) {
-    rename($filename, $filenameOld);
-    /* rename class if exists */
-    $content = DevelCodegenSupport::fileContents($filenameOld);
-    if ($content === '') {
-        echo "Cannot read file ($filenameOld)";
-        die();
-    }
-    $pattern = '/^class\s+' . $gestor . '/im';
-    $replacement = 'class zzz' . $gestor . 'Old';
-    $new_content = DevelCodegenSupport::pregReplace($pattern, $replacement, $content);
-    // también el namespace:
-    $pattern2 = '/^namespace\s+(.*)/im';
-    $replacement2 = "namespace $grupo\\legacy;";
-    $new_content2 = DevelCodegenSupport::pregReplace($pattern2, $replacement2, $new_content);
-
-    if (file_put_contents($filenameOld, $new_content2) === false) {
-        echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
-        die();
-    }
+if (!DevelCodegenSupport::esTextoDeComentario($aplicacion)) {
+    $salir("El campo «aplicacion» solo admite letras, números, espacios y guiones");
 }
 
-// Estructura de la tabla (clave primaria y columnas con su valor por defecto): la lee src/devel_codegen.
-// PostRequest corta con el mensaje si la tabla no existe o no tiene clave primaria.
-$estructura = PostRequest::getDataFromUrl('/src/devel_codegen/tabla_estructura_datos', [
-    'db' => $Q_db,
-    'tabla' => $Q_tabla,
-]);
-$aClaus = array_values(array_map(
-    static fn (mixed $c): string => PayloadCoercion::string($c),
-    is_array($estructura['primary_key'] ?? null) ? $estructura['primary_key'] : []
-));
-/** @var list<array{attnum: int, field: string, type: string, length: int, lengthvar: int, notnull: bool, default: string}> $columnas */
-$columnas = [];
-foreach (is_array($estructura['columnas'] ?? null) ? $estructura['columnas'] : [] as $col) {
-    if (!is_array($col)) {
-        continue;
-    }
-    $columnas[] = [
-        'attnum' => PayloadCoercion::int($col['attnum'] ?? 0),
-        'field' => PayloadCoercion::string($col['field'] ?? ''),
-        'type' => PayloadCoercion::string($col['type'] ?? ''),
-        'length' => PayloadCoercion::int($col['length'] ?? 0),
-        'lengthvar' => PayloadCoercion::int($col['lengthvar'] ?? 0),
-        'notnull' => ($col['notnull'] ?? false) === true,
-        'default' => PayloadCoercion::string($col['default'] ?? ''),
-    ];
+// Estructura de la tabla (clave primaria y columnas con su valor por defecto), con la conexión de ConfigDB.
+try {
+    $estructura = (new TablaEstructuraPg(
+        static fn (string $db): PDO => (new DBConnection((new ConfigDB($db))->getEsquema($schema)))->getPDO()
+    ))->leer($Q_db, $Q_tabla);
+} catch (Throwable $e) {
+    $salir($e->getMessage());
+}
+$aClaus = $estructura['primary_key'];
+$columnas = $estructura['columnas'];
+if ($columnas === []) {
+    $salir("La tabla «{$Q_tabla}» no existe en «{$Q_db}» o no tiene columnas");
+}
+if ($aClaus === []) {
+    $salir("Quizá falta definir la clave primaria de «{$Q_tabla}»");
 }
 
 
@@ -268,11 +243,11 @@ foreach ($columnas as $row) {
         case 'date':
         case 'timestamp':
         case 'timestamptz':
-            $a_use_txt['DateTimeLocal'] = "use src\shared\domain\value_objects\DateTimeLocal";
+            $a_use_txt['DateTimeLocal'] = 'use src\shared\domain\value_objects\DateTimeLocal';
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'time':
-            $a_use_txt['TimeLocal'] = "use src\shared\domain\value_objects\TimeLocal";
+            $a_use_txt['TimeLocal'] = 'use src\shared\domain\value_objects\TimeLocal';
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'bool':
@@ -299,7 +274,7 @@ foreach ($columnas as $row) {
     if ($tipo !== 'bytea') {
         $a_campos_criteria[] = $nomcamp;
     }
-    $null =(\frontend\shared\helpers\FuncTablasSupport::isTrue($row['notnull'])) ? 'null' : '';
+    $null = $row['notnull'] ? 'null' : '';
     $tip = 's';
     $tipo_db = 'string';
     $tip_val = '';
@@ -693,7 +668,7 @@ foreach ($columnas as $row) {
     $valores .= ':' . $nomcamp;
     $c++;
 }
-$hoy = PayloadCoercion::string($estructura['hoy'] ?? '');
+$hoy = (new DateTimeLocal())->getFromLocal();
 
 //------------------------------------ CLASE ENTIDAD -----------------------------------------------
 $txt_entidad = "<?php
@@ -748,13 +723,13 @@ $txt_entidad .= "\n" . '}';
 // ESCRIBIR LA CLASE ---------  ENTIDAD
 
 // crear el directorio domain/entity si no existe
-$dir_entity = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/entity';
+$dir_entity = $dirRaiz . '/src/' . $grupo . '/domain/entity';
 if (!is_dir($dir_entity)) {
     if (!mkdir($dir_entity, 0777, TRUE) && !is_dir($dir_entity)) {
         throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_entity));
     }
 }
-$filename = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
+$filename = $dirRaiz . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
     die();
@@ -764,7 +739,7 @@ if (fwrite($handle, $txt_entidad) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote entitie to file ($filename)";
+echo "\nSuccess, wrote entitie to file ($filename)";
 fclose($handle);
 
 // ---------------------- REPOSITORIO ------------------------------------------------
@@ -886,7 +861,7 @@ interface $clase_interface
 
 $txt_pgRepositorio = "<?php
 
-namespace src\\$grupo\\infrastructure\\repositories;
+namespace src\\$grupo\\infrastructure\\persistence\\postgresql;
 
 use src\\shared\\infrastructure\\persistence\\ClaseRepository;
 use src\\shared\\infrastructure\\persistence\\postgresql\\Set;
@@ -1337,9 +1312,9 @@ $txt_pgRepositorio .= "\n}";
 
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = OrbixRuntime::dir() . '/src/' . $grupo . '/infrastructure/persistence/postgresql';
+$dir_infra = $dirRaiz . '/src/' . $grupo . '/infrastructure/persistence/postgresql';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
+    throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 $filename = $dir_infra . '/' . $pg_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
@@ -1351,19 +1326,19 @@ if (fwrite($handle, $txt_pgRepositorio) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote (somecontent) to file ($filename)";
+echo "\nSuccess, wrote (somecontent) to file ($filename)";
 fclose($handle);
 /* ESCRIURE EL DIRECTORI CONTROLLERS  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = OrbixRuntime::dir() . '/src/' . $grupo . '/infrastructure/ui/http/controllers';
+$dir_infra = $dirRaiz . '/src/' . $grupo . '/infrastructure/ui/http/controllers';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
+    throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
-$dir_contracts = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/contracts';
+$dir_contracts = $dirRaiz . '/src/' . $grupo . '/domain/contracts';
 if (!is_dir($dir_contracts) && !mkdir($dir_contracts, 0777, true) && !is_dir($dir_contracts)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_contracts));
+    throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_contracts));
 }
 $filename = $dir_contracts . '/' . $clase_interface . '.php';
 if (!$handle = fopen($filename, 'w')) {
@@ -1375,30 +1350,30 @@ if (fwrite($handle, $txt_interface) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote (somecontent) to file ($filename)";
+echo "\nSuccess, wrote (somecontent) to file ($filename)";
 fclose($handle);
 /* ESCRIURE L'ENUM DE CAMPS PER CRITERIA  --------------------------------- */
-$dir_criteria = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/criteria';
+$dir_criteria = $dirRaiz . '/src/' . $grupo . '/domain/criteria';
 if (!is_dir($dir_criteria) && !mkdir($dir_criteria, 0777, true) && !is_dir($dir_criteria)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_criteria));
+    throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_criteria));
 }
 $filename = $dir_criteria . '/' . $Q_clase . 'Field.php';
 if (file_put_contents($filename, DevelCodegenSupport::criteriaFieldEnumSource($grupo, $Q_clase, $a_campos_criteria)) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote enum to file ($filename)";
+echo "\nSuccess, wrote enum to file ($filename)";
 /* ESCRIURE VALUE OBJECTS  --------------------------------- */
-$dir_value = OrbixRuntime::dir() . '/src/' . $grupo . '/domain/value_objects';
+$dir_value = $dirRaiz . '/src/' . $grupo . '/domain/value_objects';
 if (!is_dir($dir_value) && !mkdir($dir_value, 0777, true) && !is_dir($dir_value)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_value));
+    throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_value));
 }
-echo "<br>Success, create directory ($dir_value)";
+echo "\nSuccess, create directory ($dir_value)";
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
-$dir_domain = OrbixRuntime::dir() . '/src/' . $grupo . '/domain';
+$dir_domain = $dirRaiz . '/src/' . $grupo . '/domain';
 if (!is_dir($dir_domain)) {
     if (!mkdir($dir_domain, 0777, true) && !is_dir($dir_domain)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_domain));
+        throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_domain));
     }
 }
 $filename = $dir_domain . '/example.php';
@@ -1411,14 +1386,14 @@ if (fwrite($handle, '<?php') === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote (somecontent) to file ($filename)";
+echo "\nSuccess, wrote (somecontent) to file ($filename)";
 fclose($handle);
 
 /* ESCRIURE LA CLASSE  REPOSITORY  --------------------------------- */
-$dir_repositories = OrbixRuntime::dir() . '/src/' . $grupo . '/application/repositories';
+$dir_repositories = $dirRaiz . '/src/' . $grupo . '/application/repositories';
 if (!is_dir($dir_repositories)) {
     if (!mkdir($dir_repositories, 0777, true) && !is_dir($dir_repositories)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
+        throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
     }
 }
 $filename = $dir_repositories . '/' . $clase_repository . '.php';
@@ -1432,16 +1407,16 @@ if (fwrite($handle, $txt_repository) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote (somecontent) to file ($filename)";
+echo "\nSuccess, wrote (somecontent) to file ($filename)";
 fclose($handle);
 */
 
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
 /*
-$dir_application = OrbixRuntime::dir() . '/src/' . $grupo . '/application';
+$dir_application = $dirRaiz . '/src/' . $grupo . '/application';
 if (!is_dir($dir_application)) {
     if (!mkdir($dir_application, 0777, true) && !is_dir($dir_application)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_application));
+        throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_application));
     }
 }
 $filename = $dir_application . '/example.php';
@@ -1454,16 +1429,16 @@ if (fwrite($handle, '<?php') === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote (somecontent) to file ($filename)";
+echo "\nSuccess, wrote (somecontent) to file ($filename)";
 fclose($handle);
 */
 
 /*AFEGIR DEPENDENCIA  --------------------------------- */
 
-$dir_config = OrbixRuntime::dir() . '/src/' . $grupo . '/config';
+$dir_config = $dirRaiz . '/src/' . $grupo . '/config';
 if (!is_dir($dir_config)) {
     if (!mkdir($dir_config, 0777, true) && !is_dir($dir_config)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_config));
+        throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_config));
     }
 }
 $filename = $dir_config . '/dependencies.php';
@@ -1471,7 +1446,7 @@ $filename = $dir_config . '/dependencies.php';
 // Definir los strings a insertar
 // Asumimos una estructura estándar src\entidad\...
 $useInterface = "use src\\$grupo\\domain\\contracts\\{$clase_interface};";
-$useImplementation = "use src\\$grupo\\infrastructure\\repositories\\{$pg_clase};";
+$useImplementation = "use src\\$grupo\\infrastructure\\persistence\\postgresql\\{$pg_clase};";
 $mappingLine = "    {$clase_interface}::class => autowire({$pg_clase}::class),";
 
 if (file_exists($filename)) {

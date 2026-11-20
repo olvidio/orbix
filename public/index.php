@@ -14,21 +14,16 @@ use function FastRoute\simpleDispatcher;
 function bootstrapAnonymousSrcRequest(): void
 {
     if (session_status() !== PHP_SESSION_ACTIVE) {
+        \src\shared\infrastructure\ui\http\SesionCookie::configurar();
         if (!empty($_COOKIE['PHPSESSID'])) {
             session_id($_COOKIE['PHPSESSID']);
             session_start();
         } else {
-            // Al crear la sesión (p. ej. app_login), fijar path y SameSite para que
-            // el navegador/OkHttp reenvíe PHPSESSID en GET posteriores a /src/... (global_object).
+            // Al crear la sesión (p. ej. app_login) la cookie dura 30 días: la app móvil la reenvía
+            // en las peticiones siguientes a /src/...
             $lifetime = 86400 * 30;
             ini_set('session.gc_maxlifetime', (string)$lifetime);
-            session_set_cookie_params([
-                'lifetime' => $lifetime,
-                'path' => '/',
-                'secure' => false,
-                'httponly' => true,
-                'samesite' => 'Lax',
-            ]);
+            ini_set('session.cookie_lifetime', (string)$lifetime);
             session_start();
         }
     }
@@ -151,15 +146,6 @@ if ($legacyR === null) {
     if (is_string($pathInfo) && $pathInfo !== '') {
         $pathsForSrc[] = $pathInfo;
     }
-    foreach (['REDIRECT_URL', 'HTTP_X_ORIGINAL_URI'] as $serverRoutingKey) {
-        if (empty($_SERVER[$serverRoutingKey]) || !is_string($_SERVER[$serverRoutingKey])) {
-            continue;
-        }
-        $altPath = parse_url($_SERVER[$serverRoutingKey], PHP_URL_PATH);
-        if (is_string($altPath) && $altPath !== '') {
-            $pathsForSrc[] = $altPath;
-        }
-    }
     foreach ($pathsForSrc as $pathCandidate) {
         $srcPos = strpos($pathCandidate, '/src/');
         if ($srcPos !== false) {
@@ -170,6 +156,8 @@ if ($legacyR === null) {
 }
 
 if (is_string($legacyR) && str_starts_with($legacyR, '/src/')) {
+    // La restricción por rol (AccesoRolPau) se comprueba sobre esta ruta, que es la que se despacha.
+    \src\shared\infrastructure\ui\http\AccesoRolPau::fijarRutaDespachada($legacyR);
     // Solo controladores HTTP de un módulo de src/: nunca otro fichero del proyecto (ni con `..`).
     $candidate = \src\shared\infrastructure\ui\http\RutaControladorSrc::resolver($projectRoot, $legacyR);
     if ($candidate !== null) {

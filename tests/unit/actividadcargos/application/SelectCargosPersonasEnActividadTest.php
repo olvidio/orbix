@@ -315,11 +315,11 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         // el de la dl lleva que_dl; el de otra dl, no
         $miDl = \src\shared\config\ConfigGlobal::mi_delef();
         $this->assertMatchesRegularExpression(
-            "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&que_dl=" . preg_quote($miDl, '~') . "&h=[0-9a-f]{32}'\\);\">\\+ crt n</span>~",
+            "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&que_dl=" . preg_quote($miDl, '~') . "&h=[0-9a-f]{64}'\\);\">\\+ crt n</span>~",
             $html
         );
         $this->assertMatchesRegularExpression(
-            "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&h=[0-9a-f]{32}'\\);\">\\+ crt n</span>~",
+            "~/frontend/actividadcargos/controller/form_cargos_personas_en_actividad\\.php\\?id_dossier=1302&id_pau=10011&id_tipo=111&mod=nuevo&obj_pau=PersonaN&pau=p&h=[0-9a-f]{64}'\\);\">\\+ crt n</span>~",
             $html
         );
         $this->assertStringNotContainsString('>+ crt sss+</span>', $html, 'sm no gestiona sss+');
@@ -340,7 +340,7 @@ final class SelectCargosPersonasEnActividadTest extends myTest
         foreach (['pau' => 'p', 'id_pau' => '10011', 'obj_pau' => 'PersonaN', 'queSel' => 'sel', 'id_dossier' => '1302', 'permiso' => '3'] as $campo => $valor) {
             $this->assertStringContainsString(sprintf('<input type="hidden" id="%1$s" name="%1$s" value="%2$s">', $campo, $valor), $html);
         }
-        $this->assertMatchesRegularExpression('/name="hh" value="[0-9a-f]{32}"/', $html);
+        $this->assertMatchesRegularExpression('/name="hh" value="[0-9a-f]{64}"/', $html);
         // Las URL van con json_encode dentro del <script> (barras escapadas).
         $this->assertStringContainsString('attr(\'action\', "frontend\\/actividadcargos\\/controller\\/form_cargos_personas_en_actividad.php")', $html);
         $this->assertMatchesRegularExpression('~url: "[^"]*\\\\/src\\\\/actividadcargos\\\\/cargo_eliminar"~', $html);

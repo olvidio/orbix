@@ -49,7 +49,7 @@ $skipPathFragments = [
     '/tests/',
     '/proves/',
     '/node_modules/',
-    '/devel_codegen/',
+    '/tools/codegen/',
     '_imprimir_mpdf.php',
     'tessera_imprimir.php',
     'acta_imprimir_mpdf.php',

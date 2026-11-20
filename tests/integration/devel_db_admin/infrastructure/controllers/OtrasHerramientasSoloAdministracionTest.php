@@ -24,7 +24,6 @@ final class OtrasHerramientasSoloAdministracionTest extends myTest
         'resincronizar sacd' => '/personas/infrastructure/ui/http/controllers/sacd_resincronizar.php',
         'resincronizar cargos' => '/actividadcargos/infrastructure/ui/http/controllers/cargos_activ_resincronizar.php',
         'resincronizar centros' => '/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php',
-        'estructura de una tabla' => '/devel_codegen/infrastructure/ui/http/controllers/tabla_estructura_datos.php',
     ];
 
     /** @var array<string, mixed> */

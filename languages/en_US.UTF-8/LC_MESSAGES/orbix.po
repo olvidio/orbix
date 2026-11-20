@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 15:56+0100\n"
+"POT-Creation-Date: 2026-11-19 22:47+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -363,6 +363,7 @@ msgstr "activity"
 #: src/actividadcargos/infrastructure/ui/http/controllers/cargo_editar.php:16
 #: src/actividadcargos/infrastructure/ui/http/controllers/cargo_eliminar.php:15
 #: src/actividadcargos/infrastructure/ui/http/controllers/cargo_nuevo.php:15
+#: src/actividadcargos/infrastructure/ui/http/controllers/cargos_activ_resincronizar.php:16
 #: src/actividades/infrastructure/ui/http/controllers/actividad_cambiar_tipo.php:24
 #: src/actividades/infrastructure/ui/http/controllers/actividad_duplicar.php:24
 #: src/actividades/infrastructure/ui/http/controllers/actividad_editar.php:24
@@ -551,6 +552,7 @@ msgstr "activity"
 #: src/personas/infrastructure/ui/http/controllers/persona_eliminar.php:20
 #: src/personas/infrastructure/ui/http/controllers/persona_publicar.php:19
 #: src/personas/infrastructure/ui/http/controllers/persona_update.php:19
+#: src/personas/infrastructure/ui/http/controllers/sacd_resincronizar.php:16
 #: src/personas/infrastructure/ui/http/controllers/stgr_update.php:20
 #: src/personas/infrastructure/ui/http/controllers/traslado_update.php:19
 #: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_generar.php:19
@@ -562,7 +564,8 @@ msgstr "activity"
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
-#: src/shared/infrastructure/ui/http/AccesoRolPau.php:63
+#: src/procesos/infrastructure/ui/http/controllers/usuario_perm_activ_data.php:9
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:94
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:21
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:23
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:27
@@ -575,7 +578,8 @@ msgstr "activity"
 #: src/tablonanuncios/infrastructure/ui/http/controllers/anuncio_delete.php:21
 #: src/ubis/infrastructure/ui/http/controllers/calendario_periodos_eliminar.php:15
 #: src/ubis/infrastructure/ui/http/controllers/calendario_periodos_guardar.php:15
-#: src/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php:25
+#: src/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php:21
+#: src/ubis/infrastructure/ui/http/controllers/centros_resincronizar.php:31
 #: src/ubis/infrastructure/ui/http/controllers/centros_update.php:15
 #: src/ubis/infrastructure/ui/http/controllers/direccion_update.php:15
 #: src/ubis/infrastructure/ui/http/controllers/direcciones_asignar.php:15
@@ -596,32 +600,63 @@ msgstr "activity"
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php:28
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_solo_vip.php:12
 #: src/ubiscamas/infrastructure/ui/http/controllers/update_solo_vip.php:19
-#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:24
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:14
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:18
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:25
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:29
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:33
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:16
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:25
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:14
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:19
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:20
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:30
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd_form_data.php:7
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:12
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:20
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:27
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:14
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:24
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:31
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:39
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_info.php:10
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:11
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:12
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:22
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:18
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:31
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:21
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:12
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:20
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:27
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:13
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:25
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_info.php:13
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:15
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:70
-#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:16
-#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:19
+#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:12
+#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:22
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:16
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:12
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:17
+#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:15
+#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:25
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:20
+#: src/usuarios/infrastructure/ui/http/controllers/role_lista.php:9
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:18
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php:11
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php:18
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:18
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:20
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:21
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:28
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:32
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:36
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php:17
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php:24
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php:31
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:22
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:29
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:14
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:24
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:16
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:26
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php:16
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:18
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:20
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:27
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:34
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:38
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:42
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:70
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:17
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:18
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_lista.php:9
 #: src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_update.php:18
 #: src/zonassacd/infrastructure/ui/http/controllers/zona_ctr_update.php:24
 #: src/zonassacd/infrastructure/ui/http/controllers/zona_sacd_update.php:25
@@ -1095,7 +1130,7 @@ msgstr "Are you sure you want to delete this type of activity?"
 #: src/ubis/application/TelecoTablaData.php:113
 #: src/ubis/application/UbisTablaData.php:109
 #: src/usuarios/application/rolesLista.php:66
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:66
 #: src/zonassacd/application/ZonaSacdLista.php:124
 msgid "modificar"
 msgstr "Modify"
@@ -1376,7 +1411,7 @@ msgstr "save"
 #: src/shared/domain/DatosTablaRepo.php:58
 #: src/ubis/application/TelecoTablaData.php:114
 #: src/ubis/application/UbisTablaData.php:112
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:67
 msgid "eliminar"
 msgstr "remove"
 
@@ -2911,14 +2946,14 @@ msgid "objeto"
 msgstr "object"
 
 #: frontend/cambios/controller/usuario_form_avisos.php:42
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:51
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:57
 msgid "dl propia"
 msgstr "Own dl"
 
 #: frontend/cambios/controller/usuario_form_avisos.php:43
 #: src/casas/application/CasaIngresosListaData.php:65
 #: src/personas/domain/entity/UltimaAsistencia.php:156
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:52
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:58
 msgid "tipo de actividad"
 msgstr "type of activity"
 
@@ -3068,7 +3103,7 @@ msgstr "choose the type of activity"
 
 #: frontend/cambios/view/usuario_avisos_pref.phtml:201
 #: src/cambios/application/UsuarioAvisosPrefFormData.php:156
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:54
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
 msgid "fase de referencia"
 msgstr "reference phase"
 
@@ -3780,7 +3815,6 @@ msgid "apps requeridas"
 msgstr "required apps"
 
 #: frontend/configuracion/view/modulos_form.phtml:112
-#: frontend/devel_codegen/controller/factory_form.php:25
 #: frontend/dossiers/view/perm_dossier_pres.phtml:111
 #: frontend/personas/view/_persona_form_botones.phtml:22
 #: frontend/ubis/view/cdc_form.phtml:103
@@ -4828,7 +4862,7 @@ msgstr "timetable"
 #: frontend/encargossacd/controller/encargo_select.php:65
 #: src/actividadtarifas/application/TarifaUbiListaData.php:133
 #: src/actividadtarifas/application/TipoTarifaListaData.php:68
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:42
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:48
 msgid "sección"
 msgstr "section"
 
@@ -5081,7 +5115,7 @@ msgstr "Select assignment type"
 #: frontend/menus/view/menus_que.phtml:12
 #: frontend/usuarios/view/grupo_form.phtml:20
 #: src/usuarios/application/GruposLista.php:32
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:41
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:47
 #: src/zonassacd/domain/entity/Zona.php:170
 msgid "grupo"
 msgstr "group"
@@ -5587,16 +5621,16 @@ msgstr "you must select a location"
 
 #: frontend/inventario/controller/equipajes_movimientos.php:45
 #: frontend/inventario/view/equipajes_form_add.phtml:8
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:59
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:67
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:65
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:73
 msgid "añadir"
 msgstr "Add"
 
 #: frontend/inventario/controller/equipajes_movimientos.php:49
 #: src/cartaspresentacion/application/CartasPresentacionUbisListaData.php:231
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:19
-#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:77
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php:51
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:25
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:83
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php:57
 msgid "quitar"
 msgstr "remove"
 
@@ -9709,16 +9743,16 @@ msgstr "Failed to resolve route /src in internal call: %s"
 msgid "No existe controlador para la ruta %s"
 msgstr "No controller exists for route %s"
 
-#: frontend/shared/PostRequest.php:523 frontend/shared/PostRequest.php:955
+#: frontend/shared/PostRequest.php:523 frontend/shared/PostRequest.php:951
 msgid "Procedencia"
 msgstr "Origin"
 
-#: frontend/shared/PostRequest.php:767
+#: frontend/shared/PostRequest.php:763
 #, php-format
 msgid "Sesión no autenticada en llamada interna a %s (status %d)."
 msgstr "Unauthenticated session in internal call to %s (status %d)."
 
-#: frontend/shared/PostRequest.php:771
+#: frontend/shared/PostRequest.php:767
 msgid ""
 "El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a "
 "entrar en Orbix."
@@ -9726,22 +9760,22 @@ msgstr ""
 "The backend returned the login form instead of JSON. Please log in again to "
 "Orbix."
 
-#: frontend/shared/PostRequest.php:776
+#: frontend/shared/PostRequest.php:772
 #, php-format
 msgid "Respuesta no-JSON de %s (status %d)."
 msgstr "Non-JSON response from %s (status %d)."
 
-#: frontend/shared/PostRequest.php:783
+#: frontend/shared/PostRequest.php:779
 #, php-format
 msgid "No se obtiene respuesta de: %s"
 msgstr "No response received from: %s"
 
-#: frontend/shared/PostRequest.php:831
+#: frontend/shared/PostRequest.php:827
 #, php-format
 msgid "No se pudo conectar en llamada interna a %s."
 msgstr "Could not connect in internal call to %s."
 
-#: frontend/shared/PostRequest.php:835
+#: frontend/shared/PostRequest.php:831
 msgid ""
 "Comprueba que el servidor web escucha en localhost; si `web_server` usa la "
 "IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1."
@@ -9750,16 +9784,16 @@ msgstr ""
 "the LAN IP of the local machine, the connection must be able to be made via "
 "127.0.0.1."
 
-#: frontend/shared/PostRequest.php:845
+#: frontend/shared/PostRequest.php:841
 #, php-format
 msgid "Redirección inesperada en llamada interna a %s (status %d → %s)"
 msgstr "Unexpected redirect in internal call to %s (status %d → %s)"
 
-#: frontend/shared/PostRequest.php:848
+#: frontend/shared/PostRequest.php:844
 msgid "sin Location"
 msgstr "no Location"
 
-#: frontend/shared/PostRequest.php:850
+#: frontend/shared/PostRequest.php:846
 msgid ""
 "Probable causa: validación de hash/sesión. Revisa que el endpoint no "
 "requiera firma que no se está generando igual server-to-server."
@@ -9767,20 +9801,20 @@ msgstr ""
 "Probable cause: hash/session validation. Check that the endpoint does not "
 "require a signature that is not being generated equally server-to-server."
 
-#: frontend/shared/PostRequest.php:855
+#: frontend/shared/PostRequest.php:851
 #, php-format
 msgid "Error HTTP %d en llamada interna a %s"
 msgstr "HTTP error %d in internal call to %s"
 
-#: frontend/shared/PostRequest.php:937
+#: frontend/shared/PostRequest.php:933
 msgid "Endpoint"
 msgstr "Endpoint"
 
-#: frontend/shared/PostRequest.php:941
+#: frontend/shared/PostRequest.php:937
 msgid "Página"
 msgstr "Page"
 
-#: frontend/shared/PostRequest.php:957
+#: frontend/shared/PostRequest.php:953
 msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
 msgstr "Internal signed POST (HashF) with PHPSESSID (cookie or session_id())."
 
@@ -9891,35 +9925,38 @@ msgstr "Offices"
 msgid "salir"
 msgstr "exit"
 
-#: frontend/shared/security/HashF.php:235
+#: frontend/shared/security/HashF.php:278
 msgid "llegan campos hidden modificados"
 msgstr "modified hidden fields received"
 
-#: frontend/shared/security/HashF.php:263
+#: frontend/shared/security/HashF.php:306
 msgid "llegan distinto número o nombre de los campos que se dice que se envían"
 msgstr ""
 "The number or name of the fields received differs from the number or name of "
 "the fields stated to be sent"
 
-#: frontend/shared/security/HashF.php:277
-#: frontend/shared/security/HashF.php:318
+#: frontend/shared/security/HashF.php:320
+#: frontend/shared/security/HashF.php:361
 msgid "url modificada"
 msgstr "modified url"
 
-#: frontend/shared/security/HashF.php:333
-#: frontend/shared/security/HashF.php:340
+#: frontend/shared/security/HashF.php:396
 msgid "problema general de seguridad"
 msgstr "general security problem"
 
-#: frontend/shared/security/HashF.php:341
+#: frontend/shared/security/HashF.php:404
+msgid "Firma no válida. Vuelva a abrir la pantalla desde el menú."
+msgstr "Invalid signature. Please reopen the screen from the menu."
+
+#: frontend/shared/security/HashF.php:415
 msgid ""
 "para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend"
 msgstr ""
 "to view more details define ORBIX_FRONT_DEBUG=1 in the frontend environment"
 
-#: frontend/shared/security/HashF.php:390
-msgid "página con seguridad desactivada"
-msgstr "page with security disabled"
+#: frontend/shared/security/HashF.php:470
+msgid "Petición sin firma. Vuelva a abrir la pantalla desde el menú."
+msgstr "Request without signature. Please reopen the screen from the menu."
 
 #: frontend/shared/view/ayuda_consultas_lista.phtml:86
 msgid "Consultas a la ayuda"
@@ -10782,10 +10819,10 @@ msgstr "and"
 #: src/ubis/application/UbisGuardar.php:275
 #: src/ubis/application/UbisGuardar.php:299
 #: src/usuarios/domain/GrupoJefeZona.php:61
-#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:76
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:60
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:106
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:49
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:82
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:66
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:112
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:55
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:59
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:84
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:104
@@ -10794,10 +10831,10 @@ msgstr "and"
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:148
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:164
 #: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:194
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:47
-#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:52
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:29
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:128
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:53
+#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:58
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:140
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:36
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:49
 #: src/zonassacd/application/ZonaSacdUpdate.php:51
@@ -11865,7 +11902,7 @@ msgid "Añadir nuevo permiso a %s"
 msgstr "Add new permission to %s"
 
 #: frontend/usuarios/view/perm_menu_form.phtml:33
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:18
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:24
 msgid "oficina o grupo"
 msgstr "office or group"
 
@@ -12646,12 +12683,12 @@ msgstr "id_item is missing"
 #: src/ubis/application/UbisEliminar.php:22
 #: src/usuarios/application/usuarioEliminar.php:28
 #: src/usuarios/domain/GrupoJefeZona.php:75
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:33
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:29
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:32
-#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:28
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:30
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:32
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:39
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:38
+#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:34
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:36
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:38
 #: src/zonassacd/application/ZonaSacdUpdate.php:36
 #: src/zonassacd/application/ZonaSacdUpdate.php:67
 msgid "hay un error, no se ha eliminado"
@@ -14310,7 +14347,6 @@ msgstr "The attendee for this activity was not found."
 
 #: src/asistentes/application/ListaActivCtrData.php:58
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php:14
-#: src/devel_codegen/infrastructure/ui/http/controllers/tabla_estructura_datos.php:17
 #: src/dossiers/infrastructure/ui/http/controllers/perm_dossier_ver_data.php:12
 #: src/inventario/application/DocumentosTrasladar.php:30
 #: src/inventario/infrastructure/ui/http/RangoPeriodoRequest.php:39
@@ -14815,15 +14851,15 @@ msgstr "Invalid activity type ID"
 #: src/usuarios/application/rolesLista.php:38
 #: src/usuarios/application/usuarioEliminar.php:25
 #: src/usuarios/application/usuariosLista.php:33
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:17
-#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:25
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:23
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:31
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php:22
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:32
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php:34
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:25
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:81
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:23
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:73
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:36
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:92
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:29
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:85
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:29
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail_form_data.php:21
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:30
@@ -14876,7 +14912,7 @@ msgstr "No permission"
 
 #: src/cambios/application/UsuarioFormAvisosData.php:102
 #: src/ubis/application/ListCtrData.php:309
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:91
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:97
 msgid "otras"
 msgstr "others"
 
@@ -17295,9 +17331,9 @@ msgid "No encuentro el grupmenu"
 msgstr "Menu group not found"
 
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:49
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:41
-#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:56
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:44
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:47
+#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:62
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:50
 msgid "debe poner un nombre"
 msgstr "you must put a name"
 
@@ -20395,11 +20431,11 @@ msgid "Error de servidor"
 msgstr "Server error"
 
 #: src/usuarios/application/AppMobileLogin.php:191
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:22
-#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:37
-#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:48
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:95
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:101
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:43
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:54
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:106
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:113
 msgid "Rol no encontrado"
 msgstr "Role not found"
 
@@ -20408,8 +20444,8 @@ msgid "Acceso no permitido"
 msgstr "Access not allowed"
 
 #: src/usuarios/application/usuariosLista.php:38
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:23
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:29
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:46
 msgid "no tiene permisos para ver esto"
 msgstr "you do not have permission to see this"
 
@@ -20523,11 +20559,11 @@ msgstr "Error updating the password"
 msgid "Error de autenticación"
 msgstr "Authentication error"
 
-#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:41
 msgid "No se pudieron obtener esquemas"
 msgstr "Schemas could not be retrieved"
 
-#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:45
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:51
 msgid "Sólo se puede borrar en la base de datos de pruebas"
 msgstr "Deletion is only allowed in the test database"
 
@@ -20539,37 +20575,37 @@ msgstr ""
 "For security reasons, it is recommended to configure two-factor "
 "authentication (2FA)."
 
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:29
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:53
-#: src/usuarios/infrastructure/ui/http/controllers/grupo_info.php:16
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_info.php:17
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:59
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_info.php:22
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_info.php:23
 msgid "Grupo no encontrado"
 msgstr "Group not found"
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:26
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:30
-#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:26
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:32
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:36
+#: src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:32
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:34
 msgid "no existe el registro"
 msgstr "Record does not exist"
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:122
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:128
 msgid "hay un error."
 msgstr "There is an error."
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:53
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:59
 msgid "afecta a"
 msgstr "affects"
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:55
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:61
 msgid "permiso off"
 msgstr "Permission off"
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:56
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:62
 msgid "permiso on"
 msgstr "Permission on"
 
-#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:41
 msgid "Permiso de menú no encontrado"
 msgstr "Menu permission not found"
 
@@ -20615,12 +20651,12 @@ msgstr ""
 msgid "Recuperación de código de seguridad"
 msgstr "Security code recovery"
 
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:52
-#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:35
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:58
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:41
 msgid "debe seleccionar uno"
 msgstr "You must select one"
 
-#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:75
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:81
 msgid "grupo de menus"
 msgstr "group of menus"
 
@@ -20652,11 +20688,11 @@ msgstr "Please enter a valid username"
 msgid "El administrador de esta circunscripción no tiene email asociado"
 msgstr "The administrator of this district does not have an associated email"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:43
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:49
 msgid "acción"
 msgstr "action"
 
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:84
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:96
 msgid "Ese nombre de usuario ya está en uso, elija otro"
 msgstr "That username is already taken, please choose another"
 
@@ -21387,6 +21423,9 @@ msgstr "permission off (unchecked)"
 #: frontend/procesos/view/usuario_perm_activ.html.twig:100
 msgid "permiso on (marcado)"
 msgstr "permission on (checked)"
+
+#~ msgid "página con seguridad desactivada"
+#~ msgstr "page with security disabled"
 
 #~ msgid " Nuevo plan"
 #~ msgstr " New plan"

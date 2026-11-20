@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { expect, test, type Browser, type Page } from '@playwright/test';
-import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, redEnCalma, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, esperarSrc, limpiar, marcaE2e, parametrosFirmados, redEnCalma, sqlDev } from '../../orbix-app';
 
 /**
  * Usuarios con un rol limitado a una persona, casa o centro (rol «pau» de `aux_roles`): p-sacd, casa y
@@ -45,6 +45,8 @@ function denegadas(pau: string, desde: number): string[] {
     .split('\n')
     .map((l) => l.split('\t'))
     .filter((c) => c.length >= 4 && c[1] === pau && Date.parse(c[0]) >= desde)
+    // El firmador de la suite E2E no es una pantalla de sus menús (solo existe en la instancia de pruebas).
+    .filter((c) => !c[3].endsWith('frontend/shared/controller/e2e_firmar.php'))
     .map((c) => `${c[2]} ${c[3]}${c[5] ? ` ${c[5]}` : ''}`);
 }
 const marca = marcaE2e().toLowerCase().slice(0, 14);
@@ -176,7 +178,7 @@ for (const rol of ROLES) {
     expect(denegadas(rol.pau, desde), 'lo que piden sus menús está en la lista').toEqual([]);
 
     // Una pantalla de oficina pedida directamente queda fuera.
-    const oficina = await p.request.post(OFICINA, { form: { e2e: '1' }, failOnStatusCode: false });
+    const oficina = await p.request.post(OFICINA, { form: { PHPSESSID: '1' }, failOnStatusCode: false });
     expect(denegadas(rol.pau, desde), 'se apunta la pantalla de oficina').toContain(`POST ${OFICINA}`);
     if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
       // Con `ORBIX_ACCESO_PAU=exigir` en el servidor, además se corta.
@@ -184,7 +186,10 @@ for (const rol of ROLES) {
     }
     if (rol.pau === 'cdc') {
       // En una pantalla suya, todas las casas sv en lugar de las suyas.
-      const todas = await p.request.post(CASAS_RESUMEN, { form: { cdc_sel: '4', que: 'get' }, failOnStatusCode: false });
+      const todas = await p.request.post(CASAS_RESUMEN, {
+        form: Object.fromEntries(new URLSearchParams(await parametrosFirmados(p, CASAS_RESUMEN, 'cdc_sel=4&que=get'))),
+        failOnStatusCode: false,
+      });
       expect(denegadas(rol.pau, desde), 'se apunta pedir todas las casas').toContain(`POST ${CASAS_RESUMEN} cdc_sel`);
       if (process.env.E2E_ACCESO_PAU_EXIGIDO === '1') {
         expect(todas.status(), 'todas las casas se niegan').toBe(403);

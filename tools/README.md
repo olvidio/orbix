@@ -5,6 +5,7 @@ Scripts que **no** sirve la aplicación web. Se ejecutan en local o en CI.
 | Carpeta | Contenido |
 |---------|-----------|
 | `audit/` | Auditorías del código (gettext, navegación, PSR-4, etc.) |
+| `codegen/` | Generador del esqueleto de un módulo a partir de una tabla: `php tools/codegen/generar_clases.php --db=comun --tabla=esquema.tabla --clase=Clase [--clase-plural=…] [--grupo=modulo] [--aplicacion=…]`. Escribe en `src/<grupo>/`; solo línea de órdenes |
 | `fix/` | Migraciones y correcciones puntuales (`--dry-run` / `--apply`) |
 | `i18n/` | Traducción asistida de ficheros `.po` en `languages/` |
 | `phpstan/` | Utilidades sobre la baseline de PHPStan |

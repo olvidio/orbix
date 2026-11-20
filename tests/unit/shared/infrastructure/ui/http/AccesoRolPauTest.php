@@ -137,4 +137,32 @@ final class AccesoRolPauTest extends TestCase
         $this->assertTrue(AccesoRolPau::decidir($this->dir, '', 'POST', '/orbix/src/notas/persona_nota_eliminar', [], true));
         $this->assertFileDoesNotExist($this->dir . '/' . AccesoRolPau::REGISTRO_DENEGADO);
     }
+
+    /**
+     * Lo que se comprueba es la ruta que el enrutador va a despachar, no la que aparenta la URL.
+     */
+    public function test_se_comprueba_la_ruta_despachada_y_no_la_url(): void
+    {
+        try {
+            $this->assertSame('/orbix/public/index.php', AccesoRolPau::uriQueSeComprueba(['REQUEST_URI' => '/orbix/public/index.php']));
+            AccesoRolPau::fijarRutaDespachada('/src/usuarios/usuario_lista');
+            $uri = AccesoRolPau::uriQueSeComprueba(['REQUEST_URI' => '/orbix/public/index.php']);
+            $this->assertSame('src/usuarios/usuario_lista', AccesoRolPau::ruta((string) $uri));
+        } finally {
+            AccesoRolPau::fijarRutaDespachada(null);
+        }
+    }
+
+    public function test_los_enrutadores_no_toman_la_ruta_de_cabeceras_y_comprueban_la_que_despachan(): void
+    {
+        $raiz = dirname(__DIR__, 6);
+        $publico = (string) file_get_contents($raiz . '/public/index.php');
+        $this->assertStringNotContainsString('HTTP_X_ORIGINAL_URI', $publico);
+        $this->assertStringNotContainsString('REDIRECT_URL', $publico);
+        $this->assertStringContainsString('AccesoRolPau::fijarRutaDespachada(', $publico);
+
+        $proxy = (string) file_get_contents($raiz . '/frontend/shared/controller/src_ajax.php');
+        $this->assertStringContainsString('AccesoRolPau::fijarRutaDespachada($src)', $proxy);
+        $this->assertStringContainsString('AccesoRolPau::comprobarPeticionActual()', $proxy);
+    }
 }

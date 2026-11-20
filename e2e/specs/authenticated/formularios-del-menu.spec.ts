@@ -3,7 +3,7 @@ import path from 'node:path';
 import { expect, test } from '@playwright/test';
 
 import { camposFirmadosEnElCodigo, comprobarFormularios, diagnosticar, formulariosDePagina, idSesion } from '../../form-hash-audit';
-import { abrirApp, redEnCalma, sqlDev } from '../../orbix-app';
+import { abrirApp, parametrosFirmados, redEnCalma, sqlDev } from '../../orbix-app';
 import { conPreferenciasDelUsuario, sePuedeAbrir } from '../../pantallas';
 
 /**
@@ -76,6 +76,8 @@ test('los formularios de las pantallas del menú envían los campos que firman',
       const ruta = `frontend/${rel}`;
       const etiqueta = `${rel}${parametros === '' ? '' : '?' + parametros}`;
       try {
+        // Los parámetros del menú van firmados, como en el menú real.
+        const firmados = await parametrosFirmados(page, ruta, parametros);
         await Promise.all([
           page.waitForResponse((r) => r.request().method() === 'POST' && new URL(r.url()).pathname.endsWith(ruta), { timeout: 60_000 }),
           page.evaluate(
@@ -83,7 +85,7 @@ test('los formularios de las pantallas del menú envían los campos que firman',
               // @ts-expect-error función global de Orbix (scripts/index.js.php)
               fnjs_link_submenu(p, q);
             },
-            [ruta, parametros],
+            [ruta, firmados],
           ),
         ]);
         // Desplegables y rejillas que la pantalla carga a continuación.

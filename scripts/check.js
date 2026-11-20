@@ -296,7 +296,7 @@ function fnjs_def_tabla(tabla) {
 }
 
 function fnjs_logout() {
-    var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
+    var parametros = 'logout=si&PHPSESSID=1';
     var path = window.location.pathname;
 
     if (path.endsWith('/index.php')) {
@@ -867,7 +867,7 @@ function fnjs_def_tabla(tabla) {
 }
 
 function fnjs_logout() {
-    var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
+    var parametros = 'logout=si&PHPSESSID=1';
     var path = window.location.pathname;
 
     if (path.endsWith('/index.php')) {

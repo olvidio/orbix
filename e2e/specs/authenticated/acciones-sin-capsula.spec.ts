@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { indexPathForE2e } from '../../grupmenu';
-import { abrirApp, abrirPantalla, redEnCalma, sqlDev } from '../../orbix-app';
+import { abrirApp, abrirPantalla, parametrosFirmados, redEnCalma, sqlDev } from '../../orbix-app';
 
 /**
  * Pantallas que son una acción (fase 6 del plan de tests): no hacen nada si se abren sin la cápsula
@@ -39,7 +39,12 @@ test('abiertas sin cápsula, las acciones responden «no autorizada» y no cambi
     ['frontend/actividadestudios/controller/matricular.php', { confirmar: 'si' }],
   ];
   for (const [ruta, form] of acciones) {
-    const res = await page.request.post(new URL(ruta, base).href, { form, failOnStatusCode: false });
+    // Firmada (si no, se rechazaría antes por falta de firma): lo que se prueba es que falta la cápsula.
+    const firmados = await parametrosFirmados(page, ruta, new URLSearchParams(form).toString());
+    const res = await page.request.post(new URL(ruta, base).href, {
+      form: Object.fromEntries(new URLSearchParams(firmados)),
+      failOnStatusCode: false,
+    });
     const cuerpo = await res.text();
     // En el idioma del usuario de E2E (castellano o catalán).
     expect(cuerpo, ruta).toMatch(/Operaci(ón|ó) no autori(z|tz)ada/);

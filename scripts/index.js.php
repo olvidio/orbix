@@ -471,7 +471,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     }
 
     function fnjs_logout() {
-        var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
+        var parametros = 'logout=si&PHPSESSID=1';
         var path = window.location.pathname;
 
         if (path.endsWith('/index.php')) {
@@ -605,7 +605,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
     }
 
     function fnjs_link_menu(id_grupmenu) {
-        var parametros = 'id_grupmenu=' + id_grupmenu + '&PHPSESSID=<?= session_id() ?>';
+        var parametros = 'id_grupmenu=' + id_grupmenu + '&PHPSESSID=1';
 
         if (id_grupmenu === 'web_externa') {
             top.location.href = 'http://www/exterior/cl/index.html';
@@ -616,9 +616,9 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
 
     function fnjs_link_submenu(url, parametros) {
         if (parametros) {
-            parametros = parametros + '&nav=reset&PHPSESSID=<?= session_id() ?>';
+            parametros = parametros + '&nav=reset&PHPSESSID=1';
         } else {
-            parametros = 'nav=reset&PHPSESSID=<?= session_id() ?>';
+            parametros = 'nav=reset&PHPSESSID=1';
         }
         if (!url) return false;
         // para el caso de editar webs
@@ -726,7 +726,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         fnjs_cerrar_ventana_modal();
         fnjs_left_side_hide();
 
-        var parametros = '<?= $navAtrasSignedParams ?>&n=' + n + '&PHPSESSID=<?= session_id() ?>';
+        var parametros = '<?= $navAtrasSignedParams ?>&n=' + n + '&PHPSESSID=1';
         $.ajax({
             url: '<?= $navAtrasUrl ?>',
             type: 'post',
@@ -763,7 +763,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         }
         var parametros = '<?= $navStateSignedParams ?>&nav_patch='
             + encodeURIComponent(JSON.stringify(patch))
-            + '&PHPSESSID=<?= session_id() ?>';
+            + '&PHPSESSID=1';
         $.ajax({
             url: '<?= $navStateUrl ?>',
             type: 'post',
@@ -905,9 +905,9 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         var pattern = /\?/;
         if (pattern.test(ref)) {
             parametros = ref.replace(/^[^\?]*\?/, '');
-            parametros = parametros + '&PHPSESSID=<?= session_id() ?>';
+            parametros = parametros + '&PHPSESSID=1';
         } else {
-            parametros = 'PHPSESSID=<?= session_id() ?>';
+            parametros = 'PHPSESSID=1';
         }
         $(bloque).attr('refe', path);
         $.ajax({

@@ -134,7 +134,7 @@ final class EncargoSacdHorarioVerData
             'id_item' => $id_item,
         ]);
         $data['ctx_eliminar'] = $id_item > 0
-            ? HashB::sign('horario_sacd_update_data', ['id_item' => $id_item])
+            ? HashB::sign('horario_sacd_eliminar', ['id_item' => $id_item])
             : '';
 
         return $data;

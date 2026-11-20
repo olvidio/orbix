@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace src\devel_codegen\infrastructure\persistence;
+namespace tools\codegen;
 
 use InvalidArgumentException;
 use PDO;
 use src\shared\infrastructure\GlobalPdo;
 
 /**
- * Estructura de una tabla de PostgreSQL para el generador de código (`frontend/devel_codegen`):
+ * Estructura de una tabla de PostgreSQL para el generador de código (`tools/codegen/generar_clases.php`):
  * clave primaria y columnas (tipo, longitud, not null y valor por defecto).
  */
 final class TablaEstructuraPg

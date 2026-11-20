@@ -154,7 +154,7 @@ final class EncargoSacdHorarioVerDataTest extends TestCase
         $out = $this->useCase->cargar(10011, 7, 55, 'x');
 
         $this->assertSame(['id_nom' => 10011, 'id_enc' => 7, 'id_item' => 55], HashB::open($out['ctx_guardar'], 'horario_sacd_update_data'));
-        $this->assertSame(['id_item' => 55], HashB::open($out['ctx_eliminar'], 'horario_sacd_update_data'));
+        $this->assertSame(['id_item' => 55], HashB::open($out['ctx_eliminar'], 'horario_sacd_eliminar'));
     }
 
     // ---- búsqueda del horario más reciente ---------------------------------------------------------------

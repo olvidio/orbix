@@ -131,7 +131,7 @@ Detalle del modelo: [`hash_arquitectura.md`](hash_arquitectura.md) (§4 y §10).
 10. Si la tabla es de dl y lleva `id_schema` (o un valor por defecto con la dl o la región): apuntarla en `RenombrarEsquemaDefaultsCatalog` y en el DDL de creación de esquemas del módulo (`src/<modulo>/db/`), para que los esquemas nuevos nazcan con ella.
 11. `composer qa:huecos` (modo estricto para entidades, VO y repos) y [cierre](#14-cierre-antes-del-commit).
 
-Para el esqueleto existe el generador del módulo `devel_codegen` (`frontend/devel_codegen/controller/factory.php`); lo que genera hay que revisarlo contra estas reglas.
+Para el esqueleto existe el generador `php tools/codegen/generar_clases.php --db=… --tabla=esquema.tabla --clase=…` (línea de órdenes; ya no es una pantalla); lo que genera hay que revisarlo contra estas reglas.
 
 ## 5. Añadir un campo a una tabla que ya existe
 

@@ -1,6 +1,8 @@
 <?php
 // Para salir de la sesión.
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
+    require_once __DIR__ . '/src/shared/infrastructure/ui/http/SesionCookie.php';
+    \src\shared\infrastructure\ui\http\SesionCookie::configurar();
     session_start();
     // Destruir todas las variables de sesión.
     $_SESSION = [];
@@ -15,7 +17,7 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
                 'Domain' => $params["domain"],
                 'Secure' => $params["secure"],
                 'HttpOnly' => true,
-                'SameSite' => 'None' // None || Lax  || Strict
+                'SameSite' => 'Lax'
         );
         setcookie(session_name(), '', $arr_cookie_options);
     }

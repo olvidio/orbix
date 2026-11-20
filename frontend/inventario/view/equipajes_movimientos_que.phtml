@@ -14,7 +14,7 @@
         pata = 'id_grupo=' + id_grupo + '&id_lugar=' + id_lugar + '&donde=' + donde + '&id_equipaje=' + id_equipaje;
         <?php
         echo "var url='/scdl/documentos/equipajes_ajax.php';\n";
-        echo "var parametros=pata+'&que=lista_docs&PHPSESSID=" . session_id() . "';\n";
+        echo "var parametros=pata+'&que=lista_docs&PHPSESSID=1';\n";
         ?>
         $.ajax({
             url: url,

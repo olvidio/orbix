@@ -3,6 +3,8 @@ namespace frontend\shared\security;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
+use src\shared\infrastructure\ui\http\AccesoRolPau;
+use src\shared\security\HashB;
 
 class HashF
 {
@@ -10,6 +12,13 @@ class HashF
     public const BANDERA_REGISTRO_SIN_FIRMA = 'hashf_registrar_sin_h';
 
     public const REGISTRO_SIN_FIRMA = 'hashf_sin_h.log';
+
+    /** Modos de firma: entran en lo firmado, así una firma de un modo no vale en otro. */
+    private const MODO_FORM = 'F';      // nombres de los campos de un formulario (h junto a hh)
+    private const MODO_OCULTOS = 'H';   // campos ocultos con su valor (hh)
+    private const MODO_SIN_VALOR = 'N'; // url + nombres de campo (hnov=1)
+    private const MODO_URL = 'U';       // url + parámetros con su valor
+    private const MODO_POSICION = 'P';  // vuelta atrás por la pila de navegación (hpos=1)
 
     /**
      * Campos que el JS puede inyectar al enviar (p. ej. fnjs_solo_uno) y no forman parte del hash del formulario origen.
@@ -157,14 +166,48 @@ class HashF
     }
 
     /**
-     * Para validar los parámetros enviados via POST. Recalcula el hash y lo compara con el
-     * que se pasa a trasvés del POST.
+     * Los datos de la petición actual que hay que validar: el POST si lo hay; si no, el GET cuando trae `h`.
+     * Si la firma va en la URL y los datos en el cuerpo (`$url . linkSinVal()` con un POST), se validan
+     * juntos: antes esa firma no se comprobaba.
      *
-     * @param array<string, mixed> $aPOST (normalmente $_POST)
+     * @return array<string, mixed>
      */
-    public function validatePost(array $aPOST): void
-{
-    if (isset($aPOST['h'])) {
+    public static function datosDeLaPeticion(): array
+    {
+        /** @var array<string, mixed> $post */
+        $post = $_POST;
+        /** @var array<string, mixed> $get */
+        $get = $_GET;
+        if ($post === []) {
+            return isset($get['h']) ? $get : [];
+        }
+        if (isset($post['h']) || !isset($get['h'])) {
+            return $post;
+        }
+        // Los parámetros con los que el servidor web elige la ruta `/src` no son datos de la pantalla.
+        unset($get['r'], $get['dir'], $get['_orbix_src']);
+
+        return $post + $get;
+    }
+
+    /**
+     * ¿Coincide la firma `h` (y `hh`) de la petición con la que se calcula aquí? No corta ni redirige:
+     * eso lo hace {@see validatePost()}.
+     *
+     * @param array<string, mixed> $aPOST
+     */
+    public function firmaValida(array $aPOST): bool
+    {
+        return isset($aPOST['h']) && $this->comprobarFirma($aPOST)['ok'];
+    }
+
+    /**
+     * @param array<string, mixed> $aPOST con `h`
+     * @return array{ok: bool, motivo: string, horig: string, orig: string}
+     */
+    private function comprobarFirma(array $aPOST): array
+    {
+        $sUrl = '';
         $salta = 0;
         $salta_txt = '';
         $horig = '';
@@ -229,7 +272,7 @@ class HashF
             $h2 = self::getHashArray($aCampos)['hash'];
             $sUrl = self::getHashArray($aCampos)['orig'];
 
-            if ($hh !== $h2) {
+            if (!hash_equals($h2, $hh)) {
                 $salta = 1;
                 if (OrbixRuntime::isDebug()) {
                     $salta_txt = _("llegan campos hidden modificados");
@@ -241,7 +284,7 @@ class HashF
                 if ($hpos == 1) {
                     $requestPath = parse_url($this->realFullUrl(), PHP_URL_PATH);
                     $requestPath = is_string($requestPath) ? $requestPath : '';
-                    $rta = self::mdForPosicionBack($requestPath, $aPOST);
+                    $rta = self::mdForPosicionBack($requestPath, $aPOST, false, $hno);
                 } else {
                     // Que los campos checkbox sean los mismos sin tener en cuenta los mismos valores.
                     // Solo para forms normales: add_hash (posicion) usa los valores reales.
@@ -253,11 +296,11 @@ class HashF
                     }
                     // El hash de los campos Form, Tiene que ser sin valores, pues cuando se ha
                     //  generado, los campos estaban vacíos.
-                    $rta = self::getHashArray($aPOST, 1);
+                    $rta = self::getHashArray($aPOST, 1, self::MODO_FORM, self::ligado($hno, $hchk, $hhc));
                 }
                 $h2 = $rta['hash'];
                 $sUrl = $rta['orig'];
-                if ($h1 !== $h2) {
+                if (!hash_equals($h2, $h1)) {
                     $salta = 1;
                     if (OrbixRuntime::isDebug()) {
                         $salta_txt = _("llegan distinto número o nombre de los campos que se dice que se envían");
@@ -269,10 +312,10 @@ class HashF
                 // Atrás desde Posicion::mostrarNavAtras (add_hash sin meta-hash de formulario).
                 $requestPath = parse_url($this->realFullUrl(), PHP_URL_PATH);
                 $requestPath = is_string($requestPath) ? $requestPath : '';
-                $rta = self::mdForPosicionBack($requestPath, $aPOST);
+                $rta = self::mdForPosicionBack($requestPath, $aPOST, false, $hno);
                 $h2 = $rta['hash'];
                 $sUrl = $rta['orig'];
-                if ($h1 !== $h2) {
+                if (!hash_equals($h2, $h1)) {
                     $salta = 1;
                     $salta_txt = _("url modificada");
                 }
@@ -309,89 +352,135 @@ class HashF
                     $sUrl .= '?' . http_build_query($aPOST);
                 }
 
-                $rta = self::md($sUrl);
+                $rta = self::md($sUrl, $hnov === '1' ? self::MODO_SIN_VALOR : self::MODO_URL, self::ligado($hno));
                 $h2 = $rta['hash'];
                 $sUrl = $rta['orig'];
 
-                if ($h1 !== $h2) {
+                if (!hash_equals($h2, $h1)) {
                     $salta = 1;
                     $salta_txt = _("url modificada");
                 }
             }
         }
+
+        return ['ok' => $salta === 0, 'motivo' => $salta_txt, 'horig' => $horig, 'orig' => $sUrl];
+    }
+
+    /**
+     * Para validar los parámetros enviados via POST. Recalcula el hash y lo compara con el
+     * que se pasa a trasvés del POST.
+     *
+     * @param array<string, mixed> $aPOST (normalmente $_POST)
+     */
+    public function validatePost(array $aPOST): void
+{
+    if (isset($aPOST['h'])) {
+        $rtaFirma = $this->comprobarFirma($aPOST);
+        $salta = $rtaFirma['ok'] ? 0 : 1;
+        $salta_txt = $rtaFirma['motivo'];
+        $horig = $rtaFirma['horig'];
+        $sUrl = $rtaFirma['orig'];
         if ($salta === 1) {
             if (OrbixRuntime::isDebug()) {
                 $salta_txt .= '<br>';
                 $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI'])
                     ? $_SERVER['REQUEST_URI']
                     : '';
-                $salta_txt .= 'script: ' . $requestUri . '<br>';
-                $salta_txt .= "url (h1) emisor  : $horig<br>";
-                $salta_txt .= "url (h2) receptor: $sUrl<br>";
+                // Los tres valores salen de la petición: se escapan antes de pintarlos.
+                $escapar = static fn (mixed $v): string => htmlspecialchars(is_scalar($v) ? (string) $v : '', ENT_QUOTES, 'UTF-8');
+                $salta_txt .= 'script: ' . $escapar($requestUri) . '<br>';
+                $salta_txt .= 'url (h1) emisor  : ' . $escapar($horig) . '<br>';
+                $salta_txt .= 'url (h2) receptor: ' . $escapar($sUrl) . '<br>';
                 //$salta_txt .= "h1: $h1; h2: $h2;  ".var_dump($h1===$h2);
                 echo $salta_txt;
                 $err = _("problema general de seguridad") . "\n";
                 //$_SESSION['oGestorErrores']->addErrorSec($err, $salta_txt, __LINE__, __FILE__);
                 exit();
             } else {
-                $salta_txt = isset($_SERVER['PHP_SELF']) && is_string($_SERVER['PHP_SELF'])
-                    ? $_SERVER['PHP_SELF']
-                    : '';
-                $err = _("problema general de seguridad") . "\n";
-                $err .= _("para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend");
-                //$_SESSION['oGestorErrores']->addErrorSec($err, $salta_txt, __LINE__, __FILE__);
-                // Para salir de la sesión (solo si hay sesión PHP activa; p.e. CLI o bootstrap sin session_start).
-                if (session_status() === PHP_SESSION_ACTIVE) {
-                    $_SESSION = [];
-                    // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
-                    if (ini_get("session.use_cookies")) {
-                        $params = session_get_cookie_params();
-                        $sessionName = session_name();
-                        setcookie(is_string($sessionName) ? $sessionName : 'PHPSESSID', '',
-                            ['expires' => time() - 42000,
-                                'path' => $params["path"],
-                                'domain' => $params["domain"],
-                                'secure' => $params["secure"],
-                                'httponly' => $params["httponly"],
-                                'sameSite' => 'Strict',
-                            ]
-                        );
-                    }
-                    session_regenerate_id(true);
-                    session_destroy();
+                // La sesión no se toca: antes se destruía, y bastaba un enlace con una `h` inventada para
+                // expulsar al usuario.
+                $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+                error_log('[HashF] firma no válida: ' . (string) parse_url($requestUri, PHP_URL_PATH));
+                $mensaje = _("Firma no válida. Vuelva a abrir la pantalla desde el menú.");
+                if (!headers_sent()) {
+                    http_response_code(403);
                 }
-                $pagina_exit = '/' . OrbixRuntime::webdir() . '/index.php';
-                header("Location: $pagina_exit");
-                die();
+                if (str_contains($requestUri, '/src/')) {
+                    if (!headers_sent()) {
+                        header('Content-Type: application/json; charset=UTF-8');
+                    }
+                    echo json_encode(['success' => false, 'mensaje' => $mensaje], JSON_UNESCAPED_UNICODE);
+                } else {
+                    echo htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8')
+                        . '<br>' . htmlspecialchars(_("para ver más detalles define ORBIX_FRONT_DEBUG=1 en el entorno del frontend"), ENT_QUOTES, 'UTF-8');
+                }
+                exit();
             }
         }
     } else {
-        //evito los scripts y si va por command line (no existe REQUEST URI)
-        $salta = 0;
-        $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI'])
-            ? $_SERVER['REQUEST_URI']
-            : null;
-        if ($requestUri === null) {
-            $salta = 1;
-        } else {
-            if (strpos($requestUri, '/index.php') !== false) {
-                $salta = 1;
-            }
-            if (strpos($requestUri, 'udm4') !== false) {
-                $salta = 1;
-            }
-        }
-        if ($salta === 0 && $requestUri !== null) {
-            $metodo = isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
-            self::registrarSinFirma(dirname(__DIR__, 3) . '/log', $metodo, $requestUri, $aPOST !== [] ? $aPOST : $_GET);
-        }
-        if ($salta === 0 && (OrbixRuntime::miIdRole() === 1) && $requestUri !== null) {
-            if (!str_contains($requestUri, '2fa.php')) {
-                echo '<div>' . $requestUri . ':  ' . _("página con seguridad desactivada") . '</div>';
-            }
-        }
+        self::peticionSinFirma();
     }
 }
+
+    /**
+     * Petición que ha llegado sin `h`. Si trae datos y no es de las que {@see HashFSinFirma} admite, se
+     * rechaza con un 403 (la sesión no se toca). `src_ajax.php` todavía no sabe aquí qué ruta `/src` va a
+     * despachar: lo comprueba él después con {@see exigirFirmaEnRuta()}.
+     */
+    private static function peticionSinFirma(): void
+    {
+        $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+        // Scripts y línea de órdenes: no hay petición.
+        if ($requestUri === null) {
+            return;
+        }
+        $script = isset($_SERVER['SCRIPT_FILENAME']) && is_string($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : '';
+        if (str_ends_with($script, '/frontend/shared/controller/src_ajax.php')) {
+            return;
+        }
+        $ruta = AccesoRolPau::rutaDespachada() ?? (string) parse_url($requestUri, PHP_URL_PATH);
+        self::exigirFirmaEnRuta($ruta);
+    }
+
+    /**
+     * Comprueba la petición actual (ya se sabe que no trae `h`) contra la ruta que se va a servir.
+     */
+    public static function exigirFirmaEnRuta(string $ruta): void
+    {
+        /** @var array<array-key, mixed> $post */
+        $post = $_POST;
+        /** @var array<array-key, mixed> $get */
+        $get = $_GET;
+        if (isset($post['h']) || isset($get['h'])) {
+            return; // viene firmada: ya la ha comprobado validatePost() ({@see datosDeLaPeticion()})
+        }
+        $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $metodo = isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
+        if (!str_contains($requestUri, '/index.php') && !str_contains($requestUri, 'udm4')) {
+            self::registrarSinFirma(dirname(__DIR__, 3) . '/log', $metodo, $requestUri, $post !== [] ? $post : $get);
+        }
+        if (!HashFSinFirma::exigida($ruta, $post, $get, [HashB::class, 'esDeEstaSesion'])) {
+            return;
+        }
+        error_log('[HashF] petición sin firma: ' . $metodo . ' ' . HashFSinFirma::rutaCanonica($ruta)
+            . (HashFSinFirma::seCorta() ? ' (rechazada)' : ' (modo aviso)'));
+        if (!HashFSinFirma::seCorta()) {
+            return;
+        }
+        $mensaje = _("Petición sin firma. Vuelva a abrir la pantalla desde el menú.");
+        if (!headers_sent()) {
+            http_response_code(403);
+        }
+        if (str_contains($ruta, '/src/')) {
+            if (!headers_sent()) {
+                header('Content-Type: application/json; charset=UTF-8');
+            }
+            echo json_encode(['success' => false, 'mensaje' => $mensaje], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8');
+        }
+        exit();
+    }
 
     /**
      * Modo de registro: si existe la bandera {@see BANDERA_REGISTRO_SIN_FIRMA} en `$dirLog`, apunta en
@@ -428,14 +517,13 @@ class HashF
     $this->addHiddenToForm();
 
     $CamposFormSorted = $this->ordenarQuery($this->sCamposForm);
-    $rta = self::md($CamposFormSorted);
-    $HashCamposForm = $rta['hash'];
-    $HashCamposFormOrig = $rta['orig'];
-
     $CamposHidden = $this->array2stringCamposHidden();
     $aCamposHidden = $this->getArrayCamposHidden();
     $CamposNo = $this->sCamposNo;
     $CamposChk = $this->sCamposChk;
+    $rta = self::md($CamposFormSorted, self::MODO_FORM, self::ligado($CamposNo, $CamposChk, $CamposHidden));
+    $HashCamposForm = $rta['hash'];
+    $HashCamposFormOrig = $rta['orig'];
 
     $aCamposNo = [];
     if (!empty($CamposNo)) {
@@ -455,7 +543,10 @@ class HashF
     $CamposHidden_hash = $rta['hash'];
     $CamposHidden_horig = $rta['orig'];
 
-    $html = "<input type=\"Hidden\" name=\"h\" value=\"$HashCamposForm\" >\n";
+    // data-hc: los campos firmados, a la vista (no es secreto y no se envía). La usa la auditoría E2E
+    // de formularios, que no puede recalcular la firma.
+    $hc = htmlspecialchars($HashCamposFormOrig, ENT_QUOTES, 'UTF-8');
+    $html = "<input type=\"Hidden\" name=\"h\" value=\"$HashCamposForm\" data-hc=\"$hc\" >\n";
     if (OrbixRuntime::isDebug()) {
         $html .= "<input type=\"Hidden\" name=\"horig\" value=\"$HashCamposFormOrig\" >\n";
     }
@@ -486,7 +577,7 @@ class HashF
         $sUrl_full = self::ordenarParam($sUrl_full);
         // Normalizar quitando sf/ESQUEMA para hash consistente
         $sUrl_hash = self::normalizarUrlSinSfEsquema($sUrl_full);
-        $rta = self::md($sUrl_hash);
+        $rta = self::md($sUrl_hash, self::MODO_URL, self::ligado(''));
         $sUrlHash = $rta['hash'];
         $horig = $rta['orig'];
 
@@ -553,11 +644,15 @@ class HashF
     $url = $this->sUrl;
     $sUrl_full = self::FullPath($url);
 
-    $rta = self::md($CamposFormSorted);
+    $CamposNo = $this->sCamposNo;
+    $rta = self::md(
+        $CamposFormSorted,
+        self::MODO_FORM,
+        self::ligado($CamposNo, $this->sCamposChk, empty($this->aCamposHidden) ? '' : $this->array2stringCamposHidden())
+    );
     $HashCamposForm = $rta['hash'];
     $HashCamposFormOrig = $rta['orig'];
 
-    $CamposNo = $this->sCamposNo;
     $aCamposNo = [];
     if (!empty($CamposNo)) {
         $aCamposNo = explode('!', $CamposNo);
@@ -653,7 +748,7 @@ class HashF
         $sUrl_full .= (str_contains($sUrl_full, '?') ? '&' : '?') . $CamposFormSorted;
     }
 
-    $rta = self::md($sUrl_full);
+    $rta = self::md($sUrl_full, self::MODO_SIN_VALOR, self::ligado($this->sCamposNo));
     $HashCamposForm = $rta['hash'];
     $HashCamposFormOrig = $rta['orig'];
 
@@ -700,7 +795,7 @@ class HashF
      * @param array<string, mixed> $aParam POST crudo o ya preparado con {@see prepareParametrosPosicionBack}
      * @return array{orig: string, hash: string}
      */
-    private static function mdForPosicionBack(string $scriptPath, array $aParam, bool $alreadyPrepared = false): array
+    private static function mdForPosicionBack(string $scriptPath, array $aParam, bool $alreadyPrepared = false, string $hno = ''): array
     {
         $prepared = $alreadyPrepared ? $aParam : self::prepareParametrosPosicionBack($aParam);
         $aParamSorted = self::ordenarArrayParam($prepared);
@@ -710,7 +805,7 @@ class HashF
             $sUrl .= '?' . http_build_query($aParamSorted);
         }
 
-        return self::md($sUrl);
+        return self::md($sUrl, self::MODO_POSICION, self::ligado($hno));
     }
 
     /**
@@ -762,14 +857,12 @@ class HashF
     $this->addHiddenToForm();
 
     $CamposFormSorted = $this->ordenarQuery($this->sCamposForm);
-    $rta = self::md($CamposFormSorted);
-    $HashCamposForm = $rta['hash'];
-    $HashCamposFormOrig = $rta['orig'];
-
     $CamposHidden = $this->array2stringCamposHidden();
     $aCamposHidden = $this->getArrayCamposHidden();
     $CamposNo = $this->sCamposNo;
-    $CamposChk = $this->sCamposChk;
+    // Esta cadena solo lleva h, hh y hhc: se firma con las listas que de verdad viajan.
+    $rta = self::md($CamposFormSorted, self::MODO_FORM, self::ligado('', '', $CamposHidden));
+    $HashCamposForm = $rta['hash'];
 
     $aCamposNo = [];
     if (!empty($CamposNo)) {
@@ -832,12 +925,12 @@ class HashF
     $this->addHiddenToForm();
 
     $CamposFormSorted = $this->ordenarQuery($this->sCamposForm);
-    $rta = self::md($CamposFormSorted);
-    $HashCamposForm = $rta['hash'];
-
     $CamposHidden = $this->array2stringCamposHidden();
     $aCamposHidden = $this->getArrayCamposHidden();
     $CamposNo = $this->sCamposNo;
+    // Viajan h, hh, hhc y hno (sin hchk).
+    $rta = self::md($CamposFormSorted, self::MODO_FORM, self::ligado($CamposNo, '', $CamposHidden));
+    $HashCamposForm = $rta['hash'];
 
     $aCamposNo = [];
     if (!empty($CamposNo)) {
@@ -951,21 +1044,33 @@ class HashF
 
 
     /**
-     * Calcula el HashF(md5) del string que se le pasa. Se añade el id_session y algún carácter más.
-     * Por lo que sólo sirve para la misma session.
+     * Firma del string que se le pasa: HMAC-SHA256 con la clave aleatoria de la sesión (la misma de
+     * {@see HashB}; vive solo en el servidor, así que el usuario no puede calcularla aunque conozca su
+     * PHPSESSID). Solo sirve para la misma sesión.
      *
-     * @param string $str
+     * Dentro de lo firmado van también el modo ({@see MODO_FORM}…) y las listas que acompañan a la firma
+     * ({@see ligado()}): quien recibe no puede presentarla como si fuera de otro modo ni con otras listas.
+     *
      * @return array{orig: string, hash: string}
      */
-    private static function md(string $str): array
+    private static function md(string $str, string $modo, string $ligado = ''): array
 {
     $str = rawurldecode(trim($str));
 
     return [
         'orig' => $str,
-        'hash' => md5($str . session_id() . "a+front+"),
+        'hash' => hash_hmac('sha256', $modo . "\n" . $str . "\n" . $ligado, HashB::claveDeSesion()),
     ];
 }
+
+    /**
+     * Listas que viajan junto a la firma y deciden cómo se comprueba: campos que no cuentan (`hno`),
+     * casillas (`hchk`) y campos ocultos (`hhc`). Se firman tal como se emiten.
+     */
+    private static function ligado(string $hno, string $hchk = '', string $hhc = ''): string
+    {
+        return 'hno=' . $hno . "\n" . 'hchk=' . $hchk . "\n" . 'hhc=' . $hhc;
+    }
 
     /**
      * Ordenar, para asegurar que es el mismo orden al crearlo que al comprobar
@@ -1014,7 +1119,7 @@ class HashF
      * @param array<string, mixed> $aCampos
      * @return array{orig: string, hash: string}
      */
-    private static function getHashArray(array $aCampos, int $sin_valor = 0): array
+    private static function getHashArray(array $aCampos, int $sin_valor = 0, string $modo = self::MODO_OCULTOS, string $ligado = ''): array
 {
     $aCampos['hnov'] = $sin_valor;
     $aParamSorted = self::ordenarArrayParam($aCampos);
@@ -1022,7 +1127,7 @@ class HashF
     if (!empty($aParamSorted)) $sUrl_full = http_build_query($aParamSorted, '', '&');
     $sUrl_full = str_replace('%21', '!', $sUrl_full);
 
-    $rta = self::md($sUrl_full);
+    $rta = self::md($sUrl_full, $modo, $ligado);
     return $rta;
 }
 

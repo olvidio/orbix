@@ -37,14 +37,45 @@ final class AccesoRolPau
     /** @var array{comunes: list<string>, por_pau: array<string, list<string>>}|null */
     private static ?array $lista = null;
 
+    /** Ruta `/src/...` que el enrutador ha resuelto y va a despachar, si la ha fijado. */
+    private static ?string $rutaDespachada = null;
+
+    /**
+     * Los enrutadores (`public/index.php`, `src_ajax.php`) dicen aquí qué ruta `/src/...` van a despachar,
+     * para que se compruebe esa y no la que aparenta la URL de la petición.
+     */
+    public static function fijarRutaDespachada(?string $ruta): void
+    {
+        self::$rutaDespachada = $ruta;
+    }
+
+    /** La ruta `/src/...` que el enrutador ha dicho que va a despachar, si lo ha dicho. */
+    public static function rutaDespachada(): ?string
+    {
+        return self::$rutaDespachada;
+    }
+
+    /**
+     * @param array<array-key, mixed> $server
+     */
+    public static function uriQueSeComprueba(array $server): ?string
+    {
+        if (self::$rutaDespachada !== null) {
+            return self::$rutaDespachada;
+        }
+        $uri = $server['REQUEST_URI'] ?? null;
+
+        return is_string($uri) ? $uri : null;
+    }
+
     /**
      * Comprueba la petición actual. Si el usuario no puede pedirla y se exige, responde «Operación no
      * autorizada» (JSON en `/src`, texto en una pantalla) y termina.
      */
     public static function comprobarPeticionActual(): void
     {
-        $uri = $_SERVER['REQUEST_URI'] ?? null;
-        if (!is_string($uri) || PHP_SAPI === 'cli') {
+        $uri = self::uriQueSeComprueba($_SERVER);
+        if ($uri === null || PHP_SAPI === 'cli') {
             return;
         }
         $auth = $_SESSION['session_auth'] ?? null;

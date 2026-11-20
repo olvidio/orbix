@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\unit\frontend\devel_codegen;
+namespace Tests\unit\tools\codegen;
 
-use frontend\devel_codegen\helpers\DevelCodegenSupport;
 use PHPUnit\Framework\TestCase;
+use tools\codegen\DevelCodegenSupport;
+
+require_once dirname(__DIR__, 4) . '/tools/codegen/DevelCodegenSupport.php';
 
 final class DevelCodegenSupportCriteriaTest extends TestCase
 {

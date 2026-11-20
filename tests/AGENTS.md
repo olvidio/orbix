@@ -172,6 +172,10 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 - `OtrasHerramientasSoloAdministracionTest` (devel_db_admin): las herramientas sobre todos los esquemas que viven en otros módulos (resincronizaciones, estructura de tablas) comprueban `PermisoHerramientasBdGuard::permiteEsquemas()` lo primero.
 - `tests/unit/shared/infrastructure/ScriptsSoloLineaDeOrdenesTest`: todo script PHP de la raíz, `tools/`, `proves/` y `docs/scripts/` (sin `namespace`) empieza cortando si no se lanza desde la terminal (`PHP_SAPI !== 'cli'`).
 - `tests/unit/shared/infrastructure/ui/http/RutaControladorSrcTest`: el enrutador solo carga por ruta de fichero controladores HTTP de un módulo.
+- `tests/unit/shared/infrastructure/ui/http/SesionCookieTest`: los arranques de sesión configuran la cookie con `SesionCookie::configurar()` (nada de `session_set_cookie_params` sueltos), y ninguna vista ni script imprime `session_id()` ni lo lee del cuerpo de la petición.
+- `tests/unit/tools/codegen/GenerarClasesEntradaTest`: el generador de código (`tools/codegen/generar_clases.php`) no está en la web, solo corre por línea de órdenes y solo admite identificadores.
+- `tests/unit/frontend/security/HashFFirmaTest`: la firma `h` de `HashF` es un HMAC con la clave de la sesión y fija el modo y las listas `hno` / `hchk` / `hhc`; un campo añadido, una lista cambiada o una firma presentada en otro modo se rechazan. Se prueba con `HashF::firmaValida()` (lo que `validatePost()` comprueba, sin cortar ni redirigir).
+- `tests/unit/frontend/security/HashFSinFirmaTest`: qué peticiones se admiten sin firma `h` (sin datos, solo cápsula, token de descarga, portada, app móvil) y que la lista de la app móvil es la documentada. Una ruta nueva que tenga que funcionar sin firma se añade a `HashFSinFirma` con su motivo; no se relaja la regla.
 - `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
 
 ## Escapar el HTML que se monta en `src/`

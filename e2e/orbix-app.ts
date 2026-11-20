@@ -57,6 +57,34 @@ const pilaNueva = new WeakSet<Page>();
  * usuario abriendo directamente su formulario (`rol-restringido`), «atrás» en `usuarios-alta-baja`
  * volvía a ese formulario de alta en vez de a la lista.
  */
+/**
+ * Parámetros firmados (`h`) para pedir una pantalla de `frontend/` con esos parámetros, como los firma el
+ * menú. La firma solo la puede calcular el servidor: la da `frontend/shared/controller/e2e_firmar.php`,
+ * que solo existe en la instancia de pruebas. Sin parámetros no hace falta firma.
+ */
+export async function parametrosFirmados(page: Page, ruta: string, parametros: string): Promise<string> {
+  if (parametros === '') {
+    return '';
+  }
+  const base = new URL('.', page.url());
+  const res = await page.request.post(new URL('frontend/shared/controller/e2e_firmar.php', base).href, {
+    form: { ruta: new URL(ruta, base).pathname, parametros },
+  });
+  const { query } = (await res.json()) as { query: string };
+  expect(query, `firma de ${ruta}?${parametros}`).not.toBe('');
+  return query;
+}
+
+/** `ruta?parametros` con los parámetros firmados; `nav` no entra en la firma y se conserva. */
+export async function urlFirmada(page: Page, path: string): Promise<string> {
+  const [ruta, query = ''] = path.split(/\?(.*)/s);
+  const nav = new URLSearchParams(query).get('nav');
+  const resto = query.split('&').filter((p) => p !== '' && !p.startsWith('nav=')).join('&');
+  const firmados = await parametrosFirmados(page, ruta, resto);
+  const todos = [firmados, nav === null ? '' : `nav=${nav}`].filter((p) => p !== '').join('&');
+  return todos === '' ? ruta : `${ruta}?${todos}`;
+}
+
 export async function abrirPantalla(page: Page, path: string, esperar: string, soloPresente = false): Promise<void> {
   if (pilaNueva.delete(page)) {
     path += (path.includes('?') ? '&' : '?') + 'nav=reset';
@@ -64,7 +92,7 @@ export async function abrirPantalla(page: Page, path: string, esperar: string, s
   await page.evaluate((p) => {
     // @ts-expect-error función global de Orbix (scripts/index.js.php)
     fnjs_update_div('#main', p);
-  }, path);
+  }, await urlFirmada(page, path));
   const loc = page.locator('#main').locator(esperar).first();
   if (soloPresente) {
     await expect(loc).toBeAttached({ timeout: 20_000 });

@@ -72,7 +72,8 @@ export async function discoverUrlsViaMenuAjaxClicks(page: Page): Promise<string[
       if (shouldSkipMenuOnclick(onclick)) {
         continue;
       }
-      await item.scrollIntoViewIfNeeded();
+      // Con límite: una entrada de un desplegable cerrado no llega a ser visible y, sin él, la espera dura todo el test.
+      await item.scrollIntoViewIfNeeded({ timeout: 3_000 });
       await item.click({ timeout: 12_000 });
     } catch {
       continue;

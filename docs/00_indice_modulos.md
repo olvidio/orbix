@@ -22,7 +22,7 @@ fecha: 2026-05-21
 | notas, inventario, encargossacd, actividadestudios, usuarios, menus | si | si | si | si | 4 |
 | devel_db_admin, dbextern, shared, configuracion | si | si | si | si/parcial | 5 |
 | asignaturas, tablonanuncios | [catalogo](catalogo/asignaturas/) | si | si | si | 6 |
-| permisos, devel_codegen, utils_database | — | — | — | — | excepcion |
+| permisos, utils_database | — | — | — | — | excepcion |
 
 Documentos transversales:
 

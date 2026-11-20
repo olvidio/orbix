@@ -148,6 +148,20 @@ final class HashB
     }
 
     /**
+     * ¿Es una cápsula firmada aquí para esta sesión? Solo mira la firma: no dice para qué acción vale ni
+     * si ha caducado (eso lo comprueba {@see open()} en el endpoint que la recibe).
+     */
+    public static function esDeEstaSesion(string $capsule): bool
+    {
+        if (substr_count($capsule, '.') !== 1) {
+            return false;
+        }
+        [$encoded, $sig] = explode('.', $capsule, 2);
+
+        return $encoded !== '' && $sig !== '' && hash_equals(self::signature($encoded), $sig);
+    }
+
+    /**
      * Extrae el contexto sin validar (solo para diagnóstico / debug).
      *
      * **No usar en código de producción.** No verifica firma, sesión ni
@@ -196,6 +210,23 @@ final class HashB
     public static function asegurarClave(): void
     {
         self::clave();
+    }
+
+    /**
+     * Cambia la clave de la sesión. Se llama al autenticarse: lo firmado antes de entrar deja de valer.
+     */
+    public static function renovarClave(): void
+    {
+        unset($_SESSION[self::CLAVE_SESION]);
+        self::clave();
+    }
+
+    /**
+     * Para otras firmas ligadas a la sesión ({@see SignedDownloadToken}).
+     */
+    public static function claveDeSesion(): string
+    {
+        return self::clave();
     }
 
     /**

@@ -76,4 +76,19 @@ final class SignedDownloadTokenTest extends TestCase
         $this->assertNull(Token::parse(null));
         $this->assertNull(Token::parse('sinpunto'));
     }
+
+    public function test_el_token_de_una_sesion_no_vale_en_otra(): void
+    {
+        $antes = $_SESSION ?? [];
+        try {
+            $_SESSION[\src\shared\security\HashB::CLAVE_SESION] = str_repeat('a', 64);
+            $tk = Token::tokenCertificadoEmitido(5);
+            $this->assertNotNull(Token::parse($tk));
+
+            $_SESSION[\src\shared\security\HashB::CLAVE_SESION] = str_repeat('b', 64);
+            $this->assertNull(Token::parse($tk));
+        } finally {
+            $_SESSION = $antes;
+        }
+    }
 }

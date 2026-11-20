@@ -106,7 +106,7 @@ Al mapear PDO → entidad/array, convertir fechas y json/jsonb **en el mismo blo
 ### Búsquedas con `Criteria` (en lugar de `$aWhere` / `$aOperators`)
 Ya no se usan los `getXxx(array $aWhere, array $aOperators)`, ni `LegacyWhereAdapter`, ni `Condicion`; el único resto es `getConjunt()` (`ClaseRepository`, `AsistenteRepositoryInterface`). Módulo de referencia: `asistentes` (`AsistenteField`, `PgAsistenteRepository::matching()`, `AsistenteActividadService`). Historial de la migración: [`docs/dev/refactor_busquedas_criteria.md`](docs/dev/refactor_busquedas_criteria.md).
 
-- **Código nuevo o tocado:** buscar siempre con `matching(Criteria)`; **no** reintroducir métodos `getXxx(array $aWhere, array $aOperators)` ni arrays de operadores (`'~'`, `'BETWEEN'`, `_ordre`, …). El generador `devel_codegen/factory.php` ya no los emite.
+- **Código nuevo o tocado:** buscar siempre con `matching(Criteria)`; **no** reintroducir métodos `getXxx(array $aWhere, array $aOperators)` ni arrays de operadores (`'~'`, `'BETWEEN'`, `_ordre`, …). El generador `php tools/codegen/generar_clases.php` ya no los emite.
 - **Domain:** cada entidad consultable tiene un enum `src/<modulo>/domain/criteria/<Entidad>Field.php` (`implements CriteriaField`, valor = nombre del campo de la entidad). Las piezas genéricas (`Criteria`, `Filter`, `FilterGroup`, `Order`, `Operator`) viven en `src/shared/domain/criteria/` y no tienen SQL.
 - **Application:** construir el criterio con `Criteria::create()->where(Filter::eq(F::IdActiv, $id))->andWhere(...)->orderBy(F::IdNom)->limit(n)`. Valores PHP nativos o VO; nunca strings con formato (`"a,b"`, `"{1,2}"`). OR entre campos con `FilterGroup::anyOf(...)` / `allOf(...)`.
 - **Infrastructure:** el repositorio `Pg*` implementa `matching()` (con el trait `RunsCriteriaQueries` y el mapa campo → columna si difieren) y solo acepta su propio enum. Si hay que unir varios repositorios, usar un método tipo `matchingConjunto()` en lugar de `getConjunt()`.
@@ -231,7 +231,7 @@ Cobertura (vacías, fuzzy, placeholders frente a `es_ES.pot`): `php tools/audit/
 | Catálogos de traducción | `languages/` | `languages/ca_ES.UTF-8/LC_MESSAGES/orbix.po` |
 | Traducción asistida (Python) | `tools/i18n/` | `tools/i18n/traduir_groq.py` |
 
-Subcarpetas de `tools/`: `audit/`, `fix/`, `i18n/`, `phpstan/`, `qa/`; más `tools/phpunit-docker` en la raíz de `tools/`.
+Subcarpetas de `tools/`: `audit/`, `codegen/`, `fix/`, `i18n/`, `phpstan/`, `qa/`; más `tools/phpunit-docker` en la raíz de `tools/`.
 
 ### Comprobaciones al añadir un script
 

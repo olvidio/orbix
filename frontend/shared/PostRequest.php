@@ -656,10 +656,6 @@ class PostRequest
         if (!is_string($sid)) {
             $sid = '';
         }
-        if ($sid === '' && isset($_POST[$sessionName]) && is_string($_POST[$sessionName])
-            && preg_match('/^[a-zA-Z0-9,-]{16,128}$/', $_POST[$sessionName]) === 1) {
-            $sid = $_POST[$sessionName];
-        }
         if ($sid !== '') {
             $cookies[$sessionName] = $sid;
         }

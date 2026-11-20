@@ -87,7 +87,8 @@ test('las pantallas de frontend/ se abren sin parámetros sin error de PHP', asy
     const t0 = Date.now();
     try {
       const res = await page.request.post(new URL(`frontend/${rel}`, base).href, {
-        form: { e2e_sin_parametros: '' },
+        // Un POST no vacío sin datos: `PHPSESSID` es el parámetro que añade la interfaz y no necesita firma.
+        form: { PHPSESSID: '1' },
         maxRedirects: 5,
         timeout: TIEMPO_MAX_MS,
         failOnStatusCode: false,

@@ -306,7 +306,7 @@ final class SelectCargosDeActividadTest extends myTest
 
         $this->assertSame(2, substr_count($html, 'links-insert-btn'), 'sm en actividad de n: n y n de paso');
         $this->assertMatchesRegularExpression(
-            "~fnjs_update_div\\('#ficha_activ','[^']*/frontend/actividadcargos/controller/form_cargos_de_actividad\\.php\\?id_dossier=3102&id_pau=3001&mod=nuevo&obj_pau=PersonaN&pau=a&h=[0-9a-f]{32}'\\);\">añadir n</span>~",
+            "~fnjs_update_div\\('#ficha_activ','[^']*/frontend/actividadcargos/controller/form_cargos_de_actividad\\.php\\?id_dossier=3102&id_pau=3001&mod=nuevo&obj_pau=PersonaN&pau=a&h=[0-9a-f]{64}'\\);\">añadir n</span>~",
             $html
         );
         $this->assertStringContainsString('añadir n de paso</span>', $html);
@@ -364,7 +364,7 @@ final class SelectCargosDeActividadTest extends myTest
         foreach (['pau' => 'a', 'id_pau' => '3001', 'obj_pau' => 'Actividad', 'queSel' => 'sel', 'id_dossier' => '3102', 'permiso' => '3'] as $campo => $valor) {
             $this->assertStringContainsString(sprintf('<input type="hidden" id="%1$s" name="%1$s" value="%2$s">', $campo, $valor), $html);
         }
-        $this->assertMatchesRegularExpression('/name="hh" value="[0-9a-f]{32}"/', $html, 'firma de los campos ocultos');
+        $this->assertMatchesRegularExpression('/name="hh" value="[0-9a-f]{64}"/', $html, 'firma de los campos ocultos');
         // Las URL van con json_encode dentro del <script> (barras escapadas).
         $this->assertStringContainsString('attr(\'action\', "frontend\\/actividadcargos\\/controller\\/form_cargos_de_actividad.php")', $html);
         $this->assertMatchesRegularExpression('~url: "[^"]*\\\\/src\\\\/actividadcargos\\\\/cargo_eliminar"~', $html);

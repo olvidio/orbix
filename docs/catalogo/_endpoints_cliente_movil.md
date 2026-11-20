@@ -6,6 +6,8 @@ estado_revision: "revisado"
 
 # Endpoints revisados para cliente móvil
 
+**Firma `h`.** La app no firma con `HashF`. Los endpoints de este documento están exentos de la firma obligatoria en `frontend/shared/security/HashFSinFirma.php` (`RUTAS_CLIENTE_MOVIL`); un endpoint nuevo que la app llame con parámetros hay que añadirlo aquí y allí a la vez (lo comprueba `HashFSinFirmaTest`), o la petición se rechaza con un 403.
+
 Fichas API con ejemplos verificados contra `orbix-android` (mayo 2026). Estado `estado_revision: revisado` en cada ficha.
 
 ## Autenticación y shell

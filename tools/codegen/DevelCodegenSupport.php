@@ -2,12 +2,24 @@
 
 declare(strict_types=1);
 
-namespace frontend\devel_codegen\helpers;
+namespace tools\codegen;
 
 
 final class DevelCodegenSupport
 {
 
+
+    /** Nombre de clase, de módulo o de tabla: lo único que el generador admite para montar rutas y código. */
+    public static function esIdentificador(string $valor): bool
+    {
+        return preg_match('/^[A-Za-z][A-Za-z0-9_]*$/D', $valor) === 1;
+    }
+
+    /** Texto que se escribe dentro de un comentario del código generado. */
+    public static function esTextoDeComentario(string $valor): bool
+    {
+        return preg_match('/^[\p{L}\p{N} _-]*$/uD', $valor) === 1;
+    }
 
     public static function fileContents(string $path): string
     {

@@ -107,7 +107,6 @@
 194	5	frontend/actividades/controller/planning_casa_que.php	\N	Planing Casa
 114	25	frontend/cartaspresentacion/controller/cartas_presentacion.php	\N	Cartas Presentacion
 3	25	frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
-19	2	frontend/devel_codegen/controller/factory_form.php	\N	generador de clases
 133	3	frontend/ubis/controller/ubis_buscar.php	\N	buscar ubis
 119	5	frontend/actividades/controller/actividad_que.php	\N	seleccionar actividad
 179	24	\N	\N	Raiz Zonas

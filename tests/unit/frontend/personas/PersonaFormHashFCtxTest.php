@@ -6,7 +6,6 @@ namespace Tests\unit\frontend\personas;
 
 use frontend\shared\security\HashF;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
 
 /**
  * Guardar persona POSTea a `src_ajax.php`, que valida HashF antes de llegar
@@ -58,16 +57,14 @@ final class PersonaFormHashFCtxTest extends TestCase
     public function test_ctx_fuera_de_hashf_cambia_el_hash_de_nombres_del_form(): void
     {
         $post = $this->postComoSerialize($this->hashFPersona(false)->getCamposHtml());
-        $hFirmado = (string) $post['h'];
 
-        $this->assertSame($hFirmado, $this->hashNombresComoValidatePost($post));
+        $this->assertTrue((new HashF())->firmaValida($post));
 
         $post['ctx_update'] = 'capsule-update';
         $post['ctx_eliminar'] = 'capsule-eliminar';
 
-        $this->assertNotSame(
-            $hFirmado,
-            $this->hashNombresComoValidatePost($post),
+        $this->assertFalse(
+            (new HashF())->firmaValida($post),
             'Campos ctx_* extra deben romper HashF (redirect HTML, no JSON).'
         );
     }
@@ -132,38 +129,5 @@ final class PersonaFormHashFCtxTest extends TestCase
         }
 
         return $post;
-    }
-
-    /**
-     * Reproduce el segundo chequeo de HashF::validatePost (nombres del form).
-     *
-     * @param array<string, mixed> $aPOST
-     */
-    private function hashNombresComoValidatePost(array $aPOST): string
-    {
-        $hno = (string) ($aPOST['hno'] ?? '');
-        if ($hno !== '') {
-            foreach (explode('!', $hno) as $campo) {
-                unset($aPOST[$campo]);
-            }
-        }
-        unset(
-            $aPOST['PHPSESSID'],
-            $aPOST['atras'],
-            $aPOST['h'],
-            $aPOST['horig'],
-            $aPOST['hh'],
-            $aPOST['hhc'],
-            $aPOST['hhorig'],
-            $aPOST['hno'],
-            $aPOST['hchk'],
-            $aPOST['hnov'],
-        );
-
-        $method = new ReflectionMethod(HashF::class, 'getHashArray');
-        /** @var array{hash: string, orig: string} $rta */
-        $rta = $method->invoke(null, $aPOST, 1);
-
-        return $rta['hash'];
     }
 }

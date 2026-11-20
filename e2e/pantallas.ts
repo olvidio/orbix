@@ -10,7 +10,7 @@ export const PATRON_ACCION =
   /(update|guardar|eliminar|delete|borrar|nuevo|nueva|crear|aprobar|importar|exportar|enviar|resincronizar|aplicar|upload|subir|download|descargar|mover|copiar|duplicar|publicar|cambiar|marcar|asignar|quitar|add|del|insert|generar|grabar|recuperar|restablecer|login|session|logout|ejecutar|absorber|renombrar|trasladar|cerrar|abrir|anular|firmar|imprimir|sincro|calcular|actualizar|reset|bytea|mpdf|pdf)/i;
 
 /** Módulos que no se abren: DDL sobre la BD y generación de ficheros de código. */
-export const MODULOS_EXCLUIDOS = new Set(['devel_db_admin', 'devel_codegen']);
+export const MODULOS_EXCLUIDOS = new Set(['devel_db_admin']);
 
 /** Controladores concretos (`modulo/controller/fichero.php`) que no se abren, con el motivo. */
 export const EXCLUIDOS: Record<string, string> = {

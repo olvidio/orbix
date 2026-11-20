@@ -169,11 +169,18 @@ test.describe('Tras login: enlaces en la página principal', () => {
       .slice(0, max);
 
     expect(
-      candidates.length,
-      `No se recolectaron URLs navegables del mismo origen (${pageOrigin}) tras filtros (logout/delete y, por defecto, controllers tipo *_que.php / *_select.php y rutas POST-típicas). ` +
-        `Para probarlos con GET poco fiable: E2E_STRICT_MENU_LINK_GET=1. ` +
-        `¿Menú vacío? índice=${hrefsIndex.length} tras_clics_ajax=${hrefsFromMain.length} unión=${hrefs.length} antes del filtro.`
+      hrefs.length,
+      `No se recolectó ninguna URL del menú del mismo origen (${pageOrigin}). ¿Menú vacío? ` +
+        `índice=${hrefsIndex.length} tras_clics_ajax=${hrefsFromMain.length}.`
     ).toBeGreaterThan(0);
+
+    // El menú tiene entradas, pero todas son de las que no se prueban con un GET suelto
+    // (*_que.php, *_select.php, gestion_*, sincronización con la BDU…): no hay nada que pedir.
+    test.skip(
+      candidates.length === 0,
+      `Las ${hrefs.length} URL del menú quedan fuera por los filtros de GET; ` +
+        `para probarlas igualmente: E2E_STRICT_MENU_LINK_GET=1.`
+    );
 
     const failures: string[] = [];
     const traceLines: string[] = [];

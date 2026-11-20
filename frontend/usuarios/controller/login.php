@@ -148,6 +148,8 @@ if (!isset($_SESSION['session_auth'])) {
         }
 
         LoginBridge::invalidatePermisosActividadesCache();
+        // Al entrar, sesión nueva: ni el id ni la clave de firma que hubiera antes de autenticarse siguen valiendo.
+        \frontend\shared\FrontBootstrap::renovarSesionAlEntrar();
         $_SESSION['session_auth'] = $loginSession['session_auth'];
         $_SESSION['config'] = $loginSession['session_config'];
 

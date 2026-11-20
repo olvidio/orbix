@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Page } from '@playwright/test';
@@ -54,8 +53,12 @@ export interface ResultadoFormulario {
 /** Campos que `validatePost()` / `ordenarArrayParam()` descartan antes de calcular el hash. */
 const META = new Set(['PHPSESSID', 'atras', 'h', 'hc', 'horig', 'hh', 'hhc', 'hhorig', 'hno', 'hchk', 'hnov', 'id_sel', 'scroll_id', 'nav']);
 
-/** El hash que calcularía `validatePost()` para un POST con esos nombres de campo. */
-export function hashDeCampos(nombres: Iterable<string>, hno: string, hchk: string, idSesion: string): string {
+/**
+ * La lista de campos que `validatePost()` firmaría para un POST con esos nombres, en el mismo formato que
+ * publica el formulario en `data-hc` del campo `h` (`a=&b=`). La firma en sí no se puede recalcular aquí:
+ * es un HMAC con una clave que solo tiene el servidor. `idSesion` ya no interviene.
+ */
+export function hashDeCampos(nombres: Iterable<string>, hno: string, hchk: string, _idSesion: string): string {
   const fuera = new Set(hno.split('!').filter((c) => c !== ''));
   const claves = new Set<string>();
   for (const n of nombres) {
@@ -69,8 +72,7 @@ export function hashDeCampos(nombres: Iterable<string>, hno: string, hchk: strin
     }
   }
   // `ksort` + `http_build_query` con todos los valores vacíos + `rawurldecode`.
-  const texto = [...claves].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).map((c) => `${c}=`).join('&');
-  return createHash('md5').update(texto + idSesion + 'a+front+').digest('hex');
+  return [...claves].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).map((c) => `${c}=`).join('&');
 }
 
 /** Función que se ejecuta en el navegador: lee los formularios firmados de un documento. */
@@ -115,7 +117,8 @@ function leerFormularios(raiz: Document | Element): FormularioFirmado[] {
     out.push({
       nombre: form.id || form.getAttribute('name') || form.getAttribute('action') || '(sin nombre)',
       visible: form.ownerDocument.defaultView === null || form.getClientRects().length > 0,
-      h: valor('h'),
+      // No la firma, sino la lista de campos firmados que el servidor publica junto a ella.
+      h: (form.querySelector('input[name="h"]') as HTMLInputElement | null)?.dataset.hc ?? '',
       hno: valor('hno'),
       hchk: valor('hchk'),
       enviados: [...enviados],

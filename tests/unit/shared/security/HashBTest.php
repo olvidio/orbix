@@ -403,4 +403,28 @@ class HashBTest extends TestCase
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
+
+    public function test_al_entrar_se_renueva_la_clave_y_las_capsulas_anteriores_no_se_abren(): void
+    {
+        $capsula = HashB::sign('accion_x', ['id' => 1]);
+        $claveAntes = $_SESSION[HashB::CLAVE_SESION];
+
+        HashB::renovarClave();
+
+        $this->assertNotSame($claveAntes, $_SESSION[HashB::CLAVE_SESION]);
+        $this->expectException(\Throwable::class);
+        HashB::open($capsula, 'accion_x');
+    }
+
+    public function test_el_login_renueva_el_id_de_sesion_y_la_clave(): void
+    {
+        $login = (string) file_get_contents(dirname(__DIR__, 4) . '/frontend/usuarios/controller/login.php');
+        $pos = strpos($login, '$_SESSION[\'session_auth\'] = $loginSession');
+        $this->assertNotFalse($pos);
+        $antes = substr($login, 0, (int) $pos);
+        $this->assertStringContainsString('FrontBootstrap::renovarSesionAlEntrar()', $antes);
+        $arranque = (string) file_get_contents(dirname(__DIR__, 4) . '/frontend/shared/FrontBootstrap.php');
+        $this->assertStringContainsString('session_regenerate_id(true)', $arranque);
+        $this->assertStringContainsString('HashB::renovarClave()', $arranque);
+    }
 }
