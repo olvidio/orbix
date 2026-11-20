@@ -27,7 +27,8 @@ final class DelegacionCode
         if (mb_strlen($value) > 8) {
             throw new \InvalidArgumentException(ValueObjectMessages::withValueContext('DelegacionCode must be at most 6 characters', $value));
         }
-        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]+$/u", $value)) {
+        // Una sigla son letras, cifras y «+ . _ -» (crs+, dlmE...): sin comillas, espacios ni separadores.
+        if (!preg_match('/^[\p{L}\p{M}\p{N}_+.-]+$/u', $value)) {
             throw new \InvalidArgumentException('DelegacionCode has invalid characters');
         }
     }

@@ -49,7 +49,7 @@ class InfoProfesorTituloEst extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(ProfesorTituloEstField::Year, OrderDirection::Desc);
         } else {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(ProfesorTituloEstField::Titulo, $this->k_buscar));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(ProfesorTituloEstField::Titulo, (string) $this->k_buscar));
         }
 
         return $this->profesorTituloEstRepository->matching($criteria);

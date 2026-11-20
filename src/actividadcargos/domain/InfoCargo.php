@@ -36,7 +36,7 @@ class InfoCargo extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(CargoField::Cargo);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(CargoField::Cargo, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(CargoField::Cargo, (string) $this->k_buscar));
         }
 
         return $this->cargoRepository->matching($criteria);

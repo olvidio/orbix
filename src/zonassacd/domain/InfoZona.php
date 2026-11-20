@@ -36,7 +36,7 @@ class InfoZona extends DatosInfoRepo
             $criteria = Criteria::create()->orderBy(ZonaField::Orden);
         } else {
             // La tabla no tiene columna `nom` (la consulta legacy fallaba): se busca por el nombre de la zona.
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ZonaField::NombreZona, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(ZonaField::NombreZona, (string) $this->k_buscar));
         }
 
         return $this->zonaRepository->matching($criteria);

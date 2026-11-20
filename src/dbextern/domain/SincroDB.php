@@ -348,7 +348,7 @@ class SincroDB
         $criteria = Criteria::create()
             ->where(Filter::eq(PersonaField::IdTabla, $this->tipo_persona))
             ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
-            ->andWhere(Filter::matchesUnaccented(PersonaField::Apellido1, $apellido1_sinprep_c))
+            ->andWhere(Filter::containsUnaccented(PersonaField::Apellido1, $apellido1_sinprep_c))
             ->orderBy(PersonaField::Apellido1)
             ->addOrderBy(PersonaField::Apellido2)
             ->addOrderBy(PersonaField::Nom);

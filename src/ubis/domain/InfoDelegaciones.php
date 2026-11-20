@@ -36,7 +36,7 @@ class InfoDelegaciones extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::Region);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::Dl, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::Dl, (string) $this->k_buscar));
         }
 
         return $this->delegacionRepository->matching($criteria);

@@ -107,4 +107,14 @@ class FilterTest extends myTest
         $this->assertTrue(Operator::Between->takesList());
         $this->assertFalse(Operator::Eq->takesList());
     }
+
+    public function test_contiene_y_empieza_por_escapan_el_texto_para_que_no_sea_un_patron(): void
+    {
+        $f = Filter::containsUnaccented(FakeField::Nombre, 'a(b|c)*.\\1 ñ-1');
+        $this->assertSame(Operator::MatchesUnaccented, $f->operator);
+        $this->assertSame('a\\(b\\|c\\)\\*\\.\\\\1 ñ\\-1', $f->value);
+
+        $this->assertSame('^O\\\'Brien\\[', Filter::startsWithUnaccented(FakeField::Nombre, "O'Brien[")->value);
+        $this->assertSame('garcia', Filter::patronLiteral('garcia'));
+    }
 }

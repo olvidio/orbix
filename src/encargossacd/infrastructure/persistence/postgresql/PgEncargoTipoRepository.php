@@ -108,8 +108,8 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
             $grupo = $t_grupo[$ta1] ?? [];
         }
 
-        $query = "SELECT * FROM $nom_tabla where id_tipo_enc::text ~ '^" . $id_tipo_enc . "' order by tipo_enc";
-        $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
+        $query = "SELECT * FROM $nom_tabla where id_tipo_enc::text ~ :patron order by tipo_enc";
+        $stmt = $this->prepareAndExecute($oDbl, $query, ['patron' => '^' . $id_tipo_enc], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return ['grupo' => $grupo, 'nom_tipo' => []];
         }

@@ -35,7 +35,7 @@ class InfoLocales extends DatosInfoRepo
     {
         $criteria = Criteria::create();
         if (!empty($this->k_buscar)) {
-            $criteria = $criteria->where(Filter::matchesUnaccented(LocalField::NomIdioma, $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(LocalField::NomIdioma, (string) $this->k_buscar));
         }
 
         return $this->localRepository->matching(

@@ -35,7 +35,7 @@ class InfoMetaMenus extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(MetaMenuField::Url);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(MetaMenuField::Descripcion, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(MetaMenuField::Descripcion, (string) $this->k_buscar));
         }
 
         return $this->metaMenuRepository->matching($criteria);

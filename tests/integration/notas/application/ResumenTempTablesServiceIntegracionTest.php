@@ -91,6 +91,17 @@ final class ResumenTempTablesServiceIntegracionTest extends myTest
         }
     }
 
+    public function test_en_rstgr_una_dl_con_comillas_es_un_valor_y_no_parte_de_la_consulta(): void
+    {
+        $t = $this->tabla('rstgr_comillas');
+        $fin = date('Y') . '-09-01';
+        $curso = "BETWEEN '" . (date('Y') - 1) . "-09-01' AND '$fin'";
+
+        $this->service->rebuildMainTable($t, 'p_numerarios', $fin, $curso, true, ["x') OR ('a'='a", "d'l"]);
+
+        $this->assertSame(0, $this->contar($t));
+    }
+
     public function test_las_notas_del_curso_solo_incluyen_superadas_de_las_personas_de_la_tabla(): void
     {
         $main = $this->tabla('main2');

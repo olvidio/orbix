@@ -37,7 +37,7 @@ class InfoUbiInventario extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NomUbi);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomUbi, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NomUbi, (string) $this->k_buscar));
         }
 
         return $this->ubiInventarioRepository->matching($criteria);

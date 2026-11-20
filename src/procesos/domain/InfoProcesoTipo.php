@@ -34,7 +34,7 @@ class InfoProcesoTipo extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(ProcesoTipoField::NomProceso);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ProcesoTipoField::NomProceso, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(ProcesoTipoField::NomProceso, (string) $this->k_buscar));
         }
 
         return $this->procesoTipoRepository->matching($criteria);

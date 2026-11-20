@@ -65,7 +65,7 @@ final class MatriculasListaOtrasRData
 
         if ($apellido1 !== '') {
             $criteria = Criteria::create()
-                ->where(Filter::matchesUnaccented(PersonaField::Apellido1, '^' . $apellido1))
+                ->where(Filter::startsWithUnaccented(PersonaField::Apellido1, $apellido1))
                 ->andWhere(Filter::eq(PersonaField::Situacion, 'A'))
                 ->orderBy(PersonaField::Dl)
                 ->addOrderBy(PersonaField::Apellido1)

@@ -36,7 +36,7 @@ class InfoTipoTeleco extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NombreTeleco);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NombreTeleco, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NombreTeleco, (string) $this->k_buscar));
         }
 
         return $this->tipoTelecoRepository->matching($criteria);

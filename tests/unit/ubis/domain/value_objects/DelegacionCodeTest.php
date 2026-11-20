@@ -25,6 +25,18 @@ class DelegacionCodeTest extends myTest
         new DelegacionCode(str_repeat('a', 1000)); // Assuming max length validation
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('siglasConCaracteresDeSql')]
+    public function test_una_sigla_no_lleva_comillas_ni_separadores_de_sql(string $sigla)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new DelegacionCode($sigla);
+    }
+
+    public static function siglasConCaracteresDeSql(): array
+    {
+        return [["d'l"], ['d"l'], ['dl;'], ['d\\l'], ['dl b'], ['dl/*']];
+    }
+
     public function test_equals_returns_true_for_same_delegacionCode()
     {
         $delegacionCode1 = new DelegacionCode('dlb');

@@ -80,6 +80,16 @@ final class DevelDbAdminAplicacionTest extends myTest
         $this->assertSame(['a', 'p1', 'av', 'p2', 'af', 'p3'], [$u->esquema, $u->esquemaPwd, $u->esquemav, $u->esquemavPwd, $u->esquemaf, $u->esquemafPwd]);
     }
 
+    public function test_mover_tabla_rechaza_un_nombre_que_no_es_un_identificador_antes_de_hacer_nada(): void
+    {
+        foreach (["x'); id > /tmp/p; echo ('", 'Tabla', 'a b', ''] as $nombre) {
+            $r = (new \src\devel_db_admin\application\MoverTabla())->ejecutar($nombre, []);
+
+            $this->assertNotSame('', $r->fatalError, "«{$nombre}» no es un nombre de tabla");
+            $this->assertSame([], $r->lines);
+        }
+    }
+
     // ---- apps y desplegables ----------------------------------------------------------------------
 
     public function test_la_lista_de_apps_es_id_a_nombre(): void

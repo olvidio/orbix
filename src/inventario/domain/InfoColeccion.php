@@ -37,7 +37,7 @@ class InfoColeccion extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NomColeccion);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomColeccion, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NomColeccion, (string) $this->k_buscar));
         }
 
         return $this->coleccionRepository->matching($criteria);

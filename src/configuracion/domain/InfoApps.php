@@ -35,7 +35,7 @@ class InfoApps extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(AppField::Nom);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(AppField::Nom, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(AppField::Nom, (string) $this->k_buscar));
         }
 
         return $this->appRepository->matching($criteria);

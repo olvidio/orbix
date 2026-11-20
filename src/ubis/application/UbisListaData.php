@@ -36,8 +36,8 @@ class UbisListaData
 
         if ($nombre_ubi !== '') {
             $nom_ubi = str_replace('+', "\+", $nombre_ubi);
-            $criteriaCasa = $criteriaCasa->andWhere(Filter::matchesUnaccented(CasaF::NombreUbi, $nom_ubi));
-            $criteriaCtr = $criteriaCtr->andWhere(Filter::matchesUnaccented(CentroF::NombreUbi, $nom_ubi));
+            $criteriaCasa = $criteriaCasa->andWhere(Filter::containsUnaccented(CasaF::NombreUbi, $nom_ubi));
+            $criteriaCtr = $criteriaCtr->andWhere(Filter::containsUnaccented(CentroF::NombreUbi, $nom_ubi));
         }
 
         switch ($miSfsv) {

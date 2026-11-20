@@ -201,12 +201,12 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 
         $sql = "SELECT count(*)";
         $sql .= " FROM $nom_tabla";
-        $sql .= " WHERE id_tipo_activ::text ~ '^" . $seccion . "[45]' ";
+        $sql .= " WHERE id_tipo_activ::text ~ :patron_tipo ";
         $sql .= " AND $sql_ini";
         $sql .= " AND $sql_fin";
 
         //echo "sql: $sql<br>";
-        $stmt = $this->prepareAndExecute($oDbl, $sql, [], __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sql, ['patron_tipo' => '^' . $seccion . '[45]'], __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return false;
         }
@@ -245,15 +245,30 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /**
      * @return array<int|string, string>
      */
-    public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array
+    public function getArrayActividadesDeTipo(string $sid_tipo = '......', ?int $status = null, string $dlOrg = '', string $dlOrgDistinta = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTablaSelect();
+        // Los filtros son parámetros con tipo: antes se recibía un trozo de SQL ya montado.
+        $condicion = '';
+        $params = ['tipo' => $sid_tipo];
+        if ($status !== null) {
+            $condicion .= ' AND status = :status';
+            $params['status'] = $status;
+        }
+        if ($dlOrg !== '') {
+            $condicion .= ' AND dl_org = :dl_org';
+            $params['dl_org'] = $dlOrg;
+        }
+        if ($dlOrgDistinta !== '') {
+            $condicion .= ' AND dl_org != :dl_org_distinta';
+            $params['dl_org_distinta'] = $dlOrgDistinta;
+        }
         $sQuery = "SELECT id_activ, nom_activ
 		   FROM $nom_tabla
-	   	   WHERE id_tipo_activ::text ~ :tipo $scondicion
+	   	   WHERE id_tipo_activ::text ~ :tipo $condicion
 		   ORDER by f_ini";
-        $stmt = $this->prepareAndExecute($oDbl, $sQuery, ['tipo' => $sid_tipo], __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQuery, $params, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) {
             return [];
         }

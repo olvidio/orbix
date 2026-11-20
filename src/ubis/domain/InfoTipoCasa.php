@@ -36,7 +36,7 @@ class InfoTipoCasa extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NombreTipoCasa);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NombreTipoCasa, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NombreTipoCasa, (string) $this->k_buscar));
         }
 
         return $this->tipoCasaRepository->matching($criteria);

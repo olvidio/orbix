@@ -34,7 +34,7 @@ interface ActividadAllRepositoryInterface
     /**
      * @return array<int, string>
      */
-    public function getArrayActividadesDeTipo(string $sid_tipo = '......', string $scondicion = ''): array;
+    public function getArrayActividadesDeTipo(string $sid_tipo = '......', ?int $status = null, string $dlOrg = '', string $dlOrgDistinta = ''): array;
 
     /**
      * @return array<string, int> id_activ con clave `f_ini#n`

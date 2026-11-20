@@ -34,7 +34,7 @@ class InfoFases extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(ActividadFaseField::DescFase);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ActividadFaseField::DescFase, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(ActividadFaseField::DescFase, (string) $this->k_buscar));
         }
 
         return $this->actividadFaseRepository->matching($criteria);

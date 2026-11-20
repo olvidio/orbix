@@ -48,7 +48,7 @@ class InfoProfesorPublicacion extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(ProfesorPublicacionField::FPublicacion, OrderDirection::Desc);
         } else {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(ProfesorPublicacionField::Titulo, $this->k_buscar));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(ProfesorPublicacionField::Titulo, (string) $this->k_buscar));
         }
 
         return $this->profesorPublicacionRepository->matching($criteria);

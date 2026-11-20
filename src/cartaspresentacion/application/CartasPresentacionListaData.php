@@ -147,10 +147,10 @@ final class CartasPresentacionListaData
         if ($Qpais !== '' || $Qpoblacion !== '') {
             $criteria = Criteria::create();
             if ($Qpoblacion !== '') {
-                $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Poblacion, $Qpoblacion));
+                $criteria = $criteria->andWhere(Filter::containsUnaccented(F::Poblacion, $Qpoblacion));
             }
             if ($Qpais !== '') {
-                $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Pais, $Qpais));
+                $criteria = $criteria->andWhere(Filter::containsUnaccented(F::Pais, $Qpais));
             }
 
             $cDirecciones = $this->direccionCentroRepository->matching($criteria);
@@ -181,7 +181,7 @@ final class CartasPresentacionListaData
             // Extiendo la busqueda al campo `zona`.
             if ($Qpoblacion !== '') {
                 $cCartasZona = $this->cartaPresentacionRepository->matching(
-                    Criteria::create()->where(Filter::matchesUnaccented(CartaPresentacionField::Zona, $Qpoblacion))
+                    Criteria::create()->where(Filter::containsUnaccented(CartaPresentacionField::Zona, $Qpoblacion))
                 );
                 $a_mega_tmp = [];
                 foreach ($cCartasZona as $oCarta) {

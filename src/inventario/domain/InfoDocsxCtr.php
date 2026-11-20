@@ -70,7 +70,7 @@ class InfoDocsxCtr extends DatosInfoRepo
         $criterioUbi = Criteria::create();
         $criterioUbi = $this->exacto
             ? $criterioUbi->where(Filter::eq(UbiF::NomUbi, $nom_ubi))
-            : $criterioUbi->where(Filter::matchesUnaccented(UbiF::NomUbi, $nom_ubi));
+            : $criterioUbi->where(Filter::containsUnaccented(UbiF::NomUbi, $nom_ubi));
 
         $cUbisInventario = $this->ubiInventarioRepository->matching($criterioUbi);
         $aIdUbi = [];

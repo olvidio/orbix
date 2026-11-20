@@ -125,15 +125,26 @@ final class PgActividadAllConsultasTest extends myTest
         $this->crear(1, 141000, '2091-06-10', '2091-06-12', nom: 'zz test tipo b');
         $this->crear(2, 141000, '2091-06-01', '2091-06-03', nom: 'zz test tipo a');
         $this->crear(3, 151000, '2091-06-01', '2091-06-03', nom: 'zz test tipo c');
-        $res = $this->repo->getArrayActividadesDeTipo('^141', "AND id_activ BETWEEN " . (self::ID_BASE + 1) . " AND " . (self::ID_BASE + 20));
+        $res = $this->soloDelTest($this->repo->getArrayActividadesDeTipo('^141'));
         $this->assertSame([self::ID_BASE + 2 => 'zz test tipo a', self::ID_BASE + 1 => 'zz test tipo b'], $res);
+        $this->assertSame([], $this->soloDelTest($this->repo->getArrayActividadesDeTipo('^141', null, "x' OR '1'='1")));
+        $this->assertSame([], $this->soloDelTest($this->repo->getArrayActividadesDeTipo('^141', -5)));
+    }
+
+    /**
+     * @param array<int|string, string> $res
+     * @return array<int|string, string>
+     */
+    private function soloDelTest(array $res): array
+    {
+        return array_filter($res, fn (int|string $id): bool => $id > self::ID_BASE && $id <= self::ID_BASE + 20, ARRAY_FILTER_USE_KEY);
     }
 
     public function test_actividades_de_tipo_no_interpreta_el_tipo_como_sql(): void
     {
         $this->crear(1, 141000, '2091-06-10', '2091-06-12');
-        $res = $this->repo->getArrayActividadesDeTipo("^9' OR '1'='1", "AND id_activ BETWEEN " . (self::ID_BASE + 1) . " AND " . (self::ID_BASE + 20));
-        $this->assertSame([], $res);
+        $res = $this->repo->getArrayActividadesDeTipo("^9' OR '1'='1");
+        $this->assertSame([], $this->soloDelTest($res));
     }
 
     // --- getArrayActividadesEstudios ---

@@ -54,4 +54,20 @@ final class InfoZonaTest extends TestCase
 
         $this->assertSame(['zona-nord'], $info->getColeccion());
     }
+
+    public function test_el_texto_buscado_es_un_texto_y_no_una_expresion_regular(): void
+    {
+        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
+        $zonaRepo->expects($this->once())
+            ->method('matching')
+            ->with($this->equalTo(Criteria::create()->where(
+                Filter::matchesUnaccented(ZonaField::NombreZona, 'nord \\(a\\.\\*\\)\\+')
+            )))
+            ->willReturn([]);
+
+        $info = new InfoZona($zonaRepo);
+        $info->setK_buscar('nord (a.*)+');
+
+        $this->assertSame([], $info->getColeccion());
+    }
 }

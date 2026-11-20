@@ -37,7 +37,7 @@ class InfoEncargoTipo extends DatosInfoRepo
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->k_buscar)) {
-            $criteria = $criteria->where(Filter::matchesUnaccented(EncargoTipoField::TipoEnc, $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(EncargoTipoField::TipoEnc, (string) $this->k_buscar));
         }
         $criteria = $criteria->orderBy(EncargoTipoField::IdTipoEnc);
 

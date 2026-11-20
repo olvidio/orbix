@@ -487,8 +487,7 @@ class Resumen
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             // Si tengo dl filtro por dl.
             if (!empty($this->getArrayDl())) {
-                $dl_csv = implode("','", $this->getArrayDl());
-                $where_dl = "p.dl IN ('$dl_csv') AND";
+                $where_dl = 'p.dl IN (' . $this->tempTablesService->listaDeTextos($this->getArrayDl()) . ') AND';
             }
         }
         $ssql = "SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ce_lugar
@@ -549,14 +548,7 @@ class Resumen
         $tabla = 'p_numerarios';
         $notas_vf = $this->tablaNotas;
         $ce_lugar = $this->getCe_lugar();
-        $a_lugares = explode(',', $ce_lugar);
-        $condiciones = [];
-        foreach ($a_lugares as $lugar) {
-            // Limpiar espacios en blanco alrededor de cada valor
-            $lugar_limpio = trim($lugar);
-            $condiciones[] = "p.ce_lugar LIKE '%" . $lugar_limpio . "%'";
-        }
-        $where_clause = implode(' OR ', $condiciones);
+        $where_clause = $this->tempTablesService->condicionContieneAlguno('p.ce_lugar', $ce_lugar);
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 

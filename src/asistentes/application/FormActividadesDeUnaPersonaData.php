@@ -102,15 +102,9 @@ final class FormActividadesDeUnaPersonaData
                 $id_tipo = '^' . $id_tipo_post;
             }
 
-            $condicion = 'AND status = ' . StatusId::ACTUAL;
-            if ($que_dl !== '') {
-                $que_dl_esc = str_replace("'", "''", $que_dl);
-                $condicion .= " AND dl_org = '$que_dl_esc'";
-            } else {
-                $condicion .= " AND dl_org != '" . ConfigGlobal::mi_delef() . "'";
-            }
-
-            $actividades_opciones = $this->actividadRepository->getArrayActividadesDeTipo($id_tipo, $condicion);
+            $actividades_opciones = $que_dl !== ''
+                ? $this->actividadRepository->getArrayActividadesDeTipo($id_tipo, StatusId::ACTUAL, $que_dl)
+                : $this->actividadRepository->getArrayActividadesDeTipo($id_tipo, StatusId::ACTUAL, '', ConfigGlobal::mi_delef());
             $actividades_onchange = ConfigGlobal::is_app_installed('actividadplazas') ? 'fnjs_cmb_propietario()' : null;
 
             $propio = 't';

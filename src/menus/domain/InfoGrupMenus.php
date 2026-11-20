@@ -36,7 +36,7 @@ class InfoGrupMenus extends DatosInfoRepo
             $criteria = Criteria::create()->orderBy(GrupMenuField::Orden);
         } else {
             // La tabla no tiene columna `descripcion` (la consulta legacy fallaba): se busca por el nombre del grupo.
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(GrupMenuField::GrupMenu, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(GrupMenuField::GrupMenu, (string) $this->k_buscar));
         }
 
         return $this->grupMenuRepository->matching($criteria);

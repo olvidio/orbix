@@ -120,6 +120,30 @@ final class Filter implements FilterExpression
         return new self($field, Operator::MatchesUnaccented, $pattern);
     }
 
+    /**
+     * El campo contiene el texto, ignorando mayúsculas y acentos. Para lo que escribe el usuario en un
+     * buscador: el texto no se interpreta como expresión regular.
+     */
+    public static function containsUnaccented(CriteriaField $field, string $texto): self
+    {
+        return self::matchesUnaccented($field, self::patronLiteral($texto));
+    }
+
+    /** El campo empieza por el texto, ignorando mayúsculas y acentos (el texto no es un patrón). */
+    public static function startsWithUnaccented(CriteriaField $field, string $texto): self
+    {
+        return self::matchesUnaccented($field, '^' . self::patronLiteral($texto));
+    }
+
+    /**
+     * Texto convertido en un patrón que solo coincide con ese texto: se escapa todo lo que no es letra,
+     * cifra o espacio (en una expresión regular de PostgreSQL, «\» + signo es el signo literal).
+     */
+    public static function patronLiteral(string $texto): string
+    {
+        return (string) preg_replace('/[^\p{L}\p{N}\s]/u', '\\\\$0', $texto);
+    }
+
     /** Todos los bits de la máscara están activos en el campo. */
     public static function hasBits(CriteriaField $field, int $mask): self
     {

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 22:47+0100\n"
+"POT-Creation-Date: 2026-11-20 10:00+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -6981,7 +6981,7 @@ msgid "casas comunes sv"
 msgstr "sv common houses"
 
 #: frontend/menus/view/traducir_menu.phtml:255
-#: src/planning/application/PlanningCtrSelectData.php:71
+#: src/planning/application/PlanningCtrSelectData.php:70
 msgid "centros"
 msgstr "centers"
 
@@ -16087,12 +16087,13 @@ msgstr "databases"
 msgid "estado"
 msgstr "state"
 
-#: src/devel_db_admin/application/MoverTabla.php:48
+#: src/devel_db_admin/application/MoverTabla.php:25
+#: src/devel_db_admin/application/MoverTabla.php:53
 #, php-format
 msgid "Nombre de tabla no válido: %s"
 msgstr "Invalid table name: %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:55
+#: src/devel_db_admin/application/MoverTabla.php:60
 #, php-format
 msgid ""
 "La tabla se ha copiado a sv-e, pero no se ha podido quitar de sv (%s): %s"
@@ -16100,12 +16101,12 @@ msgstr ""
 "The table has been copied to sv-e, but it could not be removed from sv (%s): "
 "%s"
 
-#: src/devel_db_admin/application/MoverTabla.php:58
+#: src/devel_db_admin/application/MoverTabla.php:63
 #, php-format
 msgid "Error para %s"
 msgstr "Error for %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:91
+#: src/devel_db_admin/application/MoverTabla.php:96
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:375
 #: src/shared/infrastructure/persistence/postgresql/DBTabla.php:312
 #, php-format
@@ -17988,12 +17989,12 @@ msgstr "No person exists with id_nom: %s"
 msgid "No encuentro persona con id_nom: %s"
 msgstr "I do not find person with id_nom: %s"
 
-#: src/notas/application/legacy/Resumen.php:698
+#: src/notas/application/legacy/Resumen.php:690
 #, php-format
 msgid "total de asignaturas superadas en bienio %s"
 msgstr "total of subjects passed in biennium %s"
 
-#: src/notas/application/legacy/Resumen.php:755
+#: src/notas/application/legacy/Resumen.php:747
 #, php-format
 msgid "total de asignaturas superadas en cuadrienio %s"
 msgstr "total of subjects passed in quadrennium %s"
@@ -18281,6 +18282,10 @@ msgstr "to set 'r' for all items in the list, perform %s"
 #, php-format
 msgid "para borrar las cursadas de más de %s años, hacer %s"
 msgstr "to delete 'taken' entries older than %s years, perform %s"
+
+#: src/notas/infrastructure/ui/http/controllers/informe_stgr_n_data.php:35
+msgid "No se ha podido calcular el informe"
+msgstr "The report could not be calculated"
 
 #: src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php:11
 msgid "Se requiere id_nom"
@@ -18840,17 +18845,17 @@ msgstr "planning by zones"
 msgid "Faltan fechas de periodo (f_ini_iso / f_fin_iso)."
 msgstr "Missing period dates (f_ini_iso / f_fin_iso)."
 
-#: src/planning/application/PlanningCtrSelectData.php:54
+#: src/planning/application/PlanningCtrSelectData.php:53
 #, php-format
 msgid "personas de: %s"
 msgstr "people from: %s"
 
-#: src/planning/application/PlanningCtrSelectData.php:63
+#: src/planning/application/PlanningCtrSelectData.php:62
 #, php-format
 msgid "No encuentro personas para %s"
 msgstr "No people found for %s"
 
-#: src/planning/application/PlanningCtrSelectData.php:68
+#: src/planning/application/PlanningCtrSelectData.php:67
 msgid "No encuentro este ctr"
 msgstr "I cannot find this ctr"
 

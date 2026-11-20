@@ -36,7 +36,7 @@ class InfoDepartamentos extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(DepartamentoField::NombreDepartamento);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(DepartamentoField::NombreDepartamento, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(DepartamentoField::NombreDepartamento, (string) $this->k_buscar));
         }
 
         return $this->departamentoRepository->matching($criteria);

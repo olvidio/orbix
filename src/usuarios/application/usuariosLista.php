@@ -47,7 +47,7 @@ class usuariosLista
         }
 
         if ($Qusername !== '') {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(UsuarioField::Usuario, $Qusername));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(UsuarioField::Usuario, $Qusername));
         }
         $criteria = $criteria->orderBy(UsuarioField::Usuario);
 

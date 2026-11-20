@@ -20,6 +20,11 @@ final class MoverTabla
      */
     public function ejecutar(string $tabla, array $aEsquemas): MoverTablaResult
     {
+        // El nombre va después a un DROP TABLE y a una orden del sistema: solo un identificador.
+        if (preg_match('/^[a-z_][a-z0-9_]*$/', $tabla) !== 1) {
+            return new MoverTablaResult(sprintf(_("Nombre de tabla no válido: %s"), $tabla));
+        }
+
         $oConfigDB = new ConfigDB('importar');
         $configRef = $oConfigDB->getEsquema('publicv');
         $configNew = $oConfigDB->getEsquema('publicv-e');
@@ -65,8 +70,8 @@ final class MoverTabla
         $lines = [];
         if (str_ends_with((string) ConfigGlobal::SERVIDOR, '.local')) {
             $a_rta = [];
-            $command = "grep -r \"setNomTabla('$tabla');\" ";
-            $command .= ServerConf::DIR . '/*';
+            $command = 'grep -rF ' . escapeshellarg("setNomTabla('$tabla');") . ' ';
+            $command .= escapeshellarg(ServerConf::DIR . '/src');
             exec($command, $a_rta);
 
             foreach ($a_rta as $rta_txt) {

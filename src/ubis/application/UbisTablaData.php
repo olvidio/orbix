@@ -444,7 +444,7 @@ final class UbisTablaData
                 continue;
             }
             if (in_array($clave, $textoSinAcentos, true)) {
-                $filtro = Filter::matchesUnaccented($campo, is_scalar($valor) ? (string) $valor : '');
+                $filtro = Filter::containsUnaccented($campo, is_scalar($valor) ? (string) $valor : '');
             } elseif (in_array($clave, ['active', 'sv', 'sf'], true)) {
                 $filtro = Filter::eq($campo, in_array($valor, ['t', 'true', '1', 1, true], true));
             } else {

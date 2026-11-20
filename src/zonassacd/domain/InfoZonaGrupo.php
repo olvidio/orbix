@@ -36,7 +36,7 @@ class InfoZonaGrupo extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(ZonaGrupoField::Orden);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ZonaGrupoField::NombreGrupo, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(ZonaGrupoField::NombreGrupo, (string) $this->k_buscar));
         }
 
         return $this->zonaGrupoRepository->matching($criteria);

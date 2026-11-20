@@ -49,7 +49,7 @@ final class EncargoSelectData
 
         $criteria = Criteria::create()->orderBy(EncargoField::DescEnc);
         if ($desc_enc !== '') {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(EncargoField::DescEnc, $desc_enc));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(EncargoField::DescEnc, $desc_enc));
         }
         if ($id_tipo_enc !== 0) {
             $criteria = $criteria->andWhere(Filter::eq(EncargoField::IdTipoEnc, $id_tipo_enc));

@@ -110,6 +110,7 @@ Ya no se usan los `getXxx(array $aWhere, array $aOperators)`, ni `LegacyWhereAda
 - **Domain:** cada entidad consultable tiene un enum `src/<modulo>/domain/criteria/<Entidad>Field.php` (`implements CriteriaField`, valor = nombre del campo de la entidad). Las piezas genéricas (`Criteria`, `Filter`, `FilterGroup`, `Order`, `Operator`) viven en `src/shared/domain/criteria/` y no tienen SQL.
 - **Application:** construir el criterio con `Criteria::create()->where(Filter::eq(F::IdActiv, $id))->andWhere(...)->orderBy(F::IdNom)->limit(n)`. Valores PHP nativos o VO; nunca strings con formato (`"a,b"`, `"{1,2}"`). OR entre campos con `FilterGroup::anyOf(...)` / `allOf(...)`.
 - **Infrastructure:** el repositorio `Pg*` implementa `matching()` (con el trait `RunsCriteriaQueries` y el mapa campo → columna si difieren) y solo acepta su propio enum. Si hay que unir varios repositorios, usar un método tipo `matchingConjunto()` en lugar de `getConjunt()`.
+- **Texto que escribe el usuario en un buscador:** `Filter::containsUnaccented()` / `Filter::startsWithUnaccented()`, que lo tratan como texto. `Filter::matches*()` recibe una expresión regular: solo para patrones que monta el código (o el texto pasado por `Filter::patronLiteral()`).
 - **Sin equivalente genérico** (`TXT`, `~INV`): método específico del repositorio, no ampliar `Criteria` con SQL.
 - **Tests:** un `matching()` nuevo lleva test de integración.
 

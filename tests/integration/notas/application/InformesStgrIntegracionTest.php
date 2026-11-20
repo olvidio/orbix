@@ -136,6 +136,30 @@ final class InformesStgrIntegracionTest extends myTest
         }
     }
 
+    public function test_un_ce_lugar_con_apostrofo_es_un_texto_y_no_parte_de_la_consulta(): void
+    {
+        $informe = $GLOBALS['container']->get(InformeStgrNumerarios::class);
+
+        $r = $informe->calcular([], false, "L'Hospitalet que no existe, otro' OR 'a' LIKE '%a");
+
+        $this->assertSame(0, (int) $r['res'][5]['num'], 'ningún centro de estudios se llama así');
+    }
+
+    public function test_el_ce_lugar_se_busca_por_el_esquema_exacto_aunque_la_sigla_lleve_comillas(): void
+    {
+        // Una sigla con comillas no puede cambiar la condición de la consulta (antes devolvía el
+        // ce_lugar de otro esquema).
+        $dl = (new \ReflectionClass(\src\ubis\domain\value_objects\DelegacionCode::class))->newInstanceWithoutConstructor();
+        (new \ReflectionProperty($dl, 'value'))->setValue($dl, "'OR''='");
+        $delegacion = $this->createMock(\src\ubis\domain\entity\Delegacion::class);
+        $delegacion->method('getDlVo')->willReturn($dl);
+        $delegacion->method('getRegionVo')->willReturn(new \src\ubis\domain\value_objects\RegionCode('H'));
+        $repo = $this->createMock(DelegacionRepositoryInterface::class);
+        $repo->method('findById')->willReturn($delegacion);
+
+        $this->assertSame('', (new CentroEstudiosLookup($repo))->getFromDl([1]));
+    }
+
     public function test_resolver_ce_lugar_con_dl_elegidas_usa_el_lookup(): void
     {
         $informe = $GLOBALS['container']->get(InformeStgrNumerarios::class);

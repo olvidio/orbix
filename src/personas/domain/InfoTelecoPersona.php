@@ -53,7 +53,7 @@ class InfoTelecoPersona extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(TelecoPersonaField::IdTipoTeleco);
         } else {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(TelecoPersonaField::NumTeleco, $this->k_buscar));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(TelecoPersonaField::NumTeleco, (string) $this->k_buscar));
         }
 
         return $this->telecoPersonaRepository->matching($criteria);

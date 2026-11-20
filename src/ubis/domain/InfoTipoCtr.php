@@ -36,7 +36,7 @@ class InfoTipoCtr extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NombreTipoCtr);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NombreTipoCtr, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NombreTipoCtr, (string) $this->k_buscar));
         }
 
         return $this->tipoCentroRepository->matching($criteria);

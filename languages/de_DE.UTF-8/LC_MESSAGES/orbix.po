@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-19 22:47+0100\n"
+"POT-Creation-Date: 2026-11-20 10:00+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -7017,7 +7017,7 @@ msgid "casas comunes sv"
 msgstr "Gemeinschaftshäuser sv"
 
 #: frontend/menus/view/traducir_menu.phtml:255
-#: src/planning/application/PlanningCtrSelectData.php:71
+#: src/planning/application/PlanningCtrSelectData.php:70
 msgid "centros"
 msgstr "Zentren"
 
@@ -10012,8 +10012,7 @@ msgstr ""
 #: frontend/shared/security/HashF.php:470
 msgid "Petición sin firma. Vuelva a abrir la pantalla desde el menú."
 msgstr ""
-"Anfrage ohne Signatur. Bitte öffnen Sie den Bildschirm erneut über das "
-"Menü."
+"Anfrage ohne Signatur. Bitte öffnen Sie den Bildschirm erneut über das Menü."
 
 #: frontend/shared/view/ayuda_consultas_lista.phtml:86
 msgid "Consultas a la ayuda"
@@ -16238,12 +16237,13 @@ msgstr "Datenbanken"
 msgid "estado"
 msgstr "Status"
 
-#: src/devel_db_admin/application/MoverTabla.php:48
+#: src/devel_db_admin/application/MoverTabla.php:25
+#: src/devel_db_admin/application/MoverTabla.php:53
 #, php-format
 msgid "Nombre de tabla no válido: %s"
 msgstr "Ungültiger Tabellenname: %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:55
+#: src/devel_db_admin/application/MoverTabla.php:60
 #, php-format
 msgid ""
 "La tabla se ha copiado a sv-e, pero no se ha podido quitar de sv (%s): %s"
@@ -16251,12 +16251,12 @@ msgstr ""
 "Die Tabelle wurde nach sv-e kopiert, konnte aber nicht von sv (%s) entfernt "
 "werden: %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:58
+#: src/devel_db_admin/application/MoverTabla.php:63
 #, php-format
 msgid "Error para %s"
 msgstr "Fehler für %s"
 
-#: src/devel_db_admin/application/MoverTabla.php:91
+#: src/devel_db_admin/application/MoverTabla.php:96
 #: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:375
 #: src/shared/infrastructure/persistence/postgresql/DBTabla.php:312
 #, php-format
@@ -18185,12 +18185,12 @@ msgstr "Es gibt keine Person mit id_nom: %s"
 msgid "No encuentro persona con id_nom: %s"
 msgstr "Ich kann keine Person mit id_nom: %s finden"
 
-#: src/notas/application/legacy/Resumen.php:698
+#: src/notas/application/legacy/Resumen.php:690
 #, php-format
 msgid "total de asignaturas superadas en bienio %s"
 msgstr "Gesamtzahl der im Biennium bestandenen Fächer %s"
 
-#: src/notas/application/legacy/Resumen.php:755
+#: src/notas/application/legacy/Resumen.php:747
 #, php-format
 msgid "total de asignaturas superadas en cuadrienio %s"
 msgstr "Gesamtzahl der im Quadrennium bestandenen Fächer %s"
@@ -18488,6 +18488,10 @@ msgid "para borrar las cursadas de más de %s años, hacer %s"
 msgstr ""
 "um die als belegt eingetragenen Fächer, die älter als %s Jahre sind, zu "
 "löschen, %s ausführen"
+
+#: src/notas/infrastructure/ui/http/controllers/informe_stgr_n_data.php:35
+msgid "No se ha podido calcular el informe"
+msgstr "Der Bericht konnte nicht berechnet werden"
 
 #: src/notas/infrastructure/ui/http/controllers/tessera_copiar_select_data.php:11
 msgid "Se requiere id_nom"
@@ -19052,17 +19056,17 @@ msgstr "Planning nach Zonen"
 msgid "Faltan fechas de periodo (f_ini_iso / f_fin_iso)."
 msgstr "Fehlende Datumsangaben für Zeitraum (f_ini_iso / f_fin_iso)."
 
-#: src/planning/application/PlanningCtrSelectData.php:54
+#: src/planning/application/PlanningCtrSelectData.php:53
 #, php-format
 msgid "personas de: %s"
 msgstr "Personen von: %s"
 
-#: src/planning/application/PlanningCtrSelectData.php:63
+#: src/planning/application/PlanningCtrSelectData.php:62
 #, php-format
 msgid "No encuentro personas para %s"
 msgstr "Keine Personen für %s gefunden"
 
-#: src/planning/application/PlanningCtrSelectData.php:68
+#: src/planning/application/PlanningCtrSelectData.php:67
 msgid "No encuentro este ctr"
 msgstr "Dieses ctr wurde nicht gefunden"
 

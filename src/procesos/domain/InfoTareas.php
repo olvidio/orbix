@@ -34,7 +34,7 @@ class InfoTareas extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = Criteria::create()->orderBy(ActividadTareaField::DescTarea);
         } else {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(ActividadTareaField::DescTarea, $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(ActividadTareaField::DescTarea, (string) $this->k_buscar));
         }
 
         return $this->actividadTareaRepository->matching($criteria);

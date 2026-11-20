@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test-guardia: ninguna sentencia SQL de `src/` lleva una variable de PHP dentro de un literal entre
- * comillas simples (`'$x'`, `'%$x%'`, `'^$x'`, `'" . $x . "'`). Los valores van como parámetros
+ * comillas simples (`'$x'`, `'%$x%'`, `'^$x'`, `'" . $x . "'`, `'%" . $x . "%'`). Los valores van como parámetros
  * (`:param` con `prepareAndExecute`, o en el array de `execute`).
  *
  * Las líneas que ya existían, revisadas como seguras (enteros, value objects que validan el formato,
@@ -50,7 +50,7 @@ final class SqlSinValoresInterpoladosTest extends TestCase
     private static function interpolaUnValor(string $linea): bool
     {
         // '" . $var  (literal SQL cerrado alrededor de una concatenación)
-        if (preg_match('/\'"\s*\.\s*\$/', $linea) === 1 && preg_match(self::SQL, $linea) === 1) {
+        if (preg_match('/\'[%^]*"\s*\.\s*\$/', $linea) === 1 && preg_match(self::SQL, $linea) === 1) {
             return true;
         }
         // '...$var dentro de un string PHP entre comillas dobles

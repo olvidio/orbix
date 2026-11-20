@@ -82,7 +82,7 @@ final class CartasPresentacionUbisListaData
 
         if ($poblacion_sel !== '') {
             $cDirecciones = $this->direccionCentroDlRepository->matching(
-                Criteria::create()->where(Filter::matchesUnaccented(F::Poblacion, $poblacion_sel))
+                Criteria::create()->where(Filter::containsUnaccented(F::Poblacion, $poblacion_sel))
             );
             $d = 0;
             foreach ($cDirecciones as $oDireccion) {

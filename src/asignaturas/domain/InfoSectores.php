@@ -36,7 +36,7 @@ class InfoSectores extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(SectorField::NombreSector);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(SectorField::NombreSector, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(SectorField::NombreSector, (string) $this->k_buscar));
         }
 
         return $this->sectorRepository->matching($criteria);

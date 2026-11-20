@@ -43,9 +43,8 @@ final class PlanningCtrSelectData
         $cabecera_title = '';
         $cPersonas = [];
         if ($Qctr !== '') {
-            $nom_ubi = str_replace('+', '\\+', $Qctr);
             $cCentros = $this->centroDlRepository->matching(
-                Criteria::create()->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, '^' . $nom_ubi))
+                Criteria::create()->where(Filter::startsWithUnaccented(CentroDlField::NombreUbi, $Qctr))
             );
             if (!empty($cCentros)) {
                 foreach ($cCentros as $oCentro) {

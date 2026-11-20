@@ -82,8 +82,7 @@ class ResumenTempTablesService
         if ($isRstgr) {
             $whereDl = '';
             if (!empty($delegaciones)) {
-                $dlCsv = implode("','", $delegaciones);
-                $whereDl = "u.dl IN ('$dlCsv') AND";
+                $whereDl = 'u.dl IN (' . $this->listaDeTextos($delegaciones) . ') AND';
             }
             $sqlLlenar = "INSERT INTO $tabla
                 SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
@@ -197,6 +196,43 @@ class ResumenTempTablesService
                         WHERE situacion='A' AND (p.id_ctr = u.id_ubi)
                         ORDER BY id_nom";
         $this->pdo->query($sqlCreate);
+    }
+
+    /**
+     * Literal SQL de un texto, con sus comillas. Las consultas de `Resumen` se montan como cadena (la
+     * misma se reutiliza para el listado), así que los valores se entrecomillan aquí en lugar de enlazarse.
+     */
+    public function literal(string $texto): string
+    {
+        $literal = $this->pdo->quote($texto);
+        if (!is_string($literal)) {
+            throw new \RuntimeException('No se ha podido entrecomillar el valor');
+        }
+        return $literal;
+    }
+
+    /**
+     * Lista de literales separados por comas, para un `IN (...)`.
+     *
+     * @param array<int|string, int|string> $textos
+     */
+    public function listaDeTextos(array $textos): string
+    {
+        return implode(',', array_map(fn (int|string $t): string => $this->literal((string) $t), $textos));
+    }
+
+    /**
+     * Condición «la columna contiene alguno de los lugares» de una lista separada por comas
+     * (`ce_lugar`). Los comodines de LIKE del valor se toman como texto.
+     */
+    public function condicionContieneAlguno(string $columna, string $listaPorComas): string
+    {
+        $condiciones = [];
+        foreach (explode(',', $listaPorComas) as $lugar) {
+            $patron = '%' . addcslashes(trim($lugar), '\\%_') . '%';
+            $condiciones[] = "$columna LIKE " . $this->literal($patron);
+        }
+        return implode(' OR ', $condiciones);
     }
 
     public function query(string $sql): \PDOStatement

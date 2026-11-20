@@ -54,7 +54,7 @@ class InfoTelecoUbi extends DatosInfoRepo
             }
         } else {
             // con texto de búsqueda se ignora `id_pau`, como antes
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(F::NumTeleco, (string) $this->k_buscar));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(F::NumTeleco, (string) $this->k_buscar));
         }
 
         $repo = $this->ubiRepositoryResolver->getTelecoRepository($this->objPau);

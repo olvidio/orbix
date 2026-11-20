@@ -98,7 +98,7 @@ final class FormActividadesDeUnaPersonaDataTest extends myTest
     public function test_un_alta_ofrece_las_actividades_de_otras_dl_del_tipo_de_mi_sfsv(): void
     {
         $this->actividades->expects($this->once())->method('getArrayActividadesDeTipo')
-            ->with('^1', 'AND status = 2 AND dl_org != \'' . ConfigGlobal::mi_delef() . '\'')->willReturn([3001 => 'ca']);
+            ->with('^1', 2, '', ConfigGlobal::mi_delef())->willReturn([3001 => 'ca']);
 
         $r = $this->uc()->build(['id_pau' => '10011', 'obj_pau' => 'PersonaN']);
 
@@ -110,10 +110,10 @@ final class FormActividadesDeUnaPersonaDataTest extends myTest
         $this->assertArrayNotHasKey('id_activ', $r['hash_main']['campos_hidden']);
     }
 
-    public function test_el_filtro_de_dl_y_de_tipo_pedidos_se_aplican_y_se_escapan(): void
+    public function test_el_filtro_de_dl_y_de_tipo_pedidos_se_pasan_como_valores(): void
     {
         $this->actividades->expects($this->once())->method('getArrayActividadesDeTipo')
-            ->with('^131', "AND status = 2 AND dl_org = 'd''l'")->willReturn([]);
+            ->with('^131', 2, "d'l", '')->willReturn([]);
 
         $this->uc()->build(['id_tipo' => '131', 'que_dl' => "d'l"]);
     }

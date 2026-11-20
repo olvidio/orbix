@@ -40,7 +40,7 @@ class InfoDescTeleco extends DatosInfoRepo
         } else {
             // Antes buscaba en la columna inexistente `id_desc_teleco` (error SQL); se busca en la descripción.
             $criterio = Criteria::create()
-                ->where(Filter::matchesUnaccented(DescTelecoField::DescTeleco, (string) $this->k_buscar));
+                ->where(Filter::containsUnaccented(DescTelecoField::DescTeleco, (string) $this->k_buscar));
         }
 
         return $this->descTelecoRepository->matching($criterio);

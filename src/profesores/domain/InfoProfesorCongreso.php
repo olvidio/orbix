@@ -49,7 +49,7 @@ class InfoProfesorCongreso extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(ProfesorCongresoField::FIni, OrderDirection::Desc);
         } else {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(ProfesorCongresoField::Congreso, $this->k_buscar));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(ProfesorCongresoField::Congreso, (string) $this->k_buscar));
         }
 
         return $this->profesorCongresoRepository->matching($criteria);

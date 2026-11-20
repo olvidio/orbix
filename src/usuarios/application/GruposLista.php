@@ -21,7 +21,7 @@ class GruposLista
     public function execute(string $username): array
     {
         if ($username !== '') {
-            $criteria = Criteria::create()->where(Filter::matchesUnaccented(GrupoField::Usuario, $username));
+            $criteria = Criteria::create()->where(Filter::containsUnaccented(GrupoField::Usuario, $username));
         } else {
             $criteria = Criteria::create()->where(Filter::matches(GrupoField::IdUsuario, '^5'));
         }

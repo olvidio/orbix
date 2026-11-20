@@ -23,7 +23,6 @@ src/actividadessacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id
 src/actividadessacd/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
 src/asignaturas/infrastructure/persistence/postgresql/PgAsignaturaRepository.php|$sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
 src/asignaturas/infrastructure/persistence/postgresql/PgAsignaturaRepository.php|$sql = "SELECT 1 FROM $nom_tabla WHERE id_asignatura = $id_asignatura AND plan_estudios = '$planPg'::integer[]";
-src/asistentes/application/FormActividadesDeUnaPersonaData.php|$condicion .= " AND dl_org = '$que_dl_esc'";
 src/cambios/db/DB.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
 src/cambios/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
 src/cambios/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
@@ -73,8 +72,6 @@ src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql 
 src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
 src/misas/infrastructure/persistence/postgresql/PgEncargoDiaRepository.php|$sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
 src/notas/application/legacy/Resumen.php|$curso = "BETWEEN '" . $this->getIniCurso() . "' AND '" . $this->getFinCurso() . "' ";
-src/notas/application/legacy/Resumen.php|$where_dl = "p.dl IN ('$dl_csv') AND";
-src/notas/application/services/ResumenTempTablesService.php|$whereDl = "u.dl IN ('$dlCsv') AND";
 src/notas/infrastructure/persistence/postgresql/PgResiduoOtraRegionConsulta.php|FROM " . '"' . str_replace('"', '""', $resto) . '"' . ".p_de_paso_ex p
 src/notas/infrastructure/persistence/postgresql/PgResiduoOtraRegionConsulta.php|FROM (" . implode(' UNION ALL ', $partes) . ") r
 src/pasarela/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
@@ -123,3 +120,4 @@ src/zonassacd/db/DBEsquema.php|$a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX
 src/zonassacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
 src/zonassacd/db/DBEsquema.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
 src/zonassacd/db/DBEsquemaSelect.php|$a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+src/dbextern/domain/SincroDB.php|WHERE identif::text LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'

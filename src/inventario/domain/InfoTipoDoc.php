@@ -37,7 +37,7 @@ class InfoTipoDoc extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NomDoc);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomDoc, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NomDoc, (string) $this->k_buscar));
         }
 
         return $this->tipoDocRepository->matching($criteria);

@@ -37,7 +37,7 @@ class InfoLugar extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::NomLugar);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::NomLugar, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::NomLugar, (string) $this->k_buscar));
         }
 
         return $this->lugarRepository->matching($criteria);

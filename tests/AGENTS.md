@@ -176,6 +176,7 @@ Fallan en cuanto un fichero nuevo o tocado rompe una regla del proyecto; si un c
 - `tests/unit/tools/codegen/GenerarClasesEntradaTest`: el generador de código (`tools/codegen/generar_clases.php`) no está en la web, solo corre por línea de órdenes y solo admite identificadores.
 - `tests/unit/frontend/security/HashFFirmaTest`: la firma `h` de `HashF` es un HMAC con la clave de la sesión y fija el modo y las listas `hno` / `hchk` / `hhc`; un campo añadido, una lista cambiada o una firma presentada en otro modo se rechazan. Se prueba con `HashF::firmaValida()` (lo que `validatePost()` comprueba, sin cortar ni redirigir).
 - `tests/unit/frontend/security/HashFSinFirmaTest`: qué peticiones se admiten sin firma `h` (sin datos, solo cápsula, token de descarga, portada, app móvil) y que la lista de la app móvil es la documentada. Una ruta nueva que tenga que funcionar sin firma se añade a `HashFSinFirma` con su motivo; no se relaja la regla.
+- `tests/unit/shared/infrastructure/SqlSinValoresInterpoladosTest`: ninguna sentencia SQL de `src/` lleva una variable de PHP dentro de un literal entre comillas (`'$x'`, `'%$x%'`, `'" . $x . "'`, `'%" . $x . "%'`); los valores van como parámetros. Las líneas antiguas ya revisadas están en `sql_interpolado_baseline.txt`, que solo encoge. No ve las cadenas SQL de varias líneas: ahí se revisa a mano.
 - `NombresPermisoTest` (permisos): los nombres de oficina que se pasan a `have_perm_oficina()` / `permOficina()` existen.
 
 ## Escapar el HTML que se monta en `src/`

@@ -36,17 +36,17 @@ final class PlanningPersonaSelectData
         $criterioCtr = null;
 
         if ($Qapellido1 !== '') {
-            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Apellido1, '^' . $Qapellido1));
+            $criterioPersona = $criterioPersona->andWhere(Filter::startsWithUnaccented(PersonaField::Apellido1, $Qapellido1));
         }
         if ($Qapellido2 !== '') {
-            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Apellido2, '^' . $Qapellido2));
+            $criterioPersona = $criterioPersona->andWhere(Filter::startsWithUnaccented(PersonaField::Apellido2, $Qapellido2));
         }
         if ($Qnombre !== '') {
-            $criterioPersona = $criterioPersona->andWhere(Filter::matchesUnaccented(PersonaField::Nom, '^' . $Qnombre));
+            $criterioPersona = $criterioPersona->andWhere(Filter::startsWithUnaccented(PersonaField::Nom, $Qnombre));
         }
         if ($Qcentro !== '') {
             $nom_ubi = str_replace('+', '\\+', $Qcentro);
-            $criterioCtr = Criteria::create()->where(Filter::matchesUnaccented(CentroDlField::NombreUbi, $nom_ubi));
+            $criterioCtr = Criteria::create()->where(Filter::containsUnaccented(CentroDlField::NombreUbi, $nom_ubi));
         }
         if ($Qna !== '') {
             $criterioPersona = $criterioPersona->andWhere(Filter::eq(PersonaField::IdTabla, 'p' . $Qna));

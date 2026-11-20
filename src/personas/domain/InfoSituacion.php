@@ -38,7 +38,7 @@ class InfoSituacion extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(SituacionField::Situacion);
         } else {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(SituacionField::Situacion, $this->k_buscar));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(SituacionField::Situacion, (string) $this->k_buscar));
         }
 
         return $this->situacionRepository->matching($criteria);

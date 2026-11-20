@@ -29,6 +29,10 @@ try {
 
     $data = $informe->calcular($Qdl, $lista, (string)$ce_lugar);
     $data['ce_lugar'] = $ce_lugar;
+} catch (\PDOException $e) {
+    // El texto de un error de la BD (consulta incluida) no se enseña: va al registro.
+    error_log('informe_stgr_n_data: ' . $e->getMessage());
+    $error = _("No se ha podido calcular el informe");
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

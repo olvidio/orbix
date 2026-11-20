@@ -25,10 +25,10 @@ final class DireccionesTablaData
             $criteria = $criteria->andWhere(Filter::matches(F::CP, preg_quote($c_p)));
         }
         if ($ciudad !== '') {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Poblacion, $ciudad));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(F::Poblacion, $ciudad));
         }
         if ($pais !== '') {
-            $criteria = $criteria->andWhere(Filter::matchesUnaccented(F::Pais, $pais));
+            $criteria = $criteria->andWhere(Filter::containsUnaccented(F::Pais, $pais));
         }
 
         $a_valores = [];

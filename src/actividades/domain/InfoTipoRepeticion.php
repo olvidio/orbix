@@ -35,7 +35,7 @@ class InfoTipoRepeticion extends DatosInfoRepo
         // Si se quiere listar una selección, $this->k_buscar
         $criteria = Criteria::create();
         if (!empty($this->k_buscar)) {
-            $criteria = $criteria->where(Filter::matchesUnaccented(RepeticionField::Repeticion, $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(RepeticionField::Repeticion, (string) $this->k_buscar));
         }
         $criteria = $criteria
             ->orderBy(RepeticionField::Temporada)

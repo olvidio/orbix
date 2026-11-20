@@ -36,7 +36,7 @@ class InfoRegiones extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(F::Region);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(F::Region, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(F::Region, (string) $this->k_buscar));
         }
 
         return $this->regionRepository->matching($criteria);

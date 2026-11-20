@@ -36,7 +36,7 @@ class InfoAsignaturaTipo extends DatosInfoRepo
         if (empty($this->k_buscar)) {
             $criteria = $criteria->orderBy(AsignaturaTipoField::TipoAsignatura);
         } else {
-            $criteria = $criteria->where(Filter::matchesUnaccented(AsignaturaTipoField::TipoAsignatura, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(AsignaturaTipoField::TipoAsignatura, (string) $this->k_buscar));
         }
 
         return $this->asignaturaTipoRepository->matching($criteria);

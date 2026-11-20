@@ -34,7 +34,7 @@ class InfoOpcionales extends DatosInfoRepo
     {
         $criteria = Criteria::create();
         if (!empty($this->k_buscar)) {
-            $criteria = $criteria->where(Filter::matchesUnaccented(AsignaturaField::NombreAsignatura, (string) $this->k_buscar));
+            $criteria = $criteria->where(Filter::containsUnaccented(AsignaturaField::NombreAsignatura, (string) $this->k_buscar));
         }
         $criteria = $criteria
             ->andWhere(Filter::gt(AsignaturaField::IdAsignatura, 3000))
