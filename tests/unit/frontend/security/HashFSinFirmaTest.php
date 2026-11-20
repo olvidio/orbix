@@ -29,6 +29,9 @@ final class HashFSinFirmaTest extends TestCase
         yield 'tk por POST' => ['/src/ubis/plano_download', ['tk' => 'x'], []];
         yield 'un index.php que no es la portada' => ['/orbix/frontend/zz/controller/index.php', ['id' => '1'], []];
         yield 'ruta de la app con otro prefijo' => ['/src/misas/ver_plan_sacd_data_x', ['id_sacd' => '1'], []];
+        yield 'datos en la query y un POST con solo un campo neutro' => ['/orbix/frontend/asistentes/controller/lista_asistentes.php', ['scroll_id' => '1'], ['id_activ' => '21']];
+        yield 'datos en la query y un POST con un campo que se llama ctx' => ['/src/encargossacd/sacd_ficha_data', ['ctx' => '1'], ['id_nom' => '21']];
+        yield 'datos en la query y la cápsula de la sesión en un endpoint que no la abre' => ['/src/shared/tablaDB_depende_datos', ['ctx_x' => 'buena'], ['clase_info' => 'x']];
         yield 'datos junto a los parámetros de ruta' => ['/src/personas/personas_editar_data', [], ['r' => '/src/misas/ver_plan_sacd_data', 'id_nom' => '21']];
     }
 
@@ -97,5 +100,19 @@ final class HashFSinFirmaTest extends TestCase
                 $_ENV['ORBIX_HASHF_SIN_FIRMA'] = $previo;
             }
         }
+    }
+
+    public function test_con_firma_en_el_cuerpo_la_query_no_puede_traer_datos_propios(): void
+    {
+        $post = ['h' => 'x', 'id_activ' => '5', 'filtro' => 'a'];
+
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma($post, []));
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma($post, ['r' => '/src/x/y', 'dir' => 'x', 'PHPSESSID' => '1', 'nav' => 'reset']));
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma($post, ['id_activ' => '5']), 'el mismo dato repetido en la query');
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma($post, ['hnov' => '1', 'h' => 'y', 'hno' => 'a!b', 'horig' => 'z']), 'los campos de la firma de un enlace sin valores');
+        $this->assertTrue(HashFSinFirma::queryFueraDeLaFirma($post, ['id_activ' => '6']), 'otro valor en la query');
+        $this->assertTrue(HashFSinFirma::queryFueraDeLaFirma($post, ['id_nom' => '21']), 'un dato que la firma no cubre');
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma([], ['h' => 'x', 'id_nom' => '21']), 'firmada por GET: no hay cuerpo');
+        $this->assertFalse(HashFSinFirma::queryFueraDeLaFirma(['id_nom' => '21'], ['h' => 'x', 'a' => '1']), 'firma en la query: se valida todo junto');
     }
 }

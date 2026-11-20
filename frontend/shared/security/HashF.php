@@ -451,7 +451,9 @@ class HashF
         $post = $_POST;
         /** @var array<array-key, mixed> $get */
         $get = $_GET;
-        if (isset($post['h']) || isset($get['h'])) {
+        $firmada = isset($post['h']) || isset($get['h']);
+        $queryAparte = HashFSinFirma::queryFueraDeLaFirma($post, $get);
+        if ($firmada && !$queryAparte) {
             return; // viene firmada: ya la ha comprobado validatePost() ({@see datosDeLaPeticion()})
         }
         $requestUri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
@@ -459,7 +461,8 @@ class HashF
         if (!str_contains($requestUri, '/index.php') && !str_contains($requestUri, 'udm4')) {
             self::registrarSinFirma(dirname(__DIR__, 3) . '/log', $metodo, $requestUri, $post !== [] ? $post : $get);
         }
-        if (!HashFSinFirma::exigida($ruta, $post, $get, [HashB::class, 'esDeEstaSesion'])) {
+        // Firmado el cuerpo pero con datos propios en la query: esos no los cubre la firma.
+        if (!$queryAparte && !HashFSinFirma::exigida($ruta, $post, $get, [HashB::class, 'esDeEstaSesion'])) {
             return;
         }
         error_log('[HashF] petición sin firma: ' . $metodo . ' ' . HashFSinFirma::rutaCanonica($ruta)

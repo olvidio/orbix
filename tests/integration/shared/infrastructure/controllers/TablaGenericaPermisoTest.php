@@ -165,4 +165,16 @@ final class TablaGenericaPermisoTest extends myTest
         $this->assertFalse($json['success'] ?? null);
         $this->assertStringContainsString('Operación no autorizada', (string) ($json['mensaje'] ?? ''));
     }
+
+    /**
+     * El permiso se comprueba para la persona, casa o actividad de la cápsula: el registro se guarda para
+     * esa misma, no para el `id_pau` que llegue en el formulario (LOG-04).
+     */
+    public function test_guardar_usa_el_id_pau_de_la_capsula_y_no_el_del_formulario(): void
+    {
+        $codigo = (string) file_get_contents(dirname(__DIR__, 5) . '/src/shared/infrastructure/ui/http/controllers/tablaDB_update.php');
+
+        $this->assertStringNotContainsString('setCampos($_POST)', $codigo);
+        $this->assertMatchesRegularExpression('/\$campos\[\'id_pau\'\]\s*=\s*\$Qid_pau;/', $codigo);
+    }
 }

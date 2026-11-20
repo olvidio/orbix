@@ -213,4 +213,16 @@ final class AccesoRolPauTest extends TestCase
     {
         $this->assertTrue(AccesoRolPau::permite('cdc', 'frontend/shared/controller/e2e_firmar.php'));
     }
+
+    public function test_se_miran_los_parametros_del_cuerpo_y_los_de_la_query(): void
+    {
+        $this->assertSame([[]], AccesoRolPau::parametrosDeLaPeticion([], []));
+        $this->assertSame([['a' => '1']], AccesoRolPau::parametrosDeLaPeticion(['a' => '1'], []));
+        $this->assertSame([['id_activ' => '7']], AccesoRolPau::parametrosDeLaPeticion([], ['id_activ' => '7']));
+        $this->assertSame(
+            [['scroll_id' => '1'], ['id_activ' => '7']],
+            AccesoRolPau::parametrosDeLaPeticion(['scroll_id' => '1'], ['id_activ' => '7']),
+            'un id en la query no se libra por venir con un cuerpo'
+        );
+    }
 }

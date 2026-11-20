@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 14:12+0100\n"
+"POT-Creation-Date: 2026-11-20 17:54+0100\n"
 "PO-Revision-Date: 2026-07-16 12:28+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -151,7 +151,7 @@ msgstr "Unknown error"
 #: frontend/shared/view/ayuda_consultas_lista.phtml:73
 #: frontend/shared/view/tablaDB_formulario.phtml:16
 #: frontend/shared/view/tablaDB_formulario.phtml:47
-#: frontend/shared/web/TablaEditable.php:872
+#: frontend/shared/web/TablaEditable.php:885
 #: frontend/ubis/controller/plano_bytea.php:77
 #: frontend/ubis/view/direccion_form.phtml:77
 #: frontend/ubis/view/teleco_tabla.phtml:21
@@ -320,7 +320,7 @@ msgstr "required data missing: activity, person and type of position."
 #: src/actividadcargos/application/Select_cargos_personas_en_actividad.php:97
 #: src/actividades/application/ActividadSelectListado.php:252
 #: src/actividades/application/ListaSrCsvListado.php:167
-#: src/actividadplazas/application/GestionPlazasData.php:246
+#: src/actividadplazas/application/GestionPlazasData.php:248
 #: src/actividadplazas/application/PlazasBalanceData.php:99
 #: src/asistentes/application/ListaEstCtrData.php:204
 #: src/cambios/domain/AvisoObjetoCatalog.php:39
@@ -400,6 +400,7 @@ msgstr "activity"
 #: src/actividadestudios/infrastructure/ui/http/controllers/matricula_eliminar.php:33
 #: src/actividadestudios/infrastructure/ui/http/controllers/matricula_nueva.php:15
 #: src/actividadplazas/infrastructure/ui/http/controllers/gestion_plazas_update.php:25
+#: src/actividadplazas/infrastructure/ui/http/controllers/gestion_plazas_update.php:31
 #: src/actividadplazas/infrastructure/ui/http/controllers/peticiones_eliminar.php:21
 #: src/actividadplazas/infrastructure/ui/http/controllers/peticiones_guardar.php:21
 #: src/actividadplazas/infrastructure/ui/http/controllers/peticiones_incorporar.php:22
@@ -514,6 +515,7 @@ msgstr "activity"
 #: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:29
 #: src/menus/infrastructure/ui/http/controllers/menus_importar.php:19
 #: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:51
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:56
 #: src/misas/infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php:17
 #: src/misas/infrastructure/ui/http/controllers/cuadricula_update.php:16
 #: src/misas/infrastructure/ui/http/controllers/eliminar_encargo_centro.php:16
@@ -559,13 +561,14 @@ msgstr "activity"
 #: src/procesos/infrastructure/ui/http/controllers/actividad_proceso_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:18
 #: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:26
+#: src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_update.php:32
 #: src/procesos/infrastructure/ui/http/controllers/procesos_clonar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_eliminar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_regenerar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/procesos_update.php:15
 #: src/procesos/infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php:15
 #: src/procesos/infrastructure/ui/http/controllers/usuario_perm_activ_data.php:9
-#: src/shared/infrastructure/ui/http/AccesoRolPau.php:99
+#: src/shared/infrastructure/ui/http/AccesoRolPau.php:98
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consulta_valorar.php:21
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:23
 #: src/shared/infrastructure/ui/http/controllers/ayuda_consultas_estado_update.php:27
@@ -2567,7 +2570,7 @@ msgstr "obtained"
 #: frontend/actividadplazas/view/resumen_plazas.phtml:56
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:95
 #: frontend/casas/view/calendario_ubi_resumen_body.phtml:104
-#: src/actividadplazas/application/GestionPlazasData.php:249
+#: src/actividadplazas/application/GestionPlazasData.php:251
 #: src/actividadtarifas/domain/value_objects/TarifaModoId.php:16
 msgid "total"
 msgstr "total"
@@ -5774,8 +5777,8 @@ msgstr "Unknown error"
 #: frontend/inventario/view/equipajes_ver.phtml:50
 #: frontend/personas/view/_persona_form_js.phtml:47
 #: frontend/personas/view/_persona_form_js.phtml:72
-#: frontend/shared/view/tablaDB_formulario.phtml:22 scripts/index.js.php:1235
-#: scripts/index.js.php:1266 src/inventario/view/buscarDocsxSigla.phtml:164
+#: frontend/shared/view/tablaDB_formulario.phtml:22 scripts/index.js.php:1270
+#: scripts/index.js.php:1301 src/inventario/view/buscarDocsxSigla.phtml:164
 msgid "Error en la conexión con el servidor"
 msgstr "Server connection error"
 
@@ -9500,7 +9503,7 @@ msgid "planning vista tabla"
 msgstr "planning table view"
 
 #: frontend/planning/view/planning_casa_select.phtml:68
-#: scripts/index.js.php:643
+#: scripts/index.js.php:659
 msgid "Error de página devuelta"
 msgstr "Page error returned"
 
@@ -9962,7 +9965,7 @@ msgid ""
 msgstr ""
 "to view more details define ORBIX_FRONT_DEBUG=1 in the frontend environment"
 
-#: frontend/shared/security/HashF.php:470
+#: frontend/shared/security/HashF.php:473
 msgid "Petición sin firma. Vuelva a abrir la pantalla desde el menú."
 msgstr "Request without signature. Please reopen the screen from the menu."
 
@@ -10664,19 +10667,19 @@ msgid "clic para seleccionar"
 msgstr "click to select"
 
 #: frontend/shared/web/Lista.php:469 frontend/shared/web/Lista.php:614
-#: frontend/shared/web/Lista.php:1485 frontend/shared/web/TablaEditable.php:112
+#: frontend/shared/web/Lista.php:1485 frontend/shared/web/TablaEditable.php:120
 msgid "no hay ninguna fila"
 msgstr "there is no row"
 
-#: frontend/shared/web/Lista.php:1442 frontend/shared/web/TablaEditable.php:671
+#: frontend/shared/web/Lista.php:1442 frontend/shared/web/TablaEditable.php:684
 msgid "guardar selección de columnas"
 msgstr "save column selection"
 
-#: frontend/shared/web/Lista.php:1447 frontend/shared/web/TablaEditable.php:676
+#: frontend/shared/web/Lista.php:1447 frontend/shared/web/TablaEditable.php:689
 msgid "ver/ocultar panel de búsqueda"
 msgstr "see / hide search panel"
 
-#: frontend/shared/web/Lista.php:1462 frontend/shared/web/TablaEditable.php:691
+#: frontend/shared/web/Lista.php:1462 frontend/shared/web/TablaEditable.php:704
 msgid "Buscar en todas las columnas"
 msgstr "Search in all columns"
 
@@ -10713,7 +10716,7 @@ msgstr "between"
 msgid "y"
 msgstr "and"
 
-#: frontend/shared/web/TablaEditable.php:873
+#: frontend/shared/web/TablaEditable.php:886
 #: src/actividadcargos/application/ActividadCargoEditar.php:84
 #: src/actividadcargos/application/ActividadCargoNuevo.php:69
 #: src/actividades/application/ActividadCambiarTipo.php:103
@@ -10739,10 +10742,10 @@ msgstr "and"
 #: src/actividadestudios/application/AsistentePlanEstOk.php:46
 #: src/actividadestudios/application/MatriculaEditar.php:52
 #: src/actividadestudios/application/MatriculaNueva.php:118
-#: src/actividadplazas/application/GestionPlazasUpdate.php:75
-#: src/actividadplazas/application/GestionPlazasUpdate.php:100
+#: src/actividadplazas/application/GestionPlazasUpdate.php:104
+#: src/actividadplazas/application/GestionPlazasUpdate.php:129
 #: src/actividadplazas/application/PeticionesIncorporar.php:174
-#: src/actividadplazas/application/PlazasCeder.php:86
+#: src/actividadplazas/application/PlazasCeder.php:100
 #: src/actividadtarifas/application/RelacionTarifaUpdate.php:74
 #: src/actividadtarifas/application/TarifaUbiCopiar.php:63
 #: src/actividadtarifas/application/TarifaUbiUpdate.php:62
@@ -10803,7 +10806,7 @@ msgstr "and"
 #: src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php:45
 #: src/misas/application/cuadricula_zona_grid_data_build.php:111
 #: src/notas/application/ActaModificar.php:69
-#: src/notas/application/ActaNueva.php:68
+#: src/notas/application/ActaNueva.php:72
 #: src/notas/application/support/ActaTribunalSync.php:55
 #: src/personas/application/PersonaUpdate.php:117
 #: src/personas/application/PersonaUpdate.php:146
@@ -12955,7 +12958,7 @@ msgid "lugar según país o dl"
 msgstr "place according to country or dl"
 
 #: src/actividades/application/ActividadQueFiltrosBloque.php:95
-#: src/actividadplazas/application/GestionPlazasData.php:247
+#: src/actividadplazas/application/GestionPlazasData.php:249
 #: src/profesores/application/CongresosLista.php:35
 #: src/profesores/domain/entity/ProfesorCongreso.php:280
 msgid "organiza"
@@ -13958,31 +13961,31 @@ msgstr "Missing id_dl to modify the enrollment in STGR region schema."
 msgid "Se requieren inicioIso y finIso"
 msgstr "inicioIso and finIso are required"
 
-#: src/actividadplazas/application/GestionPlazasData.php:245
+#: src/actividadplazas/application/GestionPlazasData.php:247
 #: src/actividadplazas/application/PlazasBalanceData.php:98
 #: src/casas/application/PrevisionAsistentesData.php:62
 msgid "id_activ"
 msgstr "id_activ"
 
-#: src/actividadplazas/application/GestionPlazasData.php:247
+#: src/actividadplazas/application/GestionPlazasData.php:249
 msgid "org"
 msgstr "org"
 
-#: src/actividadplazas/application/GestionPlazasData.php:250
+#: src/actividadplazas/application/GestionPlazasData.php:252
 msgid "totales actividad"
 msgstr "activity totals"
 
-#: src/actividadplazas/application/GestionPlazasData.php:260
+#: src/actividadplazas/application/GestionPlazasData.php:262
 #: src/actividadplazas/application/PlazasBalanceData.php:101
 #: src/actividadplazas/application/PlazasBalanceData.php:103
 msgid "concedidas"
 msgstr "granted"
 
-#: src/actividadplazas/application/GestionPlazasData.php:268
+#: src/actividadplazas/application/GestionPlazasData.php:270
 msgid "pedidas"
 msgstr "requested"
 
-#: src/actividadplazas/application/GestionPlazasUpdate.php:71
+#: src/actividadplazas/application/GestionPlazasUpdate.php:100
 msgid "no se encuentra la actividad"
 msgstr "Activity not found"
 
@@ -14061,11 +14064,19 @@ msgstr ""
 msgid "faltan parametros id_activ / region_dl"
 msgstr "missing parameters id_activ / region_dl"
 
-#: src/actividadplazas/application/PlazasCeder.php:111
+#: src/actividadplazas/application/PlazasCeder.php:45
+msgid "El número de plazas no puede ser negativo."
+msgstr "The number of places cannot be negative."
+
+#: src/actividadplazas/application/PlazasCeder.php:72
+msgid "La delegación a la que se ceden las plazas no es válida."
+msgstr "The delegation to which the places are transferred is not valid."
+
+#: src/actividadplazas/application/PlazasCeder.php:125
 msgid "No tiene plazas para ceder"
 msgstr "No places available to transfer"
 
-#: src/actividadplazas/application/PlazasCeder.php:115
+#: src/actividadplazas/application/PlazasCeder.php:129
 #, php-format
 msgid "No tiene plazas suficientes para ceder. Puede ceder como máximo %s"
 msgstr "Not enough places to transfer. You can transfer a maximum of %s"
@@ -17377,15 +17388,15 @@ msgstr "There is an error. You must specify the destination"
 msgid "PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"
 msgstr "PSQL ERROR IN COMMAND: %s<br> check in: %s<br>"
 
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:94
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:112
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:124
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:138
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:156
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:168
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:180
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:198
-#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:210
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:102
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:120
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:132
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:146
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:164
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:176
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:188
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:206
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:218
 msgid "No se han podido actualizar los menus"
 msgstr "Failed to update the menus"
 
@@ -17531,6 +17542,13 @@ msgstr ""
 #: src/notas/application/ActaImprimirPresentacionData.php:107
 msgid "no aparece en la lista"
 msgstr "does not appear in the list"
+
+#: src/notas/application/ActaNueva.php:62
+#, php-format
+msgid "El acta %s ya existe. Para cambiarla, ábrala desde la lista de actas."
+msgstr ""
+"Grade record %s already exists. To change it, open it from the list of grade "
+"records."
 
 #: src/notas/application/ActaPdfSubir.php:41
 msgid ""
@@ -19791,7 +19809,7 @@ msgstr "The session has been closed. Please log in again."
 msgid "Las consultas a la ayuda las revisa un administrador."
 msgstr "Help inquiries are reviewed by an administrator."
 
-#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:72
+#: src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:75
 msgid "no se ha ejecutado la acción"
 msgstr "the action has not been executed"
 

@@ -57,6 +57,10 @@ final class ActaNueva
         // La fecha debe fijarse antes para que inventarActa tenga referencia.
         $valor = Acta::inventarActa($acta, $oF_acta);
         $oActa->setActa($valor);
+        // Un alta no pisa un acta que ya existe (ni su PDF firmado): para cambiarla está «modificar».
+        if ($repo->findById($valor) !== null) {
+            return sprintf(_("El acta %s ya existe. Para cambiarla, ábrala desde la lista de actas."), $valor);
+        }
         $oActa->setLibro(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'libro'));
         $oActa->setPagina(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'pagina'));
         $oActa->setLinea(\src\shared\domain\helpers\FuncTablasSupport::inputInt($input, 'linea'));

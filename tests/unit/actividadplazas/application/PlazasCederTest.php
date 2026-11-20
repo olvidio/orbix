@@ -256,6 +256,43 @@ final class PlazasCederTest extends TestCase
         $this->assertSame('', $msg);
     }
 
+    /** Una cesión negativa quitaría plazas a la otra dl y subiría las propias (LOG-03). */
+    public function test_no_se_cede_una_cantidad_negativa(): void
+    {
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->expects($this->never())->method('Guardar');
+
+        $msg = $this->makeUseCase(
+            $this->createMock(DelegacionRepositoryInterface::class),
+            $plazasDlRepo,
+            $this->createMock(ActividadPlazasRepositoryInterface::class),
+        )->execute(['id_activ' => 1, 'region_dl' => 'X-dly', 'num_plazas' => -4]);
+
+        $this->assertNotSame('', $msg);
+    }
+
+    public function test_solo_se_cede_a_una_delegacion_que_existe(): void
+    {
+        $deleg = new Delegacion();
+        $deleg->setIdDlVo(new DelegacionId(5));
+        $deleg->setDl('dl');
+        $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
+        // La mía existe; la de destino, no.
+        $delegRepo->method('matching')->willReturnOnConsecutiveCalls([$deleg], []);
+
+        $oPlazas = $this->createMock(ActividadPlazas::class);
+        $oPlazas->method('getArrayCedidas')->willReturn([]);
+        $oPlazas->expects($this->never())->method('setCedidas');
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->method('matching')->willReturn([$oPlazas]);
+        $plazasDlRepo->expects($this->never())->method('Guardar');
+
+        $msg = $this->makeUseCase($delegRepo, $plazasDlRepo, $this->createMock(ActividadPlazasRepositoryInterface::class))
+            ->execute(['id_activ' => 1, 'region_dl' => 'X-<b>no existe', 'num_plazas' => 2]);
+
+        $this->assertNotSame('', $msg);
+    }
+
     private function makeUseCase(
         DelegacionRepositoryInterface $delegRepo,
         ActividadPlazasDlRepositoryInterface $plazasDlRepo,

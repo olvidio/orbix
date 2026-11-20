@@ -87,7 +87,8 @@ final class HashFSinFirma
      */
     public static function exigida(string $ruta, array $post, array $get, ?callable $capsulaDeLaSesion = null): bool
     {
-        $datos = $post !== [] ? $post : $get;
+        // Cuerpo y query juntos: un dato en la query cuenta aunque el cuerpo traiga solo un campo neutro.
+        $datos = $post + $get;
         $nombres = self::nombresConDatos($datos);
         if ($nombres === []) {
             return false;
@@ -104,6 +105,32 @@ final class HashFSinFirma
         }
 
         return !self::rutaExenta($ruta);
+    }
+
+    /**
+     * Con la firma `h` en el cuerpo se valida solo el cuerpo: ¿trae la query algún dato que esa firma no
+     * cubre? (Un parámetro que no está en el cuerpo, o que está con otro valor.) Los controladores que
+     * leen `$_GET` lo recibirían sin firmar.
+     *
+     * @param array<array-key, mixed> $post
+     * @param array<array-key, mixed> $get
+     */
+    public static function queryFueraDeLaFirma(array $post, array $get): bool
+    {
+        if (!isset($post['h'])) {
+            return false;
+        }
+        foreach (self::nombresConDatos($get) as $nombre) {
+            // Los campos de la propia firma (los de un enlace `linkSinVal` van en la query) no son datos.
+            if (in_array($nombre, ['h', 'hh', 'hhc', 'hpos', 'hnov', 'hno', 'horig'], true)) {
+                continue;
+            }
+            if (!array_key_exists($nombre, $post) || $post[$nombre] != $get[$nombre]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

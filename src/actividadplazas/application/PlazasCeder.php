@@ -41,6 +41,10 @@ final class PlazasCeder
             return (string)_("faltan parametros id_activ / region_dl");
         }
 
+        if ($num_plazas < 0) {
+            return (string)_("El número de plazas no puede ser negativo.");
+        }
+
         $dl = substr($reg_dl, strpos($reg_dl, '-') + 1);
 
         $mi_dele = ConfigGlobal::mi_delef();
@@ -58,6 +62,16 @@ final class PlazasCeder
         }
 
         $aCedidas = $oActividadPlazasDl->getArrayCedidas() ?? [];
+
+        // Solo se cede a una delegación que existe (quitar una cesión ya apuntada se deja siempre).
+        if ($num_plazas > 0) {
+            $dl_destino_sigla = ConfigGlobal::mi_sfsv() === 2 ? substr($dl, 0, -1) : $dl;
+            if ($dl === $mi_dele
+                || $this->delegacionRepository->matching(Criteria::create()->where(Filter::eq(DelegacionField::Dl, $dl_destino_sigla))) === []
+            ) {
+                return (string)_("La delegación a la que se ceden las plazas no es válida.");
+            }
+        }
 
         if ($num_plazas > 0) {
             $msg = $this->validarPlazasParaCeder(

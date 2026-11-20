@@ -122,6 +122,18 @@ final class ActaNuevaModificarEliminarTest extends myTest
         $this->assertSame('nota', $guardada->getObserv());
     }
 
+    /** Dar de alta con el número de un acta que ya existe la sobrescribiría, y con ella su PDF firmado (LOG-02). */
+    public function test_nueva_con_el_numero_de_un_acta_que_ya_existe_se_rechaza(): void
+    {
+        $this->actas->method('findById')->with("{$this->miDl} 12/24")->willReturn($this->actaExistente("{$this->miDl} 12/24"));
+        $this->actas->expects($this->never())->method('Guardar');
+        $this->tribunales->expects($this->never())->method('matching');
+
+        $err = $this->nueva()->execute(['acta' => "{$this->miDl} 12/24", 'f_acta' => $this->local('2024-06-15'), 'id_asignatura' => '1101']);
+
+        $this->assertStringContainsString('ya existe', $err);
+    }
+
     public function test_nueva_con_numero_de_acta_construye_el_acta_con_mi_dl(): void
     {
         $this->tribunales->method('matching')->willReturn([]);

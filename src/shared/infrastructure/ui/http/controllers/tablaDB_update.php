@@ -67,7 +67,10 @@ $repositoryInterface = $oInfoClase->getRepositoryInterface();
 $oDatosUpdate = new DatosUpdateRepo();
 $oDatosUpdate->setRepositoryInterface($repositoryInterface);
 $oDatosUpdate->setFicha($oFicha);
-$oDatosUpdate->setCampos($_POST);
+// El registro es de la persona, casa o actividad para la que se ha comprobado el permiso (la de la cápsula).
+$campos = $_POST;
+$campos['id_pau'] = $Qid_pau;
+$oDatosUpdate->setCampos($campos);
 
 $rta = _("no se ha ejecutado la acción");
 switch ($Qmod) {

@@ -90,13 +90,29 @@ final class AccesoRolPau
             return;
         }
         $metodo = is_string($_SERVER['REQUEST_METHOD'] ?? null) ? $_SERVER['REQUEST_METHOD'] : '';
-        $parametros = $_POST !== [] ? $_POST : $_GET;
         $dirLog = dirname(__DIR__, 5) . '/log';
-        self::registrar($dirLog, $pau, $metodo, $uri, $parametros);
-        if (self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::seCorta(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
-            return;
+        $conjuntos = self::parametrosDeLaPeticion($_POST, $_GET);
+        self::registrar($dirLog, $pau, $metodo, $uri, $conjuntos[0]);
+        foreach ($conjuntos as $parametros) {
+            if (!self::decidir($dirLog, $pau, $metodo, $uri, $parametros, self::seCorta(), self::idsDelPau($auth), self::ubiDeActividad(...))) {
+                self::responderNoAutorizada($uri, _("Operación no autorizada"));
+            }
         }
-        self::responderNoAutorizada($uri, _("Operación no autorizada"));
+    }
+
+    /**
+     * Los parámetros que hay que mirar: los del cuerpo y, aparte, los de la query (un id ajeno en la query
+     * no se libra por venir acompañado de un cuerpo).
+     *
+     * @param array<array-key, mixed> $post
+     * @param array<array-key, mixed> $get
+     * @return non-empty-list<array<array-key, mixed>>
+     */
+    public static function parametrosDeLaPeticion(array $post, array $get): array
+    {
+        $conjuntos = array_values(array_filter([$post, $get], static fn (array $p): bool => $p !== []));
+
+        return $conjuntos === [] ? [[]] : $conjuntos;
     }
 
     private static function responderNoAutorizada(string $uri, string $mensaje): never

@@ -1,5 +1,6 @@
 <?php
 
+use src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\GlobalPdo;
 use src\shared\infrastructure\logging\GestorErrores;
@@ -34,7 +35,7 @@ $Qtodos = ($Qtodos === false || $Qtodos === null || $Qtodos === 0) ? 2 : $Qtodos
 if ($Qseguro === 2) {
     ContestarJson::enviar('', [
         'estado' => 'confirmacion',
-        'puede_importar_todas' => ConfigGlobal::mi_dele() === 'dlb',
+        'puede_importar_todas' => ConfigGlobal::mi_dele() === 'dlb' && PermisoHerramientasBdGuard::permiteEsquemas(),
         'ctx_importar' => HashB::sign('menus_importar_de_ficheros_a_ref'),
     ]);
     return;
@@ -43,11 +44,15 @@ if ($Qseguro === 2) {
 if ($Qseguro === 1) {
     try {
         HashB::open(
-            \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_importar')
-                ?: \src\shared\domain\helpers\FuncTablasSupport::inputString($_GET, 'ctx_importar'),
+            \src\shared\domain\helpers\FuncTablasSupport::inputString($_POST, 'ctx_importar'),
             'menus_importar_de_ficheros_a_ref'
         );
     } catch (HashBInvalidException $e) {
+        ContestarJson::enviar(_("Operación no autorizada"), 'none');
+        return;
+    }
+    // Cambiar los menús de todos los esquemas es una herramienta de administración de la base de datos.
+    if ($Qtodos === 1 && !PermisoHerramientasBdGuard::permiteEsquemas()) {
         ContestarJson::enviar(_("Operación no autorizada"), 'none');
         return;
     }
@@ -83,6 +88,9 @@ if ($Qseguro === 1) {
         $oDB = $oConexion->getPDO();
 
         $messages[] = "actualizando menus para $esquema";
+
+        // Cada esquema se cambia entero o no se cambia: si algo falla, la conexión se cierra sin confirmar.
+        $oDB->beginTransaction();
 
         //************ GRUPMENU **************
         $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
@@ -211,6 +219,7 @@ if ($Qseguro === 1) {
                 }
             }
         }
+        $oDB->commit();
     }
 }
 

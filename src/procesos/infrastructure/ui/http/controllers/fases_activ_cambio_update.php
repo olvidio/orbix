@@ -27,6 +27,12 @@ try {
     return;
 }
 
+// Sin ninguna actividad firmada no hay nada autorizado.
+if ($selRebuilt === []) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $_POST['sel'] = $selRebuilt;
 $_POST['id_fase_nueva'] = $idFase;
 $_POST['accion'] = $accion;
