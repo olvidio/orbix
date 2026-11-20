@@ -146,8 +146,8 @@ final class ExportadorDocumento
     private function odf(string $contentXml, string $estilo, string $tipoDoc): string
     {
         require_once dirname($this->dirOdf) . '/odf.php';
+        // Solo se usan sus plantillas (meta, manifiesto); no hace falta analizar ningún documento.
         $odf = new \odf();
-        $odf->parse((string) file_get_contents($this->dirOdf . '/content_ini.xml'));
 
         $estilos = $this->dirOdf . '/' . $estilo . ($tipoDoc === 'text' ? '_styles_txt.xml' : '_styles.xml');
         $ajustes = $this->dirOdf . '/' . $estilo . '_settings.xml';

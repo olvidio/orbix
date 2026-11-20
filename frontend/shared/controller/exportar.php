@@ -27,6 +27,8 @@ if ((string) filter_input(INPUT_POST, 'frm_export_enc') === 'b64') {
 }
 session_write_close();
 
+// Nada de lo que se escriba mientras se genera (avisos de PHP incluidos) va delante del fichero.
+ob_start();
 try {
     $fichero = (new ExportadorDocumento())->generar($tipo, $titulo, $documento, $referencia);
 } catch (\InvalidArgumentException $e) {
@@ -38,6 +40,10 @@ try {
     exit(_("No se ha podido generar el fichero"));
 }
 
+if (headers_sent()) {
+    error_log('exportar: las cabeceras ya se habían enviado');
+    exit;
+}
 while (ob_get_level() > 0) {
     ob_end_clean();
 }

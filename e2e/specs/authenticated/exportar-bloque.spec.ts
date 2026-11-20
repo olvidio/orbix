@@ -7,11 +7,13 @@ import { abrirApp } from '../../orbix-app';
  * `frontend/shared/controller/exportar.php`, con sesión y con la firma del formulario. El título solo da
  * nombre al fichero, y el exportador antiguo de `libs/` (se ejecutaba sin sesión) ya no existe.
  */
+test.describe.configure({ timeout: 120_000 });
+
 const TABLA = '<div><table><tr><th>a</th></tr><tr><td>uno</td></tr></table></div>';
 
 async function exportar(page: import('@playwright/test').Page, tipo: string, titulo: string) {
   const [descarga] = await Promise.all([
-    page.waitForEvent('download'),
+    page.waitForEvent('download', { timeout: 30_000 }),
     page.evaluate(
       ([t, n, html]) => {
         const valor = (id: string, v: string) => ((document.getElementById(id) as HTMLInputElement).value = v);

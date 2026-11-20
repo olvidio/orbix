@@ -53,6 +53,7 @@ final class ExportadorDocumentoTest extends TestCase
         @unlink($marca);
         $antes = glob(sys_get_temp_dir() . '/orbix_export_*') ?: [];
 
+        $this->expectOutputString('');
         foreach (['odfc' => 'ods', 'odft' => 'odt'] as $tipo => $ext) {
             $r = (new ExportadorDocumento())->generar($tipo, 'a;touch ' . $marca . ';false', self::TABLA, 'frontend/encargossacd/view/listas_com_ctr.phtml');
 
