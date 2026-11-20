@@ -76,7 +76,7 @@ class PillsLayout implements LayoutInterface
         ?>
         <script>
             window.orbixLayout = {
-                defaultGrupMenu: <?= json_encode($defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
+                defaultGrupMenu: <?= json_encode($defaultGrupMenu, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS) ?>,
                 menuConfig: <?= $menuJson ?>
             };
             if (!window.__orbixLayoutPillsJsLoaded) {

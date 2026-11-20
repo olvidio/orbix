@@ -85,6 +85,33 @@ final class NavStack
     }
 
     /**
+     * Lo que el navegador puede apuntar en el estado de la pantalla actual (`nav_state.php`): la fila
+     * elegida y la posición de la lista. El resto del estado lo fija la pantalla al entrar; si el cliente
+     * pudiera añadir campos, al volver atrás los recibiría firmados.
+     *
+     * @param array<array-key, mixed> $patch
+     * @return array<string, string>
+     */
+    public static function patchDelCliente(array $patch): array
+    {
+        $admitido = [];
+        foreach ($patch as $clave => $valor) {
+            if (!is_string($clave) || !is_scalar($valor)) {
+                continue;
+            }
+            if ($clave !== 'id_sel' && preg_match('/^scroll_id(_[A-Za-z0-9_]+)?$/', $clave) !== 1) {
+                continue;
+            }
+            $texto = (string) $valor;
+            if (strlen($texto) <= 500) {
+                $admitido[$clave] = $texto;
+            }
+        }
+
+        return $admitido;
+    }
+
+    /**
      * @param array<string, mixed> $patch
      */
     public function updateStateAt(int $n, array $patch): void
@@ -198,9 +225,10 @@ final class NavStack
                 $bloque = '#main';
             }
             /** @var array<string, mixed> $params */
+            // La identidad (qué registro es) manda sobre el estado, que en parte apunta el navegador.
             $params = array_merge(
-                is_array($entry['identity'] ?? null) ? $entry['identity'] : [],
                 is_array($entry['state'] ?? null) ? $entry['state'] : [],
+                is_array($entry['identity'] ?? null) ? $entry['identity'] : [],
             );
 
             return [

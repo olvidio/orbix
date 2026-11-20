@@ -356,7 +356,7 @@
     }
 
     function reset_campos_modal() {
-        $('#titulo_modal').html('');
+        $('#titulo_modal').text('');
         $('#id_sacd').val('');
         $('#ctx_update').val('');
         $('#iniciales').val('');
@@ -377,7 +377,7 @@
         let iniciales = data[cell.row].iniciales;
         let color = data[cell.row].color;
 
-        $('#titulo_modal').html(sacd);
+        $('#titulo_modal').text(sacd);
         $('#id_sacd').val(id_sacd);
         $('#ctx_update').val(data[cell.row].ctx_update || '');
         $('#iniciales').val(iniciales);

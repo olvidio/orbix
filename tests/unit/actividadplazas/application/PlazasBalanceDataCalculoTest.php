@@ -117,7 +117,7 @@ final class PlazasBalanceDataCalculoTest extends myTest
         $this->assertSame(['editable' => 'false', 'valor' => 8], $mia['dlb-l']);
         $this->assertSame(['editable' => 'true', 'valor' => 5], $mia['dlp-c']);
         $this->assertSame(['editable' => 'false', 'valor' => '-'], $mia['dlp-l'], 'ocupadas negativas: sin dato');
-        $this->assertSame(['id_activ' => 10], HashB::open($mia['ctx_update'], 'gestion_plazas_update'));
+        $this->assertSame(['id_activ' => 10, 'editables' => ['dlb-c', 'dlp-c']], HashB::open($mia['ctx_update'], 'gestion_plazas_update'), 'la cápsula dice qué columnas puede cambiar');
 
         $this->assertSame(20, $suya['id']);
         $this->assertSame('tono2', $suya['clase']);

@@ -41,6 +41,35 @@ final class GestionPlazasUpdate
      *
      * @param array<string, mixed> $input
      */
+    /**
+     * Columnas que la fila marca como editables (`['editable' => 'true', ...]`): es lo que se firma en la
+     * cápsula de la fila.
+     *
+     * @param array<array-key, mixed> $fila
+     * @return list<string>
+     */
+    public static function columnasEditables(array $fila): array
+    {
+        $columnas = [];
+        foreach ($fila as $columna => $celda) {
+            if (is_array($celda) && ($celda['editable'] ?? '') === 'true') {
+                $columnas[] = (string) $columna;
+            }
+        }
+
+        return $columnas;
+    }
+
+    /**
+     * @param array<array-key, mixed> $ctx contenido de la cápsula `gestion_plazas_update`
+     */
+    public static function columnaAdmitida(array $ctx, string $columna): bool
+    {
+        $editables = $ctx['editables'] ?? null;
+
+        return is_array($editables) && in_array($columna, $editables, true);
+    }
+
     public function execute(array $input): string
     {
         $dataRaw = \src\shared\domain\helpers\FuncTablasSupport::inputString($input, 'data');

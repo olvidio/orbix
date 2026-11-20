@@ -165,7 +165,7 @@ use frontend\shared\config\OrbixRuntime;
     fnjs_cargar_desplegable = function (tipo, contenedor, cb) {
         var url = '<?= $url_desplegable ?>';
         var isfsv = <?= $isfsv ?>;
-        var dl_org = '<?= addslashes($dl_org) ?>';
+        var dl_org = '<?= \frontend\shared\helpers\JsEscape::cadena($dl_org) ?>';
         var parametros = 'tipo=' + tipo + '&dl_org=' + encodeURIComponent(dl_org) + '&isfsv=' + isfsv + '<?= $h_desplegable ?>';
         $.ajax({
         url: url,

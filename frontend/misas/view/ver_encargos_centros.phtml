@@ -320,13 +320,13 @@
         reset_campos_modal();
         $('#que').val('nuevo');
         $('#ctx_guardar').val(ctx_nuevo);
-        $('#titulo_modal').html(<?= json_encode(_("nuevo encargo visible para un centro")) ?>);
+        $('#titulo_modal').text(<?= json_encode(_("nuevo encargo visible para un centro")) ?>);
         fnjs_prepara_select_encargo();
         modal.show();
     }
 
     function reset_campos_modal() {
-        $('#titulo_modal').html('');
+        $('#titulo_modal').text('');
         $('#id_item').val('');
         $('#ctx_guardar').val('');
         $('#ctx_eliminar').val('');
@@ -354,7 +354,7 @@
         var id_encargo = row.id_encargo;
         var id_centro = row.id_centro;
 
-        $('#titulo_modal').html(<?= json_encode(_("modificar encargo visible para un centro")) ?>);
+        $('#titulo_modal').text(<?= json_encode(_("modificar encargo visible para un centro")) ?>);
         $('#que').val('modificar');
         $('#id_item').val(id_item);
         $('#ctx_guardar').val(row.ctx_guardar || '');

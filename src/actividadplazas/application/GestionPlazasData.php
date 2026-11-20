@@ -194,9 +194,6 @@ final class GestionPlazasData
                 $a_valores[$i]['clase'] = 'tono2';
             }
             $a_valores[$i]['id'] = $id_activ;
-            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
-                'id_activ' => (int) $id_activ,
-            ]);
             $a_valores[$i]['actividad'] = $nom;
             $a_valores[$i]['dlorg'] = $dl_org;
             $a_valores[$i]['tot'] = [
@@ -239,6 +236,11 @@ final class GestionPlazasData
                     $a_valores[$i][$dl_p] = ['editable' => 'false', 'valor' => $pedidas];
                 }
             }
+            // La cápsula de la fila lleva las columnas que esta dl puede cambiar.
+            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
+                'id_activ' => (int) $id_activ,
+                'editables' => GestionPlazasUpdate::columnasEditables($a_valores[$i]),
+            ]);
         }
 
         $a_cabeceras = [

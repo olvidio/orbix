@@ -62,8 +62,8 @@ $oHashVer->setCamposForm('id_zona!orden');
 $h_ver_encargos_zona = $oHashVer->linkSinValParams();
 
 $a_campos = [
-    'json_columns_cuadricula' => json_encode($columns),
-    'json_data_cuadricula' => json_encode($rows),
+    'json_columns_cuadricula' => \frontend\shared\helpers\JsEscape::json($columns),
+    'json_data_cuadricula' => \frontend\shared\helpers\JsEscape::json($rows),
     'oDesplNoms' => $oDesplNoms,
     'oDesplCentros' => $oDesplCentros,
     'oDesplIdiomas' => $oDesplIdiomas,

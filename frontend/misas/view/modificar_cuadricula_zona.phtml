@@ -520,7 +520,7 @@
             uuid_item = url.substring(url.lastIndexOf('/') + 1)
         }
 
-        $('#titulo_modal').html(encargo);
+        $('#titulo_modal').text(encargo);
         $('#id_sacd_key_preselect').val(key);
         $('#id_sacd').val(key);
         $('#tstart').val(tstart);
@@ -559,12 +559,18 @@
         }
     }
 
+/* El texto de una celda (encargo, nombre, iniciales) no es HTML. */
+function fnjs_misas_esc(v) {
+    if (v === null || v === undefined) { return ''; }
+    return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
 function formato_sacd(row, cell, value, columnDef, dataContext) {
     var id_campo=columns[cell].field;
     var color=data_sacd[row].meta[id_campo].color;
     var texto=data_sacd[row].meta[id_campo].texto;
 //alert('sacd: '+sacd+' id_campo: '+id_campo+'value: '+value+' texto: '+texto+' color '+color);
-      var rtn = { text: value, removeClasses: 'red orange green' };
+      var rtn = { text: fnjs_misas_esc(value), removeClasses: 'red orange green' };
       if (color !== null && color !== "") {
           rtn.addClasses =  color;
           rtn.toolTip = texto;
@@ -575,7 +581,7 @@ function formato_sacd(row, cell, value, columnDef, dataContext) {
 function formato_misas(row, cell, value, columnDef, dataContext) {
     var id_campo=columns[cell].field;
     var color=data[row].meta[id_campo].color;
-      var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+      var rtn = { text: fnjs_misas_esc(value), removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
       if (color !== null && color !== "") {
           rtn.addClasses = color;
 //          rtn.toolTip = value;
@@ -586,7 +592,7 @@ function formato_misas(row, cell, value, columnDef, dataContext) {
 function formato_encargos(row, cell, value, columnDef, dataContext) {
     var id_campo=columns[cell].field;
     var color=data[row].color_encargo;
-    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+    var rtn = { text: fnjs_misas_esc(value), removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
 
     if (color !== null && color !== "") {
           rtn.addClasses = color;
@@ -597,7 +603,7 @@ function formato(row, cell, value, columnDef, dataContext) {
     var color='';
     var id_campo=columns[cell].field;
     tipo=data[row].meta[id_campo].tipo;
-    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+    var rtn = { text: fnjs_misas_esc(value), removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
     if (tipo=='sacd') {
         color=data[row].meta[id_campo].color;
  //       alert(tipo);

@@ -129,7 +129,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
         document.getElementById("overlay").style.display = "block";
 
         var url = '<?= $url_actividad_buscar ?>';
-        var parametros = 'dl_org=&f_acta_iso=<?= $f_acta_iso ?><?= $h_actividad_buscar ?>';
+        var parametros = 'dl_org=&f_acta_iso=<?= \frontend\shared\helpers\JsEscape::cadena($f_acta_iso) ?><?= $h_actividad_buscar ?>';
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
@@ -137,7 +137,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
         var dl_org = $('#dl_org').val();
         fnjs_ajax_json_html({
             url: '<?= $url_actividad_buscar ?>',
-            data: 'f_acta_iso=<?= $f_acta_iso ?>&dl_org=' + dl_org + '<?= $h_actividad_buscar ?>',
+            data: 'f_acta_iso=<?= \frontend\shared\helpers\JsEscape::cadena($f_acta_iso) ?>&dl_org=' + dl_org + '<?= $h_actividad_buscar ?>',
             target: '#div_modificar'
         });
     }

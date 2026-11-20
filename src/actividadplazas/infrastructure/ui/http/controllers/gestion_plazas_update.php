@@ -26,6 +26,12 @@ try {
     return;
 }
 
+$columna = json_decode($colNameRaw);
+if (!is_string($columna) || !GestionPlazasUpdate::columnaAdmitida($ctx, $columna)) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $id_activ = \src\shared\domain\helpers\FuncTablasSupport::inputInt($ctx, 'id_activ');
 if (is_object($obj)) {
     $obj->id = $id_activ;

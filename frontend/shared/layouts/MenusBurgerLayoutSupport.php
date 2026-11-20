@@ -207,7 +207,7 @@ trait MenusBurgerLayoutSupport
 
     protected function menuConfigJson(): string
     {
-        $menuJson = json_encode($this->menuConfigArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $menuJson = json_encode($this->menuConfigArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS);
         if ($menuJson === false) {
             return '{}';
         }

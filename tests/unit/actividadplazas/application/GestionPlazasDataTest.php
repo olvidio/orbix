@@ -155,7 +155,7 @@ final class GestionPlazasDataTest extends myTest
         $this->assertSame(['editable' => 'true', 'valor' => '12'], $fila['dlb-c']);
         $this->assertSame(['editable' => 'false', 'valor' => '-'], $fila['dlb-p']);
         $this->assertSame(['editable' => 'true', 'valor' => '5'], $fila['dlx-c'], 'concedida = fila cuyo dl_tabla es la dl organizadora; el resto se toma como pedida');
-        $this->assertSame(['id_activ' => 100], HashB::open($fila['ctx_update'], 'gestion_plazas_update'));
+        $this->assertSame(['id_activ' => 100, 'editables' => ['tot', 'dlb-c', 'dlx-c']], HashB::open($fila['ctx_update'], 'gestion_plazas_update'), 'la cápsula dice qué columnas puede cambiar');
     }
 
     public function test_en_actividad_ajena_mi_dl_edita_solo_las_pedidas_y_el_total_no_es_editable(): void

@@ -51,7 +51,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
     }
     fnjs_sincronizar = function () {
         var url = '<?= $url_sincro_syncro ?>';
-        var parametros = 'region=<?= $region ?>&dl_listas=<?= $dl_listas ?>&tipo_persona=<?= $tipo_persona ?>&ctx_syncro=' + encodeURIComponent(<?= json_encode($ctx_syncro ?? '') ?>) + '<?= $h1 ?>';
+        var parametros = 'region=<?= \frontend\shared\helpers\JsEscape::cadena($region) ?>&dl_listas=<?= \frontend\shared\helpers\JsEscape::cadena($dl_listas) ?>&tipo_persona=<?= \frontend\shared\helpers\JsEscape::cadena($tipo_persona) ?>&ctx_syncro=' + encodeURIComponent(<?= json_encode($ctx_syncro ?? '') ?>) + '<?= $h1 ?>';
 
         $.ajax({
             url: url,

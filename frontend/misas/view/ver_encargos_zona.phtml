@@ -248,12 +248,12 @@
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#ctx_guardar').val(ctx_nuevo);
-        $('#titulo_modal').html(<?= json_encode(_("nuevo encargo")) ?>);
+        $('#titulo_modal').text(<?= json_encode(_("nuevo encargo")) ?>);
         showEncargosModal();
     }
 
     function reset_campos_modal() {
-        $('#titulo_modal').html('');
+        $('#titulo_modal').text('');
         $('#observ').val('');
         $('#encargo').val('');
         $('#orden').val('');
@@ -283,7 +283,7 @@
         let idioma = data[cell.row].idioma_enc;
         let descripcion_lugar = data[cell.row].descripcion_lugar;
 
-        $('#titulo_modal').html(encargo);
+        $('#titulo_modal').text(encargo);
         $('#observ').val(observ);
         $('#orden').val(orden);
         $('#prioridad').val(prioridad);

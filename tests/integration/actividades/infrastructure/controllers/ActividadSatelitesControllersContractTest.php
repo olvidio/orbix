@@ -198,11 +198,15 @@ final class ActividadSatelitesControllersContractTest extends myTest
     public function test_gestion_plazas_update_toma_la_actividad_del_token_dentro_de_data(): void
     {
         $caso = $this->doble(self::uc('actividadplazas', 'GestionPlazasUpdate'), '');
-        $data = json_encode(['id' => 99, 'dlb-c' => 5, 'ctx_update' => HashB::sign('gestion_plazas_update', ['id_activ' => 10])]);
-        $this->assertTrue($this->ejecutar('actividadplazas', 'gestion_plazas_update.php', ['data' => $data, 'colName' => 'dlb-c'])['success']);
+        $data = json_encode(['id' => 99, 'dlb-c' => 5, 'ctx_update' => HashB::sign('gestion_plazas_update', ['id_activ' => 10, 'editables' => ['dlb-c']])]);
+        $this->assertTrue($this->ejecutar('actividadplazas', 'gestion_plazas_update.php', ['data' => $data, 'colName' => '"dlb-c"'])['success']);
         $in = $caso->llamadas[0][1][0];
-        $this->assertSame('dlb-c', $in['colName']);
+        $this->assertSame('"dlb-c"', $in['colName']);
         $this->assertSame(10, json_decode($in['data'], true)['id']);
+
+        // Una columna que la fila no daba por editable no se acepta.
+        $otra = $this->ejecutar('actividadplazas', 'gestion_plazas_update.php', ['data' => $data, 'colName' => '"tot"']);
+        $this->assertSame('Operación no autorizada', $otra['mensaje']);
 
         $sin = $this->ejecutar('actividadplazas', 'gestion_plazas_update.php', ['data' => '{"id":10}', 'colName' => 'x']);
         $this->assertSame('Operación no autorizada', $sin['mensaje']);

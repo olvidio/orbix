@@ -57,7 +57,7 @@ function misas_ver_misas_zona_build(array $in, \src\misas\application\VerMisasZo
 
     return [
         'error' => '',
-        'columns_cuadricula' => json_encode($columns_cuadricula, JSON_UNESCAPED_UNICODE),
+        'columns_cuadricula' => json_encode($columns_cuadricula, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS),
         'data_cuadricula' => $data_cuadricula,
         'id_zona' => $Qid_zona,
         'seleccion' => $Qseleccion,

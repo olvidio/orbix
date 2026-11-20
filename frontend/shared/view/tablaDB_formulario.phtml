@@ -34,7 +34,7 @@ use frontend\shared\config\AppUrlConfig;
 
     fnjs_actualizar_depende = function (camp, accion) {
         var valor_depende = $('#' + camp).val();
-        var parametros = 'clase_info=<?= $clase_info?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h_depende ?>';
+        var parametros = 'clase_info=<?= \frontend\shared\helpers\JsEscape::cadena($clase_info) ?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h_depende ?>';
         var url = '<?= $web_depende ?>';
         let request = $.ajax({
             url: url,

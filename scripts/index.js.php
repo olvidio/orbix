@@ -470,7 +470,22 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
         });
     }
 
+    /* Selección, posición y búsqueda de las listas: no pasan al siguiente usuario de la misma pestaña. */
+    function fnjs_olvidar_estado_de_listas() {
+        try {
+            for (var i = sessionStorage.length - 1; i >= 0; i--) {
+                var clave = sessionStorage.key(i);
+                if (clave !== null && (clave.indexOf('state_') === 0 || clave === 'is_back_navigation')) {
+                    sessionStorage.removeItem(clave);
+                }
+            }
+        } catch (e) {
+            // sin sessionStorage no hay nada que borrar
+        }
+    }
+
     function fnjs_logout() {
+        fnjs_olvidar_estado_de_listas();
         var parametros = 'logout=si&PHPSESSID=1';
         var path = window.location.pathname;
 
@@ -493,6 +508,7 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             return;
         }
         _orbixAuthRedirectPending = true;
+        fnjs_olvidar_estado_de_listas();
 
         var path = window.location.pathname;
         var target;
@@ -864,17 +880,36 @@ $navStateSignedParams = $oHashNavState->linkSinValParams();
             $(selector).each(function (i) {
                 var aa = this.href;
                 // si tiene una ref a name(#):
+                // El destino se guarda en el manejador, no en un `onclick` montado con cadenas: una comilla
+                // en la URL no se convierte en código.
                 if (aa !== undefined && aa.indexOf("#") !== -1) {
-                    var part = aa.split("#");
+                    var ancla = aa.split("#")[1];
                     this.href = "";
-                    $(this).attr("onclick", "location.hash = '#" + part[1] + "'; return false;");
+                    $(this).off('click.orbixlink').on('click.orbixlink', function () {
+                        location.hash = '#' + ancla;
+                        return false;
+                    });
                 } else {
                     var url = fnjs_ref_absoluta(base, aa);
                     var path = aa.replace(/[\?#].*$/, ''); // borro desde el "?" o el "#".
                     var extension = path.substr(-4);
-                    if (extension === ".php" || extension === "html" || extension === ".htm") { // documento web
+                    var mismoSitio = false;
+                    try {
+                        mismoSitio = new URL(url, window.location.href).origin === window.location.origin;
+                    } catch (e) {
+                        mismoSitio = false;
+                    }
+                    if (!mismoSitio) {
+                        // Un enlace a otro sitio se abre aparte; no se carga dentro de la aplicación.
+                        $(this).attr({target: '_blank', rel: 'noopener noreferrer'});
+                    } else if (extension === ".php" || extension === "html" || extension === ".htm") { // documento web
                         this.href = "";
-                        $(this).attr("onclick", "fnjs_update_div('" + id_div + "','" + url + "'); return false;");
+                        $(this).off('click.orbixlink').on('click.orbixlink', (function (destino) {
+                            return function () {
+                                fnjs_update_div(id_div, destino);
+                                return false;
+                            };
+                        })(url));
                     } else {
                         this.href = url;
                     }

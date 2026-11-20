@@ -842,7 +842,7 @@ function misas_crear_nuevo_periodo_build(array $in, \src\misas\application\Crear
 
     return [
         'error' => $error_txt,
-        'columns_cuadricula' => json_encode($columns_cuadricula),
+        'columns_cuadricula' => json_encode($columns_cuadricula, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS),
         'data_cuadricula' => $data_cuadricula,
         'id_zona' => $Qid_zona,
         'tipo_plantilla' => $QTipoPlantilla,

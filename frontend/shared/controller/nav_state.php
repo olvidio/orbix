@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use frontend\shared\FrontBootstrap;
-use frontend\shared\web\NavEphemeralFields;
+use frontend\shared\web\NavStack;
 
 require_once __DIR__ . '/../FrontBootstrap.php';
 
@@ -16,14 +16,7 @@ $patch = [];
 if (is_string($patchJson) && $patchJson !== '') {
     $decoded = json_decode($patchJson, true);
     if (is_array($decoded)) {
-        /** @var array<string, mixed> $normalized */
-        $normalized = [];
-        foreach ($decoded as $key => $value) {
-            if (is_string($key)) {
-                $normalized[$key] = $value;
-            }
-        }
-        $patch = NavEphemeralFields::strip($normalized);
+        $patch = NavStack::patchDelCliente($decoded);
     }
 }
 

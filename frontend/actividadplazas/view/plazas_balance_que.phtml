@@ -2,7 +2,7 @@
     fnjs_comparativa = function () {
         var filtro_dl = $('#dl').val();
         var url = <?= json_encode($url_balance_dl) ?>;
-        var parametros = 'id_tipo_activ=<?= $Qid_tipo_activ ?>&dl=' + filtro_dl + '<?= $h ?>';
+        var parametros = 'id_tipo_activ=<?= \frontend\shared\helpers\JsEscape::cadena($Qid_tipo_activ) ?>&dl=' + filtro_dl + '<?= $h ?>';
         fnjs_ajax_json_html({ url: url, data: parametros, target: '#comparativa' });
     }
 </script>

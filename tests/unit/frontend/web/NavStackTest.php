@@ -291,4 +291,46 @@ class NavStackTest extends TestCase
             ob_end_clean();
         }
     }
+
+    /**
+     * El navegador solo puede apuntar en el estado la fila elegida y la posición de la lista: lo demás lo
+     * fija la pantalla al entrar. Lo que vuelve firmado al ir atrás no lo elige el cliente (JS-03).
+     */
+    public function testElClienteSoloPuedeApuntarSeleccionYPosicion(): void
+    {
+        $patch = NavStack::patchDelCliente([
+            'id_sel' => '300125177#1',
+            'scroll_id' => '4',
+            'scroll_id_actividad_select' => 12,
+            'permiso' => 3,
+            'id_activ' => 999,
+            'scroll_id_x' => ['a' => 'b'],
+            'id_sel_otro' => 'x',
+            7 => 'sin nombre',
+        ]);
+
+        $this->assertSame(['id_sel' => '300125177#1', 'scroll_id' => '4', 'scroll_id_actividad_select' => '12'], $patch);
+        $this->assertSame([], NavStack::patchDelCliente(['id_sel' => str_repeat('9', 2000)]), 'un valor desmesurado no entra');
+    }
+
+    public function testAlVolverLaIdentidadNoLaPisaElEstado(): void
+    {
+        $nav = $this->nav();
+        $nav->enter('/frontend/x/controller/ficha.php', '#main', ['id_activ' => 5], ['filtro' => 'a']);
+        $nav->updateState(['id_activ' => 999, 'id_sel' => '3']);
+        $nav->enter('/frontend/x/controller/otra.php', '#main', [], []);
+
+        $destino = $nav->backTarget(1);
+        parse_str((string) ($destino['parametros'] ?? ''), $params);
+
+        $this->assertSame('5', $params['id_activ'] ?? null);
+        $this->assertSame('3', $params['id_sel'] ?? null);
+    }
+
+    public function testElControladorDelEstadoFiltraLoQueLlegaDelNavegador(): void
+    {
+        $codigo = (string) file_get_contents(dirname(__DIR__, 4) . '/frontend/shared/controller/nav_state.php');
+
+        $this->assertStringContainsString('NavStack::patchDelCliente(', $codigo);
+    }
 }

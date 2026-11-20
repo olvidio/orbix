@@ -218,7 +218,7 @@ fnjs_cmb_sacd=function(tipo,id_item,id_enc){
             } else {
                 if (id_sacd != id_sacd_old) {
                     $(id_tr).removeClass( "sf" ).addClass( "sf" );
-                    $(id_nom).html(nombre_new);
+                    $(id_nom).text(nombre_new);
                     $(id_nom).attr("title",id_sacd_new);
                 } else {
                     $(id_tr).removeClass( "sf" );

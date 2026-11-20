@@ -159,9 +159,6 @@ final class PlazasBalanceData
             $nom = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             $a_valores[$i]['id'] = $id_activ;
-            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
-                'id_activ' => (int) $id_activ,
-            ]);
             $a_valores[$i]['actividad'] = $nom;
             $a_valores[$i]['dlorg'] = $dl_org;
 
@@ -207,6 +204,11 @@ final class PlazasBalanceData
                 $a_valores[$i][$dlA_l] = ['editable' => 'false', 'valor' => $libresA];
             }
             $a_valores[$i]['clase'] = $clase;
+            // La cápsula de la fila lleva las columnas que esta dl puede cambiar.
+            $a_valores[$i]['ctx_update'] = HashB::sign('gestion_plazas_update', [
+                'id_activ' => (int) $id_activ,
+                'editables' => GestionPlazasUpdate::columnasEditables($a_valores[$i]),
+            ]);
         }
 
         return [

@@ -29,8 +29,8 @@ $oHashIniciales->setCamposForm('ctx_update!iniciales!color');
 $h_iniciales = $oHashIniciales->linkSinValParams();
 
 $a_campos = [
-    'json_columns_cuadricula' => json_encode($columns),
-    'json_data_cuadricula' => json_encode($rows),
+    'json_columns_cuadricula' => \frontend\shared\helpers\JsEscape::json($columns),
+    'json_data_cuadricula' => \frontend\shared\helpers\JsEscape::json($rows),
     'h_iniciales' => $h_iniciales,
     'url_update_iniciales' => $url_update_iniciales,
     'id_zona' => $id_zona,

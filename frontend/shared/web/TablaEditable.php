@@ -31,6 +31,14 @@ class TablaEditable
     {
     }
 
+    /** Ancho o alto guardado en las preferencias: se escribe en el script, así que solo vale un número. */
+    private static function dimension(mixed $value, string $porDefecto): string
+    {
+        $s = self::scalarString($value);
+
+        return $s !== '' && is_numeric($s) ? $s : $porDefecto;
+    }
+
     private static function scalarString(mixed $value): string
     {
         if ($value === null) {
@@ -134,8 +142,8 @@ class TablaEditable
             if (!empty($aPrefs['colWidths']) && is_array($aPrefs['colWidths'])) {
                 $aColsWidth = $aPrefs['colWidths'];
             }
-            $grid_width = self::scalarString($aPrefs['widthGrid'] ?? '900');
-            $grid_height = self::scalarString($aPrefs['heightGrid'] ?? '0');
+            $grid_width = self::dimension($aPrefs['widthGrid'] ?? null, '900');
+            $grid_height = self::dimension($aPrefs['heightGrid'] ?? null, '0');
         }
         if ($this->aColVisible !== []) {
             $aColsVisible = $this->aColVisible;
@@ -328,23 +336,28 @@ class TablaEditable
 				$(\"#scroll_id\").val(row);	
 			}
             
+			/* El valor de una celda es texto: se escapa antes de meterlo en el HTML del formateador. */
+			function fnjs_lista_esc(v) {
+				if (v === null || v === undefined) { return ''; }
+				return String(v).replace(/&(?![a-zA-Z#0-9]+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;').replace(/'/g, '&#039;');
+			}
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
-					return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]);\"+ira+\";' >\"+value+\"</span>\";
+					return \"<span class=link onclick='grid_$id_tabla.setSelectedRows([\"+row+\"]);\"+ira+\";' >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
-				return value;
+				return fnjs_lista_esc(value);
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
-					return \"<span class=link onclick=\"+ira+\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\"+ira+\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
-				return value;
+				return fnjs_lista_esc(value);
 			}
 			function checkboxSelectionFormatter(row, cell, value, columnDef, dataContext) {
 				if (value == null || value === \"\") {
@@ -373,7 +386,7 @@ class TablaEditable
 			}
 			function cssFormatter(row, cell, value, columnDef, dataContext) {
 				if (isCellEditable(row, cell)) {
-				    return \"<div style='background-color:white'>\"+value+\"</div>\";
+				    return \"<div style='background-color:white'>\"+fnjs_lista_esc(value)+\"</div>\";
                 }
 			}
 

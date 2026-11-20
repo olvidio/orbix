@@ -2,14 +2,14 @@
     fnjs_nuevo = function (formulario) {
         $('#mod').val("nuevo");
         $(formulario).attr('action', "<?= $url_editar ?>");
-        fnjs_enviar_formulario(formulario, '#<?= $ficha ?>');
+        fnjs_enviar_formulario(formulario, '#<?= \frontend\shared\helpers\JsEscape::cadena($ficha) ?>');
     }
     fnjs_modificar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             $('#mod').val("editar");
             $(formulario).attr('action', "<?= $url_editar ?>");
-            fnjs_enviar_formulario(formulario, '#<?= $ficha ?>');
+            fnjs_enviar_formulario(formulario, '#<?= \frontend\shared\helpers\JsEscape::cadena($ficha) ?>');
         }
     }
     fnjs_eliminar = function (formulario) {
@@ -40,7 +40,7 @@
         var campo = '<input type="hidden" name="refresh" value=1>';
         $(formulario).attr('action', "<?= $url_tabla ?>");
         $(formulario).append(campo);
-        fnjs_enviar_formulario(formulario, '#<?= $ficha ?>');
+        fnjs_enviar_formulario(formulario, '#<?= \frontend\shared\helpers\JsEscape::cadena($ficha) ?>');
     }
 </script>
 <?= $oPosicion->mostrarNavAtras(1); ?>
