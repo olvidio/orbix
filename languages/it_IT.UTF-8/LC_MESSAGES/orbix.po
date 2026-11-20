@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 11:22+0100\n"
+"POT-Creation-Date: 2026-11-20 12:10+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -433,11 +433,11 @@ msgstr "attività"
 #: src/casas/infrastructure/ui/http/controllers/ingreso_plazas_previstas_update.php:22
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php:15
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php:18
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:25
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:24
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php:21
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php:24
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_delete.php:15
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:23
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:22
 #: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php:24
 #: src/configuracion/infrastructure/ui/http/controllers/modulos_update.php:25
 #: src/configuracion/infrastructure/ui/http/controllers/parametros_update.php:18
@@ -992,8 +992,8 @@ msgstr "nome"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:38
 #: frontend/ubis/controller/home_ubis.php:65
-#: src/dossiers/application/DossiersVerPantallaData.php:232
-#: src/dossiers/application/DossiersVerPantallaData.php:472
+#: src/dossiers/application/DossiersVerPantallaData.php:233
+#: src/dossiers/application/DossiersVerPantallaData.php:473
 msgid "ver dossiers"
 msgstr "vedi dossier"
 
@@ -1003,8 +1003,8 @@ msgstr "vedi dossier"
 #: frontend/personas/view/traslado_form.phtml:56
 #: frontend/procesos/controller/actividad_proceso.php:39
 #: frontend/ubis/controller/home_ubis.php:66
-#: src/dossiers/application/DossiersVerPantallaData.php:233
-#: src/dossiers/application/DossiersVerPantallaData.php:473
+#: src/dossiers/application/DossiersVerPantallaData.php:234
+#: src/dossiers/application/DossiersVerPantallaData.php:474
 msgid "dossiers"
 msgstr "dossier"
 
@@ -12778,12 +12778,12 @@ msgstr "non trovo nessuno con id_nom: %d"
 #: src/asistentes/application/services/AsistenteActividadService.php:302
 #: src/certificados/domain/CertificadoEmitidoEnviar.php:54
 #: src/certificados/domain/Select_certificados_de_una_persona.php:86
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:62
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:61
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_datos.php:28
 #: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:71
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:60
-#: src/dossiers/application/DossiersVerPantallaData.php:175
-#: src/dossiers/application/DossiersVerPantallaData.php:186
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:59
+#: src/dossiers/application/DossiersVerPantallaData.php:176
+#: src/dossiers/application/DossiersVerPantallaData.php:187
 #: src/profesores/domain/ProfesorActividad.php:51
 #, php-format
 msgid "No encuentro a nadie con id_nom: %s"
@@ -12845,39 +12845,39 @@ msgstr "ordine carica"
 msgid "tipo de cargo"
 msgstr "tipo di carica"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:119
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:120
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:126
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:127
 #, php-format
 msgid "Sólo se puede resincronizar desde el interior sv (UBICACION=%s)"
 msgstr "È possibile resincronizzare solo dall'interno sv (UBICAZIONE=%s)"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:122
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:123
-#: src/shared/infrastructure/cli/copias_resincronizar.php:101
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:131
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:129
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:130
+#: src/shared/infrastructure/cli/copias_resincronizar.php:103
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:138
 msgid "Sólo se puede resincronizar desde el interior (esta instalación es DMZ)"
 msgstr ""
 "È possibile resincronizzare solo dall'interno (questa installazione è DMZ)"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:135
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:142
 msgid "Ya hay una resincronización de cd_cargos_activ_dl en marcha"
 msgstr "È già in corso una resincronizzazione di cd_cargos_activ_dl"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:193
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:194
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:207
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:200
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:201
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:214
 msgid "aplicado"
 msgstr "applicato"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:193
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:194
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:207
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:200
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:201
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:214
 msgid "informe"
 msgstr "rapporto"
 
-#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:206
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:207
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:220
+#: src/actividadcargos/infrastructure/cli/cargos_activ_resincronizar.php:213
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:214
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:227
 msgid ""
 "Informe sin cambios en la base de datos. Para aplicar, repita con «aplicar»."
 msgstr ""
@@ -15057,42 +15057,42 @@ msgstr "elimina"
 msgid "fase"
 msgstr "fase"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:59
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:66
 msgid "error al apuntar cambio usuario en"
 msgstr "errore durante la registrazione del cambio utente in"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:62
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:69
 msgid "schema"
 msgstr "schema"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:63
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:70
 msgid "id_item_cmb"
 msgstr "id_item_cmb"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:64
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:71
 msgid "id_activ / id_usuario"
 msgstr "id_activ / id_usuario"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:65
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:72
 msgid "motivo / aviso tipo"
 msgstr "motivo / tipo avviso"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:86
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:108
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:93
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:115
 msgid "Algo falla"
 msgstr "Qualcosa non va"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:91
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:98
 msgid "Se han detectado incidencias al generar la tabla de avisos"
 msgstr ""
 "Sono stati rilevati problemi durante la generazione della tabella degli "
 "avvisi"
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:97
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:104
 msgid "Tabla de avisos generada."
 msgstr "Tabella degli avvisi generata."
 
-#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:98
+#: src/cambios/infrastructure/cli/avisos_generar_tabla.php:105
 msgid "Puede consultar los avisos desde el menú «ver avisos»."
 msgstr "Può consultare gli avvisi dal menu «Vedi avvisi»."
 
@@ -15387,8 +15387,8 @@ msgstr ""
 #: src/certificados/domain/CertificadoRecibidoDelete.php:30
 #: src/certificados/domain/CertificadoRecibidoDelete.php:36
 #: src/certificados/domain/CertificadoRecibidoUpload.php:60
-#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:53
-#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:51
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php:52
+#: src/certificados/infrastructure/ui/http/controllers/certificado_recibido_guardar.php:50
 msgid "No se encuentra el certificado"
 msgstr "Certificato non trovato"
 
@@ -18928,7 +18928,7 @@ msgstr "in"
 msgid "region"
 msgstr "regione"
 
-#: src/personas/infrastructure/cli/sacd_resincronizar.php:136
+#: src/personas/infrastructure/cli/sacd_resincronizar.php:143
 msgid "Ya hay una resincronización de cp_sacd en marcha"
 msgstr "È già in corso una resincronizzazione di cp_sacd"
 
@@ -19544,7 +19544,7 @@ msgstr "scartata"
 msgid "No puedo conectar con la base de datos de listas"
 msgstr "Impossibile connettersi al database delle liste"
 
-#: src/shared/infrastructure/cli/copias_resincronizar.php:111
+#: src/shared/infrastructure/cli/copias_resincronizar.php:113
 msgid "Ya hay una resincronización de copias en marcha"
 msgstr "È già in corso una resincronizzazione delle copie"
 
@@ -19659,7 +19659,7 @@ msgstr "Manca dbname nella connessione di manutenzione «%s»."
 msgid "Error pg_dump/psql (comando %1$d). Log: %2$s.%3$s"
 msgstr "Errore pg_dump/psql (comando %1$d). Log: %2$s.%3$s"
 
-#: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:1142
+#: src/shared/infrastructure/persistence/postgresql/DBEsquemaCreate.php:1143
 msgid ""
 "Suele deberse a pg_dump y psql de versiones distintas; tras desplegar, el "
 "cliente debe coincidir con la major del servidor (p. ej. /usr/lib/postgresql/"
@@ -20016,6 +20016,11 @@ msgstr "solo commissioni regionali"
 #: src/ubis/application/ListCtrData.php:336
 msgid "todas las casas"
 msgstr "tutte le case"
+
+#: src/ubis/application/PlanosDireccion.php:66
+#, php-format
+msgid "Tipo de fichero no admitido. Se admiten: %s"
+msgstr "Tipo di file non supportato. Tipi supportati: %s"
 
 #: src/ubis/application/TelecoGuardar.php:39
 #, php-format
@@ -20397,12 +20402,12 @@ msgstr "nome del tipo di casa"
 msgid "nombre de tipo centro"
 msgstr "nome del tipo di centro"
 
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:128
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:135
 #, php-format
 msgid "Sólo se puede resincronizar desde sv o sf (UBICACION=%s)"
 msgstr "È possibile resincronizzare solo da sv o sf (UBICACION=%s)"
 
-#: src/ubis/infrastructure/cli/centros_resincronizar.php:144
+#: src/ubis/infrastructure/cli/centros_resincronizar.php:151
 msgid "Ya hay una resincronización de centros en marcha"
 msgstr "È già in corso una resincronizzazione dei centri"
 

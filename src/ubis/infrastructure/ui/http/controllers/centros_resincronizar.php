@@ -32,4 +32,5 @@ try {
     return;
 }
 
+defined('ORBIX_CLI_DESDE_CONTROLADOR') || define('ORBIX_CLI_DESDE_CONTROLADOR', true);
 require __DIR__ . '/../../../cli/centros_resincronizar.php';

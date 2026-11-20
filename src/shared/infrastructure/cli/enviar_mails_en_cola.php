@@ -1,5 +1,12 @@
 <?php
 
+
+if (PHP_SAPI !== 'cli') {
+    // Solo por línea de órdenes (cron): no atiende peticiones web.
+    http_response_code(404);
+    return;
+}
+
 /**
  * Driver CLI para consumir la cola de mails pendientes.
  *

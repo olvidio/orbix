@@ -14,7 +14,7 @@ La implementación de presentación actual es `HashF`:
 - `getCamposHtml()` publica en `data-hc` del campo `h` la lista de campos firmados (no es secreta ni se envía): la lee la auditoría E2E de formularios (`e2e/form-hash-audit.ts`), que ya no puede recalcular la firma.
 - **La firma es obligatoria** (2026-11, AUT-11): una petición que trae datos y no trae `h` se rechaza con un 403 («Petición sin firma»). La regla está en `frontend/shared/security/HashFSinFirma.php`; sin firma solo se admite:
   - la petición sin parámetros, o solo con los de la interfaz (`PHPSESSID`, `nav`, selección y scroll);
-  - la que solo trae cápsulas `ctx*`, o trae una cápsula `HashB` firmada para esta sesión junto a los campos de su formulario (la acción la autoriza la cápsula);
+  - la que solo trae cápsulas `ctx*`, o trae una cápsula `HashB` firmada para esta sesión junto a los campos de su formulario, **y la ruta es un endpoint `/src` cuyo controlador abre una cápsula** (`HashFSinFirma::abreCapsulas()`: la acción la autoriza la cápsula; en cualquier otra ruta la cápsula no sustituye a la firma);
   - la descarga con el token `tk`;
   - la portada (`index.php`: entrar, salir, cambiar de grupo de menú) y el menú `udm4`;
   - los endpoints `/src` que la app móvil llama directamente (`HashFSinFirma::RUTAS_CLIENTE_MOVIL`, la misma lista de `docs/catalogo/_endpoints_cliente_movil.md`; un test las compara).

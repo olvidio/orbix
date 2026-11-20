@@ -13,11 +13,21 @@ use src\shared\domain\DatosInfoRepo;
  */
 final class DatosInfoRepoResolver
 {
+    /**
+     * El nombre es el de una clase `Info*` del dominio de un módulo (`src\<modulo>\domain\Info...`).
+     * Se comprueba ANTES de tocar el autoload: el nombre llega de la petición, y con cualquier otro el
+     * autoload incluiría (y ejecutaría) el fichero PHP que le corresponda.
+     */
+    public static function esNombreAdmitido(string $className): bool
+    {
+        return preg_match('/^src\\\\[a-z0-9_]+\\\\domain\\\\Info[A-Za-z0-9_]*$/', ltrim($className, '\\')) === 1;
+    }
+
     public static function resolve(string $className): DatosInfoRepo
     {
         $className = ltrim($className, '\\');
-        if ($className === '' || !class_exists($className)) {
-            throw new InvalidArgumentException(sprintf('Clase Info invalida: %s', $className));
+        if (!self::esNombreAdmitido($className) || !class_exists($className) || !is_subclass_of($className, DatosInfoRepo::class)) {
+            throw new InvalidArgumentException('Clase Info no válida');
         }
 
         $instance = DependencyResolver::get($className);

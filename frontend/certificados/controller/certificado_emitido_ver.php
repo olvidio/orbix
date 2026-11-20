@@ -72,20 +72,8 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'ctx_guardar' => $ver['ctx_guardar'],
 ]);
 
-$dir_tmp = OrbixRuntime::dir() . '/log/tmp/';
-$cmd_shell = "find $dir_tmp -mtime +1 -delete";
-shell_exec($cmd_shell);
-
-$filename_sin_barra = str_replace('/', '_', $certificado);
-$filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
-$filename_pdf = OrbixRuntime::dir() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-if (($file_handle = @fopen($filename_pdf, 'wb')) !== false) {
-    fwrite($file_handle, $content_pdf);
-    fclose($file_handle);
-    $filename_pdf_web = AppUrlConfig::getPublicAppBaseUrl() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-} else {
-    $filename_pdf_web = '';
-}
+// El PDF se enseña desde la propia página (ver la vista): no se copia a ningún directorio del servidor.
+$pdf_base64 = $content_pdf !== '' ? base64_encode($content_pdf) : '';
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -99,7 +87,7 @@ $a_campos = [
     'f_certificado' => $f_certificado,
     'f_enviado' => $f_enviado,
     'chk_firmado' => $chk_firmado,
-    'filename_pdf' => $filename_pdf_web,
+    'pdf_base64' => $pdf_base64,
 ];
 
 $oView = new ViewNewTwig('frontend/certificados/controller');

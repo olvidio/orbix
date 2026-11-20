@@ -123,7 +123,7 @@ final class ExportadorDocumento
         $salida = $dir . '/salida.xml';
         try {
             file_put_contents($entrada, $html);
-            $orden = 'xsltproc --html -o ' . escapeshellarg($salida) . ' '
+            $orden = 'xsltproc --nonet --novalid --html -o ' . escapeshellarg($salida) . ' '
                 . escapeshellarg($this->dirOdf . '/xslt/' . $xslt) . ' ' . escapeshellarg($entrada) . ' 2>&1';
             $lineas = [];
             $codigo = 0;

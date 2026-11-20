@@ -72,7 +72,8 @@ function src_ajax_resolve_route(): ?string
     foreach ($candidates as $raw) {
         $src = '/' . ltrim(rawurldecode($raw), '/');
         $src = strtok($src, '?') ?: $src;
-        if (preg_match('#^/src/[A-Za-z0-9_./-]+$#', $src) === 1) {
+        // Solo `/src/<modulo>/<accion>` (o su forma larga de controlador): sin `..` ni otras rutas del servidor.
+        if (preg_match('#^/src/[A-Za-z0-9_]+/(infrastructure/ui/http/controllers/)?[A-Za-z0-9_]+(\.php)?$#', $src) === 1) {
             return $src;
         }
     }

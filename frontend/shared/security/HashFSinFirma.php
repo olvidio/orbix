@@ -12,7 +12,8 @@ namespace frontend\shared\security;
  *
  * - sin parámetros (o solo los de la interfaz: `PHPSESSID`, `nav`, selección y scroll);
  * - solo cápsulas `ctx*` de {@see \src\shared\security\HashB}, o una cápsula firmada para esta sesión
- *   junto a los campos de su formulario (la acción la autoriza la cápsula, que ya va firmada);
+ *   junto a los campos de su formulario, solo en el endpoint `/src` que abre esa cápsula (la acción la
+ *   autoriza la cápsula; en otra ruta no sustituye a la firma);
  * - una descarga con el token `tk` ({@see \src\shared\security\SignedDownloadToken});
  * - la portada (`index.php`: entrar, salir, cambiar de grupo de menú) y el menú `udm4`;
  * - los endpoints que la app móvil llama directamente ({@see RUTAS_CLIENTE_MOVIL}).
@@ -94,7 +95,8 @@ final class HashFSinFirma
         if (self::soloCapsulas($nombres)) {
             return false;
         }
-        if ($capsulaDeLaSesion !== null && self::traeCapsulaDeLaSesion($datos, $capsulaDeLaSesion)) {
+        // La cápsula solo autoriza en el endpoint que la abre: en cualquier otra ruta no sustituye a la firma.
+        if ($capsulaDeLaSesion !== null && self::abreCapsulas($ruta) && self::traeCapsulaDeLaSesion($datos, $capsulaDeLaSesion)) {
             return false;
         }
         if ($post === [] && $nombres === ['tk']) {
@@ -102,6 +104,23 @@ final class HashFSinFirma
         }
 
         return !self::rutaExenta($ruta);
+    }
+
+    /**
+     * ¿Es un endpoint `/src/<modulo>/<accion>` cuyo controlador abre una cápsula `HashB`?
+     * Se mira en el propio controlador, así no hay una lista que mantener.
+     */
+    public static function abreCapsulas(string $ruta): bool
+    {
+        if (preg_match('~/src/([A-Za-z0-9_]+)/([A-Za-z0-9_]+)$~', self::rutaCanonica($ruta), $m) !== 1) {
+            return false;
+        }
+        $fichero = dirname(__DIR__, 3) . '/src/' . $m[1] . '/infrastructure/ui/http/controllers/' . $m[2] . '.php';
+        if (!is_file($fichero)) {
+            return false;
+        }
+
+        return preg_match('/\b(HashB::open|MutationCtx::(abrir|open)\w*)\(/', (string) file_get_contents($fichero)) === 1;
     }
 
     /** `false` con `ORBIX_HASHF_SIN_FIRMA=aviso`: la petición sin firma solo se apunta. */

@@ -22,4 +22,5 @@ try {
     return;
 }
 
+defined('ORBIX_CLI_DESDE_CONTROLADOR') || define('ORBIX_CLI_DESDE_CONTROLADOR', true);
 require __DIR__ . '/../../../cli/avisos_generar_tabla.php';

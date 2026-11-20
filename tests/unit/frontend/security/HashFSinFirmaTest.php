@@ -22,6 +22,9 @@ final class HashFSinFirmaTest extends TestCase
         yield 'endpoint src con datos' => ['/src/personas/personas_editar_data', ['id_nom' => '21'], []];
         yield 'endpoint src en su forma larga' => ['/src/personas/infrastructure/ui/http/controllers/personas_editar_data.php', ['id_nom' => '21'], []];
         yield 'cápsula inventada con más campos' => ['/src/personas/persona_update', ['ctx_update' => 'inventada', 'id_nom' => '21'], []];
+        yield 'cápsula de la sesión en una pantalla (no abre cápsulas)' => ['/orbix/frontend/shared/parsedown.php', ['file' => '/.env', 'ctx_x' => 'buena'], []];
+        yield 'cápsula de la sesión en un endpoint que no abre cápsulas' => ['/src/shared/tablaDB_depende_datos', ['clase_info' => 'x', 'ctx_x' => 'buena'], []];
+        yield 'cápsula de la sesión en un endpoint que no existe' => ['/src/x/y', ['ctx_eliminar' => ['mala', 'buena'], 'mod' => 'eliminar'], []];
         yield 'tk junto a otro parámetro' => ['/src/ubis/plano_download', [], ['tk' => 'x', 'id_direccion' => '5']];
         yield 'tk por POST' => ['/src/ubis/plano_download', ['tk' => 'x'], []];
         yield 'un index.php que no es la portada' => ['/orbix/frontend/zz/controller/index.php', ['id' => '1'], []];
@@ -46,8 +49,9 @@ final class HashFSinFirmaTest extends TestCase
         yield 'solo parámetros de la interfaz' => ['/orbix/frontend/usuarios/controller/usuario_lista.php', ['PHPSESSID' => '1', 'nav' => 'reset', 'scroll_id_x' => '3'], []];
         yield 'endpoint src sin datos' => ['/src/usuarios/usuario_lista', [], ['r' => '/src/usuarios/usuario_lista', 'dir' => 'x']];
         yield 'solo la cápsula' => ['/src/ubis/plano_borrar', ['ctx_plano_borrar' => 'x'], []];
-        yield 'cápsula de la sesión con los campos de su formulario' => ['/src/actividadessacd/com_sacd_txt_guardar', ['ctx_guardar' => 'buena', 'texto' => 'x'], []];
-        yield 'lista de cápsulas con otro campo' => ['/src/x/y', ['ctx_eliminar' => ['mala', 'buena'], 'mod' => 'eliminar'], []];
+        yield 'cápsula de la sesión con los campos de su formulario' => ['/src/inventario/cabecera_pie_txt_guardar', ['ctx_guardar' => 'buena', 'texto' => 'x'], []];
+        yield 'lista de cápsulas con otro campo' => ['/src/usuarios/usuario_guardar_pwd', ['ctx_guardar' => ['mala', 'buena'], 'password' => 'x'], []];
+        yield 'cápsula de la sesión, forma larga' => ['/src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php', ['ctx_guardar' => 'buena', 'password' => 'x'], []];
         yield 'descarga con token' => ['/src/ubis/plano_download', [], ['tk' => 'x', 'r' => '/src/ubis/plano_download', 'dir' => 'x']];
         yield 'portada: entrar' => ['/orbix/index.php', ['username' => 'a', 'password' => 'b'], []];
         yield 'portada sin index.php' => ['/orbix/', ['id_grupmenu' => '3'], []];

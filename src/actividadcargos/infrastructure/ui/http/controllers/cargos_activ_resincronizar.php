@@ -17,4 +17,5 @@ if (!\src\devel_db_admin\infrastructure\ui\http\PermisoHerramientasBdGuard::perm
     return;
 }
 
+defined('ORBIX_CLI_DESDE_CONTROLADOR') || define('ORBIX_CLI_DESDE_CONTROLADOR', true);
 require __DIR__ . '/../../../cli/cargos_activ_resincronizar.php';

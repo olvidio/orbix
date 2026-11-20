@@ -4,7 +4,6 @@ use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\infrastructure\DependencyResolver;
 use src\shared\security\HashB;
@@ -81,15 +80,6 @@ if ($oF_recibido instanceof DateTimeLocal) {
 
 if ($certificadoRecibidoRepository->Guardar($oCertificadoRecibido) === false) {
     $error_txt .= $certificadoRecibidoRepository->getErrorTxt();
-}
-
-if ($Qcertificado_old !== '') {
-    $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
-    $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
-    $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-    if (is_file($filename_pdf)) {
-        unlink($filename_pdf);
-    }
 }
 
 $data = ['mensaje' => 'ok', 'item' => $Qid_item];

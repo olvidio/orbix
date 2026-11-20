@@ -54,7 +54,23 @@
         </form>
     </div>
     <div style="width:60%; height:500px;">
-        <embed type="application/pdf" src="{{ filename_pdf }}" width='100%' height='100%' />
+        <embed id="certificado_pdf_visor" type="application/pdf" data-pdf="{{ pdf_base64 }}" width='100%' height='100%' />
+        <script>
+            // El PDF viene en la página y se enseña desde memoria (un objeto del navegador), sin fichero en el servidor.
+            (function () {
+                var visor = document.getElementById('certificado_pdf_visor');
+                var b64 = visor ? visor.getAttribute('data-pdf') : '';
+                if (!b64) {
+                    return;
+                }
+                var bin = atob(b64), bytes = new Uint8Array(bin.length);
+                for (var i = 0; i < bin.length; i++) {
+                    bytes[i] = bin.charCodeAt(i);
+                }
+                visor.removeAttribute('data-pdf');
+                visor.src = URL.createObjectURL(new Blob([bytes], {type: 'application/pdf'}));
+            })();
+        </script>
     </div>
 </div>
 

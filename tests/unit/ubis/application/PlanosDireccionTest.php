@@ -64,6 +64,24 @@ final class PlanosDireccionTest extends TestCase
         $planos->borrar('DireccionCdc', 8);
     }
 
+    public function test_solo_se_guardan_planos_de_los_tipos_admitidos_y_con_un_nombre_limpio(): void
+    {
+        $casa = $this->createMockForIntersectionOfInterfaces([DireccionCasaRepositoryInterface::class, PlanoRepositoryInterface::class]);
+        $casa->expects($this->once())->method('planoUpload')->with(8, 'plano_1_script_', 'pdf', 'bytes');
+        $planos = $this->planos(casa: $casa);
+
+        $planos->subir('DireccionCdc', 8, "plano 1<script>\r\n", 'PDF', 'bytes');
+
+        foreach (['php', 'html', 'svg', 'exe', ''] as $extension) {
+            try {
+                $planos->subir('DireccionCdc', 8, 'plano', $extension, 'bytes');
+                $this->fail("la extensión «{$extension}» no se admite");
+            } catch (InvalidArgumentException) {
+                $this->addToAssertionCount(1);
+            }
+        }
+    }
+
     public function test_tipo_desconocido_es_un_error(): void
     {
         $this->expectException(InvalidArgumentException::class);

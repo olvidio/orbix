@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+
+if (PHP_SAPI !== 'cli') {
+    // Solo por línea de órdenes (cron): no atiende peticiones web.
+    http_response_code(404);
+    return;
+}
+
 use src\shared\application\copias\AvisarErrorCopias;
 use src\shared\application\copias\CopiasResincronizar;
 use src\shared\config\ConfigGlobal;
@@ -25,11 +32,6 @@ use src\shared\infrastructure\cli\CronSesion;
  *
  * Códigos: 0 correcto, 1 error o abortado, 2 uso incorrecto.
  */
-
-if (PHP_SAPI !== 'cli') {
-    fwrite(STDERR, "Solo CLI.\n");
-    exit(1);
-}
 
 $root = dirname(__DIR__, 4);
 // El .env antes de leer ORBIX_CRON_SESION (la sesión se aplica antes de global_header.inc).

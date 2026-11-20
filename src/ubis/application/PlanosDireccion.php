@@ -55,8 +55,20 @@ final class PlanosDireccion
         ];
     }
 
+    /** Tipos de fichero que se admiten como plano (los mismos que sabe servir la descarga). */
+    public const EXTENSIONES = ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'odt', 'doc', 'rtf', 'xls', 'ppt', 'zip'];
+
     public function subir(string $obj_dir, int $id_direccion, string $nom, string $extension, string $fichero): void
     {
+        // El nombre y la extensión los da el navegador: solo tipos conocidos y un nombre sin signos raros.
+        $extension = strtolower($extension);
+        if (!in_array($extension, self::EXTENSIONES, true)) {
+            throw new InvalidArgumentException(sprintf(_("Tipo de fichero no admitido. Se admiten: %s"), implode(', ', self::EXTENSIONES)));
+        }
+        $nom = mb_substr((string) preg_replace('/[^\p{L}\p{N}_-]+/u', '_', $nom), 0, 80);
+        if ($nom === '' || $nom === '_') {
+            $nom = 'plano';
+        }
         $this->repo($obj_dir)->planoUpload($id_direccion, $nom, $extension, $fichero);
     }
 

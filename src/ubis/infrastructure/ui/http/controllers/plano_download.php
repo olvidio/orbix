@@ -39,7 +39,7 @@ $ctype = match (strtolower($plano['extension'])) {
     'ppt' => 'application/vnd.ms-powerpoint',
     'gif' => 'image/gif',
     'png' => 'image/png',
-    'jpeg', 'jpg' => 'image/jpg',
+    'jpeg', 'jpg' => 'image/jpeg',
     default => 'application/octet-stream',
 };
 $nom_ext = $plano['nom'] . ($plano['extension'] !== '' ? '.' . $plano['extension'] : '');
@@ -51,6 +51,7 @@ header('Cache-Control: private', false);
 header('Content-Type: ' . $ctype);
 header('Content-Disposition: attachment; filename="' . str_replace(['"', "\r", "\n"], '', $nom_ext) . '"');
 header('Content-Transfer-Encoding: binary');
+header('X-Content-Type-Options: nosniff');
 
 ob_start();
 ob_clean();

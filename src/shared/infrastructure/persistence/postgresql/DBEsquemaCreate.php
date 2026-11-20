@@ -1133,7 +1133,8 @@ class DBEsquemaCreate
             _("Error pg_dump/psql (comando %1\$d). Log: %2\$s.%3\$s"),
             $numeroComando,
             $logFile,
-            $detalle !== '' ? ' ' . $detalle : ' ' . $command,
+            // La orden lleva la conexión con su contraseña: no va al mensaje.
+            $detalle !== '' ? ' ' . $detalle : '',
         );
         if ($detalle !== ''
             && str_contains($detalle, 'NOT NULL')

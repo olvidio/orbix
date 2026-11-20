@@ -97,10 +97,11 @@ class DossiersVerPantallaData
 
         if ($Qid_dossier === '' && $Qclase_info_encoded !== '') {
             $obj = urldecode($Qclase_info_encoded);
-            if (!class_exists($obj)) {
+            try {
+                $oInfoClase = DatosInfoRepoResolver::resolve($obj);
+            } catch (\InvalidArgumentException) {
                 return ['error' => 'clase_info invalida', 'ficha_segmentos' => []];
             }
-            $oInfoClase = DatosInfoRepoResolver::resolve($obj);
             if (method_exists($oInfoClase, 'setObj_pau')) {
                 $oInfoClase->setObj_pau($Qobj_pau);
             }

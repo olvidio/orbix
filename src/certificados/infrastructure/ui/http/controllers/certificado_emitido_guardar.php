@@ -5,7 +5,6 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\DependencyResolver;
@@ -89,15 +88,6 @@ if ($guardado === false && $error_txt === '') {
     $error_txt .= CertificadoEmitidoGuardarMessages::fromDatabaseError(
         $certificadoEmitidoRepository->getErrorTxt(),
     );
-}
-
-if ($guardado && $Qcertificado_old !== '') {
-    $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
-    $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
-    $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-    if (is_file($filename_pdf)) {
-        unlink($filename_pdf);
-    }
 }
 
 // Para guardar a continuación el PDF que genera `certificado_emitido_2_mpdf.php` de este certificado.

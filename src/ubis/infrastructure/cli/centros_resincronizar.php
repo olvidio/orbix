@@ -1,5 +1,12 @@
 <?php
 
+
+if (PHP_SAPI !== 'cli' && !defined('ORBIX_CLI_DESDE_CONTROLADOR')) {
+    // Solo por línea de órdenes, o desde su controlador (que ya ha comprobado permiso y cápsula).
+    http_response_code(404);
+    return;
+}
+
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\helpers\FilterPostGet;
 use src\shared\infrastructure\DependencyResolver;
