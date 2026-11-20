@@ -39,8 +39,10 @@ final class Email
             throw new \InvalidArgumentException('Email cannot be empty');
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email format: ' . $email);
+        // Además del formato: sin comillas, espacios ni signos de HTML (el filtro de PHP admite la parte
+        // local entre comillas con casi cualquier carácter, y el correo se pinta en varias pantallas).
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('/["\'<>\\\\\s]/', $email) === 1) {
+            throw new \InvalidArgumentException('Invalid email format');
         }
     }
 

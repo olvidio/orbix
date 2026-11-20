@@ -82,7 +82,7 @@ $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
         }
     }
 </script>
-<div id=tablon_anuncios>Tablón <?= $grup_menu ?>
+<div id=tablon_anuncios>Tablón <?= htmlspecialchars((string) $grup_menu, ENT_QUOTES, 'UTF-8') ?>
     <br><br>
     <form method="post" id="seleccionados" action="public/portada.php">
         <?= $oHash->getCamposHtml() ?>

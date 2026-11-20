@@ -43,6 +43,14 @@ class HashBTest extends TestCase
         return hash_hmac('sha256', $encoded . "\0" . session_id(), (string) $_SESSION[HashB::CLAVE_SESION]);
     }
 
+    /** Marca de sesión que lleva la cápsula (derivada del identificador, no el identificador). */
+    private function marca(): string
+    {
+        HashB::sign('preparar_clave');
+
+        return substr(hash_hmac('sha256', 'sesion|' . session_id(), (string) $_SESSION[HashB::CLAVE_SESION]), 0, 16);
+    }
+
     /* ---------------------------------------------------------------
      * Roundtrip
      * --------------------------------------------------------------- */
@@ -272,7 +280,7 @@ class HashBTest extends TestCase
         $payload = [
             'a' => 'foo',
             'c' => ['id' => 5],
-            's' => session_id(),
+            's' => $this->marca(),
             'x' => time() - 10,
         ];
         $encoded = $this->base64UrlEncode(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
@@ -362,7 +370,7 @@ class HashBTest extends TestCase
         $this->assertNotNull($peek);
         $this->assertSame('foo', $peek['a']);
         $this->assertSame(['id' => 5], $peek['c']);
-        $this->assertSame('test-session-alpha', $peek['s']);
+        $this->assertSame($this->marca(), $peek['s']);
         $this->assertIsInt($peek['x']);
     }
 
@@ -426,5 +434,21 @@ class HashBTest extends TestCase
         $arranque = (string) file_get_contents(dirname(__DIR__, 4) . '/frontend/shared/FrontBootstrap.php');
         $this->assertStringContainsString('session_regenerate_id(true)', $arranque);
         $this->assertStringContainsString('HashB::renovarClave()', $arranque);
+    }
+
+    /**
+     * La cápsula va al HTML: no puede llevar el identificador de sesión, que con él cualquier script de la
+     * página (o quien vea una cápsula) usaría la sesión aunque la cookie sea HttpOnly.
+     */
+    public function test_la_capsula_no_publica_el_identificador_de_sesion(): void
+    {
+        $capsula = HashB::sign('foo', ['id' => 1]);
+        [$encoded] = explode('.', $capsula);
+        $json = (string) base64_decode(strtr($encoded, '-_', '+/'), true);
+
+        $this->assertStringNotContainsString((string) session_id(), $json);
+        $this->assertStringNotContainsString((string) session_id(), $capsula);
+        $this->assertSame(['id' => 1], HashB::open($capsula, 'foo'));
+        $this->assertNotSame(session_id(), HashB::peekUnsafe($capsula)['s'] ?? null);
     }
 }

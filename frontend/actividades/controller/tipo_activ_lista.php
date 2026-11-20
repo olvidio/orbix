@@ -31,7 +31,8 @@ foreach ($tipos as $tipo) {
     $id_tipo_activ = (int) ($tipo['id_tipo_activ'] ?? 0);
     $a_valores[$i][1] = $id_tipo_activ;
     $a_valores[$i][2] = (string) ($tipo['nom'] ?? '');
-    $a_valores[$i][3] = "<span class=link id=mod_$id_tipo_activ onclick=fnjs_modificar('$id_tipo_activ')> $texto_link</span>";
+    // HTML propio de la celda (un enlace): `Lista` escapa las celdas que son texto.
+    $a_valores[$i][3] = ['html' => "<span class=link id=mod_$id_tipo_activ onclick=fnjs_modificar('$id_tipo_activ')> $texto_link</span>"];
 }
 
 $oLista = new Lista();

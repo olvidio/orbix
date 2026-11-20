@@ -150,17 +150,26 @@ class Desplegable
         }
     }
 
+    /**
+     * Texto (o valor de atributo) escapado. Las entidades que ya vengan escritas (`&nbsp;`, `&amp;`) se
+     * respetan; las etiquetas, no: las opciones son datos.
+     */
+    private static function e(string $texto): string
+    {
+        return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+    }
+
     public function desplegable(): string
     {
-        $nombre = $this->sNombre ?? '';
+        $nombre = self::e($this->sNombre ?? '');
         $multiple = empty($this->bMultiple) ? '' : 'multiple';
         $tab_index = empty($this->iTabIndex) ? '' : 'tabindex="' . $this->iTabIndex . '"';
         $size = empty($this->iSize) ? '' : 'size="' . $this->iSize . '"';
-        $clase = empty($this->sClase) ? '' : 'class="' . $this->sClase . '"';
+        $clase = empty($this->sClase) ? '' : 'class="' . self::e($this->sClase) . '"';
         if (empty($this->sAction)) {
             $sHtml = '<select ' . $multiple . ' ' . $tab_index . ' id="' . $nombre . '" name="' . $nombre . '" ' . $clase . ' ' . $size . '>';
         } else {
-            $sHtml = '<select ' . $multiple . ' ' . $tab_index . ' id="' . $nombre . '" name="' . $nombre . '" ' . $clase . ' ' . $size . ' onChange="' . $this->sAction . '" >';
+            $sHtml = '<select ' . $multiple . ' ' . $tab_index . ' id="' . $nombre . '" name="' . $nombre . '" ' . $clase . ' ' . $size . ' onChange="' . self::e($this->sAction) . '" >';
         }
         $sHtml .= $this->options();
         $sHtml .= '</select>';
@@ -171,7 +180,7 @@ class Desplegable
     public function cuadros_check(): string
     {
         $txt = '';
-        $camp = ($this->sNombre ?? '') . '[]';
+        $camp = self::e(($this->sNombre ?? '') . '[]');
         $aChecked = $this->aChecked ?? [];
         $aOpcionNo = $this->aOpcion_no ?? [];
 
@@ -186,7 +195,7 @@ class Desplegable
                 if (in_array($value, $aOpcionNo, true)) {
                     continue;
                 }
-                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . $value . '" ' . $chk . '>' . $label;
+                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . self::e($value) . '" ' . $chk . '>' . self::e($label);
             }
         } elseif (is_array($this->oOpciones)) {
             // PHP convierte en int las claves numéricas del array; lo marcado suele llegar
@@ -199,7 +208,7 @@ class Desplegable
                 if (in_array($keyTxt, $aOpcionNoTxt, true)) {
                     continue;
                 }
-                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . $keyTxt . '" ' . $chk . '>' . self::scalarString($val);
+                $txt .= '   <input type="Checkbox" id="' . $camp . '" name="' . $camp . '" value="' . self::e($keyTxt) . '" ' . $chk . '>' . self::e(self::scalarString($val));
             }
         } else {
             $msg_err = _("tiene que ser un array") . ': ' . basename(__FILE__) . ': line ' . __LINE__;
@@ -231,7 +240,7 @@ class Desplegable
         $txt = '';
         if (!empty($this->Blanco)) {
             if (!empty($this->valorBlanco)) {
-                $txt .= '<option value="' . $this->valorBlanco . '"></option>';
+                $txt .= '<option value="' . self::e($this->valorBlanco) . '"></option>';
             } else {
                 $txt .= '<option></option>';
             }
@@ -244,7 +253,7 @@ class Desplegable
             if (in_array($key, $aOpcionNo, true)) {
                 continue;
             }
-            $txt .= '<option value="' . self::scalarString($key) . '" ' . $sel . '>' . self::scalarString($val) . '</option>';
+            $txt .= '<option value="' . self::e(self::scalarString($key)) . '" ' . $sel . '>' . self::e(self::scalarString($val)) . '</option>';
         }
 
         return $txt;

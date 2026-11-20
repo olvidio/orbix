@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: orbix v1.0\n"
-"POT-Creation-Date: 2026-11-20 12:44+0100\n"
+"POT-Creation-Date: 2026-11-20 14:12+0100\n"
 "PO-Revision-Date: 2026-07-16 12:29+0200\n"
 "Last-Translator: Daniel Serrabou <dani@moneders.net>\n"
 "Language-Team: \n"
@@ -969,7 +969,7 @@ msgstr "id"
 #: frontend/usuarios/view/role_form.phtml:60
 #: frontend/usuarios/view/usuario_lista.phtml:42
 #: src/asistentes/application/ListaEstCtrData.php:203
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:336
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:337
 #: src/asistentes/application/Select_actividades_de_una_persona.php:125
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:270
 #: src/asistentes/application/TablaPeticionesData.php:71
@@ -1109,7 +1109,7 @@ msgid "¿Está seguro que quiere eliminar este tipo de actividad?"
 msgstr "Sei sicuro di voler eliminare questo tipo di attività?"
 
 #: frontend/actividades/controller/tipo_activ_lista.php:23
-#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: frontend/actividades/controller/tipo_activ_lista.php:39
 #: frontend/cambios/controller/usuario_form_avisos.php:53
 #: frontend/encargossacd/controller/encargo_horario_select.php:70
 #: frontend/encargossacd/controller/encargo_select.php:60
@@ -1136,13 +1136,13 @@ msgstr "Sei sicuro di voler eliminare questo tipo di attività?"
 msgid "modificar"
 msgstr "modifica"
 
-#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: frontend/actividades/controller/tipo_activ_lista.php:39
 #: src/actividades/domain/entity/ActividadAllDatosCampos.php:52
 #: src/procesos/application/TipoActivProcesoLista.php:43
 msgid "id_tipo_activ"
 msgstr "id_tipo_activ"
 
-#: frontend/actividades/controller/tipo_activ_lista.php:38
+#: frontend/actividades/controller/tipo_activ_lista.php:39
 #: src/actividades/application/CalendarioListasDatos.php:341
 #: src/actividades/application/CalendarioListasDatos.php:353
 #: src/actividades/application/ListaActivTabla.php:211
@@ -1521,7 +1521,7 @@ msgid "centro"
 msgstr "centro"
 
 #: frontend/actividadescentro/view/activ_ctr.phtml:29
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:335
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:336
 #: src/asistentes/application/Select_asistentes_a_una_actividad.php:260
 msgid "num"
 msgstr "num"
@@ -9292,42 +9292,42 @@ msgstr "(default: periodo dal 1/%s al 31/5)"
 msgid "(por defecto: periodo desde 1/6 hasta 30/%s)"
 msgstr "(default: periodo da 1/6 a 30/%s)"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "D"
 msgstr "D"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "L"
 msgstr "L"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "M"
 msgstr "M"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "X"
 msgstr "X"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "J"
 msgstr "J"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "V"
 msgstr "V"
 
-#: frontend/planning/support/PlanningRenderer.php:56
+#: frontend/planning/support/PlanningRenderer.php:62
 #: src/zonassacd/application/ZonaSacdLista.php:130
 msgid "S"
 msgstr "S"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:17
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:29
 #: src/encargossacd/domain/EncargoConstants.php:48
@@ -9335,7 +9335,7 @@ msgstr "S"
 msgid "enero"
 msgstr "gennaio"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:18
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:30
 #: src/encargossacd/domain/EncargoConstants.php:49
@@ -9343,7 +9343,7 @@ msgstr "gennaio"
 msgid "febrero"
 msgstr "febbraio"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:19
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:31
 #: src/encargossacd/domain/EncargoConstants.php:50
@@ -9351,7 +9351,7 @@ msgstr "febbraio"
 msgid "marzo"
 msgstr "marzo"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:24
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:32
 #: src/encargossacd/domain/EncargoConstants.php:51
@@ -9359,7 +9359,7 @@ msgstr "marzo"
 msgid "abril"
 msgstr "aprile"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:25
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:33
 #: src/encargossacd/domain/EncargoConstants.php:52
@@ -9367,7 +9367,7 @@ msgstr "aprile"
 msgid "mayo"
 msgstr "maggio"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:26
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:34
 #: src/encargossacd/domain/EncargoConstants.php:53
@@ -9375,7 +9375,7 @@ msgstr "maggio"
 msgid "junio"
 msgstr "giugno"
 
-#: frontend/planning/support/PlanningRenderer.php:57
+#: frontend/planning/support/PlanningRenderer.php:63
 #: frontend/planning/view/planning_zones_que.phtml:31
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:35
 #: src/encargossacd/domain/EncargoConstants.php:54
@@ -9383,7 +9383,7 @@ msgstr "giugno"
 msgid "julio"
 msgstr "luglio"
 
-#: frontend/planning/support/PlanningRenderer.php:58
+#: frontend/planning/support/PlanningRenderer.php:64
 #: frontend/planning/view/planning_zones_que.phtml:32
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:36
 #: src/encargossacd/domain/EncargoConstants.php:55
@@ -9391,7 +9391,7 @@ msgstr "luglio"
 msgid "agosto"
 msgstr "agosto"
 
-#: frontend/planning/support/PlanningRenderer.php:58
+#: frontend/planning/support/PlanningRenderer.php:64
 #: frontend/planning/view/planning_zones_que.phtml:33
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:37
 #: src/encargossacd/domain/EncargoConstants.php:56
@@ -9399,7 +9399,7 @@ msgstr "agosto"
 msgid "septiembre"
 msgstr "settembre"
 
-#: frontend/planning/support/PlanningRenderer.php:58
+#: frontend/planning/support/PlanningRenderer.php:64
 #: frontend/planning/view/planning_zones_que.phtml:38
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:38
 #: src/encargossacd/domain/EncargoConstants.php:57
@@ -9407,7 +9407,7 @@ msgstr "settembre"
 msgid "octubre"
 msgstr "ottobre"
 
-#: frontend/planning/support/PlanningRenderer.php:58
+#: frontend/planning/support/PlanningRenderer.php:64
 #: frontend/planning/view/planning_zones_que.phtml:39
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:39
 #: src/encargossacd/domain/EncargoConstants.php:58
@@ -9415,7 +9415,7 @@ msgstr "ottobre"
 msgid "noviembre"
 msgstr "novembre"
 
-#: frontend/planning/support/PlanningRenderer.php:58
+#: frontend/planning/support/PlanningRenderer.php:64
 #: frontend/planning/view/planning_zones_que.phtml:40
 #: frontend/shared/domain/value_objects/DateTimeLocal.php:40
 #: src/encargossacd/domain/EncargoConstants.php:59
@@ -9423,26 +9423,26 @@ msgstr "novembre"
 msgid "diciembre"
 msgstr "dicembre"
 
-#: frontend/planning/support/PlanningRenderer.php:59
+#: frontend/planning/support/PlanningRenderer.php:65
 msgid "clic para crear una nueva actividad en esta casa"
 msgstr "fare clic per creare una nuova attività in questa casa"
 
-#: frontend/planning/support/PlanningRenderer.php:60
+#: frontend/planning/support/PlanningRenderer.php:66
 msgid "esta fila es para que represente correctamente las divisiones de día"
 msgstr ""
 "questa riga è tale da rappresentare correttamente le divisioni del giorno"
 
-#: frontend/planning/support/PlanningRenderer.php:191
+#: frontend/planning/support/PlanningRenderer.php:199
 msgid "PREMIO: Ha conseguido crear una actividad sin fecha de inicio."
 msgstr "PREMIO: sei riuscito a creare un'attività senza data di inizio."
 
-#: frontend/planning/support/PlanningRenderer.php:192
-#: frontend/planning/support/PlanningRenderer.php:198
+#: frontend/planning/support/PlanningRenderer.php:200
+#: frontend/planning/support/PlanningRenderer.php:206
 #, php-format
 msgid "id_activ: %s, nombre: %s %s"
 msgstr "id_activ: %s, nome: %s %s"
 
-#: frontend/planning/support/PlanningRenderer.php:197
+#: frontend/planning/support/PlanningRenderer.php:205
 msgid "PREMIO: Ha conseguido crear una actividad sin fecha finalización."
 msgstr "PREMIO: sei riuscito a creare un'attività senza data di fine."
 
@@ -9767,16 +9767,16 @@ msgstr ""
 msgid "No existe controlador para la ruta %s"
 msgstr "Non esiste un controller per il percorso %s"
 
-#: frontend/shared/PostRequest.php:523 frontend/shared/PostRequest.php:951
+#: frontend/shared/PostRequest.php:534 frontend/shared/PostRequest.php:962
 msgid "Procedencia"
 msgstr "Provenienza"
 
-#: frontend/shared/PostRequest.php:763
+#: frontend/shared/PostRequest.php:774
 #, php-format
 msgid "Sesión no autenticada en llamada interna a %s (status %d)."
 msgstr "Sessione non autenticata nella chiamata interna a %s (stato %d)."
 
-#: frontend/shared/PostRequest.php:767
+#: frontend/shared/PostRequest.php:778
 msgid ""
 "El backend ha devuelto el formulario de login en lugar de JSON. Vuelve a "
 "entrar en Orbix."
@@ -9784,22 +9784,22 @@ msgstr ""
 "Il backend ha restituito il modulo di accesso invece di JSON. Accedi di "
 "nuovo a Orbix."
 
-#: frontend/shared/PostRequest.php:772
+#: frontend/shared/PostRequest.php:783
 #, php-format
 msgid "Respuesta no-JSON de %s (status %d)."
 msgstr "Risposta non-JSON di %s (stato %d)."
 
-#: frontend/shared/PostRequest.php:779
+#: frontend/shared/PostRequest.php:790
 #, php-format
 msgid "No se obtiene respuesta de: %s"
 msgstr "Nessuna risposta da: %s"
 
-#: frontend/shared/PostRequest.php:827
+#: frontend/shared/PostRequest.php:838
 #, php-format
 msgid "No se pudo conectar en llamada interna a %s."
 msgstr "Impossibile connettersi alla chiamata interna a %s."
 
-#: frontend/shared/PostRequest.php:831
+#: frontend/shared/PostRequest.php:842
 msgid ""
 "Comprueba que el servidor web escucha en localhost; si `web_server` usa la "
 "IP LAN del propio equipo, la conexión debe poder hacerse vía 127.0.0.1."
@@ -9808,16 +9808,16 @@ msgstr ""
 "l'IP LAN del proprio computer, la connessione deve poter essere stabilita "
 "tramite 127.0.0.1."
 
-#: frontend/shared/PostRequest.php:841
+#: frontend/shared/PostRequest.php:852
 #, php-format
 msgid "Redirección inesperada en llamada interna a %s (status %d → %s)"
 msgstr "Redirezione inaspettata nella chiamata interna a %s (stato %d → %s)"
 
-#: frontend/shared/PostRequest.php:844
+#: frontend/shared/PostRequest.php:855
 msgid "sin Location"
 msgstr "senza Location"
 
-#: frontend/shared/PostRequest.php:846
+#: frontend/shared/PostRequest.php:857
 msgid ""
 "Probable causa: validación de hash/sesión. Revisa que el endpoint no "
 "requiera firma que no se está generando igual server-to-server."
@@ -9825,20 +9825,20 @@ msgstr ""
 "Probabile causa: validazione di hash/sessione. Verifica che l'endpoint non "
 "richieda una firma che non viene generata allo stesso modo server-to-server."
 
-#: frontend/shared/PostRequest.php:851
+#: frontend/shared/PostRequest.php:862
 #, php-format
 msgid "Error HTTP %d en llamada interna a %s"
 msgstr "Errore HTTP %d nella chiamata interna a %s"
 
-#: frontend/shared/PostRequest.php:933
+#: frontend/shared/PostRequest.php:944
 msgid "Endpoint"
 msgstr "Endpoint"
 
-#: frontend/shared/PostRequest.php:937
+#: frontend/shared/PostRequest.php:948
 msgid "Página"
 msgstr "Pagina"
 
-#: frontend/shared/PostRequest.php:953
+#: frontend/shared/PostRequest.php:964
 msgid "POST interno firmado (HashF) con PHPSESSID (cookie o session_id())."
 msgstr "POST interno firmato (HashF) con PHPSESSID (cookie o session_id())."
 
@@ -10680,28 +10680,28 @@ msgstr "centri sv e sf"
 msgid "un centro o lugar"
 msgstr "un centro o un luogo"
 
-#: frontend/shared/web/Desplegable.php:205
+#: frontend/shared/web/Desplegable.php:214
 msgid "tiene que ser un array"
 msgstr "deve essere una matrice"
 
-#: frontend/shared/web/Lista.php:97 frontend/shared/web/Lista.php:1538
+#: frontend/shared/web/Lista.php:106 frontend/shared/web/Lista.php:1559
 msgid "clic para seleccionar"
 msgstr "fare clic per selezionare"
 
-#: frontend/shared/web/Lista.php:456 frontend/shared/web/Lista.php:601
-#: frontend/shared/web/Lista.php:1464 frontend/shared/web/TablaEditable.php:112
+#: frontend/shared/web/Lista.php:469 frontend/shared/web/Lista.php:614
+#: frontend/shared/web/Lista.php:1485 frontend/shared/web/TablaEditable.php:112
 msgid "no hay ninguna fila"
 msgstr "non c'è nessuna riga"
 
-#: frontend/shared/web/Lista.php:1421 frontend/shared/web/TablaEditable.php:671
+#: frontend/shared/web/Lista.php:1442 frontend/shared/web/TablaEditable.php:671
 msgid "guardar selección de columnas"
 msgstr "salva la selezione della colonna"
 
-#: frontend/shared/web/Lista.php:1426 frontend/shared/web/TablaEditable.php:676
+#: frontend/shared/web/Lista.php:1447 frontend/shared/web/TablaEditable.php:676
 msgid "ver/ocultar panel de búsqueda"
 msgstr "guarda / nascondi il pannello di ricerca"
 
-#: frontend/shared/web/Lista.php:1441 frontend/shared/web/TablaEditable.php:691
+#: frontend/shared/web/Lista.php:1462 frontend/shared/web/TablaEditable.php:691
 msgid "Buscar en todas las columnas"
 msgstr "Cerca in tutte le colonne"
 
@@ -10868,7 +10868,7 @@ msgstr "e"
 #: src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:58
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:35
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:140
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:36
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:44
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:56
 #: src/zonassacd/application/ZonaSacdUpdate.php:51
 #: src/zonassacd/application/ZonaSacdUpdate.php:62
@@ -14481,16 +14481,16 @@ msgstr "proposta di cl in cv di sss+"
 msgid "relación de asistentes a las actividades seleccionadas"
 msgstr "elenco dei partecipanti alle attività selezionate"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:318
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:319
 #, php-format
 msgid "plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"
 msgstr "posti (max-min): %s, per la dl: %s, occupati + richiesti: %s"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:323
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:324
 msgid "dif"
 msgstr "dif"
 
-#: src/asistentes/application/ListaPlazasConjuntoActividades.php:326
+#: src/asistentes/application/ListaPlazasConjuntoActividades.php:327
 #, php-format
 msgid "plazas (max-min): %s, ocupadas: %s"
 msgstr "posti (max-min): %s, occupati: %s"
@@ -14945,7 +14945,7 @@ msgstr "id_tipo_activ non valido"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:92
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:29
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:85
-#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:29
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:33
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail_form_data.php:21
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:30
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_info.php:43
@@ -20833,6 +20833,10 @@ msgstr "azione"
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:96
 msgid "Ese nombre de usuario ya está en uso, elija otro"
 msgstr "Questo nome utente è già in uso, ne scelga un altro"
+
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:38
+msgid "El correo no es válido"
+msgstr "L'indirizzo e-mail non è valido"
 
 #: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:41
 msgid "La contraseña actual no es correcta"

@@ -47,7 +47,7 @@ final class AsistentesTablaPeticionesSupport
         $out = '';
         foreach ($parts as $p) {
             if ($p['t'] === 'p') {
-                $out .= $p['s'];
+                $out .= htmlspecialchars($p['s'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
             } elseif ($p['t'] === 'm' && $p['h'] !== []) {
                 $oHash = new HashF();
                 $oHash->setUrl($apiSaveUrl);
@@ -57,7 +57,8 @@ final class AsistentesTablaPeticionesSupport
                     . htmlspecialchars($p['s'], ENT_QUOTES, 'UTF-8') . '</span>';
             }
         }
-        $fila[2] = $out;
+        // HTML propio de la celda (enlaces para cambiar de actividad), con los textos ya escapados.
+        $fila[2] = ['html' => $out];
 
         return $fila;
     }

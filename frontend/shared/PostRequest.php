@@ -242,7 +242,7 @@ class PostRequest
         try {
             $content = self::dispatchInProcess($url, $hash_params);
         } catch (\Throwable $e) {
-            return ['error' => $e->getMessage() . self::sufijoDiagnosticoLlamadaInterna($url)];
+            return ['error' => self::mensajeSeguro($e->getMessage()) . self::sufijoDiagnosticoLlamadaInterna($url)];
         }
 
         return self::dataFromJsonResponseBody($content, $url, 200);
@@ -513,6 +513,17 @@ class PostRequest
     /**
      * Quita el sufijo técnico de {@see sufijoDiagnosticoLlamadaInterna} para mostrar el aviso al usuario.
      */
+    /**
+     * Mensaje de error de un endpoint listo para imprimirse: es texto (puede traer el valor recibido o el
+     * nombre de un registro), así que se escapa; solo se respetan los saltos `<br>` de los propios mensajes.
+     */
+    public static function mensajeSeguro(string $mensaje): string
+    {
+        $escapado = htmlspecialchars($mensaje, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+
+        return (string) preg_replace('~&lt;br\s*/?&gt;~i', '<br>', $escapado);
+    }
+
     public static function stripInternalCallProvenance(string $errorHtml): string
     {
         $pos = strpos($errorHtml, self::DIAGNOSTIC_MARKER);
@@ -784,7 +795,7 @@ class PostRequest
             $mensaje = $rta_json['mensaje'] ?? '';
             $mensajeStr = is_string($mensaje) ? $mensaje : (is_scalar($mensaje) ? (string) $mensaje : '');
 
-            return ['error' => $mensajeStr . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
+            return ['error' => self::mensajeSeguro($mensajeStr) . self::sufijoDiagnosticoLlamadaInterna($urlLimpia)];
         }
 
         return self::envelopeDataFieldToArray($rta_json['data'] ?? null);

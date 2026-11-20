@@ -942,6 +942,12 @@ Con `linkSinVal()` / `linkSinValParams()` el servidor compara **los nombres** de
 4. `dataType: 'json'` y parseo de `ContestarJson`.
 5. Eliminar endpoint huérfano cuando no queden referencias.
 
+### Escapar lo que se pinta
+
+- Los datos de la BD son texto: en una vista `.phtml` van con `htmlspecialchars($v, ENT_QUOTES, 'UTF-8')` (Twig ya escapa; no usar `|raw` con datos).
+- `frontend\shared\web\Lista` y `Desplegable` escapan el texto de celdas y opciones. Si una celda necesita HTML propio (un enlace, un texto resaltado), se pasa como `['html' => '<span ...>' . htmlspecialchars($dato) . '</span>']`, con los datos de dentro ya escapados.
+- El mensaje de error de un endpoint se imprime como texto (`PostRequest::mensajeSeguro()`): puede llevar `<br>`, no otras etiquetas.
+
 ### Qué evitar
 - No mover lógica de negocio a `.phtml`.
 - No hacer que `src` renderice HTML de aplicación: prohibido en `application` y controladores HTTP instanciar `frontend\shared\web\Desplegable`, `frontend\shared\web\Lista`, `echo`/`print` de marcado, o devolver HTML desde use cases para tablas/listados.

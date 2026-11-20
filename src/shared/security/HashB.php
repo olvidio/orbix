@@ -68,7 +68,7 @@ final class HashB
         $payload = [
             'a' => $action,
             'c' => $context,
-            's' => self::sessionId(),
+            's' => self::marcaDeSesion(),
             'x' => $exp,
         ];
 
@@ -135,7 +135,7 @@ final class HashB
         }
 
         $sessionInPayload = is_string($payload['s']) ? $payload['s'] : '';
-        if (!hash_equals(self::sessionId(), $sessionInPayload)) {
+        if (!hash_equals(self::marcaDeSesion(), $sessionInPayload)) {
             throw new HashBInvalidException('session mismatch', HashBInvalidException::SESSION_MISMATCH);
         }
 
@@ -195,6 +195,15 @@ final class HashB
             's' => is_string($sRaw) ? $sRaw : (is_scalar($sRaw) ? (string) $sRaw : ''),
             'x' => is_int($xRaw) ? $xRaw : (is_numeric($xRaw) ? (int) $xRaw : 0),
         ];
+    }
+
+    /**
+     * Marca de la sesión que va dentro de la cápsula: derivada del identificador con la clave de la sesión,
+     * no el identificador mismo (la cápsula se escribe en el HTML).
+     */
+    private static function marcaDeSesion(): string
+    {
+        return substr(hash_hmac('sha256', 'sesion|' . self::sessionId(), self::clave()), 0, 16);
     }
 
     private static function signature(string $encodedPayload): string

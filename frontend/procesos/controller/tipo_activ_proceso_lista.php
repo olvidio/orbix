@@ -20,17 +20,18 @@ $i = 0;
 foreach ($a_tipos as $fila) {
     $row = ProcesosPayload::tipoActivRow($fila);
     $i++;
-    $id_tipo_activ = $row['id_tipo_activ'];
+    $id_tipo_activ = (int) $row['id_tipo_activ'];
     $a_valores[$i][1] = $id_tipo_activ;
     $a_valores[$i][2] = $row['nom'];
 
     $id_txt_dl = 'dl_' . $id_tipo_activ;
-    $a_valores[$i][3] = "<span class=link id=$id_txt_dl onclick=fnjs_cambiar_proceso('$id_tipo_activ','t')> "
-        . $row['nom_proceso_propio'] . '</span>';
+    // HTML propio de la celda (un enlace); el nombre del proceso es un dato y va escapado.
+    $a_valores[$i][3] = ['html' => "<span class=link id=$id_txt_dl onclick=fnjs_cambiar_proceso('$id_tipo_activ','t')> "
+        . htmlspecialchars((string) $row['nom_proceso_propio'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</span>'];
 
     $id_txt_nodl = 'nodl_' . $id_tipo_activ;
-    $a_valores[$i][4] = "<span class=link id=$id_txt_nodl onclick=fnjs_cambiar_proceso('$id_tipo_activ','f')> "
-        . $row['nom_proceso_no_propio'] . '</span>';
+    $a_valores[$i][4] = ['html' => "<span class=link id=$id_txt_nodl onclick=fnjs_cambiar_proceso('$id_tipo_activ','f')> "
+        . htmlspecialchars((string) $row['nom_proceso_no_propio'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</span>'];
 }
 
 $oLista = new Lista();

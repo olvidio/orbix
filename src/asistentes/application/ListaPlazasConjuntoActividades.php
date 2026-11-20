@@ -263,7 +263,8 @@ class ListaPlazasConjuntoActividades
                                 continue;
                             }
                             $plazas_pedidas++;
-                            $aPedidas[] = ['cargo' => '', 'ap_nom' => "<span class=\"alert\">$ap_nom ($ctr_dl)</span>"];
+                            // Celda con formato propio (resaltada): se marca como HTML y el nombre va escapado.
+                            $aPedidas[] = ['cargo' => '', 'ap_nom' => ['html' => '<span class="alert">' . htmlspecialchars("$ap_nom ($ctr_dl)", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</span>']];
                         } else { // asignados y confirmados
                             $num++;
                             $a_activ[$id_activ][$num]['cargo'] = $num;
@@ -317,14 +318,14 @@ class ListaPlazasConjuntoActividades
             if ($publicado === true) {
                 $plazas_txt = sprintf(_("plazas (max-min): %s, para la dl: %s, ocupadas + pedidas: %s"), $plazas_casa, (string) $pl_disponibles, (string) $pl_ocupadas_pedidas);
                 // Nombre actividad y plazas:
-                $aGrupos[$id_activ] = $nom_activ;
+                $aGrupos[$id_activ] = htmlspecialchars((string) $nom_activ, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 //Si es sólo los sacd no tiene sentido el resumen de plazas.
                 if (!$this->bsacd) {
                     $aGrupos[$id_activ] .= '<br>' . " $plazas_txt, " . _("dif") . ": $pl_dif_txt";
                 }
             } else {
                 $plazas_txt = sprintf(_("plazas (max-min): %s, ocupadas: %s"), $plazas_casa, $num_txt);
-                $aGrupos[$id_activ] = $nom_activ;
+                $aGrupos[$id_activ] = htmlspecialchars((string) $nom_activ, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 //Si es sólo los sacd no tiene sentido el resumen de plazas.
                 if (!$this->bsacd) {
                     $aGrupos[$id_activ] .= '<br>' . " $plazas_txt";

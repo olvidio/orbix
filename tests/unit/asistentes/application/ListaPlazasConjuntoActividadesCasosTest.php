@@ -331,7 +331,7 @@ final class ListaPlazasConjuntoActividadesCasosTest extends myTest
 
         [, $datos] = self::contenido($this->sut()->getLista());
 
-        $this->assertSame(['Pla, Joan (ctr10011)', '<span class="alert">Bosch, Pau (ctr10012)</span>'], array_column($datos[3001], 'ap_nom'));
+        $this->assertSame(['Pla, Joan (ctr10011)', ['html' => '<span class="alert">Bosch, Pau (ctr10012)</span>']], array_column($datos[3001], 'ap_nom'));
         $this->assertSame([1, ''], array_column($datos[3001], 'cargo'));
     }
 
@@ -354,7 +354,7 @@ final class ListaPlazasConjuntoActividadesCasosTest extends myTest
         [, $datos] = self::contenido($this->sut()->getLista());
 
         $this->assertSame(
-            ['Pla, Joan (ctr10011)', 'Roca, Pere (ctr10013)', '<span class="alert">Bosch, Pau (ctr10012)</span>'],
+            ['Pla, Joan (ctr10011)', 'Roca, Pere (ctr10013)', ['html' => '<span class="alert">Bosch, Pau (ctr10012)</span>']],
             array_column($datos[3001], 'ap_nom')
         );
     }

@@ -24,14 +24,15 @@ public static function scrollIdFromPost(): string
             continue;
         }
         $s = (string) $v;
-        if ($s !== '' && $s !== '0') {
+        // Es el número de la fila; lo que no sea un número no se usa (el valor se vuelve a pintar).
+        if ($s !== '' && $s !== '0' && ctype_digit($s)) {
             return $s;
         }
     }
 
     $raw = filter_input(INPUT_POST, 'scroll_id');
 
-    return is_scalar($raw) ? (string) $raw : '';
+    return is_scalar($raw) && ctype_digit((string) $raw) ? (string) $raw : '';
 }
 
 /**

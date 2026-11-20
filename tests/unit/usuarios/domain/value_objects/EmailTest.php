@@ -46,4 +46,17 @@ class EmailTest extends myTest
         $email = new Email('test@example.com');
         $this->assertEquals('test@example.com', (string)$email);
     }
+
+    public function test_un_correo_no_lleva_comillas_ni_signos_de_html(): void
+    {
+        foreach (['"a@x.<svg/onload=alert(1)>"@a.es', '"><script>x</script>"@a.es', "o'brien@a.es", 'a b@a.es', 'a\\b@a.es'] as $correo) {
+            try {
+                new \src\usuarios\domain\value_objects\Email($correo);
+                $this->fail("«{$correo}» no debería admitirse");
+            } catch (\InvalidArgumentException $e) {
+                $this->assertStringNotContainsString('<', $e->getMessage(), 'el mensaje no repite el valor');
+            }
+        }
+        $this->assertSame('pepe.garcia+orbix@example-uno.org', (new \src\usuarios\domain\value_objects\Email('pepe.garcia+orbix@example-uno.org'))->value());
+    }
 }

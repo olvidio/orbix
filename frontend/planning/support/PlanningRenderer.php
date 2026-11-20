@@ -47,6 +47,12 @@ class PlanningRenderer
     /** @var array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>>|null */
     private ?array $casaPeriodosPorUbi = null;
 
+    /** Texto escapado para una celda o un atributo; las entidades ya escritas se respetan. */
+    private static function e(string $texto): string
+    {
+        return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+    }
+
     public function dibujar(): string
     {
         if ($this->oInicio === null || $this->oFin === null) {
@@ -149,6 +155,7 @@ class PlanningRenderer
                     }
                 }
                 $long = strlen((string)$persona);
+                $persona = self::e((string) $persona);
                 if ($ancho < $long) {
                     $ancho = $long;
                 }
@@ -178,8 +185,9 @@ class PlanningRenderer
                 $css = [];
                 for ($a = 0; $a < $num_a; $a++) {
                     $activi = $actividad[$a];
-                    $nom_curt[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['nom_curt'] ?? '');
-                    $nom[$a] = \frontend\shared\helpers\PayloadCoercion::string($activi['nom_llarg'] ?? '');
+                    // Son datos (nombres de actividad): escapados desde aquí, que luego van a celdas y a `title`.
+                    $nom_curt[$a] = self::e(\frontend\shared\helpers\PayloadCoercion::string($activi['nom_curt'] ?? ''));
+                    $nom[$a] = self::e(\frontend\shared\helpers\PayloadCoercion::string($activi['nom_llarg'] ?? ''));
                     $ini = \frontend\shared\helpers\PayloadCoercion::string($activi['f_ini'] ?? '');
                     $hini = \frontend\shared\helpers\PayloadCoercion::string($activi['h_ini'] ?? '');
                     $fi = \frontend\shared\helpers\PayloadCoercion::string($activi['f_fi'] ?? '');

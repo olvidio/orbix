@@ -78,6 +78,15 @@ class Lista
         return ['fila' => $fila, 'meta' => $meta];
     }
 
+    /**
+     * Texto de una celda (o de un atributo) escapado. Las entidades que ya vengan escritas (`&nbsp;`,
+     * `&amp;`) se respetan; las etiquetas, no: una celda es texto.
+     */
+    private static function e(string $texto): string
+    {
+        return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+    }
+
     private static function htmlCeldaSel(mixed $valor): string
     {
         if ($valor === null) {
@@ -95,7 +104,7 @@ class Lista
         }
 
         return "<td tipo='sel' title='" . _("clic para seleccionar") . "'>"
-            . '<input class=\'sel\' type=\'checkbox\' ' . $chk . " name='sel[]' id='a" . $id . "' value='" . $id . "'>"
+            . '<input class=\'sel\' type=\'checkbox\' ' . ($chk !== '' ? 'checked' : '') . " name='sel[]' id='a" . self::e($id) . "' value='" . self::e($id) . "'>"
             . '</td>';
     }
 
@@ -260,24 +269,25 @@ class Lista
     /** @param array<string, mixed> $valor */
     private static function renderArrayValorTd(array $valor): string
     {
-        $val = self::scalarString($valor['valor'] ?? '');
+        // El texto es un dato; los enlaces y scripts los monta el código y van dentro de un atributo.
+        $val = self::e(self::scalarString($valor['valor'] ?? ''));
         $html = '<td>';
         if (!empty($valor['ira'])) {
-            $ira = self::scalarString($valor['ira']);
+            $ira = self::e(self::scalarString($valor['ira']));
             $html .= '<span class="link" onclick="fnjs_update_div(\'#main\',\'' . $ira . '\')" >' . $val . '</span>';
         } elseif (!empty($valor['script'])) {
-            $ira = self::scalarString($valor['script']);
+            $ira = self::e(self::scalarString($valor['script']));
             $html .= '<span class="link" onclick=\'' . $ira . '\' >' . $val . '</span>';
         } else {
             $html .= $val;
         }
         for ($idx = 2; $idx <= 3; $idx++) {
             if (!empty($valor["ira$idx"])) {
-                $ira = self::scalarString($valor["ira$idx"]);
+                $ira = self::e(self::scalarString($valor["ira$idx"]));
                 $html .= ' <span class="link" onclick="fnjs_update_div(\'#main\',\'' . $ira . '\')" >' . $val . '</span>';
             }
             if (!empty($valor["script$idx"])) {
-                $ira = self::scalarString($valor["script$idx"]);
+                $ira = self::e(self::scalarString($valor["script$idx"]));
                 $html .= ' <span class="link" onclick=\'' . $ira . '\' >' . $val . '</span>';
             }
         }
@@ -293,7 +303,7 @@ class Lista
             return "<td class='fecha' fecha_iso='$fechaIso'>$text</td>";
         }
 
-        return '<td>' . $text . '</td>';
+        return '<td>' . self::e($text) . '</td>';
     }
 
     private static function formatFechaIsoFromDmy(string $valor): ?string
@@ -362,7 +372,10 @@ class Lista
                 $valor = $fila[$targetIdx] ?? '';
                 $icolOffset++;
             }
-            if (is_array($valor) && array_key_exists('valor', $valor)) {
+            if (is_array($valor) && array_key_exists('html', $valor)) {
+                // HTML que ha montado el código para esta celda (un enlace, un texto resaltado).
+                $tbody .= '<td>' . self::scalarString($valor['html']) . '</td>';
+            } elseif (is_array($valor) && array_key_exists('valor', $valor)) {
                 $tbody .= self::renderArrayValorTd($valor);
             } else {
                 $tbody .= self::renderScalarValorTd($valor);
@@ -797,7 +810,10 @@ class Lista
                     }
                 } else {
                     if (is_array($valor) && $valor !== []) {
-                        $val = self::scalarString($valor['valor'] ?? '');
+                        // En la rejilla una celda es texto: de una celda con HTML propio queda su texto.
+                        $val = array_key_exists('html', $valor)
+                            ? trim(strip_tags(self::scalarString($valor['html'])))
+                            : self::scalarString($valor['valor'] ?? '');
                         if (!empty($valor['clase'])) {
                             $aFilas[$num_fila]['clase'] = self::scalarString($valor['clase']);
                         }
@@ -886,7 +902,7 @@ class Lista
             $grid_height = '350';
         }
 
-        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
+        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"" . self::e($scroll_id) . "\" type=\"hidden\">";
         $tt .= "
 			<script>
 			
@@ -951,33 +967,38 @@ class Lista
 				$(\"#scroll_id_$id_tabla\").val(row);
 			}
     
+			/* El valor de una celda es texto: se escapa antes de meterlo en el HTML del formateador. */
+			function fnjs_lista_esc(v) {
+				if (v === null || v === undefined) { return ''; }
+				return String(v).replace(/&(?![a-zA-Z#0-9]+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;').replace(/'/g, '&#039;');
+			}
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'); return false; \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'); return false; \\\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
 				if (ira=dataContext['script']) {
                     var fun = \"event.stopPropagation(); (function (s) { \"+ira+\"; })(grid_$id_tabla.setSelectedRows([\"+row+\"]))\";
-					return \"<span class=link onclick=' \"+fun+\"; return false;' >\"+value+\"</span>\";
+					return \"<span class=link onclick=' \"+fun+\"; return false;' >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
-				return value;
+				return fnjs_lista_esc(value);
 			}
 			function clickFormatter2(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira2']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
 				if (ira=dataContext['script2']) {
-					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+value+\"</span>\";
+					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
-				return value;
+				return fnjs_lista_esc(value);
 			}
 			function clickFormatter3(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira3']) {
-					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+value+\"</span>\";
+					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'): return false; \\\" >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
 				if (ira=dataContext['script3']) {
-					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+value+\"</span>\";
+					return \"<span class=link onclick='\"+ira+\"; return false;' >\"+fnjs_lista_esc(value)+\"</span>\";
 				}
-				return value;
+				return fnjs_lista_esc(value);
 			}
 			function checkboxSelectionFormatter(row, cell, value, columnDef, dataContext) {
 				if (value == null || value === \"\") {
@@ -1536,7 +1557,7 @@ class Lista
                             $chk = in_array($id, $a_valores_chk, true) ? 'checked' : '';
                         }
                         $tbody .= "<td tipo='sel' title='" . _("clic para seleccionar") . "'>";
-                        $tbody .= '<input class=\'sel\' type=\'checkbox\' ' . $chk . "  name='sel[]' id='a" . $id . "' value='" . $id . "'>";
+                        $tbody .= '<input class=\'sel\' type=\'checkbox\' ' . ($chk !== '' ? 'checked' : '') . "  name='sel[]' id='a" . self::e($id) . "' value='" . self::e($id) . "'>";
                         $tbody .= "</td>";
                     } else {
                         $tbody .= "<td></td>";
@@ -1553,7 +1574,7 @@ class Lista
         if ($numBotones > 0) {
             $botones = "<tr class=botones><td colspan='$cab'>" . $botones;
         }
-        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
+        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"" . self::e($scroll_id) . "\" type=\"hidden\">";
         $tt .= "<table>$botones</table>\n";
         $tt .= "<table border=1  class='sortable' id='$id_tabla'>\n";
         $tt .= "<thead><tr>";
